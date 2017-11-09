@@ -1,4 +1,5 @@
 <img align="center" src="./docs/logo/ithaca-fv-small.png?raw=true" alt="ITHACA logo"/>
+
 ## ITHACA-FV - In real Time Highly Advanced Computational Applications for Finite Volumes - ROMs for OpenFOAM ##
 
 ### 0. Introduction
