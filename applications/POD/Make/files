@@ -1,0 +1,3 @@
+perform_POD.C
+
+EXE = $(FOAM_APPBIN)/perform_POD

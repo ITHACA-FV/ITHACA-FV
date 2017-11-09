@@ -1,0 +1,41 @@
+EXE_INC = \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/transportModels \
+    -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
+    -I$(LIB_SRC)/transportModels/incompressible/viscosityModels/viscosityModel \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/fvOptions/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/radiationModels/lnInclude \
+    -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
+    -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
+    -I../../src/reductionMethods/reducedProblem \
+    -I../../src/reductionMethods/unsteadyNSreduced \
+    -I../../src/reductionMethods/steadyNSreduced \
+    -I../../src/reductionMethods/laplacianReduced \
+    -I../../src/NonLinearSolvers \
+    -I../../src/thirdparty/Eigen \
+    -I../../src/ITHACAutilities \
+    -I../../src/ITHACAPOD \
+    -I../../src/ITHACAstream \
+    -w \
+    -std=c++11
+
+EXE_LIBS = \
+    -lturbulenceModels \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lfvOptions \
+    -lsampling \
+    -lfluidThermophysicalModels \
+    -lradiationModels \
+    -lspecie \
+    -lforces \
+    -lfileFormats \
+    -lITHACA-FV-Problems
+

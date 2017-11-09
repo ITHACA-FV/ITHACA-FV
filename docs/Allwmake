@@ -1,0 +1,77 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} [OPTION]
+options:
+  -online    use the links to the Github repositories instead of the local source code
+  -help
+
+USAGE
+    exit 1
+}
+
+defineURL() {
+
+  case "$WM_PROJECT_VERSION" in
+  [0-9].[0-9].x)
+    FOAM_BRANCH_NAME="master"
+    FOAM_REPO_VERSION="$WM_PROJECT-$WM_PROJECT_VERSION"
+    ;;
+  [0-9].[0-9].[0-9])
+    FOAM_BRANCH_NAME="version-$WM_PROJECT_VERSION"
+    FOAM_REPO_VERSION="$WM_PROJECT-${WM_PROJECT_VERSION%.*}.x"
+    ;;
+  *)
+    FOAM_BRANCH_NAME="master"
+    FOAM_REPO_VERSION="$WM_PROJECT-$WM_PROJECT_VERSION"
+    ;;
+  esac
+
+  export FOAM_BASE_REPO="https://github.com/$WM_PROJECT/$FOAM_REPO_VERSION"
+  export FOAM_ONLINE_REPO="$FOAM_BASE_REPO/tree/$FOAM_BRANCH_NAME"
+}
+
+# parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -online)
+        defineURL
+        shift
+        ;;
+    *)
+        usage "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+#------------------------------------------------------------------------------
+
+set -x
+
+rm -rf latex man
+
+# remove html directory in background
+mv html html-stagedRemove$$ 2> /dev/null
+rm -rf html-stagedRemove$$ >/dev/null 2>&1 &
+
+# ensure that created files are readable by everyone
+umask 22
+doxygen
+
+# fix permissions (NB: '+X' and not '+x'!)
+chmod -R a+rX html latex man 2>/dev/null
+
+echo
+echo "Done doxygen"
+echo
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,3238 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<tagfile>
+  <compound kind="file">
+    <name>ITHACA-FV-REC.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/applications/rec/</path>
+    <filename>a00002</filename>
+    <member kind="function">
+      <type>int</type>
+      <name>main</name>
+      <anchorfile>a00002.html</anchorfile>
+      <anchor>a0ddf1224851353fc92bfbff6f499fa97</anchor>
+      <arglist>(int argc, char *argv[])</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>ITHACAstream.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/ITHACAstream/</path>
+    <filename>a00005</filename>
+    <includes id="a00008" name="ITHACAstream.H" local="yes" imported="no">ITHACAstream.H</includes>
+  </compound>
+  <compound kind="file">
+    <name>ITHACAstream.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/ITHACAstream/</path>
+    <filename>a00008</filename>
+    <class kind="class">ITHACAstream</class>
+    <member kind="define">
+      <type>#define</type>
+      <name>MAXBUFSIZE</name>
+      <anchorfile>a00008.html</anchorfile>
+      <anchor>a848bb0e0fe1522d44344445c43d05bec</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>ITHACAstreamTemplates.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/ITHACAstream/</path>
+    <filename>a00011</filename>
+  </compound>
+  <compound kind="file">
+    <name>ITHACAutilities.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/ITHACAutilities/</path>
+    <filename>a00014</filename>
+    <includes id="a00017" name="ITHACAutilities.H" local="yes" imported="no">ITHACAutilities.H</includes>
+  </compound>
+  <compound kind="file">
+    <name>ITHACAutilities.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/ITHACAutilities/</path>
+    <filename>a00017</filename>
+    <class kind="class">ITHACAutilities</class>
+  </compound>
+  <compound kind="file">
+    <name>ITHACAutilitiesTemplates.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/ITHACAutilities/</path>
+    <filename>a00020</filename>
+  </compound>
+  <compound kind="file">
+    <name>POD.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/POD/</path>
+    <filename>a00023</filename>
+    <includes id="a00026" name="POD.H" local="yes" imported="no">POD.H</includes>
+  </compound>
+  <compound kind="file">
+    <name>POD.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/POD/</path>
+    <filename>a00026</filename>
+    <includes id="a00017" name="ITHACAutilities.H" local="yes" imported="no">ITHACAutilities.H</includes>
+    <includes id="a00008" name="ITHACAstream.H" local="yes" imported="no">ITHACAstream.H</includes>
+    <class kind="class">POD</class>
+  </compound>
+  <compound kind="file">
+    <name>PODTemplates.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/POD/</path>
+    <filename>a00029</filename>
+  </compound>
+  <compound kind="file">
+    <name>compressibleCreatePhi.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00032</filename>
+    <member kind="define">
+      <type>#define</type>
+      <name>createPhi_H</name>
+      <anchorfile>a00053.html</anchorfile>
+      <anchor>af171a3223d35c90413b6a44682b66177</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading/calculating face flux field phi\&lt; endl;_phi=autoPtr&lt; surfaceScalarField &gt;</name>
+      <anchorfile>a00032.html</anchorfile>
+      <anchor>a49a04e0fb9d24c0de5dfe806bd30bc08</anchor>
+      <arglist>(new surfaceScalarField(IOobject(&quot;phi&quot;, runTime.timeName(), mesh, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE), linearInterpolate(rho *U) &amp;mesh.Sf()))</arglist>
+    </member>
+    <member kind="variable">
+      <type>surfaceScalarField &amp;</type>
+      <name>phi</name>
+      <anchorfile>a00032.html</anchorfile>
+      <anchor>a1a97abcf6c141f539994c8a21c8daca7</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createFields.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00402</filename>
+    <includes id="a00032" name="compressibleCreatePhi.H" local="yes" imported="no">compressibleCreatePhi.H</includes>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading thermophysical properties\&lt; endl;_pThermo=autoPtr&lt; rhoThermo &gt;</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>acd22f7c07c4e60a47dfbf71b31337eff</anchor>
+      <arglist>(rhoThermo::New(mesh))</arglist>
+    </member>
+    <member kind="function">
+      <type>thermo</type>
+      <name>validate</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>a22d0ba3ec2f78fd322515536f772db71</anchor>
+      <arglist>(args.executable(), &quot;h&quot;, &quot;e&quot;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field U\&lt; endl;_U=autoPtr&lt; volVectorField &gt;</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>a0bccf143155793f87b7cf998a3cb330f</anchor>
+      <arglist>(new volVectorField(IOobject(&quot;U&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Creating turbulence model\&lt; endl;turbulence=autoPtr&lt; compressible::turbulenceModel &gt;</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>aa1f5a305755dbaf188c83fd44971380a</anchor>
+      <arglist>(compressible::turbulenceModel::New(rho, U, phi, thermo))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Calculating field g.h\&lt; endl;_gh=autoPtr&lt; volScalarField &gt;</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>a2540bbfcb6d1a0da146bcea146853d50</anchor>
+      <arglist>(new volScalarField(&quot;gh&quot;, g &amp;mesh.C()))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p_rgh\&lt; endl;_p_rgh=autoPtr&lt; volScalarField &gt;</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>ab6b1865ea730087e200dc1ce257f09ea</anchor>
+      <arglist>(new volScalarField(IOobject(&quot;p_rgh&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Creating field dpdt\&lt; endl;_dpdt=autoPtr&lt; volScalarField &gt;</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>ab905d9f8f8329c7e1d031fff32ea4499</anchor>
+      <arglist>(new volScalarField(IOobject(&quot;dpdt&quot;, runTime.timeName(), mesh), mesh, dimensionedScalar(&quot;dpdt&quot;, p.dimensions()/dimTime, 0)))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Creating field kinetic energy K\&lt; endl;_K=autoPtr&lt; volScalarField &gt;</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>a48b1a57c1bf269ae4bbbe05a5f681087</anchor>
+      <arglist>(new volScalarField(&quot;K&quot;, 0.5 *magSqr(U)))</arglist>
+    </member>
+    <member kind="variable">
+      <type>rhoThermo &amp;</type>
+      <name>thermo</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>aad0c921770bd26de425cedad0c8ae8be</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>_rho</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>ab673d22bc34851adb21dfc81b4b813dc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>volScalarField &amp;</type>
+      <name>rho</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>ae323f2a96b6b181ecef23798ef9f4982</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>_p</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>ad87eff8426f119b54f0ae7841940306b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>volScalarField &amp;</type>
+      <name>p</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>a334650304cdcdff41898bee9eaf2e3db</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>_psi</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>a29fe1b4beb9c1fc45ace8a83a633b236</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const volScalarField &amp;</type>
+      <name>psi</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>aba679271c41582099c8ccf4827fdf217</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>volVectorField &amp;</type>
+      <name>U</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>ae4919c063fc0646445cdcafee89ebd60</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>volScalarField &amp;</type>
+      <name>gh</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>a02ae31b4be2bce133e714b6d2f3a9e17</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>_ghf</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>a1d488322318bb3b1aa02657e38a2dad1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>surfaceScalarField &amp;</type>
+      <name>ghf</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>ad04819e58004fbc6688f4da3f906d34c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>volScalarField &amp;</type>
+      <name>p_rgh</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>ad6cbeeb8c1bfd661b0da54134509008e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>volScalarField &amp;</type>
+      <name>K</name>
+      <anchorfile>a00402.html</anchorfile>
+      <anchor>a9791461e4fdfb6fe2e90dd67049d3a26</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createFields.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00405</filename>
+    <includes id="a00456" name="createPhi.H" local="yes" imported="no">createPhi.H</includes>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;_p=autoPtr&lt; volScalarField &gt;</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>a8161e9887c6989d450d5a935e8037edc</anchor>
+      <arglist>(new volScalarField(IOobject(&quot;p&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field U\&lt; endl;_U=autoPtr&lt; volVectorField &gt;</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>a0bccf143155793f87b7cf998a3cb330f</anchor>
+      <arglist>(new volVectorField(IOobject(&quot;U&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>setRefCell</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>afeb00419cfdbd69ab20e430caf6e541b</anchor>
+      <arglist>(p, mesh.solutionDict().subDict(&quot;SIMPLE&quot;), pRefCell, pRefValue)</arglist>
+    </member>
+    <member kind="variable">
+      <type>volScalarField &amp;</type>
+      <name>p</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>a334650304cdcdff41898bee9eaf2e3db</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>volVectorField &amp;</type>
+      <name>U</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>ae4919c063fc0646445cdcafee89ebd60</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>label</type>
+      <name>pRefCell</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>abb89b4982abae5250b3c0ecf53853939</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>pRefValue</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>a4c979f06cb1ef4672fd8ba1146638963</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>_laminarTransport</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>a2196113e1201a3f47ea70ae5e2193751</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>singlePhaseTransportModel &amp;</type>
+      <name>laminarTransport</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>aaa15f2fa61d58ef55036975f0a15cd3d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>turbulence</name>
+      <anchorfile>a00405.html</anchorfile>
+      <anchor>a7eb708ed6afd5d2b8cec73f71e0ff2d4</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createFields.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00408</filename>
+    <includes id="a00459" name="createPhi.H" local="yes" imported="no">createPhi.H</includes>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;_p=autoPtr&lt; volScalarField &gt;</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>a8161e9887c6989d450d5a935e8037edc</anchor>
+      <arglist>(new volScalarField(IOobject(&quot;p&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field U\&lt; endl;_U=autoPtr&lt; volVectorField &gt;</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>a0bccf143155793f87b7cf998a3cb330f</anchor>
+      <arglist>(new volVectorField(IOobject(&quot;U&quot;, runTime.timeName(), mesh, IOobject::MUST_READ, IOobject::AUTO_WRITE), mesh))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>setRefCell</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>afeb00419cfdbd69ab20e430caf6e541b</anchor>
+      <arglist>(p, mesh.solutionDict().subDict(&quot;SIMPLE&quot;), pRefCell, pRefValue)</arglist>
+    </member>
+    <member kind="variable">
+      <type>volScalarField &amp;</type>
+      <name>p</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>a334650304cdcdff41898bee9eaf2e3db</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>volVectorField &amp;</type>
+      <name>U</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>ae4919c063fc0646445cdcafee89ebd60</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>label</type>
+      <name>pRefCell</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>abb89b4982abae5250b3c0ecf53853939</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>pRefValue</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>a4c979f06cb1ef4672fd8ba1146638963</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>_laminarTransport</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>a2196113e1201a3f47ea70ae5e2193751</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>singlePhaseTransportModel &amp;</type>
+      <name>laminarTransport</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>aaa15f2fa61d58ef55036975f0a15cd3d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>turbulence</name>
+      <anchorfile>a00408.html</anchorfile>
+      <anchor>a7eb708ed6afd5d2b8cec73f71e0ff2d4</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createFvOptions.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00411</filename>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;_fvOptions=autoPtr&lt; fv::IOoptionList &gt;</name>
+      <anchorfile>a00411.html</anchorfile>
+      <anchor>a66a66bb065ba25f07d693124d00e570c</anchor>
+      <arglist>(new fv::IOoptionList(mesh))</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createFvOptions.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00414</filename>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;_fvOptions=autoPtr&lt; fv::IOoptionList &gt;</name>
+      <anchorfile>a00414.html</anchorfile>
+      <anchor>a66a66bb065ba25f07d693124d00e570c</anchor>
+      <arglist>(new fv::IOoptionList(mesh))</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createFvOptions.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00417</filename>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;_fvOptions=autoPtr&lt; fv::IOoptionList &gt;</name>
+      <anchorfile>a00417.html</anchorfile>
+      <anchor>a66a66bb065ba25f07d693124d00e570c</anchor>
+      <arglist>(new fv::IOoptionList(mesh))</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createMesh.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00420</filename>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;Info&lt;&lt; &quot;Create mesh for time=&quot;&lt;&lt; runTime.timeName()&lt;&lt; nl&lt;&lt; endl;_mesh=autoPtr&lt; fvMesh &gt;</name>
+      <anchorfile>a00420.html</anchorfile>
+      <anchor>aa577388213c1d77b8763850c83196af4</anchor>
+      <arglist>(new fvMesh(IOobject(fvMesh::defaultRegion, runTime.timeName(), runTime, IOobject::MUST_READ)))</arglist>
+    </member>
+    <member kind="variable">
+      <type>Foam::fvMesh &amp;</type>
+      <name>mesh</name>
+      <anchorfile>a00420.html</anchorfile>
+      <anchor>ad3874bb3b9ab8a24930b4793e928108d</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createMesh.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00423</filename>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;Info&lt;&lt; &quot;Create mesh for time=&quot;&lt;&lt; runTime.timeName()&lt;&lt; nl&lt;&lt; endl;_mesh=autoPtr&lt; fvMesh &gt;</name>
+      <anchorfile>a00423.html</anchorfile>
+      <anchor>aa577388213c1d77b8763850c83196af4</anchor>
+      <arglist>(new fvMesh(IOobject(fvMesh::defaultRegion, runTime.timeName(), runTime, IOobject::MUST_READ)))</arglist>
+    </member>
+    <member kind="variable">
+      <type>Foam::fvMesh &amp;</type>
+      <name>mesh</name>
+      <anchorfile>a00423.html</anchorfile>
+      <anchor>ad3874bb3b9ab8a24930b4793e928108d</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createMesh.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00426</filename>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;Info&lt;&lt; &quot;Create mesh for time=&quot;&lt;&lt; runTime.timeName()&lt;&lt; nl&lt;&lt; endl;_mesh=autoPtr&lt; fvMesh &gt;</name>
+      <anchorfile>a00426.html</anchorfile>
+      <anchor>aa577388213c1d77b8763850c83196af4</anchor>
+      <arglist>(new fvMesh(IOobject(fvMesh::defaultRegion, runTime.timeName(), runTime, IOobject::MUST_READ)))</arglist>
+    </member>
+    <member kind="variable">
+      <type>Foam::fvMesh &amp;</type>
+      <name>mesh</name>
+      <anchorfile>a00426.html</anchorfile>
+      <anchor>ad3874bb3b9ab8a24930b4793e928108d</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createRadiationModel.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00044</filename>
+    <member kind="variable">
+      <type></type>
+      <name>radiation</name>
+      <anchorfile>a00044.html</anchorfile>
+      <anchor>a12223c66ccfc5e4eccaef8b62603e622</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createTime.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00429</filename>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;Foam::Info&lt;&lt; &quot;Create time\&quot;&lt;&lt; Foam::endl;_runTime=autoPtr&lt; Foam::Time &gt;</name>
+      <anchorfile>a00429.html</anchorfile>
+      <anchor>a147b5d1153b97d943145a98b3b4d3cdc</anchor>
+      <arglist>(new Foam::Time(Foam::Time::controlDictName, args))</arglist>
+    </member>
+    <member kind="variable">
+      <type>Foam::Time &amp;</type>
+      <name>runTime</name>
+      <anchorfile>a00429.html</anchorfile>
+      <anchor>a477812c93e1698f206b3c3266041d0fd</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createTime.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00432</filename>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;Foam::Info&lt;&lt; &quot;Create time\&quot;&lt;&lt; Foam::endl;_runTime=autoPtr&lt; Foam::Time &gt;</name>
+      <anchorfile>a00432.html</anchorfile>
+      <anchor>a147b5d1153b97d943145a98b3b4d3cdc</anchor>
+      <arglist>(new Foam::Time(Foam::Time::controlDictName, args))</arglist>
+    </member>
+    <member kind="variable">
+      <type>Foam::Time &amp;</type>
+      <name>runTime</name>
+      <anchorfile>a00432.html</anchorfile>
+      <anchor>a477812c93e1698f206b3c3266041d0fd</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createTime.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00435</filename>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading field p\&lt; endl;Foam::Info&lt;&lt; &quot;Create time\&quot;&lt;&lt; Foam::endl;_runTime=autoPtr&lt; Foam::Time &gt;</name>
+      <anchorfile>a00435.html</anchorfile>
+      <anchor>a147b5d1153b97d943145a98b3b4d3cdc</anchor>
+      <arglist>(new Foam::Time(Foam::Time::controlDictName, args))</arglist>
+    </member>
+    <member kind="variable">
+      <type>Foam::Time &amp;</type>
+      <name>runTime</name>
+      <anchorfile>a00435.html</anchorfile>
+      <anchor>a477812c93e1698f206b3c3266041d0fd</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>EEqn.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00050</filename>
+    <member kind="function">
+      <type>fvScalarMatrix</type>
+      <name>EEqn</name>
+      <anchorfile>a00050.html</anchorfile>
+      <anchor>ad27f6708a6863aaa5a4eec8f21c376ca</anchor>
+      <arglist>(fvm::ddt(rho, he)+fvm::div(phi, he)+fvc::ddt(rho, K)+fvc::div(phi, K)+(he.name()==&quot;e&quot; ? fvc::div(fvc::absolute(phi/fvc::interpolate(rho), U), p, &quot;div(phiv,p)&quot;) :-dpdt) - fvm::laplacian(turbulence-&gt;alphaEff(), he)==radiation-&gt;Sh(thermo)+fvOptions(rho, he))</arglist>
+    </member>
+    <member kind="function">
+      <type>EEqn</type>
+      <name>relax</name>
+      <anchorfile>a00050.html</anchorfile>
+      <anchor>a9b1e3cf7921c1d57830a6970779f3d24</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>constrain</name>
+      <anchorfile>a00050.html</anchorfile>
+      <anchor>a99e52b6aa83a3087ae81ccb1030aceef</anchor>
+      <arglist>(EEqn)</arglist>
+    </member>
+    <member kind="function">
+      <type>EEqn</type>
+      <name>solve</name>
+      <anchorfile>a00050.html</anchorfile>
+      <anchor>ac123867940006fb14e8346d9bdc38f8d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>correct</name>
+      <anchorfile>a00050.html</anchorfile>
+      <anchor>a45936480b8c1b0bb71ede46b78d0269d</anchor>
+      <arglist>(he)</arglist>
+    </member>
+    <member kind="function">
+      <type>thermo</type>
+      <name>correct</name>
+      <anchorfile>a00050.html</anchorfile>
+      <anchor>a8f2ec7df0ad2ec79360a5d964f55de87</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>glassFurnace.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00053</filename>
+    <includes id="a00056" name="glassFurnace.H" local="yes" imported="no">glassFurnace.H</includes>
+    <includes id="a00429" name="createTime.H" local="yes" imported="no">createTime.H</includes>
+    <includes id="a00420" name="createMesh.H" local="yes" imported="no">createMesh.H</includes>
+    <includes id="a00402" name="createFields.H" local="yes" imported="no">createFields.H</includes>
+    <includes id="a00411" name="createFvOptions.H" local="yes" imported="no">createFvOptions.H</includes>
+    <includes id="a00044" name="createRadiationModel.H" local="yes" imported="no">createRadiationModel.H</includes>
+    <includes id="a00447" name="UEqn.H" local="yes" imported="no">UEqn.H</includes>
+    <includes id="a00050" name="EEqn.H" local="yes" imported="no">EEqn.H</includes>
+    <includes id="a00438" name="pEqn.H" local="yes" imported="no">pEqn.H</includes>
+  </compound>
+  <compound kind="file">
+    <name>glassFurnace.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00056</filename>
+    <includes id="a00092" name="unsteadyNS.H" local="yes" imported="no">unsteadyNS.H</includes>
+    <class kind="class">glassFurnace</class>
+  </compound>
+  <compound kind="file">
+    <name>glassFurnaceTemplates.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00059</filename>
+  </compound>
+  <compound kind="file">
+    <name>pEqn.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00438</filename>
+    <member kind="function">
+      <type>thermo</type>
+      <name>rho</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>a75b7fdc3aa65da4e3c1eccb170439ba8</anchor>
+      <arglist>() -</arglist>
+    </member>
+    <member kind="function">
+      <type>volScalarField</type>
+      <name>rAU</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>a4ae3ff6f0732a8a206a641d7ff2d9f7d</anchor>
+      <arglist>(1.0/UEqn.A())</arglist>
+    </member>
+    <member kind="function">
+      <type>surfaceScalarField</type>
+      <name>rAUf</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>a8bda1bd0bfc2f263500c995f294a69bf</anchor>
+      <arglist>(&quot;rAUf&quot;, fvc::interpolate(rho *rAU))</arglist>
+    </member>
+    <member kind="function">
+      <type>volVectorField</type>
+      <name>HbyA</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>a468939cb78ac529f61dc89324860b185</anchor>
+      <arglist>(&quot;HbyA&quot;, U)</arglist>
+    </member>
+    <member kind="function">
+      <type>surfaceScalarField</type>
+      <name>phig</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>ac85098d143001fdd3877a4fbe808ad75</anchor>
+      <arglist>(-rAUf *ghf *fvc::snGrad(rho) *mesh.magSf())</arglist>
+    </member>
+    <member kind="function">
+      <type>surfaceScalarField</type>
+      <name>phiHbyA</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>a2a9f36bb9645abb006d00cbf58804616</anchor>
+      <arglist>(&quot;phiHbyA&quot;,((fvc::interpolate(rho *HbyA) &amp;mesh.Sf())+rAUf *fvc::ddtCorr(rho, U, phi))+phig)</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>makeRelative</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>af72b4a6de11283a46e084ea8d9678d82</anchor>
+      <arglist>(fvc::interpolate(rho), phiHbyA)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>setSnGrad&lt; fixedFluxPressureFvPatchScalarField &gt;</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>ad6da30466979c204f7819550d25b2fd4</anchor>
+      <arglist>(p_rgh.boundaryField(),(phiHbyA.boundaryField() - fvOptions.relative(mesh.Sf().boundaryField() &amp;U.boundaryField()) *rho.boundaryField())/(mesh.magSf().boundaryField() *rAUf.boundaryField()))</arglist>
+    </member>
+    <member kind="function">
+      <type>fvScalarMatrix</type>
+      <name>p_rghDDtEqn</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>aab86021ac402de18529ad363d829f1b3</anchor>
+      <arglist>(fvc::ddt(rho)+psi *correction(fvm::ddt(p_rgh))+fvc::div(phiHbyA)==fvOptions(psi, p_rgh, rho.name()))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>while</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>ab13470e79e249d04c443bf59be9ff31d</anchor>
+      <arglist>(pimple.correctNonOrthogonal())</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>if</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>a3a782599467f113a731d85df5c3b1e70</anchor>
+      <arglist>(thermo.dpdt())</arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>HbyA</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>affe2e7d9698e1696c0560477b426c722</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>p</name>
+      <anchorfile>a00438.html</anchorfile>
+      <anchor>ac483f6ce851c9ecd9fb835ff7551737c</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>pEqn.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00441</filename>
+    <member kind="function">
+      <type>volVectorField</type>
+      <name>HbyA</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>a468939cb78ac529f61dc89324860b185</anchor>
+      <arglist>(&quot;HbyA&quot;, U)</arglist>
+    </member>
+    <member kind="function">
+      <type>UEqn</type>
+      <name>clear</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>a3a533f9231a5668b9d8f301a79d57b73</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>surfaceScalarField</type>
+      <name>phiHbyA</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>aa40404200b7d065de9ddb490124f8c58</anchor>
+      <arglist>(&quot;phiHbyA&quot;, fvc::interpolate(HbyA) &amp;mesh.Sf())</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>makeRelative</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>af8005f8b0878907419fb80377548f0f1</anchor>
+      <arglist>(phiHbyA)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>adjustPhi</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>a2763a4e809e5ae1f9caf5fb4bc42a66e</anchor>
+      <arglist>(phiHbyA, U, p)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>while</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>a80a1a15f423dbb405b1a80b4354d5793</anchor>
+      <arglist>(simple.correctNonOrthogonal())</arglist>
+    </member>
+    <member kind="function">
+      <type>p</type>
+      <name>relax</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>a15bfa901ef14c7146d67360f3c63addc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>U</type>
+      <name>correctBoundaryConditions</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>a00a7f09fddd305c7a7977494b2a6a952</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>correct</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>a139f25a7d5ee64548c7fd514755e4842</anchor>
+      <arglist>(U)</arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>HbyA</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>affe2e7d9698e1696c0560477b426c722</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>U</name>
+      <anchorfile>a00441.html</anchorfile>
+      <anchor>a81cf6107131a3583e2b0b762cb9c2862</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>pEqn.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00444</filename>
+    <member kind="function">
+      <type>surfaceScalarField</type>
+      <name>rAUf</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>ae693ae4c2085edc7ebb2aac47e046b2d</anchor>
+      <arglist>(&quot;rAUf&quot;, fvc::interpolate(rAU))</arglist>
+    </member>
+    <member kind="function">
+      <type>volVectorField</type>
+      <name>HbyA</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>a468939cb78ac529f61dc89324860b185</anchor>
+      <arglist>(&quot;HbyA&quot;, U)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>if</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>aa19d0471b129dc379d6f06628477ad7d</anchor>
+      <arglist>(pimple.nCorrPISO()&lt;=1)</arglist>
+    </member>
+    <member kind="function">
+      <type>surfaceScalarField</type>
+      <name>phiHbyA</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>a7401bfe6514dda4d335bac31be14c249</anchor>
+      <arglist>(&quot;phiHbyA&quot;,(fvc::interpolate(HbyA) &amp;mesh.Sf())+rAUf *fvc::ddtCorr(U, phi))</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>makeRelative</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>af8005f8b0878907419fb80377548f0f1</anchor>
+      <arglist>(phiHbyA)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>adjustPhi</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>a2763a4e809e5ae1f9caf5fb4bc42a66e</anchor>
+      <arglist>(phiHbyA, U, p)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>setSnGrad&lt; fixedFluxPressureFvPatchScalarField &gt;</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>a4c2b399075e64a87ce662d0ed216e7c9</anchor>
+      <arglist>(p.boundaryField(),(phiHbyA.boundaryField() - fvOptions.relative(mesh.Sf().boundaryField() &amp;U.boundaryField()))/(mesh.magSf().boundaryField() *rAUf.boundaryField()))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>while</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>ab13470e79e249d04c443bf59be9ff31d</anchor>
+      <arglist>(pimple.correctNonOrthogonal())</arglist>
+    </member>
+    <member kind="function">
+      <type>p</type>
+      <name>relax</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>a15bfa901ef14c7146d67360f3c63addc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>U</type>
+      <name>correctBoundaryConditions</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>a00a7f09fddd305c7a7977494b2a6a952</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>correct</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>a139f25a7d5ee64548c7fd514755e4842</anchor>
+      <arglist>(U)</arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>HbyA</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>affe2e7d9698e1696c0560477b426c722</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>U</name>
+      <anchorfile>a00444.html</anchorfile>
+      <anchor>a81cf6107131a3583e2b0b762cb9c2862</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>UEqn.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/glassFurnace/</path>
+    <filename>a00447</filename>
+    <member kind="function">
+      <type>fvVectorMatrix</type>
+      <name>UEqn</name>
+      <anchorfile>a00447.html</anchorfile>
+      <anchor>a52ab48945aa1b57fc2a1bec3e481449a</anchor>
+      <arglist>(fvm::ddt(rho, U)+fvm::div(phi, U)+turbulence-&gt;divDevRhoReff(U)==fvOptions(rho, U))</arglist>
+    </member>
+    <member kind="function">
+      <type>UEqn</type>
+      <name>relax</name>
+      <anchorfile>a00447.html</anchorfile>
+      <anchor>a9a717d2a556132c73a6bb389a9de48bf</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>constrain</name>
+      <anchorfile>a00447.html</anchorfile>
+      <anchor>ad9a6816dbc9c62129d40af3784545b31</anchor>
+      <arglist>(UEqn)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>if</name>
+      <anchorfile>a00447.html</anchorfile>
+      <anchor>a5340a84918449f06669e13812b90f046</anchor>
+      <arglist>(pimple.momentumPredictor())</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>UEqn.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00450</filename>
+    <member kind="function">
+      <type>tmp&lt; fvVectorMatrix &gt;</type>
+      <name>UEqn</name>
+      <anchorfile>a00450.html</anchorfile>
+      <anchor>ae0fc5545484a7be9b6a9d9e4e4a4a155</anchor>
+      <arglist>(fvm::div(phi, U)+turbulence-&gt;divDevReff(U)==fvOptions(U))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>UEqn</name>
+      <anchorfile>a00450.html</anchorfile>
+      <anchor>a714f351f75fb01b60252c453660cbe1e</anchor>
+      <arglist>().relax()</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>constrain</name>
+      <anchorfile>a00450.html</anchorfile>
+      <anchor>a9c2824832c3e2b7190ace1352e001dde</anchor>
+      <arglist>(UEqn())</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>correct</name>
+      <anchorfile>a00450.html</anchorfile>
+      <anchor>a139f25a7d5ee64548c7fd514755e4842</anchor>
+      <arglist>(U)</arglist>
+    </member>
+    <member kind="variable">
+      <type></type>
+      <name>uresidual</name>
+      <anchorfile>a00450.html</anchorfile>
+      <anchor>ae68abf568babc9d81b5069e4fb14cde2</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>UEqn.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00453</filename>
+    <member kind="function">
+      <type>tmp&lt; fvVectorMatrix &gt;</type>
+      <name>UEqn</name>
+      <anchorfile>a00453.html</anchorfile>
+      <anchor>a02bb7186a446afa0c962c47e1b1d8a87</anchor>
+      <arglist>(fvm::ddt(U)+fvm::div(phi, U)+turbulence-&gt;divDevReff(U)==fvOptions(U))</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>UEqn</name>
+      <anchorfile>a00453.html</anchorfile>
+      <anchor>a714f351f75fb01b60252c453660cbe1e</anchor>
+      <arglist>().relax()</arglist>
+    </member>
+    <member kind="function">
+      <type>fvOptions</type>
+      <name>constrain</name>
+      <anchorfile>a00453.html</anchorfile>
+      <anchor>a9c2824832c3e2b7190ace1352e001dde</anchor>
+      <arglist>(UEqn())</arglist>
+    </member>
+    <member kind="function">
+      <type>volScalarField</type>
+      <name>rAU</name>
+      <anchorfile>a00453.html</anchorfile>
+      <anchor>a5d7d90a733d3b19cd89761fa5078cffe</anchor>
+      <arglist>(1.0/UEqn().A())</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>if</name>
+      <anchorfile>a00453.html</anchorfile>
+      <anchor>a5340a84918449f06669e13812b90f046</anchor>
+      <arglist>(pimple.momentumPredictor())</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>reductionProblem.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/reductionProblem/</path>
+    <filename>a00068</filename>
+    <includes id="a00071" name="reductionProblem.H" local="yes" imported="no">reductionProblem.H</includes>
+  </compound>
+  <compound kind="file">
+    <name>reductionProblem.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/reductionProblem/</path>
+    <filename>a00071</filename>
+    <includes id="a00017" name="ITHACAutilities.H" local="yes" imported="no">ITHACAutilities.H</includes>
+    <class kind="class">reductionProblem</class>
+  </compound>
+  <compound kind="file">
+    <name>reductionProblemTemplates.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/reductionProblem/</path>
+    <filename>a00074</filename>
+  </compound>
+  <compound kind="file">
+    <name>createPhi.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00456</filename>
+    <member kind="define">
+      <type>#define</type>
+      <name>createPhi_H</name>
+      <anchorfile>a00083.html</anchorfile>
+      <anchor>af171a3223d35c90413b6a44682b66177</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading/calculating face flux field phi\&lt; endl;_phi=autoPtr&lt; surfaceScalarField &gt;</name>
+      <anchorfile>a00456.html</anchorfile>
+      <anchor>a664fdc156f1ed048c61e9cb3549a2ce6</anchor>
+      <arglist>(new surfaceScalarField(IOobject(&quot;phi&quot;, runTime.timeName(), mesh, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE), linearInterpolate(U) &amp;mesh.Sf()))</arglist>
+    </member>
+    <member kind="variable">
+      <type>surfaceScalarField &amp;</type>
+      <name>phi</name>
+      <anchorfile>a00456.html</anchorfile>
+      <anchor>a1a97abcf6c141f539994c8a21c8daca7</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>createPhi.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00459</filename>
+    <member kind="define">
+      <type>#define</type>
+      <name>createPhi_H</name>
+      <anchorfile>a00089.html</anchorfile>
+      <anchor>af171a3223d35c90413b6a44682b66177</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Info&lt;&lt; &quot;Reading/calculating face flux field phi\&lt; endl;_phi=autoPtr&lt; surfaceScalarField &gt;</name>
+      <anchorfile>a00459.html</anchorfile>
+      <anchor>a664fdc156f1ed048c61e9cb3549a2ce6</anchor>
+      <arglist>(new surfaceScalarField(IOobject(&quot;phi&quot;, runTime.timeName(), mesh, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE), linearInterpolate(U) &amp;mesh.Sf()))</arglist>
+    </member>
+    <member kind="variable">
+      <type>surfaceScalarField &amp;</type>
+      <name>phi</name>
+      <anchorfile>a00459.html</anchorfile>
+      <anchor>a1a97abcf6c141f539994c8a21c8daca7</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>NLsolve.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00462</filename>
+    <includes id="a00450" name="UEqn.H" local="yes" imported="no">UEqn.H</includes>
+    <includes id="a00441" name="pEqn.H" local="yes" imported="no">pEqn.H</includes>
+    <member kind="function">
+      <type></type>
+      <name>while</name>
+      <anchorfile>a00462.html</anchorfile>
+      <anchor>ab3054d40c4b392345c99955e3511789e</anchor>
+      <arglist>(simple.loop() &amp;&amp;residual &gt; tolerance)</arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>residual</name>
+      <anchorfile>a00462.html</anchorfile>
+      <anchor>af4cd48a0192c75c3d6f1bbe7557cc02c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>uresidual</name>
+      <anchorfile>a00462.html</anchorfile>
+      <anchor>ae16ccc15605287ff9960de5be47b576c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>presidual</name>
+      <anchorfile>a00462.html</anchorfile>
+      <anchor>aeb472eaba25b9a74f11193b83da7b992</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>tolerance</name>
+      <anchorfile>a00462.html</anchorfile>
+      <anchor>a1d30e2b512a9d74fdcde3fb386bbb857</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>NLsolve.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00465</filename>
+    <includes id="a00453" name="UEqn.H" local="yes" imported="no">UEqn.H</includes>
+    <includes id="a00444" name="pEqn.H" local="yes" imported="no">pEqn.H</includes>
+    <member kind="function">
+      <type></type>
+      <name>while</name>
+      <anchorfile>a00465.html</anchorfile>
+      <anchor>a8d2d515e1fd5d81dbe4aa0df7b7749dd</anchor>
+      <arglist>(runTime.run())</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>steadyNS.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00083</filename>
+    <includes id="a00086" name="steadyNS.H" local="yes" imported="no">steadyNS.H</includes>
+    <includes id="a00432" name="createTime.H" local="yes" imported="no">createTime.H</includes>
+    <includes id="a00423" name="createMesh.H" local="yes" imported="no">createMesh.H</includes>
+    <includes id="a00405" name="createFields.H" local="yes" imported="no">createFields.H</includes>
+    <includes id="a00414" name="createFvOptions.H" local="yes" imported="no">createFvOptions.H</includes>
+    <includes id="a00462" name="NLsolve.H" local="yes" imported="no">NLsolve.H</includes>
+  </compound>
+  <compound kind="file">
+    <name>steadyNS.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/steadyNS/</path>
+    <filename>a00086</filename>
+    <includes id="a00071" name="reductionProblem.H" local="yes" imported="no">reductionProblem.H</includes>
+    <includes id="a00008" name="ITHACAstream.H" local="yes" imported="no">ITHACAstream.H</includes>
+    <class kind="class">steadyNS</class>
+  </compound>
+  <compound kind="file">
+    <name>unsteadyNS.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00089</filename>
+    <includes id="a00092" name="unsteadyNS.H" local="yes" imported="no">unsteadyNS.H</includes>
+    <includes id="a00435" name="createTime.H" local="yes" imported="no">createTime.H</includes>
+    <includes id="a00426" name="createMesh.H" local="yes" imported="no">createMesh.H</includes>
+    <includes id="a00408" name="createFields.H" local="yes" imported="no">createFields.H</includes>
+    <includes id="a00417" name="createFvOptions.H" local="yes" imported="no">createFvOptions.H</includes>
+    <includes id="a00453" name="UEqn.H" local="yes" imported="no">UEqn.H</includes>
+    <includes id="a00444" name="pEqn.H" local="yes" imported="no">pEqn.H</includes>
+  </compound>
+  <compound kind="file">
+    <name>unsteadyNS.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00092</filename>
+    <includes id="a00086" name="steadyNS.H" local="yes" imported="no">steadyNS.H</includes>
+    <class kind="class">unsteadyNS</class>
+  </compound>
+  <compound kind="file">
+    <name>unsteadyNSTemplates.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/problems/unsteadyNS/</path>
+    <filename>a00095</filename>
+  </compound>
+  <compound kind="file">
+    <name>reducedProblem.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/reductionMethods/reducedProblem/</path>
+    <filename>a00098</filename>
+    <includes id="a00101" name="reducedProblem.H" local="yes" imported="no">reducedProblem.H</includes>
+  </compound>
+  <compound kind="file">
+    <name>reducedProblem.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/reductionMethods/reducedProblem/</path>
+    <filename>a00101</filename>
+    <includes id="a00071" name="reductionProblem.H" local="yes" imported="no">reductionProblem.H</includes>
+    <class kind="class">reducedProblem</class>
+  </compound>
+  <compound kind="file">
+    <name>unsteadyNSreduced.C</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/reductionMethods/unsteadyNSreduced/</path>
+    <filename>a00104</filename>
+    <includes id="a00107" name="unsteadyNSreduced.H" local="yes" imported="no">unsteadyNSreduced.H</includes>
+  </compound>
+  <compound kind="file">
+    <name>unsteadyNSreduced.H</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/reductionMethods/unsteadyNSreduced/</path>
+    <filename>a00107</filename>
+    <includes id="a00101" name="reducedProblem.H" local="yes" imported="no">reducedProblem.H</includes>
+    <includes id="a00092" name="unsteadyNS.H" local="yes" imported="no">unsteadyNS.H</includes>
+    <class kind="class">unsteadyNSreduced</class>
+  </compound>
+  <compound kind="file">
+    <name>A05_PortingFrom2To3.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00110</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>B01_Experimental.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00113</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>ClassHierarchy.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00116</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>CoeffwiseMathFunctionsTable.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00119</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>CustomizingEigen_CustomScalar.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00122</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>CustomizingEigen_InheritingMatrix.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00125</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>CustomizingEigen_NullaryExpr.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00128</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>CustomizingEigen_Plugins.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00131</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>DenseDecompositionBenchmark.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00134</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>FixedSizeVectorizable.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00137</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>FunctionsTakingEigenTypes.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00140</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>HiPerformance.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00143</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>InplaceDecomposition.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00146</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>InsideEigenExample.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00149</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>LeastSquares.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00152</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>Manual.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00155</filename>
+    <namespace>Eigen</namespace>
+    <namespace>Eigen::internal</namespace>
+  </compound>
+  <compound kind="file">
+    <name>MatrixfreeSolverExample.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00158</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>NewExpressionType.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00161</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>Overview.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00468</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>Overview.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/unsupported/doc/</path>
+    <filename>a00471</filename>
+    <namespace>Eigen</namespace>
+    <namespace>Eigen::internal</namespace>
+  </compound>
+  <compound kind="file">
+    <name>PassingByValue.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00167</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>Pitfalls.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00170</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>PreprocessorDirectives.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00173</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>QuickReference.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00176</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>QuickStartGuide.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00179</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>SparseLinearSystems.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00182</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>SparseQuickReference.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00185</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StlContainers.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00188</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StorageOrders.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00191</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StructHavingEigenMembers.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00194</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TemplateKeyword.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00197</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TopicAliasing.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00200</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TopicAssertions.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00203</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TopicEigenExpressionTemplates.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00206</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TopicLazyEvaluation.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00209</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TopicLinearAlgebraDecompositions.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00212</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TopicMultithreading.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00215</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TopicResizing.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00218</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TopicScalarTypes.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00221</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TopicVectorization.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00224</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialAdvancedInitialization.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00227</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialArrayClass.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00230</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialBlockOperations.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00233</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialGeometry.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00236</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialLinearAlgebra.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00239</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialMapClass.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00242</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialMatrixArithmetic.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00245</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialMatrixClass.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00248</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialReductionsVisitorsBroadcasting.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00251</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialReshapeSlicing.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00254</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialSparse.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00257</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>TutorialSparse_example_details.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00260</filename>
+  </compound>
+  <compound kind="file">
+    <name>UnalignedArrayAssert.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00263</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>UsingBlasLapackBackends.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00266</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>UsingIntelMKL.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00269</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>UsingNVCC.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00272</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="file">
+    <name>WrongStackAlignment.dox</name>
+    <path>/home/giova/OpenFOAM/OpenFOAM-2.4.0/applications/utilities/postProcessing/ITHACA-FV2.0/src/thirdparty/Eigen/doc/</path>
+    <filename>a00275</filename>
+    <namespace>Eigen</namespace>
+  </compound>
+  <compound kind="class">
+    <name>glassFurnace</name>
+    <filename>a00350.html</filename>
+    <base>unsteadyNS</base>
+    <member kind="function">
+      <type></type>
+      <name>glassFurnace</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a16b72b6609cf7e5ca0e3e3e30af321b2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>glassFurnace</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>adc79ccc6f85f22370c5530389a5fccb8</anchor>
+      <arglist>(int argc, char *argv[])</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>truthSolve</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a1f26ecd2e9172430ea66a34246af90b6</anchor>
+      <arglist>(List&lt; scalar &gt; mu_now)</arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volScalarField &gt;</type>
+      <name>Tfield</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a00d153269eb9dcd28346bb322bc617b7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volScalarField &gt;</type>
+      <name>p_rghfield</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>af05fc8bd60abf07b41ab17189b27f2c1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volScalarField &gt;</type>
+      <name>Tmodes</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a06c34c6b1aac391ee1bb9de50a1029f4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volScalarField &gt;</type>
+      <name>p_rghmodes</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a4e4f4f3aead0760802a0949b18512d2a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>g_argc</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a56a0ec58e8a4c0f144ab10e9eabc8934</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>char **</type>
+      <name>g_argv</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a42cc1f3030bc4fced497d4a33ac59959</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; volScalarField &gt;</type>
+      <name>_rho</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>ae685371f3ad53d73c208dd3bef142ef1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; volScalarField &gt;</type>
+      <name>_p_rgh</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a16848e245db4a6b3f7e2895863a14bbc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; volScalarField &gt;</type>
+      <name>_dpdt</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>adf5c7b11651839da5b0eb86c3355af8c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; volScalarField &gt;</type>
+      <name>_gh</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a20b1f07dd934f342d32bd512d469d136</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; volScalarField &gt;</type>
+      <name>_K</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a5140c63bee62a7a8aaa80a5ef110e041</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; surfaceScalarField &gt;</type>
+      <name>_ghf</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>ad77db55271636b6d8e1c8c87b7ea7cdc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; rhoThermo &gt;</type>
+      <name>_pThermo</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a46ccf2f06f637cd118dd185abcd51964</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; volScalarField &gt;</type>
+      <name>_psi</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a2b6bda9635cb7bba19f5d1db7ce42f5c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; compressible::turbulenceModel &gt;</type>
+      <name>turbulence</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>aed4b8b16fb4baac655349603ee95b686</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; radiation::radiationModel &gt;</type>
+      <name>radiation</name>
+      <anchorfile>a00350.html</anchorfile>
+      <anchor>a0c78b49c0b93fcdb0b75d5e22307d349</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>ITHACAstream</name>
+    <filename>a00338.html</filename>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>exportSolution</name>
+      <anchorfile>a00338.html</anchorfile>
+      <anchor>a404d5b2407d3e57661ce93727f775dee</anchor>
+      <arglist>(T &amp;s, fileName subfolder, fileName folder)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>exportMatrix</name>
+      <anchorfile>a00338.html</anchorfile>
+      <anchor>a7e1a017212012d3729eab0ce549d1a31</anchor>
+      <arglist>(Eigen::MatrixXd &amp;matrice, word name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>exportMatrix</name>
+      <anchorfile>a00338.html</anchorfile>
+      <anchor>a2260dcc972d3c671b7d96b4a3773651b</anchor>
+      <arglist>(List&lt; Eigen::MatrixXd &gt; &amp;matrice, word name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>read_fields</name>
+      <anchorfile>a00338.html</anchorfile>
+      <anchor>a027bb17c652f58cbe0f8e335bee17494</anchor>
+      <arglist>(PtrList&lt; volVectorField &gt; &amp;Lfield, word Name, fileName caseName)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>read_fields</name>
+      <anchorfile>a00338.html</anchorfile>
+      <anchor>a72ee647f2253ab8e9f83eec03f511dc8</anchor>
+      <arglist>(PtrList&lt; volScalarField &gt; &amp;Lfield, word Name, fileName caseName)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>read_fields</name>
+      <anchorfile>a00338.html</anchorfile>
+      <anchor>a1e9fd7d087d65ad47fbcc72125057f1e</anchor>
+      <arglist>(PtrList&lt; volVectorField &gt; &amp;Lfield, volVectorField &amp;field, fileName caseName)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>read_fields</name>
+      <anchorfile>a00338.html</anchorfile>
+      <anchor>a45c493ceca75fa1fe2de9e701155e78d</anchor>
+      <arglist>(PtrList&lt; volScalarField &gt; &amp;Lfield, volScalarField &amp;field, fileName caseName)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Eigen::MatrixXd</type>
+      <name>readMatrix</name>
+      <anchorfile>a00338.html</anchorfile>
+      <anchor>a209de12101655807007c109b8420dd1d</anchor>
+      <arglist>(const char *filename)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>ITHACAutilities</name>
+    <filename>a00342.html</filename>
+    <member kind="function" static="yes">
+      <type>static bool</type>
+      <name>check_off</name>
+      <anchorfile>a00342.html</anchorfile>
+      <anchor>af2dd692c7250723963339e2e9208d823</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static bool</type>
+      <name>check_pod</name>
+      <anchorfile>a00342.html</anchorfile>
+      <anchor>a19c6232ad9881c1d681606f4c7f07cce</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static bool</type>
+      <name>check_sup</name>
+      <anchorfile>a00342.html</anchorfile>
+      <anchor>a8062ab913db597e8d368eb272d053efc</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>POD</name>
+    <filename>a00346.html</filename>
+    <templarg></templarg>
+    <member kind="function">
+      <type></type>
+      <name>POD</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>ad3234f8de2be571e55a541580c8b4b31</anchor>
+      <arglist>(T &amp;snapshots, T &amp;modes, double accur=1, bool pod=0, bool supexist=0, bool supremizer=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>corMatrix</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a0d23004d68ccbb6a428923b777a0e4fc</anchor>
+      <arglist>(T &amp;snapshots)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>exportBases</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a4111ec05d2c59b286f77c71dfe131b68</anchor>
+      <arglist>(T &amp;s)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>normalizeBases</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>aa855ee869c8737982e4504df3754719f</anchor>
+      <arglist>(T &amp;s)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>exportEigenvalues</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a0cca78988e994fa2bf11b09ea3ab3cab</anchor>
+      <arglist>(scalarField eigenValues)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>normalizeBases</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>aa06718c4b001c3a19a332eb917f3bb48</anchor>
+      <arglist>(PtrList&lt; volScalarField &gt; &amp;Bases)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>normalizeBases</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a47a836e707267dc06f8366647c9ff6a4</anchor>
+      <arglist>(PtrList&lt; volVectorField &gt; &amp;Bases)</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>corMatrix</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a52b81662f311eebd371c0b3066f1505f</anchor>
+      <arglist>(PtrList&lt; volScalarField &gt; &amp;snapshots)</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>corMatrix</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>aaff1e86b1ab6334918f55090a9d31fd9</anchor>
+      <arglist>(PtrList&lt; volVectorField &gt; &amp;snapshots)</arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>Bases</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a1d4a304d8f6c03589ebb0a6881089441</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalarField</type>
+      <name>eigenValues</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>ab29ecfe5d8fd37ffcdf08fd8a094b176</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>List&lt; scalarField &gt;</type>
+      <name>eigenVector</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a4f5444b59aa1c2f1b9318024bf691f4d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalarField</type>
+      <name>cumEigenValues</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a508e0ee73fd7f8084f27ee5b8078bf33</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>baseSize</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a57b89fba2f50b8906c7492f50f2f280f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>accuracy</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a6e55b938786bd86846860397d25c10bd</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>supremizer</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a4d30a5f7323310d5a45fb9541b49e7d0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>podexist</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a19747a6c2f00d0b9673949dfbbcd94ab</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>supexist</name>
+      <anchorfile>a00346.html</anchorfile>
+      <anchor>a811352738e21f53b2abf452a56817b4b</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>reducedProblem</name>
+    <filename>a00366.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>reducedProblem</name>
+      <anchorfile>a00366.html</anchorfile>
+      <anchor>abe0d22d35d6c533848f29dd6c9aa46c4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>reducedProblem</name>
+      <anchorfile>a00366.html</anchorfile>
+      <anchor>a1500518ce5e65e47f7f0cb0bfae23b23</anchor>
+      <arglist>(reductionProblem &amp;problem)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>solveOnline</name>
+      <anchorfile>a00366.html</anchorfile>
+      <anchor>a6be480c102f4fd64f9b9213387188c18</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>reductionProblem</name>
+    <filename>a00354.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>reductionProblem</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>aeab646b047d7612cd3dc7ff457bb3d08</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setParameters</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a1d6c94586a33965dd4277c7fe62de430</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>genRandPar</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>ab549408663d3c4e30b80f592ccf4d1fc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>genEquiPar</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a4a245d847e6bb0cee77037d9bb8a8d1b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>truthSolve</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>ac1119f689bddeaef6c4431470189ab6b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>exportSolution</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>ac15014b07c30c263bee82a73a9105534</anchor>
+      <arglist>(T &amp;s, fileName subfolder, fileName folder=&quot;./Offline&quot;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>assignBC</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>aa2d4f6e4a1f7a9d9ba5183857b4a6dc0</anchor>
+      <arglist>(volVectorField &amp;s, label BC_ind, Vector&lt; double &gt; &amp;value)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>assignBC</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a349639e0883a7114d872328b08bcd43e</anchor>
+      <arglist>(volScalarField &amp;s, label BC_ind, double &amp;value)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>changeBCtype</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a933f271e02842305dbad4d22dba5bfcc</anchor>
+      <arglist>(volVectorField &amp;field, word BCtype, label BC_ind)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>changeBCtype</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a87537e171db61c9bc1e64bc1006cfcc9</anchor>
+      <arglist>(volScalarField &amp;field, word BCtype, label BC_ind)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>assignIF</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a4881db0513540235d6c5a09b155311ac</anchor>
+      <arglist>(T &amp;s, G &amp;value)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>read_fields</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a4c4485e2b7cccc6c40a899f12f4ea3f6</anchor>
+      <arglist>(T &amp;s, G &amp;field)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>read_modes</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a719c9d615648417f4f0790c190f9f540</anchor>
+      <arglist>(T &amp;s, G &amp;field)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>computeLift</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>af2d95db72d8e06c8ac3b2fef6b11fb12</anchor>
+      <arglist>(T &amp;Lfield, T &amp;liftfield, T &amp;omfield)</arglist>
+    </member>
+    <member kind="function">
+      <type>T</type>
+      <name>liftSolve</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>ab494f3539141ca33ae5b4e744501539e</anchor>
+      <arglist>(T &amp;field, label BC_ind)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>project</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a2ad0dddf5b4382da874484d445ee1985</anchor>
+      <arglist>(fileName &amp;folder)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>exportMatrix</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a7e1a017212012d3729eab0ce549d1a31</anchor>
+      <arglist>(Eigen::MatrixXd &amp;matrice, word name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>exportMatrix</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a2260dcc972d3c671b7d96b4a3773651b</anchor>
+      <arglist>(List&lt; Eigen::MatrixXd &gt; &amp;matrice, word name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</arglist>
+    </member>
+    <member kind="function">
+      <type>RectangularMatrix&lt; scalar &gt;</type>
+      <name>getCoeffs</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a64a5a890869d4bd473c654e682cb169c</anchor>
+      <arglist>(PtrList&lt; volScalarField &gt; &amp;snapshots, PtrList&lt; volScalarField &gt; &amp;modes)</arglist>
+    </member>
+    <member kind="function">
+      <type>RectangularMatrix&lt; scalar &gt;</type>
+      <name>getCoeffs</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a3b01fa0b3ba2145ec05653f0a194a842</anchor>
+      <arglist>(PtrList&lt; volVectorField &gt; &amp;snapshots, PtrList&lt; volVectorField &gt; &amp;modes)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>writeMu</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>aafd9ba27858600527c1329e8b863900f</anchor>
+      <arglist>(List&lt; scalar &gt; mu_now)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>saveFields</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>ab015b5bfe5117d8cbe95f98215c9d357</anchor>
+      <arglist>(std::vector&lt; autoPtr&lt; T &gt; &gt; &amp;saveVecAutoPtr)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>imposeSavedFields</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>aab98a93c88039209cc686f952dc6e6af</anchor>
+      <arglist>(std::vector&lt; autoPtr&lt; T &gt; &gt; &amp;saveVecAutoPtr)</arglist>
+    </member>
+    <member kind="variable">
+      <type>label</type>
+      <name>Pnumber</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a0d65f838bdc5f1f24976d6ded7701063</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>label</type>
+      <name>Tnumber</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a6ac64bb3286fb5dd05a61f617a0df3fa</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Eigen::MatrixXd</type>
+      <name>mu</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>ab7ebd4f34f521b5f6a564f43262d137b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Eigen::MatrixXd</type>
+      <name>mu_range</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>aa6ef17ec9b8ccb3aafcda0c8d543d272</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>mu_cur</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a36f2a48ec71491a69771e93f8cbd2339</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>podex</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a994eee9054329ba237d187599124fe3c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>offline</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a2ff0c0c443c983737558f7b602185618</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>List&lt; label &gt;</type>
+      <name>inletIndex</name>
+      <anchorfile>a00354.html</anchorfile>
+      <anchor>a65ee5b8a6cf89bb36ebca5febb83a5e4</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>steadyNS</name>
+    <filename>a00358.html</filename>
+    <base>reductionProblem</base>
+    <member kind="function">
+      <type></type>
+      <name>steadyNS</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>ac2f637bc0eef41707e704e6a374fc7f4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>steadyNS</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>aff4f2d9c7fe971e15836159134d48c84</anchor>
+      <arglist>(int argc, char *argv[])</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>truthSolve</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>ac1119f689bddeaef6c4431470189ab6b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>solvesupremizer</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>ac97e49c34a5eef6f705e578f909681dd</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>liftSolve</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>aaf43c47c7feaf44e9dd7ea172176a983</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>projectPPE</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a99a3fd6dc12f6011e8225e4da61fa695</anchor>
+      <arglist>(fileName folder, label NUmodes, label NPmodes, label NSUPmodes=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>projectSUP</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>ae1cfab437ea9e6d45ec8cd11425f7852</anchor>
+      <arglist>(fileName folder, label NUmodes, label NPmodes, label NSUPmodes)</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>diffusive_term</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a6c4ba531e35ef8f2ce1eced006beb9b3</anchor>
+      <arglist>(label NUmodes, label NPmodes, label NSUPmodes)</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>pressure_gradient_term</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a50a42245ade39aba92ea8339c0d5e3c5</anchor>
+      <arglist>(label NUmodes, label NPmodes, label NSUPmodes)</arglist>
+    </member>
+    <member kind="function">
+      <type>List&lt; Eigen::MatrixXd &gt;</type>
+      <name>convective_term</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a454f2781d260c7d7b2e345c9da36b34b</anchor>
+      <arglist>(label NUmodes, label NPmodes, label NSUPmodes)</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>mass_term</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a1bf761b593dec3001924b721c83d78a5</anchor>
+      <arglist>(label NUmodes, label NPmodes, label NSUPmodes)</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>divergence_term</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a67b1e0d8d16b56aee9664abbe2a37ce5</anchor>
+      <arglist>(label NUmodes, label NPmodes, label NSUPmodes)</arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volScalarField &gt;</type>
+      <name>Pfield</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a8307827e99491ed9c52ef21f4a11943e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volVectorField &gt;</type>
+      <name>Ufield</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a973a28ea4629e0c96cd8e7102d3cb9b7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volVectorField &gt;</type>
+      <name>Umodes</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>afaed22eca5b4f7f65b3d2e56b9209d63</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volScalarField &gt;</type>
+      <name>Pmodes</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a82fdd7ae9998057d075a5589ae47f0c0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volVectorField &gt;</type>
+      <name>supfield</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a6533c6ce690dcf56c7dee0f3cd80d464</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volVectorField &gt;</type>
+      <name>supmodes</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>ac1cbc764a84124acdb9e568146eb1c59</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volVectorField &gt;</type>
+      <name>liftfield</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a24718373c641a1a58a2c89a9aede16dd</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volVectorField &gt;</type>
+      <name>Uomfield</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a82a23cb74d6038e3e26e6c127acb8606</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>label</type>
+      <name>NUmodes</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>aed9357a8afdad208274e7570ffd0f71f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>label</type>
+      <name>NPmodes</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a5bbcbb91b24d0651b9959d2269b38986</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>label</type>
+      <name>NSUPmodes</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a89183582e9af38dc6659d1502bacb3c4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Eigen::MatrixXd</type>
+      <name>B_matrix</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>ae4de0344562b9877cc66e839587bf145</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Eigen::MatrixXd</type>
+      <name>M_matrix</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a975df4c9ebbad0f85f5e6bd29fec459b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>List&lt; Eigen::MatrixXd &gt;</type>
+      <name>C_matrix</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>adc5a714d6ea8378f32fedeecac41ffde</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>supex</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>ab59f7585e034596501b359a5504f7324</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>label</type>
+      <name>counter</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a5331c84c728fffe24112b089931cd72c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; volScalarField &gt;</type>
+      <name>_p</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a39f394b0b8c0625648fb98cb2e16c0c0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; volVectorField &gt;</type>
+      <name>_U</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>ac1881f2285e1fe181ea6f64a617f7b79</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; fvMesh &gt;</type>
+      <name>_mesh</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a71d93fdc1c5a2d6d4f54287990d254b4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; simpleControl &gt;</type>
+      <name>_simple</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a3f771bcdedf6675adcccb9417f6efca5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; fv::IOoptionList &gt;</type>
+      <name>_fvOptions</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a5ab32b9d3ffa4f1f553b30d8003dbb3e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; Time &gt;</type>
+      <name>_runTime</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>aba50427c5ba7bbbbc589df4ba39717b8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; surfaceScalarField &gt;</type>
+      <name>_phi</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a77a89ae3a932e67191d9e7f72d81faf0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; incompressible::RASModel &gt;</type>
+      <name>turbulence</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>afda84c557f5371d8742c5dcf0b3d26d6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; singlePhaseTransportModel &gt;</type>
+      <name>_laminarTransport</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>adcc39cea3857b85f2e752ff514cf43a5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>label</type>
+      <name>pRefCell</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>abb89b4982abae5250b3c0ecf53853939</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>pRefValue</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a4c979f06cb1ef4672fd8ba1146638963</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>cumulativeContErr</name>
+      <anchorfile>a00358.html</anchorfile>
+      <anchor>a95b66ebe850722e5e9a2595253f73d8a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>unsteadyNS</name>
+    <filename>a00362.html</filename>
+    <base>steadyNS</base>
+    <member kind="function">
+      <type></type>
+      <name>unsteadyNS</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>a27a8f689d70951547dc9ba6af44540fc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>unsteadyNS</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>a9279f90d50f6a4e518887cc0df223537</anchor>
+      <arglist>(int argc, char *argv[])</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>truthSolve</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>a1f26ecd2e9172430ea66a34246af90b6</anchor>
+      <arglist>(List&lt; scalar &gt; mu_now)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>checkWrite</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>a9235393c8e909b2fdd32e41c64983058</anchor>
+      <arglist>(Time &amp;timeObject)</arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>startTime</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>a4a6c84595473c13a4745e8c55e2d383d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>finalTime</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>a668d5ba2c8acc16260b8aeb136f49a0d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>timeStep</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>ae68bf94d6d817f67ef8f0c19dc5f8a83</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>nextWrite</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>a80e704b8710db0e4ea928704cdb3a35d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; pimpleControl &gt;</type>
+      <name>_pimple</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>a45aec7d6a6bfc71d952e911a7fc7203e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>autoPtr&lt; incompressible::turbulenceModel &gt;</type>
+      <name>turbulence</name>
+      <anchorfile>a00362.html</anchorfile>
+      <anchor>a980fe1762e8149f9b0d38d35af317fab</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>unsteadyNSreduced</name>
+    <filename>a00370.html</filename>
+    <base>reducedProblem</base>
+    <member kind="function">
+      <type></type>
+      <name>unsteadyNSreduced</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>acd9dea754966372dcbc23320f2271da1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>unsteadyNSreduced</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a2fa46631375352f0a5cee86882c9dc7a</anchor>
+      <arglist>(unsteadyNS &amp;problem)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>solveOnline</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a6be480c102f4fd64f9b9213387188c18</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>residual</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a3f5de7d5c6c6c6ba7283b38720f44980</anchor>
+      <arglist>(Eigen::MatrixXd &amp;y)</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>jacobian</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a60ba6a89aa2a40f1980df1ddd38bf640</anchor>
+      <arglist>(Eigen::MatrixXd &amp;y)</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>NewtonRaphson</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>aa4dd3b181a9faf6ee487421920f02a6c</anchor>
+      <arglist>(Eigen::MatrixXd y, bool verbose=1, scalar ftol=1.49012e-08)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reconstruct</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a457a601d4c72c973227623cfecd66aab</anchor>
+      <arglist>(unsteadyNS &amp;problem, fileName folder=&quot;./online_rec&quot;)</arglist>
+    </member>
+    <member kind="variable">
+      <type>Eigen::MatrixXd</type>
+      <name>B_matrix</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>ae4de0344562b9877cc66e839587bf145</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Eigen::MatrixXd</type>
+      <name>M_matrix</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a975df4c9ebbad0f85f5e6bd29fec459b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>List&lt; Eigen::MatrixXd &gt;</type>
+      <name>C_matrix</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>adc5a714d6ea8378f32fedeecac41ffde</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Eigen::MatrixXd</type>
+      <name>y_old</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a9abcd682c4377efa2d2a711844393624</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Eigen::MatrixXd</type>
+      <name>y</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>ac88a9c0ec775c9d83edcc8cd127179c6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>nu</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a6ad11a8ff0d9a479a5d1cede820d8252</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>vel</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>ad2f5677979bdf261d7615961252cf4d8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>time</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a11c50155829afb3569a572836c7bbdf4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>dt</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a19e7c33c06bd00c4cea7918965867067</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>scalar</type>
+      <name>finalTime</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a668d5ba2c8acc16260b8aeb136f49a0d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>List&lt; Eigen::MatrixXd &gt;</type>
+      <name>online_solution</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>af1068f5b4ab2d297315d309092e89194</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>PtrList&lt; volVectorField &gt;</type>
+      <name>Umodes</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>afaed22eca5b4f7f65b3d2e56b9209d63</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>unsteadyNS</type>
+      <name>_problem</name>
+      <anchorfile>a00370.html</anchorfile>
+      <anchor>a5d4fe39c79959f4be1a7a8e56a587ed3</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
+    <name>Eigen</name>
+    <filename>a00333.html</filename>
+    <namespace>Eigen::internal</namespace>
+  </compound>
+  <compound kind="namespace">
+    <name>Eigen::internal</name>
+    <filename>a00334.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>Support_modules</name>
+    <title>Support modules</title>
+    <filename>a00278.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>DenseMatrixManipulation_chapter</name>
+    <title>Dense matrix and array manipulation</title>
+    <filename>a00279.html</filename>
+    <subgroup>TutorialMatrixClass</subgroup>
+    <subgroup>TutorialMatrixArithmetic</subgroup>
+    <subgroup>TutorialArrayClass</subgroup>
+    <subgroup>TutorialBlockOperations</subgroup>
+    <subgroup>TutorialAdvancedInitialization</subgroup>
+    <subgroup>TutorialReductionsVisitorsBroadcasting</subgroup>
+    <subgroup>TutorialMapClass</subgroup>
+    <subgroup>TutorialReshapeSlicing</subgroup>
+    <subgroup>TopicAliasing</subgroup>
+    <subgroup>TopicStorageOrders</subgroup>
+    <subgroup>DenseMatrixManipulation_Alignement</subgroup>
+    <subgroup>DenseMatrixManipulation_Reference</subgroup>
+    <subgroup>CoeffwiseMathFunctions</subgroup>
+    <subgroup>QuickRefPage</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>DenseMatrixManipulation_Alignement</name>
+    <title>Alignment issues</title>
+    <filename>a00280.html</filename>
+    <subgroup>TopicUnalignedArrayAssert</subgroup>
+    <subgroup>TopicFixedSizeVectorizable</subgroup>
+    <subgroup>TopicStructHavingEigenMembers</subgroup>
+    <subgroup>TopicStlContainers</subgroup>
+    <subgroup>TopicPassingByValue</subgroup>
+    <subgroup>TopicWrongStackAlignment</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>DenseMatrixManipulation_Reference</name>
+    <title>Reference</title>
+    <filename>a00281.html</filename>
+    <subgroup>Core_Module</subgroup>
+    <subgroup>Jacobi_Module</subgroup>
+    <subgroup>Householder_Module</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>DenseLinearSolvers_chapter</name>
+    <title>Dense linear problems and decompositions</title>
+    <filename>a00282.html</filename>
+    <subgroup>TutorialLinearAlgebra</subgroup>
+    <subgroup>TopicLinearAlgebraDecompositions</subgroup>
+    <subgroup>LeastSquares</subgroup>
+    <subgroup>InplaceDecomposition</subgroup>
+    <subgroup>DenseDecompositionBenchmark</subgroup>
+    <subgroup>DenseLinearSolvers_Reference</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>DenseLinearSolvers_Reference</name>
+    <title>Reference</title>
+    <filename>a00283.html</filename>
+    <subgroup>Cholesky_Module</subgroup>
+    <subgroup>LU_Module</subgroup>
+    <subgroup>QR_Module</subgroup>
+    <subgroup>SVD_Module</subgroup>
+    <subgroup>Eigenvalues_Module</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>Sparse_chapter</name>
+    <title>Sparse linear algebra</title>
+    <filename>a00284.html</filename>
+    <subgroup>TutorialSparse</subgroup>
+    <subgroup>TopicSparseSystems</subgroup>
+    <subgroup>MatrixfreeSolverExample</subgroup>
+    <subgroup>Sparse_Reference</subgroup>
+    <subgroup>SparseQuickRefPage</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>Sparse_Reference</name>
+    <title>Reference</title>
+    <filename>a00285.html</filename>
+    <subgroup>SparseCore_Module</subgroup>
+    <subgroup>OrderingMethods_Module</subgroup>
+    <subgroup>SparseCholesky_Module</subgroup>
+    <subgroup>SparseLU_Module</subgroup>
+    <subgroup>SparseQR_Module</subgroup>
+    <subgroup>IterativeLinearSolvers_Module</subgroup>
+    <subgroup>Sparse_Module</subgroup>
+    <subgroup>Support_modules</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>Geometry_chapter</name>
+    <title>Geometry</title>
+    <filename>a00286.html</filename>
+    <subgroup>TutorialGeometry</subgroup>
+    <subgroup>Geometry_Reference</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>Geometry_Reference</name>
+    <title>Reference</title>
+    <filename>a00287.html</filename>
+    <subgroup>Geometry_Module</subgroup>
+    <subgroup>Splines_Module</subgroup>
+  </compound>
+  <compound kind="group">
+    <name>TutorialMatrixClass</name>
+    <title>TutorialMatrixClass</title>
+    <filename>a00288.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialMatrixArithmetic</name>
+    <title>TutorialMatrixArithmetic</title>
+    <filename>a00289.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialArrayClass</name>
+    <title>TutorialArrayClass</title>
+    <filename>a00290.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialBlockOperations</name>
+    <title>TutorialBlockOperations</title>
+    <filename>a00291.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialAdvancedInitialization</name>
+    <title>TutorialAdvancedInitialization</title>
+    <filename>a00292.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialReductionsVisitorsBroadcasting</name>
+    <title>TutorialReductionsVisitorsBroadcasting</title>
+    <filename>a00293.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialMapClass</name>
+    <title>TutorialMapClass</title>
+    <filename>a00294.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialReshapeSlicing</name>
+    <title>TutorialReshapeSlicing</title>
+    <filename>a00295.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicAliasing</name>
+    <title>TopicAliasing</title>
+    <filename>a00296.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicStorageOrders</name>
+    <title>TopicStorageOrders</title>
+    <filename>a00297.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicUnalignedArrayAssert</name>
+    <title>TopicUnalignedArrayAssert</title>
+    <filename>a00298.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicFixedSizeVectorizable</name>
+    <title>TopicFixedSizeVectorizable</title>
+    <filename>a00299.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicStructHavingEigenMembers</name>
+    <title>TopicStructHavingEigenMembers</title>
+    <filename>a00300.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicStlContainers</name>
+    <title>TopicStlContainers</title>
+    <filename>a00301.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicPassingByValue</name>
+    <title>TopicPassingByValue</title>
+    <filename>a00302.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicWrongStackAlignment</name>
+    <title>TopicWrongStackAlignment</title>
+    <filename>a00303.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>Core_Module</name>
+    <title>Core_Module</title>
+    <filename>a00304.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>Jacobi_Module</name>
+    <title>Jacobi_Module</title>
+    <filename>a00305.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>Householder_Module</name>
+    <title>Householder_Module</title>
+    <filename>a00306.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>CoeffwiseMathFunctions</name>
+    <title>CoeffwiseMathFunctions</title>
+    <filename>a00307.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>QuickRefPage</name>
+    <title>QuickRefPage</title>
+    <filename>a00308.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialLinearAlgebra</name>
+    <title>TutorialLinearAlgebra</title>
+    <filename>a00309.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicLinearAlgebraDecompositions</name>
+    <title>TopicLinearAlgebraDecompositions</title>
+    <filename>a00310.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>LeastSquares</name>
+    <title>LeastSquares</title>
+    <filename>a00311.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>InplaceDecomposition</name>
+    <title>InplaceDecomposition</title>
+    <filename>a00312.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>DenseDecompositionBenchmark</name>
+    <title>DenseDecompositionBenchmark</title>
+    <filename>a00313.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>Cholesky_Module</name>
+    <title>Cholesky_Module</title>
+    <filename>a00314.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>LU_Module</name>
+    <title>LU_Module</title>
+    <filename>a00315.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>QR_Module</name>
+    <title>QR_Module</title>
+    <filename>a00316.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>SVD_Module</name>
+    <title>SVD_Module</title>
+    <filename>a00317.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>Eigenvalues_Module</name>
+    <title>Eigenvalues_Module</title>
+    <filename>a00318.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialSparse</name>
+    <title>TutorialSparse</title>
+    <filename>a00319.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TopicSparseSystems</name>
+    <title>TopicSparseSystems</title>
+    <filename>a00320.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>MatrixfreeSolverExample</name>
+    <title>MatrixfreeSolverExample</title>
+    <filename>a00321.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>SparseCore_Module</name>
+    <title>SparseCore_Module</title>
+    <filename>a00322.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>OrderingMethods_Module</name>
+    <title>OrderingMethods_Module</title>
+    <filename>a00323.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>SparseCholesky_Module</name>
+    <title>SparseCholesky_Module</title>
+    <filename>a00324.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>SparseLU_Module</name>
+    <title>SparseLU_Module</title>
+    <filename>a00325.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>SparseQR_Module</name>
+    <title>SparseQR_Module</title>
+    <filename>a00326.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>IterativeLinearSolvers_Module</name>
+    <title>IterativeLinearSolvers_Module</title>
+    <filename>a00327.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>Sparse_Module</name>
+    <title>Sparse_Module</title>
+    <filename>a00328.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>SparseQuickRefPage</name>
+    <title>SparseQuickRefPage</title>
+    <filename>a00329.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>TutorialGeometry</name>
+    <title>TutorialGeometry</title>
+    <filename>a00330.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>Geometry_Module</name>
+    <title>Geometry_Module</title>
+    <filename>a00331.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>Splines_Module</name>
+    <title>Splines_Module</title>
+    <filename>a00332.html</filename>
+  </compound>
+  <compound kind="page">
+    <name>Eigen2ToEigen3</name>
+    <title>Porting from Eigen2 to Eigen3</title>
+    <filename>a00371</filename>
+    <docanchor file="a00371" title="Eigen2 compatibility support">CompatibilitySupport</docanchor>
+    <docanchor file="a00371" title="The USING_PART_OF_NAMESPACE_EIGEN macro">Using</docanchor>
+    <docanchor file="a00371" title="Dot products over complex numbers">ComplexDot</docanchor>
+    <docanchor file="a00371" title="Vector blocks">VectorBlocks</docanchor>
+    <docanchor file="a00371" title="Matrix Corners">Corners</docanchor>
+    <docanchor file="a00371" title="Coefficient wise operations">CoefficientWiseOperations</docanchor>
+    <docanchor file="a00371" title="Triangular and self-adjoint matrices">PartAndExtract</docanchor>
+    <docanchor file="a00371" title="Triangular in-place solving">TriangularSolveInPlace</docanchor>
+    <docanchor file="a00371" title="Matrix decompositions">Decompositions</docanchor>
+    <docanchor file="a00371" title="Linear solvers">LinearSolvers</docanchor>
+    <docanchor file="a00371" title="Changes in the Geometry module">GeometryModule</docanchor>
+    <docanchor file="a00371" title="The Transform class">Transform</docanchor>
+    <docanchor file="a00371" title="Lazy evaluation and noalias">LazyVsNoalias</docanchor>
+    <docanchor file="a00371" title="Alignment-related macros">AlignMacros</docanchor>
+    <docanchor file="a00371" title="Aligned Map objects">AlignedMap</docanchor>
+    <docanchor file="a00371" title="STL Containers">StdContainers</docanchor>
+    <docanchor file="a00371" title="Internal ei_ prefix">eiPrefix</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>Experimental</name>
+    <title>Experimental parts of Eigen</title>
+    <filename>a00372</filename>
+    <docanchor file="a00372" title="Summary">Experimental_summary</docanchor>
+    <docanchor file="a00372" title="Experimental modules">Experimental_modules</docanchor>
+    <docanchor file="a00372" title="Experimental parts of the Core module">Experimental_core</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicClassHierarchy</name>
+    <title>The class hierarchy</title>
+    <filename>a00373</filename>
+    <docanchor file="a00373" title="Principles">TopicClassHierarchyPrinciples</docanchor>
+    <docanchor file="a00373" title="The core classes">TopicClassHierarchyCoreClasses</docanchor>
+    <docanchor file="a00373" title="Base classes">TopicClassHierarchyBaseClasses</docanchor>
+    <docanchor file="a00373" title="Inheritance diagrams">TopicClassHierarchyInheritanceDiagrams</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicCustomizing_CustomScalar</name>
+    <title>Using custom scalar types</title>
+    <filename>a00374</filename>
+    <docanchor file="a00374">user_defined_scalars</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicCustomizing_InheritingMatrix</name>
+    <title>Inheriting from Matrix</title>
+    <filename>a00375</filename>
+  </compound>
+  <compound kind="page">
+    <name>TopicCustomizing_NullaryExpr</name>
+    <title>Matrix manipulation via nullary-expressions</title>
+    <filename>a00376</filename>
+    <docanchor file="a00376" title="Example 1: circulant matrix">NullaryExpr_Circulant</docanchor>
+    <docanchor file="a00376" title="Example 2: indexing rows and columns">NullaryExpr_Indexing</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicCustomizing_Plugins</name>
+    <title>Extending MatrixBase (and other classes)</title>
+    <filename>a00377</filename>
+  </compound>
+  <compound kind="page">
+    <name>TopicFunctionTakingEigenTypes</name>
+    <title>Writing Functions Taking %Eigen Types as Parameters</title>
+    <filename>a00378</filename>
+    <docanchor file="a00378" title="Some First Examples">TopicFirstExamples</docanchor>
+    <docanchor file="a00378" title="How to write generic, but non-templated function?">TopicUsingRefClass</docanchor>
+    <docanchor file="a00378" title="In which cases do functions taking plain Matrix or Array arguments work?">TopicPlainFunctionsWorking</docanchor>
+    <docanchor file="a00378" title="In which cases do functions taking a plain Matrix or Array argument fail?">TopicPlainFunctionsFailing</docanchor>
+    <docanchor file="a00378" title="How to resize matrices in generic implementations?">TopicResizingInGenericImplementations</docanchor>
+    <docanchor file="a00378" title="Summary">TopicSummary</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicWritingEfficientProductExpression</name>
+    <title>Writing efficient matrix product expressions</title>
+    <filename>a00379</filename>
+    <docanchor file="a00379" title="General Matrix-Matrix product (GEMM)">GEMM</docanchor>
+    <docanchor file="a00379" title="Limitations">GEMM_Limitations</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicInsideEigenExample</name>
+    <title>What happens inside Eigen, on a simple example</title>
+    <filename>a00380</filename>
+    <docanchor file="a00380" title="Why it&apos;s interesting">WhyInteresting</docanchor>
+    <docanchor file="a00380" title="Constructing vectors">ConstructingVectors</docanchor>
+    <docanchor file="a00380" title="Construction of the sum expression">ConstructionOfSumXpr</docanchor>
+    <docanchor file="a00380" title="The assignment">Assignment</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>UserManual_CustomizingEigen</name>
+    <title>Extending/Customizing Eigen</title>
+    <filename>a00381</filename>
+  </compound>
+  <compound kind="page">
+    <name>UserManual_Generalities</name>
+    <title>General topics</title>
+    <filename>a00382</filename>
+  </compound>
+  <compound kind="page">
+    <name>UserManual_UnderstandingEigen</name>
+    <title>Understanding Eigen</title>
+    <filename>a00383</filename>
+  </compound>
+  <compound kind="page">
+    <name>UnclassifiedPages</name>
+    <title>Unclassified pages</title>
+    <filename>a00384</filename>
+  </compound>
+  <compound kind="page">
+    <name>TopicNewExpressionType</name>
+    <title>Adding a new expression type</title>
+    <filename>a00385</filename>
+    <docanchor file="a00385" title="The setting">TopicSetting</docanchor>
+    <docanchor file="a00385" title="Getting started">TopicPreamble</docanchor>
+    <docanchor file="a00385" title="The traits class">TopicTraits</docanchor>
+    <docanchor file="a00385" title="The expression class">TopicExpression</docanchor>
+    <docanchor file="a00385" title="The evaluator">TopicEvaluator</docanchor>
+    <docanchor file="a00385" title="The entry point">TopicEntry</docanchor>
+    <docanchor file="a00385" title="A simple main function for testing">TopicMain</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicPitfalls</name>
+    <title>Common pitfalls</title>
+    <filename>a00386</filename>
+    <docanchor file="a00386" title="Compilation error with template methods">TopicPitfalls_template_keyword</docanchor>
+    <docanchor file="a00386" title="C++11 and the auto keyword">TopicPitfalls_auto_keyword</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicPreprocessorDirectives</name>
+    <title>Preprocessor directives</title>
+    <filename>a00387</filename>
+    <docanchor file="a00387" title="Macros with major effects">TopicPreprocessorDirectivesMajor</docanchor>
+    <docanchor file="a00387" title="C++ standard features">TopicPreprocessorDirectivesCppVersion</docanchor>
+    <docanchor file="a00387" title="Assertions">TopicPreprocessorDirectivesAssertions</docanchor>
+    <docanchor file="a00387" title="Alignment, vectorization and performance tweaking">TopicPreprocessorDirectivesPerformance</docanchor>
+    <docanchor file="a00387" title="Plugins">TopicPreprocessorDirectivesPlugins</docanchor>
+    <docanchor file="a00387" title="Macros for Eigen developers">TopicPreprocessorDirectivesDevelopers</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>GettingStarted</name>
+    <title>Getting started</title>
+    <filename>a00388</filename>
+    <docanchor file="a00388" title="How to &quot;install&quot; Eigen?">GettingStartedInstallation</docanchor>
+    <docanchor file="a00388" title="A simple first program">GettingStartedFirstProgram</docanchor>
+    <docanchor file="a00388" title="Compiling and running your first program">GettingStartedCompiling</docanchor>
+    <docanchor file="a00388" title="Explanation of the first program">GettingStartedExplanation</docanchor>
+    <docanchor file="a00388" title="Example 2: Matrices and vectors">GettingStartedExample2</docanchor>
+    <docanchor file="a00388" title="Explanation of the second example">GettingStartedExplanation2</docanchor>
+    <docanchor file="a00388" title="Where to go from here?">GettingStartedConclusion</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicTemplateKeyword</name>
+    <title>The template and typename keywords in C++</title>
+    <filename>a00389</filename>
+    <docanchor file="a00389" title="Using the template and typename keywords to define templates">TopicTemplateKeywordToDefineTemplates</docanchor>
+    <docanchor file="a00389" title="An example showing the second use of the template keyword">TopicTemplateKeywordExample</docanchor>
+    <docanchor file="a00389" title="Explanation">TopicTemplateKeywordExplanation</docanchor>
+    <docanchor file="a00389" title="Resources for further reading">TopicTemplateKeywordResources</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicAssertions</name>
+    <title>Assertions</title>
+    <filename>a00390</filename>
+    <docanchor file="a00390" title="Assertions">PlainAssert</docanchor>
+    <docanchor file="a00390" title="Redefining assertions">RedefineAssert</docanchor>
+    <docanchor file="a00390" title="Disabling assertions">DisableAssert</docanchor>
+    <docanchor file="a00390" title="Static assertions">StaticAssert</docanchor>
+    <docanchor file="a00390" title="Derived static assertions">DerivedStaticAssert</docanchor>
+    <docanchor file="a00390" title="Strict assertions">StrictAssertions</docanchor>
+    <docanchor file="a00390" title="Permissive assertions">PermissiveAssertions</docanchor>
+    <docanchor file="a00390" title="Disabling static assertions">DisableStaticAssert</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicEigenExpressionTemplates</name>
+    <title>Expression templates in Eigen</title>
+    <filename>a00391</filename>
+  </compound>
+  <compound kind="page">
+    <name>TopicLazyEvaluation</name>
+    <title>Lazy Evaluation and Aliasing</title>
+    <filename>a00392</filename>
+  </compound>
+  <compound kind="page">
+    <name>TopicMultiThreading</name>
+    <title>Eigen and multi-threading</title>
+    <filename>a00393</filename>
+    <docanchor file="a00393" title="Make Eigen run in parallel">TopicMultiThreading_MakingEigenMT</docanchor>
+    <docanchor file="a00393" title="Using Eigen in a multi-threaded application">TopicMultiThreading_UsingEigenWithMT</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicResizing</name>
+    <title>Resizing</title>
+    <filename>a00394</filename>
+  </compound>
+  <compound kind="page">
+    <name>TopicScalarTypes</name>
+    <title>Scalar types</title>
+    <filename>a00395</filename>
+  </compound>
+  <compound kind="page">
+    <name>TopicVectorization</name>
+    <title>Vectorization</title>
+    <filename>a00396</filename>
+  </compound>
+  <compound kind="page">
+    <name>TutorialSparse_example_details</name>
+    <title></title>
+    <filename>a00397</filename>
+  </compound>
+  <compound kind="page">
+    <name>TopicUsingBlasLapack</name>
+    <title>Using BLAS/LAPACK from %Eigen</title>
+    <filename>a00398</filename>
+  </compound>
+  <compound kind="page">
+    <name>TopicUsingIntelMKL</name>
+    <title>Using Intel® MKL from %Eigen</title>
+    <filename>a00399</filename>
+    <docanchor file="a00399" title="Links">TopicUsingIntelMKL_Links</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>TopicCUDA</name>
+    <title>Using Eigen in CUDA kernels</title>
+    <filename>a00400</filename>
+  </compound>
+  <compound kind="page">
+    <name>index</name>
+    <title>notitle</title>
+    <filename>index</filename>
+  </compound>
+</tagfile>

@@ -1,0 +1,3 @@
+./thirdparty/Eigen/buildir
+*.o
+lnInclude

@@ -1,0 +1,3 @@
+04unsteadyNS.C
+
+EXE = $(FOAM_APPBIN)/04unsteadyNS

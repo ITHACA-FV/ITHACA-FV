@@ -1,0 +1,3 @@
+02thermalBlock.C
+
+EXE = $(FOAM_APPBIN)/02thermalBlock
