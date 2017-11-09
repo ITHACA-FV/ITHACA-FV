@@ -25,12 +25,12 @@ cd ${FOAM_APP}/utilities
 ``` 
 Now you can clone the **ITHACA-FV** repository inside the selected folder
 ```
-git clone https://gitlab.com/ITHACA-FV/ITHACA-FV.git 
+git clone https://github.com/mathLab/ITHACA-FV.git
 ```
 and you can compile **ITHACA-FV** by navigating inside the src folder and compiling using wmake
 ```
 cd ITHACA-FV
-wmake 
+./Allwmake 
 ```
 Once the clone is performed, for of a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](http://people.sissa.it/~gstabile/ITHACA-FV/).
 
