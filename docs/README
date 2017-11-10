@@ -1,7 +1,7 @@
-Building the Doxygen help for OpenFOAM
+Building the Doxygen help for ITHACA-FV
 ======================================
 
-The HTML documentation of OpenFOAM can be built using the Doxygen
+The HTML documentation of ITHACA-FV can be built using the Doxygen
 software.  Images in the documentation are generated using "dot", a
 program within the graphviz software package.  To build the
 documentation on the Ubuntu Linux system, for example, the user should
