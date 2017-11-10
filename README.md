@@ -36,10 +36,10 @@ cd ITHACA-FV
 Once the clone is performed, for of a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](http://people.sissa.it/~gstabile/ITHACA-FV/).
 
 
-### 3. Tutorials
+### 3. [Tutorials](http://people.sissa.it/~gstabile/ITHACA-FV/examples.html)
 Several tutorials are provided the [**tutorials** subfolder](./tutorials).
-* **Tutorial 1**: In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case. 
-* **Tutorial 2**: In this tutorial is implemented the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**. 
+* [**Tutorial 1**](http://people.sissa.it/~gstabile/ITHACA-FV/01POD_8C-example.html): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case. 
+* [**Tutorial 2**](http://people.sissa.it/~gstabile/ITHACA-FV/02thermalBlock_8C-example.html): In this tutorial is implemented the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**. 
 * **Tutorial 3** In this tutorial is implemented the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the inlet velocity. The OpenFOAM full order problem is based on **simpleFoam**.
 * **Tutorial 4** In this tutorial is implemented the development of a parametrized POD-Galerkin method for an unsteady Navier-Stokes problem. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **pimpleFoam**.
 
