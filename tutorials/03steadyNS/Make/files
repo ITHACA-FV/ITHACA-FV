@@ -1,3 +1,0 @@
-03steadyNS.C
-
-EXE = $(FOAM_APPBIN)/03steadyNS
