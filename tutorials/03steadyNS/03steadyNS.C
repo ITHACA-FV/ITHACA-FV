@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 	ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex, example.supex, 1, 20);
 
 	// Perform the Galerkin Projection
-	example.projectSUP("./Matrices", 5, 5 , 5);
+	example.projectSUP("./Matrices", 15, 10 , 10);
 
 	// Create the reduced object
 	reducedSteadyNS ridotto(example, "SUP");
