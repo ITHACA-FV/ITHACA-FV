@@ -50,7 +50,7 @@ struct newton_steadyNS: public newton_argument<double>
 {
 public:
     newton_steadyNS() {}
-    newton_steadyNS(int Nx, int Ny, steadyNS& problem, reducedProblem& problem_red): newton_argument<double>(Nx, Ny),
+    newton_steadyNS(int Nx, int Ny, steadyNS& problem): newton_argument<double>(Nx, Ny),
     Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
     Nphi_p(problem.NPmodes),
     N_BC(problem.inletIndex.rows()),
@@ -66,6 +66,7 @@ public:
     int Nphi_u;
     int Nphi_p;
     int N_BC;
+    scalar nu;
     Eigen::MatrixXd B_matrix;
     List <Eigen::MatrixXd> C_matrix; 
     Eigen::MatrixXd K_matrix; 

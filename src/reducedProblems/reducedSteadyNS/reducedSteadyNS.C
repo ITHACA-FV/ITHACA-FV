@@ -40,14 +40,11 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& problem, word tipo)
 
 	N_BC = problem.inletIndex.rows();
 
-	if (tipo == "PPE")
-	{
-		D_matrix = problem.D_matrix;
-		G_matrix = problem.G_matrix;
-	}
 	if (tipo == "SUP")
 	{
 		P_matrix = problem.P_matrix;
+        newton_object = newton_steadyNS(Nphi_u + Nphi_p , Nphi_u + Nphi_p, problem);
+        newton_object.nu = nu;
 	}
 
 	Nphi_u = B_matrix.rows();
@@ -71,7 +68,7 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& problem, word tipo)
 		Pmodes.append(problem.Pmodes[k]);
 	}
 
-	newton_object = newton_steadyNS(Nphi_u + Nphi_p , Nphi_u + Nphi_p, problem, *this);
+	newton_object = newton_steadyNS(Nphi_u + Nphi_p , Nphi_u + Nphi_p, problem);
 }
 
 int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const
@@ -83,7 +80,7 @@ int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec)
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = B_matrix * a_tmp;
+    Eigen::VectorXd M1 = B_matrix * a_tmp *nu;
     // Gradient of pressure
     Eigen::VectorXd M2 = K_matrix * b_tmp;
     // Pressure Term
