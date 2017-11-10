@@ -23,13 +23,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         10000;
+endTime         10000000;
 
 deltaT          1;
 
-writeControl    runTime;
+writeControl    timeStep;
 
-writeInterval   100;
+writeInterval   500;
 
 purgeWrite      0;
 
@@ -44,8 +44,6 @@ timeFormat      general;
 timePrecision   6;
 
 runTimeModifiable true;
-
-
 
 
 // ************************************************************************* //

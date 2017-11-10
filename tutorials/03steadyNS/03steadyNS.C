@@ -62,9 +62,7 @@ public:
 			label BCind = 0;
 			for (label i = 0; i < mu.rows(); i++)
 			{
-				Uinl[0] = mu(i, 0);
-				Uinl[1] = mu(i, 1);
-				assignBC(U, BCind, Uinl);
+				change_viscosity( mu(i, 0));
 				assignIF(U, Uinl);
 				truthSolve();
 			}
@@ -83,12 +81,11 @@ int main(int argc, char *argv[])
 	word filename("./par");
 	example.mu = ITHACAstream::readMatrix(filename);
 
+
 	// Set the inlet boundaries patch 0 directions x and y
-	example.inletIndex.resize(2, 2);
+	example.inletIndex.resize(1, 2);
 	example.inletIndex(0, 0) = 0;
 	example.inletIndex(0, 1) = 0;
-	example.inletIndex(1, 0) = 0;
-	example.inletIndex(1, 1) = 1;
 
 	// Perform the offline solve
 	example.offlineSolve();
@@ -96,40 +93,40 @@ int main(int argc, char *argv[])
 	// Solve the supremizer problem
 	example.solvesupremizer();
 	
-	//example.liftSolve();
-	// Read the lifting functions from file
 	ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
 	
 	// Homogenize the snapshots
 	example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
 
+
+
 	// Perform POD on velocity pressure and supremizers and store the first 50 modes
-	ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 20);
-	ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 20);
-	ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex, example.supex, 1, 20);
+	ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0, 10);
+	ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0, 10);
+	ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex, example.supex, 1, 10);
 
 	// Perform the Galerkin Projection
-	example.projectSUP("./Matrices", 15, 10 , 10);
+	example.projectSUP("./Matrices", 5, 5 , 5);
 
 	// Create the reduced object
 	reducedSteadyNS ridotto(example, "SUP");
 
-	// Set the reduced viscosity
-	ridotto.nu = 1;
+	Eigen::MatrixXd vel_now(2, 1);
+	vel_now(0, 0) = 1;
+	vel_now(1, 0) = 0;
 
 	// Perform an online solve for the new values of inlet velocities
-	for (label k = 0; k < example.mu.rows(); k++)
+	for (label k = 0; k < 20; k++)
 	{
-		Eigen::MatrixXd vel_now(2, 1);
-		vel_now(0, 0) = example.mu(k, 0);
-		vel_now(1, 0) = example.mu(k, 1);
+
+		// Set the reduced viscosity
+		ridotto.nu = example.mu(k, 0);
 		ridotto.solveOnline_sup(vel_now);
 		Eigen::MatrixXd tmp_sol(ridotto.y.rows() + 1, 1);
 		tmp_sol(0) = k + 1;
 		tmp_sol.col(0).tail(ridotto.y.rows()) = ridotto.y;
 		ridotto.online_solution.append(tmp_sol);
 	}
-
 	// Save the online solution
 	ITHACAstream::exportMatrix(ridotto.online_solution, "red_coeff", "python", "./ITHACAoutput/red_coeff");
 	ITHACAstream::exportMatrix(ridotto.online_solution, "red_coeff", "matlab", "./ITHACAoutput/red_coeff");

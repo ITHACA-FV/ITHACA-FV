@@ -160,6 +160,8 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
         newton_object.BC(j) = vel_now(j, 0);
     }
 
+    newton_object.nu = nu;
+
 	hnls.solve(y);
 	//lm.minimize(y);
 	Eigen::VectorXd res(y);

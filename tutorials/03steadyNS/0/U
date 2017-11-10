@@ -30,18 +30,14 @@ boundaryField
     {
         type            zeroGradient;
     }
-    wing
+    frontAndBack
+    {
+        type            empty;
+    }
+    walls
     {
         type            fixedValue;
         value           uniform (0 0 0);
-    }
-    front
-    {
-        type            empty;
-    }
-    back
-    {
-        type            empty;
     }
 }
 

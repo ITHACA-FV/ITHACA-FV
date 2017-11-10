@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2.4.0                                 |
+|  \\    /   O peration     | Version:  2.2.2                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -22,36 +22,26 @@ ddtSchemes
 gradSchemes
 {
     default         Gauss linear;
-    grad(p)         Gauss linear;
-    grad(U)         Gauss linear;
 }
 
 divSchemes
 {
     default         Gauss linear upwind;
-    div((interpolate(Ulift0)&S),Ulift0) bounded Gauss upwind;
-    div((interpolate(Ulift0)&S),Ulift1) bounded Gauss upwind;
-    div((interpolate(Ulift0)&S),U) bounded Gauss upwind;
-    div((interpolate(Ulift1)&S),Ulift0) bounded Gauss upwind;
-    div((interpolate(Ulift1)&S),Ulift1) bounded Gauss upwind;
-    div((interpolate(Ulift1)&S),U) bounded Gauss upwind;
-    div((interpolate(U)&S),Ulift0) bounded Gauss upwind;
-    div((interpolate(U)&S),Ulift1) bounded Gauss upwind;
-    div((interpolate(U)&S),U) bounded Gauss upwind;
-    div(phi,U)      bounded Gauss upwind;
-    div(phi,k)      bounded Gauss upwind;
-    div(phi,omega)  bounded Gauss upwind;
-    div((nuEff*dev(T(grad(U))))) Gauss linear;
+    div(phi,U)      Gauss linear upwind;
 }
 
 laplacianSchemes
 {
     default         Gauss linear corrected;
+    laplacian(nu,U) Gauss linear corrected;
+    laplacian((1|A(U)),p) Gauss linear corrected;
+    laplacian(diffusivity,cellMotionU) Gauss linear corrected;
 }
 
 interpolationSchemes
 {
     default         linear;
+    interpolate(y) linear;
 }
 
 snGradSchemes
@@ -62,8 +52,10 @@ snGradSchemes
 fluxRequired
 {
     default         no;
+    pcorr           ;
     p;
-    Phi;
+    Phi             ;
+
 }
 
 // ************************************************************************* //
