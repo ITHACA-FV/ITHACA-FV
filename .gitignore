@@ -1,6 +1,6 @@
 **/ITHACAoutput
 *.o
-**/linux
+**/linux**
 ./**/linux*/**
 **/Offline
 *.pdf
