@@ -28,7 +28,9 @@ Description
 #include "forces.H"
 #include "IOmanip.H"
 
-
+/// \brief Class where the tutorial number 3 is implemented.
+/// \details It is a child of the steadyNS class and some of its 
+/// functions are overridden to be adapted to the specific case.
 class tutorial03 : public steadyNS
 {
 public:
@@ -137,10 +139,16 @@ int main(int argc, char *argv[])
 	exit(0);
 }
 
+//--------
+/// \dir 03steadyNS Folder of the turorial 3
+/// \file 
+/// \brief Implementation of a tutorial of a steady Navier-Stokes problem
 
-
-
-
+/// \example 03steadyNS.C
+/// \section intro_sreadyNS Introduction to tutorial 3
+/// The problems consists of steady Navier-Stokes problem with parametrized viscosity.
+/// The physical problem is the 2 backward facing step depicted in the following image:
+/// 
 
 
 
