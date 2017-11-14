@@ -17,7 +17,9 @@ cd tutorials
 for d in ./*/ ; do   
     echo $d    
     cd $d
+    if [ -d "Make" ]; then
     wmake
+    fi
     cd ../
 done
 

@@ -21,12 +21,12 @@ Description
     Example of NS-Stokes Reduction Problem
 
 \*---------------------------------------------------------------------------*/
+
+
 #include "steadyNS.H"
 #include "ITHACAstream.H"
 #include "ITHACAPOD.H"
 #include "reducedSteadyNS.H"
-#include "forces.H"
-#include "IOmanip.H"
 
 /// \brief Class where the tutorial number 3 is implemented.
 /// \details It is a child of the steadyNS class and some of its 
@@ -147,7 +147,129 @@ int main(int argc, char *argv[])
 /// \example 03steadyNS.C
 /// \section intro_sreadyNS Introduction to tutorial 3
 /// The problems consists of steady Navier-Stokes problem with parametrized viscosity.
-/// The physical problem is the 2 backward facing step depicted in the following image:
+/// The physical problem is the backward facing step depicted in the following image:
+/// \image html step.png
+/// At the inlet a uniform and constant velocity equal to 1 m/s is prescribed. 
+/// 
+/// \section code A look under the code
+/// 
+/// In this section are explained the main steps necessary to construct the tutorial N°3
+/// 
+/// \subsection header The necessary header files
+/// 
+/// First of all let's have a look to the header files that needs to be included and what they are responsible for:
+/// 
+/// The header file of ITHACA-FV necessary for this tutorial
+/// 
+/// \dontinclude 03steadyNS.C
+/// \skip steadyNS
+/// \until reducedSteady
+/// 
+/// \subsection classtuto03 Implementation of the tutorial03 class 
+/// 
+/// Then we can define the tutorial03 class as a child of the steadyNS class
+/// \skipline tutorial03
+/// \until {}
+/// 
+/// The members of the class are the fields that needs to be manipulated during the
+/// resolution of the problem
+/// 
+/// Inside the class it is defined the offlineSolve method according to the
+/// specific parametrized problem that needs to be solved.
+/// 
+/// \skipline offlineSolve
+/// \until {
+/// 
+/// 
+/// If the offline solve has already been performed than read the existing snapshots
+/// 
+/// \skipline offline
+/// \until }
+///
+/// else perform the offline solve where a loop over all the parameters is performed:
+/// 
+/// \skipline else
+/// \until }
+/// \skipline }
+/// 
+/// See also the steadyNS class for the definition of the methods.
+/// 
+/// \subsection main Definition of the main function
+/// 
+/// Once the tutorial03 class is defined the main function is defined,
+/// an example of type tutorial03 is constructed:
+/// 
+/// \skipline tutorial03		
+/// 
+/// In this case the vector of parameter is read from a txt file
+/// 
+/// \skipline word
+/// \until example.mu
+/// 
+/// The inlet boundary is set:
+/// 
+/// \skipline example.inlet
+/// \until example.inletIndex(0, 1) = 0;
+/// 
+/// and the offline stage is performed:
+/// 
+/// \skipline Solve()
+/// 
+/// and the supremizer problem is solved:
+/// 
+/// \skipline supremizer()
+/// 
+/// In order to show the functionality of reading fields in this case the lifting function is read
+/// from a precomputed simulation with a unitary inlet velocity:
+/// 
+/// \skipline stream
+/// 
+/// Then the snapshots matrix is homogenized:
+/// 
+/// \skipline computeLift
+/// 
+/// and the modes for velocity, pressure and supremizers are obtained:
+/// 
+/// \skipline getModes
+/// \until supfield
+/// 
+/// then the projection onto the POD modes is performed with:
+/// 
+/// \skipline projectSUP
+/// 
+/// the reduced object is constructed:
+/// 
+/// \skipline reducedSteady
+/// 
+/// and the online solve is performed for some values of the viscosity:
+/// 
+/// \skipline Eigen::
+/// \until }
+/// 
+/// The vel_now matrix in this case is not used since there are no parametrized boundary conditions.
+/// 
+/// The viscosity is set with the command:
+/// 
+/// \code
+/// ridotto.nu = example.mu(k,0)
+/// \endcode
+/// 
+/// finally the online solution stored during the online solve is exported to file in three different
+/// formats with the lines:
+/// 
+/// \skipline exportMatrix
+/// \until "eigen"
+/// 
+/// and the online solution is reconstructed and exported to file
+/// 
+/// \skipline reconstruct
+/// 
+/// 
+/// 
+/// 
+/// 
+/// \section plaincode The plain program
+/// Here there's the plain code
 /// 
 
 
