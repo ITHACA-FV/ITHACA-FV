@@ -121,8 +121,6 @@ void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now)
 	y_old.resize(Nphi_u + Nphi_p, 1);
 	y_old.setZero();
 
-	B_matrix = B_matrix * nu;
-
 	Eigen::VectorXd x(Nphi_u + Nphi_p);
 	x.setZero();
 
@@ -141,7 +139,6 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
 {
 
 	y.resize(Nphi_u + Nphi_p, 1);
-	B_matrix = B_matrix * nu;
 	y.setZero();
 
 	for (label j = 0; j < N_BC; j++)
