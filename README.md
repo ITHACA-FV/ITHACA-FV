@@ -56,18 +56,20 @@ For this reason, if you use this software, please consider citing the mentioned 
 @Article{Stabile2017CAIM,
 Title                    = {{POD-Galerkin reduced order methods for CFD using Finite Volume Discretisation: vortex shedding around a circular cylinder}},
 Author                   = {Giovanni Stabile and Saddam Hijazi and Andrea Mola and Stefano Lorenzi and Gianluigi Rozza},
-Journal                  = {In press, Communications in Applied and Industrial Mathematics, 2017},
+Journal                  = {Communications in Applied and Industrial Mathematics},
 Year                     = {(2017)},
-Url                      = {https://arxiv.org/pdf/1701.03424.pdf}}
+Volume                   = {8},
+Number                   = {1},
+pages                    = {210-236},
+Doi                      = {10.1515/caim-2017-0011}}
 ```
 
 ```
 @Article{Stabile2017CAF,
 Title                    = {{Finite volume POD-Galerkin stabilised reduced order methods for the parametrised incompressible Navier-Stokes equations}},
 Author                   = {Stabile, Giovanni and Rozza, Gianluigi},
-Journal                  = {submitted},
-Year                     = {2017},
-Url                      = {https://arxiv.org/pdf/1710.11580.pdf}}
+Journal                  = {Computers & Fluids, In press},
+Year                     = {2018}}
 ```
 
 
@@ -77,4 +79,3 @@ and cite the [ITHACA-FV website](http://mathlab.sissa.it/ITHACA-FV).
 ### 6. License
 **ITHACA-FV** is freely available under the GNU LGPL, version 3.
 
-![Google Analytics](https://ga-beacon.appspot.com/UA-66224794-1/rbnics/readme?pixel)
