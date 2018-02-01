@@ -55,7 +55,7 @@ For this reason, if you use this software, please consider citing the mentioned 
 ```
 @Article{Stabile2017CAIM,
 Title                    = {{POD-Galerkin reduced order methods for CFD using Finite Volume Discretisation: vortex shedding around a circular cylinder}},
-Author                   = {Giovanni Stabile and Saddam Hijazi and Andrea Mola and Stefano Lorenzi and Gianluigi Rozza},
+Author                   = {Stabile, Giovanni and Hijazi, Saddam and Mola, Andrea and Lorenzi, Stefano and Rozza, Gianluigi},
 Journal                  = {Communications in Applied and Industrial Mathematics},
 Year                     = {(2017)},
 Volume                   = {8},
