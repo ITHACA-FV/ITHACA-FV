@@ -115,7 +115,7 @@ public:
     /// \\mbox{BCN_index} & \\mbox{Direction of BCN} \\ \
     /// \\end{bmatrix}
     /// \\]
-    Eigen::MatrixXd inletIndex;
+    Eigen::MatrixXi inletIndex;
 
     // Functions
     /// Set Parameters Problems
