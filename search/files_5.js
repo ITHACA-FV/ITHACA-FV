@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['newton_5fargument_2eh',['newton_argument.H',['../newton__argument_8H.html',1,'']]],
-  ['nlsolve_2eh',['NLsolve.H',['../steadyNS_2NLsolve_8H.html',1,'(Global Namespace)'],['../unsteadyNS_2NLsolve_8H.html',1,'(Global Namespace)']]]
+  ['laplacianproblem_2ec',['laplacianProblem.C',['../laplacianProblem_8C.html',1,'']]],
+  ['laplacianproblem_2eh',['laplacianProblem.H',['../laplacianProblem_8H.html',1,'']]],
+  ['lift_5fand_5fdrag_2ec',['lift_and_drag.C',['../lift__and__drag_8C.html',1,'']]]
 ];
