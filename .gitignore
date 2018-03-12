@@ -1,0 +1,9 @@
+**/ITHACAoutput
+*.o
+**/linux**
+**/linux*
+**/Offline
+*.pdf
+*.dep
+examples
+tutorials_dev
