@@ -89,6 +89,9 @@ $(function() {
 <code>#include &lt;sys/types.h&gt;</code><br />
 <code>#include &lt;dirent.h&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;fstream&gt;</code><br />
+<code>#include &quot;<a class="el" href="ITHACAassert_8H_source.html">ITHACAassert.H</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>&quot;</code><br />
 <code>#include &quot;../thirdparty/Eigen/Eigen/Eigen&quot;</code><br />
 </div>
 <p><a href="ITHACAstream_8H_source.html">Go to the source code of this file.</a></p>
@@ -101,7 +104,7 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a848bb0e0fe1522d44344445c43d05bec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ITHACAstream_8H.html#a848bb0e0fe1522d44344445c43d05bec">MAXBUFSIZE</a>&#160;&#160;&#160;((int) 1e6)</td></tr>
+<tr class="memitem:a848bb0e0fe1522d44344445c43d05bec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ITHACAstream_8H.html#a848bb0e0fe1522d44344445c43d05bec">MAXBUFSIZE</a>&#160;&#160;&#160;(static_cast&lt;int&gt; (1e6))</td></tr>
 <tr class="separator:a848bb0e0fe1522d44344445c43d05bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -116,12 +119,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MAXBUFSIZE&#160;&#160;&#160;((int) 1e6)</td>
+          <td class="memname">#define MAXBUFSIZE&#160;&#160;&#160;(static_cast&lt;int&gt; (1e6))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00058">58</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00064">64</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>

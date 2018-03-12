@@ -90,12 +90,27 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a12c4639e01ed0a0f45288647c8f6512e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a12c4639e01ed0a0f45288647c8f6512e">getModes</a> (PtrList&lt; volScalarField &gt; &amp;snapshotsP, PtrList&lt; volScalarField &gt; &amp;modesP, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
 <tr class="memdesc:a12c4639e01ed0a0f45288647c8f6512e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the bases or read them for a scalar field.  <a href="#a12c4639e01ed0a0f45288647c8f6512e">More...</a><br /></td></tr>
 <tr class="separator:a12c4639e01ed0a0f45288647c8f6512e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63ed4407b16d5e762af7df1ee9ec117c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a63ed4407b16d5e762af7df1ee9ec117c">getModesSVD</a> (PtrList&lt; volScalarField &gt; &amp;snapshotsP, PtrList&lt; volScalarField &gt; &amp;modesP, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
+<tr class="memdesc:a63ed4407b16d5e762af7df1ee9ec117c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the bases for a scalar field using SVD instead of the method of snapshots.  <a href="#a63ed4407b16d5e762af7df1ee9ec117c">More...</a><br /></td></tr>
+<tr class="separator:a63ed4407b16d5e762af7df1ee9ec117c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70ed2d521fa29f92e461028d81ff0823"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a70ed2d521fa29f92e461028d81ff0823">getModesSVD</a> (PtrList&lt; volVectorField &gt; &amp;snapshotsU, PtrList&lt; volVectorField &gt; &amp;modesU, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
+<tr class="memdesc:a70ed2d521fa29f92e461028d81ff0823"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the bases for a vector field using SVD instead of the method of snapshots.  <a href="#a70ed2d521fa29f92e461028d81ff0823">More...</a><br /></td></tr>
+<tr class="separator:a70ed2d521fa29f92e461028d81ff0823"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1f7a7f3ad12d646ca134207a4e53ea3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#af1f7a7f3ad12d646ca134207a4e53ea3">GrammSchmidt</a> (Eigen::MatrixXd &amp;Matrix)</td></tr>
+<tr class="memdesc:af1f7a7f3ad12d646ca134207a4e53ea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform GrammSchmidt orthonormalization on an <a class="el" href="namespaceEigen.html">Eigen</a> Matrix.  <a href="#af1f7a7f3ad12d646ca134207a4e53ea3">More...</a><br /></td></tr>
+<tr class="separator:af1f7a7f3ad12d646ca134207a4e53ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5186e341f4ccea9f662897cd8e565645"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a5186e341f4ccea9f662897cd8e565645">corMatrix</a> (PtrList&lt; volVectorField &gt; &amp;snapshots)</td></tr>
 <tr class="memdesc:a5186e341f4ccea9f662897cd8e565645"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the correlation matrix given a vector field snapshot Matrix using the L2 norm.  <a href="#a5186e341f4ccea9f662897cd8e565645">More...</a><br /></td></tr>
 <tr class="separator:a5186e341f4ccea9f662897cd8e565645"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13dcd44b1508b40ec46deef9617f5544"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a13dcd44b1508b40ec46deef9617f5544">corMatrix</a> (PtrList&lt; volScalarField &gt; &amp;snapshots)</td></tr>
 <tr class="memdesc:a13dcd44b1508b40ec46deef9617f5544"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the correlation matrix given a scalar field snapshot Matrix using the L2 norm.  <a href="#a13dcd44b1508b40ec46deef9617f5544">More...</a><br /></td></tr>
 <tr class="separator:a13dcd44b1508b40ec46deef9617f5544"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cb889ba0f123f5255f2265b211f8a76"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a9cb889ba0f123f5255f2265b211f8a76">corMatrix</a> (List&lt; Eigen::SparseMatrix&lt; double &gt; &gt; &amp;snapshots)</td></tr>
+<tr class="memdesc:a9cb889ba0f123f5255f2265b211f8a76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the correlation matrix given a list of matrices using the Frobenius inner product.  <a href="#a9cb889ba0f123f5255f2265b211f8a76">More...</a><br /></td></tr>
+<tr class="separator:a9cb889ba0f123f5255f2265b211f8a76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a477efc161a30a221a9d4b6efc81bef12"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a477efc161a30a221a9d4b6efc81bef12">corMatrix</a> (List&lt; Eigen::VectorXd &gt; &amp;snapshots)</td></tr>
+<tr class="memdesc:a477efc161a30a221a9d4b6efc81bef12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the correlation matrix given a list of vectors using the Frobenius inner product.  <a href="#a477efc161a30a221a9d4b6efc81bef12">More...</a><br /></td></tr>
+<tr class="separator:a477efc161a30a221a9d4b6efc81bef12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3d3136b21bc4057cf6472200a71b5ab"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#ab3d3136b21bc4057cf6472200a71b5ab">exportBases</a> (PtrList&lt; volVectorField &gt; &amp;s, PtrList&lt; volVectorField &gt; &amp;bases, bool sup=0)</td></tr>
 <tr class="memdesc:ab3d3136b21bc4057cf6472200a71b5ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the basis for a vector field into the ITHACAOutput/POD or ITHACAOutput/supremizer.  <a href="#ab3d3136b21bc4057cf6472200a71b5ab">More...</a><br /></td></tr>
 <tr class="separator:ab3d3136b21bc4057cf6472200a71b5ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,14 +132,25 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aeea104485af5ff784371075067e797bf"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#aeea104485af5ff784371075067e797bf">exportcumEigenvalues</a> (scalarField cumEigenValues, fileName name, bool sup=0)</td></tr>
 <tr class="memdesc:aeea104485af5ff784371075067e797bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the cumulative eigenvalues as a txt file.  <a href="#aeea104485af5ff784371075067e797bf">More...</a><br /></td></tr>
 <tr class="separator:aeea104485af5ff784371075067e797bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24b412edf9b8db635e0243548c5395e7"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a24b412edf9b8db635e0243548c5395e7"><td class="memTemplItemLeft" align="right" valign="top">static PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a24b412edf9b8db635e0243548c5395e7">DEIMmodes</a> (PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt; &amp;SnapShotsMatrix, int nmodes, word FunctionName)</td></tr>
+<tr class="memdesc:a24b412edf9b8db635e0243548c5395e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the DEIM modes for a generic non linear function.  <a href="#a24b412edf9b8db635e0243548c5395e7">More...</a><br /></td></tr>
+<tr class="separator:a24b412edf9b8db635e0243548c5395e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8152c2a92d5f6e0b44f1ef57ac2d5d2b"><td class="memTemplParams" colspan="2">template&lt;typename type_matrix &gt; </td></tr>
+<tr class="memitem:a8152c2a92d5f6e0b44f1ef57ac2d5d2b"><td class="memTemplItemLeft" align="right" valign="top">static std::tuple&lt; List&lt; Eigen::SparseMatrix&lt; double &gt; &gt;, List&lt; Eigen::VectorXd &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a8152c2a92d5f6e0b44f1ef57ac2d5d2b">DEIMmodes</a> (PtrList&lt; type_matrix &gt; &amp;MatrixList, int nmodesA, int nmodesB, word MatrixName=&quot;Matrix&quot;)</td></tr>
+<tr class="memdesc:a8152c2a92d5f6e0b44f1ef57ac2d5d2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function.  <a href="#a8152c2a92d5f6e0b44f1ef57ac2d5d2b">More...</a><br /></td></tr>
+<tr class="separator:a8152c2a92d5f6e0b44f1ef57ac2d5d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2392f398e0db8924b4749ba53107000c"><td class="memItemLeft" align="right" valign="top">static std::tuple&lt; List&lt; Eigen::SparseMatrix&lt; double &gt; &gt;, List&lt; Eigen::VectorXd &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a2392f398e0db8924b4749ba53107000c">DEIMmodes</a> (List&lt; Eigen::SparseMatrix&lt; double &gt; &gt; &amp;A, List&lt; Eigen::VectorXd &gt; &amp;b, int nmodesA, int nmodesB, word MatrixName=&quot;Matrix&quot;)</td></tr>
+<tr class="memdesc:a2392f398e0db8924b4749ba53107000c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function.  <a href="#a2392f398e0db8924b4749ba53107000c">More...</a><br /></td></tr>
+<tr class="separator:a2392f398e0db8924b4749ba53107000c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class of the computation of the POD, it exploits the method of snapshots. </p>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8H_source.html#l00058">58</a> of file <a class="el" href="ITHACAPOD_8H_source.html">ITHACAPOD.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8H_source.html#l00068">68</a> of file <a class="el" href="ITHACAPOD_8H_source.html">ITHACAPOD.H</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a5186e341f4ccea9f662897cd8e565645"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5186e341f4ccea9f662897cd8e565645">&#9670;&nbsp;</a></span>corMatrix() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5186e341f4ccea9f662897cd8e565645">&#9670;&nbsp;</a></span>corMatrix() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -157,12 +183,12 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the Eigen::MatrixXd correlation matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00279">279</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00390">390</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
 <a id="a13dcd44b1508b40ec46deef9617f5544"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13dcd44b1508b40ec46deef9617f5544">&#9670;&nbsp;</a></span>corMatrix() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a13dcd44b1508b40ec46deef9617f5544">&#9670;&nbsp;</a></span>corMatrix() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,7 +221,286 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the Eigen::MatrixXd correlation matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00255">255</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00366">366</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+
+</div>
+</div>
+<a id="a9cb889ba0f123f5255f2265b211f8a76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cb889ba0f123f5255f2265b211f8a76">&#9670;&nbsp;</a></span>corMatrix() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXd ITHACAPOD::corMatrix </td>
+          <td>(</td>
+          <td class="paramtype">List&lt; Eigen::SparseMatrix&lt; double &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>snapshots</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Computes the correlation matrix given a list of matrices using the Frobenius inner product. </p>
+<p>Construct the Correlation Matrix for Vector Field.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">snapshots</td><td>The snapshots matrices</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the Eigen::MatrixXd correlation matrix. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00413">413</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+
+</div>
+</div>
+<a id="a477efc161a30a221a9d4b6efc81bef12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a477efc161a30a221a9d4b6efc81bef12">&#9670;&nbsp;</a></span>corMatrix() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXd ITHACAPOD::corMatrix </td>
+          <td>(</td>
+          <td class="paramtype">List&lt; Eigen::VectorXd &gt; &amp;&#160;</td>
+          <td class="paramname"><em>snapshots</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Computes the correlation matrix given a list of vectors using the Frobenius inner product. </p>
+<p>Construct the Correlation Matrix for Vector Field.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">snapshots</td><td>The snapshots matrices</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the Eigen::MatrixXd correlation matrix. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00441">441</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+
+</div>
+</div>
+<a id="a24b412edf9b8db635e0243548c5395e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24b412edf9b8db635e0243548c5395e7">&#9670;&nbsp;</a></span>DEIMmodes() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt; ITHACAPOD::DEIMmodes </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>SnapShotsMatrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nmodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>FunctionName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the DEIM modes for a generic non linear function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">SnapShotsMatrix</td><td>The snapshots matrix</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>templated object for the snapshots matrix type</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>T the POD modes </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8H_source.html#l00363">363</a> of file <a class="el" href="ITHACAPOD_8H_source.html">ITHACAPOD.H</a>.</p>
+
+</div>
+</div>
+<a id="a8152c2a92d5f6e0b44f1ef57ac2d5d2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8152c2a92d5f6e0b44f1ef57ac2d5d2b">&#9670;&nbsp;</a></span>DEIMmodes() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename type_matrix &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::tuple&lt; List&lt; Eigen::SparseMatrix&lt; double &gt; &gt;, List&lt; Eigen::VectorXd &gt; &gt; ITHACAPOD::DEIMmodes </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; type_matrix &gt; &amp;&#160;</td>
+          <td class="paramname"><em>MatrixList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nmodesA</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nmodesB</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>MatrixName</em> = <code>&quot;Matrix&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">MatrixList</td><td>The matrix list as a list of pointers </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">nmodes</td><td>The number of modes </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">MatrixName</td><td>The matrix name, used to save the matrix</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">the</td><td>type of matrix, can be fvScalarMatrix or fvVectorMatrix</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>it returns a tuple containing the list of modes for the matrix and the list of modes for the source term </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8H_source.html#l00252">252</a> of file <a class="el" href="ITHACAPOD_8H_source.html">ITHACAPOD.H</a>.</p>
+
+</div>
+</div>
+<a id="a2392f398e0db8924b4749ba53107000c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2392f398e0db8924b4749ba53107000c">&#9670;&nbsp;</a></span>DEIMmodes() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::tuple&lt; List&lt; Eigen::SparseMatrix&lt; double &gt; &gt;, List&lt; Eigen::VectorXd &gt; &gt; ITHACAPOD::DEIMmodes </td>
+          <td>(</td>
+          <td class="paramtype">List&lt; Eigen::SparseMatrix&lt; double &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List&lt; Eigen::VectorXd &gt; &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nmodesA</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nmodesB</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>MatrixName</em> = <code>&quot;Matrix&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">MatrixList</td><td>The matrix list as a list of pointers </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">nmodes</td><td>The number of modes </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">MatrixName</td><td>The matrix name, used to save the matrix</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">the</td><td>type of matrix, can be fvScalarMatrix or fvVectorMatrix</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>it returns a tuple containing the list of modes for the matrix and the list of modes for the source term </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00578">578</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -250,7 +555,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00302">302</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00467">467</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -305,7 +610,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00333">333</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00498">498</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -359,7 +664,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00387">387</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00552">552</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -413,7 +718,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00362">362</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00527">527</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -487,9 +792,9 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a25">02thermalBlock.C</a>, and <a class="el" href="03steadyNS_8C-example.html#a18">03steadyNS.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a25">02thermalBlock.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00036">36</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00037">37</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -568,6 +873,192 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a63ed4407b16d5e762af7df1ee9ec117c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63ed4407b16d5e762af7df1ee9ec117c">&#9670;&nbsp;</a></span>getModesSVD() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAPOD::getModesSVD </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>snapshotsP</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modesP</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>podex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>supex</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sup</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nmodes</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the bases for a scalar field using SVD instead of the method of snapshots. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">snapshotsP</td><td>a PtrList of volScalarField snapshots. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">modesP</td><td>a PtrList of volScalarField where the modes are stored (it must be passed empty). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">podex</td><td>boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">supex</td><td>boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sup</td><td>boolean variable 1 if you want to compute the supremizer modes 0 elsewhere. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">nmodes</td><td>int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00265">265</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+
+</div>
+</div>
+<a id="a70ed2d521fa29f92e461028d81ff0823"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70ed2d521fa29f92e461028d81ff0823">&#9670;&nbsp;</a></span>getModesSVD() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAPOD::getModesSVD </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>snapshotsU</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modesU</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>podex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>supex</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sup</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nmodes</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the bases for a vector field using SVD instead of the method of snapshots. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">snapshotsP</td><td>a PtrList of volScalarField snapshots. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">modesP</td><td>a PtrList of volScalarField where the modes are stored (it must be passed empty). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">podex</td><td>boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">supex</td><td>boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sup</td><td>boolean variable 1 if you want to compute the supremizer modes 0 elsewhere. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">nmodes</td><td>int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00210">210</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+
+</div>
+</div>
+<a id="af1f7a7f3ad12d646ca134207a4e53ea3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1f7a7f3ad12d646ca134207a4e53ea3">&#9670;&nbsp;</a></span>GrammSchmidt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAPOD::GrammSchmidt </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
+          <td class="paramname"><em>Matrix</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Perform GrammSchmidt orthonormalization on an <a class="el" href="namespaceEigen.html">Eigen</a> Matrix. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Matrix</td><td>The matrix </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00737">737</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+
+</div>
+</div>
 <a id="a0f954cb84a1069f13f9c69dd5bba3cdd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0f954cb84a1069f13f9c69dd5bba3cdd">&#9670;&nbsp;</a></span>normalizeBases() <span class="overload">[1/3]</span></h2>
 
@@ -600,7 +1091,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00224">224</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00335">335</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -637,7 +1128,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00210">210</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00321">321</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -685,7 +1176,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00239">239</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00350">350</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>

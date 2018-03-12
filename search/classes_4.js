@@ -1,8 +1,4 @@
 var searchData=
 [
-  ['reducedlaplacian',['reducedLaplacian',['../classreducedLaplacian.html',1,'']]],
-  ['reducedproblem',['reducedProblem',['../classreducedProblem.html',1,'']]],
-  ['reducedsteadyns',['reducedSteadyNS',['../classreducedSteadyNS.html',1,'']]],
-  ['reducedunsteadyns',['reducedUnsteadyNS',['../classreducedUnsteadyNS.html',1,'']]],
-  ['reductionproblem',['reductionProblem',['../classreductionProblem.html',1,'']]]
+  ['modifier',['Modifier',['../classColor_1_1Modifier.html',1,'Color']]]
 ];

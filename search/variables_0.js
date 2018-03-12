@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['_5ffvoptions',['_fvOptions',['../classsteadyNS.html#a404c448879353c38f3d3121d6afc1802',1,'steadyNS']]],
+  ['_5ffvoptions',['_fvOptions',['../classsteadyNS.html#a404c448879353c38f3d3121d6afc1802',1,'steadyNS::_fvOptions()'],['../steadyNS_2createFvOptions_8H.html#a74771b34ee266ad9dbbc9e01872aa7b4',1,'_fvOptions():&#160;createFvOptions.H']]],
   ['_5flaminartransport',['_laminarTransport',['../classsteadyNS.html#a6a8bb2d446609e075c792818ddefc2ed',1,'steadyNS::_laminarTransport()'],['../src_2problems_2steadyNS_2createFields_8H.html#a2196113e1201a3f47ea70ae5e2193751',1,'_laminarTransport():&#160;createFields.H'],['../src_2problems_2unsteadyNS_2createFields_8H.html#a2196113e1201a3f47ea70ae5e2193751',1,'_laminarTransport():&#160;createFields.H']]],
   ['_5fmesh',['_mesh',['../classlaplacianProblem.html#aace1f0215c66a5009c46f3f635a74bee',1,'laplacianProblem::_mesh()'],['../classsteadyNS.html#a6a233a5c129864684e67e41d04983e01',1,'steadyNS::_mesh()']]],
   ['_5fmrf',['_MRF',['../classsteadyNS.html#a99bd483228d60f47cd8ed4ed61a57472',1,'steadyNS::_MRF()'],['../src_2problems_2steadyNS_2createFields_8H.html#ab6622d3fa81ea4ad8462f16aa6a8da07',1,'_MRF():&#160;createFields.H'],['../src_2problems_2unsteadyNS_2createFields_8H.html#ab6622d3fa81ea4ad8462f16aa6a8da07',1,'_MRF():&#160;createFields.H']]],

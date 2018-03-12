@@ -6,7 +6,9 @@ var searchData=
   ['laplacianproblem',['laplacianProblem',['../classlaplacianProblem.html',1,'laplacianProblem'],['../classlaplacianProblem.html#a7b70e752393c730c39ff25c4fb0ddbec',1,'laplacianProblem::laplacianProblem()'],['../classlaplacianProblem.html#a65fc85de11e796ab5c033a661febba29',1,'laplacianProblem::laplacianProblem(int argc, char *argv[])']]],
   ['laplacianproblem_2ec',['laplacianProblem.C',['../laplacianProblem_8C.html',1,'']]],
   ['laplacianproblem_2eh',['laplacianProblem.H',['../laplacianProblem_8H.html',1,'']]],
+  ['lfvmatrix2lsm',['LFvMatrix2LSM',['../classFoam2Eigen.html#a1b0166d89fff0e69e28dfe9635742c4a',1,'Foam2Eigen']]],
   ['lift_5fand_5fdrag_2ec',['lift_and_drag.C',['../lift__and__drag_8C.html',1,'']]],
   ['liftfield',['liftfield',['../classsteadyNS.html#a6e6f9d485657cc2c1fea709aa8ad5ec9',1,'steadyNS']]],
-  ['liftsolve',['liftSolve',['../classreductionProblem.html#adc318cab24b21ea4e96e261fb9ecc63d',1,'reductionProblem::liftSolve()'],['../classsteadyNS.html#af11a2fa8637db86b8b129ee9d84de091',1,'steadyNS::liftSolve()']]]
+  ['liftsolve',['liftSolve',['../classreductionProblem.html#adc318cab24b21ea4e96e261fb9ecc63d',1,'reductionProblem::liftSolve()'],['../classsteadyNS.html#af11a2fa8637db86b8b129ee9d84de091',1,'steadyNS::liftSolve()']]],
+  ['localsystem_5f',['localSystem_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#ac566ea1f2ea178e996d849ec8babbb9e',1,'Foam::functionObjects::ITHACAforces']]]
 ];

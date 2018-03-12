@@ -1,6 +1,8 @@
 var searchData=
 [
   ['n_5fbc',['N_BC',['../structnewton__steadyNS.html#ac59a6844a90d8cd5e526044ba9ffdcac',1,'newton_steadyNS::N_BC()'],['../classreducedSteadyNS.html#ad1c7cdbbe4c19ad88135546f9be8356d',1,'reducedSteadyNS::N_BC()'],['../structnewton__unsteadyNS__sup.html#a6facce07b6183a0f706ff7d429789d57',1,'newton_unsteadyNS_sup::N_BC()'],['../structnewton__unsteadyNS__PPE.html#aa291924d4968606289d5cf794c79457a',1,'newton_unsteadyNS_PPE::N_BC()']]],
+  ['n_5fmatrix',['n_matrix',['../classsteadyNS.html#a9dc955e8c807124a45a3eec0b35552b4',1,'steadyNS']]],
+  ['nbin_5f',['nBin_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a969b28bf2a61446505a9dc6e6ed08d7a',1,'Foam::functionObjects::ITHACAforces']]],
   ['newton_5fargument',['newton_argument',['../classnewton__argument.html',1,'newton_argument&lt; _Scalar, NX, NY &gt;'],['../classnewton__argument.html#a616520ba2ba2af46a866c3ab43baedf1',1,'newton_argument::newton_argument()'],['../classnewton__argument.html#a5be721811badc629f08c1467b1216c6a',1,'newton_argument::newton_argument(int inputs, int values)']]],
   ['newton_5fargument_2eh',['newton_argument.H',['../newton__argument_8H.html',1,'']]],
   ['newton_5fargument_3c_20double_20_3e',['newton_argument&lt; double &gt;',['../classnewton__argument.html',1,'']]],
@@ -19,7 +21,8 @@ var searchData=
   ['npmodes',['NPmodes',['../classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19',1,'steadyNS']]],
   ['nsupmodes',['NSUPmodes',['../classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f',1,'steadyNS']]],
   ['ntmodes',['NTmodes',['../classlaplacianProblem.html#af0ff25ddcfbae8d2263e8d954204ded7',1,'laplacianProblem::NTmodes()'],['../classreducedLaplacian.html#ae7615e5a21f648e592472776ff137dd8',1,'reducedLaplacian::NTmodes()']]],
-  ['nu',['nu',['../classreducedProblem.html#a65ad23828d68db181985589b65d3c436',1,'reducedProblem::nu()'],['../structnewton__steadyNS.html#aaa438e52de4f0180e31fafc3e309e518',1,'newton_steadyNS::nu()'],['../classreducedSteadyNS.html#a49c64ba1750b50ada5302b18ba91bb5f',1,'reducedSteadyNS::nu()'],['../structnewton__unsteadyNS__sup.html#a07b7ce2c2254957a6d3e05ec4d236d50',1,'newton_unsteadyNS_sup::nu()'],['../structnewton__unsteadyNS__PPE.html#af34b6738e986630161866c1f89d31f1c',1,'newton_unsteadyNS_PPE::nu()'],['../classtutorial02.html#a0b4c96fd184c08c171dd0f6bbf8169f9',1,'tutorial02::nu()'],['../src_2problems_2laplacianProblem_2createFields_8H.html#ab5a19e77b8d6682fbbf4e06d99341df9',1,'nu():&#160;createFields.H']]],
+  ['nu',['nu',['../classreducedProblem.html#a65ad23828d68db181985589b65d3c436',1,'reducedProblem::nu()'],['../structnewton__steadyNS.html#aaa438e52de4f0180e31fafc3e309e518',1,'newton_steadyNS::nu()'],['../classreducedSteadyNS.html#a49c64ba1750b50ada5302b18ba91bb5f',1,'reducedSteadyNS::nu()'],['../structnewton__unsteadyNS__sup.html#a07b7ce2c2254957a6d3e05ec4d236d50',1,'newton_unsteadyNS_sup::nu()'],['../structnewton__unsteadyNS__PPE.html#af34b6738e986630161866c1f89d31f1c',1,'newton_unsteadyNS_PPE::nu()'],['../classtutorial02.html#a0b4c96fd184c08c171dd0f6bbf8169f9',1,'tutorial02::nu()']]],
   ['nu_5flist',['nu_list',['../classlaplacianProblem.html#a260a78178e7237e44981a07b84b9b9b3',1,'laplacianProblem']]],
+  ['numberoffiles',['numberOfFiles',['../classITHACAstream.html#a2ba99b067380356b2000afbcbcb5e06c',1,'ITHACAstream']]],
   ['numodes',['NUmodes',['../classsteadyNS.html#a6afdfb31a8d0fdf0e4c604e5c13b331d',1,'steadyNS']]]
 ];

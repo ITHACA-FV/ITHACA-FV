@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['laplacianproblem',['laplacianProblem',['../classlaplacianProblem.html',1,'']]]
+  ['foam2eigen',['Foam2Eigen',['../classFoam2Eigen.html',1,'']]]
 ];
