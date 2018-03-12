@@ -1,14 +1,5 @@
 /*---------------------------------------------------------------------------*\
-     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
-     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
-     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
-     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
- * Copyright (C) 2017 by the ITHACA-FV authors
--------------------------------------------------------------------------------
+Copyright (C) 2017 by the ITHACA-FV authors
 
 License
     This file is part of ITHACA-FV
@@ -67,7 +58,6 @@ public:
     /// It perform an offline Solve
     void offlineSolve()
     {
-
         if (offline)
         {
             ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
@@ -172,6 +162,11 @@ int main(int argc, char *argv[])
     // Create the example object of the tutorial02 type
     tutorial02 example(argc, argv);
 
+    // Read some parameters from file
+    ITHACAparameters para;
+    int NmodesTout = para.ITHACAdict->lookupOrDefault<int>("NmodesTout", 15);
+    int NmodesTproj = para.ITHACAdict->lookupOrDefault<int>("NmodesTproj", 10);
+
     // Set the number of parameters
     example.Pnumber = 9;
     // Set the parameters
@@ -197,7 +192,7 @@ int main(int argc, char *argv[])
     example.offlineSolve();
 
     // Perform a POD decomposition and get the modes
-    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.podex);
+    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.podex, 0, 0, 15);
 
     // Perform the Galerkin projection onto the space spanned by the POD modes
     /// [project]
@@ -214,7 +209,7 @@ int main(int argc, char *argv[])
     }
 
     // Reconstruct the solution and store it into Reconstruction folder
-    ridotto.reconstruct(example, "./ITHACAoutput/Reconstruction/");
+    ridotto.reconstruct(example, "./ITHACAoutput/Reconstruction");
     // Exit the code
     exit(0);
 }
@@ -296,7 +291,7 @@ int main(int argc, char *argv[])
 /// \skipline void
 /// \until {
 /// 
-/// If the online solve has already been performed than read the existing snapshots
+/// If the offline solve has already been performed than read the existing snapshots
 /// 
 /// \skipline if
 /// \until

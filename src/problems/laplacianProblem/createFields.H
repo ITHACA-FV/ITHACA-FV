@@ -62,8 +62,6 @@ _S = autoPtr<volScalarField>
        )
      );
 
-volScalarField& S = _S();
-
 _nu = autoPtr<volScalarField>
       (
         new volScalarField
@@ -80,7 +78,5 @@ _nu = autoPtr<volScalarField>
           dimensionedScalar("zero", dimensionSet( 0, 2, -1, 0, 0, 0, 0), 0)
         )
       );
-
-volScalarField& nu = _nu();
 
 

@@ -81,7 +81,7 @@ public:
     Eigen::MatrixXd K_matrix; 
     Eigen::MatrixXd P_matrix;
     Eigen::VectorXd BC;   
-      
+    
 };
 
 
@@ -107,6 +107,8 @@ public:
     /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
     /// 
     reducedSteadyNS(steadyNS& problem, word tipo);
+
+    ~reducedSteadyNS(){};
 
 
     // Specific variable
@@ -136,7 +138,13 @@ public:
     /// Divergence of momentum
     List <Eigen::MatrixXd> G_matrix;
     ///@}
+    //
 
+    /// Reduced matrix for tangent forces
+    Eigen::MatrixXd f_tau;
+
+    /// Reduced matrix for normal forces
+    Eigen::MatrixXd f_n;
 
     /// Vector to store the previous solution during the Newton procedure
     Eigen::VectorXd y_old;
@@ -223,10 +231,16 @@ public:
     ///
     void reconstruct_sup(steadyNS& problem, fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
 
+    /// @brief      { function_description }
+    ///
+    /// @param      problem  The problem
+    /// @param[in]  folder   The folder
+    ///
+    void reconstruct_LiftandDrag(steadyNS & problem, fileName folder);
+
     /// Method to evaluate the online inf-sup constant
     ///
     /// @return     return the reduced version of the inf-sup constant.
-    ///
     double inf_sup_constant();
 };
 

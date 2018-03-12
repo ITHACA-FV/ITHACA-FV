@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -75,6 +75,7 @@ public:
 
     /// Construct Null
     reductionProblem();
+    ~reductionProblem(){};
 
     // Members
     /// Number of parameters
@@ -89,9 +90,13 @@ public:
     double mu_cur;
     /// Boolean variable, it is 1 if the POD has already been computed, else 0
     bool podex;
-    // Boolean variable, it is 1 if the Offline phase has already been computed, else 0
+    /// Boolean variable, it is 1 if the Offline phase has already been computed, else 0
     bool offline;
+    /// dictionary to store input output infos
+    IOdictionary* ITHACAdict;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcomment"
     /// Matrix that contains informations about the inlet boundaries
     /// @details The dimension is: <br>
     /// Rows = Number of parametrized boundary conditions <br>
@@ -100,8 +105,8 @@ public:
     /// example.inletIndex.resize(1, 2); <br>
     /// example.inletIndex(0, 0) = 0; <br>
     /// example.inletIndex(0, 1) = 0; <br>
-    /// Means that there is one parametrized boundary conditions, the first col contains the 
-    /// index of the parametrized boundary, the second col contains the direction along which 
+    /// Means that there is one parametrized boundary conditions, the first col contains the
+    /// index of the parametrized boundary, the second col contains the direction along which
     /// the BC is parametrized: <br>
     /// 0 for x <br>
     /// 1 for y <br>
@@ -116,6 +121,7 @@ public:
     /// \\end{bmatrix}
     /// \\]
     Eigen::MatrixXi inletIndex;
+#pragma GCC diagnostic pop
 
     // Functions
     /// Set Parameters Problems
@@ -128,14 +134,14 @@ public:
     ///
     /// @param[in]  tsize  Dimension of the training set.
     ///
-    void genRandPar(int tsize);   
+    void genRandPar(int tsize);
 
     /// Generate Equidistributed Numbers
     void genEquiPar();
 
 
     /// Perform a TruthSolve
-    virtual void truthSolve();
+    void truthSolve();
 
     /// Export a field (template function)
     ///
@@ -222,20 +228,21 @@ public:
     template<typename T>
     void computeLift(T& Lfield, T& liftfield, T& omfield);
 
+    void computeLift(PtrList<volVectorField>& Lfield, PtrList<volVectorField>& liftfield, PtrList<volScalarField>& NutLiftfield, PtrList<volScalarField>& Nutfield, PtrList<volScalarField>& NutOmfield);
+
     /// Virtual function to compute the lifting function
     ///
-    virtual void liftSolve();
+    void liftSolve();
 
     /// General projection operation
     ///
-    virtual void project();
+    void project();
 
     /// Write out a list of scalar
     ///
     /// @param[in]  mu_now  The list of scalars.
     ///
     void writeMu(List<scalar> mu_now);
-
 
 };
 
@@ -264,7 +271,7 @@ Finite Volumes) is C++ library based on the finite volume solver
 [<b> OpenFOAM </b>](https://openfoam.org/). It consists of the implementation of several reduced order
 modeling techniques for parametrized problems. ITHACA-FV is developed and maintained by
 [<b> Dr. Giovanni Stabile </b>](http://people.sissa.it/~gstabile/) under the supervision of [<b> Prof. Gianluigi Rozza </b>](http://people.sissa.it/~grozza/) at [<b> SISSA mathLab </b>](https://mathlab.sissa.it/) an applied math laboratory of the
-[<b> International School for advanced studies </b>](https://www.sissa.it/). 
+[<b> International School for advanced studies </b>](https://www.sissa.it/).
 
  *
  * \section structure ITHACA-FV directory structure
@@ -275,9 +282,9 @@ modeling techniques for parametrized problems. ITHACA-FV is developed and mainta
 - \b tutorials: test-cases that demonstrate a range of ITHACA-FV functionalities.
 - \b docs: documentation.
  *
- * \section step1 How to cite ITHACA-FV.
+ * \section step1 How to cite IHACA-FV.
  *
-Most of the theoretical aspects behind ITHACA-FV are deeply explained in [<b> Stabile2017CAIM </b>](https://arxiv.org/pdf/1701.03424.pdf) and [<b> Stabile2017CAF</b>](https://arxiv.org/pdf/1710.11580.pdf).
+Most of the theoretical aspects behind ITHACA-FV are deeply explained in [<b> Stabile2017CAIM </b>](https://arxiv.org/pdf/1701.03424.pdf) and [<b> Stabile2017CAF </b>](https://arxiv.org/pdf/1710.11580.pdf).
 For this reason, if you use this software, please consider citing the mentioned works, reported in the following bibtex entries:
 
 

@@ -85,5 +85,3 @@ _MRF = autoPtr<IOMRFZoneList>
        (
          new IOMRFZoneList(mesh)
        );
-
-IOMRFZoneList& MRF = _MRF();

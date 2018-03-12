@@ -152,6 +152,7 @@ public:
     /// 
     reducedUnsteadyNS(unsteadyNS& problem,word tipo);
 
+    ~reducedUnsteadyNS(){};
 
     // Specific variable
     /** @name Reduced Matrices
@@ -219,7 +220,7 @@ public:
     /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
     /// and used to get the reduced initial condition.
     ///
-    void solveOnline_PPE(Eigen::MatrixXd vel_now, label startSnap=0);
+    void solveOnline_PPE(Eigen::MatrixXd& vel_now, label startSnap=0);
 
     /// Method to perform an online solve using a supremizer stabilisation method
     ///
@@ -229,7 +230,7 @@ public:
     /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
     /// and used to get the reduced initial condition.
     ///
-    void solveOnline_sup(Eigen::MatrixXd, label startSnap=0);
+    void solveOnline_sup(Eigen::MatrixXd& vel_now, label startSnap=0);
 
     /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
     /// stabilisation method

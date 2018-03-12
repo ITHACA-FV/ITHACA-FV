@@ -8,8 +8,9 @@ reducedProblems/reducedSteadyNS/reducedSteadyNS.C
 reducedProblems/reducedLaplacian/reducedLaplacian.C
 ITHACAstream/ITHACAstream.C
 ITHACAutilities/ITHACAutilities.C
+ITHACAutilities/ITHACAforces.C
 ITHACAPOD/ITHACAPOD.C
+Foam2Eigen/Foam2Eigen.C
+EigenFunctions/EigenFunctions.C
 
-
-
-LIB = $(FOAM_LIBBIN)/libITHACA-FV-Problems
+LIB = $(FOAM_USER_LIBBIN)/libITHACA-FV-Problems

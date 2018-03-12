@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -43,24 +43,20 @@ License
 
 void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder, word fieldname)
 {
-	for(label j=0; j<field.size() ; j++)
-	{
-	exportSolution(field[j], name(j+1), folder, fieldname);
-	}
-        system("ln -s ../../constant "+folder+"/constant");
-        system("ln -s ../../0 "+folder+"/0");
-        system("ln -s ../../system "+folder+"/system");
+    for (label j = 0; j < field.size() ; j++)
+    {
+        exportSolution(field[j], name(j + 1), folder, fieldname);
+    }
+    ITHACAutilities::createSymLink(folder);
 }
 
 void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder, word fieldname)
 {
-	for(label j=0; j<field.size() ; j++)
-	{
-	exportSolution(field[j], name(j+1), folder, fieldname);
-	}
-        system("ln -s ../../constant "+folder+"/constant");
-        system("ln -s ../../0 "+folder+"/0");
-        system("ln -s ../../system "+folder+"/system");
+    for (label j = 0; j < field.size() ; j++)
+    {
+        exportSolution(field[j], name(j + 1), folder, fieldname);
+    }
+    ITHACAutilities::createSymLink(folder);
 }
 
 void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo, word folder)
@@ -261,7 +257,7 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
 
 void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name, fileName casename, label first_snap, label n_snap)
 {
-    Info << "######### Reading the Data for " << Name << " #########\n" << endl;
+    Info << "######### Reading the Data for " << Name << " #########" << endl;
     fileName rootpath(".");
     label last_s;
 
@@ -295,7 +291,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name, fileN
 
     for (label i = 2 + first_snap; i < last_s; i++)
     {
-        Info << "Reading " << Name << " number " << i << endl; 
+        Info << "Reading " << Name << " number " << i - 1 << endl;
         volVectorField tmp_field(
             IOobject
             (
@@ -308,11 +304,12 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name, fileN
         );
         Lfield.append(tmp_field);
     }
+    std::cout << std::endl;
 }
 
 void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name, fileName casename, label first_snap, label n_snap)
 {
-    Info << " ######### Reading the Data for " << Name << " #########\n" << endl;
+    Info << " ######### Reading the Data for " << Name << " #########" << endl;
     fileName rootpath(".");
     Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
     label last_s;
@@ -345,7 +342,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name, fileN
 
     for (label i = 2 + first_snap; i < last_s; i++)
     {
-        Info << "Reading " << Name << " number " << i << endl; 
+        Info << "Reading " << Name << " number " << i - 1 << endl;
         volScalarField tmp_field(
             IOobject
             (
@@ -358,11 +355,12 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name, fileN
         );
         Lfield.append(tmp_field);
     }
+    std::cout << std::endl;
 }
 
 void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, volScalarField & field, fileName casename, label first_snap, label n_snap)
 {
-    Info << "######### Reading the Data for " << field.name() << " #########\n" << endl;
+    Info << "######### Reading the Data for " << field.name() << " #########" << endl;
     fileName rootpath(".");
     Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
     label last_s;
@@ -379,12 +377,12 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, volScalarField &
     }
     else
     {
-        last_s = min(runTime2.times().size(), n_snap + 2);
+        last_s = min(runTime2.times().size(), n_snap + 1);
     }
 
     for (label i = 2 + first_snap; i < last_s; i++)
     {
-        Info << "Reading " << field.name() << " number " << i << endl; 
+        Info << "Reading " << field.name() << " number " << i - 1 << endl;
         volScalarField tmp_field(
             IOobject
             (
@@ -397,11 +395,12 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, volScalarField &
         );
         Lfield.append(tmp_field);
     }
+    std::cout << std::endl;
 }
 
 void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, volVectorField & field, fileName casename, label first_snap, label n_snap)
 {
-    Info << "######### Reading the Data for " << field.name() << " #########\n" << endl;
+    Info << "######### Reading the Data for " << field.name() << " #########" << endl;
     fileName rootpath(".");
     Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
     label last_s;
@@ -418,12 +417,12 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, volVectorField &
     }
     else
     {
-        last_s = min(runTime2.times().size(), n_snap + 2);
+        last_s = min(runTime2.times().size(), n_snap + 1);
     }
 
     for (label i = 2 + first_snap; i < last_s; i++)
     {
-        Info << "Reading " << field.name() << " number " << i << endl; 
+        Info << "Reading " << field.name() << " number " << i - 1 << endl;
         volVectorField tmp_field(
             IOobject
             (
@@ -435,7 +434,24 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, volVectorField &
             field.mesh()
         );
         Lfield.append(tmp_field);
+
     }
+    std::cout << std::endl;
+}
+
+int ITHACAstream::numberOfFiles(word folder, word MatrixName)
+{
+    int number_of_files = 0;
+    std::ifstream in;
+    in.open(folder + MatrixName + name(0), std::ios::in | std::ios::binary);
+    while (in.good())
+    {
+        in.close();
+        number_of_files++;
+        in.open(folder + MatrixName + name(number_of_files), std::ios::in | std::ios::binary);
+    }
+    in.close();
+    return number_of_files;
 }
 
 

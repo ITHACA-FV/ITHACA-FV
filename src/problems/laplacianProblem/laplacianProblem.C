@@ -51,11 +51,8 @@ laplacianProblem::laplacianProblem(int argc, char *argv[])
 // Method to performa a truthSolve
 void laplacianProblem::truthSolve()
 {
-  Time& runTime = _runTime();
-  fvMesh& mesh = _mesh();
   volScalarField& T = _T();
   volScalarField& S = _S();
-  volScalarField& nu = _nu();
   fvScalarMatrix lhs(theta[0]*operator_list[0]);
   for (int i = 1; i < operator_list.size(); i++)
   {
@@ -65,7 +62,6 @@ void laplacianProblem::truthSolve()
   exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
   Tfield.append(T);
   counter++;
-  bool notconverged = 1;
 }
 // Perform the projection onto the POD modes
 void laplacianProblem::project(label Nmodes)

@@ -28,6 +28,9 @@ EXE_INC = \
     -I../../src/ITHACAutilities \
     -I../../src/ITHACAPOD \
     -I../../src/ITHACAstream \
+    -I../../src/thirdparty/spectra-0.6.1/include \
+    -I../../src/Foam2Eigen \
+    -I../../src/EigenFunctions \
     -w \
     -std=c++11
 
@@ -42,4 +45,6 @@ EXE_LIBS = \
     -lspecie \
     -lforces \
     -lfileFormats \
-    -lITHACA-FV-Problems
+    -lITHACA-FV-Problems \
+    -L$(FOAM_USER_LIBBIN) \
+

@@ -27,11 +27,5 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-Info << "Reading field p\n" << endl;
-
-
 _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
-
-fv::options& fvOptions = _fvOptions();
-
 

@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -69,18 +69,18 @@ void reductionProblem::genRandPar()
 void reductionProblem::genRandPar(int Tsize)
 {
 	mu.resize(Tsize, Pnumber);
-	std::srand((unsigned int) time(0));
-	auto rand = Eigen::MatrixXd::Random(Tsize,Pnumber);
+	std::srand(std::time(0));
+	auto rand = Eigen::MatrixXd::Random(Tsize, Pnumber);
 	auto dx = mu_range.col(1) - mu_range.col(0);
 	Eigen::MatrixXd k;
-    k = (rand.array()+double(1))/2;
+	k = (rand.array() + double(1)) / 2;
 
-    for(int i=0; i < Pnumber; i ++)
-    {
-            k.col(i) = (k.col(i)*dx(i)).array() + mu_range(i,0);
+	for (int i = 0; i < Pnumber; i ++)
+	{
+		k.col(i) = (k.col(i) * dx(i)).array() + mu_range(i, 0);
 
-    }
-    mu = k;
+	}
+	mu = k;
 }
 
 // Generate Equidistributed Parameters
@@ -199,17 +199,17 @@ void reductionProblem::assignBC(volVectorField& s, label BC_ind, Vector<double>&
 // Reconstruct using a Matrix of coefficients (vector field)
 void reductionProblem::reconstruct_from_matrix(PtrList<volVectorField>& rec_field2, PtrList<volVectorField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix)
 {
-	for (label k = 0; k < coeff_matrix.rows(); k++)
+	for (label k = 0; k < coeff_matrix.cols(); k++)
 	{
 		for (label i = 0; i < Nmodes; i++)
 		{
 			if ( i == 0)
 			{
-				rec_field2.append(coeff_matrix(k, i)*modes[i]);
+				rec_field2.append(coeff_matrix(i, k)*modes[i]);
 			}
 			else
 			{
-				rec_field2[k] += coeff_matrix(k, i) * modes[i];
+				rec_field2[k] += coeff_matrix(i, k) * modes[i];
 			}
 		}
 	}
@@ -219,17 +219,17 @@ void reductionProblem::reconstruct_from_matrix(PtrList<volVectorField>& rec_fiel
 // Reconstruct using a Matrix of coefficients (vector field)
 void reductionProblem::reconstruct_from_matrix(PtrList<volScalarField>& rec_field2, PtrList<volScalarField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix)
 {
-	for (label k = 0; k < coeff_matrix.rows(); k++)
+	for (label k = 0; k < coeff_matrix.cols(); k++)
 	{
 		for (label i = 0; i < Nmodes; i++)
 		{
 			if ( i == 0)
 			{
-				rec_field2.append(coeff_matrix(k, i)*modes[i]);
+				rec_field2.append(coeff_matrix(i, k)*modes[i]);
 			}
 			else
 			{
-				rec_field2[k] += coeff_matrix(k, i) * modes[i];
+				rec_field2[k] += coeff_matrix(i, k) * modes[i];
 			}
 		}
 	}
@@ -258,6 +258,34 @@ void reductionProblem::liftSolve()
 {
 	Info << "reductionProblem::liftSolve is a virtual function it must be overridden" << endl;
 	exit(0);
+}
+
+void reductionProblem::computeLift(PtrList<volVectorField>& Lfield, PtrList<volVectorField>& liftfield, PtrList<volScalarField>& NutLiftfield, PtrList<volScalarField>& Nutfield, PtrList<volScalarField>& NutOmfield)
+{
+	scalar u_bc;
+	scalar area;
+
+	for (label k = 0; k < inletIndex.rows(); k++)
+	{
+		label p = inletIndex(k, 0);
+		label l = inletIndex(k, 1);
+		area = gSum(Lfield[0].mesh().magSf().boundaryField()[p]);
+		for (label j = 0; j < Lfield.size(); j++)
+		{
+			if (k == 0)
+			{
+				u_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] * Lfield[j].boundaryField()[p]).component(l) / area;
+				volScalarField C("Nut", Nutfield[j] - NutLiftfield[k]*u_bc);
+				NutOmfield.append(C);
+			}
+			else
+			{
+				u_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] * Lfield[j].boundaryField()[p]).component(l) / area;
+				volScalarField C("Nut", NutOmfield[j] - NutLiftfield[k]*u_bc);
+				NutOmfield.set(j, C);
+			}
+		}
+	}
 }
 
 // ************************************************************************* //

@@ -40,8 +40,6 @@ unsteadyNS::unsteadyNS() {}
 
 // Construct from zero
 unsteadyNS::unsteadyNS(int argc, char *argv[])
-	:
-	timeStep(timeStep)
 {
 #include "setRootCase.H"
 #include "createTime.H"
@@ -54,12 +52,8 @@ unsteadyNS::unsteadyNS(int argc, char *argv[])
 	                  mesh
 	              )
 	          );
-	    pimpleControl& pimple = _pimple();
-
-#include "createTimeControls.H"
 #include "createFields.H"
 #include "createFvOptions.H"
-#include "initContinuityErrs.H"
 
 	supex = ITHACAutilities::check_sup();
 }

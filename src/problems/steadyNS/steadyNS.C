@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -54,9 +54,19 @@ steadyNS::steadyNS(int argc, char *argv[])
 	simpleControl& simple = _simple();
 #include "createFields.H"
 #include "createFvOptions.H"
-#include "initContinuityErrs.H"
 	supex = ITHACAutilities::check_sup();
 	turbulence->validate();
+	ITHACAdict = new IOdictionary
+	(
+	    IOobject
+	    (
+	        "ITHACAdict",
+	        runTime.system(),
+	        mesh,
+	        IOobject::MUST_READ,
+	        IOobject::NO_WRITE
+	    )
+	);
 }
 
 
@@ -80,7 +90,6 @@ void steadyNS::truthSolve()
 	Ufield.append(U);
 	Pfield.append(p);
 	counter++;
-	bool notconverged = 1; \
 }
 
 // Method to solve the supremizer problem
@@ -138,7 +147,7 @@ void steadyNS::solvesupremizer()
 			assignIF(Usup, v);
 		}
 
-		for (label i; i < Pfield.size(); i++)
+		for (label i = 0; i < Pfield.size(); i++)
 		{
 
 			fvVectorMatrix u_sup_eqn
@@ -150,11 +159,16 @@ void steadyNS::solvesupremizer()
 			    u_sup_eqn == fvc::grad(Pfield[i])
 			);
 			supfield.append(Usup);
-			exportSolution(Usup, name(i), "./ITHACAoutput/supfield/");
+			exportSolution(Usup, name(i+1), "./ITHACAoutput/supfield/");
 		}
-		system("ln -s ../../constant ./ITHACAoutput/supfield/constant");
-		system("ln -s ../../0 ./ITHACAoutput/supfield/0");
-		system("ln -s ../../system ./ITHACAoutput/supfield/system");
+		int systemRet = system("ln -s ../../constant ./ITHACAoutput/supfield/constant");
+		systemRet += system("ln -s ../../0 ./ITHACAoutput/supfield/0");
+		systemRet += system("ln -s ../../system ./ITHACAoutput/supfield/system");
+		if (systemRet < 0)
+		{
+			Info << "System Command Failed in steadyNS.C" << endl;
+			exit(0);
+		}
 	}
 }
 
@@ -166,7 +180,6 @@ void steadyNS::liftSolve()
 		Time& runTime = _runTime();
 		surfaceScalarField& phi = _phi();
 		fvMesh& mesh = _mesh();
-		fv::options& fvOptions = _fvOptions();
 		volScalarField p = _p();
 		volVectorField U = _U();
 		IOMRFZoneList& MRF = _MRF();
@@ -313,17 +326,26 @@ Eigen::MatrixXd steadyNS::diffusive_term(label NUmodes, label NPmodes, label NSU
 	B_matrix.resize(Bsize, Bsize);
 
 	PtrList<volVectorField> Together(0);
-	for (label k = 0; k < liftfield.size(); k++)
+	if (liftfield.size() != 0)
 	{
-		Together.append(liftfield[k]);
+		for (label k = 0; k < liftfield.size(); k++)
+		{
+			Together.append(liftfield[k]);
+		}
 	}
-	for (label k = 0; k < NUmodes; k++)
+	if (NUmodes != 0)
 	{
-		Together.append(Umodes[k]);
+		for (label k = 0; k < NUmodes; k++)
+		{
+			Together.append(Umodes[k]);
+		}
 	}
-	for (label k = 0; k < NSUPmodes; k++)
+	if (NSUPmodes != 0)
 	{
-		Together.append(supmodes[k]);
+		for (label k = 0; k < NSUPmodes; k++)
+		{
+			Together.append(supmodes[k]);
+		}
 	}
 
 	// Project everything
@@ -586,8 +608,6 @@ List < Eigen::MatrixXd > steadyNS::div_momentum(label NUmodes, label NPmodes)
 Eigen::MatrixXd steadyNS::laplacian_pressure(label NPmodes)
 {
 
-	fvMesh& mesh = _mesh();
-
 	label Dsize = NPmodes;
 
 	Eigen::MatrixXd D_matrix(Dsize, Dsize);
@@ -753,7 +773,6 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
 
 void steadyNS::change_viscosity(double mu)
 {
-	singlePhaseTransportModel& laminarTransport = _laminarTransport();
 	const volScalarField& nu = 	_laminarTransport().nu();
 	volScalarField& ciao = const_cast<volScalarField&>(nu);
 
@@ -763,4 +782,111 @@ void steadyNS::change_viscosity(double mu)
 		this->assignBC(ciao, i, mu);
 	}
 }
+
+
+void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
+{
+	PtrList<volVectorField> Together(0);
+	for (label k = 0; k < liftfield.size(); k++)
+	{
+		Together.append(liftfield[k]);
+	}
+	for (label k = 0; k < NUmodes; k++)
+	{
+		Together.append(Umodes[k]);
+	}
+	for (label k = 0; k < NSUPmodes; k++)
+	{
+		Together.append(supmodes[k]);
+	}
+
+	tau_matrix.resize(Together.size(), 3);
+	n_matrix.resize(NPmodes, 3);
+
+	tau_matrix = tau_matrix * 0;
+	n_matrix = n_matrix * 0;
+
+	Time& runTime = _runTime();
+
+	instantList Times = runTime.times();
+
+	fvMesh& mesh = _mesh();
+	volScalarField& p = _p();
+	volVectorField& U = _U();
+
+	//Read FORCESdict
+	IOdictionary FORCESdict
+	(
+	    IOobject
+	    (
+	        "FORCESdict",
+	        runTime.system(),
+	        mesh,
+	        IOobject::MUST_READ,
+	        IOobject::NO_WRITE
+	    )
+	);
+
+	IOdictionary transportProperties
+	(
+	    IOobject
+	    (
+	        "transportProperties",
+	        runTime.constant(),
+	        mesh,
+	        IOobject::MUST_READ,
+	        IOobject::NO_WRITE
+	    )
+	);
+
+	word pName = FORCESdict.lookup("pName");
+	word UName = FORCESdict.lookup("UName");
+
+	functionObjects::ITHACAforces f("Forces", mesh, FORCESdict);
+	for (label i = 0; i < Together.size(); i++)
+	{
+		U = Together[i];
+		p = Pmodes[0];
+		mesh.readUpdate();
+		f.write();
+		f.calcForcesMoment();
+
+		for (label j = 0; j < 3; j++)
+		{
+
+			tau_matrix(i, j) = f.force_tau()[j];
+		}
+	}
+
+
+
+
+	for (label i = 0; i < NPmodes; i++)
+	{
+		U = Together[0];
+		p = Pmodes[i];
+		mesh.readUpdate();
+		f.write();
+		f.calcForcesMoment();
+
+		for (label j = 0; j < 3; j++)
+		{
+			n_matrix(i, j) = f.force_pressure()[j];
+		}
+
+	}
+
+	ITHACAstream::exportMatrix(tau_matrix, "tau", "python", "./ITHACAoutput/Matrices/");
+	ITHACAstream::exportMatrix(tau_matrix, "tau", "matlab", "./ITHACAoutput/Matrices/");
+	ITHACAstream::exportMatrix(tau_matrix, "tau", "eigen", "./ITHACAoutput/Matrices/");
+
+	ITHACAstream::exportMatrix(n_matrix, "n", "python", "./ITHACAoutput/Matrices/");
+	ITHACAstream::exportMatrix(n_matrix, "n", "matlab", "./ITHACAoutput/Matrices/");
+	ITHACAstream::exportMatrix(n_matrix, "n", "eigen", "./ITHACAoutput/Matrices/");
+
+
+
+}
+
+
 

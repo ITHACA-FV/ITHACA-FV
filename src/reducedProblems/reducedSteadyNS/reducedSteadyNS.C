@@ -9,6 +9,7 @@
  * In real Time Highly Advanced Computational Applications for Finite Volumes 
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
+
 License
     This file is part of ITHACA-FV
 
@@ -282,11 +283,93 @@ double reducedSteadyNS::inf_sup_constant()
 		}
 		inf(i) = sup.maxCoeff();
 	}
-	Info << "output" << endl;
 	a = inf.minCoeff();
 	return a;
 }
 
 
-// ************************************************************************* //
+
+void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS & problem, fileName folder)
+{
+	mkDir(folder);
+	system("ln -s ../../constant " + folder + "/constant");
+	system("ln -s ../../0 " + folder + "/0");
+	system("ln -s ../../system " + folder + "/system");
+	
+	label NUmodes = problem.NUmodes;
+	label NSUPmodes = problem.NSUPmodes;
+	label NPmodes = problem.NPmodes;
+	label liftfieldSize = problem.liftfield.size();
+	label totalSize = NUmodes + NSUPmodes + liftfieldSize;
+	
+	Eigen::VectorXd cl(online_solution.size());
+	Eigen::VectorXd cd(online_solution.size());
+
+
+	//Read FORCESdict
+    IOdictionary FORCESdict
+    (
+        IOobject
+        (
+            "FORCESdict",
+            "./system",
+            Umodes[0].mesh(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );	
+
+	Eigen::MatrixXd TAU = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/tau_mat.txt");
+	Eigen::MatrixXd N = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/n_mat.txt");
+	Eigen::VectorXd temp1;
+
+    f_tau.setZero(online_solution.size(),3);
+    f_n.setZero(online_solution.size(),3);
+	
+
+	for (label i = 0; i < online_solution.size(); i++)
+	{
+		
+			for (label j = 0; j < totalSize; j++)
+			{
+				
+				
+				f_tau.row(i) += TAU.row(j) * online_solution[i](j + 1, 0);
+				
+				
+				///std::cout << TAU.row(j) << std::endl;
+				///Info << online_solution[i](j + 1, 0) << endl;
+				///
+				///std::cout << TAU.row(j) * online_solution[i](j + 1, 0) << std::endl;
+                ///
+				///Info << "Update" << endl;
+				///std::cout << f_tau.row(i) << std::endl;
+			}
+			
+			for (label j = 0; j < NPmodes; j++)
+			{
+				f_n.row(i) += N.row(j) * online_solution[i](j + Nphi_u + 1, 0);
+			}
+			///problem.exportSolution(U_rec,  name(counter2), folder);
+
+			
+			
+			///problem.exportSolution(P_rec, name(counter2), folder);
+
+			
+		}
+			
+			
+			//f_tau = f_tau *factor;
+			//f_n = f_n *factor;
+		
+			ITHACAstream::exportMatrix(f_tau, "f_tau", "python", folder);
+			ITHACAstream::exportMatrix(f_tau, "f_tau", "matlab", folder);
+			ITHACAstream::exportMatrix(f_tau, "f_tau", "eigen", folder);
+
+			ITHACAstream::exportMatrix(f_n, "f_n", "python", folder);
+			ITHACAstream::exportMatrix(f_n, "f_n", "matlab", folder);
+			ITHACAstream::exportMatrix(f_n, "f_n", "eigen", folder);
+	
+}
 

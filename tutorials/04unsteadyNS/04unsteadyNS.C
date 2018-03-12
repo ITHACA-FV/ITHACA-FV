@@ -1,14 +1,5 @@
 /*---------------------------------------------------------------------------*\
-     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
-     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
-     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
-     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
- * Copyright (C) 2017 by the ITHACA-FV authors
--------------------------------------------------------------------------------
+Copyright (C) 2017 by the ITHACA-FV authors
 
 License
     This file is part of ITHACA-FV
@@ -86,8 +77,19 @@ public:
 \*---------------------------------------------------------------------------*/
 int main(int argc, char *argv[])
 {
-
+    // Construct the tutorial object
     tutorial04 example(argc, argv);
+
+    // Read some parameters from file
+    ITHACAparameters para;
+    int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+    int NmodesPout = para.ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
+    int NmodesSUPout = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 15);
+    int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
+    int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+    int NmodesSUPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
+
+
     /// Set the number of parameters
     example.Pnumber = 1;
     /// Set samples
@@ -122,14 +124,14 @@ int main(int argc, char *argv[])
 
     // Create homogeneous basis functions for velocity
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
-    int nmodes = 50;
-
+    
     // Perform a POD decomposition for velocity and pressure
-    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0, 50);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0, 50);
-    ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex, example.supex, 1, 50);
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0, NmodesUout);
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0, NmodesPout);
+    ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex, example.supex, 1, NmodesSUPout);
 
-    example.projectSUP("./Matrices", 15, 10, 12);
+    example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
+    
     reducedUnsteadyNS ridotto(example, "SUP");
     //unsteadyNSreduced ridotto(example, "PPE");
 

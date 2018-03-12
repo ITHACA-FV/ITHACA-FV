@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -30,14 +30,15 @@
 
 scalar residual = 1;
 scalar uresidual = 1;
-Vector<double> uresidual_v;
+Vector<double> uresidual_v(0,0,0);
 
 scalar presidual = 1;
 
 // Variable that can be changed
 scalar tolerance = 1e-5;
 turbulence->read();
-
+std::ofstream res_os;
+res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
 while (simple.loop() && residual > tolerance )
 {
   Info << "Time = " << runTime.timeName() << nl << endl;
@@ -46,17 +47,17 @@ while (simple.loop() && residual > tolerance )
   {
 #include "UEqn.H"
 #include "pEqn.H"
-  scalar C =0;
-  for(label i =0;i<3;i++)
-  {
-  if(C<uresidual_v[i])
-  {
-    C = uresidual_v[i];
-  }
-  
-  }
-  
-  uresidual = C;
+    scalar C = 0;
+    for (label i = 0; i < 3; i++)
+    {
+      if (C < uresidual_v[i])
+      {
+        C = uresidual_v[i];
+      }
+
+    }
+
+    uresidual = C;
     residual = max(presidual, uresidual);
 
     Info << "\nResidual: " << residual << endl << endl;
@@ -69,7 +70,8 @@ while (simple.loop() && residual > tolerance )
        << "  ClockTime = " << runTime.elapsedClockTime() << " s"
        << nl << endl;
 }
-
+res_os << residual << std::endl;
+res_os.close();
 runTime.setTime(runTime.startTime(), 0);
 
 

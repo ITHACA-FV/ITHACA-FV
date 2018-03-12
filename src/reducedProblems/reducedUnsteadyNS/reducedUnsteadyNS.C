@@ -3,12 +3,13 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
+
 License
     This file is part of ITHACA-FV
 
@@ -93,7 +94,7 @@ reducedUnsteadyNS::reducedUnsteadyNS(unsteadyNS& problem, word tipo)
         Pmodes.append(problem.Pmodes[k]);
     }
 
-    // Store locally the snapshots for prokections
+    // Store locally the snapshots for projections
     for (label k = 0; k < problem.Ufield.size(); k++)
     {
         Usnapshots.append(problem.Ufield[k]);
@@ -215,7 +216,7 @@ int newton_unsteadyNS_PPE::df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) 
 
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now, label startSnap)
+void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd& vel_now, label startSnap)
 {
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
@@ -250,7 +251,7 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now, label startSnap
 
 
     // Set number of online solutions
-    int Ntsteps = (int) ((finalTime - tstart) / dt);
+    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
     online_solution.resize(Ntsteps);
 
     // Set the initial time
@@ -320,7 +321,7 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now, label startSnap
 }
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now, label startSnap)
+void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd& vel_now, label startSnap)
 {
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
@@ -348,7 +349,7 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now, label startSnap
     }
 
     // Set number of online solutions
-    int Ntsteps = (int) ((finalTime - tstart) / dt);
+    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
     online_solution.resize(Ntsteps);
 
     // Set the initial time

@@ -74,9 +74,7 @@ void reducedLaplacian::solveOnline(Eigen::MatrixXd mu)
 void reducedLaplacian::reconstruct(laplacianProblem& problem, fileName folder, int printevery)
 {
     mkDir(folder);
-    system("ln -s ../../constant " + folder + "/constant");
-    system("ln -s ../../0 " + folder + "/0");
-    system("ln -s ../../system " + folder + "/system");
+    ITHACAutilities::createSymLink(folder);
 
     int counter = 0;
     int nextwrite = 0;

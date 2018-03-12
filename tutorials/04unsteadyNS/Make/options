@@ -28,6 +28,9 @@ EXE_INC = \
     -I../../src/ITHACAPOD \
     -I../../src/NonLinearSolvers \
     -I../../src/thirdparty/Eigen \
+    -I../../src/Foam2Eigen \
+    -I../../src/EigenFunctions \
+    -I../../src/thirdparty/spectra-0.6.1/include \
     -w \
     -std=c++11
 
@@ -40,6 +43,9 @@ EXE_LIBS = \
     -lfvOptions \
     -lsampling \
     -lforces \
-    -lITHACA-FV-Problems
+    -lITHACA-FV-Problems \
+    -L$(FOAM_USER_LIBBIN) \
+    -L../../src/thirdparty/multivariate-splines-master \
+    -lmultivariate-splines-static.1.1
 
  

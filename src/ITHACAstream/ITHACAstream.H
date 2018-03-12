@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -52,10 +52,16 @@ SourceFiles
 #include <stdio.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include <algorithm>  
+#include <algorithm>
+#include <fstream>
+#include "ITHACAassert.H"
+#include "ITHACAutilities.H"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 #include "../thirdparty/Eigen/Eigen/Eigen"
+#pragma GCC diagnostic pop
 
-#define MAXBUFSIZE  ((int) 1e6)
+#define MAXBUFSIZE (static_cast<int> (1e6))
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -71,16 +77,18 @@ class ITHACAstream
 private:
 
 public:
-    /// Export a generic field to file in a certain folder and subfolder
-    /* This is a function to export a generic field into a certain subfolder */
+
+
+    /// @brief      Export an Fv Matrix to folder together with its source term
     ///
-    /// @param[in] s volVectorField or volScalarField.
-    /// @param[in] subfolder string to indicated the subfolder where the field is stored.
-    /// @param[in] folder string to indicated the folder where the field is stored.
-    /// @param[in] fieldName string to indicate the name of the field/file.
-    /// 
+    /// @param      Matrix     The matrix
+    /// @param[in]  folder     The folder
+    /// @param[in]  fieldname  The fieldname
+    ///
+    /// @tparam     T          can be scalar or vector
+    ///
     template<typename T>
-    static void exportSolution(T& s, fileName subfolder, fileName folder, word fieldName);
+    static void exportFvMatrix(fvMatrix<T>& Matrix, word folder, word fieldname);
 
     /// Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format
     /* In this case the function is implemented for a second order matrix  */
@@ -89,7 +97,7 @@ public:
     /// @param[in] name string to identify the name you want to use to save the file.
     /// @param[in] tipo string to identify format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
     /// @param[in] folder string to identify the folder where you want to save the file.
-    /// 
+    ///
     static void exportMatrix(Eigen::MatrixXd& matrice, word name, word tipo = "python", word folder = "./Matrices");
 
     /// Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format
@@ -101,19 +109,19 @@ public:
     /// @param[in] name string to identify the name you want to use to save the file.
     /// @param[in] tipo format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
     /// @param[in] folder string to identify the folder where you want to save the file.
-    /// 
+    ///
     static void exportMatrix(List < Eigen::MatrixXd >& matrice, word name, word tipo = "python", word folder = "./Matrices");
 
     /// Funtion to read a list of volVectorField from name of the field and casename
-    /// 
+    ///
     /// @param[in]  Lfield      a PtrList of volVectorField where you want to store the field.
     /// @param[in]  Name        The name of the field you want to read.
     /// @param[in]  caseName    The folder where the field is stored.
     /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
     /// @param[in]  n_snap      The number of snapshots you want to read.
-    /// 
-    static void read_fields(PtrList<volVectorField>& Lfield, word Name, fileName caseName, label first_snap=0, label n_snap=0);
-    
+    ///
+    static void read_fields(PtrList<volVectorField>& Lfield, word Name, fileName caseName, label first_snap = 0, label n_snap = 0);
+
     /// Funtion to read a list of volScalarField from name of the field and folder name
     ///
     /// @param[in]  Lfield      a PtrList of volScalarField where you want to store the field.
@@ -122,7 +130,7 @@ public:
     /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
     /// @param[in]  n_snap      The number of snapshots you want to read.
     ///
-    static void read_fields(PtrList<volScalarField>& Lfield, word Name, fileName caseName, label first_snap=0, label n_snap=0); 
+    static void read_fields(PtrList<volScalarField>& Lfield, word Name, fileName caseName, label first_snap = 0, label n_snap = 0);
 
     /// Funtion to read a list of volVectorField from name of the field a volVectorField if it is already existing
     ///
@@ -132,7 +140,7 @@ public:
     /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
     /// @param[in]  n_snap      The number of snapshots you want to read.
     ///
-    static void read_fields(PtrList<volVectorField>& Lfield, volVectorField& field, fileName caseName, label first_snap=0, label n_snap=0);
+    static void read_fields(PtrList<volVectorField>& Lfield, volVectorField& field, fileName caseName, label first_snap = 0, label n_snap = 0);
 
     /// Funtion to read a list of volScalarField from casename and a list of volScalarField with the same name
     ///
@@ -141,24 +149,24 @@ public:
     /// @param[in]  caseName    The folder where the field is stored.
     /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
     /// @param[in]  n_snap      The number of snapshots you want to read.
-    static void read_fields(PtrList<volScalarField>& Lfield, volScalarField& field, fileName caseName, label first_snap=0, label n_snap=0);
+    static void read_fields(PtrList<volScalarField>& Lfield, volScalarField& field, fileName caseName, label first_snap = 0, label n_snap = 0);
 
-	/// Function to export volVectorFields
+    /// Function to export volVectorFields
     ///
     /// @param[in]  field      The field you want to export.
     /// @param[in]  folder     The folder where you want to save the field.
-    /// @param[in]  fieldname  The name you want to give to the file. 
+    /// @param[in]  fieldname  The name you want to give to the file.
     ///
-	static void exportFields(PtrList<volVectorField>& field, word folder, word fieldname);
-	
-	/// Function to export volScalarFields
+    static void exportFields(PtrList<volVectorField>& field, word folder, word fieldname);
+
+    /// Function to export volScalarFields
     ///
     /// @param[in]  field      The field you want to export.
     /// @param[in]  folder     The folder where you want to save the field.
-    /// @param[in]  fieldname  The name you want to give to the file. 
+    /// @param[in]  fieldname  The name you want to give to the file.
     ///
-	static void exportFields(PtrList<volScalarField>& field, word folder, word fieldname);
-	
+    static void exportFields(PtrList<volScalarField>& field, word folder, word fieldname);
+
     /// Read a two dimensional matrix from e a txt fle in Eigen format
     /*One has to provide the complete filename with the absolute or relative path*/
     ///
@@ -167,10 +175,10 @@ public:
     /// @return     The Eigen::MatrixXd that contains the imported matrix.
     ///
     static Eigen::MatrixXd readMatrix(word filename);
-    
+
     /// Read a three dimensional matrix from a txt file in Eigen format
     /*One has to provide the folder containing the matrix files and the filename of the
-    the matrix. Since it is stored as a List of matrices each matrix must be stored in a 
+    the matrix. Since it is stored as a List of matrices each matrix must be stored in a
     different file with the following format:
     matFileName(i)_mat.txt*/
     ///
@@ -180,11 +188,232 @@ public:
     /// @return     List <Eigen::MatrixXd> that contains the imported matrix.
     ///
     static List <Eigen::MatrixXd> readMatrix(word folder, word mat_name);
+
+    /// Export a generic field to file in a certain folder and subfolder
+    /* This is a function to export a generic field into a certain subfolder */
+    ///
+    /// @param[in] s volVectorField or volScalarField.
+    /// @param[in] subfolder string to indicated the subfolder where the field is stored.
+    /// @param[in] folder string to indicated the folder where the field is stored.
+    /// @param[in] fieldName string to indicate the name of the field/file.
+    ///
+    template<typename T>
+    static void exportSolution(T& s, fileName subfolder, fileName folder, word fieldName);
+
+    /// @brief      Export a list type object to file
+    ///
+    /// @param[in]  list      The list
+    /// @param[in]  filename  The filename
+    /// @param[in]  folder    The folder
+    ///
+    /// @tparam     T         generic list type object
+    ///
+    template<typename T>
+    static void exportList(T& list, word folder, word filename);
+
+    template <typename T, int whatever, typename IND>
+    static void SaveSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m, word folder, word MatrixName);
+
+    template <typename T, int whatever, typename IND>
+    static void ReadSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m, word folder, word MatrixName);
+
+    template <typename MatrixType>
+    static void SaveDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
+
+    template <typename MatrixType>
+    static void ReadDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
+
+    template <typename MatrixType>
+    static void SaveSparseMatrixList(List<MatrixType>& MatrixList, word folder, word MatrixName);
+
+    template <typename T, int whatever, typename IND>
+    static void ReadSparseMatrixList(List<Eigen::SparseMatrix<T, whatever, IND> >& m, word folder, word MatrixName);
+
+    template <typename MatrixType>
+    static void SaveDenseMatrixList(List<MatrixType>& MatrixList, word folder, word MatrixName);
+
+    template <typename MatrixType>
+    static void ReadDenseMatrixList(List<MatrixType>& m, word folder, word MatrixName);
+
+    static int numberOfFiles(word Folder, word MatrixName);
 };
 
-#ifdef NoRepository
-#   include "ITHACAstreamTemplates.C"
-#endif
+template<typename T>
+void ITHACAstream::exportFvMatrix(fvMatrix<T>& Matrix, word folder, word MatrixName)
+{
+    Eigen::SparseMatrix<double> A;
+    Eigen::VectorXd b;
+    Foam2Eigen::fvMatrix2Eigen(Matrix, A, b);
+    SaveSparseMatrix(A, folder + "/", "A_" + MatrixName);
+    SaveDenseMatrix(b, folder + "/", "B_" + MatrixName);
+}
+
+template<typename T>
+void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder, word fieldName)
+{
+    mkDir(folder + "/" + subfolder);
+    T act(fieldName, s);
+    fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
+    OFstream os(fieldname);
+    act.writeHeader(os);
+    os << act << endl;
+}
+
+
+template<typename T>
+void ITHACAstream::exportList(T& list, word folder, word filename)
+{
+    mkDir(folder);
+    word fieldname = folder + filename;
+    OFstream os(fieldname);
+    for (label i = 0; i < list.size(); i++)
+    {
+        os << list[i] << endl;
+    }
+}
+
+template <typename T, int whatever, typename IND>
+void ITHACAstream::SaveSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m, word folder, word MatrixName)
+{
+    typedef Eigen::Triplet<int> Trip;
+    std::vector<Trip> res;
+    m.makeCompressed();
+    mkDir(folder);
+
+    std::fstream writeFile;
+    writeFile.open(folder + MatrixName, std::ios::binary | std::ios::out);
+
+    if (writeFile.is_open())
+    {
+        IND rows, cols, nnzs, outS, innS;
+        rows = m.rows()     ;
+        cols = m.cols()     ;
+        nnzs = m.nonZeros() ;
+        outS = m.outerSize();
+        innS = m.innerSize();
+        writeFile.write(reinterpret_cast<const char *> (&rows), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char *> (&cols), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char *> (&nnzs), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char *> (&outS), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char *> (&innS), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char *>(m.valuePtr()),       sizeof(T  ) * m.nonZeros());
+        writeFile.write(reinterpret_cast<const char *>(m.outerIndexPtr()),  sizeof(IND) * m.outerSize());
+        writeFile.write(reinterpret_cast<const char *>(m.innerIndexPtr()),  sizeof(IND) * m.nonZeros());
+        writeFile.close();
+    }
+}
+
+template <typename T, int whatever, typename IND>
+void ITHACAstream::ReadSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m, word folder, word MatrixName)
+{
+    std::fstream readFile;
+    readFile.open(folder + MatrixName, std::ios::binary | std::ios::in);
+    if (!readFile.good())
+    {
+        std::cout << folder + MatrixName << " file does not exist, try to rerun the Offline Stage!" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    else if (readFile.is_open())
+    {
+        IND rows, cols, nnz, inSz, outSz;
+        readFile.read(reinterpret_cast<char *>(&rows ), sizeof(IND));
+        readFile.read(reinterpret_cast<char *>(&cols ), sizeof(IND));
+        readFile.read(reinterpret_cast<char *>(&nnz  ), sizeof(IND));
+        readFile.read(reinterpret_cast<char *>(&inSz ), sizeof(IND));
+        readFile.read(reinterpret_cast<char *>(&outSz), sizeof(IND));
+        m.resize(rows, cols);
+        m.makeCompressed();
+        m.resizeNonZeros(nnz);
+        readFile.read(reinterpret_cast<char *>(m.valuePtr())     , sizeof(T  ) * nnz  );
+        readFile.read(reinterpret_cast<char *>(m.outerIndexPtr()), sizeof(IND) * outSz);
+        readFile.read(reinterpret_cast<char *>(m.innerIndexPtr()), sizeof(IND) * nnz );
+        m.finalize();
+        readFile.close();
+    }
+
+}
+
+template <typename MatrixType>
+void ITHACAstream::SaveDenseMatrix(MatrixType& Matrix, word folder, word MatrixName)
+{
+    mkDir(folder);
+    std::ofstream out(folder + MatrixName, std::ios::out | std::ios::binary | std::ios::trunc);
+    typename MatrixType::Index rows = Matrix.rows(), cols = Matrix.cols();
+    out.write(reinterpret_cast<char *> (&rows), sizeof(typename MatrixType::Index));
+    out.write(reinterpret_cast<char *> (&cols), sizeof(typename MatrixType::Index));
+    out.write(reinterpret_cast<char *> (Matrix.data()), rows * cols * sizeof(typename MatrixType::Scalar) );
+    out.close();
+}
+
+template <typename MatrixType>
+void ITHACAstream::ReadDenseMatrix(MatrixType& Matrix, word folder, word MatrixName)
+{
+    std::ifstream in;
+    in.open(folder + MatrixName, std::ios::in | std::ios::binary);
+    if (!in.good())
+    {
+        std::cout << folder + MatrixName << " file does not exist, try to rerun the Offline Stage!" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    else if (in.is_open())
+    {
+        typename MatrixType::Index rows = 0, cols = 0;
+        in.read(reinterpret_cast<char *> (&rows), sizeof(typename MatrixType::Index));
+        in.read(reinterpret_cast<char *> (&cols), sizeof(typename MatrixType::Index));
+        Matrix.resize(rows, cols);
+        in.read( reinterpret_cast<char *>(Matrix.data()) , rows * cols * sizeof(typename MatrixType::Scalar) );
+        in.close();
+    }
+
+}
+
+template <typename MatrixType>
+void ITHACAstream::SaveSparseMatrixList(List<MatrixType>& MatrixList, word folder, word MatrixName)
+{
+    for (int i = 0; i < MatrixList.size(); i++)
+    {
+        SaveSparseMatrix(MatrixList[i], folder , MatrixName + name(i));
+    }
+}
+
+template <typename MatrixType>
+void ITHACAstream::SaveDenseMatrixList(List<MatrixType>& MatrixList, word folder, word MatrixName)
+{
+    for (int i = 0; i < MatrixList.size(); i++)
+    {
+        SaveDenseMatrix(MatrixList[i], folder , MatrixName + name(i));
+    }
+}
+
+template <typename T, int whatever, typename IND>
+void ITHACAstream::ReadSparseMatrixList(List<Eigen::SparseMatrix<T, whatever, IND> >& m, word folder, word MatrixName)
+{
+    int number_of_files = numberOfFiles(folder, MatrixName);    
+    std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
+    M_Assert(number_of_files!=0, "Check if the file you are trying to read exists" );
+    Eigen::SparseMatrix<T, whatever, IND> A; 
+    for(int i=0; i<number_of_files; i++)
+    {
+        ReadSparseMatrix(A,folder,MatrixName+name(i));
+        m.append(A);
+    }
+}
+
+
+template <typename MatrixType>
+void ITHACAstream::ReadDenseMatrixList(List<MatrixType>& m, word folder, word MatrixName)
+{
+    int number_of_files = numberOfFiles(folder, MatrixName);    
+    std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
+    M_Assert(number_of_files!=0, "Check if the file you are trying to read exists" );
+    MatrixType A; 
+    for(int i=0; i<number_of_files; i++)
+    {
+        ReadDenseMatrix(A,folder,MatrixName+name(i));
+        m.append(A);
+    }
+}
+
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

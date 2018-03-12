@@ -70,6 +70,8 @@ public:
     /// Construct from a laplacian problem
     reducedLaplacian(laplacianProblem& problem);
 
+    ~reducedLaplacian(){};
+
     // Specific variables
     /// Number of modes
     label NTmodes;

@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -38,11 +38,99 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index, int layers)
+{
+    List<int> out;
+    out.resize(1);
+    out[0] = index;
+    for (int i = 0; i < layers; i++)
+    {
+        int size = out.size();
+        for (int j = 0; j < size; j++)
+        {
+            out.append(mesh.cellCells()[out[j]]);
+        }
+
+    }
+    labelList uniqueIndex;
+    uniqueOrder(out, uniqueIndex);
+    List<int> out2;
+    forAll(uniqueIndex, i)
+    {
+        out2.append(out[uniqueIndex[i]]);
+    }
+    return out2;
+}
+
+List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index_row, int index_col, int layers)
+{
+    List<int> out;
+    out.resize(2);
+    out[0] = index_row;
+    out[1] = index_col;
+    for (int i = 0; i < layers; i++)
+    {
+        int size = out.size();
+        for (int j = 0; j < size; j++)
+        {
+            out.append(mesh.cellCells()[out[j]]);
+        }
+
+    }
+    labelList uniqueIndex;
+    uniqueOrder(out, uniqueIndex);
+    List<int> out2;
+    forAll(uniqueIndex, i)
+    {
+        out2.append(out[uniqueIndex[i]]);
+    }
+    return out2;
+}
+
+
+void ITHACAutilities::createSymLink(word folder)
+{
+    mkDir(folder);
+    word command1("ln -rs  $(readlink -f constant/) " + folder + "/" + " >/dev/null 2>&1");
+    word command2("ln -rs  $(readlink -f system/) " + folder + "/" + " >/dev/null 2>&1");
+    word command3("ln -rs  $(readlink -f 0/) " + folder + "/" + " >/dev/null 2>&1");
+    std::cout.setstate(std::ios_base::failbit);
+    system(command1);
+    system(command2);
+    system(command3);
+    std::cout.clear();
+    
+}
+
+Eigen::MatrixXd ITHACAutilities::rand(int rows, int cols, double min, double max)
+{
+    Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);
+    matr = (matr.array() + 1) / 2;
+    matr = matr.array() * (max - min);
+    matr = matr.array() + min;
+    return matr;
+}
+
+Eigen::MatrixXd ITHACAutilities::rand(int rows, Eigen::MatrixXd minMax)
+{
+    int cols = minMax.rows();
+    Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);
+    matr = (matr.array() + 1) / 2;
+    for (int i = 0; i<cols; i++)
+    {
+        matr.col(i) = matr.col(i).array()*(minMax(i,1)-minMax(i,0));
+        matr.col(i) = matr.col(i).array()+(minMax(i,0));
+    }
+    return matr; 
+
+}
+
 // Check if the modes exists
 bool ITHACAutilities::check_pod()
 {
     struct stat sb;
     bool pod_exist;
+    int c = 0;
     if (stat("./ITHACAoutput/POD", &sb) == 0 && S_ISDIR(sb.st_mode))
     {
         pod_exist = true;
@@ -53,9 +141,14 @@ bool ITHACAutilities::check_pod()
         pod_exist = false;
         Info << "POD don't exist, performing a POD decomposition" << endl;
         mkDir("./ITHACAoutput/POD");
-        system("ln -s ../../constant ./ITHACAoutput/POD/constant");
-        system("ln -s ../../0 ./ITHACAoutput/POD/0");
-        system("ln -s ../../system ./ITHACAoutput/POD/system");
+        c += abs(system("ln -s ../../constant ./ITHACAoutput/POD/constant"));
+        c += abs(system("ln -s ../../0 ./ITHACAoutput/POD/0"));
+        c += abs(system("ln -s ../../system ./ITHACAoutput/POD/system"));
+    }
+    if (c > 0)
+    {
+        Info << "Error in system operation" << endl;
+        exit(0);
     }
     return pod_exist;
 }
@@ -65,6 +158,7 @@ bool ITHACAutilities::check_off()
 {
     struct stat sb;
     bool off_exist;
+    int c = 0;
     if (stat("./ITHACAoutput/Offline", &sb) == 0 && S_ISDIR(sb.st_mode))
     {
         off_exist = true;
@@ -75,9 +169,14 @@ bool ITHACAutilities::check_off()
         off_exist = false;
         Info << "Offline don't exist, performing the Offline Solve" << endl;
         mkDir("./ITHACAoutput/Offline");
-        system("ln -s ../../constant ./ITHACAoutput/Offline/constant");
-        system("ln -s ../../0 ./ITHACAoutput/Offline/0");
-        system("ln -s ../../system ./ITHACAoutput/Offline/system");
+        c += abs(system("ln -s ../../constant ./ITHACAoutput/Offline/constant"));
+        c += abs(system("ln -s ../../0 ./ITHACAoutput/Offline/0"));
+        c += abs(system("ln -s ../../system ./ITHACAoutput/Offline/system"));
+    }
+    if (c > 0)
+    {
+        Info << "Error in system operation" << endl;
+        exit(0);
     }
     return off_exist;
 }
@@ -87,6 +186,7 @@ bool ITHACAutilities::check_sup()
 {
     struct stat sb;
     bool sup_exist;
+    int c = 0;
     if (stat("./ITHACAoutput/supremizer", &sb) == 0 && S_ISDIR(sb.st_mode))
     {
         sup_exist = true;
@@ -97,9 +197,14 @@ bool ITHACAutilities::check_sup()
         sup_exist = false;
         Info << "Supremizers don't exist, performing a POD decomposition" << endl;
         mkDir("./ITHACAoutput/supremizer");
-        system("ln -s ../../constant ./ITHACAoutput/supremizer/constant");
-        system("ln -s ../../0 ./ITHACAoutput/supremizer/0");
-        system("ln -s ../../system ./ITHACAoutput/supremizer/system");
+        c += abs(system("ln -s ../../constant ./ITHACAoutput/supremizer/constant"));
+        c += abs(system("ln -s ../../0 ./ITHACAoutput/supremizer/0"));
+        c += abs(system("ln -s ../../system ./ITHACAoutput/supremizer/system"));
+    }
+    if (c > 0)
+    {
+        Info << "Error in system operation" << endl;
+        exit(0);
     }
     return sup_exist;
 }
@@ -123,22 +228,22 @@ bool ITHACAutilities::check_folder(word folder)
 
 double ITHACAutilities::error_fields(volVectorField & field1, volVectorField & field2)
 {
-    double err = L2norm(field1 - field2)/L2norm(field1);
+    double err = L2norm(field1 - field2) / L2norm(field1);
     return err;
 }
 
 Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volVectorField>& fields1, PtrList<volVectorField>& fields2)
-{    
+{
     Eigen::VectorXd err;
     if (fields1.size() != fields2.size())
     {
         Info << "The two fields does not have the same size, code will abort" << endl;
         exit(0);
     }
-    err.resize(fields1.size(),1);
+    err.resize(fields1.size(), 1);
     for (label k = 0; k < fields1.size(); k++)
     {
-        err(k,0) = error_fields(fields1[k], fields2[k]);
+        err(k, 0) = error_fields(fields1[k], fields2[k]);
         Info << " Error is " << err[k] << endl;
     }
     return err;
@@ -146,7 +251,7 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volVectorField>& field
 
 double ITHACAutilities::error_fields(volScalarField & field1, volScalarField & field2)
 {
-    double err = L2norm(field1 - field2)/L2norm(field1);
+    double err = L2norm(field1 - field2) / L2norm(field1);
     return err;
 }
 
@@ -159,16 +264,16 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volScalarField>& field
         Info << "The two fields does not have the same size, code will abort" << endl;
         exit(0);
     }
-    err.resize(fields1.size(),1);
+    err.resize(fields1.size(), 1);
     for (label k = 0; k < fields1.size(); k++)
     {
-        err(k,0) = error_fields(fields1[k], fields2[k]);
+        err(k, 0) = error_fields(fields1[k], fields2[k]);
         Info << " Error is " << err[k] << endl;
     }
     return err;
 }
 
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField>& modes)
+Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes)
 {
     label Msize = modes.size();
     Eigen::MatrixXd M_matrix(Msize, Msize);
@@ -184,7 +289,7 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField>& modes)
     return M_matrix;
 }
 
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField>& modes)
+Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes)
 {
     label Msize = modes.size();
     Eigen::MatrixXd M_matrix(Msize, Msize);
@@ -197,6 +302,7 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField>& modes)
             M_matrix(i, j) = fvc::domainIntegrate(modes[i] * modes[j]).value();
         }
     }
+
     return M_matrix;
 }
 
@@ -219,7 +325,6 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot, PtrList<vol
     return a;
 }
 
-
 Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot, PtrList<volScalarField>& modes)
 {
     label Msize = modes.size();
@@ -233,10 +338,75 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot, PtrList<vol
     {
         b(i) = fvc::domainIntegrate(snapshot * modes[i]).value();
     }
-
     a = M_matrix.colPivHouseholderQr().solve(b);
 
     return a;
+}
+
+Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<volScalarField>  snapshots, PtrList<volScalarField> modes)
+{
+    label Msize = modes.size();
+    Eigen::MatrixXd M_matrix = get_mass_matrix(modes);
+    Eigen::VectorXd a(Msize);
+    Eigen::VectorXd b(Msize);
+
+    Eigen::MatrixXd coeff(modes.size(), snapshots.size());
+    for (auto i = 0; i < snapshots.size(); i++)
+    {
+        for (label k = 0; k < Msize; k++)
+        {
+            b(k) = fvc::domainIntegrate(snapshots[i] * modes[k]).value();
+        }
+        coeff.col(i) = M_matrix.ldlt().solve(b);;
+    }
+    return coeff;
+}
+
+Eigen::MatrixXd ITHACAutilities::get_coeffs( PtrList<volVectorField>  snapshots, PtrList<volVectorField> modes)
+{
+    label Msize = modes.size();
+    Eigen::MatrixXd M_matrix = get_mass_matrix(modes);
+    Eigen::VectorXd a(Msize);
+    Eigen::VectorXd b(Msize);
+
+    Eigen::MatrixXd coeff(modes.size(), snapshots.size());
+    for (auto i = 0; i < snapshots.size(); i++)
+    {
+        for (label k = 0; k < Msize; k++)
+        {
+            b(k) = fvc::domainIntegrate(snapshots[i] & modes[k]).value();
+        }
+        coeff.col(i) = M_matrix.ldlt().solve(b);;
+    }
+    return coeff;
+}
+
+
+Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes)
+{
+    Eigen::MatrixXd coeff(modes.size(), snapshots.size());
+    for (auto i = 0; i < modes.size(); i++)
+    {
+        for (auto j = 0; j < snapshots.size(); j++)
+        {
+            coeff(i, j) = fvc::domainIntegrate(snapshots[j] * modes[i]).value();
+        }
+    }
+    return coeff;
+}
+
+
+Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes)
+{
+    Eigen::MatrixXd coeff(modes.size(), snapshots.size());
+    for (auto i = 0; i < modes.size(); i++)
+    {
+        for (auto j = 0; j < snapshots.size(); j++)
+        {
+            coeff(i, j) = fvc::domainIntegrate(snapshots[j] & modes[i]).value();
+        }
+    }
+    return coeff;
 }
 
 
@@ -268,38 +438,6 @@ double ITHACAutilities::H1seminorm(volVectorField field)
     return a;
 }
 
-Eigen::MatrixXd ITHACAutilities::foam2eigen(PtrList<volVectorField>& fields1)
-{
-    Eigen::MatrixXd out;
-    out.resize(int(fields1[0].size()*3),fields1.size());
-
-    for(int k=0; k<fields1.size(); k++)
-    {
-        for(int l=0; l<fields1[k].size(); l++)
-        {
-            out(3*l,k) = fields1[k][l][0];
-            out(3*l+1,k) = fields1[k][l][1];
-            out(3*l+2,k) = fields1[k][l][2];                 
-        }
-    }
-    return out;
-}
-
-Eigen::MatrixXd ITHACAutilities::foam2eigen(PtrList<volScalarField>& fields1)
-{
-    Eigen::MatrixXd out;
-    out.resize(int(fields1[0].size()),fields1.size());
-
-    for(int k=0; k<fields1.size(); k++)
-    {
-        for(int l=0; l<fields1[k].size(); l++)
-        {
-            out(l,k) = fields1[k][l];                
-        }
-    }
-    return out;
-}
-
 void ITHACAutilities::setBoxToValue(volScalarField& field, Eigen::MatrixXd Box, double value)
 {
     for (label i = 0; i < field.internalField().size(); i++)
@@ -327,6 +465,14 @@ void ITHACAutilities::setBoxToValue(volScalarField& field, Eigen::MatrixXd Box, 
                 }
             }
         }
+    }
+}
+
+void ITHACAutilities::assignONE(volScalarField& s, List<int>& L)
+{
+    for (label i = 0; i < L.size(); i++)
+    {
+        s.ref()[L[i]] = 1;
     }
 }
 

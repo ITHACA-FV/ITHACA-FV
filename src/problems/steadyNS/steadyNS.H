@@ -52,6 +52,8 @@ SourceFiles
 #include "fvOptions.H"
 #include "reductionProblem.H"
 #include "ITHACAstream.H"
+#include "ITHACAforces.H"
+#include "volFields.H"
 #include <iostream>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -75,6 +77,7 @@ public:
 
     /// Construct with argc and argv
     steadyNS(int argc, char *argv[]);
+    ~steadyNS(){};
 
     // Member Functions
     /// List of pointers used to form the pressure snapshots matrix
@@ -145,6 +148,13 @@ public:
     /// PPE BC3
     Eigen::MatrixXd BC3_matrix;   
     ///@}
+    //
+
+    /// Viscous forces
+    Eigen::MatrixXd tau_matrix;
+    
+    /// Pressure forces
+    Eigen::MatrixXd n_matrix;
 
 
     // Other Variables
@@ -326,6 +336,14 @@ public:
     /// @param[in]  mu    viscosity (scalar)
     ///
     void change_viscosity(double mu);
+
+    /// @brief      Compute lift and drag matrices
+    ///
+    /// @param[in]  NUmodes    The N of velocity modes
+    /// @param[in]  NPmodes    The N of pressure modes
+    /// @param[in]  NSUPmodes  The N of supremizer modes
+    ///
+    void Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes);
 
 
 };

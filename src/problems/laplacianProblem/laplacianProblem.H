@@ -9,7 +9,6 @@
  * In real Time Highly Advanced Computational Applications for Finite Volumes 
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
-
 License
     This file is part of ITHACA-FV
 
@@ -62,10 +61,15 @@ public:
     laplacianProblem();
     /// Construct with argc and argv
     laplacianProblem(int argc, char *argv[]);
+    ~laplacianProblem(){};
 
     // Member Functions
     /// List of snapshots for the solution
     PtrList<volScalarField> Tfield;
+
+    /// List of snapshots for the solution
+    PtrList<volScalarField> Tonline;
+    
     /// List of POD modes    
     PtrList<volScalarField> Tmodes;
 
