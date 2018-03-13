@@ -215,6 +215,8 @@ public:
     void liftSolve();
 
     // Wrapped Proj. Methods;    
+    
+    //--------------------------------------------------------------------------
     /// Project using the Poisson Equation for pressure
     ///
     /// @param[in]  folder     The folder used to save the reduced matrices.
@@ -224,7 +226,7 @@ public:
     ///
     void projectPPE(fileName folder, label NUmodes, label NPmodes, label NSUPmodes = 0);
 
-
+    //--------------------------------------------------------------------------
     /// Project using a supremizer approach
     ///
     /// @param[in]  folder     The folder used to save the reduced matrices.
@@ -234,6 +236,7 @@ public:
     ///
     void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes);
 
+    //--------------------------------------------------------------------------
     // Projection Methods Momentum Equation    
     /// Diffusive Term
     ///
@@ -245,6 +248,7 @@ public:
     ///
     Eigen::MatrixXd diffusive_term(label NUmodes, label NPmodes, label NSUPmodes);
 
+    //--------------------------------------------------------------------------
     /// Gradient of pressure
     ///
     /// @param[in]  NUmodes    The number of velocity modes.
@@ -255,6 +259,7 @@ public:
     ///
     Eigen::MatrixXd pressure_gradient_term(label NUmodes, label NPmodes, label NSUPmodes);
 
+    //--------------------------------------------------------------------------
     /// Convective Term
     ///
     /// @param[in]  NUmodes    The number of velocity modes.
@@ -265,6 +270,7 @@ public:
     ///
     List < Eigen::MatrixXd >  convective_term(label NUmodes, label NPmodes, label NSUPmodes);
 
+    //--------------------------------------------------------------------------
     /// Mass Term
     ///
     /// @param[in]  NUmodes    The number of velocity modes.
@@ -276,7 +282,8 @@ public:
     Eigen::MatrixXd  mass_term(label NUmodes, label NPmodes, label NSUPmodes);
 
     // Projection Methods Continuity Equation
-    
+
+    //--------------------------------------------------------------------------
     /// Divergence Term (supremizer approach)
     ///
     /// @param[in]  NUmodes    The number of velocity modes.
@@ -287,6 +294,7 @@ public:
     ///
     Eigen::MatrixXd divergence_term(label NUmodes, label NPmodes, label NSUPmodes);
 
+    //--------------------------------------------------------------------------
     /// Divergence of convective term (PPE approach)
     ///
     /// @param[in]  NUmodes    The number of velocity modes.
@@ -296,6 +304,7 @@ public:
     ///
     List < Eigen::MatrixXd > div_momentum(label NUmodes, label NPmodes);
 
+    //--------------------------------------------------------------------------
     /// Laplacian of pressure term (PPE approach)
     ///
     /// @param[in]  NPmodes    The number of pressure modes.
@@ -304,6 +313,7 @@ public:
     ///
     Eigen::MatrixXd laplacian_pressure(label NPmodes);
 
+    //--------------------------------------------------------------------------
     /// @brief      Term N° 1 given by the additional boundary condition using a PPE approach
     ///
     /// @param[in]  NUmodes    The number of velocity modes.
@@ -313,6 +323,7 @@ public:
     ///
     Eigen::MatrixXd pressure_BC1(label NPmodes, label NUmodes);
 
+    //--------------------------------------------------------------------------
     /// @brief      Term N° 2 given by the additional boundary condition using a PPE approach
     ///
     /// @param[in]  NPmodes  The n pmodes
@@ -321,7 +332,8 @@ public:
     /// @return     reduced matrix in Eigen::MatrixXd format for the BC2 using a PPE approach.
     ///
     List < Eigen::MatrixXd > pressure_BC2(label NPmodes, label NUmodes);
-    
+
+    //--------------------------------------------------------------------------
     /// @brief      Term N° 3 given by the additional boundary condition using a PPE approach
     ///
     /// @param[in]  NPmodes  The n pmodes
@@ -331,12 +343,14 @@ public:
     ///
     Eigen::MatrixXd pressure_BC3(label NPmodes, label NUmodes);
 
+    //--------------------------------------------------------------------------
     /// Function to change the viscosity
     ///
     /// @param[in]  mu    viscosity (scalar)
     ///
     void change_viscosity(double mu);
 
+    //--------------------------------------------------------------------------
     /// @brief      Compute lift and drag matrices
     ///
     /// @param[in]  NUmodes    The N of velocity modes

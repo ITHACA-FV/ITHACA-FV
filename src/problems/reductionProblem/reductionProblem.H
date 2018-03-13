@@ -75,7 +75,7 @@ public:
 
     /// Construct Null
     reductionProblem();
-    ~reductionProblem(){};
+    ~reductionProblem() {};
 
     // Members
     /// Number of parameters
@@ -124,25 +124,31 @@ public:
 #pragma GCC diagnostic pop
 
     // Functions
+     
+    //--------------------------------------------------------------------------
     /// Set Parameters Problems
     void setParameters();
 
+    //--------------------------------------------------------------------------
     /// Generate Random Numbers
     void genRandPar();
 
+    //--------------------------------------------------------------------------
     /// Generate Random Numbers given the dimension of the training set
     ///
     /// @param[in]  tsize  Dimension of the training set.
     ///
     void genRandPar(int tsize);
 
+    //--------------------------------------------------------------------------
     /// Generate Equidistributed Numbers
     void genEquiPar();
 
-
+    //--------------------------------------------------------------------------
     /// Perform a TruthSolve
     void truthSolve();
 
+    //--------------------------------------------------------------------------
     /// Export a field (template function)
     ///
     /// @param[in]  s          field you want to export.
@@ -154,6 +160,7 @@ public:
     template<typename T>
     void exportSolution(T& s, fileName subfolder, fileName folder = "./Offline");
 
+    //--------------------------------------------------------------------------
     /// Assign Boundary Condition to a volVectorField
     ///
     /// @param[in]  s       field where you want to assign the BC.
@@ -162,6 +169,7 @@ public:
     ///
     void assignBC(volVectorField& s, label BC_ind, Vector<double>& value);
 
+    //--------------------------------------------------------------------------
     /// Assign Boundary Condition to a volScalarField
     ///
     /// @param[in]  s       field where you want to assign the BC.
@@ -170,6 +178,7 @@ public:
     ///
     void assignBC(volScalarField& s, label BC_ind, double& value);
 
+    //--------------------------------------------------------------------------
     /// Change the boundary condition type for a volVectorField
     ///
     /// @param[in]  field   The field
@@ -178,6 +187,7 @@ public:
     ///
     void changeBCtype(volVectorField& field, word BCtype, label BC_ind);
 
+    //--------------------------------------------------------------------------
     /// Change the boundary condition type for a volScalarField
     ///
     /// @param[in]  field   The field
@@ -185,6 +195,7 @@ public:
     /// @param[in]  BC_ind  The BC index
     void changeBCtype(volScalarField& field, word BCtype, label BC_ind);
 
+    //--------------------------------------------------------------------------
     /// Exact reconstruction using a certain number of modes for vector list of
     /// fields and the projection coefficients (volVectorField)
     ///
@@ -195,6 +206,7 @@ public:
     ///
     void reconstruct_from_matrix(PtrList<volVectorField>& rec_field2, PtrList<volVectorField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
+    //--------------------------------------------------------------------------
     /// Exact reconstruction using a certain number of modes for vector list of
     /// fields and the projection coefficients (volScalarField)
     ///
@@ -206,6 +218,7 @@ public:
     /// Exact reconstruction using a certain number of modes for scalar list of fields
     void reconstruct_from_matrix(PtrList<volScalarField>& rec_field2, PtrList<volScalarField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
+    //--------------------------------------------------------------------------
     /// Assign internal field condition
     ///
     /// @param[in,out]  s      field where you want to assign the internal field condition
@@ -217,6 +230,7 @@ public:
     template<typename T, typename G>
     void assignIF(T& s, G& value);
 
+    //--------------------------------------------------------------------------
     /// Homogenize the snapshot matrix, it works with PtrList of volVectorField and volScalarField
     ///
     /// @param[in]      Lfield     The list of snapshots to be homogenized.
@@ -228,16 +242,17 @@ public:
     template<typename T>
     void computeLift(T& Lfield, T& liftfield, T& omfield);
 
-    void computeLift(PtrList<volVectorField>& Lfield, PtrList<volVectorField>& liftfield, PtrList<volScalarField>& NutLiftfield, PtrList<volScalarField>& Nutfield, PtrList<volScalarField>& NutOmfield);
-
+    //--------------------------------------------------------------------------
     /// Virtual function to compute the lifting function
     ///
     void liftSolve();
 
+    //--------------------------------------------------------------------------
     /// General projection operation
     ///
     void project();
 
+    //--------------------------------------------------------------------------
     /// Write out a list of scalar
     ///
     /// @param[in]  mu_now  The list of scalars.
@@ -288,20 +303,22 @@ Most of the theoretical aspects behind ITHACA-FV are deeply explained in [<b> St
 For this reason, if you use this software, please consider citing the mentioned works, reported in the following bibtex entries:
 
 
-    @Article{Stabile2017CAIM,
-    Title                    = {{POD-Galerkin reduced order methods for CFD using Finite Volume Discretisation: vortex shedding around a circular cylinder}},
-    Author                   = {Giovanni Stabile and Saddam Hijazi and Andrea Mola and Stefano Lorenzi and Gianluigi Rozza},
-    Journal                  = {In press, Communications in Applied and Industrial Mathematics, 2017},
-    Year                     = {(2017)},
-    Url                      = {https://arxiv.org/pdf/1701.03424.pdf}
-    }
+@Article{Stabile2017CAIM,
+Title                    = {{POD-Galerkin reduced order methods for CFD using Finite Volume Discretisation: vortex shedding around a circular cylinder}},
+Author                   = {Stabile, Giovanni and Hijazi, Saddam and Mola, Andrea and Lorenzi, Stefano and Rozza, Gianluigi},
+Journal                  = {Communications in Applied and Industrial Mathematics},
+Year                     = {(2017)},
+Volume                   = {8},
+Number                   = {1},
+pages                    = {210-236},
+Doi                      = {10.1515/caim-2017-0011}}
 
-    @Article{Stabile2017CAF,
-    Title                    = {{Finite volume POD-Galerkin stabilised reduced order methods for the parametrised incompressible Navier-Stokes equations}},
-    Author                   = {Stabile, Giovanni and Rozza, Gianluigi},
-    Journal                  = {submitted},
-    Year                     = {2017},
-    Url                      = {https://arxiv.org/pdf/1710.11580.pdf}}
+@Article{Stabile2017CAF,
+Title                    = {{Finite volume POD-Galerkin stabilised reduced order methods for the parametrised incompressible Navier-Stokes equations}},
+Author                   = {Stabile, Giovanni and Rozza, Gianluigi},
+Journal                  = {Computers & Fluids},
+Year                     = {2018},
+Doi                      = {10.1016/j.compfluid.2018.01.035}}
 
 And cite the ITHACA-FV [website](https://mathlab.sissa.it/ithaca-fv).
 

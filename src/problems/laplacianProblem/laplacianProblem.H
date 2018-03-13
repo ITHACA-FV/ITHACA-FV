@@ -107,9 +107,12 @@ public:
     autoPtr<Time> _runTime;
 
     // Functions
+    
+    //--------------------------------------------------------------------------
     /// Perform a truthsolve
     void truthSolve();
 
+    //--------------------------------------------------------------------------
     /// Perform a projection onto the POD modes
     ///
     /// @param[in]  Nmodes  The number of modes used for the projection

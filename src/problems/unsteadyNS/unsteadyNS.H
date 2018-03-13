@@ -108,6 +108,8 @@ class unsteadyNS: public steadyNS
         scalar maxDeltaT;
 
     // Functions
+
+        //--------------------------------------------------------------------------        
         /// @brief      Perform a truthsolve
         ///
         /// @param[in]  mu_now  The actual value of the parameter, used only to write it 
@@ -115,6 +117,7 @@ class unsteadyNS: public steadyNS
         ///
         void truthSolve(List<scalar> mu_now);
 
+        //--------------------------------------------------------------------------        
         /// Function to check if the solution must be exported.
         ///
         /// @param      timeObject  The time object of OpenFOAM.

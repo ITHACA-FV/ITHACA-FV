@@ -72,6 +72,7 @@ public:
 
     // Public Members
 
+    //--------------------------------------------------------------------------
     /// Compute the bases or read them for a vector field
     ///
     /// @param[in]  snapshotsU  a PtrList of volVectorField snapshots.
@@ -83,6 +84,7 @@ public:
     ///
     static void getModes(PtrList<volVectorField>& snapshotsU, PtrList<volVectorField>& modesU, bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
+    //--------------------------------------------------------------------------
     /// Compute the bases or read them for a scalar field
     ///
     /// @param[in]  snapshotsP  a PtrList of volScalarField snapshots.
@@ -94,6 +96,7 @@ public:
     ///
     static void getModes(PtrList<volScalarField>& snapshotsP, PtrList<volScalarField>& modesP, bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
+    //--------------------------------------------------------------------------
     /// @brief      Gets the bases for a scalar field using SVD instead of the method of snapshots
     ///
     /// @param[in]  snapshotsP  a PtrList of volScalarField snapshots.
@@ -105,6 +108,7 @@ public:
     ///
     static void getModesSVD(PtrList<volScalarField>& snapshotsP, PtrList<volScalarField>& modesP, bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
+    //--------------------------------------------------------------------------
     /// @brief      Gets the bases for a vector field using SVD instead of the method of snapshots
     ///
     /// @param[in]  snapshotsP  a PtrList of volScalarField snapshots.
@@ -116,14 +120,14 @@ public:
     ///
     static void getModesSVD(PtrList<volVectorField>& snapshotsU, PtrList<volVectorField>& modesU, bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
-
+    //--------------------------------------------------------------------------
     /// @brief      Perform GrammSchmidt orthonormalization on an Eigen Matrix
     ///
     /// @param      Matrix  The matrix
     ///
     static void GrammSchmidt(Eigen::MatrixXd& Matrix);
 
-
+    //--------------------------------------------------------------------------
     /// Computes the correlation matrix given a vector field snapshot Matrix using the L2 norm
     ///
     /// @param[in] snapshots    a PtrList of volVectorField snapshots.
@@ -132,6 +136,7 @@ public:
     ///
     static Eigen::MatrixXd corMatrix(PtrList<volVectorField>& snapshots);
 
+    //--------------------------------------------------------------------------
     /// Computes the correlation matrix given a scalar field snapshot Matrix using the L2 norm.
     ///
     /// @param[in] snapshots    a PtrList of volScalarField snapshots.
@@ -140,7 +145,7 @@ public:
     ///
     static Eigen::MatrixXd corMatrix(PtrList<volScalarField>& snapshots);
 
-
+    //--------------------------------------------------------------------------
     /// Computes the correlation matrix given a list of matrices using the Frobenius inner product.
     ///
     /// @param[in]  snapshots  The snapshots matrices
@@ -149,6 +154,7 @@ public:
     ///
     static Eigen::MatrixXd corMatrix(List<Eigen::SparseMatrix<double> > & snapshots);
 
+    //--------------------------------------------------------------------------
     /// Computes the correlation matrix given a list of vectors using the Frobenius inner product.
     ///
     /// @param[in]  snapshots  The snapshots matrices
@@ -157,6 +163,7 @@ public:
     ///
     static Eigen::MatrixXd corMatrix(List<Eigen::VectorXd>& snapshots);
 
+    //--------------------------------------------------------------------------
     /// Export the basis for a vector field into the ITHACAOutput/POD or ITHACAOutput/supremizer
     ///
     /// @param[in] s        a PtrList of volVectorField where the snapshots associated with the bases are stored.
@@ -165,6 +172,7 @@ public:
     ///
     static void exportBases(PtrList<volVectorField>& s, PtrList<volVectorField>& bases, bool sup = 0);
 
+    //--------------------------------------------------------------------------
     /// Export the basis for a scalar field into the ITHACAOutput/POD or ITHACAOutput/supremizer
     ///
     /// @param[in] s        a PtrList of volScalarField where the snapshots associated with the bases are stored.
@@ -173,18 +181,21 @@ public:
     ///
     static void exportBases(PtrList<volScalarField>& s, PtrList<volScalarField>& bases, bool sup = 0);
 
+    //--------------------------------------------------------------------------
     /// Normalize the Bases for a vector field
     ///
     /// @param[in] s    a PtrList of volVectorField where the bases are stored.
     ///
     static void normalizeBases(PtrList<volVectorField>& s);
 
+    //--------------------------------------------------------------------------
     /// Normalize the Bases for a scalar field
     ///
     /// @param[in] s    a PtrList of volScalarField where the bases are stored.
     ///
     static void normalizeBases(PtrList<volScalarField>& s);
 
+    //--------------------------------------------------------------------------
     /// Normalize a volScalarField field using a volVectorField
     ///
     /// @param[in] s    a PtrList of volVectorField where the bases used for normalization are stored.
@@ -192,6 +203,7 @@ public:
     ///
     static void normalizeBases(PtrList<volVectorField>& s, PtrList<volScalarField>& p);
 
+    //--------------------------------------------------------------------------
     /// Export the eigenvalues as a txt file
     ///
     /// @param[in] eigenValues  a scalarField of eigenvalues.
@@ -200,6 +212,7 @@ public:
     ///
     static void exportEigenvalues(scalarField eigenValues, fileName name, bool sup = 0);
 
+    //--------------------------------------------------------------------------
     /// Export the cumulative eigenvalues as a txt file
     ///
     /// @param[in] cumEigenValues   a scalarField of cumEigenValues.
@@ -208,7 +221,7 @@ public:
     ///
     static void exportcumEigenvalues(scalarField cumEigenValues,  fileName name, bool sup = 0);
 
-
+    //--------------------------------------------------------------------------
     /// @brief      Get the DEIM modes for a generic non linear function
     ///
     /// @param[in]  SnapShotsMatrix  The snapshots matrix
@@ -220,6 +233,7 @@ public:
     template<typename T>
     static PtrList<GeometricField<T, fvPatchField, volMesh> > DEIMmodes(PtrList<GeometricField<T, fvPatchField, volMesh> > & SnapShotsMatrix, int nmodes, word FunctionName);
 
+    //--------------------------------------------------------------------------
     /// @brief      Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function
     ///
     /// @param[in]  MatrixList   The matrix list as a list of pointers
@@ -233,6 +247,7 @@ public:
     template<typename type_matrix>
     static std::tuple<List<Eigen::SparseMatrix<double> >, List<Eigen::VectorXd> > DEIMmodes(PtrList<type_matrix>& MatrixList, int nmodesA, int nmodesB, word MatrixName = "Matrix");
 
+    //--------------------------------------------------------------------------
     /// @brief      Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function
     ///
     /// @param[in]  MatrixList   The matrix list as a list of pointers
@@ -244,7 +259,6 @@ public:
     /// @return     it returns a tuple containing the list of modes for the matrix and the list of modes for the source term
     ///
     static std::tuple<List<Eigen::SparseMatrix<double> >, List<Eigen::VectorXd> > DEIMmodes(List<Eigen::SparseMatrix<double> >& A, List<Eigen::VectorXd>& b, int nmodesA, int nmodesB, word MatrixName = "Matrix");
-
 
 };
 
