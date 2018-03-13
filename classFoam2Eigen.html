@@ -78,7 +78,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Class to converts foam objects into <a class="el" href="namespaceEigen.html">Eigen</a> and viceversa.  
+<p>Class to converts OpenFOAM objects into <a class="el" href="namespaceEigen.html">Eigen</a> and viceversa.  
  <a href="classFoam2Eigen.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>&gt;</code></p>
@@ -136,30 +136,35 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:ae03c257b77f160733c8e582f9e5bb91f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9333ffb94411263be510b3019e8c7cab"><td class="memTemplParams" colspan="2">template&lt;class type_f &gt; </td></tr>
 <tr class="memitem:a9333ffb94411263be510b3019e8c7cab"><td class="memTemplItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#a9333ffb94411263be510b3019e8c7cab">PtrList2Eigen</a> (type_f &amp;fields, int Nfields=10000000)</td></tr>
-<tr class="memdesc:a9333ffb94411263be510b3019e8c7cab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a PtrList List of snapshots to eigen matrix (only internalfield)  <a href="#a9333ffb94411263be510b3019e8c7cab">More...</a><br /></td></tr>
+<tr class="memdesc:a9333ffb94411263be510b3019e8c7cab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a PtrList of snapshots to <a class="el" href="namespaceEigen.html">Eigen</a> matrix (only internal field)  <a href="#a9333ffb94411263be510b3019e8c7cab">More...</a><br /></td></tr>
 <tr class="separator:a9333ffb94411263be510b3019e8c7cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0eae8508e48151c53303e79d02e419e"><td class="memTemplParams" colspan="2">template&lt;class type_f &gt; </td></tr>
 <tr class="memitem:ac0eae8508e48151c53303e79d02e419e"><td class="memTemplItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#ac0eae8508e48151c53303e79d02e419e">field2Eigen</a> (type_f &amp;field)</td></tr>
-<tr class="memdesc:ac0eae8508e48151c53303e79d02e419e"><td class="mdescLeft">&#160;</td><td class="mdescRight">{ function_description }  <a href="#ac0eae8508e48151c53303e79d02e419e">More...</a><br /></td></tr>
+<tr class="memdesc:ac0eae8508e48151c53303e79d02e419e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert an OpenFOAM field to an <a class="el" href="namespaceEigen.html">Eigen</a> Vector.  <a href="#ac0eae8508e48151c53303e79d02e419e">More...</a><br /></td></tr>
 <tr class="separator:ac0eae8508e48151c53303e79d02e419e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3a72702df9afae05f90992e329aeb61"><td class="memTemplParams" colspan="2">template&lt;class type_f &gt; </td></tr>
 <tr class="memitem:ab3a72702df9afae05f90992e329aeb61"><td class="memTemplItemLeft" align="right" valign="top">static type_f&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#ab3a72702df9afae05f90992e329aeb61">Eigen2field</a> (type_f &amp;field, Eigen::VectorXd &amp;eigen_vector)</td></tr>
+<tr class="memdesc:ab3a72702df9afae05f90992e329aeb61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert an <a class="el" href="namespaceEigen.html">Eigen</a> Vector to an OpenFOAM field (only the internal Field is copied inside the OpenFOAM field)  <a href="#ab3a72702df9afae05f90992e329aeb61">More...</a><br /></td></tr>
 <tr class="separator:ab3a72702df9afae05f90992e329aeb61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcc1a4cb21c7cefb2ddf9874c165c3cc"><td class="memTemplParams" colspan="2">template&lt;class type_m , class type_PtrList &gt; </td></tr>
 <tr class="memitem:adcc1a4cb21c7cefb2ddf9874c165c3cc"><td class="memTemplItemLeft" align="right" valign="top">static std::tuple&lt; Eigen::MatrixXd, Eigen::VectorXd &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#adcc1a4cb21c7cefb2ddf9874c165c3cc">projectFvMatrix</a> (type_m &amp;matrix, type_PtrList &amp;modes, int Nmodes)</td></tr>
+<tr class="memdesc:adcc1a4cb21c7cefb2ddf9874c165c3cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform the projection of an OpenFOAM fvMatrix onto a set of modes using the <a class="el" href="namespaceEigen.html">Eigen</a> matrix multiplication.  <a href="#adcc1a4cb21c7cefb2ddf9874c165c3cc">More...</a><br /></td></tr>
 <tr class="separator:adcc1a4cb21c7cefb2ddf9874c165c3cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaddb06c2196cbb3147fb126869308bc5"><td class="memTemplParams" colspan="2">template&lt;class type_f , class type_PtrList &gt; </td></tr>
 <tr class="memitem:aaddb06c2196cbb3147fb126869308bc5"><td class="memTemplItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#aaddb06c2196cbb3147fb126869308bc5">projectField</a> (type_f &amp;field, type_PtrList &amp;modes, int Nmodes)</td></tr>
+<tr class="memdesc:aaddb06c2196cbb3147fb126869308bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform the projection of an OpenFOAM field onto a set of modes using the <a class="el" href="namespaceEigen.html">Eigen</a> matrix multiplication.  <a href="#aaddb06c2196cbb3147fb126869308bc5">More...</a><br /></td></tr>
 <tr class="separator:aaddb06c2196cbb3147fb126869308bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af69089654326beba984470a77b457e5d"><td class="memTemplParams" colspan="2">template&lt;class type_PtrList &gt; </td></tr>
 <tr class="memitem:af69089654326beba984470a77b457e5d"><td class="memTemplItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#af69089654326beba984470a77b457e5d">MassMatrix</a> (type_PtrList &amp;modes, int Nmodes)</td></tr>
+<tr class="memdesc:af69089654326beba984470a77b457e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain the Mass Matrix from a list of reduced basis.  <a href="#af69089654326beba984470a77b457e5d">More...</a><br /></td></tr>
 <tr class="separator:af69089654326beba984470a77b457e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b0166d89fff0e69e28dfe9635742c4a"><td class="memTemplParams" colspan="2">template&lt;class type_matrix &gt; </td></tr>
 <tr class="memitem:a1b0166d89fff0e69e28dfe9635742c4a"><td class="memTemplItemLeft" align="right" valign="top">static std::tuple&lt; List&lt; Eigen::SparseMatrix&lt; double &gt; &gt;, List&lt; Eigen::VectorXd &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#a1b0166d89fff0e69e28dfe9635742c4a">LFvMatrix2LSM</a> (PtrList&lt; type_matrix &gt; &amp;MatrixList)</td></tr>
+<tr class="memdesc:a1b0166d89fff0e69e28dfe9635742c4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a PtrList of OpenFOAM fvMatrix into a tuple of lists of <a class="el" href="namespaceEigen.html">Eigen</a> Sparse Matrices and source vectors.  <a href="#a1b0166d89fff0e69e28dfe9635742c4a">More...</a><br /></td></tr>
 <tr class="separator:a1b0166d89fff0e69e28dfe9635742c4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class to converts foam objects into <a class="el" href="namespaceEigen.html">Eigen</a> and viceversa. </p>
+<div class="textblock"><p>Class to converts OpenFOAM objects into <a class="el" href="namespaceEigen.html">Eigen</a> and viceversa. </p>
 
 <p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00065">65</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
@@ -259,6 +264,22 @@ template&lt;class type_f &gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Convert an <a class="el" href="namespaceEigen.html">Eigen</a> Vector to an OpenFOAM field (only the internal Field is copied inside the OpenFOAM field) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">field</td><td>The OpenFOAM field where to copy the <a class="el" href="namespaceEigen.html">Eigen</a> Vector </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">eigen_vector</td><td>The <a class="el" href="namespaceEigen.html">Eigen</a> vector</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">type_f</td><td>Type of the field can be volScalarField or volVectorField</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The OpenFoam Field </dd></dl>
+
 </div>
 </div>
 <a id="a8da901c66f6d08d3be689f4b55cfc256"></a>
@@ -347,22 +368,22 @@ template&lt;class type_f &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>{ function_description } </p>
+<p>Convert an OpenFOAM field to an <a class="el" href="namespaceEigen.html">Eigen</a> Vector. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">field</td><td>The field</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">field</td><td>The field</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">type_f</td><td>{ description }</td></tr>
+    <tr><td class="paramname">type_f</td><td>Type of the field can be volScalarField or volVectorField</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>{ description_of_the_return_value } </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>return the dense <a class="el" href="namespaceEigen.html">Eigen</a> vector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00137">137</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00202">202</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 
 </div>
 </div>
@@ -739,7 +760,21 @@ template&lt;class type_matrix &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00151">151</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p>Convert a PtrList of OpenFOAM fvMatrix into a tuple of lists of <a class="el" href="namespaceEigen.html">Eigen</a> Sparse Matrices and source vectors. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">MatrixList</td><td>The matrix list</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname"></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00216">216</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 
 </div>
 </div>
@@ -779,7 +814,23 @@ template&lt;class type_PtrList &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00220">220</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p>Obtain the Mass Matrix from a list of reduced basis. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">modes</td><td>The OpenFOAM modes contained in a PtrList </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Nmodes</td><td>The number of requested modes</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">type_PtrList</td><td>the type of the PtrList for the modes can be volScalarField or volVectorField</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="namespaceEigen.html">Eigen</a> matrix containing the mass matrix </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00283">283</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 
 </div>
 </div>
@@ -825,7 +876,32 @@ template&lt;class type_f , class type_PtrList &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00256">256</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p>Perform the projection of an OpenFOAM field onto a set of modes using the <a class="el" href="namespaceEigen.html">Eigen</a> matrix multiplication. </p>
+<p>It is the standard Galerkin projection of a field onto a reduced basis:</p>
+<p class="formulaDsp">
+\[ \mathbf{f} \in R^{Nx1} , \mathbf{f_r} \in R^{nx1} , \mathbf{M} \in R^{Nxn} \]
+</p>
+<p class="formulaDsp">
+\[ \mathbf{f_r} = \mathbf{M^T f} \]
+</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">field</td><td>The f OpenFOAM field </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modes</td><td>The M OpenFOAM modes contained in a PtrList </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Nmodes</td><td>The n number of modes you want to use (The size of input modes can be bigger than the requested number of modes)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">type_f</td><td>type of field can be either scalar or vectorial </td></tr>
+    <tr><td class="paramname">type_PtrList</td><td>the type of the PtrList for the modes can be volScalarField or volVectorField</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a vector fr with the projection </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00319">319</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 
 </div>
 </div>
@@ -871,7 +947,32 @@ template&lt;class type_m , class type_PtrList &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00177">177</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p>Perform the projection of an OpenFOAM fvMatrix onto a set of modes using the <a class="el" href="namespaceEigen.html">Eigen</a> matrix multiplication. </p>
+<p>It is performed the standard projection used in reduced order models to obtain the reduced matrices:</p>
+<p class="formulaDsp">
+\[ \mathbf{A} \in R^{NxN} , \mathbf{A_r} \in R^{nxn} , \mathbf{b} \in R^{Nx1} , \mathbf{b_r} \in R^{nx1} , \mathbf{M} \in R^{Nxn} \]
+</p>
+<p class="formulaDsp">
+\[ \mathbf{A_r} = \mathbf{M^T A M} , \mathbf{b_r} = \mathbf{M^T b} \]
+</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">matrix</td><td>The A OpenFOAM fvMatrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modes</td><td>The M OpenFOAM modes contained in a PtrList </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Nmodes</td><td>The n number of modes you want to use (The size of input modes can be bigger than the requested number of modes)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">type_m</td><td>type of fvMatrix can be either scalar or vectorial </td></tr>
+    <tr><td class="paramname">type_PtrList</td><td>the type of the PtrList for the modes can be volScalarField or volVectorField</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing the projected Ar matrix and vector br which are coming from the source term. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00242">242</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 
 </div>
 </div>
@@ -911,10 +1012,10 @@ template&lt;class type_f &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Convert a PtrList List of snapshots to eigen matrix (only internalfield) </p>
+<p>Convert a PtrList of snapshots to <a class="el" href="namespaceEigen.html">Eigen</a> matrix (only internal field) </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fields</td><td>The fields can be a PtrList&lt;volScalarField&gt; or PtrList&lt;volVectorField&gt;</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fields</td><td>The fields can be a PtrList&lt;volScalarField&gt; or PtrList&lt;volVectorField&gt;</td></tr>
   </table>
   </dd>
 </dl>
@@ -924,7 +1025,7 @@ template&lt;class type_f &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="namespaceEigen.html">Eigen</a> matrix containing as columns the snapshots </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="namespaceEigen.html">Eigen</a> matrix containing as columns the snapshots </dd></dl>
 
 </div>
 </div>

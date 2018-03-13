@@ -125,7 +125,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:ae224f60bcea321a7a583b0b86dc4fcc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8197016447ab9a865a1f4383f608e9a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ad8197016447ab9a865a1f4383f608e9a"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classEigenFunctions.html#ad8197016447ab9a865a1f4383f608e9a">condNumber</a> (Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, Eigen::Dynamic, Eigen::Dynamic &gt; &amp;A)</td></tr>
-<tr class="memdesc:ad8197016447ab9a865a1f4383f608e9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">{ function_description }  <a href="#ad8197016447ab9a865a1f4383f608e9a">More...</a><br /></td></tr>
+<tr class="memdesc:ad8197016447ab9a865a1f4383f608e9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conditioning number of a dense matrix.  <a href="#ad8197016447ab9a865a1f4383f608e9a">More...</a><br /></td></tr>
 <tr class="separator:ad8197016447ab9a865a1f4383f608e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -159,20 +159,20 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>{ function_description } </p>
+<p>Conditioning number of a dense matrix. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">A</td><td>{ parameter_description }</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">A</td><td>input Matrix</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td>{ description }</td></tr>
+    <tr><td class="paramname">T</td><td>type of object, i.e. double, float, ....</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>{ description_of_the_return_value } </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Conditioning number </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="EigenFunctions_8H_source.html#l00379">379</a> of file <a class="el" href="EigenFunctions_8H_source.html">EigenFunctions.H</a>.</p>
 
@@ -526,8 +526,8 @@ template&lt;typename T &gt; </div>
 </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">A</td><td>{ parameter_description } </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">C</td><td>{ parameter_description }</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">A</td><td>List of sparse Matrices </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">C</td><td>Dense Matrix</td></tr>
   </table>
   </dd>
 </dl>
