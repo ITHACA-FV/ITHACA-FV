@@ -75,7 +75,7 @@ private:
 
 public:
 
-    ///
+    //--------------------------------------------------------------------------
     /// @brief      Gets the indices of the cells around a certain cell.
     ///
     /// @param      mesh    The mesh
@@ -86,7 +86,7 @@ public:
     ///
     static List<int> getIndices(fvMesh& mesh, int index, int layers);
 
-    ///
+    //--------------------------------------------------------------------------
     /// @brief      Gets the indices of the cells around a certain cell.
     ///
     /// @param      mesh    The mesh
@@ -97,13 +97,14 @@ public:
     ///
     static List<int> getIndices(fvMesh& mesh, int index_row, int index_col, int layers);
 
+    //--------------------------------------------------------------------------
     /// @brief      Creates a symbolic links to 0, system and constant
     ///
     /// @param[in]  folder  The folder where to create the symbolic links
     ///
     static void createSymLink(word folder);
 
-
+    //--------------------------------------------------------------------------
     /// @brief      generate random matrix with random values in an interval
     ///
     /// @param[in]  rows  The rows
@@ -115,7 +116,7 @@ public:
     ///
     static Eigen::MatrixXd rand(int rows, int cols, double min, double max);
 
-    ///
+    //--------------------------------------------------------------------------
     /// @brief      generate random matrix with random values in an interval
     ///
     /// @param[in]  rows    The rows
@@ -125,6 +126,7 @@ public:
     ///
     static Eigen::MatrixXd rand(int rows, Eigen::MatrixXd minMax);
 
+    //--------------------------------------------------------------------------
     /// Check if a folder exists
     ///
     /// @param[in]  folder  The folder you want to check.
@@ -133,24 +135,28 @@ public:
     ///
     static bool check_folder(word folder);
 
+    //--------------------------------------------------------------------------
     /// Check if the offline data folder exists
     ///
     /// @return     1 if the folder exists 0 elsewhere.
     ///
     static bool check_off();
 
+    //--------------------------------------------------------------------------
     /// Check if the POD data folder exists
     ///
     /// @return     1 if the folder exists 0 elsewhere.
     ///
     static bool check_pod();
 
+    //--------------------------------------------------------------------------
     /// Check if the supremizer folder exists
     ///
     /// @return     1 if the folder exists 0 elsewhere.
     ///
     static bool check_sup();
 
+    //--------------------------------------------------------------------------
     /// Function to compute the relative error between two volVectorFields in L2 norm
     ///
     /// @param[in]  field1  The field 1
@@ -160,6 +166,7 @@ public:
     ///
     static double error_fields(volVectorField & field1, volVectorField & field2);
 
+    //--------------------------------------------------------------------------
     /// Function to compute the relative error between two volScalarFields in L2 norm
     ///
     /// @param[in]  field1  The field 1
@@ -169,6 +176,7 @@ public:
     ///
     static double error_fields(volScalarField & field1, volScalarField & field2);
 
+    //--------------------------------------------------------------------------
     /// Function to compute the relative error in L2 norm between two lists of volVectorFields
     ///
     /// @param[in]  fields1  The fields 1
@@ -178,6 +186,7 @@ public:
     ///
     static Eigen::MatrixXd error_listfields(PtrList<volVectorField>& fields1, PtrList<volVectorField>& fields2);
 
+    //--------------------------------------------------------------------------
     /// Function to compute the relative error in L2 norm between two lists of volScalarFields
     ///
     /// @param[in]  fields1  The fields 1
@@ -187,6 +196,7 @@ public:
     ///
     static Eigen::MatrixXd error_listfields(PtrList<volScalarField>& fields1, PtrList<volScalarField>& fields2);
 
+    //--------------------------------------------------------------------------
     /// Function to compute a Mass Matrix from a list of Basis Functions (vectorial) for L2 projection
     ///
     /// @param[in]  modes  The modes in PtrList form
@@ -195,6 +205,7 @@ public:
     ///
     static Eigen::MatrixXd get_mass_matrix(PtrList<volVectorField> modes);
 
+    //--------------------------------------------------------------------------
     /// Function to compute a Mass Matrix from a list of Basis Functions (scalar) for L2 projection
     ///
     /// @param[in]  modes  The modes in PtrList form
@@ -203,6 +214,7 @@ public:
     ///
     static Eigen::MatrixXd get_mass_matrix(PtrList<volScalarField> modes);
 
+    //--------------------------------------------------------------------------
     /// Project a snapshot scalar field on a non-orthogonal basis function and get the coefficients of the projection
     ///
     /// @param[in]  snapshots  The snapshots matrix.
@@ -212,6 +224,7 @@ public:
     ///
     static Eigen::MatrixXd get_coeffs(PtrList<volScalarField> snapshots, PtrList<volScalarField> modes);
 
+    //--------------------------------------------------------------------------
     /// Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection
     ///
     /// @param[in]  snapshots  The snapshots matrix.
@@ -221,6 +234,7 @@ public:
     ///
     static Eigen::MatrixXd get_coeffs(PtrList<volVectorField> snapshots, PtrList<volVectorField> modes);
 
+    //--------------------------------------------------------------------------
     /// Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection
     ///
     /// @param[in]  snapshot  The snapshots.
@@ -230,6 +244,7 @@ public:
     ///
     static Eigen::VectorXd get_coeffs(volVectorField snapshot, PtrList<volVectorField>& modes);
 
+    //--------------------------------------------------------------------------
     /// Project a snapshot vector field on a non-orthogonal basis function
     /// and get the coefficients of the projection
     ///
@@ -240,7 +255,7 @@ public:
     ///
     static Eigen::VectorXd get_coeffs(volScalarField snapshot, PtrList<volScalarField>& modes);
 
-    ///
+    //--------------------------------------------------------------------------
     /// @brief      Gets the coeffs ortho.
     ///
     /// @param[in]  snapshots  The snapshots
@@ -250,7 +265,7 @@ public:
     ///
     static Eigen::MatrixXd get_coeffs_ortho(PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes);
 
-    ///
+    //--------------------------------------------------------------------------
     /// @brief      Gets the coeffs ortho.
     ///
     /// @param[in]  snapshots  The snapshots
@@ -260,7 +275,7 @@ public:
     ///
     static Eigen::MatrixXd get_coeffs_ortho(PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes);
 
-
+    //--------------------------------------------------------------------------
     /// Export a field (template function)
     ///
     /// @param[in]  s          field you want to export.
@@ -272,6 +287,7 @@ public:
     template<typename T>
     static void exportSolution(T& s, fileName subfolder, fileName folder);
 
+    //--------------------------------------------------------------------------
     /// Assign internal field condition
     ///
     /// @param[in,out]  s      field where you want to assign the internal field condition
@@ -283,6 +299,7 @@ public:
     template<typename T, typename G>
     static void assignIF(T& s, G& value);
 
+    //--------------------------------------------------------------------------
     /// Assign one to volScalarField
     ///
     /// @param[in,out] s     field where you want to assign the internal field
@@ -291,6 +308,7 @@ public:
     ///
     static void assignONE(volScalarField& s, List<int>& L);
 
+    //--------------------------------------------------------------------------
     /// Evaluate the L2 norm of a volScalarField
     ///
     /// @param[in]  field  The field.
@@ -299,6 +317,7 @@ public:
     ///
     static double L2norm(volScalarField field);
 
+    //--------------------------------------------------------------------------
     /// Evaluate the L2 norm of a volVectorField
     ///
     /// @param[in]  field  The field.
@@ -307,6 +326,7 @@ public:
     ///
     static double L2norm(volVectorField field);
 
+    //--------------------------------------------------------------------------
     /// Evaluate the H1 seminorm of a volScalarField
     ///
     /// @param[in]  field  The field.
@@ -315,6 +335,7 @@ public:
     ///
     static double H1seminorm(volScalarField field);
 
+    //--------------------------------------------------------------------------
     /// Evaluate the H1 seminorm of a volVectorField
     ///
     /// @param[in]  field  The field.
@@ -323,6 +344,7 @@ public:
     ///
     static double H1seminorm(volVectorField field);
 
+    //--------------------------------------------------------------------------
     /// Convert to List of volVectorField snapshots to eigen matrix (only internalfield)
     ///
     /// @param      fields  The fields in PtrList format.
@@ -331,7 +353,7 @@ public:
     ///
     static Eigen::MatrixXd foam2eigen(PtrList<volVectorField>& fields);
 
-
+    //--------------------------------------------------------------------------
     /// Convert to List of volScalarField snapshots to eigen matrix (only internalfield)
     ///
     /// @param      fields  The fields in PtrList format.
@@ -342,6 +364,7 @@ public:
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
+    //--------------------------------------------------------------------------
     /// Set value of a volScalarField to a constant inside a given box
     ///
     /// @details the Box must be defined with a 2*3 Eigen::MatrixXd in the following way
@@ -362,10 +385,17 @@ public:
     static void setBoxToValue(volScalarField& field, Eigen::MatrixXd Box, double value);
 #pragma GCC diagnostic pop
 
+    //--------------------------------------------------------------------------
+    /// @brief      Gets the mass matrix using the eigen routine
+    ///
+    /// @param      fields  The openFoam fields
+    ///
+    /// @tparam     T       type of field
+    ///
+    /// @return     The mass matrix eigen.
+    ///
     template<typename T>
     static Eigen::MatrixXd get_mass_matrix_Eigen(PtrList<T>& fields);
-
-
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
