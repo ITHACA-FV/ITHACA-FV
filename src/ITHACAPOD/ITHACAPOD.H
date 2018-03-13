@@ -143,7 +143,7 @@ public:
 
     /// Computes the correlation matrix given a list of matrices using the Frobenius inner product.
     ///
-    /// @param      snapshots  The snapshots matrices
+    /// @param[in]  snapshots  The snapshots matrices
     ///
     /// @return     the Eigen::MatrixXd correlation matrix.
     ///
@@ -151,7 +151,7 @@ public:
 
     /// Computes the correlation matrix given a list of vectors using the Frobenius inner product.
     ///
-    /// @param      snapshots  The snapshots matrices
+    /// @param[in]  snapshots  The snapshots matrices
     ///
     /// @return     the Eigen::MatrixXd correlation matrix.
     ///
@@ -211,7 +211,7 @@ public:
 
     /// @brief      Get the DEIM modes for a generic non linear function
     ///
-    /// @param      SnapShotsMatrix  The snapshots matrix
+    /// @param[in]  SnapShotsMatrix  The snapshots matrix
     ///
     /// @tparam     T                templated object for the snapshots matrix type
     ///
@@ -222,7 +222,7 @@ public:
 
     /// @brief      Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function
     ///
-    /// @param      MatrixList   The matrix list as a list of pointers
+    /// @param[in]  MatrixList   The matrix list as a list of pointers
     /// @param[in]  nmodes       The number of modes
     /// @param[in]  MatrixName   The matrix name, used to save the matrix
     ///
@@ -235,7 +235,7 @@ public:
 
     /// @brief      Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function
     ///
-    /// @param      MatrixList   The matrix list as a list of pointers
+    /// @param[in]  MatrixList   The matrix list as a list of pointers
     /// @param[in]  nmodes       The number of modes
     /// @param[in]  MatrixName   The matrix name, used to save the matrix
     ///

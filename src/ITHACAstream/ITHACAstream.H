@@ -42,7 +42,7 @@ SourceFiles
 /// Header file of the ITHACAstream class, it contains the implementation of
 /// several methods for input output operations.
 /// \dir
-/// Directory containing the header, source and template files for the ITHACAstream class.
+/// Directory containing the header, source and template files for the ITHACAstream class, ITHACAparameters and Assert Functions
 
 #ifndef ITHACAstream_H
 #define ITHACAstream_H
@@ -78,7 +78,7 @@ private:
 
 public:
 
-
+    //--------------------------------------------------------------------------
     /// @brief      Export an Fv Matrix to folder together with its source term
     ///
     /// @param      Matrix     The matrix
@@ -90,6 +90,7 @@ public:
     template<typename T>
     static void exportFvMatrix(fvMatrix<T>& Matrix, word folder, word fieldname);
 
+    //--------------------------------------------------------------------------
     /// Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format
     /* In this case the function is implemented for a second order matrix  */
     ///
@@ -100,6 +101,7 @@ public:
     ///
     static void exportMatrix(Eigen::MatrixXd& matrice, word name, word tipo = "python", word folder = "./Matrices");
 
+    //--------------------------------------------------------------------------
     /// Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format
     /* In this case the function is implemented for a third order matrix
     the eigen matrix is stored as a set of two dimensional matrices where
@@ -112,6 +114,7 @@ public:
     ///
     static void exportMatrix(List < Eigen::MatrixXd >& matrice, word name, word tipo = "python", word folder = "./Matrices");
 
+    //--------------------------------------------------------------------------
     /// Funtion to read a list of volVectorField from name of the field and casename
     ///
     /// @param[in]  Lfield      a PtrList of volVectorField where you want to store the field.
@@ -122,6 +125,7 @@ public:
     ///
     static void read_fields(PtrList<volVectorField>& Lfield, word Name, fileName caseName, label first_snap = 0, label n_snap = 0);
 
+    //--------------------------------------------------------------------------
     /// Funtion to read a list of volScalarField from name of the field and folder name
     ///
     /// @param[in]  Lfield      a PtrList of volScalarField where you want to store the field.
@@ -132,6 +136,7 @@ public:
     ///
     static void read_fields(PtrList<volScalarField>& Lfield, word Name, fileName caseName, label first_snap = 0, label n_snap = 0);
 
+    //--------------------------------------------------------------------------
     /// Funtion to read a list of volVectorField from name of the field a volVectorField if it is already existing
     ///
     /// @param[in]  Lfield      a PtrList of volVectorField where you want to store the field.
@@ -142,6 +147,7 @@ public:
     ///
     static void read_fields(PtrList<volVectorField>& Lfield, volVectorField& field, fileName caseName, label first_snap = 0, label n_snap = 0);
 
+    //--------------------------------------------------------------------------
     /// Funtion to read a list of volScalarField from casename and a list of volScalarField with the same name
     ///
     /// @param[in]  Lfield      a PtrList of volScalarField where you want to store the field.
@@ -151,6 +157,7 @@ public:
     /// @param[in]  n_snap      The number of snapshots you want to read.
     static void read_fields(PtrList<volScalarField>& Lfield, volScalarField& field, fileName caseName, label first_snap = 0, label n_snap = 0);
 
+    //--------------------------------------------------------------------------
     /// Function to export volVectorFields
     ///
     /// @param[in]  field      The field you want to export.
@@ -159,6 +166,7 @@ public:
     ///
     static void exportFields(PtrList<volVectorField>& field, word folder, word fieldname);
 
+    //--------------------------------------------------------------------------
     /// Function to export volScalarFields
     ///
     /// @param[in]  field      The field you want to export.
@@ -167,6 +175,7 @@ public:
     ///
     static void exportFields(PtrList<volScalarField>& field, word folder, word fieldname);
 
+    //--------------------------------------------------------------------------
     /// Read a two dimensional matrix from e a txt fle in Eigen format
     /*One has to provide the complete filename with the absolute or relative path*/
     ///
@@ -176,6 +185,7 @@ public:
     ///
     static Eigen::MatrixXd readMatrix(word filename);
 
+    //--------------------------------------------------------------------------    
     /// Read a three dimensional matrix from a txt file in Eigen format
     /*One has to provide the folder containing the matrix files and the filename of the
     the matrix. Since it is stored as a List of matrices each matrix must be stored in a
@@ -189,6 +199,7 @@ public:
     ///
     static List <Eigen::MatrixXd> readMatrix(word folder, word mat_name);
 
+    //--------------------------------------------------------------------------
     /// Export a generic field to file in a certain folder and subfolder
     /* This is a function to export a generic field into a certain subfolder */
     ///
@@ -200,6 +211,7 @@ public:
     template<typename T>
     static void exportSolution(T& s, fileName subfolder, fileName folder, word fieldName);
 
+    //--------------------------------------------------------------------------
     /// @brief      Export a list type object to file
     ///
     /// @param[in]  list      The list
@@ -211,30 +223,116 @@ public:
     template<typename T>
     static void exportList(T& list, word folder, word filename);
 
+
+    //--------------------------------------------------------------------------
+    /// @brief      Saves an Eigen sparse matrix into bynary format file
+    ///
+    /// @param      m           Eigen::SparseMatrix m 
+    /// @param[in]  folder      The folder where you want to save the matrix
+    /// @param[in]  MatrixName  The matrix name for the output file
+    ///
+    /// @tparam     T           type of the matrix, i.e. double, float, ...
+    /// @tparam     whatever    number of matrix rows
+    /// @tparam     IND         number of matrix cols
+    ///
     template <typename T, int whatever, typename IND>
     static void SaveSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m, word folder, word MatrixName);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Reads an Eigen sparse matrix from a bynary format file
+    ///
+    /// @param[in,out]  m           Eigen::SparseMatrix m 
+    /// @param[in]      folder      The folder from where you want to read the matrix
+    /// @param[in]      MatrixName  The matrix name for the input file
+    ///
+    /// @tparam     T           type of the matrix, i.e. double, float, ...
+    /// @tparam     whatever    number of matrix rows
+    /// @tparam     IND         number of matrix cols
+    ///
     template <typename T, int whatever, typename IND>
     static void ReadSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m, word folder, word MatrixName);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Saves a dense matrix to a binary format file
+    ///
+    /// @param[in]  Matrix      The  Eigen dense matrix
+    /// @param[in]  folder      he folder where you want to save the matrix
+    /// @param[in]  MatrixName  The matrix name for the output file
+    ///
+    /// @tparam     MatrixType  type of the matrix, i.e. double, float, ...
+    ///
     template <typename MatrixType>
     static void SaveDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Reads a dense matrix from a binary format file
+    ///
+    /// @param[in,out]  Matrix      The Eigen dense matrix
+    /// @param[in]      folder      The folder from where you want to read the matrix
+    /// @param[in]      MatrixName  The matrix name of the input file
+    ///
+    /// @tparam     MatrixType  type of the matrix, i.e. double, float, ...
+    ///
     template <typename MatrixType>
     static void ReadDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Saves a sparse matrix list to bynary files
+    ///
+    /// @param[in]  MatrixList  The matrix list 
+    /// @param[in]  folder      The folder where you want to save files
+    /// @param[in]  MatrixName  The matrix name prefix, files are the named with an incremental number
+    ///
+    /// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
+    ///
     template <typename MatrixType>
     static void SaveSparseMatrixList(List<MatrixType>& MatrixList, word folder, word MatrixName);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Reads a sparse matrix list to bynary files
+    ///
+    /// @param[in,out]  MatrixList  The matrix list 
+    /// @param[in]      folder      The folder from where you want to read the files
+    /// @param[in]      MatrixName  The matrix name prefix, files are the named with an incremental number
+    ///
+    /// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
+    ///
     template <typename T, int whatever, typename IND>
     static void ReadSparseMatrixList(List<Eigen::SparseMatrix<T, whatever, IND> >& m, word folder, word MatrixName);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Saves a dense matrix list to bynary files
+    ///
+    /// @param[in]  MatrixList  The matrix list 
+    /// @param[in]  folder      The folder where you want to save files
+    /// @param[in]  MatrixName  The matrix name prefix, files are the named with an incremental number
+    ///
+    /// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
+    ///
     template <typename MatrixType>
     static void SaveDenseMatrixList(List<MatrixType>& MatrixList, word folder, word MatrixName);
 
+
+    //--------------------------------------------------------------------------
+    /// @brief      Reads a sparse matrix list to bynary files
+    ///
+    /// @param[in,out]  MatrixList  The matrix list 
+    /// @param[in]      folder      The folder from where you want to read the files
+    /// @param[in]      MatrixName  The matrix name prefix, files are the named with an incremental number
+    ///
+    /// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
+    ///
     template <typename MatrixType>
     static void ReadDenseMatrixList(List<MatrixType>& m, word folder, word MatrixName);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Count the number of files with a certain name prefix, used by reading functions of list of matrices
+    ///
+    /// @param[in]  Folder      The folder
+    /// @param[in]  MatrixName  The matrix name
+    ///
+    /// @return     the number of files matching the request
+    ///
     static int numberOfFiles(word Folder, word MatrixName);
 };
 

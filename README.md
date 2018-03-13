@@ -1,5 +1,4 @@
 <img align="center" src="./docs/logo/ithaca-fv-small.png?raw=true" alt="ITHACA logo"/>
-
 ## ITHACA-FV - In real Time Highly Advanced Computational Applications for Finite Volumes - ROMs for OpenFOAM ##
 
 ### 0. Introduction
@@ -26,26 +25,26 @@ cd ${FOAM_APP}/utilities
 ``` 
 Now you can clone the **ITHACA-FV** repository inside the selected folder
 ```
-git clone https://github.com/mathLab/ITHACA-FV.git
+https://gitlab.com/giovastabile/ITHACA-FV5.1
 ```
 and you can compile **ITHACA-FV** by navigating inside the src folder and compiling using wmake
 ```
 cd ITHACA-FV
 ./Allwmake 
 ```
-Once the clone is performed, for of a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://mathlab.github.io/ITHACA-FV/).
+Once the clone is performed, for of a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](http://people.sissa.it/~gstabile/ITHACA-FV/).
 
 
-### 3. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
+### 3. Tutorials
 Several tutorials are provided the [**tutorials** subfolder](./tutorials).
-* [**Tutorial 1**](https://mathlab.github.io/ITHACA-FV/01POD_8C-example.html): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case. 
-* [**Tutorial 2**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C-example.html): In this tutorial is implemented the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**. 
-* [**Tutorial 3**](https://mathlab.github.io/ITHACA-FV/03steadyNS_8C-example.html) In this tutorial is implemented the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **simpleFoam**.
+* **Tutorial 1**: In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case. 
+* **Tutorial 2**: In this tutorial is implemented the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**. 
+* **Tutorial 3** In this tutorial is implemented the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the inlet velocity. The OpenFOAM full order problem is based on **simpleFoam**.
 * **Tutorial 4** In this tutorial is implemented the development of a parametrized POD-Galerkin method for an unsteady Navier-Stokes problem. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **pimpleFoam**.
 
 
 ### 4. Authors and contributors
-**ITHACA-FV** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by [Dr. Giovanni Stabile](mailto:gstabile@sissa.it) under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it).
+**ITHACA-FV** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by [Dr. Giovanni Stabile](mailto:gstabile@sissa.it) under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it)
 
 Contact us by email for further information or questions about **ITHACA-FV**, or open an ''Issue'' on this website. **ITHACA-FV** is at an early development stage, so contributions improving either the code or the documentation are welcome, both as patches or merge requests on this website.
 
@@ -68,8 +67,9 @@ Doi                      = {10.1515/caim-2017-0011}}
 @Article{Stabile2017CAF,
 Title                    = {{Finite volume POD-Galerkin stabilised reduced order methods for the parametrised incompressible Navier-Stokes equations}},
 Author                   = {Stabile, Giovanni and Rozza, Gianluigi},
-Journal                  = {Computers & Fluids, In press},
-Year                     = {2018}}
+Journal                  = {Computers & Fluids},
+Year                     = {2018},
+Doi                      = {10.1016/j.compfluid.2018.01.035}}
 ```
 
 
@@ -79,3 +79,4 @@ and cite the [ITHACA-FV website](http://mathlab.sissa.it/ITHACA-FV).
 ### 6. License
 **ITHACA-FV** is freely available under the GNU LGPL, version 3.
 
+![Google Analytics](https://ga-beacon.appspot.com/UA-66224794-1/rbnics/readme?pixel)

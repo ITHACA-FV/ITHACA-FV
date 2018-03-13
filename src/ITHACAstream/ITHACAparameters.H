@@ -27,10 +27,10 @@ License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    ITHACAPOD
+    IHACAparameters
 
 Description
-    Implementation of a POD decomposition of a general field
+    Some parameters for input output informations
 
 SourceFiles
     IHACAparameters.H
@@ -42,6 +42,8 @@ SourceFiles
 #include <iostream>
 #include "fvCFD.H"
 
+/// Class for the definition of some general parameters, the parameters must be defined from the file ITHACAdict inside the 
+/// system folder.
 class ITHACAparameters
 {
 public:
@@ -75,9 +77,16 @@ public:
         if (typeout == "scientific") {outytpe = std::ios_base::scientific;}
         eigensolver = ITHACAdict->lookupOrDefault<word>("EigenSolver", "spectra");
     }
+    /// type of eigensolver used in the eigenvalue decomposition can be either be eigen or spectra
     word eigensolver;
+
+    /// precision of the output Market Matrix objects (i.e. reduced matrices, eigenvalues, ...)
     int precision;
+
+    /// type of output format can be fixed or scientific
     std::_Ios_Fmtflags outytpe;
+
+    /// Dictionary for input objects from file
     IOdictionary* ITHACAdict;
 private:
 

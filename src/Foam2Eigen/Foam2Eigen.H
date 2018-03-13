@@ -38,9 +38,9 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the ITHACAutilities class.
+/// Header file of the Foam2Eigen class.
 /// \dir
-/// Directory containing the header and source files for the ITHACAutilities class.
+/// Directory containing the header and source files for the Foam2Eigen class.
 
 #ifndef Foam2Eigen_H
 #define Foam2Eigen_H
@@ -59,9 +59,9 @@ SourceFiles
 
 /*---------------------------------------------------------------------------*\
   Class foam2eigen Declaration
-  \*---------------------------------------------------------------------------*/
+\*---------------------------------------------------------------------------*/
 
-/// Class to converts foam objects into Eigen and viceversa
+/// Class to converts OpenFOAM objects into Eigen and viceversa
 class Foam2Eigen
 {
 private:
@@ -85,13 +85,13 @@ public:
 
 
     //--------------------------------------------------------------------------
-    /// @brief      Convert a PtrList List of snapshots to eigen matrix (only internalfield)
+    /// @brief      Convert a PtrList of snapshots to Eigen matrix (only internal field)
     ///
-    /// @param      fields  The fields can be a PtrList<volScalarField> or PtrList<volVectorField>
+    /// @param[in]  fields The fields can be a PtrList<volScalarField> or PtrList<volVectorField>
     ///
     /// @tparam     type_f  Type of the fields can be PtrList<volScalarField> or PtrList<volVectorField>
     ///
-    /// @return     A Eigen matrix containing as columns the snapshots
+    /// @return     An Eigen matrix containing as columns the snapshots
     ///
     ///
     ///
@@ -100,29 +100,94 @@ public:
 
 
     //--------------------------------------------------------------------------
-    /// @brief      { function_description }
+    /// @brief      Convert an OpenFOAM field to an Eigen Vector
     ///
-    /// @param      field   The field
+    /// @param[in]  field   The field
     ///
-    /// @tparam     type_f  { description }
+    /// @tparam     type_f  Type of the field can be volScalarField or volVectorField
     ///
-    /// @return     { description_of_the_return_value }
+    /// @return     return the dense Eigen vector
     ///
     template <class type_f>
     static Eigen::VectorXd field2Eigen(type_f& field);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Convert an Eigen Vector to an OpenFOAM field (only the internal Field is copied inside the OpenFOAM field)
+    ///
+    /// @param[in,out]  field         The OpenFOAM field where to copy the Eigen Vector
+    /// @param[in]      eigen_vector  The Eigen vector
+    ///
+    /// @tparam     type_f         Type of the field can be volScalarField or volVectorField
+    ///
+    /// @return     The OpenFoam Field
+    ///
     template <class type_f>
     static type_f Eigen2field(type_f& field, Eigen::VectorXd& eigen_vector);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Perform the projection of an OpenFOAM fvMatrix onto a set of modes using the Eigen matrix multiplication
+    /// 
+    /// It is performed the standard projection used in reduced order models to obtain the reduced matrices:
+    /// 
+    /// \f[  \mathbf{A} \in R^{NxN} , \mathbf{A_r} \in R^{nxn}  , \mathbf{b} \in R^{Nx1} , \mathbf{b_r} \in R^{nx1} , \mathbf{M} \in R^{Nxn} \f]
+    /// 
+    /// \f[ \mathbf{A_r} = \mathbf{M^T A M} , \mathbf{b_r} = \mathbf{M^T b}  \f]
+    ///
+    /// @param[in]  matrix        The A OpenFOAM fvMatrix
+    /// @param[in]  modes         The M OpenFOAM modes contained in a PtrList
+    /// @param[in]  Nmodes        The n number of modes you want to use (The size of input modes can be bigger than the requested number of modes)
+    ///
+    /// @tparam     type_m        type of fvMatrix can be either scalar or vectorial
+    /// @tparam     type_PtrList  the type of the PtrList for the modes can be volScalarField or volVectorField
+    ///
+    /// @return     A tuple containing the projected Ar matrix and vector br which are coming from the source term.
+    ///
     template <class type_m, class type_PtrList>
     static std::tuple<Eigen::MatrixXd, Eigen::VectorXd> projectFvMatrix(type_m& matrix, type_PtrList& modes, int Nmodes);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Perform the projection of an OpenFOAM field onto a set of modes using the Eigen matrix multiplication
+    /// 
+    /// It is the standard Galerkin projection of a field onto a reduced basis:
+    /// 
+    /// \f[  \mathbf{f} \in R^{Nx1} , \mathbf{f_r} \in R^{nx1} , \mathbf{M} \in R^{Nxn} \f]
+    /// 
+    /// \f[ \mathbf{f_r} = \mathbf{M^T f}  \f]
+    ///
+    /// @param[in]  field         The f OpenFOAM field
+    /// @param[in]  modes         The M OpenFOAM modes contained in a PtrList
+    /// @param[in]  Nmodes        The n number of modes you want to use (The size of input modes can be bigger than the requested number of modes)
+    ///
+    /// @tparam     type_f        type of field can be either scalar or vectorial
+    /// @tparam     type_PtrList  the type of the PtrList for the modes can be volScalarField or volVectorField
+    ///
+    /// @return     a vector fr with the projection
+    ///
     template <class type_f, class type_PtrList>
     static Eigen::VectorXd projectField(type_f& field, type_PtrList& modes, int Nmodes);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Obtain the Mass Matrix from a list of reduced basis
+    ///
+    /// @param      modes         The OpenFOAM modes contained in a PtrList
+    /// @param[in]  Nmodes        The number of requested modes
+    ///
+    /// @tparam     type_PtrList  the type of the PtrList for the modes can be volScalarField or volVectorField
+    ///
+    /// @return     An Eigen matrix containing the mass matrix
+    ///
     template <class type_PtrList>
     static Eigen::MatrixXd MassMatrix(type_PtrList& modes, int Nmodes);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Convert a PtrList of OpenFOAM fvMatrix into a tuple of lists of Eigen Sparse Matrices and source vectors
+    ///
+    /// @param[in]      MatrixList   The matrix list
+    ///
+    /// @tparam[in]     type_matrix  type of fvMatrix can be either scalar or vectorial
+    ///
+    /// @return     a tuple containing a list of sparse matrices and a list of source vectors
+    ///
     template<class type_matrix>
     static std::tuple<List<Eigen::SparseMatrix<double> >, List<Eigen::VectorXd> > LFvMatrix2LSM(PtrList<type_matrix>& MatrixList);
 
@@ -207,8 +272,6 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(type_m&
 
         }
     }
-    /*    Ar = Eig_Modes.transpose() * A * (Eig_Modes.cwiseProduct(VolumesN));
-        br = Eig_Modes.transpose() * (b.cwiseProduct(Volumes));*/
     Ar = Eig_Modes.transpose() * A * Eig_Modes;
     br = Eig_Modes.transpose() * b;
     std::tuple <Eigen::MatrixXd, Eigen::VectorXd> tupla;

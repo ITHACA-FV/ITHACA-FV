@@ -66,7 +66,7 @@ class EigenFunctions
 {
 public:
 
-    ///
+    //--------------------------------------------------------------------------
     /// @brief      Vectorize a Sparse Matrix
     ///
     /// @param[in]      Matrix  The matrix
@@ -78,21 +78,21 @@ public:
     template <typename T>
     static Eigen::SparseMatrix<T> vectorize(Eigen::SparseMatrix<T>& Matrix);
 
-    ///
+    //--------------------------------------------------------------------------
     /// @brief      Find the maximum of a sparse Matrix (Useful for DEIM)
     ///
     /// @param[out]      mat      The matrix
     /// @param[out]      ind_row  The ind row
     /// @param[out]      ind_col  The ind col
     ///
-    /// @tparam     T        { description }
+    /// @tparam     T        type of object, i.e. double, float, ....
     ///
     /// @return     the maximum
     ///
     template <typename T>
     static T max(Eigen::SparseMatrix<T>& mat, int& ind_row, int& ind_col);
 
-    ///
+    //--------------------------------------------------------------------------
     /// @brief           Find the minimum of a sparse Matrix (Useful for DEIM)
     ///
     /// @param[out]      mat      The matrix
@@ -106,7 +106,7 @@ public:
     template <typename T>
     static T min(Eigen::SparseMatrix<T>& mat, int& ind_row, int& ind_col);
 
-    ///
+    //--------------------------------------------------------------------------
     /// @brief      sort eigenvalues
     ///
     /// @param[in,out]      eigenvalues   The eigenvalues
@@ -114,92 +114,111 @@ public:
     ///
     static void sortEigenvalues(Eigen::VectorXd& eigenvalues, Eigen::MatrixXd& eigenvectors);
 
-    ///
-    /// @brief      Perform matrix innerProduct between two list of sparse matrices A and B
+    //--------------------------------------------------------------------------
+    /// @brief      Perform Frobenius inner Product between two list of sparse matrices A and B
+    /// 
+    /// \f[ \mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , \mathbf{B} = [\mathbf{B_1}, \dots, \mathbf{B_M}] , out_{ij} = tr(\mathbf{A_i}^T \mathbf{B_j} ) \f]
     ///
     /// @param[in]      A     List of Matrices A
     /// @param[in]      B     List of Matrices B
     ///
     /// @tparam     T     type of object, i.e. double, float, ....
     ///
-    /// @return     Matrix containing the inner products between the matrix lists
+    /// @return     out Matrix containing the inner products between the matrix lists
     ///
     template <typename T>
     static Eigen::Matrix<T , Eigen::Dynamic, Eigen::Dynamic> innerProduct(List <Eigen::SparseMatrix<T> >& A , List <Eigen::SparseMatrix<T> >& B);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Perform Frobenius inner Product between a list of sparse matrices A and a sparse matrix B
+    /// 
+    ///   \f[\mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , out_i = tr(\mathbf{A_i}^T \mathbf{B} ) \f]
     ///
-    /// @brief      Perform matrix innerProduct between a list of sparse matrices A and a sparse matrix B
+    /// @param[in]      A     List of Matrices A
+    /// @param[in]      B     Sparse Matrix B
     ///
-    /// @param      A     List of Matrices A
-    /// @param      B     { parameter_description }
+    /// @tparam     T     type of object, i.e. double, float, ....
     ///
-    /// @tparam     T     { description }
-    ///
-    /// @return     { description_of_the_return_value }
+    /// @return     out Vector containing the inner products between the matrix lists
     ///
     template <typename T>
     static Eigen::Matrix<T , Eigen::Dynamic, Eigen::Dynamic> innerProduct(List <Eigen::SparseMatrix<T> >& A , Eigen::SparseMatrix<T>& B);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Perform Frobenius inner Product between two sparse matrices A and B
+    /// 
+    ///   \f[out = tr(\mathbf{A}^T \mathbf{B} ) \f]
+    ///   
     ///
-    /// @brief      { function_description }
+    /// @param[in]      A     Sparse Matrix A
+    /// @param[in]      B     Sparse Matrix B
     ///
-    /// @param      A     { parameter_description }
-    /// @param      B     { parameter_description }
+    /// @tparam     T     type of object, i.e. double, float, ....
     ///
-    /// @tparam     T     { description }
-    ///
-    /// @return     { description_of_the_return_value }
+    /// @return     out Value of the inner products between the two matrices
     ///
     template <typename T>
     static T innerProduct(Eigen::SparseMatrix<T>& A , Eigen::SparseMatrix<T>& B);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Sparse Matrix-Vector product between a list of sparse matrices and a vector of coefficients
+    /// 
+    ///   \f[ \mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , \mathbf{c} = [c_1, ...., c_N] \f]
+    ///   
+    ///   \f[ \mathbf{out} = \sum_{k=1}^N \mathbf{A_k} c_k  \f]
     ///
-    /// @brief      { function_description }
+    /// @param[in]      A     Sparse Matrix A
+    /// @param[in]      C     Dense Vector C
     ///
-    /// @param      A     { parameter_description }
-    /// @param      C     { parameter_description }
+    /// @tparam     T     type of object, i.e. double, float, ....
     ///
-    /// @tparam     T     { description }
-    ///
-    /// @return     { description_of_the_return_value }
+    /// @return     out Sparse Matrix containing the sum of all the matrices multiplied by the vector coefficients
     ///
     template <typename T>
     static Eigen::SparseMatrix<T> MVproduct(List<Eigen::SparseMatrix<T> >& A , Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> >& C);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Dense Matrix-Vector product between a list of sparse matrices and a vector of coefficients
+    /// 
+    ///   \f[ \mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , \mathbf{c} = [c_1, ...., c_N] \f]
+    ///   
+    ///   \f[ \mathbf{out} = \sum_{k=1}^N \mathbf{A_k} c_k  \f]
     ///
-    /// @brief      { function_description }
+    /// @param[in]  A     Dense Matrix A
+    /// @param[in]  C     Dense Vector C
     ///
-    /// @param[in]  A     { parameter_description }
-    /// @param      C     { parameter_description }
+    /// @tparam     T     type of object, i.e. double, float, ....
     ///
-    /// @tparam     T     { description }
-    ///
-    /// @return     { description_of_the_return_value }
+    /// @return     Dense Matrix containing the sum of all the matrices multiplied by the vector coefficients
     ///
     template <typename T>
     static Eigen::Matrix<T , Eigen::Dynamic, Eigen::Dynamic> MVproduct(const std::vector< Eigen::Matrix<T , Eigen::Dynamic, Eigen::Dynamic> >& A , Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> >& C);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Sparse Matrix - Dense Matrix product between a list of sparse matrices and a dense matrix
+    /// 
+    ///   \f[ \mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , \mathbf{C} = [\mathbf{c_{\bullet 1}}, ...., \mathbf{c_{\bullet N}}], \mathbf{out} = [\mathbf{O_1},\dots,\mathbf{O_N}] \f]
+    ///   
+    ///   \f[ \mathbf{O_i} = \sum_{k=1}^N \mathbf{A_k} c_{ki}  \f]
     ///
-    /// @brief      { function_description }
+    /// @param[in]      A     List of sparse Matrices
+    /// @param[in]      C     Dense Matrix
     ///
-    /// @param      A     { parameter_description }
-    /// @param      C     { parameter_description }
+    /// @tparam     T     type of object, i.e. double, float, ....
     ///
-    /// @tparam     T     { description }
-    ///
-    /// @return     { description_of_the_return_value }
+    /// @return     List of Sparse Matrices containing the sum of all the matrices multiplied by the matrix coefficients by columns
     ///
     template <typename T>
     static List<Eigen::SparseMatrix<T> > MMproduct(List<Eigen::SparseMatrix<T> >& A , Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> >& C);
 
+    //--------------------------------------------------------------------------
+    /// @brief      Conditioning number of a dense matrix
     ///
-    /// @brief      { function_description }
+    /// @param[in]  A     input Matrix
     ///
-    /// @param      A     { parameter_description }
+    /// @tparam     T     type of object, i.e. double, float, ....
     ///
-    /// @tparam     T     { description }
-    ///
-    /// @return     { description_of_the_return_value }
+    /// @return     Conditioning number
     ///
     template <typename T>
     static T condNumber(Eigen::Matrix<T , Eigen::Dynamic, Eigen::Dynamic>& A);
