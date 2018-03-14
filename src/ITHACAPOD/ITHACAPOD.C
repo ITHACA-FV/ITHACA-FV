@@ -36,7 +36,6 @@
 
 void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU, PtrList<volVectorField>& modes, bool podex, bool supex, bool sup, int nmodes)
 {
-
     if (nmodes == 0)
     {
         nmodes = snapshotsU.size() - 2;
@@ -46,6 +45,8 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU, PtrList<volVectorF
     {
         ITHACAparameters para;
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshotsU);
+        List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshotsU);
+        int NBC = snapshotsU[0].boundaryField().size();
         Eigen::VectorXd V = Foam2Eigen::field2Eigen(snapshotsU[0].mesh().V());
         Eigen::VectorXd V3d = (V.replicate(3, 1));
         auto VM = V3d.asDiagonal();
@@ -78,21 +79,32 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU, PtrList<volVectorF
         Info << "####### End of the POD for " << snapshotsU[0].name() << " #######" << endl;
         Eigen::VectorXd eigenValueseigLam = eigenValueseig.real().array().cwiseInverse().sqrt() ;
         Eigen::MatrixXd modesEig = (SnapMatrix * eigenVectoreig) * eigenValueseigLam.asDiagonal();
+        List<Eigen::MatrixXd> modesEigBC;
+        modesEigBC.resize(NBC);
+        for (int i = 0; i < NBC; i++)
+        {
+            modesEigBC[i] = (SnapMatrixBC[i] * eigenVectoreig) * eigenValueseigLam.asDiagonal();
+        }
+
         for (int i = 0; i < modes.size(); i++)
         {
             volVectorField tmp(snapshotsU[0].name(), snapshotsU[0] * 0);
             Eigen::VectorXd vec = modesEig.col(i);
             tmp = Foam2Eigen::Eigen2field(tmp, vec);
-            const fvPatchList & patches = tmp.mesh().boundary();
-            // Adjusting boundary conditions
-            forAll(patches, iPatch)
+            for (int k = 0; k < tmp.boundaryField().size(); k++)
             {
-                UList<vector> myList(tmp.boundaryField()[iPatch].patchInternalField());
-                forAll(tmp.boundaryFieldRef()[iPatch], iCell)
-                {
-                    tmp.boundaryFieldRef()[iPatch][iCell] = myList[iCell];
-                }
+                ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i));
             }
+            // const fvPatchList & patches = tmp.mesh().boundary();
+            // // Adjusting boundary conditions
+            // forAll(patches, iPatch)
+            // {
+            //     UList<vector> myList(tmp.boundaryField()[iPatch].patchInternalField());
+            //     forAll(tmp.boundaryFieldRef()[iPatch], iCell)
+            //     {
+            //         tmp.boundaryFieldRef()[iPatch][iCell] = myList[iCell];
+            //     }
+            // }
             modes.set(i, tmp);
         }
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -132,6 +144,8 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP, PtrList<volScalarF
     {
         ITHACAparameters para;
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshotsP);
+        List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshotsP);
+        int NBC = snapshotsP[0].boundaryField().size();
         Eigen::VectorXd V = Foam2Eigen::field2Eigen(snapshotsP[0].mesh().V());
         auto VM = V.asDiagonal();
         Eigen::MatrixXd _corMatrix = SnapMatrix.transpose() * VM * SnapMatrix;
@@ -163,21 +177,31 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP, PtrList<volScalarF
         Info << "####### End of the POD for " << snapshotsP[0].name() << " #######" << endl;
         Eigen::VectorXd eigenValueseigLam = eigenValueseig.real().array().cwiseInverse().sqrt() ;
         Eigen::MatrixXd modesEig = (SnapMatrix * eigenVectoreig) * eigenValueseigLam.asDiagonal();
+        List<Eigen::MatrixXd> modesEigBC;
+        modesEigBC.resize(NBC);
+        for (int i = 0; i < NBC; i++)
+        {
+            modesEigBC[i] = (SnapMatrixBC[i] * eigenVectoreig) * eigenValueseigLam.asDiagonal();
+        }
         for (label i = 0; i < modes.size(); i++)
         {
             volScalarField tmp(snapshotsP[0].name(), snapshotsP[0] * 0);
             Eigen::VectorXd vec = modesEig.col(i);
             tmp = Foam2Eigen::Eigen2field(tmp, vec);
             // Adjusting boundary conditions
-            const fvPatchList & patches = tmp.mesh().boundary();
-            forAll(patches, iPatch)
+            for (int k = 0; k < tmp.boundaryField().size(); k++)
             {
-                UList<scalar> myList(tmp.boundaryField()[iPatch].patchInternalField());
-                forAll(tmp.boundaryFieldRef()[iPatch], iCell)
-                {
-                    tmp.boundaryFieldRef()[iPatch][iCell] = myList[iCell];
-                }
+                ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i));
             }
+            // const fvPatchList & patches = tmp.mesh().boundary();
+            // forAll(patches, iPatch)
+            // {
+            //     UList<scalar> myList(tmp.boundaryField()[iPatch].patchInternalField());
+            //     forAll(tmp.boundaryFieldRef()[iPatch], iCell)
+            //     {
+            //         tmp.boundaryFieldRef()[iPatch][iCell] = myList[iCell];
+            //     }
+            // }
             modes.set(i, tmp);
         }
         eigenValueseig = eigenValueseig / eigenValueseig.sum();

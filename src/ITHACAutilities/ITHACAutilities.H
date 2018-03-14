@@ -47,6 +47,7 @@ SourceFiles
 
 #include "fvCFD.H"
 #include "IOmanip.H"
+#include "freestreamFvPatchField.H"
 #include <sys/stat.h>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -307,6 +308,44 @@ public:
     /// @param         L     List of indices
     ///
     static void assignONE(volScalarField& s, List<int>& L);
+
+    //--------------------------------------------------------------------------
+    /// Assign Boundary Condition to a volVectorField
+    ///
+    /// @param[in]  s       field where you want to assign the BC.
+    /// @param[in]  BC_ind  The BC index.
+    /// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
+    ///
+    static void assignBC(volVectorField& s, label BC_ind, Vector<double>& value);
+
+    //--------------------------------------------------------------------------
+    /// Assign Boundary Condition to a volScalarField
+    ///
+    /// @param[in]  s       field where you want to assign the BC.
+    /// @param[in]  BC_ind  The BC index.
+    /// @param[in]  value   The value you want to assign (it must be a double).
+    ///
+    static void assignBC(volScalarField& s, label BC_ind, double& value);
+
+    //--------------------------------------------------------------------------
+    /// Assign Boundary Condition to a volVectorField
+    ///
+    /// @param[in]  s       field where you want to assign the BC.
+    /// @param[in]  BC_ind  The BC index.
+    /// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
+    ///
+    static void assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd value);
+
+    //--------------------------------------------------------------------------
+    /// Assign Boundary Condition to a volScalarField
+    ///
+    /// @param[in]  s       field where you want to assign the BC.
+    /// @param[in]  BC_ind  The BC index.
+    /// @param[in]  value   The value you want to assign (it must be a double).
+    ///
+    static void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd value);
+
+
 
     //--------------------------------------------------------------------------
     /// Evaluate the L2 norm of a volScalarField

@@ -476,6 +476,171 @@ void ITHACAutilities::assignONE(volScalarField& s, List<int>& L)
     }
 }
 
+// Assign a BC for a vector field
+void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
+{
+    if (s.boundaryField()[BC_ind].type() == "fixedValue")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        fixedGradientFvPatchScalarField& Tpatch = refCast<fixedGradientFvPatchScalarField>(s.boundaryFieldRef()[BC_ind]);
+        scalarField& gradTpatch = Tpatch.gradient();
+        forAll(gradTpatch, faceI)
+        {
+            gradTpatch[faceI] = value;
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "fixedFluxPressure")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "freestream")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+        freestreamFvPatchField<scalar>& Tpatch = refCast<freestreamFvPatchField<scalar> >(s.boundaryFieldRef()[BC_ind]);
+        scalarField& gradTpatch = Tpatch.freestreamValue();
+        forAll(gradTpatch, faceI)
+        {
+            gradTpatch[faceI] = value;
+        }
+
+    }
+    else if (s.boundaryField()[BC_ind].type() == "calculated")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "empty")
+    {
+
+    }
+}
+
+// Assign a BC for a scalar field
+void ITHACAutilities::assignBC(volVectorField& s, label BC_ind, Vector<double>& value)
+{
+    if (s.boundaryField()[BC_ind].type() == "fixedValue")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        Info << "This Feature is not implemented for this boundary condition" << endl;
+        exit(0);
+    }
+    else if (s.boundaryField()[BC_ind].type() == "freestream")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+        freestreamFvPatchField<vector>& Tpatch = refCast<freestreamFvPatchField<vector> >(s.boundaryFieldRef()[BC_ind]);
+        vectorField& gradTpatch = Tpatch.freestreamValue();
+        forAll(gradTpatch, faceI)
+        {
+            gradTpatch[faceI] = value;
+        }
+    }
+}
+
+void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd valueVec)
+{
+    word typeBC = s.boundaryField()[BC_ind].type();
+    if (typeBC == "fixedValue" || typeBC == "calculated" || typeBC == "fixedFluxPressure" )
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            double value = valueVec(i);
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        fixedGradientFvPatchScalarField& Tpatch = refCast<fixedGradientFvPatchScalarField>(s.boundaryFieldRef()[BC_ind]);
+        scalarField& gradTpatch = Tpatch.gradient();
+        forAll(gradTpatch, faceI)
+        {
+            double value = valueVec(faceI);
+            gradTpatch[faceI] = value;
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "freestream")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            double value = valueVec(i);
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+        freestreamFvPatchField<scalar>& Tpatch = refCast<freestreamFvPatchField<scalar> >(s.boundaryFieldRef()[BC_ind]);
+        scalarField& gradTpatch = Tpatch.freestreamValue();
+        forAll(gradTpatch, faceI)
+        {
+            double value = valueVec(faceI);
+            gradTpatch[faceI] = value;
+        }
+
+    }
+    else if (s.boundaryField()[BC_ind].type() == "empty")
+    {
+
+    }
+}
+
+// Assign a BC for a scalar field
+void ITHACAutilities::assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd valueVec)
+{
+    word typeBC = s.boundaryField()[BC_ind].type();
+    int sizeBC = s.boundaryField()[BC_ind].size();
+    if (typeBC == "fixedValue" || typeBC == "calculated")
+    {
+        for (label i = 0; i < sizeBC; i++)
+        {
+            Vector<double> value(valueVec(i),valueVec(i+sizeBC),valueVec(i+sizeBC*2)); 
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        Info << "This Feature is not implemented for this boundary condition" << endl;
+        exit(0);
+    }
+    else if (s.boundaryField()[BC_ind].type() == "freestream")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            Vector<double> value(valueVec(i),valueVec(i+sizeBC),valueVec(i+sizeBC*2)); 
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
+        freestreamFvPatchField<vector>& Tpatch = refCast<freestreamFvPatchField<vector> >(s.boundaryFieldRef()[BC_ind]);
+        vectorField& gradTpatch = Tpatch.freestreamValue();
+        forAll(gradTpatch, faceI)
+        {
+            Vector<double> value(valueVec(faceI),valueVec(faceI+sizeBC),valueVec(faceI+sizeBC*2)); 
+            gradTpatch[faceI] = value;
+        }
+    }
+}
+
+
+
+
+
 // * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * * //
 
 

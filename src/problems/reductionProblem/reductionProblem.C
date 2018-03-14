@@ -260,33 +260,5 @@ void reductionProblem::liftSolve()
 	exit(0);
 }
 
-void reductionProblem::computeLift(PtrList<volVectorField>& Lfield, PtrList<volVectorField>& liftfield, PtrList<volScalarField>& NutLiftfield, PtrList<volScalarField>& Nutfield, PtrList<volScalarField>& NutOmfield)
-{
-	scalar u_bc;
-	scalar area;
-
-	for (label k = 0; k < inletIndex.rows(); k++)
-	{
-		label p = inletIndex(k, 0);
-		label l = inletIndex(k, 1);
-		area = gSum(Lfield[0].mesh().magSf().boundaryField()[p]);
-		for (label j = 0; j < Lfield.size(); j++)
-		{
-			if (k == 0)
-			{
-				u_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] * Lfield[j].boundaryField()[p]).component(l) / area;
-				volScalarField C("Nut", Nutfield[j] - NutLiftfield[k]*u_bc);
-				NutOmfield.append(C);
-			}
-			else
-			{
-				u_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] * Lfield[j].boundaryField()[p]).component(l) / area;
-				volScalarField C("Nut", NutOmfield[j] - NutLiftfield[k]*u_bc);
-				NutOmfield.set(j, C);
-			}
-		}
-	}
-}
-
 // ************************************************************************* //
 

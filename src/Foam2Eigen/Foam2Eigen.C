@@ -74,6 +74,97 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(fvMesh const& field)
 }
 
 template<>
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volVectorField& field)
+{
+    List<Eigen::VectorXd> Out;
+    unsigned int size = field.boundaryField().size();
+    Out.resize(size);
+    for (unsigned int i = 0; i < size; i++ )
+    {
+        unsigned int sizei = field.boundaryField()[i].size();
+        Out[i].resize(sizei * 3);
+        for (unsigned int k = 0; k < sizei ; k++)
+        {
+            Out[i](k) = field.boundaryField()[i][k][0];
+            Out[i](k + sizei) = field.boundaryField()[i][k][1];
+            Out[i](k + 2 * sizei) = field.boundaryField()[i][k][2];
+        }
+    }
+    return Out;
+}
+
+template<>
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volScalarField& field)
+{
+    List<Eigen::VectorXd> Out;
+    unsigned int size = field.boundaryField().size();
+    Out.resize(size);
+    for (unsigned int i = 0; i < size; i++ )
+    {
+        unsigned int sizei = field.boundaryField()[i].size();
+        Out[i].resize(sizei);
+        for (unsigned int k = 0; k < sizei ; k++)
+        {
+            Out[i](k) = field.boundaryField()[i][k];
+        }
+    }
+    return Out;
+}
+
+template<>
+List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volScalarField>& fields, int Nfields)
+{
+    unsigned int Nf;
+    if (Nfields > fields.size()) Nf = fields.size();
+    else  Nf = Nfields;
+    List<Eigen::MatrixXd> Out;
+    unsigned int NBound = fields[0].boundaryField().size();
+    Out.resize(NBound);
+    for (unsigned int i = 0; i < NBound; i++)
+    {
+        int sizei = fields[0].boundaryField()[i].size();
+        Out[i].resize(sizei,Nf);
+    }
+    for (unsigned int k = 0; k < Nf; k++)
+    {   
+        List<Eigen::VectorXd> temp;
+        temp = field2EigenBC(fields[k]);
+        for (unsigned int i = 0; i < NBound; i++)
+        {
+            Out[i].col(k) = temp[i];
+        }
+    }
+    return Out;
+}
+
+template<>
+List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volVectorField>& fields, int Nfields)
+{
+    unsigned int Nf;
+    if (Nfields > fields.size()) Nf = fields.size();
+    else  Nf = Nfields;
+    List<Eigen::MatrixXd> Out;
+    unsigned int NBound = fields[0].boundaryField().size();
+    Out.resize(NBound);
+    for (unsigned int i = 0; i < NBound; i++)
+    {
+        int sizei = fields[0].boundaryField()[i].size();
+        Out[i].resize(sizei*3,Nf);
+    }
+    for (unsigned int k = 0; k < Nf; k++)
+    {   
+        List<Eigen::VectorXd> temp;
+        temp = field2EigenBC(fields[k]);
+        for (unsigned int i = 0; i < NBound; i++)
+        {
+            Out[i].col(k) = temp[i];
+        }
+    }
+    return Out;
+}
+
+
+template<>
 volVectorField Foam2Eigen::Eigen2field(volVectorField& field_in, Eigen::VectorXd& eigen_vector)
 {
     volVectorField field_out(field_in);
@@ -102,6 +193,7 @@ volScalarField Foam2Eigen::Eigen2field(volScalarField& field_in, Eigen::VectorXd
 
 
 
+
 template<>
 Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volVectorField>& fields, int Nfields)
 {
@@ -114,7 +206,6 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volVectorField>& fields, int N
     {
         Nf = Nfields;
     }
-
 
     Eigen::MatrixXd out;
     out.resize(int(fields[0].size() * 3), Nf);

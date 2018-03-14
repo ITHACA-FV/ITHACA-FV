@@ -112,6 +112,32 @@ public:
     static Eigen::VectorXd field2Eigen(type_f& field);
 
     //--------------------------------------------------------------------------
+    /// @brief      Convert an OpenFOAM field to a List of Eigen Vectors, one for each boundary
+    ///
+    /// @param[in]  field   The field
+    ///
+    /// @tparam     type_f  Type of the field can be volScalarField or volVectorField
+    ///
+    /// @return     return the dense Eigen vector
+    ///
+    template <class type_f>
+    static List<Eigen::VectorXd> field2EigenBC(type_f& field);
+
+
+    //--------------------------------------------------------------------------
+    /// @brief      Converts an OpenFOAM PtrList to a list of Eigen Matrices, one for each boundary
+    ///
+    /// @param      fields   The fields
+    /// @param[in]  Nfields  The Number of requested modes.
+    ///
+    /// @tparam     type_f   type of the field, can be volVectorField or volScalarField
+    ///
+    /// @return     List of Eigen Matrices
+    ///
+    template <class type_f>
+    static List<Eigen::MatrixXd> PtrList2EigenBC(type_f& fields, int Nfields = 10000000);
+
+    //--------------------------------------------------------------------------
     /// @brief      Convert an Eigen Vector to an OpenFOAM field (only the internal Field is copied inside the OpenFOAM field)
     ///
     /// @param[in,out]  field         The OpenFOAM field where to copy the Eigen Vector
@@ -126,11 +152,11 @@ public:
 
     //--------------------------------------------------------------------------
     /// @brief      Perform the projection of an OpenFOAM fvMatrix onto a set of modes using the Eigen matrix multiplication
-    /// 
+    ///
     /// It is performed the standard projection used in reduced order models to obtain the reduced matrices:
-    /// 
+    ///
     /// \f[  \mathbf{A} \in R^{NxN} , \mathbf{A_r} \in R^{nxn}  , \mathbf{b} \in R^{Nx1} , \mathbf{b_r} \in R^{nx1} , \mathbf{M} \in R^{Nxn} \f]
-    /// 
+    ///
     /// \f[ \mathbf{A_r} = \mathbf{M^T A M} , \mathbf{b_r} = \mathbf{M^T b}  \f]
     ///
     /// @param[in]  matrix        The A OpenFOAM fvMatrix
@@ -147,11 +173,11 @@ public:
 
     //--------------------------------------------------------------------------
     /// @brief      Perform the projection of an OpenFOAM field onto a set of modes using the Eigen matrix multiplication
-    /// 
+    ///
     /// It is the standard Galerkin projection of a field onto a reduced basis:
-    /// 
+    ///
     /// \f[  \mathbf{f} \in R^{Nx1} , \mathbf{f_r} \in R^{nx1} , \mathbf{M} \in R^{Nxn} \f]
-    /// 
+    ///
     /// \f[ \mathbf{f_r} = \mathbf{M^T f}  \f]
     ///
     /// @param[in]  field         The f OpenFOAM field
@@ -194,16 +220,36 @@ public:
 
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-//
-//
-//
+template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(volVectorField& field);
 
-template <class type_f>
+template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(volScalarField& field);
+
+template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(fvMesh const& field);
+
+template<>
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volVectorField& field);
+
+template<>
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volScalarField& field);
+
+template<class type_f>
+List<Eigen::MatrixXd> PtrList2EigenBC(type_f& fields, int Nfields);
+
+template<>
+List<Eigen::MatrixXd> PtrList2EigenBC(PtrList<volScalarField>& fields, int Nfields);
+
+template<>
+List<Eigen::MatrixXd> PtrList2EigenBC(PtrList<volVectorField>& fields, int Nfields);
+
+
+template<class type_f>
 Eigen::VectorXd Foam2Eigen::field2Eigen(type_f& field)
 {
     Eigen::VectorXd out;
     out.resize(int(field.size()));
-
     for (int l = 0; l < field.size(); l++)
     {
         out(l) = field[l];
@@ -211,30 +257,24 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(type_f& field)
     return out;
 }
 
-
 template<class type_matrix>
 std::tuple<List<Eigen::SparseMatrix<double> >, List<Eigen::VectorXd> > Foam2Eigen::LFvMatrix2LSM(PtrList<type_matrix>& MatrixList)
 {
     List<Eigen::SparseMatrix<double> > SM_list;
     List<Eigen::VectorXd> V_list;
-
     int LSize =  MatrixList.size();
-
     SM_list.resize(LSize);
     V_list.resize(LSize);
     Eigen::SparseMatrix<double> A;
     Eigen::VectorXd b;
-
     for (int j = 0; j < LSize; j++)
     {
         fvMatrix2Eigen(MatrixList[j], A, b);
         SM_list[j] = A;
         V_list[j] = b;
     }
-
     std::tuple <List<Eigen::SparseMatrix<double> >, List<Eigen::VectorXd> > tupla;
     tupla = std::make_tuple(SM_list, V_list);
-
     return tupla;
 }
 
@@ -249,12 +289,10 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(type_m&
     Foam2Eigen::fvMatrix2Eigen(matrix, A, b);
     Eigen::VectorXd Volumes = field2Eigen(modes[0].mesh());
     Eigen::MatrixXd VolumesN(Volumes.rows(), Nmodes);
-
     if (Volumes.rows() != Eig_Modes.rows())
     {
         VolumesN.resize(Eig_Modes.rows(), Nmodes);
     }
-
     if (Volumes.rows() == Eig_Modes.rows())
     {
         for (auto i = 0; i < Nmodes; i++)
@@ -269,7 +307,6 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(type_m&
             VolumesN.col(i).segment(0, Volumes.rows()) = Volumes;
             VolumesN.col(i).segment(Volumes.rows() + 1, Volumes.rows() * 2) = Volumes;
             VolumesN.col(i).segment(Volumes.rows() * 2 + 1, Volumes.rows() * 3) = Volumes;
-
         }
     }
     Ar = Eig_Modes.transpose() * A * Eig_Modes;
@@ -286,12 +323,10 @@ Eigen::MatrixXd Foam2Eigen::MassMatrix(type_PtrList& modes, int Nmodes)
     Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
     Eigen::VectorXd Volumes = field2Eigen(modes[0].mesh());
     Eigen::MatrixXd VolumesN(Volumes.rows(), Nmodes);
-
     if (Volumes.rows() != Eig_Modes.rows())
     {
         VolumesN.resize(Eig_Modes.rows(), Nmodes);
     }
-
     if (Volumes.rows() == Eig_Modes.rows())
     {
         for (auto i = 0; i < Nmodes; i++)
@@ -313,8 +348,6 @@ Eigen::MatrixXd Foam2Eigen::MassMatrix(type_PtrList& modes, int Nmodes)
     return Mr;
 }
 
-
-
 template <class type_f, class type_PtrList>
 Eigen::VectorXd Foam2Eigen::projectField(type_f& field, type_PtrList& modes, int Nmodes)
 {
@@ -324,7 +357,6 @@ Eigen::VectorXd Foam2Eigen::projectField(type_f& field, type_PtrList& modes, int
     Eigen::VectorXd Volumes = field2Eigen(modes[0].mesh());
     Eigen::MatrixXd VolumesN(Volumes.rows(), 1);
     VolumesN = Volumes;
-
     if (Volumes.rows() != Eig_Modes.rows())
     {
         VolumesN.resize(Eig_Modes.rows(), 1);
@@ -332,12 +364,9 @@ Eigen::VectorXd Foam2Eigen::projectField(type_f& field, type_PtrList& modes, int
         VolumesN.col(0).segment(Volumes.rows() + 1, Volumes.rows() * 2) = Volumes;
         VolumesN.col(0).segment(Volumes.rows() * 2 + 1, Volumes.rows() * 3) = Volumes;
     }
-
     fr = Eig_Modes.transpose() * (f.cwiseProduct(VolumesN));
-
     return fr;
 }
-
 #endif
 
 
