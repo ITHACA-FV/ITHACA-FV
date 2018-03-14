@@ -1,6 +1,7 @@
 var searchData=
 [
   ['field2eigen',['field2Eigen',['../classFoam2Eigen.html#ac0eae8508e48151c53303e79d02e419e',1,'Foam2Eigen::field2Eigen(type_f &amp;field)'],['../classFoam2Eigen.html#a8da901c66f6d08d3be689f4b55cfc256',1,'Foam2Eigen::field2Eigen(volVectorField &amp;field)'],['../classFoam2Eigen.html#a016bf0226972d6de5bcadd678834a61a',1,'Foam2Eigen::field2Eigen(volScalarField &amp;field)'],['../classFoam2Eigen.html#a82441c8cb9b928c98b874c1ac1088c46',1,'Foam2Eigen::field2Eigen(fvMesh const &amp;field)']]],
+  ['field2eigenbc',['field2EigenBC',['../classFoam2Eigen.html#aabc370f2a025f6894470f7549da2ba34',1,'Foam2Eigen::field2EigenBC(type_f &amp;field)'],['../classFoam2Eigen.html#a096086526d6fd618ef616959a8996500',1,'Foam2Eigen::field2EigenBC(volVectorField &amp;field)'],['../classFoam2Eigen.html#a98bb8e71816f7a612c54f6713ba4de41',1,'Foam2Eigen::field2EigenBC(volScalarField &amp;field)']]],
   ['foam2eigen',['foam2eigen',['../classITHACAutilities.html#a56aecb2bfbf793ba39c0b1f3cc181865',1,'ITHACAutilities::foam2eigen(PtrList&lt; volVectorField &gt; &amp;fields)'],['../classITHACAutilities.html#a543c5753d1111985dee9b0502dd263e9',1,'ITHACAutilities::foam2eigen(PtrList&lt; volScalarField &gt; &amp;fields)']]],
   ['force_5fporous',['force_porous',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a50efe396057ba0263e2db7e108357e46',1,'Foam::functionObjects::ITHACAforces']]],
   ['force_5fpressure',['force_pressure',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#aaeab0b881f8a271090e32b93355f77e6',1,'Foam::functionObjects::ITHACAforces']]],

@@ -94,6 +94,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a82441c8cb9b928c98b874c1ac1088c46"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
 <tr class="memitem:a82441c8cb9b928c98b874c1ac1088c46"><td class="memTemplItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#a82441c8cb9b928c98b874c1ac1088c46">field2Eigen</a> (fvMesh const &amp;field)</td></tr>
 <tr class="separator:a82441c8cb9b928c98b874c1ac1088c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a096086526d6fd618ef616959a8996500"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a096086526d6fd618ef616959a8996500"><td class="memTemplItemLeft" align="right" valign="top">List&lt; Eigen::VectorXd &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#a096086526d6fd618ef616959a8996500">field2EigenBC</a> (volVectorField &amp;field)</td></tr>
+<tr class="separator:a096086526d6fd618ef616959a8996500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98bb8e71816f7a612c54f6713ba4de41"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a98bb8e71816f7a612c54f6713ba4de41"><td class="memTemplItemLeft" align="right" valign="top">List&lt; Eigen::VectorXd &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#a98bb8e71816f7a612c54f6713ba4de41">field2EigenBC</a> (volScalarField &amp;field)</td></tr>
+<tr class="separator:a98bb8e71816f7a612c54f6713ba4de41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0681e21b18a48bd490b35b57e1986a10"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a0681e21b18a48bd490b35b57e1986a10"><td class="memTemplItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#a0681e21b18a48bd490b35b57e1986a10">PtrList2EigenBC</a> (PtrList&lt; volScalarField &gt; &amp;fields, int Nfields)</td></tr>
+<tr class="separator:a0681e21b18a48bd490b35b57e1986a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25e5b6ce22611c47ea53ecd09a156c2a"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a25e5b6ce22611c47ea53ecd09a156c2a"><td class="memTemplItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#a25e5b6ce22611c47ea53ecd09a156c2a">PtrList2EigenBC</a> (PtrList&lt; volVectorField &gt; &amp;fields, int Nfields)</td></tr>
+<tr class="separator:a25e5b6ce22611c47ea53ecd09a156c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93f8fe96a898bc34fbed100049e1570c"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
 <tr class="memitem:a93f8fe96a898bc34fbed100049e1570c"><td class="memTemplItemLeft" align="right" valign="top">volVectorField&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#a93f8fe96a898bc34fbed100049e1570c">Eigen2field</a> (volVectorField &amp;field_in, Eigen::VectorXd &amp;eigen_vector)</td></tr>
 <tr class="separator:a93f8fe96a898bc34fbed100049e1570c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,6 +154,14 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ac0eae8508e48151c53303e79d02e419e"><td class="memTemplItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#ac0eae8508e48151c53303e79d02e419e">field2Eigen</a> (type_f &amp;field)</td></tr>
 <tr class="memdesc:ac0eae8508e48151c53303e79d02e419e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert an OpenFOAM field to an <a class="el" href="namespaceEigen.html">Eigen</a> Vector.  <a href="#ac0eae8508e48151c53303e79d02e419e">More...</a><br /></td></tr>
 <tr class="separator:ac0eae8508e48151c53303e79d02e419e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabc370f2a025f6894470f7549da2ba34"><td class="memTemplParams" colspan="2">template&lt;class type_f &gt; </td></tr>
+<tr class="memitem:aabc370f2a025f6894470f7549da2ba34"><td class="memTemplItemLeft" align="right" valign="top">static List&lt; Eigen::VectorXd &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#aabc370f2a025f6894470f7549da2ba34">field2EigenBC</a> (type_f &amp;field)</td></tr>
+<tr class="memdesc:aabc370f2a025f6894470f7549da2ba34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert an OpenFOAM field to a List of <a class="el" href="namespaceEigen.html">Eigen</a> Vectors, one for each boundary.  <a href="#aabc370f2a025f6894470f7549da2ba34">More...</a><br /></td></tr>
+<tr class="separator:aabc370f2a025f6894470f7549da2ba34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcdc5a20dd9fbcecb51c342e58c07891"><td class="memTemplParams" colspan="2">template&lt;class type_f &gt; </td></tr>
+<tr class="memitem:abcdc5a20dd9fbcecb51c342e58c07891"><td class="memTemplItemLeft" align="right" valign="top">static List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#abcdc5a20dd9fbcecb51c342e58c07891">PtrList2EigenBC</a> (type_f &amp;fields, int Nfields=10000000)</td></tr>
+<tr class="memdesc:abcdc5a20dd9fbcecb51c342e58c07891"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an OpenFOAM PtrList to a list of <a class="el" href="namespaceEigen.html">Eigen</a> Matrices, one for each boundary.  <a href="#abcdc5a20dd9fbcecb51c342e58c07891">More...</a><br /></td></tr>
+<tr class="separator:abcdc5a20dd9fbcecb51c342e58c07891"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3a72702df9afae05f90992e329aeb61"><td class="memTemplParams" colspan="2">template&lt;class type_f &gt; </td></tr>
 <tr class="memitem:ab3a72702df9afae05f90992e329aeb61"><td class="memTemplItemLeft" align="right" valign="top">static type_f&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classFoam2Eigen.html#ab3a72702df9afae05f90992e329aeb61">Eigen2field</a> (type_f &amp;field, Eigen::VectorXd &amp;eigen_vector)</td></tr>
 <tr class="memdesc:ab3a72702df9afae05f90992e329aeb61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert an <a class="el" href="namespaceEigen.html">Eigen</a> Vector to an OpenFOAM field (only the internal Field is copied inside the OpenFOAM field)  <a href="#ab3a72702df9afae05f90992e329aeb61">More...</a><br /></td></tr>
@@ -168,68 +188,8 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00065">65</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a93f8fe96a898bc34fbed100049e1570c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93f8fe96a898bc34fbed100049e1570c">&#9670;&nbsp;</a></span>Eigen2field() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">volVectorField Foam2Eigen::Eigen2field </td>
-          <td>(</td>
-          <td class="paramtype">volVectorField &amp;&#160;</td>
-          <td class="paramname"><em>field_in</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
-          <td class="paramname"><em>eigen_vector</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00077">77</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
-
-</div>
-</div>
-<a id="aee8680ade81b0c79ba23893028901a8b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee8680ade81b0c79ba23893028901a8b">&#9670;&nbsp;</a></span>Eigen2field() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">volScalarField Foam2Eigen::Eigen2field </td>
-          <td>(</td>
-          <td class="paramtype">volScalarField &amp;&#160;</td>
-          <td class="paramname"><em>field_in</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
-          <td class="paramname"><em>eigen_vector</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00091">91</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
-
-</div>
-</div>
 <a id="ab3a72702df9afae05f90992e329aeb61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3a72702df9afae05f90992e329aeb61">&#9670;&nbsp;</a></span>Eigen2field() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3a72702df9afae05f90992e329aeb61">&#9670;&nbsp;</a></span>Eigen2field() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -279,6 +239,66 @@ template&lt;class type_f &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The OpenFoam Field </dd></dl>
+
+</div>
+</div>
+<a id="a93f8fe96a898bc34fbed100049e1570c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93f8fe96a898bc34fbed100049e1570c">&#9670;&nbsp;</a></span>Eigen2field() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">volVectorField Foam2Eigen::Eigen2field </td>
+          <td>(</td>
+          <td class="paramtype">volVectorField &amp;&#160;</td>
+          <td class="paramname"><em>field_in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
+          <td class="paramname"><em>eigen_vector</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00168">168</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+
+</div>
+</div>
+<a id="aee8680ade81b0c79ba23893028901a8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee8680ade81b0c79ba23893028901a8b">&#9670;&nbsp;</a></span>Eigen2field() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">volScalarField Foam2Eigen::Eigen2field </td>
+          <td>(</td>
+          <td class="paramtype">volScalarField &amp;&#160;</td>
+          <td class="paramname"><em>field_in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
+          <td class="paramname"><em>eigen_vector</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00182">182</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
 
 </div>
 </div>
@@ -383,7 +403,90 @@ template&lt;class type_f &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>return the dense <a class="el" href="namespaceEigen.html">Eigen</a> vector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00202">202</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00249">249</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+
+</div>
+</div>
+<a id="a096086526d6fd618ef616959a8996500"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a096086526d6fd618ef616959a8996500">&#9670;&nbsp;</a></span>field2EigenBC() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt; Eigen::VectorXd &gt; Foam2Eigen::field2EigenBC </td>
+          <td>(</td>
+          <td class="paramtype">volVectorField &amp;&#160;</td>
+          <td class="paramname"><em>field</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00077">77</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+
+</div>
+</div>
+<a id="a98bb8e71816f7a612c54f6713ba4de41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98bb8e71816f7a612c54f6713ba4de41">&#9670;&nbsp;</a></span>field2EigenBC() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt; Eigen::VectorXd &gt; Foam2Eigen::field2EigenBC </td>
+          <td>(</td>
+          <td class="paramtype">volScalarField &amp;&#160;</td>
+          <td class="paramname"><em>field</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00097">97</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+
+</div>
+</div>
+<a id="aabc370f2a025f6894470f7549da2ba34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabc370f2a025f6894470f7549da2ba34">&#9670;&nbsp;</a></span>field2EigenBC() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class type_f &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static List&lt;Eigen::VectorXd&gt; Foam2Eigen::field2EigenBC </td>
+          <td>(</td>
+          <td class="paramtype">type_f &amp;&#160;</td>
+          <td class="paramname"><em>field</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert an OpenFOAM field to a List of <a class="el" href="namespaceEigen.html">Eigen</a> Vectors, one for each boundary. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">field</td><td>The field</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">type_f</td><td>Type of the field can be volScalarField or volVectorField</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>return the dense <a class="el" href="namespaceEigen.html">Eigen</a> vector </dd></dl>
 
 </div>
 </div>
@@ -450,46 +553,8 @@ template&lt;class type_foam_matrix , class type_A , class type_B &gt; </div>
 
 </div>
 </div>
-<a id="a3580d693bf0209d822bad5d0c7742cef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3580d693bf0209d822bad5d0c7742cef">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[2/8]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void Foam2Eigen::fvMatrix2Eigen </td>
-          <td>(</td>
-          <td class="paramtype">fvScalarMatrix &amp;&#160;</td>
-          <td class="paramname"><em>foam_matrix</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
-          <td class="paramname"><em>A</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
-          <td class="paramname"><em>b</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00155">155</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
-
-</div>
-</div>
 <a id="a93471926657ec5a3374affb6a1a3493e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93471926657ec5a3374affb6a1a3493e">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[3/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a93471926657ec5a3374affb6a1a3493e">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[2/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -532,46 +597,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a6030a37ea7bf4d7f78a422a3e7fa6c90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6030a37ea7bf4d7f78a422a3e7fa6c90">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[4/8]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void Foam2Eigen::fvMatrix2Eigen </td>
-          <td>(</td>
-          <td class="paramtype">fvVectorMatrix &amp;&#160;</td>
-          <td class="paramname"><em>foam_matrix</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
-          <td class="paramname"><em>A</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
-          <td class="paramname"><em>b</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00191">191</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
-
-</div>
-</div>
 <a id="aff6f6c5f8eacb7902e1a11c143e15db5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff6f6c5f8eacb7902e1a11c143e15db5">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[5/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aff6f6c5f8eacb7902e1a11c143e15db5">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[3/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -615,7 +642,7 @@ template&lt;&gt; </div>
 </div>
 </div>
 <a id="a7d71d27190602dddbdd5be6137057db0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d71d27190602dddbdd5be6137057db0">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[6/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d71d27190602dddbdd5be6137057db0">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[4/8]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -658,6 +685,82 @@ template&lt;&gt; </div>
 
 </div>
 </div>
+<a id="a3580d693bf0209d822bad5d0c7742cef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3580d693bf0209d822bad5d0c7742cef">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[5/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void Foam2Eigen::fvMatrix2Eigen </td>
+          <td>(</td>
+          <td class="paramtype">fvScalarMatrix &amp;&#160;</td>
+          <td class="paramname"><em>foam_matrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00246">246</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+
+</div>
+</div>
+<a id="a6030a37ea7bf4d7f78a422a3e7fa6c90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6030a37ea7bf4d7f78a422a3e7fa6c90">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[6/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void Foam2Eigen::fvMatrix2Eigen </td>
+          <td>(</td>
+          <td class="paramtype">fvVectorMatrix &amp;&#160;</td>
+          <td class="paramname"><em>foam_matrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::VectorXd &amp;&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00282">282</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+
+</div>
+</div>
 <a id="a84e3df9d60078622ca6f7f1e568bcd22"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a84e3df9d60078622ca6f7f1e568bcd22">&#9670;&nbsp;</a></span>fvMatrix2Eigen() <span class="overload">[7/8]</span></h2>
 
@@ -692,7 +795,7 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00235">235</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00326">326</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
 
 </div>
 </div>
@@ -730,7 +833,7 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00277">277</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00368">368</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
 
 </div>
 </div>
@@ -774,7 +877,7 @@ template&lt;class type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00216">216</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00261">261</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 
 </div>
 </div>
@@ -830,7 +933,7 @@ template&lt;class type_PtrList &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="namespaceEigen.html">Eigen</a> matrix containing the mass matrix </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00283">283</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00320">320</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 
 </div>
 </div>
@@ -901,7 +1004,7 @@ template&lt;class type_f , class type_PtrList &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a vector fr with the projection </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00319">319</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00352">352</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 
 </div>
 </div>
@@ -972,7 +1075,7 @@ template&lt;class type_m , class type_PtrList &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A tuple containing the projected Ar matrix and vector br which are coming from the source term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00242">242</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8H_source.html#l00282">282</a> of file <a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>.</p>
 
 </div>
 </div>
@@ -1055,7 +1158,7 @@ template&lt;class type_f &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00106">106</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00198">198</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
 
 </div>
 </div>
@@ -1085,7 +1188,125 @@ template&lt;class type_f &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00130">130</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00221">221</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+
+</div>
+</div>
+<a id="a0681e21b18a48bd490b35b57e1986a10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0681e21b18a48bd490b35b57e1986a10">&#9670;&nbsp;</a></span>PtrList2EigenBC() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;Eigen::MatrixXd&gt; Foam2Eigen::PtrList2EigenBC </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>fields</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nfields</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00115">115</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
+
+</div>
+</div>
+<a id="abcdc5a20dd9fbcecb51c342e58c07891"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcdc5a20dd9fbcecb51c342e58c07891">&#9670;&nbsp;</a></span>PtrList2EigenBC() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class type_f &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static List&lt;Eigen::MatrixXd&gt; Foam2Eigen::PtrList2EigenBC </td>
+          <td>(</td>
+          <td class="paramtype">type_f &amp;&#160;</td>
+          <td class="paramname"><em>fields</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nfields</em> = <code>10000000</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts an OpenFOAM PtrList to a list of <a class="el" href="namespaceEigen.html">Eigen</a> Matrices, one for each boundary. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">fields</td><td>The fields </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Nfields</td><td>The Number of requested modes.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">type_f</td><td>type of the field, can be volVectorField or volScalarField</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>List of <a class="el" href="namespaceEigen.html">Eigen</a> Matrices </dd></dl>
+
+</div>
+</div>
+<a id="a25e5b6ce22611c47ea53ecd09a156c2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25e5b6ce22611c47ea53ecd09a156c2a">&#9670;&nbsp;</a></span>PtrList2EigenBC() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;Eigen::MatrixXd&gt; Foam2Eigen::PtrList2EigenBC </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>fields</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nfields</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Foam2Eigen_8C_source.html#l00141">141</a> of file <a class="el" href="Foam2Eigen_8C_source.html">Foam2Eigen.C</a>.</p>
 
 </div>
 </div>

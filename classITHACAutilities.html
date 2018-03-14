@@ -158,6 +158,18 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ad48aa1d13baa41442056eb850681fcf0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#ad48aa1d13baa41442056eb850681fcf0">assignONE</a> (volScalarField &amp;s, List&lt; int &gt; &amp;L)</td></tr>
 <tr class="memdesc:ad48aa1d13baa41442056eb850681fcf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign one to volScalarField.  <a href="#ad48aa1d13baa41442056eb850681fcf0">More...</a><br /></td></tr>
 <tr class="separator:ad48aa1d13baa41442056eb850681fcf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cef00dca0eb4354fed0213e180ce36b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a2cef00dca0eb4354fed0213e180ce36b">assignBC</a> (volVectorField &amp;s, label BC_ind, Vector&lt; double &gt; &amp;value)</td></tr>
+<tr class="memdesc:a2cef00dca0eb4354fed0213e180ce36b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign Boundary Condition to a volVectorField.  <a href="#a2cef00dca0eb4354fed0213e180ce36b">More...</a><br /></td></tr>
+<tr class="separator:a2cef00dca0eb4354fed0213e180ce36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa008382cbcac4d33d99ab4051683e1d3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#aa008382cbcac4d33d99ab4051683e1d3">assignBC</a> (volScalarField &amp;s, label BC_ind, double &amp;value)</td></tr>
+<tr class="memdesc:aa008382cbcac4d33d99ab4051683e1d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign Boundary Condition to a volScalarField.  <a href="#aa008382cbcac4d33d99ab4051683e1d3">More...</a><br /></td></tr>
+<tr class="separator:aa008382cbcac4d33d99ab4051683e1d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b2a297b5fd0488649854f16cb4de995"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a5b2a297b5fd0488649854f16cb4de995">assignBC</a> (volVectorField &amp;s, label BC_ind, Eigen::MatrixXd value)</td></tr>
+<tr class="memdesc:a5b2a297b5fd0488649854f16cb4de995"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign Boundary Condition to a volVectorField.  <a href="#a5b2a297b5fd0488649854f16cb4de995">More...</a><br /></td></tr>
+<tr class="separator:a5b2a297b5fd0488649854f16cb4de995"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1c67a114e5ed7f735d969473efbef6a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#af1c67a114e5ed7f735d969473efbef6a">assignBC</a> (volScalarField &amp;s, label BC_ind, Eigen::MatrixXd value)</td></tr>
+<tr class="memdesc:af1c67a114e5ed7f735d969473efbef6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign Boundary Condition to a volScalarField.  <a href="#af1c67a114e5ed7f735d969473efbef6a">More...</a><br /></td></tr>
+<tr class="separator:af1c67a114e5ed7f735d969473efbef6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac55995f882c098eedd705faa97ee9764"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#ac55995f882c098eedd705faa97ee9764">L2norm</a> (volScalarField field)</td></tr>
 <tr class="memdesc:ac55995f882c098eedd705faa97ee9764"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate the L2 norm of a volScalarField.  <a href="#ac55995f882c098eedd705faa97ee9764">More...</a><br /></td></tr>
 <tr class="separator:ac55995f882c098eedd705faa97ee9764"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,8 +199,224 @@ Static Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class to implement some useful functions inside ITHACA-FV. </p>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00072">72</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00073">73</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2cef00dca0eb4354fed0213e180ce36b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cef00dca0eb4354fed0213e180ce36b">&#9670;&nbsp;</a></span>assignBC() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAutilities::assignBC </td>
+          <td>(</td>
+          <td class="paramtype">volVectorField &amp;&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>BC_ind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign Boundary Condition to a volVectorField. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td>field where you want to assign the BC. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">BC_ind</td><td>The BC index. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The value you want to assign (it must be an OpenFOAM vector). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00533">533</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="aa008382cbcac4d33d99ab4051683e1d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa008382cbcac4d33d99ab4051683e1d3">&#9670;&nbsp;</a></span>assignBC() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAutilities::assignBC </td>
+          <td>(</td>
+          <td class="paramtype">volScalarField &amp;&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>BC_ind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign Boundary Condition to a volScalarField. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td>field where you want to assign the BC. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">BC_ind</td><td>The BC index. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The value you want to assign (it must be a double). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00480">480</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="a5b2a297b5fd0488649854f16cb4de995"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b2a297b5fd0488649854f16cb4de995">&#9670;&nbsp;</a></span>assignBC() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAutilities::assignBC </td>
+          <td>(</td>
+          <td class="paramtype">volVectorField &amp;&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>BC_ind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign Boundary Condition to a volVectorField. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td>field where you want to assign the BC. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">BC_ind</td><td>The BC index. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The value you want to assign (it must be an OpenFOAM vector). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00606">606</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="af1c67a114e5ed7f735d969473efbef6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1c67a114e5ed7f735d969473efbef6a">&#9670;&nbsp;</a></span>assignBC() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAutilities::assignBC </td>
+          <td>(</td>
+          <td class="paramtype">volScalarField &amp;&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>BC_ind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assign Boundary Condition to a volScalarField. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td>field where you want to assign the BC. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">BC_ind</td><td>The BC index. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The value you want to assign (it must be a double). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00562">562</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
 <a id="a95fe0dead6d078a43ba9e51913b0c778"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a95fe0dead6d078a43ba9e51913b0c778">&#9670;&nbsp;</a></span>assignIF()</h2>
 
@@ -241,7 +469,7 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00416">416</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00455">455</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
 
 </div>
 </div>
@@ -705,7 +933,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00404">404</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00443">443</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
 
 </div>
 </div>
@@ -1182,7 +1410,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The mass matrix eigen. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00425">425</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00464">464</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
 
 </div>
 </div>
