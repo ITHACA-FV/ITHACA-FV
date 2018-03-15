@@ -117,7 +117,7 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU, PtrList<volVectorF
 
         ITHACAPOD::exportBases(modes, snapshotsU, sup);
         Eigen::saveMarketVector(eigenValueseig, "./ITHACAoutput/POD/Eigenvalues_" + snapshotsU[0].name(), para.precision, para.outytpe);
-        Eigen::saveMarketVector(eigenValueseig, "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsU[0].name(), para.precision, para.outytpe);
+        Eigen::saveMarketVector(cumEigenValues, "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsU[0].name(), para.precision, para.outytpe);
     }
     else
     {
@@ -213,7 +213,7 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP, PtrList<volScalarF
         Info << "####### Saving the POD bases for " << snapshotsP[0].name() << " #######" << endl;
         ITHACAPOD::exportBases(modes, snapshotsP, sup);
         Eigen::saveMarketVector(eigenValueseig, "./ITHACAoutput/POD/Eigenvalues_" + snapshotsP[0].name(), para.precision, para.outytpe);
-        Eigen::saveMarketVector(eigenValueseig, "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsP[0].name(), para.precision, para.outytpe);
+        Eigen::saveMarketVector(cumEigenValues, "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsP[0].name(), para.precision, para.outytpe);
     }
     else
     {
@@ -270,7 +270,7 @@ void ITHACAPOD::getModesSVD(PtrList<volVectorField>& snapshotsU, PtrList<volVect
         ITHACAparameters para;
         ITHACAPOD::exportBases(modes, snapshotsU, sup);
         Eigen::saveMarketVector(eigenValueseig, "./ITHACAoutput/POD/Eigenvalues_" + snapshotsU[0].name(), para.precision, para.outytpe);
-        Eigen::saveMarketVector(eigenValueseig, "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsU[0].name(), para.precision, para.outytpe);
+        Eigen::saveMarketVector(cumEigenValues, "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsU[0].name(), para.precision, para.outytpe);
     }
     else
     {
@@ -325,7 +325,7 @@ void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshotsP, PtrList<volScal
         ITHACAparameters para;
         ITHACAPOD::exportBases(modes, snapshotsP, sup);
         Eigen::saveMarketVector(eigenValueseig, "./ITHACAoutput/POD/Eigenvalues_" + snapshotsP[0].name(), para.precision, para.outytpe);
-        Eigen::saveMarketVector(eigenValueseig, "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsP[0].name(), para.precision, para.outytpe);
+        Eigen::saveMarketVector(cumEigenValues, "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsP[0].name(), para.precision, para.outytpe);
     }
     else
     {
