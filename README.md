@@ -30,7 +30,7 @@ cd ${FOAM_APP}/utilities
 ``` 
 Now you can clone the **ITHACA-FV** repository inside the selected folder
 ```
-https://github.com/mathLab/ITHACA-FV
+git clone https://github.com/mathLab/ITHACA-FV
 ```
 and you can compile **ITHACA-FV** by navigating inside the src folder and compiling using wmake
 ```
