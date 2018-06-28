@@ -45,7 +45,5 @@ EXE_LIBS = \
     -lforces \
     -lITHACA-FV-Problems \
     -L$(FOAM_USER_LIBBIN) \
-    -L../../src/thirdparty/multivariate-splines-master \
-    -lmultivariate-splines-static.1.1
 
  
