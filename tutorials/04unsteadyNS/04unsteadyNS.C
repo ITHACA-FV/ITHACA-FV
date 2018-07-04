@@ -136,7 +136,6 @@ int main(int argc, char *argv[])
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
     
     reducedUnsteadyNS ridotto(example, "SUP");
-    //unsteadyNSreduced ridotto(example, "PPE");
 
     // Set values of the ridotto stuff
     ridotto.nu = 0.005;

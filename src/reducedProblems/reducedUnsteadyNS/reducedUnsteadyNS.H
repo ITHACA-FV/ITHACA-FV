@@ -206,7 +206,7 @@ public:
     /// Scalar to store the final time if the online simulation
     scalar finalTime;
 
-    /// Scalar to store the final time if the online simulation
+    /// Scalar to store the initial time if the online simulation
     scalar tstart;
 
     // Functions
