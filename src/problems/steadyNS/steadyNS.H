@@ -30,7 +30,7 @@ Class
     steadyNS
 
 Description
-    Reduction class for a Stationary NS class
+    Reduction class for a Stationary Navier-Stokes problem
 
 SourceFiles
     steadyNS.C
