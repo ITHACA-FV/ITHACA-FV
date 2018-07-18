@@ -88,7 +88,6 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
 #include "CourantNo.H"
 #include "setDeltaT.H"
 		runTime.setEndTime(finalTime);
-		runTime++;
 		Info << "Time = " << runTime.timeName() << nl << endl;
 
 		// --- Pressure-velocity PIMPLE corrector loop
@@ -122,6 +121,7 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
 			nextWrite += writeEvery;
 			writeMu(mu_now);
 		}
+        runTime++;
 	}
 }
 
