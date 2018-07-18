@@ -17,10 +17,10 @@ Linear and non-linear algebra operations which are not already implemented in Op
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
-* [**OpenFOAM 5.0**](https://openfoam.org/version/5-0/);
+* [**OpenFOAM 5.0**](https://openfoam.org/version/5-0/)
 
 ### 2. Installation and usage
-First of all you need to source the bashrc file of your installation of **OpenFOAM 5.0**. This is of course dependending on the location of your OpenFOAM installation. 
+First of all you need to source the bashrc file of your installation of **OpenFOAM 5.0**. This is of course depending on the location of your OpenFOAM installation. 
 ```
 source $HOME/OpenFOAM/OpenFOAM-5.0/etc/bashrc
 ``` 
@@ -37,7 +37,7 @@ and you can compile **ITHACA-FV** by navigating inside the src folder and compil
 cd ITHACA-FV
 ./Allwmake 
 ```
-Once the clone is performed, for of a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://mathlab.github.io/ITHACA-FV/).
+For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://mathlab.github.io/ITHACA-FV/).
 
 
 ### 3. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
