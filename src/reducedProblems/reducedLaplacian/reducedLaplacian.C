@@ -76,7 +76,6 @@ void reducedLaplacian::reconstruct(fileName folder, int printevery)
 
     int counter = 0;
     int nextwrite = 0;
-    int counter2 = 1;
 
     for (label i = 0; i < online_solution.rows(); i++)
     {
@@ -88,10 +87,7 @@ void reducedLaplacian::reconstruct(fileName folder, int printevery)
                 T_rec += problem->Tmodes[j] * online_solution(i, j + 1);
             }
             problem->exportSolution(T_rec, name(online_solution(i, 0)), folder);
-
             nextwrite += printevery;
-            counter2 ++;
-
         }
         counter++;
     }
