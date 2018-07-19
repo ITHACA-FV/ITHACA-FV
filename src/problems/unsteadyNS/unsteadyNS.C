@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
-     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
-     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
-     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
-     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
+	 ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
+	 ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
+	 ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
+	 ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
+	 ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
+	 ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
  
  * In real Time Highly Advanced Computational Applications for Finite Volumes 
  * Copyright (C) 2017 by the ITHACA-FV authors
@@ -44,14 +44,13 @@ unsteadyNS::unsteadyNS(int argc, char *argv[])
 #include "setRootCase.H"
 #include "createTime.H"
 #include "createMesh.H"
-
 		_pimple = autoPtr<pimpleControl>
-	          (
-	              new pimpleControl
-	              (
-	                  mesh
-	              )
-	          );
+			  (
+				  new pimpleControl
+				  (
+					  mesh
+				  )
+			  );
 #include "createFields.H"
 #include "createFvOptions.H"
 
@@ -76,7 +75,6 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
 	instantList Times = runTime.times();
 	runTime.setEndTime(finalTime);
 	// Perform a TruthSolve
-	bool WRITE;
 	runTime.setTime(Times[1], 1);
 	runTime.setDeltaT(timeStep);
 	nextWrite = startTime;
@@ -101,16 +99,15 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
 			}
 			if (pimple.turbCorr())
 			{
-                laminarTransport.correct();
-                turbulence->correct();
+				laminarTransport.correct();
+				turbulence->correct();
 			}
 		}
 
 		Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-		     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-		     << nl << endl;
-		WRITE = checkWrite(runTime);
-		if (WRITE)
+			 << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+			 << nl << endl;
+		if (checkWrite(runTime))
 		{
 			exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
 			exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
@@ -121,7 +118,7 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
 			nextWrite += writeEvery;
 			writeMu(mu_now);
 		}
-        runTime++;
+		runTime++;
 	}
 }
 
