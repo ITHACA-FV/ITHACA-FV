@@ -72,13 +72,6 @@ public:
 
     ~reducedLaplacian(){};
 
-    // Specific variables
-    /// Number of modes
-    label NTmodes;
-
-    /// T snapshots matrix
-    PtrList<volScalarField> Tmodes;
-
     /// Problem object
     laplacianProblem* problem;
 
@@ -87,13 +80,6 @@ public:
 
     /// Counter for online sol
     label count_online_solve = 1;
-
-    // Reduced Matrices
-    /// A matrices
-    List<Eigen::MatrixXd> A_matrices;
-
-    /// Source vector
-    Eigen::MatrixXd source;
 
     /// Function to perform an online solve given a certain mu
     ///

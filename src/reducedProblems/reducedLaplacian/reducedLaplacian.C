@@ -46,10 +46,6 @@ reducedLaplacian::reducedLaplacian(laplacianProblem& problem)
 :
 problem(&problem)
 {
-    source = problem.source;
-    NTmodes = problem.NTmodes;
-    A_matrices = problem.A_matrices;
-    Tmodes = problem.Tmodes;
 }
 
 void reducedLaplacian::solveOnline(Eigen::MatrixXd mu)
