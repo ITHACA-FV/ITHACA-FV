@@ -123,9 +123,6 @@ int main(int argc, char *argv[])
     {
         Info << "Error you cannot define LatestTime and NSnapShots together" << endl;
         abort();
-        nSnapshots = 0;
-        startTime = 0;
-        endTime = 0;
     }
     else if (existnsnap)
     {
