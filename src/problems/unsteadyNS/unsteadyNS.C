@@ -111,7 +111,6 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
 		{
 			exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
 			exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-			std::ofstream of("./ITHACAoutput/Offline/"+name(counter)+"/"+runTime.timeName());
 			Ufield.append(U);
 			Pfield.append(p);
 			counter++;
