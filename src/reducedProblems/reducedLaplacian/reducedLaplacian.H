@@ -80,7 +80,7 @@ public:
     PtrList<volScalarField> Tmodes;
 
     /// Problem object
-    laplacianProblem _problem;
+    laplacianProblem* problem;
 
     /// Online solution
     Eigen::MatrixXd online_solution;
@@ -104,11 +104,10 @@ public:
 
     /// Function to recover the solution given the online solution
     ///
-    /// @param      problem     The full order laplacian object defined in laplacianProblem.C
     /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec")
     /// @param[in]  printevery  Variable to recover only every printevery the online solutions
     ///
-    void reconstruct(laplacianProblem& problem, fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
+    void reconstruct(fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
 
 };
 

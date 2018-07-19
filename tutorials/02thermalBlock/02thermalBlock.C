@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
     }
 
     // Reconstruct the solution and store it into Reconstruction folder
-    ridotto.reconstruct(example, "./ITHACAoutput/Reconstruction");
+    ridotto.reconstruct("./ITHACAoutput/Reconstruction");
     // Exit the code
     exit(0);
 }

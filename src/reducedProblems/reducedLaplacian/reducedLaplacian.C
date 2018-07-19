@@ -43,6 +43,8 @@ reducedLaplacian::reducedLaplacian()
 }
 
 reducedLaplacian::reducedLaplacian(laplacianProblem& problem)
+:
+problem(&problem)
 {
     source = problem.source;
     NTmodes = problem.NTmodes;
@@ -52,26 +54,26 @@ reducedLaplacian::reducedLaplacian(laplacianProblem& problem)
 
 void reducedLaplacian::solveOnline(Eigen::MatrixXd mu)
 {
-    if (mu.cols() != A_matrices.size())
+    if (mu.cols() != problem->A_matrices.size())
     {
         Info << "wrong dimension of online parameters" << endl;
         exit(0);
     }
     Eigen::MatrixXd A;
-    A.setZero(NTmodes, NTmodes);
-    for (int i = 0; i < A_matrices.size() ; i++)
+    A.setZero(problem->NTmodes, problem->NTmodes);
+    for (int i = 0; i < problem->A_matrices.size() ; i++)
     {
-        A += A_matrices[i] * mu(0, i);
+        A += problem->A_matrices[i] * mu(0, i);
     }
     Eigen::MatrixXd x;
-    x = A.colPivHouseholderQr().solve(-source);
-    online_solution.conservativeResize(count_online_solve, NTmodes + 1);
+    x = A.colPivHouseholderQr().solve(-problem->source);
+    online_solution.conservativeResize(count_online_solve, problem->NTmodes + 1);
     online_solution(count_online_solve - 1, 0) = count_online_solve;
-    online_solution.row(count_online_solve - 1).tail(NTmodes) = x.transpose();
+    online_solution.row(count_online_solve - 1).tail(problem->NTmodes) = x.transpose();
     count_online_solve += 1;
 }
 
-void reducedLaplacian::reconstruct(laplacianProblem& problem, fileName folder, int printevery)
+void reducedLaplacian::reconstruct(fileName folder, int printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
@@ -84,12 +86,12 @@ void reducedLaplacian::reconstruct(laplacianProblem& problem, fileName folder, i
     {
         if (counter == nextwrite)
         {
-            volScalarField T_rec("T_rec", Tmodes[0] * 0);
-            for (label j = 0; j < NTmodes; j++)
+            volScalarField T_rec("T_rec", problem->Tmodes[0] * 0);
+            for (label j = 0; j < problem->NTmodes; j++)
             {
-                T_rec += Tmodes[j] * online_solution(i, j + 1);
+                T_rec += problem->Tmodes[j] * online_solution(i, j + 1);
             }
-            problem.exportSolution(T_rec, name(online_solution(i, 0)), folder);
+            problem->exportSolution(T_rec, name(online_solution(i, 0)), folder);
 
             nextwrite += printevery;
             counter2 ++;
