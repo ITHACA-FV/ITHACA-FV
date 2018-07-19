@@ -98,9 +98,6 @@ class unsteadyNS: public steadyNS
         /// Turbulence model
         autoPtr<incompressible::turbulenceModel> turbulence;
 
-        /// adjustTimeStep
-        bool adjustTimeStep;
-
         /// maxCourant
         scalar maxCo;
 
