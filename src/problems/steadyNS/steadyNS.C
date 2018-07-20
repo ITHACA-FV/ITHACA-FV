@@ -67,6 +67,7 @@ steadyNS::steadyNS(int argc, char *argv[])
 	        IOobject::NO_WRITE
 	    )
 	);
+	tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
 }
 
 

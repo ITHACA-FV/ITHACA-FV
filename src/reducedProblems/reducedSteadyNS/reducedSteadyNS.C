@@ -38,46 +38,29 @@ License
 // Constructor
 reducedSteadyNS::reducedSteadyNS()
 {
-
 }
 
-reducedSteadyNS::reducedSteadyNS(steadyNS& problem, word tipo)
+reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
+:
+problem(&FOMproblem)
 {
-	B_matrix = problem.B_matrix;
-	C_matrix = problem.C_matrix;
-	K_matrix = problem.K_matrix;
+	N_BC = problem->inletIndex.rows();
+    Nphi_u = problem->B_matrix.rows();
+    Nphi_p = problem->K_matrix.cols();
 
-	N_BC = problem.inletIndex.rows();
-
-	if (tipo == "SUP")
+	for (label k = 0; k < problem->liftfield.size(); k++)
 	{
-		P_matrix = problem.P_matrix;
-        newton_object = newton_steadyNS(Nphi_u + Nphi_p , Nphi_u + Nphi_p, problem);
-        newton_object.nu = nu;
+		Umodes.append(problem->liftfield[k]);
 	}
-
-	Nphi_u = B_matrix.rows();
-    Nphi_p = K_matrix.cols();
-
-	for (label k = 0; k < problem.liftfield.size(); k++)
+	for (label k = 0; k < problem->NUmodes; k++)
 	{
-		Umodes.append(problem.liftfield[k]);
+		Umodes.append(problem->Umodes[k]);
 	}
-	for (label k = 0; k < problem.NUmodes; k++)
+	for (label k = 0; k < problem->NSUPmodes; k++)
 	{
-		Umodes.append(problem.Umodes[k]);
+		Umodes.append(problem->supmodes[k]);
 	}
-	for (label k = 0; k < problem.NSUPmodes; k++)
-	{
-		Umodes.append(problem.supmodes[k]);
-	}
-
-	for (label k = 0; k < problem.NPmodes; k++)
-	{
-		Pmodes.append(problem.Pmodes[k]);
-	}
-
-	newton_object = newton_steadyNS(Nphi_u + Nphi_p , Nphi_u + Nphi_p, problem);
+	newton_object = newton_steadyNS(Nphi_u + Nphi_p , Nphi_u + Nphi_p, FOMproblem);
 }
 
 int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const
@@ -89,15 +72,15 @@ int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec)
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = B_matrix * a_tmp *nu;
+    Eigen::VectorXd M1 = problem->B_matrix * a_tmp *nu;
     // Gradient of pressure
-    Eigen::VectorXd M2 = K_matrix * b_tmp;
+    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
     // Pressure Term
-    Eigen::VectorXd M3 = P_matrix * a_tmp;
+    Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * C_matrix[i] * a_tmp;
+        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
         fvec(i) = M1(i) - cc(0, 0) - M2(i);
     }
     for (label j = 0; j < Nphi_p; j++)
@@ -117,7 +100,6 @@ int newton_steadyNS::df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) const
 {
     Eigen::NumericalDiff<newton_steadyNS> numDiff(*this);
     numDiff.df(x, fjac);
-
     return 0;
 }
 
@@ -126,22 +108,8 @@ int newton_steadyNS::df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) const
 
 void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now)
 {
-	y.resize(Nphi_u + Nphi_p, 1);
-	y_old.resize(Nphi_u + Nphi_p, 1);
-	y_old.setZero();
-
-	Eigen::VectorXd x(Nphi_u + Nphi_p);
-	x.setZero();
-
-	for (label j = 0; j < N_BC; j++)
-	{
-		x(j) = vel_now(j, 0);
-	}
-	for (label j = 0; j < N_BC; j++)
-	{
-		y_old(j) = vel_now(j, 0);
-	}
-	// y = NewtonRaphson_PPE(y_old);
+    Info << "This function is still not implemented for the stationary case" << endl;
+    exit(0);
 }
 
 void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
@@ -154,22 +122,18 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
 	{
 		y(j) = vel_now(j, 0);
 	}
-	//Eigen::LevenbergMarquardt<newton_steadyNS> lm(newton_object);
 	Color::Modifier red(Color::FG_RED);
 	Color::Modifier green(Color::FG_GREEN);
 	Color::Modifier def(Color::FG_DEFAULT);
 	Eigen::HybridNonLinearSolver<newton_steadyNS> hnls(newton_object);
 	newton_object.BC.resize(N_BC);
-
 	for (label j = 0; j < N_BC; j++)
     {
         newton_object.BC(j) = vel_now(j, 0);
     }
-
     newton_object.nu = nu;
-
 	hnls.solve(y);
-	//lm.minimize(y);
+
 	Eigen::VectorXd res(y);
 	newton_object.operator()(y, res);
 
@@ -184,23 +148,18 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
 		std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " << hnls.iter << " iterations " << def << std::endl << std::endl;
 	}
 	count_online_solve += 1;
-
-	//y = NewtonRaphson_sup(y_old, 1, 1e-7);
 }
 
 
 // * * * * * * * * * * * * * * * Jacobian Evaluation  * * * * * * * * * * * * * //
 
-void reducedSteadyNS::reconstruct_PPE(steadyNS & problem, fileName folder, int printevery)
+void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
 {
 	mkDir(folder);
-	system("ln -s ../../constant " + folder + "/constant");
-	system("ln -s ../../0 " + folder + "/0");
-	system("ln -s ../../system " + folder + "/system");
+    ITHACAutilities::createSymLink(folder);
 
 	int counter = 0;
 	int nextwrite = 0;
-	int counter2 = 1;
 
 	for (label i = 0; i < online_solution.size(); i++)
 	{
@@ -211,33 +170,26 @@ void reducedSteadyNS::reconstruct_PPE(steadyNS & problem, fileName folder, int p
 			{
 				U_rec += Umodes[j] * online_solution[i](j + 1, 0);
 			}
-			problem.exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
-			//problem.exportSolution(U_rec,  name(counter2), folder);
-
+			problem->exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
 			volScalarField P_rec("P_rec", Pmodes[0] * 0);
 			for (label j = 0; j < Nphi_p; j++)
 			{
-				P_rec += Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
+				P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
 			}
-			problem.exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
-			//problem.exportSolution(P_rec, name(counter2), folder);
+			problem->exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
 			nextwrite += printevery;
-			counter2 ++;
 		}
 		counter++;
 	}
 }
 
-void reducedSteadyNS::reconstruct_sup(steadyNS & problem, fileName folder, int printevery)
+void reducedSteadyNS::reconstruct_sup(fileName folder, int printevery)
 {
 	mkDir(folder);
-	system("ln -s ../../constant " + folder + "/constant");
-	system("ln -s ../../0 " + folder + "/0");
-	system("ln -s ../../system " + folder + "/system");
+    ITHACAutilities::createSymLink(folder);
 
 	int counter = 0;
 	int nextwrite = 0;
-	int counter2 = 1;
 
 	for (label i = 0; i < online_solution.size(); i++)
 	{
@@ -248,18 +200,14 @@ void reducedSteadyNS::reconstruct_sup(steadyNS & problem, fileName folder, int p
 			{
 				U_rec += Umodes[j] * online_solution[i](j + 1, 0);
 			}
-			problem.exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
-			//problem.exportSolution(U_rec,  name(counter2), folder);
-
-			volScalarField P_rec("P_rec", Pmodes[0] * 0);
+			problem->exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
+			volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
 			for (label j = 0; j < Nphi_p; j++)
 			{
-				P_rec += Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
+				P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
 			}
-			problem.exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
-			//problem.exportSolution(P_rec, name(counter2), folder);
+			problem->exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
 			nextwrite += printevery;
-			counter2 ++;
 
 			UREC.append(U_rec);
 			PREC.append(P_rec);
@@ -273,8 +221,6 @@ double reducedSteadyNS::inf_sup_constant()
 	double a;
 	Eigen::VectorXd sup(Nphi_u);
 	Eigen::VectorXd inf(Nphi_p);
-
-	
 	for (int i = 0; i < Nphi_p; i++)
 	{
 		for (int j = 0; j < Nphi_u; j++)
@@ -286,7 +232,6 @@ double reducedSteadyNS::inf_sup_constant()
 	a = inf.minCoeff();
 	return a;
 }
-
 
 
 void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS & problem, fileName folder)
@@ -304,7 +249,6 @@ void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS & problem, fileName folde
 	
 	Eigen::VectorXd cl(online_solution.size());
 	Eigen::VectorXd cd(online_solution.size());
-
 
 	//Read FORCESdict
     IOdictionary FORCESdict
@@ -326,50 +270,25 @@ void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS & problem, fileName folde
     f_tau.setZero(online_solution.size(),3);
     f_n.setZero(online_solution.size(),3);
 	
-
 	for (label i = 0; i < online_solution.size(); i++)
 	{
 		
 			for (label j = 0; j < totalSize; j++)
-			{
-				
-				
+			{				
 				f_tau.row(i) += TAU.row(j) * online_solution[i](j + 1, 0);
-				
-				
-				///std::cout << TAU.row(j) << std::endl;
-				///Info << online_solution[i](j + 1, 0) << endl;
-				///
-				///std::cout << TAU.row(j) * online_solution[i](j + 1, 0) << std::endl;
-                ///
-				///Info << "Update" << endl;
-				///std::cout << f_tau.row(i) << std::endl;
 			}
 			
 			for (label j = 0; j < NPmodes; j++)
 			{
 				f_n.row(i) += N.row(j) * online_solution[i](j + Nphi_u + 1, 0);
-			}
-			///problem.exportSolution(U_rec,  name(counter2), folder);
-
-			
-			
-			///problem.exportSolution(P_rec, name(counter2), folder);
-
-			
+			}			
 		}
 			
-			
-			//f_tau = f_tau *factor;
-			//f_n = f_n *factor;
-		
 			ITHACAstream::exportMatrix(f_tau, "f_tau", "python", folder);
 			ITHACAstream::exportMatrix(f_tau, "f_tau", "matlab", folder);
 			ITHACAstream::exportMatrix(f_tau, "f_tau", "eigen", folder);
-
 			ITHACAstream::exportMatrix(f_n, "f_n", "python", folder);
 			ITHACAstream::exportMatrix(f_n, "f_n", "matlab", folder);
 			ITHACAstream::exportMatrix(f_n, "f_n", "eigen", folder);
-	
 }
 

@@ -60,13 +60,10 @@ struct newton_steadyNS: public newton_argument<double>
 public:
     newton_steadyNS() {}
     newton_steadyNS(int Nx, int Ny, steadyNS& problem): newton_argument<double>(Nx, Ny),
+    problem(&problem),
     Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
     Nphi_p(problem.NPmodes),
-    N_BC(problem.inletIndex.rows()),
-    B_matrix(problem.B_matrix),
-    C_matrix(problem.C_matrix),
-    K_matrix(problem.K_matrix),
-    P_matrix(problem.P_matrix)
+    N_BC(problem.inletIndex.rows())
     {}
 
     int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
@@ -76,11 +73,8 @@ public:
     int Nphi_p;
     int N_BC;
     scalar nu;
-    Eigen::MatrixXd B_matrix;
-    List <Eigen::MatrixXd> C_matrix; 
-    Eigen::MatrixXd K_matrix; 
-    Eigen::MatrixXd P_matrix;
     Eigen::VectorXd BC;   
+    steadyNS* problem;
     
 };
 
@@ -106,39 +100,39 @@ public:
     /// @param[in]  problem  a full order steadyNS problem
     /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
     /// 
-    reducedSteadyNS(steadyNS& problem, word tipo);
+    reducedSteadyNS(steadyNS& problem);
 
     ~reducedSteadyNS(){};
 
 
-    // Specific variable
-    /** @name Reduced Matrices
-    *
-    */
-    ///@{
+    // // Specific variable
+    // /** @name Reduced Matrices
+    // *
+    // */
+    // ///@{
 
-    /// Diffusion Term
-    Eigen::MatrixXd B_matrix;
+    // /// Diffusion Term
+    // Eigen::MatrixXd B_matrix;
 
-    /// Mass Matrix Term
-    Eigen::MatrixXd M_matrix;
+    // /// Mass Matrix Term
+    // Eigen::MatrixXd M_matrix;
 
-    /// Gradient of pressure
-    Eigen::MatrixXd K_matrix;
+    // /// Gradient of pressure
+    // Eigen::MatrixXd K_matrix;
 
-    /// Convective Term
-    List <Eigen::MatrixXd> C_matrix;
+    // /// Convective Term
+    // List <Eigen::MatrixXd> C_matrix;
 
-    /// Divergence of velocity
-    Eigen::MatrixXd P_matrix;
+    // /// Divergence of velocity
+    // Eigen::MatrixXd P_matrix;
 
-    /// Laplacian of pressure
-    Eigen::MatrixXd D_matrix;
+    // /// Laplacian of pressure
+    // Eigen::MatrixXd D_matrix;
 
-    /// Divergence of momentum
-    List <Eigen::MatrixXd> G_matrix;
-    ///@}
-    //
+    // /// Divergence of momentum
+    // List <Eigen::MatrixXd> G_matrix;
+    // ///@}
+    // //
 
     /// Reduced matrix for tangent forces
     Eigen::MatrixXd f_tau;
@@ -178,6 +172,9 @@ public:
 
     /// Newton object used to solve the non linear problem
     newton_steadyNS newton_object;
+
+    /// Pointer to the FOM problem
+    steadyNS* problem;
 
     /// Number of velocity modes
     int Nphi_u;
@@ -220,7 +217,7 @@ public:
     /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
     /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
     ///
-    void reconstruct_PPE(steadyNS& problem, fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
+    void reconstruct_PPE(fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
 
     /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique.
     /// stabilisation method
@@ -229,7 +226,7 @@ public:
     /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
     /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
     ///
-    void reconstruct_sup(steadyNS& problem, fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
+    void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
 
     /// @brief      { function_description }
     ///

@@ -30,20 +30,17 @@
 
 scalar residual = 1;
 scalar uresidual = 1;
-Vector<double> uresidual_v(0,0,0);
+Vector<double> uresidual_v(0, 0, 0);
 
 scalar presidual = 1;
 
 // Variable that can be changed
-scalar tolerance = 1e-5;
 turbulence->read();
 std::ofstream res_os;
 res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
 while (simple.loop() && residual > tolerance )
 {
   Info << "Time = " << runTime.timeName() << nl << endl;
-
-  // --- Pressure-velocity SIMPLE corrector
   {
 #include "UEqn.H"
 #include "pEqn.H"
@@ -61,7 +58,6 @@ while (simple.loop() && residual > tolerance )
     residual = max(presidual, uresidual);
 
     Info << "\nResidual: " << residual << endl << endl;
-    //Info << "Residual U: " << solve(UEqn() == -fvc::grad(p)).initialResidual() << endl;
   }
   laminarTransport.correct();
   turbulence->correct();

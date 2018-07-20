@@ -104,6 +104,9 @@ public:
     /// List of pointers used to form the homogeneous velocity snapshots
     PtrList<volVectorField> Uomfield;
 
+    /// Tolerance for the residual of the stationary problems, there is the same tolerance for velocity and pressure
+    scalar tolerance;
+
     /// Number of velocity modes used for the projection
     label NUmodes;
 
