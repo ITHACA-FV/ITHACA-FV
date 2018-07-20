@@ -1,7 +1,7 @@
 var searchData=
 [
   ['m_5finputs',['m_inputs',['../classnewton__argument.html#a907200b6b8d627bb82bf8055107a3419',1,'newton_argument']]],
-  ['m_5fmatrix',['M_matrix',['../classsteadyNS.html#ad7b9f7697cbc0ce9e0ab5f2bc90c12b1',1,'steadyNS::M_matrix()'],['../classreducedSteadyNS.html#abbb49ea22d02e85fcfd3863664566e0f',1,'reducedSteadyNS::M_matrix()'],['../structnewton__unsteadyNS__sup.html#ab7f78ee60c2f2f2802cefc7653b65e2b',1,'newton_unsteadyNS_sup::M_matrix()'],['../structnewton__unsteadyNS__PPE.html#a06bfb68b57748124e6401b2043c5d433',1,'newton_unsteadyNS_PPE::M_matrix()'],['../classreducedUnsteadyNS.html#ae7edca3fa80ab2fd5206bf82da625ced',1,'reducedUnsteadyNS::M_matrix()']]],
+  ['m_5fmatrix',['M_matrix',['../classsteadyNS.html#ad7b9f7697cbc0ce9e0ab5f2bc90c12b1',1,'steadyNS::M_matrix()'],['../structnewton__unsteadyNS__sup.html#ab7f78ee60c2f2f2802cefc7653b65e2b',1,'newton_unsteadyNS_sup::M_matrix()'],['../structnewton__unsteadyNS__PPE.html#a06bfb68b57748124e6401b2043c5d433',1,'newton_unsteadyNS_PPE::M_matrix()'],['../classreducedUnsteadyNS.html#ae7edca3fa80ab2fd5206bf82da625ced',1,'reducedUnsteadyNS::M_matrix()']]],
   ['m_5fvalues',['m_values',['../classnewton__argument.html#a296a614142f3e057c03027c762e8141f',1,'newton_argument']]],
   ['maxco',['maxCo',['../classunsteadyNS.html#a6e7f78b3db8742150150f8ac87ed2b36',1,'unsteadyNS']]],
   ['maxdeltat',['maxDeltaT',['../classunsteadyNS.html#a95cf6236d609b1974898a0db915782df',1,'unsteadyNS']]],

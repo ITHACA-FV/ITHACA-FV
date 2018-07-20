@@ -8,7 +8,6 @@ var searchData=
   ['_5fp',['_p',['../classsteadyNS.html#afe342c9980231332bb8c22bbceb32254',1,'steadyNS']]],
   ['_5fphi',['_phi',['../classsteadyNS.html#a27dd336cf3b9757ba406b3d3926ac299',1,'steadyNS']]],
   ['_5fpimple',['_pimple',['../classunsteadyNS.html#a85bf97e61ca9b746501a1f4fbdf75ae5',1,'unsteadyNS']]],
-  ['_5fproblem',['_problem',['../classreducedLaplacian.html#ac680ed5b74f879539d3a654825842f5f',1,'reducedLaplacian']]],
   ['_5fruntime',['_runTime',['../classlaplacianProblem.html#aee095e897c12912b7216fc194990a85b',1,'laplacianProblem::_runTime()'],['../classsteadyNS.html#a4493d1f1ce7e2008c85b1dde7c027de4',1,'steadyNS::_runTime()']]],
   ['_5fs',['_S',['../classlaplacianProblem.html#ac99b6f6820ca07d4fd81e2a7b413cec2',1,'laplacianProblem::_S()'],['../src_2problems_2laplacianProblem_2createFields_8H.html#ad82651f6fd3665f10155d4b307fab2d3',1,'_S():&#160;createFields.H']]],
   ['_5fsimple',['_simple',['../classsteadyNS.html#a2eedc2d1f931744a2e2ba785d803eb5f',1,'steadyNS']]],

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['a_5fmatrices',['A_matrices',['../classlaplacianProblem.html#aa33c49b4a039d26f44fe6656bb667f97',1,'laplacianProblem::A_matrices()'],['../classreducedLaplacian.html#afbff690af8e6a3ad70503675928bdeb7',1,'reducedLaplacian::A_matrices()']]],
+  ['a_5fmatrices',['A_matrices',['../classlaplacianProblem.html#aa33c49b4a039d26f44fe6656bb667f97',1,'laplacianProblem']]],
   ['addtoruntimeselectiontable',['addToRunTimeSelectionTable',['../namespaceFoam_1_1functionObjects.html#acfdd2a7acf1734f8926d2e2b711cc187',1,'Foam::functionObjects']]],
   ['adjustphi',['adjustPhi',['../steadyNS_2pEqn_8H.html#a2763a4e809e5ae1f9caf5fb4bc42a66e',1,'adjustPhi(phiHbyA, U, p):&#160;pEqn.H'],['../unsteadyNS_2pEqn_8H.html#a2763a4e809e5ae1f9caf5fb4bc42a66e',1,'adjustPhi(phiHbyA, U, p):&#160;pEqn.H']]],
   ['adjusttimestep',['adjustTimeStep',['../classunsteadyNS.html#ac19230470343b257416acf43d1136e1b',1,'unsteadyNS']]],

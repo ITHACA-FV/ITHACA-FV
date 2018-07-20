@@ -1,7 +1,7 @@
 var searchData=
 [
   ['p',['p',['../classtutorial03.html#a69945719587ff48554fe4bbf9e9e8ab6',1,'tutorial03::p()'],['../classtutorial04.html#a90a63bb872d2d28151a572adcaa8f9af',1,'tutorial04::p()'],['../src_2problems_2steadyNS_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db',1,'p():&#160;createFields.H'],['../src_2problems_2unsteadyNS_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db',1,'p():&#160;createFields.H']]],
-  ['p_5fmatrix',['P_matrix',['../classsteadyNS.html#ac8998c39e2c5a2b1937e8ce5937b9cef',1,'steadyNS::P_matrix()'],['../structnewton__steadyNS.html#aa031a3c402d90985dfede720ca93a4fd',1,'newton_steadyNS::P_matrix()'],['../classreducedSteadyNS.html#aa3a536a01af181aa481c74fac2f89f3c',1,'reducedSteadyNS::P_matrix()'],['../structnewton__unsteadyNS__sup.html#a8efb10f1f9979a3abaf849a25916c8fc',1,'newton_unsteadyNS_sup::P_matrix()'],['../classreducedUnsteadyNS.html#a4bb36eadf19855deaf1591b6fe76ab3d',1,'reducedUnsteadyNS::P_matrix()']]],
+  ['p_5fmatrix',['P_matrix',['../classsteadyNS.html#ac8998c39e2c5a2b1937e8ce5937b9cef',1,'steadyNS::P_matrix()'],['../structnewton__unsteadyNS__sup.html#a8efb10f1f9979a3abaf849a25916c8fc',1,'newton_unsteadyNS_sup::P_matrix()'],['../classreducedUnsteadyNS.html#a4bb36eadf19855deaf1591b6fe76ab3d',1,'reducedUnsteadyNS::P_matrix()']]],
   ['patchset_5f',['patchSet_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#ac269b0e9ac0f742b31440d49e364ce90',1,'Foam::functionObjects::ITHACAforces']]],
   ['peqn_2eh',['pEqn.H',['../steadyNS_2pEqn_8H.html',1,'(Global Namespace)'],['../unsteadyNS_2pEqn_8H.html',1,'(Global Namespace)']]],
   ['perform_5fpod_2ec',['perform_POD.C',['../perform__POD_8C.html',1,'']]],
@@ -23,6 +23,7 @@ var searchData=
   ['pressure_5fbc2',['pressure_BC2',['../classsteadyNS.html#aafd4f7700fd1de6e22c43cf6de916f5b',1,'steadyNS']]],
   ['pressure_5fbc3',['pressure_BC3',['../classsteadyNS.html#a92305a97dede65f911cc36446984f9aa',1,'steadyNS']]],
   ['pressure_5fgradient_5fterm',['pressure_gradient_term',['../classsteadyNS.html#ac56ea02311c4952267fe72fef0f88be8',1,'steadyNS']]],
+  ['problem',['problem',['../classreducedLaplacian.html#a568aa647455ce73b7731949717142341',1,'reducedLaplacian::problem()'],['../structnewton__steadyNS.html#a02d4609a7a9b76d666bc3d04c5e3babb',1,'newton_steadyNS::problem()'],['../classreducedSteadyNS.html#a7f9a3574d2a7d08fa131a3533f879f29',1,'reducedSteadyNS::problem()']]],
   ['project',['project',['../classlaplacianProblem.html#a99510c7f2c989dac7ae31d4ece7db894',1,'laplacianProblem::project()'],['../classreductionProblem.html#a13f8de83a6998544001ac79839b31d84',1,'reductionProblem::project()']]],
   ['projectfield',['projectField',['../classFoam2Eigen.html#aaddb06c2196cbb3147fb126869308bc5',1,'Foam2Eigen']]],
   ['projectfvmatrix',['projectFvMatrix',['../classFoam2Eigen.html#adcc1a4cb21c7cefb2ddf9874c165c3cc',1,'Foam2Eigen']]],

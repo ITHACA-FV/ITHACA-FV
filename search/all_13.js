@@ -16,7 +16,7 @@ var searchData=
   ['solveonline_5fsup',['solveOnline_sup',['../classreducedSteadyNS.html#a2e9605d7acfcca9a66339fdbf930a256',1,'reducedSteadyNS::solveOnline_sup()'],['../classreducedUnsteadyNS.html#a968fee21812af67cb1a353aee62e5f1f',1,'reducedUnsteadyNS::solveOnline_sup()']]],
   ['solvesupremizer',['solvesupremizer',['../classsteadyNS.html#a9c397721a5c9a7a2cf7575929579eb79',1,'steadyNS']]],
   ['sorteigenvalues',['sortEigenvalues',['../classEigenFunctions.html#ac105af18b2922b29bac7b842e6b94baa',1,'EigenFunctions']]],
-  ['source',['source',['../classlaplacianProblem.html#abe844ac55089584af4cb7aed7792f019',1,'laplacianProblem::source()'],['../classreducedLaplacian.html#a34519dd2f1ba57479b4a481f07723b03',1,'reducedLaplacian::source()']]],
+  ['source',['source',['../classlaplacianProblem.html#abe844ac55089584af4cb7aed7792f019',1,'laplacianProblem']]],
   ['starttime',['startTime',['../classunsteadyNS.html#a963e77fca351cbb998d95845532c84fd',1,'unsteadyNS']]],
   ['steadyns',['steadyNS',['../classsteadyNS.html',1,'steadyNS'],['../classsteadyNS.html#a5a0ea36df404eaea97a213efb3d7c529',1,'steadyNS::steadyNS()'],['../classsteadyNS.html#a77c09cbae0e5623bbce341df55123155',1,'steadyNS::steadyNS(int argc, char *argv[])']]],
   ['steadyns_2ec',['steadyNS.C',['../steadyNS_8C.html',1,'']]],
