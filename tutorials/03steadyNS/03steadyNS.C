@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 	example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
 
 	// Create the reduced object
-	reducedSteadyNS ridotto(example, "SUP");
+	reducedSteadyNS ridotto(example);
 
 	// Set the inlet velocity
 	Eigen::MatrixXd vel_now(2, 1);
@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
 	ITHACAstream::exportMatrix(ridotto.online_solution, "red_coeff", "eigen", "./ITHACAoutput/red_coeff");
 
 	// Reconstruct and export the solution
-	ridotto.reconstruct_sup(example, "./ITHACAoutput/Reconstruction/");
+	ridotto.reconstruct_sup("./ITHACAoutput/Reconstruction/");
 	exit(0);
 }
 

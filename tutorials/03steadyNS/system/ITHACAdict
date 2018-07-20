@@ -29,4 +29,7 @@ NmodesSUPproj 10;
 OutPrecision 20;
 OutType fixed;
 
+// Specific problem of a stationary case
+tolerance 1e-5;
+
 
