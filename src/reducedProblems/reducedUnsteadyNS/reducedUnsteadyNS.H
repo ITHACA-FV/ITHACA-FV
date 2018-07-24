@@ -59,14 +59,10 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
 public:
     newton_unsteadyNS_sup() {}
     newton_unsteadyNS_sup(int Nx, int Ny, unsteadyNS& problem): newton_argument<double>(Nx, Ny),
+    problem(&problem),
     Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
     Nphi_p(problem.NPmodes),
-    N_BC(problem.inletIndex.rows()),
-    B_matrix(problem.B_matrix),
-    C_matrix(problem.C_matrix),
-    K_matrix(problem.K_matrix),
-    P_matrix(problem.P_matrix),
-    M_matrix(problem.M_matrix)
+    N_BC(problem.inletIndex.rows())
     {}
 
     int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
@@ -75,16 +71,15 @@ public:
     int Nphi_u;
     int Nphi_p;
     int N_BC;
+
     scalar nu;
     scalar dt;
-    Eigen::MatrixXd B_matrix;
-    List <Eigen::MatrixXd> C_matrix; 
-    Eigen::MatrixXd K_matrix; 
-    Eigen::MatrixXd P_matrix;
-    Eigen::MatrixXd M_matrix;
     Eigen::VectorXd y_old;   
     Eigen::VectorXd BC;   
+
+    unsteadyNS* problem;
 };
+
 
 /// Newton object for the resolution of the reduced problem using a PPE approach
 struct newton_unsteadyNS_PPE: public newton_argument<double>
@@ -92,18 +87,10 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
 public:
     newton_unsteadyNS_PPE() {}
     newton_unsteadyNS_PPE(int Nx, int Ny, unsteadyNS& problem): newton_argument<double>(Nx, Ny),
+    problem(&problem),
     Nphi_u(problem.NUmodes + problem.liftfield.size()),
     Nphi_p(problem.NPmodes),
-    N_BC(problem.inletIndex.rows()),
-    B_matrix(problem.B_matrix),
-    C_matrix(problem.C_matrix),
-    K_matrix(problem.K_matrix),
-    D_matrix(problem.D_matrix),
-    M_matrix(problem.M_matrix),
-    G_matrix(problem.G_matrix),
-    BC1_matrix(problem.BC1_matrix),
-    BC2_matrix(problem.BC2_matrix),
-    BC3_matrix(problem.BC3_matrix)
+    N_BC(problem.inletIndex.rows())
     {}
 
     int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
@@ -115,18 +102,10 @@ public:
 
     scalar nu;
     scalar dt;
-    
-    Eigen::MatrixXd B_matrix;
-    List <Eigen::MatrixXd> C_matrix; 
-    Eigen::MatrixXd K_matrix; 
-    Eigen::MatrixXd D_matrix;
-    Eigen::MatrixXd M_matrix;
-    List <Eigen::MatrixXd> G_matrix;
-    Eigen::MatrixXd BC1_matrix;
-    List <Eigen::MatrixXd> BC2_matrix;  
-    Eigen::MatrixXd BC3_matrix;  
     Eigen::VectorXd y_old;    
     Eigen::VectorXd BC;     
+
+    unsteadyNS* problem;
 };
 
 
@@ -150,46 +129,9 @@ public:
     /// @param[in]  problem  a full order unsteadyNS problem
     /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
     /// 
-    reducedUnsteadyNS(unsteadyNS& problem,word tipo);
+    reducedUnsteadyNS(unsteadyNS& problem);
 
     ~reducedUnsteadyNS(){};
-
-    // Specific variable
-    /** @name Reduced Matrices
-    *
-    */
-    ///@{
-
-    /// Diffusion Term
-    Eigen::MatrixXd B_matrix;
-
-    /// Mass Matrix Term
-    Eigen::MatrixXd M_matrix;
-
-    /// Gradient of pressure
-    Eigen::MatrixXd K_matrix;
-
-    /// Convective Term
-    List <Eigen::MatrixXd> C_matrix;
-
-    /// Divergence of velocity
-    Eigen::MatrixXd P_matrix; 
-
-    /// Laplacian of pressure
-    Eigen::MatrixXd D_matrix;
-
-    /// Divergence of momentum
-    List <Eigen::MatrixXd> G_matrix;
-
-    /// PPE BC1
-    Eigen::MatrixXd BC1_matrix;
-
-    /// PPE BC2    
-    List <Eigen::MatrixXd> BC2_matrix;
-
-    ///
-    Eigen::MatrixXd BC3_matrix;
-    ///@}
 
     /// Functor object to call the non linear solver sup. approach
     newton_unsteadyNS_sup newton_object_sup;
@@ -208,6 +150,8 @@ public:
 
     /// Scalar to store the initial time if the online simulation
     scalar tstart;
+
+    unsteadyNS* problem;
 
     // Functions
     
@@ -239,7 +183,7 @@ public:
     /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
     /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
     ///
-    void reconstruct_PPE(unsteadyNS& problem, fileName folder = "./online_rec", int printevery = 1);
+    void reconstruct_PPE(fileName folder = "./online_rec", int printevery = 1);
 
     /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique.
     /// stabilisation method
@@ -248,7 +192,7 @@ public:
     /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
     /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
     ///
-    void reconstruct_sup(unsteadyNS& problem, fileName folder = "./online_rec", int printevery = 1);
+    void reconstruct_sup(fileName folder = "./online_rec", int printevery = 1);
 
 };
 
@@ -258,9 +202,4 @@ public:
 
 
 #endif
-
-
-
-
-
 
