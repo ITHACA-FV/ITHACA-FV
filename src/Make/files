@@ -12,5 +12,18 @@ ITHACAutilities/ITHACAforces.C
 ITHACAPOD/ITHACAPOD.C
 Foam2Eigen/Foam2Eigen.C
 EigenFunctions/EigenFunctions.C
+thirdparty/splinter/src/bspline.C
+thirdparty/splinter/src/bsplinebasis.C
+thirdparty/splinter/src/bsplinebasis1d.C
+thirdparty/splinter/src/bsplinebuilder.C
+thirdparty/splinter/src/datapoint.C
+thirdparty/splinter/src/datatable.C
+thirdparty/splinter/src/function.C
+thirdparty/splinter/src/knots.C
+thirdparty/splinter/src/mykroneckerproduct.C
+thirdparty/splinter/src/serializer.C
+thirdparty/splinter/src/utilities.C
+thirdparty/splinter/src/rbfspline.C
+
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA-FV-Problems
