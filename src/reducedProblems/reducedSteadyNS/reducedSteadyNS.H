@@ -104,36 +104,6 @@ public:
 
     ~reducedSteadyNS(){};
 
-
-    // // Specific variable
-    // /** @name Reduced Matrices
-    // *
-    // */
-    // ///@{
-
-    // /// Diffusion Term
-    // Eigen::MatrixXd B_matrix;
-
-    // /// Mass Matrix Term
-    // Eigen::MatrixXd M_matrix;
-
-    // /// Gradient of pressure
-    // Eigen::MatrixXd K_matrix;
-
-    // /// Convective Term
-    // List <Eigen::MatrixXd> C_matrix;
-
-    // /// Divergence of velocity
-    // Eigen::MatrixXd P_matrix;
-
-    // /// Laplacian of pressure
-    // Eigen::MatrixXd D_matrix;
-
-    // /// Divergence of momentum
-    // List <Eigen::MatrixXd> G_matrix;
-    // ///@}
-    // //
-
     /// Reduced matrix for tangent forces
     Eigen::MatrixXd f_tau;
 
