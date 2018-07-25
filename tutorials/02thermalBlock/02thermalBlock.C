@@ -192,24 +192,24 @@ int main(int argc, char *argv[])
     example.offlineSolve();
 
     // Perform a POD decomposition and get the modes
-    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.podex, 0, 0, 15);
+    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.podex, 0, 0, NmodesTout);
 
     // Perform the Galerkin projection onto the space spanned by the POD modes
     /// [project]
-    example.project(10);
+    example.project(NmodesTproj);
     /// [project]
     
     // Create a reduced object
-    reducedLaplacian ridotto(example);
+    reducedLaplacian reduced(example);
 
     // Solve the online reduced problem some new values of the parameters
     for (int i = 0; i < 10; i++)
     {
-        ridotto.solveOnline(example.mu.row(i));
+        reduced.solveOnline(example.mu.row(i));
     }
 
     // Reconstruct the solution and store it into Reconstruction folder
-    ridotto.reconstruct("./ITHACAoutput/Reconstruction");
+    reduced.reconstruct("./ITHACAoutput/Reconstruction");
     // Exit the code
     exit(0);
 }
