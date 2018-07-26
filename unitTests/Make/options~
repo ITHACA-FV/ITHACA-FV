@@ -1,13 +1,10 @@
 EXE_INC = \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/transportModels \
     -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
-    -I$(LIB_SRC)/transportModels/incompressible/viscosityModels/viscosityModel \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/fvOptions/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
@@ -15,29 +12,28 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/radiationModels/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
-    -I../problems/reductionProblem \
-    -I../problems/laplacianProblem \
-    -I../problems/steadyNS \
-    -I../problems/unsteadyNS \
-    -I../reducedProblems/reducedProblem \
-    -I../reducedProblems/reducedUnsteadyNS \
-    -I../reducedProblems/reducedSteadyNS \
-    -I../reducedProblems/reducedLaplacian \
-    -I../NonLinearSolvers \
+    -I$(FOAM_SRC)/postProcessing/functionObjects/forces/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I../../src/problems/reductionProblem \
+    -I../../src/problems/steadyNS \
+    -I../../src/problems/unsteadyNS \
+    -I../../src/POD \
+    -I../../src/reducedProblems/reducedProblem \
+    -I../../src/reducedProblems/reducedUnsteadyNS \
+    -I../../src/reducedProblems/reducedSteadyNS \
+    -I../../src/ITHACAutilities \
+    -I../../src/ForceCoeff \
+    -I../../src/ITHACAstream \
+    -I../../src/ITHACAPOD \
+    -I../../src/NonLinearSolvers \
+    -I../../src/thirdparty/Eigen \
+    -I../../src/Foam2Eigen \
+    -I../../src/EigenFunctions \
+    -I../../src/thirdparty/spectra-0.6.1/include \
     -I../src/thirdparty/splinter/include \
-    -I../src/thirdparty/Eigen \
-    -I../src/thirdparty/spectra-0.6.1/include \
-    -I../ITHACAutilities \
-    -I../ITHACAstream \
-    -I../ITHACAPOD \
-    -I../ForceCoeff \
-    -I../Foam2Eigen \
-    -I../EigenFunctions \
     -w \
     -std=c++11
-
 
 EXE_LIBS = \
     -lturbulenceModels \
@@ -47,11 +43,8 @@ EXE_LIBS = \
     -lmeshTools \
     -lfvOptions \
     -lsampling \
-    -lfluidThermophysicalModels \
-    -lradiationModels \
-    -lspecie \
-    -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
     -lforces \
-    -lfileFormats \
-    -lcompressibleLESModels 
+    -lITHACA-FV-Problems \
+    -L$(FOAM_USER_LIBBIN) \
+
+ 

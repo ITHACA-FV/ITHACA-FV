@@ -30,9 +30,12 @@ SourceFiles
 #include "steadyNS.H"
 #include "ITHACAstream.H"
 #include "ITHACAPOD.H"
-#include "reducedSteadyNS.H"
 #include "forces.H"
 #include "IOmanip.H"
+
+#include "bspline.h"
+#include "pspline.h"
+#include "rbfspline.h"
 
 
 class tutorial05 : public steadyNS
@@ -100,6 +103,10 @@ int main(int argc, char *argv[])
 	// Perform POD on velocity pressure and supremizers and store the first 10 modes
 	ITHACAPOD::getModes(example.Ufield, example.Umodes, example.podex, 0, 0, NmodesUout);
 	ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0, NmodesPout);
+
+    // ITHACAUTILITIES
+
+    DataTable samples;
 	
 	exit(0);
 }
