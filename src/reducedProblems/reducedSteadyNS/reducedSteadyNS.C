@@ -171,7 +171,7 @@ void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
 				U_rec += Umodes[j] * online_solution[i](j + 1, 0);
 			}
 			problem->exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
-			volScalarField P_rec("P_rec", Pmodes[0] * 0);
+			volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
 			for (label j = 0; j < Nphi_p; j++)
 			{
 				P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);

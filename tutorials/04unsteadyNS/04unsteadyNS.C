@@ -111,10 +111,10 @@ int main(int argc, char *argv[])
     example.inletIndex(0, 1) = 0;
 
     // Time parameters
-    example.startTime = 180;
-    example.finalTime = 190;
+    example.startTime = 0;
+    example.finalTime = 5;
     example.timeStep = 0.01;
-    example.writeEvery = 0.05;
+    example.writeEvery = 0.5;
 
     // Perform The Offline Solve;
     example.offlineSolve();
@@ -135,21 +135,21 @@ int main(int argc, char *argv[])
 
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
     
-    reducedUnsteadyNS ridotto(example, "SUP");
+    reducedUnsteadyNS reduced(example);
 
-    // Set values of the ridotto stuff
-    ridotto.nu = 0.005;
-    ridotto.tstart = 0;
-    ridotto.finalTime = 10;
-    ridotto.dt = 0.01;
+    // Set values of the reduced stuff
+    reduced.nu = 0.005;
+    reduced.tstart = 0;
+    reduced.finalTime = 10;
+    reduced.dt = 0.01;
 
     // Set the online velocity
     Eigen::MatrixXd vel_now(1, 1);
     vel_now(0, 0) = 1;
-    ridotto.solveOnline_sup(vel_now);
+    reduced.solveOnline_sup(vel_now);
     // Reconstruct the solution and export it
-    ridotto.reconstruct_sup(example, "./ITHACAoutput/ReconstructionSUP/", 5);
-    //ridotto.reconstruct_PPE(example,"./ITHACAoutput/Reconstruction/",4);
+    reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 5);
+    //reduced.reconstruct_PPE("./ITHACAoutput/Reconstruction/",4);
     exit(0);
 }
 
