@@ -22,9 +22,9 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Description
-    Example of steady NS Reduction Problem
+    Example of PODI Problem
 SourceFiles
-    03steadyNS.C
+    05PODI.C
 \*---------------------------------------------------------------------------*/
 
 #include "steadyNS.H"
@@ -35,11 +35,11 @@ SourceFiles
 #include "IOmanip.H"
 
 
-class tutorial03 : public steadyNS
+class tutorial05 : public steadyNS
 {
 public:
 	/// Constructor
-	explicit tutorial03(int argc, char *argv[])
+	explicit tutorial05(int argc, char *argv[])
 		:
 		steadyNS(argc, argv),
 		U(_U()),
@@ -81,7 +81,7 @@ public:
 int main(int argc, char *argv[])
 {
 	// Construct the tutorial object
-	tutorial03 example(argc, argv);
+	tutorial05 example(argc, argv);
 
 	// Read some parameters from file
 	ITHACAparameters para;
