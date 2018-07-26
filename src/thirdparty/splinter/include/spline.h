@@ -11,7 +11,7 @@
 #ifndef MS_SPLINE_H
 #define MS_SPLINE_H
 
-#include "generaldefinitions.h"
+#include "definitions.h"
 
 namespace SPLINTER
 {
