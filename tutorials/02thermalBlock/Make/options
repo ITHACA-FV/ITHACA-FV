@@ -32,7 +32,8 @@ EXE_INC = \
     -I../../src/Foam2Eigen \
     -I../../src/EigenFunctions \
     -w \
-    -std=c++11
+    -std=c++11 \
+    -DOFVER=$${WM_PROJECT_VERSION%.*}
 
 EXE_LIBS = \
     -lturbulenceModels \
