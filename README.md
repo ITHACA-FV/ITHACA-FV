@@ -8,6 +8,8 @@
 
 [![Build Status](https://travis-ci.org/mathLab/ITHACA-FV.svg?branch=master)](https://travis-ci.org/mathLab/ITHACA-FV)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7ff770dfb954819a0e691ea03de281b)](https://www.codacy.com/project/giovastabile/ITHACA-FV/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/ITHACA-FV&amp;utm_campaign=Badge_Grade_Dashboard)
+
 ### 0. Introduction
 **ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM 5.0**](https://openfoam.org/version/5-0/) but it can be easily adapted also to other versions of OpenFOAM. 
 
