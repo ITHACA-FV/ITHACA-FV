@@ -23,3 +23,7 @@ before_script:
 script:
     - ./Allwmake -j
 
+branches:    
+    only:
+        - master
+
