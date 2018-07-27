@@ -9,10 +9,10 @@
 <p align="center">
     <a href="https://www.gnu.org/licenses/lgpl-3.0" target="_blank">
         <img alt="Software License" src="https://img.shields.io/badge/License-LGPL%20v3-blue.svg">
-    </a> <b>OpenFOAM 5</b>
+    </a> <b><small>OpenFOAM 5</small></b>
     <a href="https://travis-ci.org/mathLab/ITHACA-FV" target="_blank">
         <img alt="Build Status" src="https://travis-matrix-badges.herokuapp.com/repos/giovastabile/ITHACA-FV/branches/master/1">
-    </a> <b>OpenFOAM 6</b> 
+    </a> <b><small>OpenFOAM 6 </small> </b> 
       <a href="https://travis-ci.org/mathLab/ITHACA-FV" target="_blank">
         <img alt="Build Status" src="https://travis-matrix-badges.herokuapp.com/repos/giovastabile/ITHACA-FV/branches/master/2">
     </a>
