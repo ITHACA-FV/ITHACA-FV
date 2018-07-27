@@ -12,7 +12,7 @@
     </a>
     <a href="https://travis-ci.org/mathLab/ITHACA-FV" target="_blank">
         <img alt="Build Status" src="https://travis-matrix-badges.herokuapp.com/repos/giovastabile/ITHACA-FV/branches/master/1">
-    </a>  
+    </a> OF6  
       <a href="https://travis-ci.org/mathLab/ITHACA-FV" target="_blank">
         <img alt="Build Status" src="https://travis-matrix-badges.herokuapp.com/repos/giovastabile/ITHACA-FV/branches/master/2">
     </a>
