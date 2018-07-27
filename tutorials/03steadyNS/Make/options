@@ -31,6 +31,7 @@ EXE_INC = \
     -I../../src/EigenFunctions \
     -I../../src/thirdparty/spectra-0.6.1/include \
     -w \
+    -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11
 
 EXE_LIBS = \
