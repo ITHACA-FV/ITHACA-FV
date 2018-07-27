@@ -34,7 +34,6 @@ SourceFiles
 #include "IOmanip.H"
 
 #include "bspline.h"
-#include "pspline.h"
 #include "rbfspline.h"
 
 
@@ -105,8 +104,6 @@ int main(int argc, char *argv[])
 	ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0, NmodesPout);
 
     // ITHACAUTILITIES
-
-    DataTable samples;
 	
 	exit(0);
 }
