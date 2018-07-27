@@ -15,11 +15,11 @@ before_install:
 
 install:
     - source /opt/openfoam${OF_VERS}/etc/bashrc
-    - ./Allwmake
+    - ./Allwmake -j
 
 before_script:
     - source /opt/openfoam${OF_VERS}/etc/bashrc
 
 script:
-    - ./Allwmake
+    - ./Allwmake -j
 
