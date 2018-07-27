@@ -7,3 +7,4 @@
 *.dep
 examples
 tutorials_dev
+*~
