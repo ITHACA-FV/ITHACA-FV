@@ -6,9 +6,18 @@
 
 ## ITHACA-FV - In real Time Highly Advanced Computational Applications for Finite Volumes - ROMs for OpenFOAM ##
 
-[![Build Status](https://travis-ci.org/mathLab/ITHACA-FV.svg?branch=master)](https://travis-ci.org/mathLab/ITHACA-FV)
+<p align="center">
+    <a href="https://www.gnu.org/licenses/lgpl-3.0" target="_blank">
+        <img alt="Software License" src="https://img.shields.io/badge/License-LGPL%20v3-blue.svg">
+    </a>
+    <a href="https://travis-ci.org/mathLab/ITHACA-FV" target="_blank">
+        <img alt="Build Status" src="https://travis-ci.org/mathLab/ITHACA-FV.svg?branch=master">
+    </a>
+    <a href="https://www.codacy.com/project/giovastabile/ITHACA-FV/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/ITHACA-FV&amp;utm_campaign=Badge_Grade_Dashboard">
+        <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/d7ff770dfb954819a0e691ea03de281b">
+    </a>
+</p>
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7ff770dfb954819a0e691ea03de281b)](https://www.codacy.com/project/giovastabile/ITHACA-FV/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/ITHACA-FV&amp;utm_campaign=Badge_Grade_Dashboard)
 
 ### 0. Introduction
 **ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM 5.0**](https://openfoam.org/version/5-0/) but it can be easily adapted also to other versions of OpenFOAM. 
