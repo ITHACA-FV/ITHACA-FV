@@ -6,6 +6,8 @@
 
 ## ITHACA-FV - In real Time Highly Advanced Computational Applications for Finite Volumes - ROMs for OpenFOAM ##
 
+[![Build Status](https://travis-ci.org/mathLab/ITHACA-FV.svg?branch=master)](https://travis-ci.org/mathLab/ITHACA-FV)
+
 ### 0. Introduction
 **ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM 5.0**](https://openfoam.org/version/5-0/) but it can be easily adapted also to other versions of OpenFOAM. 
 
