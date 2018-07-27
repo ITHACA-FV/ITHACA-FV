@@ -18,6 +18,14 @@
     </a>
 </p>
 
+| Build1            | Build2            |
+|-------------------|-------------------|
+| [![Build1][1]][3] | [![Build2][2]][3] |
+
+[1]: https://travis-matrix-badges.herokuapp.com/repos/giovastabile/ITHACA-FV/branches/master/1
+[2]: https://travis-matrix-badges.herokuapp.com/repos/giovastabile/ITHACA-FV/branches/master/2
+[3]: https://travis-ci.org/giovastabile/ITHACA-FV/
+
 
 ### 0. Introduction
 **ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM 6.0**](https://openfoam.org/version/6) and [**OpenFOAM 5.0**](https://openfoam.org/version/5-0) but it can be easily adapted also to other versions of OpenFOAM. 
