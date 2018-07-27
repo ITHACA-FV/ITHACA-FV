@@ -20,20 +20,22 @@
 
 
 ### 0. Introduction
-**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM 6.0**](https://openfoam.org/version/6) but it can be easily adapted also to other versions of OpenFOAM. 
+**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM 6.0**](https://openfoam.org/version/6) and [**OpenFOAM 5.0**](https://openfoam.org/version/5-0) but it can be easily adapted also to other versions of OpenFOAM. 
 
 **ITHACA-FV** can also be used as a basis for more advanced projects that would like to assess the capability of reduced order models in their existing **OpenFOAM**-based software, thanks to the availability of several reduced order methods and algorithms.
 
 Linear and non-linear algebra operations which are not already implemented in OpenFOAM are performed with the external library [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page). The source code of Eigen 3.3.4 is provided together with ITHACA-FV and is located in the [src/thirdyparty/Eigen](./src/thirdparty/Eigen) folder.  For the EigenValue decomposition it is also possible to rely on the [**Spectra-0.6.1**](https://spectralib.org/) library and the source code is provided in the [src/thirdyparty/spectra-0.6.1](./src//thirdparty/spectra-0.6.1) folder.
 
-**ITHACA-FV** has been tested on ubuntu 16.04 but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 6.0 but the previous release works also with OpenFOAM 5.0. 
+**ITHACA-FV** has been tested on ubuntu 16.04 but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 6.0 or OpenFOAM 5.0. 
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
-* [**OpenFOAM 6.0**](https://openfoam.org/version/6)
+* [**OpenFOAM 6.0**](https://openfoam.org/version/6) or
+* [**OpenFOAM 5.0**](https://openfoam.org/version/5-0) 
+
 
 ### 2. Installation and usage
-First of all you need to source the bashrc file of your installation of **OpenFOAM 6.0**. This is of course depending on the location of your OpenFOAM installation. 
+First of all you need to source the bashrc file of your installation of **OpenFOAM 6.0** or **OpenFOAM 5.0**. This is of course depending on the location of your OpenFOAM installation and of your particular version of OpenFOAM
 ```
 source $HOME/OpenFOAM/OpenFOAM-6/etc/bashrc
 ``` 

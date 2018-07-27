@@ -4,8 +4,12 @@ sudo: required
 dist: trusty
 language: cpp
 
-env:
-    - OF_VERS=6
+matrix:
+  include:
+  - name: "OpenFOAM 6"
+    env: OF_VERS=6
+  - name: "OpenFOAM 5"
+    env: OF_VERS=5
 
 before_install:
     - sudo add-apt-repository http://dl.openfoam.org/ubuntu
