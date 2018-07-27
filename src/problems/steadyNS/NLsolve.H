@@ -38,7 +38,7 @@ scalar presidual = 1;
 turbulence->read();
 std::ofstream res_os;
 res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
-while (simple.loop() && residual > tolerance )
+while (simple.loop(runTime) && residual > tolerance )
 {
   Info << "Time = " << runTime.timeName() << nl << endl;
   {

@@ -91,9 +91,9 @@ List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index_row, int index_col
 void ITHACAutilities::createSymLink(word folder)
 {
     mkDir(folder);
-    word command1("ln -rs  $(readlink -f constant/) " + folder + "/" + " >/dev/null 2>&1");
-    word command2("ln -rs  $(readlink -f system/) " + folder + "/" + " >/dev/null 2>&1");
-    word command3("ln -rs  $(readlink -f 0/) " + folder + "/" + " >/dev/null 2>&1");
+    word command1("ln -s  $(readlink -f constant/) " + folder + "/" + " >/dev/null 2>&1");
+    word command2("ln -s  $(readlink -f system/) " + folder + "/" + " >/dev/null 2>&1");
+    word command3("ln -s  $(readlink -f 0/) " + folder + "/" + " >/dev/null 2>&1");
     std::cout.setstate(std::ios_base::failbit);
     system(command1);
     system(command2);

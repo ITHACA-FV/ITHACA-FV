@@ -1,3 +1,0 @@
-test.C
-
-EXE = $(FOAM_USER_APPBIN)/05PODI
