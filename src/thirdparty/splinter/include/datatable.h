@@ -57,6 +57,7 @@ public:
     bool isGridComplete() const;
 
     void save(const std::string &fileName) const;
+    void load(const std::string &fileName);
 
 private:
     bool allowDuplicates;
@@ -75,8 +76,6 @@ private:
     // Used by functions that require the grid to be complete before they start their operation
     // This function prints a message and exits the program if the grid is not complete.
     void gridCompleteGuard() const;
-
-    void load(const std::string &fileName);
 
     friend class Serializer;
     friend bool operator==(const DataTable &lhs, const DataTable &rhs);
