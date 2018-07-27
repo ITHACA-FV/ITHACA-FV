@@ -278,6 +278,13 @@ void runExample()
     BSpline bspline2 = BSpline::Builder(samples).degree(2).build();
     BSpline bspline3 = BSpline::Builder(samples).degree(3).build();
 
+    // Build penalized B-spline (P-spline) that smooths the samples
+    BSpline pspline = BSpline::Builder(samples)
+            .degree(3)
+            .smoothing(BSpline::Smoothing::PSPLINE)
+            .alpha(0.03)
+            .build();
+
 
     // Build radial basis function spline that interpolate the samples
     RBFSpline rbfspline(samples, RadialBasisFunctionType::THIN_PLATE_SPLINE);
@@ -292,6 +299,7 @@ void runExample()
     cout << "Linear B-spline:       "   << bspline1.eval(x)     << endl;
     cout << "Quadratic B-spline:    "   << bspline2.eval(x)     << endl;
     cout << "Cubic B-spline:        "   << bspline3.eval(x)     << endl;
+    cout << "P-spline:              "   << pspline.eval(x)      << endl;
     cout << "Thin-plate spline:     "   << rbfspline.eval(x)    << endl;
     cout << "-------------------------------------------"       << endl;
 
@@ -305,6 +313,7 @@ void runExample()
     cout << "Linear B-spline:       "   << bspline1.eval(x)     << endl;
     cout << "Quadratic B-spline:    "   << bspline2.eval(x)     << endl;
     cout << "Cubic B-spline:        "   << bspline3.eval(x)     << endl;
+    cout << "P-spline:              "   << pspline.eval(x)      << endl;
     cout << "Thin-plate spline:     "   << rbfspline.eval(x)    << endl;
     cout << "-------------------------------------------"       << endl;
 
@@ -325,7 +334,8 @@ void runExample()
             e_max.at(0) = std::max(e_max.at(0), std::abs(bspline1.eval(x) - y));
             e_max.at(1) = std::max(e_max.at(1), std::abs(bspline2.eval(x) - y));
             e_max.at(2) = std::max(e_max.at(2), std::abs(bspline3.eval(x) - y));
-            e_max.at(3) = std::max(e_max.at(3), std::abs(rbfspline.eval(x) - y));
+            e_max.at(3) = std::max(e_max.at(3), std::abs(pspline.eval(x) - y));
+            e_max.at(4) = std::max(e_max.at(4), std::abs(rbfspline.eval(x) - y));
         }
     }
 
@@ -335,7 +345,8 @@ void runExample()
     cout << "Linear B-spline:      "   << e_max.at(0)       << endl;
     cout << "Quadratic B-spline:   "   << e_max.at(1)       << endl;
     cout << "Cubic B-spline:       "   << e_max.at(2)       << endl;
-    cout << "Thin-plate spline:    "   << e_max.at(3)       << endl;
+    cout << "P-spline:             "   << e_max.at(3)       << endl;
+    cout << "Thin-plate spline:    "   << e_max.at(4)       << endl;
     cout << "-------------------------------------------"   << endl;
 }
 
@@ -440,9 +451,9 @@ void runRecursiveDomainReductionTest()
         }
     }
 
-    // Build B-splines that interpolate the samples
-//    BSpline bspline(samples, BSplineType::LINEAR);
-//    BSpline bspline(samples, BSplineType::QUADRATIC_FREE);
+//  Build B-splines that interpolate the samples
+//  BSpline bspline(samples, BSplineType::LINEAR);
+//  BSpline bspline(samples, BSplineType::QUADRATIC_FREE);
     BSpline bspline = BSpline::Builder(samples).degree(3).build();
 
 
@@ -485,7 +496,7 @@ void testSplineDerivative()
         }
     }
 
-    // Build spline that interpolate the samples
+// Build spline that interpolate the samples
 //    BSpline spline(samples, BSplineType::LINEAR);
 //    BSpline spline(samples, BSplineType::QUADRATIC_FREE);
     BSpline spline = BSpline::Builder(samples).degree(3).build();
@@ -607,6 +618,5 @@ int main(int argc, char **argv)
     {
         cout << "std::exception - " << e.what() << endl;
     }
-
     return 0;
 }
