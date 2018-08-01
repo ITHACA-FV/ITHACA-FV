@@ -52,9 +52,12 @@ SourceFiles
 #include "fvOptions.H"
 #include "reductionProblem.H"
 #include "ITHACAstream.H"
-#include "rbfspline.h"
-#include <datatable.h>
 #include <iostream>
+#include <datatable.h>
+#include <bspline.h>
+#include <bsplinebuilder.h>
+#include <rbfspline.h>
+#include <spline.h>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -83,8 +86,8 @@ public:
     PtrList<volScalarField> nuTmodes;
 
     // Create a SAMPLES and Rbf splines for interpolation
-    std::vector<MultivariateSplines::DataTable*> SAMPLES;
-    std::vector<MultivariateSplines::RBFSpline*> rbfsplines;
+    std::vector<SPLINTER::DataTable*> SAMPLES;
+    std::vector<SPLINTER::RBFSpline*> rbfsplines;
 
 
 
