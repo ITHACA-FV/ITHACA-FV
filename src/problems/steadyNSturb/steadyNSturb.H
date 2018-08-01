@@ -62,7 +62,7 @@ SourceFiles
                         Class SteadyNSturb Declaration
 \*---------------------------------------------------------------------------*/
 
-/// Implementation of a parametrized full order <b> steady turbulent NS problem </b> and preparation of the the reduced matrices for the online solve.
+/// Implementation of a parametrized full order <b> steady turbulent Navier Stokes problem </b> and preparation of the the reduced matrices for the online solve.
 /** In this class are implemented the methods for the offline solve of a turbulent steady NS problem and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the reduction problem class */
 class steadyNSturb: public steadyNS
