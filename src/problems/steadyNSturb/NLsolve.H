@@ -35,51 +35,43 @@ Vector<double> uresidual_v(0,0,0);
 scalar presidual = 1;
 
 // Variable that can be changed
-scalar tolerance = 1e-5;
 turbulence->read();
 std::ofstream res_os;
 res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
 
-int maxIter = 3000;
-int csolves = 0;
-
 #if OFVER == 6
 while (simple.loop(runTime) && residual > tolerance )
 #else
-while (simple.loop() && residual > tolerance )
+  while (simple.loop() && residual > tolerance )
 #endif
-{
-  Info << "Time = " << runTime.timeName() << nl << endl;
-  // --- Pressure-velocity SIMPLE corrector
   {
+    Info << "Time = " << runTime.timeName() << nl << endl;
+  // --- Pressure-velocity SIMPLE corrector
+    {
 #include "UEqn.H"
 #include "pEqn.H"
-   scalar C =0;
-   for(label i =0;i<3;i++)
-   {
-     if(C<uresidual_v[i])
+     scalar C =0;
+     for(label i =0;i<3;i++)
      {
-      C = uresidual_v[i];
+       if(C<uresidual_v[i])
+       {
+        C = uresidual_v[i];
+      }
+
     }
-    
-  }
-  
-  uresidual = C;
-  residual = max(presidual, uresidual);
 
-  Info << "\nResidual: " << residual << endl << endl;
+    uresidual = C;
+    residual = max(presidual, uresidual);
+
+    Info << "\nResidual: " << residual << endl << endl;
     //Info << "Residual U: " << solve(UEqn() == -fvc::grad(p)).initialResidual() << endl;
-}
-laminarTransport.correct();
-turbulence->correct();
+  }
+  laminarTransport.correct();
+  turbulence->correct();
 
-Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-<< "  ClockTime = " << runTime.elapsedClockTime() << " s"
-<< nl << endl;
-
-csolves++;
-
-
+  Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+  << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+  << nl << endl;
 }
 res_os << residual << std::endl;
 res_os.close();
