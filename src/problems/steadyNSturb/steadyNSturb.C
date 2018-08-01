@@ -48,6 +48,7 @@ steadyNSturb::steadyNSturb(int argc, char *argv[])
 	supex = ITHACAutilities::check_sup();
 
 	turbulence->validate();
+	tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
 
 
 }
