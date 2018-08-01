@@ -39,10 +39,15 @@ scalar tolerance = 1e-5;
 turbulence->read();
 std::ofstream res_os;
 res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
+
 int maxIter = 3000;
 int csolves = 0;
 
-while (simple.loop() && residual > tolerance && csolves < maxIter )
+#if OFVER == 6
+while (simple.loop(runTime) && residual > tolerance )
+#else
+while (simple.loop() && residual > tolerance )
+#endif
 {
   Info << "Time = " << runTime.timeName() << nl << endl;
   // --- Pressure-velocity SIMPLE corrector
