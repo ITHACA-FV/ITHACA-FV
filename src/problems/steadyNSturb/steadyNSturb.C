@@ -316,13 +316,13 @@ void steadyNSturb::projectSUP(fileName folder, label NU, label NP, label NSUP, l
 
 	for (int i = 0; i < Nnutmodes; i++)
 	{
-		SAMPLES[i] = new MultivariateSplines::DataTable(1,1);
+		SAMPLES[i] = new SPLINTER::DataTable(1,1);
 		for(int j = 0; j < Ncoeff.cols(); j++)
 		{
 			SAMPLES[i]->addSample(mu.row(j),Ncoeff(i,j));
 		}
 
-		rbfsplines[i] = new MultivariateSplines::RBFSpline(*SAMPLES[i], MultivariateSplines::RadialBasisFunctionType::GAUSSIAN);
+		rbfsplines[i] = new SPLINTER::RBFSpline(*SAMPLES[i], SPLINTER::RadialBasisFunctionType::GAUSSIAN);
 		std::cout << "Constructing RadialBasisFunction for mode " << i+1 << std::endl;
 	}
 }
