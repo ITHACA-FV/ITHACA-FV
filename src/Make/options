@@ -20,6 +20,7 @@ EXE_INC = \
     -I../problems/reductionProblem \
     -I../problems/laplacianProblem \
     -I../problems/steadyNS \
+    -I../problems/steadyNSturb \
     -I../problems/unsteadyNS \
     -I../reducedProblems/reducedProblem \
     -I../reducedProblems/reducedUnsteadyNS \

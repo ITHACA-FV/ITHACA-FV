@@ -1,5 +1,6 @@
 problems/reductionProblem/reductionProblem.C
 problems/steadyNS/steadyNS.C
+problems/steadyNSturb/steadyNSturb.C
 problems/unsteadyNS/unsteadyNS.C
 problems/laplacianProblem/laplacianProblem.C
 reducedProblems/reducedProblem/reducedProblem.C
