@@ -89,8 +89,8 @@ int main(int argc, char *argv[])
 	ITHACAparameters para;
 	int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
 	int NmodesPout = para.ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
-	int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
-	int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+	// int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
+	// int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
 
 	// Read the par file where the parameters are stored
 	word filename("./par");

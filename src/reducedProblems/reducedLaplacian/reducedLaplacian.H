@@ -68,7 +68,7 @@ public:
     reducedLaplacian();
 
     /// Construct from a laplacian problem
-    reducedLaplacian(laplacianProblem& problem);
+    explicit reducedLaplacian(laplacianProblem& problem);
 
     ~reducedLaplacian(){};
 
