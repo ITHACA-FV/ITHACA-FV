@@ -25,6 +25,7 @@ EXE_INC = \
     -I../reducedProblems/reducedProblem \
     -I../reducedProblems/reducedUnsteadyNS \
     -I../reducedProblems/reducedSteadyNS \
+    -I../reducedProblems/reducedSteadyNSturb \
     -I../reducedProblems/reducedLaplacian \
     -I../NonLinearSolvers \
     -I../src/thirdparty/splinter/include \
