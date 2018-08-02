@@ -65,9 +65,9 @@ bool test1()
     DataTable table;
 
     auto x = std::vector<double>(1);
-    double y;
     for(double i = -0.3; i <= 0.3; i += 0.04)
     {
+        double y;
         x.at(0) = i;
         y = 2 * i;
         table.addSample(x, y);

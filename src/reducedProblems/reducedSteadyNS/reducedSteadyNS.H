@@ -100,7 +100,7 @@ public:
     /// @param[in]  problem  a full order steadyNS problem
     /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
     /// 
-    reducedSteadyNS(steadyNS& problem);
+    explicit reducedSteadyNS(steadyNS& problem);
 
     ~reducedSteadyNS(){};
 

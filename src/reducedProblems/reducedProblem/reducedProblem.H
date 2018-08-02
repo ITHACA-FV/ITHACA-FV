@@ -70,7 +70,7 @@ public:
     ///
     /// @param  problem a reductionProblem or a child of it
     ///
-    reducedProblem(reductionProblem& problem);
+    explicit reducedProblem(reductionProblem& problem);
 
     /// Viscosity
     scalar nu;
