@@ -6,6 +6,7 @@ problems/laplacianProblem/laplacianProblem.C
 reducedProblems/reducedProblem/reducedProblem.C
 reducedProblems/reducedUnsteadyNS/reducedUnsteadyNS.C
 reducedProblems/reducedSteadyNS/reducedSteadyNS.C
+reducedProblems/reducedSteadyNSturb/reducedSteadyNSturb.C
 reducedProblems/reducedLaplacian/reducedLaplacian.C
 ITHACAstream/ITHACAstream.C
 ITHACAutilities/ITHACAutilities.C
