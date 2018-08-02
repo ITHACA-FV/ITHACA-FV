@@ -45,12 +45,12 @@ steadyNS::steadyNS(int argc, char *argv[])
 #include "createTime.H"
 #include "createMesh.H"
 	_simple = autoPtr<simpleControl>
-	          (
-	              new simpleControl
-	              (
-	                  mesh
-	              )
-	          );
+	(
+		new simpleControl
+		(
+			mesh
+			)
+		);
 	simpleControl& simple = _simple();
 #include "createFields.H"
 #include "createFvOptions.H"
@@ -58,16 +58,18 @@ steadyNS::steadyNS(int argc, char *argv[])
 	turbulence->validate();
 	ITHACAdict = new IOdictionary
 	(
-	    IOobject
-	    (
-	        "ITHACAdict",
-	        runTime.system(),
-	        mesh,
-	        IOobject::MUST_READ,
-	        IOobject::NO_WRITE
-	    )
-	);
+		IOobject
+		(
+			"ITHACAdict",
+			runTime.system(),
+			mesh,
+			IOobject::MUST_READ,
+			IOobject::NO_WRITE
+			)
+		);
 	tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
+	maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
+
 }
 
 
@@ -102,17 +104,17 @@ void steadyNS::solvesupremizer()
 
 		volVectorField Usup
 		(
-		    IOobject
-		    (
-		        "Usup",
-		        U.time().timeName(),
-		        U.mesh(),
-		        IOobject::NO_READ,
-		        IOobject::AUTO_WRITE
-		    ),
-		    U.mesh(),
-		    dimensionedVector("zero", U.dimensions(), vector::zero)
-		);
+			IOobject
+			(
+				"Usup",
+				U.time().timeName(),
+				U.mesh(),
+				IOobject::NO_READ,
+				IOobject::AUTO_WRITE
+				),
+			U.mesh(),
+			dimensionedVector("zero", U.dimensions(), vector::zero)
+			);
 		ITHACAstream::read_fields(supfield, Usup, "./ITHACAoutput/supfield/");
 	}
 	else
@@ -121,24 +123,24 @@ void steadyNS::solvesupremizer()
 
 		volVectorField Usup
 		(
-		    IOobject
-		    (
-		        "Usup",
-		        U.time().timeName(),
-		        U.mesh(),
-		        IOobject::NO_READ,
-		        IOobject::AUTO_WRITE
-		    ),
-		    U.mesh(),
-		    dimensionedVector("zero", U.dimensions(), vector::zero)
-		);
+			IOobject
+			(
+				"Usup",
+				U.time().timeName(),
+				U.mesh(),
+				IOobject::NO_READ,
+				IOobject::AUTO_WRITE
+				),
+			U.mesh(),
+			dimensionedVector("zero", U.dimensions(), vector::zero)
+			);
 
 		dimensionedScalar nu_fake
 		(
-		    "nu_fake",
-		    dimensionSet(0, 2, -1, 0, 0, 0, 0),
-		    scalar(1)
-		);
+			"nu_fake",
+			dimensionSet(0, 2, -1, 0, 0, 0, 0),
+			scalar(1)
+			);
 
 		Vector<double> v(0, 0, 0);
 		for (label i = 0; i < Usup.boundaryField().size(); i++)
@@ -153,12 +155,12 @@ void steadyNS::solvesupremizer()
 
 			fvVectorMatrix u_sup_eqn
 			(
-			    - fvm::laplacian(nu_fake, Usup)
-			);
+				- fvm::laplacian(nu_fake, Usup)
+				);
 			solve
 			(
-			    u_sup_eqn == fvc::grad(Pfield[i])
-			);
+				u_sup_eqn == fvc::grad(Pfield[i])
+				);
 			supfield.append(Usup);
 			exportSolution(Usup, name(i+1), "./ITHACAoutput/supfield/");
 		}
@@ -217,28 +219,28 @@ void steadyNS::liftSolve()
 		Info << "Constructing velocity potential field Phi\n" << endl;
 		volScalarField Phi
 		(
-		    IOobject
-		    (
-		        "Phi",
-		        runTime.timeName(),
-		        mesh,
-		        IOobject::READ_IF_PRESENT,
-		        IOobject::NO_WRITE
-		    ),
-		    mesh,
-		    dimensionedScalar("Phi", dimLength * dimVelocity, 0),
-		    p.boundaryField().types()
-		);
+			IOobject
+			(
+				"Phi",
+				runTime.timeName(),
+				mesh,
+				IOobject::READ_IF_PRESENT,
+				IOobject::NO_WRITE
+				),
+			mesh,
+			dimensionedScalar("Phi", dimLength * dimVelocity, 0),
+			p.boundaryField().types()
+			);
 
 		label PhiRefCell = 0;
 		scalar PhiRefValue = 0;
 		setRefCell
 		(
-		    Phi,
-		    potentialFlow.dict(),
-		    PhiRefCell,
-		    PhiRefValue
-		);
+			Phi,
+			potentialFlow.dict(),
+			PhiRefCell,
+			PhiRefValue
+			);
 
 		mesh.setFluxRequired(Phi.name());
 
@@ -252,10 +254,10 @@ void steadyNS::liftSolve()
 		{
 			fvScalarMatrix PhiEqn
 			(
-			    fvm::laplacian(dimensionedScalar("1", dimless, 1), Phi)
-			    ==
-			    fvc::div(phi)
-			);
+				fvm::laplacian(dimensionedScalar("1", dimless, 1), Phi)
+				==
+				fvc::div(phi)
+				);
 
 			PhiEqn.setReference(PhiRefCell, PhiRefValue);
 			PhiEqn.solve();
@@ -269,16 +271,16 @@ void steadyNS::liftSolve()
 		MRF.makeAbsolute(phi);
 
 		Info << "Continuity error = "
-		     << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
-		     << endl;
+		<< mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
+		<< endl;
 
 		Ulift = fvc::reconstruct(phi);
 		Ulift.correctBoundaryConditions();
 
 		Info << "Interpolated velocity error = "
-		     << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
-		         / sum(mesh.magSf())).value()
-		     << endl;
+		<< (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
+			/ sum(mesh.magSf())).value()
+		<< endl;
 		Ulift.write();
 		liftfield.append(Ulift);
 	}
@@ -818,27 +820,27 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
 	//Read FORCESdict
 	IOdictionary FORCESdict
 	(
-	    IOobject
-	    (
-	        "FORCESdict",
-	        runTime.system(),
-	        mesh,
-	        IOobject::MUST_READ,
-	        IOobject::NO_WRITE
-	    )
-	);
+		IOobject
+		(
+			"FORCESdict",
+			runTime.system(),
+			mesh,
+			IOobject::MUST_READ,
+			IOobject::NO_WRITE
+			)
+		);
 
 	IOdictionary transportProperties
 	(
-	    IOobject
-	    (
-	        "transportProperties",
-	        runTime.constant(),
-	        mesh,
-	        IOobject::MUST_READ,
-	        IOobject::NO_WRITE
-	    )
-	);
+		IOobject
+		(
+			"transportProperties",
+			runTime.constant(),
+			mesh,
+			IOobject::MUST_READ,
+			IOobject::NO_WRITE
+			)
+		);
 
 	word pName = FORCESdict.lookup("pName");
 	word UName = FORCESdict.lookup("UName");

@@ -49,6 +49,7 @@ steadyNSturb::steadyNSturb(int argc, char *argv[])
 
 	turbulence->validate();
 	tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
+	maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
 
 
 }

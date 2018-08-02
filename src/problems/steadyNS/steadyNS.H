@@ -107,6 +107,9 @@ public:
     /// Tolerance for the residual of the stationary problems, there is the same tolerance for velocity and pressure
     scalar tolerance;
 
+    /// Number of maximum iterations to be done for the computation of the truth solution
+    scalar maxIter;
+
     /// Number of velocity modes used for the projection
     label NUmodes;
 
