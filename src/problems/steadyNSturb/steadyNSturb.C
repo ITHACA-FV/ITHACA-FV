@@ -46,11 +46,20 @@ steadyNSturb::steadyNSturb(int argc, char *argv[])
 #include "createFvOptions.H"
 #include "initContinuityErrs.H"
 	supex = ITHACAutilities::check_sup();
-
 	turbulence->validate();
+	ITHACAdict = new IOdictionary
+	(
+		IOobject
+		(
+			"ITHACAdict",
+			runTime.system(),
+			mesh,
+			IOobject::MUST_READ,
+			IOobject::NO_WRITE
+			)
+		);
 	tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
 	maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
-
 
 }
 
