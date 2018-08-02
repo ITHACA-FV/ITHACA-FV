@@ -34,15 +34,18 @@ Vector<double> uresidual_v(0,0,0);
 
 scalar presidual = 1;
 
+scalar csolve = 0;
+
+
 // Variable that can be changed
 turbulence->read();
 std::ofstream res_os;
 res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
 
 #if OFVER == 6
-while (simple.loop(runTime) && residual > tolerance )
+while (simple.loop(runTime) && (residual > tolerance || csolve < maxIter ))
 #else
-  while (simple.loop() && residual > tolerance )
+  while (simple.loop() && (residual > tolerance || csolve < maxIter ))
 #endif
   {
     Info << "Time = " << runTime.timeName() << nl << endl;
@@ -63,19 +66,21 @@ while (simple.loop(runTime) && residual > tolerance )
     uresidual = C;
     residual = max(presidual, uresidual);
 
-    Info << "\nResidual: " << residual << endl << endl;
+      Info << "\nResidual: " << residual << endl << endl;
     //Info << "Residual U: " << solve(UEqn() == -fvc::grad(p)).initialResidual() << endl;
-  }
-  laminarTransport.correct();
-  turbulence->correct();
+    }
+    laminarTransport.correct();
+    turbulence->correct();
 
-  Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-  << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-  << nl << endl;
-}
-res_os << residual << std::endl;
-res_os.close();
-runTime.setTime(runTime.startTime(), 0);
+    csolve = csolve+1;
+
+    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+    << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+    << nl << endl;
+  }
+  res_os << residual << std::endl;
+  res_os.close();
+  runTime.setTime(runTime.startTime(), 0);
 
 
 
