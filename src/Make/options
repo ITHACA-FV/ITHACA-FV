@@ -21,9 +21,11 @@ EXE_INC = \
     -I../problems/laplacianProblem \
     -I../problems/steadyNS \
     -I../problems/unsteadyNS \
+    -I../problems/unsteadyNST \ 
     -I../reducedProblems/reducedProblem \
     -I../reducedProblems/reducedUnsteadyNS \
     -I../reducedProblems/reducedSteadyNS \
+    -I../reducedProblems/reducedUnsteadyNST \
     -I../reducedProblems/reducedLaplacian \
     -I../NonLinearSolvers \
     -I../src/thirdparty/splinter/include \

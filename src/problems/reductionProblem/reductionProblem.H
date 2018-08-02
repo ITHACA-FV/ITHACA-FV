@@ -148,6 +148,8 @@ public:
     /// Perform a TruthSolve
     void truthSolve();
 
+    Eigen::MatrixXi inletIndexT;
+
     //--------------------------------------------------------------------------
     /// Export a field (template function)
     ///
@@ -245,8 +247,14 @@ public:
     //--------------------------------------------------------------------------
     /// Virtual function to compute the lifting function
     ///
-    void liftSolve();
 
+    template<typename T>
+    void computeLiftT(T& Lfield, T& liftfield, T& omfield);
+    //--------------------------------------------------------------------------
+    /// Virtual function to compute the lifting function for scalar field
+    ///
+    void liftSolve();
+    void liftSolveT();
     //--------------------------------------------------------------------------
     /// General projection operation
     ///

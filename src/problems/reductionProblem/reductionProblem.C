@@ -260,5 +260,14 @@ void reductionProblem::liftSolve()
 	exit(0);
 }
 
+void reductionProblem::liftSolveT()
+{
+	Info << "reductionProblem::liftSolveT is a virtual function it must be overridden" << endl;
+	exit(0);
+}
+
+
+
+
 // ************************************************************************* //
 
