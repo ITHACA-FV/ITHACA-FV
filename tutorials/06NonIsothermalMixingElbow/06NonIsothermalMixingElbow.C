@@ -92,8 +92,7 @@ int main(int argc, char *argv[])
     int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 15);
     int NmodesTproj = para.ITHACAdict->lookupOrDefault<int>("NmodesTproj", 5);
     int NmodesSUPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
-
-   
+ 
     /// Set the number of parameters
     example.Pnumber = 1;
     /// Set samples
@@ -109,11 +108,9 @@ int main(int argc, char *argv[])
     // Set the inlet boundaries where you have non homogeneous boundary conditions
     example.inletIndex.resize(2,2);
     example.inletIndex << 3,0,2,1;
-
     example.inletIndexT.resize(3,1);
     example.inletIndexT << 3,2,0;
     
-
     // Time parameters
     example.startTime = 0;
     example.finalTime = 50;
@@ -130,10 +127,8 @@ int main(int argc, char *argv[])
     example.liftSolve();
     // Search the lift function for the temperature
     example.liftSolveT();
-  
     // Create homogeneous basis functions for velocity
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
- 
     // Create homogeneous basis functions for temperature
     example.computeLiftT(example.Tfield, example.liftfieldT, example.Tomfield);
     
@@ -143,36 +138,28 @@ int main(int argc, char *argv[])
     ITHACAPOD::getModes(example.Tomfield, example.LTmodes, example.podex, 0, 0, NmodesTout);
     ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex, example.supex, 1, NmodesSUPout);
     
-    example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesTproj, NmodesSUPproj);
-    
-    reducedUnsteadyNST ridotto(example, "SUP");
-
+    example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesTproj, NmodesSUPproj);    
+    reducedUnsteadyNST reduced(example);
 
     // Set values of the ridotto stuff
-    ridotto.nu = 0.1;
-    ridotto.tstart = 0;
-    ridotto.finalTime = 50;
-    ridotto.dt = 0.05;
-
-    ridotto.DT = 1e-06;
-
+    reduced.nu = 0.1;
+    reduced.tstart = 0;
+    reduced.finalTime = 50;
+    reduced.dt = 0.05;
+    reduced.DT = 1e-06;
     // Set the online velocity
     Eigen::MatrixXd vel_now;
     vel_now.resize(2,1);
     vel_now << 0.6, 1.2;
+  
     // Set the online temperature and the value of the internal field 
     Eigen::MatrixXd temp_now;
     temp_now.resize(3,1);
     temp_now << 60, 70, 60;
-
-    ridotto.solveOnline_sup(vel_now, temp_now);
-    
+    reduced.solveOnline_sup(vel_now, temp_now);   
     // Reconstruct the solution and export it
-    ridotto.reconstruct_sup(example, "./ITHACAoutput/ReconstructionSUP/", 2);
-
-    ridotto.reconstruct_supt(example, "./ITHACAoutput/ReconstructionSUP/", 2);
-
-    std::cerr << example.Tomfield.size() << " " << example.Uomfield.size() << " " << std::endl;
+    reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 2);
+    reduced.reconstruct_supt("./ITHACAoutput/ReconstructionSUP/", 2);
   
     exit(0);
 }
