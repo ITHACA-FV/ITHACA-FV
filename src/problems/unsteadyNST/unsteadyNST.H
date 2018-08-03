@@ -76,7 +76,8 @@ public:
 
     /// Construct with argc and argv
     unsteadyNST(int argc, char *argv[]);
-
+    ~unsteadyNST(){};
+    
     // Specific variable for the unstationary case
     /// Start Time (initial time to start storing the snapshots)
     scalar startTime;
@@ -91,7 +92,6 @@ public:
     scalar writeEvery = timeStep;
 
     /// Auxiliary variable to store the next writing instant
-    
     scalar nextWrite;
 
     /// adjustTimeStep
@@ -105,14 +105,12 @@ public:
 
     /// List of pointers used to form the temperature snapshots matrix
     PtrList<volScalarField> Tfield;
+
     /// Temperature field
     autoPtr<volScalarField> _T;
-    /// List of pointers used to form the temperature modes
-    
-    PtrList<volScalarField> LTmodes;
 
     /// List of pointers used to form the temperature modes
-    // PtrList<volScalarField> Tmodes;
+    PtrList<volScalarField> LTmodes;
 
     ///dimensionedScalar DT;
     autoPtr<dimensionedScalar> _DT;
@@ -129,7 +127,6 @@ public:
     /// pisoControl
     autoPtr<pisoControl> _piso;
 
-  
     /// Reference pressure cell
     label pRefCell;
 
@@ -159,7 +156,8 @@ public:
 
     /// Perform a lift solve for temperature field
     void liftSolveT();
-    
+
+    /// Perform a truthsolve
     void truthSolve(List<scalar> mu_now);
 
     bool checkWrite(Time& timeObject);
@@ -177,13 +175,38 @@ public:
     ///
     void projectSUP(fileName folder, label NUmodes, label NPmodes, label NTmodes, label NSUPmodes);
 
+    //--------------------------------------------------------------------------
+    /// Convective Term for Temperature
+    ///
+    /// @param[in]  NUmodes    The number of velocity modes.
+    /// @param[in]  NTmodes    The number of temperature modes.
+    /// @param[in]  NSUPmodes  The number of supremizer modes.
+    ///
+    /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the convective term.
+    ///
     List< Eigen::MatrixXd > convective_term_temperature(label NUmodes, label NTmodes, label NSUPmodes);
 
+    //--------------------------------------------------------------------------
+    /// Diffusive Term for Temperature
+    ///
+    /// @param[in]  NUmodes    The number of velocity modes.
+    /// @param[in]  NTmodes    The number of temperature modes.
+    /// @param[in]  NSUPmodes  The number of supremizer modes.
+    ///
+    /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term for the temperature equation.
+    ///
     Eigen::MatrixXd diffusive_term_temperature(label NUmodes,  label NTmodes, label NSUPmodes);
 
+    //--------------------------------------------------------------------------
+    /// Mass Term for Temperature
+    ///
+    /// @param[in]  NUmodes    The number of velocity modes.
+    /// @param[in]  NTmodes    The number of temperature modes.
+    /// @param[in]  NSUPmodes  The number of supremizer modes.
+    ///
+    /// @return     reduced matrix in Eigen::MatrixXd format for the mass matrix for the temperature equation.
+    ///
     Eigen::MatrixXd mass_term_temperature(label NUmodes,  label NTmodes, label NSUPmodes);
-
-
 
   
 };

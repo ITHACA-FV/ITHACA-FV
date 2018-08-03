@@ -36,28 +36,21 @@ while (runTime.run())
 
  runTime++;
 
-  Info << "Time = " << runTime.timeName() << nl << endl;
+ Info << "Time = " << runTime.timeName() << nl << endl;
 
-  // --- Pressure-velocity PIMPLE corrector loop
 		// --- Pressure-velocity PISO corrector loop
-		//while (runtime.loop())
-		//{
-{
-#include "UEqn.H"
- }                 
-			// --- Pressure corrector loop
+  {
+    #include "UEqn.H"
+                  
+			// --- PISO loop
 		while (piso.correct())
-			{
-#include "pEqn.H"
-			}
+		{
+      #include "pEqn.H"
 		}
-		    {
-#include "TEqn.H"
-	        }
-
-
-		    
-
+	}
+  {
+  #include "TEqn.H"
+	}
 
 		Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
 		     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
