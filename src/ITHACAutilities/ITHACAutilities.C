@@ -99,7 +99,7 @@ void ITHACAutilities::createSymLink(word folder)
     system(command2);
     system(command3);
     std::cout.clear();
-    
+
 }
 
 Eigen::MatrixXd ITHACAutilities::rand(int rows, int cols, double min, double max)
@@ -116,12 +116,12 @@ Eigen::MatrixXd ITHACAutilities::rand(int rows, Eigen::MatrixXd minMax)
     int cols = minMax.rows();
     Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);
     matr = (matr.array() + 1) / 2;
-    for (int i = 0; i<cols; i++)
+    for (int i = 0; i < cols; i++)
     {
-        matr.col(i) = matr.col(i).array()*(minMax(i,1)-minMax(i,0));
-        matr.col(i) = matr.col(i).array()+(minMax(i,0));
+        matr.col(i) = matr.col(i).array() * (minMax(i, 1) - minMax(i, 0));
+        matr.col(i) = matr.col(i).array() + (minMax(i, 0));
     }
-    return matr; 
+    return matr;
 
 }
 
@@ -611,7 +611,7 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd 
     {
         for (label i = 0; i < sizeBC; i++)
         {
-            Vector<double> value(valueVec(i),valueVec(i+sizeBC),valueVec(i+sizeBC*2)); 
+            Vector<double> value(valueVec(i), valueVec(i + sizeBC), valueVec(i + sizeBC * 2));
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
@@ -624,14 +624,14 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd 
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
         {
-            Vector<double> value(valueVec(i),valueVec(i+sizeBC),valueVec(i+sizeBC*2)); 
+            Vector<double> value(valueVec(i), valueVec(i + sizeBC), valueVec(i + sizeBC * 2));
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
         freestreamFvPatchField<vector>& Tpatch = refCast<freestreamFvPatchField<vector> >(s.boundaryFieldRef()[BC_ind]);
         vectorField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
-            Vector<double> value(valueVec(faceI),valueVec(faceI+sizeBC),valueVec(faceI+sizeBC*2)); 
+            Vector<double> value(valueVec(faceI), valueVec(faceI + sizeBC), valueVec(faceI + sizeBC * 2));
             gradTpatch[faceI] = value;
         }
     }

@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -59,10 +59,10 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
 public:
     newton_unsteadyNS_sup() {}
     newton_unsteadyNS_sup(int Nx, int Ny, unsteadyNS& problem): newton_argument<double>(Nx, Ny),
-    problem(&problem),
-    Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-    Nphi_p(problem.NPmodes),
-    N_BC(problem.inletIndex.rows())
+        problem(&problem),
+        Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
+        Nphi_p(problem.NPmodes),
+        N_BC(problem.inletIndex.rows())
     {}
 
     int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
@@ -74,8 +74,8 @@ public:
 
     scalar nu;
     scalar dt;
-    Eigen::VectorXd y_old;   
-    Eigen::VectorXd BC;   
+    Eigen::VectorXd y_old;
+    Eigen::VectorXd BC;
 
     unsteadyNS* problem;
 };
@@ -87,10 +87,10 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
 public:
     newton_unsteadyNS_PPE() {}
     newton_unsteadyNS_PPE(int Nx, int Ny, unsteadyNS& problem): newton_argument<double>(Nx, Ny),
-    problem(&problem),
-    Nphi_u(problem.NUmodes + problem.liftfield.size()),
-    Nphi_p(problem.NPmodes),
-    N_BC(problem.inletIndex.rows())
+        problem(&problem),
+        Nphi_u(problem.NUmodes + problem.liftfield.size()),
+        Nphi_p(problem.NPmodes),
+        N_BC(problem.inletIndex.rows())
     {}
 
     int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
@@ -102,8 +102,8 @@ public:
 
     scalar nu;
     scalar dt;
-    Eigen::VectorXd y_old;    
-    Eigen::VectorXd BC;     
+    Eigen::VectorXd y_old;
+    Eigen::VectorXd BC;
 
     unsteadyNS* problem;
 };
@@ -128,10 +128,10 @@ public:
     ///
     /// @param[in]  problem  a full order unsteadyNS problem
     /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
-    /// 
+    ///
     explicit reducedUnsteadyNS(unsteadyNS& problem);
 
-    ~reducedUnsteadyNS(){};
+    ~reducedUnsteadyNS() {};
 
     /// Functor object to call the non linear solver sup. approach
     newton_unsteadyNS_sup newton_object_sup;
@@ -154,27 +154,27 @@ public:
     unsteadyNS* problem;
 
     // Functions
-    
+
 
     /// Method to perform an online solve using a PPE stabilisation method
     ///
-    /// @param[in]  vel_now   The vector of online velocity. It is defined in 
+    /// @param[in]  vel_now   The vector of online velocity. It is defined in
     /// with an Eigen::MatrixXd and must have one col and as many rows as the number
     /// of parametrized boundary conditions.
     /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
     /// and used to get the reduced initial condition.
     ///
-    void solveOnline_PPE(Eigen::MatrixXd& vel_now, label startSnap=0);
+    void solveOnline_PPE(Eigen::MatrixXd& vel_now, label startSnap = 0);
 
     /// Method to perform an online solve using a supremizer stabilisation method
     ///
-    /// @param[in]  vel_now   The vector of online velocity. It is defined in 
+    /// @param[in]  vel_now   The vector of online velocity. It is defined in
     /// with an Eigen::MatrixXd and must have one col and as many rows as the number
     /// of parametrized boundary conditions.
     /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
     /// and used to get the reduced initial condition.
     ///
-    void solveOnline_sup(Eigen::MatrixXd& vel_now, label startSnap=0);
+    void solveOnline_sup(Eigen::MatrixXd& vel_now, label startSnap = 0);
 
     /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
     /// stabilisation method

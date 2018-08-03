@@ -466,7 +466,7 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix_Eigen(PtrList<T>& fields)
     Eigen::MatrixXd F = Foam2Eigen::PtrList2Eigen(fields);
     Eigen::VectorXd V = Foam2Eigen::field2Eigen(fields[0].mesh().V());
     Eigen::MatrixXd VM = V.asDiagonal();
-    Eigen::MatrixXd M = F.transpose()*VM*F;
+    Eigen::MatrixXd M = F.transpose() * VM * F;
     return M;
 
 }

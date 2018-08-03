@@ -329,8 +329,8 @@ std::tuple<List<Eigen::SparseMatrix<double> >, List<Eigen::VectorXd> > ITHACAPOD
             }
             ModesB[i] = tmp_B;
         }
-        eigenValueseigA = eigenValueseigA/eigenValueseigA.sum();
-        eigenValueseigB = eigenValueseigB/eigenValueseigB.sum();
+        eigenValueseigA = eigenValueseigA / eigenValueseigA.sum();
+        eigenValueseigB = eigenValueseigB / eigenValueseigB.sum();
         Eigen::VectorXd cumEigenValuesA(eigenValueseigA);
         Eigen::VectorXd cumEigenValuesB(eigenValueseigB);
         for (int j = 1; j < cumEigenValuesA.size(); ++j)
@@ -350,10 +350,10 @@ std::tuple<List<Eigen::SparseMatrix<double> >, List<Eigen::VectorXd> > ITHACAPOD
             ITHACAstream::SaveDenseMatrix(ModesB[i], "./ITHACAoutput/DEIM/" + MatrixName + "/" , "B_" + MatrixName + name(i));
         }
         ITHACAparameters para;
-        Eigen::saveMarketVector(eigenValueseigA, "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesA",para.precision, para.outytpe);
-        Eigen::saveMarketVector(eigenValueseigB, "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesB",para.precision, para.outytpe);
-        Eigen::saveMarketVector(cumEigenValuesA, "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesA",para.precision, para.outytpe);
-        Eigen::saveMarketVector(cumEigenValuesB, "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesB",para.precision, para.outytpe);
+        Eigen::saveMarketVector(eigenValueseigA, "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesA", para.precision, para.outytpe);
+        Eigen::saveMarketVector(eigenValueseigB, "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesB", para.precision, para.outytpe);
+        Eigen::saveMarketVector(cumEigenValuesA, "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesA", para.precision, para.outytpe);
+        Eigen::saveMarketVector(cumEigenValuesB, "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesB", para.precision, para.outytpe);
     }
     else
     {
@@ -380,7 +380,7 @@ PtrList<GeometricField<T, fvPatchField, volMesh> > ITHACAPOD::DEIMmodes( PtrList
     {
         nmodes = SnapShotsMatrix.size() - 2;
     }
-        M_Assert(nmodes <= SnapShotsMatrix.size() - 2, "The number of requested modes cannot be bigger than the number of Snapshots - 2");
+    M_Assert(nmodes <= SnapShotsMatrix.size() - 2, "The number of requested modes cannot be bigger than the number of Snapshots - 2");
 
     if (nmodes > SnapShotsMatrix.size() - 2)
     {

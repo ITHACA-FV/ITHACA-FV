@@ -1,5 +1,14 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017 by the ITHACA-FV authors
+     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
+     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
+     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
+     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
+ * Copyright (C) 2017 by the ITHACA-FV authors
+-------------------------------------------------------------------------------
 
 License
     This file is part of ITHACA-FV
@@ -30,14 +39,13 @@ reducedSteadyNSturb::reducedSteadyNSturb()
 }
 
 reducedSteadyNSturb::reducedSteadyNSturb(steadyNSturb& FOMproblem)
-:
-problem(&FOMproblem)
+    :
+    problem(&FOMproblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
     Nphi_nut = problem->CT2_matrix[0].rows();
-
 
     for (label k = 0; k < problem->liftfield.size(); k++)
     {
@@ -101,14 +109,12 @@ int newton_steadyNSturb::df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) co
 void reducedSteadyNSturb::solveOnline_sup(Eigen::MatrixXd vel_now)
 {
 
-
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
     for (label j = 0; j < N_BC; j++)
     {
         y(j) = vel_now(j, 0);
     }
-    //Eigen::LevenbergMarquardt<newton_steadyNS> lm(newton_object);
     Color::Modifier red(Color::FG_RED);
     Color::Modifier green(Color::FG_GREEN);
     Color::Modifier def(Color::FG_DEFAULT);
@@ -119,13 +125,13 @@ void reducedSteadyNSturb::solveOnline_sup(Eigen::MatrixXd vel_now)
         newton_object.BC(j) = vel_now(j, 0);
     }
 
-    for(label i=0; i < Nphi_nut;i++)
+    for (label i = 0; i < Nphi_nut; i++)
     {
-        newton_object.nu_c(i)= problem->rbfsplines[i]->eval(vel_now);
+        newton_object.nu_c(i) = problem->rbfsplines[i]->eval(vel_now);
     }
 
     volScalarField nut_rec("nut_rec", nuTmodes[0] * 0);
-    for (label j = 0; j < Nphi_nut;j++)
+    for (label j = 0; j < Nphi_nut; j++)
     {
         nut_rec += problem->nuTmodes[j] * newton_object.nu_c(j);
     }
@@ -133,7 +139,6 @@ void reducedSteadyNSturb::solveOnline_sup(Eigen::MatrixXd vel_now)
     nutREC.append(nut_rec);
     newton_object.nu = nu;
     hnls.solve(y);
-    //lm.minimize(y);
     Eigen::VectorXd res(y);
     newton_object.operator()(y, res);
 
@@ -148,10 +153,7 @@ void reducedSteadyNSturb::solveOnline_sup(Eigen::MatrixXd vel_now)
         std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " << hnls.iter << " iterations " << def << std::endl << std::endl;
     }
     count_online_solve += 1;
-
-    //y = NewtonRaphson_sup(y_old, 1, 1e-7);
 }
-
 
 
 void reducedSteadyNSturb::reconstruct_sup(fileName folder, int printevery)

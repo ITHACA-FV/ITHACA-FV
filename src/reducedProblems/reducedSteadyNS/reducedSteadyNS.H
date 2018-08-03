@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -49,7 +49,7 @@ SourceFiles
 #include "IOmanip.H"
 #include "reducedProblem.H"
 #include "steadyNS.H"
-#include "ITHACAutilities.H" 
+#include "ITHACAutilities.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
@@ -60,10 +60,10 @@ struct newton_steadyNS: public newton_argument<double>
 public:
     newton_steadyNS() {}
     newton_steadyNS(int Nx, int Ny, steadyNS& problem): newton_argument<double>(Nx, Ny),
-    problem(&problem),
-    Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-    Nphi_p(problem.NPmodes),
-    N_BC(problem.inletIndex.rows())
+        problem(&problem),
+        Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
+        Nphi_p(problem.NPmodes),
+        N_BC(problem.inletIndex.rows())
     {}
 
     int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
@@ -73,9 +73,9 @@ public:
     int Nphi_p;
     int N_BC;
     scalar nu;
-    Eigen::VectorXd BC;   
+    Eigen::VectorXd BC;
     steadyNS* problem;
-    
+
 };
 
 
@@ -99,10 +99,10 @@ public:
     ///
     /// @param[in]  problem  a full order steadyNS problem
     /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
-    /// 
+    ///
     explicit reducedSteadyNS(steadyNS& problem);
 
-    ~reducedSteadyNS(){};
+    ~reducedSteadyNS() {};
 
     /// Reduced matrix for tangent forces
     Eigen::MatrixXd f_tau;
@@ -125,15 +125,15 @@ public:
     /// List of pointers to store the modes for velocity
     PtrList<volVectorField> Umodes;
 
-    /// List of pointers to store the modes for pressure    
+    /// List of pointers to store the modes for pressure
     PtrList<volScalarField> Pmodes;
 
-    /// List of pointers to store the snapshots for velocity    
+    /// List of pointers to store the snapshots for velocity
     PtrList<volVectorField> Usnapshots;
 
-    /// List of pointers to store the snapshots for pressure    
+    /// List of pointers to store the snapshots for pressure
     PtrList<volScalarField> Psnapshots;
-    
+
     /// Reconstructed pressure field
     PtrList<volScalarField> PREC;
 
@@ -162,10 +162,10 @@ public:
     int count_online_solve = 1;
 
     // Functions
-    
+
     /// Method to perform an online solve using a PPE stabilisation method
     ///
-    /// @param[in]  vel_now  The vector of online velocity. It is defined in 
+    /// @param[in]  vel_now  The vector of online velocity. It is defined in
     /// with an Eigen::MatrixXd and must have one col and as many rows as the number
     /// of parametrized boundary conditions.
     ///
@@ -174,7 +174,7 @@ public:
     /// Method to perform an online solve using a supremizer stabilisation
     /// method
     ///
-    /// @param[in]  vel_now  The vector of online velocity. It is defined in 
+    /// @param[in]  vel_now  The vector of online velocity. It is defined in
     /// with an Eigen::MatrixXd and must have one col and as many rows as the number
     /// of parametrized boundary conditions.
     ///
