@@ -1,5 +1,14 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017 by the ITHACA-FV authors
+     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
+     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
+     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
+     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
+ * Copyright (C) 2017 by the ITHACA-FV authors
+-------------------------------------------------------------------------------
 
 License
     This file is part of ITHACA-FV
@@ -41,7 +50,7 @@ SourceFiles
 #include "reducedProblem.H"
 #include "reducedSteadyNS.H"
 #include "steadyNSturb.H"
-#include "ITHACAutilities.H" 
+#include "ITHACAutilities.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
@@ -52,11 +61,11 @@ struct newton_steadyNSturb: public newton_argument<double>
 public:
     newton_steadyNSturb() {}
     newton_steadyNSturb(int Nx, int Ny, steadyNSturb& problem): newton_argument<double>(Nx, Ny),
-    problem(&problem),
-    Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-    Nphi_nut(problem.Nnutmodes),
-    Nphi_p(problem.NPmodes),
-    N_BC(problem.inletIndex.rows())
+        problem(&problem),
+        Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
+        Nphi_nut(problem.Nnutmodes),
+        Nphi_p(problem.NPmodes),
+        N_BC(problem.inletIndex.rows())
     {}
 
     int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
@@ -69,8 +78,8 @@ public:
     scalar nu;
     Eigen::VectorXd BC;
     steadyNSturb* problem;
-    Eigen::VectorXd nu_c;      
-    std::vector<SPLINTER::RBFSpline*> SPLINES;   
+    Eigen::VectorXd nu_c;
+    std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
 
@@ -93,13 +102,13 @@ public:
 
     reducedSteadyNSturb(steadyNSturb& problem);
 
-    ~reducedSteadyNSturb(){};
-    
+    ~reducedSteadyNSturb() {};
 
-    /// List of snapshots for the solution for eddy viscosity 
+
+    /// List of snapshots for the solution for eddy viscosity
     PtrList<volScalarField> nutFields;
 
-    /// List of POD modes for eddy viscosity 
+    /// List of POD modes for eddy viscosity
     PtrList<volScalarField> nuTmodes;
 
     /// Reconstructed eddy viscosity field
@@ -129,7 +138,7 @@ public:
     /// @param      problem     a steadyNS full order problem.
     /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
     /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
-    ///      
+    ///
     void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
 
 };

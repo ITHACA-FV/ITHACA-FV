@@ -185,7 +185,7 @@ public:
     ///
     static Eigen::MatrixXd readMatrix(word filename);
 
-    //--------------------------------------------------------------------------    
+    //--------------------------------------------------------------------------
     /// Read a three dimensional matrix from a txt file in Eigen format
     /*One has to provide the folder containing the matrix files and the filename of the
     the matrix. Since it is stored as a List of matrices each matrix must be stored in a
@@ -227,7 +227,7 @@ public:
     //--------------------------------------------------------------------------
     /// @brief      Saves an Eigen sparse matrix into bynary format file
     ///
-    /// @param      m           Eigen::SparseMatrix m 
+    /// @param      m           Eigen::SparseMatrix m
     /// @param[in]  folder      The folder where you want to save the matrix
     /// @param[in]  MatrixName  The matrix name for the output file
     ///
@@ -241,7 +241,7 @@ public:
     //--------------------------------------------------------------------------
     /// @brief      Reads an Eigen sparse matrix from a bynary format file
     ///
-    /// @param[in,out]  m           Eigen::SparseMatrix m 
+    /// @param[in,out]  m           Eigen::SparseMatrix m
     /// @param[in]      folder      The folder from where you want to read the matrix
     /// @param[in]      MatrixName  The matrix name for the input file
     ///
@@ -279,7 +279,7 @@ public:
     //--------------------------------------------------------------------------
     /// @brief      Saves a sparse matrix list to bynary files
     ///
-    /// @param[in]  MatrixList  The matrix list 
+    /// @param[in]  MatrixList  The matrix list
     /// @param[in]  folder      The folder where you want to save files
     /// @param[in]  MatrixName  The matrix name prefix, files are the named with an incremental number
     ///
@@ -291,7 +291,7 @@ public:
     //--------------------------------------------------------------------------
     /// @brief      Reads a sparse matrix list to bynary files
     ///
-    /// @param[in,out]  MatrixList  The matrix list 
+    /// @param[in,out]  MatrixList  The matrix list
     /// @param[in]      folder      The folder from where you want to read the files
     /// @param[in]      MatrixName  The matrix name prefix, files are the named with an incremental number
     ///
@@ -303,7 +303,7 @@ public:
     //--------------------------------------------------------------------------
     /// @brief      Saves a dense matrix list to bynary files
     ///
-    /// @param[in]  MatrixList  The matrix list 
+    /// @param[in]  MatrixList  The matrix list
     /// @param[in]  folder      The folder where you want to save files
     /// @param[in]  MatrixName  The matrix name prefix, files are the named with an incremental number
     ///
@@ -316,7 +316,7 @@ public:
     //--------------------------------------------------------------------------
     /// @brief      Reads a sparse matrix list to bynary files
     ///
-    /// @param[in,out]  MatrixList  The matrix list 
+    /// @param[in,out]  MatrixList  The matrix list
     /// @param[in]      folder      The folder from where you want to read the files
     /// @param[in]      MatrixName  The matrix name prefix, files are the named with an incremental number
     ///
@@ -486,13 +486,13 @@ void ITHACAstream::SaveDenseMatrixList(List<MatrixType>& MatrixList, word folder
 template <typename T, int whatever, typename IND>
 void ITHACAstream::ReadSparseMatrixList(List<Eigen::SparseMatrix<T, whatever, IND> >& m, word folder, word MatrixName)
 {
-    int number_of_files = numberOfFiles(folder, MatrixName);    
+    int number_of_files = numberOfFiles(folder, MatrixName);
     std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
-    M_Assert(number_of_files!=0, "Check if the file you are trying to read exists" );
-    Eigen::SparseMatrix<T, whatever, IND> A; 
-    for(int i=0; i<number_of_files; i++)
+    M_Assert(number_of_files != 0, "Check if the file you are trying to read exists" );
+    Eigen::SparseMatrix<T, whatever, IND> A;
+    for (int i = 0; i < number_of_files; i++)
     {
-        ReadSparseMatrix(A,folder,MatrixName+name(i));
+        ReadSparseMatrix(A, folder, MatrixName + name(i));
         m.append(A);
     }
 }
@@ -501,13 +501,13 @@ void ITHACAstream::ReadSparseMatrixList(List<Eigen::SparseMatrix<T, whatever, IN
 template <typename MatrixType>
 void ITHACAstream::ReadDenseMatrixList(List<MatrixType>& m, word folder, word MatrixName)
 {
-    int number_of_files = numberOfFiles(folder, MatrixName);    
+    int number_of_files = numberOfFiles(folder, MatrixName);
     std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
-    M_Assert(number_of_files!=0, "Check if the file you are trying to read exists" );
-    MatrixType A; 
-    for(int i=0; i<number_of_files; i++)
+    M_Assert(number_of_files != 0, "Check if the file you are trying to read exists" );
+    MatrixType A;
+    for (int i = 0; i < number_of_files; i++)
     {
-        ReadDenseMatrix(A,folder,MatrixName+name(i));
+        ReadDenseMatrix(A, folder, MatrixName + name(i));
         m.append(A);
     }
 }
