@@ -123,10 +123,10 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volScalarField>& field
     for (unsigned int i = 0; i < NBound; i++)
     {
         int sizei = fields[0].boundaryField()[i].size();
-        Out[i].resize(sizei,Nf);
+        Out[i].resize(sizei, Nf);
     }
     for (unsigned int k = 0; k < Nf; k++)
-    {   
+    {
         List<Eigen::VectorXd> temp;
         temp = field2EigenBC(fields[k]);
         for (unsigned int i = 0; i < NBound; i++)
@@ -149,10 +149,10 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volVectorField>& field
     for (unsigned int i = 0; i < NBound; i++)
     {
         int sizei = fields[0].boundaryField()[i].size();
-        Out[i].resize(sizei*3,Nf);
+        Out[i].resize(sizei * 3, Nf);
     }
     for (unsigned int k = 0; k < Nf; k++)
-    {   
+    {
         List<Eigen::VectorXd> temp;
         temp = field2EigenBC(fields[k]);
         for (unsigned int i = 0; i < NBound; i++)

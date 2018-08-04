@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
-
- * In real Time Highly Advanced Computational Applications for Finite Volumes
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
+ 
+ * In real Time Highly Advanced Computational Applications for Finite Volumes 
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -27,63 +27,27 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+// Momentum predictor
 
-scalar residual = 1;
-scalar uresidual = 1;
-Vector<double> uresidual_v(0, 0, 0);
+MRF.correctBoundaryVelocity(U);
 
-scalar presidual = 1;
+tmp<fvVectorMatrix> tUEqn
+(
+  fvm::div(phi, U)
+  + MRF.DDt(U)
+  + turbulence->divDevReff(U)
+  ==
+  fvOptions(U)
+);
+fvVectorMatrix& UEqn = tUEqn.ref();
 
-scalar csolve = 0;
+UEqn.relax();
 
+fvOptions.constrain(UEqn);
 
-// Variable that can be changed
-turbulence->read();
-std::ofstream res_os;
-res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
+if (simple.momentumPredictor())
+{
+  uresidual_v = solve(UEqn == -fvc::grad(p)).initialResidual();
 
-#if OFVER == 6
-while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
-#else
-  while (simple.loop() && residual > tolerance && csolve < maxIter )
-#endif
-  {
-    Info << "Time = " << runTime.timeName() << nl << endl;
-    {
-#include "UEqn.H"
-#include "pEqn.H"
-      scalar C = 0;
-      for (label i = 0; i < 3; i++)
-      {
-        if (C < uresidual_v[i])
-        {
-          C = uresidual_v[i];
-        }
-
-      }
-
-      uresidual = C;
-      residual = max(presidual, uresidual);
-
-      Info << "\nResidual: " << residual << endl << endl;
-    }
-    laminarTransport.correct();
-    turbulence->correct();
-
-    csolve = csolve+1;
-    
-    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-    << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-    << nl << endl;
-  }
-  res_os << residual << std::endl;
-  res_os.close();
-  runTime.setTime(runTime.startTime(), 0);
-
-
-
-
-
-
-
-
+  fvOptions.correct(U);
+}

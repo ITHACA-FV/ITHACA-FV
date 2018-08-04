@@ -393,7 +393,7 @@ void reducedUnsteadyNS::reconstruct_PPE(fileName folder, int printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    
+
     int counter = 0;
     int nextwrite = 0;
     int counter2 = 1;
@@ -429,7 +429,7 @@ void reducedUnsteadyNS::reconstruct_sup(fileName folder, int printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    
+
     int counter = 0;
     int nextwrite = 0;
     int counter2 = 1;

@@ -42,7 +42,7 @@ SourceFiles
 #include <iostream>
 #include "fvCFD.H"
 
-/// Class for the definition of some general parameters, the parameters must be defined from the file ITHACAdict inside the 
+/// Class for the definition of some general parameters, the parameters must be defined from the file ITHACAdict inside the
 /// system folder.
 class ITHACAparameters
 {

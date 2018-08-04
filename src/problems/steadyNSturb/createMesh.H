@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
-
- * In real Time Highly Advanced Computational Applications for Finite Volumes
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
+ 
+ * In real Time Highly Advanced Computational Applications for Finite Volumes 
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -27,63 +27,23 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+Info << "Reading field p\n" << endl;
 
-scalar residual = 1;
-scalar uresidual = 1;
-Vector<double> uresidual_v(0, 0, 0);
+Info << "Create mesh for time = "
+     << runTime.timeName() << nl << endl;
 
-scalar presidual = 1;
+_mesh = autoPtr<fvMesh>
+        (
+            new fvMesh
+            (
+                IOobject
+                (
+                    fvMesh::defaultRegion,
+                    runTime.timeName(),
+                    runTime,
+                    IOobject::MUST_READ
+                )
+            )
+        );
 
-scalar csolve = 0;
-
-
-// Variable that can be changed
-turbulence->read();
-std::ofstream res_os;
-res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
-
-#if OFVER == 6
-while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
-#else
-  while (simple.loop() && residual > tolerance && csolve < maxIter )
-#endif
-  {
-    Info << "Time = " << runTime.timeName() << nl << endl;
-    {
-#include "UEqn.H"
-#include "pEqn.H"
-      scalar C = 0;
-      for (label i = 0; i < 3; i++)
-      {
-        if (C < uresidual_v[i])
-        {
-          C = uresidual_v[i];
-        }
-
-      }
-
-      uresidual = C;
-      residual = max(presidual, uresidual);
-
-      Info << "\nResidual: " << residual << endl << endl;
-    }
-    laminarTransport.correct();
-    turbulence->correct();
-
-    csolve = csolve+1;
-    
-    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-    << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-    << nl << endl;
-  }
-  res_os << residual << std::endl;
-  res_os.close();
-  runTime.setTime(runTime.startTime(), 0);
-
-
-
-
-
-
-
-
+Foam::fvMesh& mesh = _mesh();

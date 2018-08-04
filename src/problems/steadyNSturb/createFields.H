@@ -27,20 +27,81 @@ License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+Info << "Reading field p\n" << endl;
+_p = autoPtr<volScalarField>
+     (
+       new volScalarField
+       (
+         IOobject
+         (
+           "p",
+           runTime.timeName(),
+           mesh,
+           IOobject::MUST_READ,
+           IOobject::AUTO_WRITE
+         ),
+         mesh
+       )
+     );
+volScalarField& p = _p();
 
-/// \file
-/// Template function file of the ITHACAstream class, it contains the implementation of
-/// several methods for input output operations.
+Info << "Reading field U\n" << endl;
+_U = autoPtr<volVectorField>
+     (
+       new volVectorField
+       (
+         IOobject
+         (
+           "U",
+           runTime.timeName(),
+           mesh,
+           IOobject::MUST_READ,
+           IOobject::AUTO_WRITE
+         ),
+         mesh
+       )
+     );
+volVectorField& U = _U();
 
-template<typename T>
-void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder, word fieldName)
-{
-    mkDir(folder + "/" + subfolder);
-    T act(fieldName, s);
-    fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
-    OFstream os(fieldname);
-    act.writeHeader(os);
-    os << act << endl;
-}
+_nut = autoPtr<volScalarField>
+     (
+       new volScalarField
+       (
+         IOobject
+         (
+           "nut",
+           runTime.timeName(),
+           mesh,
+           IOobject::MUST_READ,
+           IOobject::AUTO_WRITE
+         ),
+         mesh
+       )
+     );
+volScalarField& nut = _nut();
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "createPhi.H"
+
+
+label pRefCell = 0;
+scalar pRefValue = 0.0;
+setRefCell(p, simple.dict(), pRefCell, pRefValue);
+
+_laminarTransport = autoPtr<singlePhaseTransportModel>
+                    (
+                      new singlePhaseTransportModel( U, phi )
+                    );
+singlePhaseTransportModel& laminarTransport = _laminarTransport();
+
+turbulence = autoPtr<incompressible::turbulenceModel>
+             (
+               incompressible::turbulenceModel::New(U, phi, laminarTransport)
+             );
+
+_MRF = autoPtr<IOMRFZoneList>
+       (
+         new IOMRFZoneList(mesh)
+       );
+
+IOMRFZoneList& MRF = _MRF();

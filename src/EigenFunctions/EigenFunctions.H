@@ -116,7 +116,7 @@ public:
 
     //--------------------------------------------------------------------------
     /// @brief      Perform Frobenius inner Product between two list of sparse matrices A and B
-    /// 
+    ///
     /// \f[ \mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , \mathbf{B} = [\mathbf{B_1}, \dots, \mathbf{B_M}] , out_{ij} = tr(\mathbf{A_i}^T \mathbf{B_j} ) \f]
     ///
     /// @param[in]      A     List of Matrices A
@@ -131,7 +131,7 @@ public:
 
     //--------------------------------------------------------------------------
     /// @brief      Perform Frobenius inner Product between a list of sparse matrices A and a sparse matrix B
-    /// 
+    ///
     ///   \f[\mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , out_i = tr(\mathbf{A_i}^T \mathbf{B} ) \f]
     ///
     /// @param[in]      A     List of Matrices A
@@ -146,9 +146,9 @@ public:
 
     //--------------------------------------------------------------------------
     /// @brief      Perform Frobenius inner Product between two sparse matrices A and B
-    /// 
+    ///
     ///   \f[out = tr(\mathbf{A}^T \mathbf{B} ) \f]
-    ///   
+    ///
     ///
     /// @param[in]      A     Sparse Matrix A
     /// @param[in]      B     Sparse Matrix B
@@ -162,9 +162,9 @@ public:
 
     //--------------------------------------------------------------------------
     /// @brief      Sparse Matrix-Vector product between a list of sparse matrices and a vector of coefficients
-    /// 
+    ///
     ///   \f[ \mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , \mathbf{c} = [c_1, ...., c_N] \f]
-    ///   
+    ///
     ///   \f[ \mathbf{out} = \sum_{k=1}^N \mathbf{A_k} c_k  \f]
     ///
     /// @param[in]      A     Sparse Matrix A
@@ -179,9 +179,9 @@ public:
 
     //--------------------------------------------------------------------------
     /// @brief      Dense Matrix-Vector product between a list of sparse matrices and a vector of coefficients
-    /// 
+    ///
     ///   \f[ \mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , \mathbf{c} = [c_1, ...., c_N] \f]
-    ///   
+    ///
     ///   \f[ \mathbf{out} = \sum_{k=1}^N \mathbf{A_k} c_k  \f]
     ///
     /// @param[in]  A     Dense Matrix A
@@ -196,9 +196,9 @@ public:
 
     //--------------------------------------------------------------------------
     /// @brief      Sparse Matrix - Dense Matrix product between a list of sparse matrices and a dense matrix
-    /// 
+    ///
     ///   \f[ \mathbf{A} = [\mathbf{A_1}, \dots, \mathbf{A_N}] , \mathbf{C} = [\mathbf{c_{\bullet 1}}, ...., \mathbf{c_{\bullet N}}], \mathbf{out} = [\mathbf{O_1},\dots,\mathbf{O_N}] \f]
-    ///   
+    ///
     ///   \f[ \mathbf{O_i} = \sum_{k=1}^N \mathbf{A_k} c_{ki}  \f]
     ///
     /// @param[in]      A     List of sparse Matrices

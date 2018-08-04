@@ -37,7 +37,7 @@ void EigenFunctions::sortEigenvalues(Eigen::VectorXd& eigenvalues, Eigen::Matrix
 {
     labelList order;
     scalarField eigenValues(eigenvalues.size());
-    for(int i=0; i<eigenvalues.size(); i++)
+    for (int i = 0; i < eigenvalues.size(); i++)
     {
         eigenValues[i] = eigenvalues(i);
     }
@@ -54,7 +54,7 @@ void EigenFunctions::sortEigenvalues(Eigen::VectorXd& eigenvalues, Eigen::Matrix
     {
         for (label k = 0; k < eigenvalues.size(); k++)
         {
-            eigenvectors2(i,k) = eigenvectors(k, order[order.size() - i - 1]);
+            eigenvectors2(i, k) = eigenvectors(k, order[order.size() - i - 1]);
         }
     }
     eigenvectors = eigenvectors2;

@@ -28,25 +28,24 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-/// \file
-/// Source file of the reducedSteadyNS class
-
-#include "reducedSteadyNS.H"
+#include "reducedSteadyNSturb.H"
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-reducedSteadyNS::reducedSteadyNS()
+reducedSteadyNSturb::reducedSteadyNSturb()
 {
+
 }
 
-reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
+reducedSteadyNSturb::reducedSteadyNSturb(steadyNSturb& FOMproblem)
     :
     problem(&FOMproblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
+    Nphi_nut = problem->CT2_matrix[0].rows();
 
     for (label k = 0; k < problem->liftfield.size(); k++)
     {
@@ -60,11 +59,12 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
     {
         Umodes.append(problem->supmodes[k]);
     }
-    newton_object = newton_steadyNS(Nphi_u + Nphi_p , Nphi_u + Nphi_p, FOMproblem);
+    newton_object = newton_steadyNSturb(Nphi_u + Nphi_p , Nphi_u + Nphi_p, FOMproblem);
 }
 
-int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const
+int newton_steadyNSturb::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const
 {
+
     Eigen::VectorXd a_tmp(Nphi_u);
     Eigen::VectorXd b_tmp(Nphi_p);
     a_tmp = x.head(Nphi_u);
@@ -72,7 +72,7 @@ int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec)
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
+    Eigen::VectorXd M1 = problem->B_total_matrix * a_tmp * nu;
     // Gradient of pressure
     Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
     // Pressure Term
@@ -80,7 +80,7 @@ int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec)
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
+        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp - nu_c.transpose() * problem->C_total_matrix[i] * a_tmp;
         fvec(i) = M1(i) - cc(0, 0) - M2(i);
     }
     for (label j = 0; j < Nphi_p; j++)
@@ -95,10 +95,9 @@ int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec)
     return 0;
 }
 
-
-int newton_steadyNS::df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) const
+int newton_steadyNSturb::df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) const
 {
-    Eigen::NumericalDiff<newton_steadyNS> numDiff(*this);
+    Eigen::NumericalDiff<newton_steadyNSturb> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -106,18 +105,12 @@ int newton_steadyNS::df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) const
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now)
-{
-    Info << "This function is still not implemented for the stationary case" << endl;
-    exit(0);
-}
 
-void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
+void reducedSteadyNSturb::solveOnline_sup(Eigen::MatrixXd vel_now)
 {
 
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
-
     for (label j = 0; j < N_BC; j++)
     {
         y(j) = vel_now(j, 0);
@@ -125,15 +118,27 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
     Color::Modifier red(Color::FG_RED);
     Color::Modifier green(Color::FG_GREEN);
     Color::Modifier def(Color::FG_DEFAULT);
-    Eigen::HybridNonLinearSolver<newton_steadyNS> hnls(newton_object);
+    Eigen::HybridNonLinearSolver<newton_steadyNSturb> hnls(newton_object);
     newton_object.BC.resize(N_BC);
     for (label j = 0; j < N_BC; j++)
     {
         newton_object.BC(j) = vel_now(j, 0);
     }
+
+    for (label i = 0; i < Nphi_nut; i++)
+    {
+        newton_object.nu_c(i) = problem->rbfsplines[i]->eval(vel_now);
+    }
+
+    volScalarField nut_rec("nut_rec", nuTmodes[0] * 0);
+    for (label j = 0; j < Nphi_nut; j++)
+    {
+        nut_rec += problem->nuTmodes[j] * newton_object.nu_c(j);
+    }
+
+    nutREC.append(nut_rec);
     newton_object.nu = nu;
     hnls.solve(y);
-
     Eigen::VectorXd res(y);
     newton_object.operator()(y, res);
 
@@ -151,39 +156,7 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
 }
 
 
-// * * * * * * * * * * * * * * * Jacobian Evaluation  * * * * * * * * * * * * * //
-
-void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
-{
-    mkDir(folder);
-    ITHACAutilities::createSymLink(folder);
-
-    int counter = 0;
-    int nextwrite = 0;
-
-    for (label i = 0; i < online_solution.size(); i++)
-    {
-        if (counter == nextwrite)
-        {
-            volVectorField U_rec("U_rec", Umodes[0] * 0);
-            for (label j = 0; j < Nphi_u; j++)
-            {
-                U_rec += Umodes[j] * online_solution[i](j + 1, 0);
-            }
-            problem->exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
-            volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
-            for (label j = 0; j < Nphi_p; j++)
-            {
-                P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
-            }
-            problem->exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
-            nextwrite += printevery;
-        }
-        counter++;
-    }
-}
-
-void reducedSteadyNS::reconstruct_sup(fileName folder, int printevery)
+void reducedSteadyNSturb::reconstruct_sup(fileName folder, int printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
@@ -215,80 +188,5 @@ void reducedSteadyNS::reconstruct_sup(fileName folder, int printevery)
         counter++;
     }
 }
-
-double reducedSteadyNS::inf_sup_constant()
-{
-    double a;
-    Eigen::VectorXd sup(Nphi_u);
-    Eigen::VectorXd inf(Nphi_p);
-    for (int i = 0; i < Nphi_p; i++)
-    {
-        for (int j = 0; j < Nphi_u; j++)
-        {
-            sup(j) = fvc::domainIntegrate(fvc::div(Umodes[j]) * Pmodes[i]).value() / ITHACAutilities::H1seminorm(Umodes[j]) / ITHACAutilities::L2norm(Pmodes[i]);
-        }
-        inf(i) = sup.maxCoeff();
-    }
-    a = inf.minCoeff();
-    return a;
-}
-
-
-void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS & problem, fileName folder)
-{
-    mkDir(folder);
-    system("ln -s ../../constant " + folder + "/constant");
-    system("ln -s ../../0 " + folder + "/0");
-    system("ln -s ../../system " + folder + "/system");
-
-    label NUmodes = problem.NUmodes;
-    label NSUPmodes = problem.NSUPmodes;
-    label NPmodes = problem.NPmodes;
-    label liftfieldSize = problem.liftfield.size();
-    label totalSize = NUmodes + NSUPmodes + liftfieldSize;
-
-    Eigen::VectorXd cl(online_solution.size());
-    Eigen::VectorXd cd(online_solution.size());
-
-    //Read FORCESdict
-    IOdictionary FORCESdict
-    (
-        IOobject
-        (
-            "FORCESdict",
-            "./system",
-            Umodes[0].mesh(),
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE
-        )
-    );
-
-    Eigen::MatrixXd TAU = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/tau_mat.txt");
-    Eigen::MatrixXd N = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/n_mat.txt");
-    Eigen::VectorXd temp1;
-
-    f_tau.setZero(online_solution.size(), 3);
-    f_n.setZero(online_solution.size(), 3);
-
-    for (label i = 0; i < online_solution.size(); i++)
-    {
-
-        for (label j = 0; j < totalSize; j++)
-        {
-            f_tau.row(i) += TAU.row(j) * online_solution[i](j + 1, 0);
-        }
-
-        for (label j = 0; j < NPmodes; j++)
-        {
-            f_n.row(i) += N.row(j) * online_solution[i](j + Nphi_u + 1, 0);
-        }
-    }
-
-    ITHACAstream::exportMatrix(f_tau, "f_tau", "python", folder);
-    ITHACAstream::exportMatrix(f_tau, "f_tau", "matlab", folder);
-    ITHACAstream::exportMatrix(f_tau, "f_tau", "eigen", folder);
-    ITHACAstream::exportMatrix(f_n, "f_n", "python", folder);
-    ITHACAstream::exportMatrix(f_n, "f_n", "matlab", folder);
-    ITHACAstream::exportMatrix(f_n, "f_n", "eigen", folder);
-}
+// ************************************************************************* //
 
