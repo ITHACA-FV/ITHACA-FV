@@ -39,8 +39,8 @@ reducedSteadyNSturb::reducedSteadyNSturb()
 }
 
 reducedSteadyNSturb::reducedSteadyNSturb(steadyNSturb& FOMproblem)
-    :
-    problem(&FOMproblem)
+:
+problem(&FOMproblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
@@ -124,35 +124,33 @@ void reducedSteadyNSturb::solveOnline_sup(Eigen::MatrixXd vel_now)
     {
         newton_object.BC(j) = vel_now(j, 0);
     }
-
     for (label i = 0; i < Nphi_nut; i++)
     {
         newton_object.nu_c(i) = problem->rbfsplines[i]->eval(vel_now);
     }
 
-    volScalarField nut_rec("nut_rec", nuTmodes[0] * 0);
+    volScalarField nut_rec("nut_rec", problem->nuTmodes[0] * 0);
     for (label j = 0; j < Nphi_nut; j++)
     {
-        nut_rec += problem->nuTmodes[j] * newton_object.nu_c(j);
-    }
+      nut_rec += problem->nuTmodes[j] * newton_object.nu_c(j);
+  }
+  nutREC.append(nut_rec);
+  newton_object.nu = nu;
+  hnls.solve(y);
+  Eigen::VectorXd res(y);
+  newton_object.operator()(y, res);
 
-    nutREC.append(nut_rec);
-    newton_object.nu = nu;
-    hnls.solve(y);
-    Eigen::VectorXd res(y);
-    newton_object.operator()(y, res);
-
-    std::cout << "################## Online solve N° " << count_online_solve << " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << vel_now << std::endl;
-    if (res.norm() < 1e-5)
-    {
-        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " << hnls.iter << " iterations " << def << std::endl << std::endl;
-    }
-    else
-    {
-        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " << hnls.iter << " iterations " << def << std::endl << std::endl;
-    }
-    count_online_solve += 1;
+  std::cout << "################## Online solve N° " << count_online_solve << " ##################" << std::endl;
+  std::cout << "Solving for the parameter: " << vel_now << std::endl;
+  if (res.norm() < 1e-5)
+  {
+    std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " << hnls.iter << " iterations " << def << std::endl << std::endl;
+}
+else
+{
+    std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " << hnls.iter << " iterations " << def << std::endl << std::endl;
+}
+count_online_solve += 1;
 }
 
 

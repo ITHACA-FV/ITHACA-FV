@@ -65,7 +65,8 @@ public:
         Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
         Nphi_nut(problem.Nnutmodes),
         Nphi_p(problem.NPmodes),
-        N_BC(problem.inletIndex.rows())
+        N_BC(problem.inletIndex.rows()),
+        nu_c(problem.Nnutmodes)
     {}
 
     int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
