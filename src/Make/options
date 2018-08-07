@@ -22,8 +22,10 @@ EXE_INC = \
     -I../problems/steadyNS \
     -I../problems/steadyNSturb \
     -I../problems/unsteadyNS \
+    -I../problems/unsteadyNST \
     -I../reducedProblems/reducedProblem \
     -I../reducedProblems/reducedUnsteadyNS \
+    -I../reducedProblems/reducedUnsteadyNST \
     -I../reducedProblems/reducedSteadyNS \
     -I../reducedProblems/reducedSteadyNSturb \
     -I../reducedProblems/reducedLaplacian \
