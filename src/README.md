@@ -1,50 +1,106 @@
-**Developer Instructions**
+## Developer Instructions
 
-In order to start developing the code and to start adding your contributions to the repository please follow these steps. If it is the first time you start adding contributions to the ITHACA-FV library follow these steps. From point number 1) If you have already contributed to the project you can start directly from point 4). However, before creating the development branch that contains the new feature you want to add, remember to pull the last changes from the mathlab remote master branch:
+In order to start developing the code and to start adding your contributions to
+the repository please follow these steps. In particular:
+* if it is the first time you start adding contributions to the ITHACA-FV library
+follow these steps from point number [1](#1);
+* if you have already contributed to the project you can start directly from point number [4](#4).
+
+However, before creating the development branch that contains the new feature
+you want to add, remember to pull the last changes (see [here](https://help.github.com/articles/syncing-a-fork/) for more information).
+
+1. <div id="1">Create a new fork of the public repository
+   [ITHACA-FV](https://github.com/mathlab/ITHACA-FV)
+   ([here](https://help.github.com/articles/fork-a-repo) you can find an
+    introduction about the fork procedure). 
+
+2. Let's assume your Github username is YOUR-USERNAME, you can access to your
+   own fork at the URL
+   [github.com/YOUR-USERNAME/ITHACA-FV](https://github.com/YOUR-USERNAME/ITHACA-FV)
+   and clone it using the favourite protocol (HTTPS is the easiest) using the
+   command `git clone <url>`. In this example by digiting on the terminal:
 ```
-git pull mathlab master
+git clone "https://github.com/YOUR-USERNAME/ITHACA-FV"
 ```
-1) Make a fork of the public repository onto your gihub account,  https://github.com/mathlab/ITHACA-FV and let's suppose from now on that your user account is **pincopallino**. 
-2) Once you have forked the repository you can clone it to your pc:
-```
-git clone https://github.com/pincopallino/ITHACA-FV
-```
-3) Go the cloned folder and add the remote URL of the mathlab version of the ITHACA-FV repository
+a new folder called ITHACA-FV is created.
+
+3. Go the cloned folder and add the remote URL of the original ITHACA-FV
+   repository (**not** the fork) using the following commands:
 ```
 cd ITHACA-FV
-git remote add mathlab https://github.com/mathlab/ITHACA-FV
+git remote add mathlab "https://github.com/mathlab/ITHACA-FV"
 ```
-4) Create a development branch into your local repository
+
+4. <div id="4">Create a branch into your local repository. The new branch name
+   should describe the new feature you have planned to insert in the
+   repository. The command is:
 ```
-git checkout -b development
+git checkout -b new_branch_name
 ```
-5) Start implementing changes or adding new functionalities
-6) Add changed files or new files for the next commit
+
+5. Start implementing changes or adding new functionalities. Please ensure to
+   write well-documented and properly formatted code. You can use the
+   [`code_formatter.sh`](https://github.com/mathLab/ITHACA-FV/blob/master/code_formatter.sh)
+   script (already in the repository) to automatically format the code
+   according to the ITHACA style.
+
+6. Add changed files or new files for the next commit by digiting:
 ```
 git add NEWFILE1.H
 git add NEWFILE2.C
 ```
-7) Prepare a commit 
+
+7. Create the new commit. The commit message has to synthetically describe the
+   new changes (see [here](https://chris.beams.io/posts/git-commit/) for an
+   exhaustive discussion about commit messages).
 ```
 git commit -m "meaningfull commit message"
 ```
-8) Push the development branch commit to your remote repository
+
+8. Before pushing your local changes in the Github fork, don't forget to sync
+   your fork with the original repository. With this further step, you can
+   avoid conflicts and maintain a clean history of the repository. To do this,
+   you have to fetch the new changes, pull the `master` branch then adjust the
+   history of your `new_branch_name` branch. Shortly:
+   ```
+   git fetch mathlab
+   git pull mathlab/master master
+   git rebase master new_branch_name
+   ```
+   For a detailed discussion about rebasing and synching, you can read
+   [this](https://help.github.com/articles/syncing-a-fork/).
+
+9. Push the `new_branch_name` branch commit to your remote fork:
 ```
-git push origin development
+git push origin new_branch_name
 ```
-9) Perform a pull request from the github webpage of ITHACA-FV, the mathlab one at https://github.com/mathlab/ITHACA-FV. You will have to click " New pull request" and then on "compare across forks". You will have to compare the master branch of the mathlab version of ITHACA "mathlab/ITHACA-FV/master" with the development branch of your version of ITHACA-FV "pincopallino/ITHACA-FV/development". Once you have performed the pull request you will have to wait the response of the ITHACA-FV administrators. 
-10) In case there is something to change you will have to implement corrections asked by the administrators and perform a new push. In case there are no corrections to be done you don't have to consider this point.
-```
-git add "modifiedfile.H"
-git commit -m "meaningfull commit message"
-git push origin development
-```
-11) Once the pull request has been accepted you can checkout on the master branch of your local repo, pull the last changes from the mathlab remote master branch, delete the development branch locally and remotely and finally push the local changes onto your remote repository.
+
+10. Open a new pull request (in [this guide](https://help.github.com/articles/creating-a-pull-request/)
+    the basic steps to open a pull request are introduced). Please use a
+    meaningful name and a synthetic description of the new implemented feature.
+    Once you have performed the pull request you will have to wait the response
+    of the ITHACA-FV administrators. 
+
+11. In case there is something to change you will have to implement corrections
+    asked by the administrators and perform a new push. In case there are no
+    corrections to be done you don't have to consider this point.
+    ```
+    git add "modifiedfile.H"
+    git commit -m "another meaningfull commit message"
+    git push origin new_branch_name
+    ```
+
+12. Once the pull request has been accepted you have to synchronize your fork
+    with the original repository (at this moment, only the original repository, 
+    and not your fork, contains within the `master` branch the feature you
+    implemented).
+    As before digit (*NOTE*: the following commands delete the `new_branch_name`):
 ```
 git checkout master
-git pull mathlab master
-git branch -d development
-git push origin --delete development
+git fetch mathlab
+git pull mathlab/master master
+git branch -D new_branch_name
+git push origin --delete new_branch_name
 git push origin master
 ```
 
