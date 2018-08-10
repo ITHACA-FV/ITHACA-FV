@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 /// \image html step.png
 /// At the inlet a uniform and constant velocity equal to 1 m/s is prescribed. 
 /// 
-/// \section code A look under the code
+/// \section code03 A detailed look into the code
 /// 
 /// In this section are explained the main steps necessary to construct the tutorial N°3
 /// 
