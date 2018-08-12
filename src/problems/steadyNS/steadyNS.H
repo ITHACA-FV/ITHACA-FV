@@ -217,6 +217,10 @@ public:
     /// Solve the supremizer problem
     void solvesupremizer();
 
+    /// Solve the supremizer problem using the pressure modes
+    void solvesupremizer(PtrList<volScalarField> Pmodes);
+
+
     /// Perform a lift solve
     void liftSolve();
 

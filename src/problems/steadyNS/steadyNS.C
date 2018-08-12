@@ -174,6 +174,85 @@ void steadyNS::solvesupremizer()
     }
 }
 
+void steadyNS::solvesupremizer(PtrList<volScalarField> Pmodes)
+{
+    if (supex == 1)
+    {
+        volVectorField U = _U();
+
+        volVectorField Usup
+        (
+            IOobject
+            (
+                "Usup",
+                U.time().timeName(),
+                U.mesh(),
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+                ),
+            U.mesh(),
+            dimensionedVector("zero", U.dimensions(), vector::zero)
+            );
+        ITHACAstream::read_fields(supmodes, Usup, "./ITHACAoutput/supremizer/");
+    }
+    else
+    {
+        volVectorField U = _U();
+
+        volVectorField Usup
+        (
+            IOobject
+            (
+                "Usup",
+                U.time().timeName(),
+                U.mesh(),
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+                ),
+            U.mesh(),
+            dimensionedVector("zero", U.dimensions(), vector::zero)
+            );
+
+        dimensionedScalar nu_fake
+        (
+            "nu_fake",
+            dimensionSet(0, 2, -1, 0, 0, 0, 0),
+            scalar(1)
+            );
+
+        Vector<double> v(0, 0, 0);
+        for (label i = 0; i < Usup.boundaryField().size(); i++)
+        {
+            changeBCtype(Usup, "fixedValue", i);
+            assignBC(Usup, i, v);
+            assignIF(Usup, v);
+        }
+
+        for (label i = 0; i < Pmodes.size(); i++)
+        {
+
+            fvVectorMatrix u_sup_eqn
+            (
+                - fvm::laplacian(nu_fake, Usup)
+                );
+            solve
+            (
+                u_sup_eqn == fvc::grad(Pmodes[i])
+                );
+            supmodes.append(Usup);
+            exportSolution(Usup, name(i+1), "./ITHACAoutput/supremizer/");
+        }
+        int systemRet = system("ln -s ../../constant ./ITHACAoutput/supremizer/constant");
+        systemRet += system("ln -s ../../0 ./ITHACAoutput/supremizer/0");
+        systemRet += system("ln -s ../../system ./ITHACAoutput/supremizer/system");
+        if (systemRet < 0)
+        {
+            Info << "System Command Failed in steadyNS.C" << endl;
+            exit(0);
+        }
+    }
+}
+
 // Method to compute the lifting function
 void steadyNS::liftSolve()
 {
