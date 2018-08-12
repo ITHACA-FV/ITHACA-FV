@@ -30,7 +30,7 @@ Class
     reducedSteadyNSturb
 
 Description
-    A reduced problem for the stationary NS equations
+    A reduced problem for the stationary turbulent NS equations
 
 SourceFiles
     reducedSteadyNSturb.C

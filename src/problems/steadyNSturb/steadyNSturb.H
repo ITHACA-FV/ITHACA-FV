@@ -85,8 +85,9 @@ public:
     /// List of POD modes for eddy viscosity 
     PtrList<volScalarField> nuTmodes;
 
-    // Create a SAMPLES and Rbf splines for interpolation
+    // Create a Rbf splines for interpolation
     std::vector<SPLINTER::DataTable*> SAMPLES;
+    // Create a SAMPLES for interpolation
     std::vector<SPLINTER::RBFSpline*> rbfsplines;
 
 

@@ -150,32 +150,32 @@ int newton_unsteadyNSturb_PPE::operator()(const Eigen::VectorXd &x, Eigen::Vecto
 	Eigen::MatrixXd gg(1, 1);
 	Eigen::MatrixXd bb(1, 1);
     // Mom Term
-	Eigen::VectorXd M1 = B_matrix * a_tmp * nu;
+	Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
     // Gradient of pressure
-	Eigen::VectorXd M2 = K_matrix * b_tmp;
+	Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
     // Mass Term
-	Eigen::VectorXd M5 = M_matrix * a_dot;
+	Eigen::VectorXd M5 = problem->M_matrix * a_dot;
     // Pressure Term
-	Eigen::VectorXd M3 = D_matrix * b_tmp;
+	Eigen::VectorXd M3 = problem->D_matrix * b_tmp;
 
     // BC PPE
-	Eigen::VectorXd M6 = BC1_matrix * a_tmp * nu;
+	Eigen::VectorXd M6 = problem->BC1_matrix * a_tmp * nu;
 
     // BC PPE
-	Eigen::VectorXd M7 = BC3_matrix * a_tmp * nu;
+	Eigen::VectorXd M7 = problem->BC3_matrix * a_tmp * nu;
 
 
 
 	for (label i = 0; i < Nphi_u; i++)
 	{
-		cc = a_tmp.transpose() * C_matrix[i] * a_tmp - nu_c.transpose() * C_total_matrix[i] * a_tmp;
+		cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp - nu_c.transpose() * problem->C_total_matrix[i] * a_tmp;
 		fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M2(i);
 	}
 	for (label j = 0; j < Nphi_p; j++)
 	{
 		label k = j + Nphi_u;
-		gg = a_tmp.transpose() * G_matrix[j] * a_tmp;
-		bb = a_tmp.transpose() * BC2_matrix[j] * a_tmp;
+		gg = a_tmp.transpose() * problem->G_matrix[j] * a_tmp;
+		bb = a_tmp.transpose() * problem->BC2_matrix[j] * a_tmp;
         //fvec(k) = M3(j, 0) - gg(0, 0) - M6(j, 0) + bb(0, 0);
 		fvec(k) = M3(j, 0) + gg(0, 0) - M7(j, 0);
 	}

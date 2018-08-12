@@ -133,10 +133,10 @@ public:
 
     ~reducedUnsteadyNS() {};
 
-    /// Functor object to call the non linear solver sup. approach
+    /// Function object to call the non linear solver sup approach
     newton_unsteadyNS_sup newton_object_sup;
 
-    /// Functor object to call the non linear solver PPE approach
+    /// Function object to call the non linear solver PPE approach
     newton_unsteadyNS_PPE newton_object_PPE;
 
     /// Scalar to store the current time
@@ -151,6 +151,7 @@ public:
     /// Scalar to store the initial time if the online simulation
     scalar tstart;
 
+    /// Pointer to the FOM problem    
     unsteadyNS* problem;
 
     // Functions

@@ -27,20 +27,20 @@ License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    reducedProblem
+    reducedUnsteadyNSturb
 
 Description
-    A reduced problem for the unsteady NS equations
+    A reduced problem for the unsteady turbulent NS equations
 
 SourceFiles
-    reducedUnsteadyNS.C
+    reducedUnsteadyNSturb.C
 
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the reducedUnsteadyNS class.
+/// Header file of the reducedUnsteadyNSturb class.
 /// \dir
-/// Directory containing the header and source files for the reducedUnsteadyNS class
+/// Directory containing the header and source files for the reducedUnsteadyNSturb class
 
 #ifndef reducedUnsteadyNSturb_H
 #define reducedUnsteadyNSturb_H
@@ -91,23 +91,13 @@ struct newton_unsteadyNSturb_PPE: public newton_argument<double>
 public:
 	newton_unsteadyNSturb_PPE() {}
 	newton_unsteadyNSturb_PPE(int Nx, int Ny, unsteadyNSturb& problem): newton_argument<double>(Nx, Ny),
+	problem(&problem),
 	Nphi_u(problem.NUmodes + problem.liftfield.size()),
 	Nphi_nut(problem.Nnutmodes),
 	Nphi_p(problem.NPmodes),
 	N_BC(problem.inletIndex.rows()),
-	B_matrix(problem.B_total_matrix),
-	C_matrix(problem.C_matrix),
-	C_total_matrix(problem.C_total_matrix),
-	K_matrix(problem.K_matrix),
-	D_matrix(problem.D_matrix),
-	M_matrix(problem.M_matrix),
-	G_matrix(problem.G_matrix),
-	BC1_matrix(problem.BC1_matrix),
-	BC2_matrix(problem.BC2_matrix),
-	BC3_matrix(problem.BC3_matrix),
-	SPLINES(problem.rbfsplines)
-
-	{nu_c.resize(Nphi_nut);}
+	nu_c(problem.Nnutmodes)
+	{}
 
 	int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
 	int df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) const;
@@ -116,26 +106,16 @@ public:
 	int Nphi_nut;
 	int Nphi_p;
 	int N_BC;
-	int count_online_solve=0;
+	unsteadyNSturb* problem;
 	scalar nu;
 	scalar dt;
-
-	Eigen::MatrixXd B_matrix;
-	List <Eigen::MatrixXd> C_matrix;
-	List <Eigen::MatrixXd> C_total_matrix; 
-	Eigen::MatrixXd K_matrix; 
-	Eigen::MatrixXd D_matrix;
-	Eigen::MatrixXd M_matrix;
-	List <Eigen::MatrixXd> G_matrix;
-	Eigen::MatrixXd BC1_matrix;
-	List <Eigen::MatrixXd> BC2_matrix;  
-	Eigen::MatrixXd BC3_matrix;  
-	Eigen::VectorXd y_old;    
+	Eigen::VectorXd y_old;   
 	Eigen::VectorXd BC;
 	Eigen::VectorXd nu_c;      
 	std::vector<SPLINTER::RBFSpline*> SPLINES;
-
 };
+
+
 
 /*---------------------------------------------------------------------------*\
                         Class reducedProblem Declaration
@@ -151,8 +131,7 @@ private:
 public:
     // Constructors
     /// Construct Null
-    //
-	reducedUnsteadyNSturb();
+   	reducedUnsteadyNSturb();
     /// Construct Null
     ///
     /// @param[in]  problem  a full order unsteadyNS problem
@@ -160,17 +139,10 @@ public:
     /// 
 	explicit reducedUnsteadyNSturb(unsteadyNSturb& problem);
 
-	~reducedUnsteadyNSturb(){};
+	~reducedUnsteadyNSturb() {};
 
-    // Specific variable
-    /** @name Reduced Matrices
-    *
-    */
-    ///@{
+    /// Pointer to the FOM problem
 	unsteadyNSturb* problem;
-
-
-
 
     /// Reconstructed eddy viscosity field
 	PtrList<volScalarField> nutREC;
@@ -178,10 +150,10 @@ public:
     /// Number of viscosity modes
 	int Nphi_nut;
 
-    /// Functor object to call the non linear solver sup. approach
+    /// Function object to call the non linear solver sup approach
 	newton_unsteadyNSturb_sup newton_object_sup;
 
-    /// Functor object to call the non linear solver PPE approach
+    /// Function object to call the non linear solver PPE approach
 	newton_unsteadyNSturb_PPE newton_object_PPE;
 
     /// Scalar to store the current time

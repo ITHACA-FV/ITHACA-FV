@@ -27,20 +27,20 @@ License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    unsteadyNS
+    unsteadyNSturb
 
 Description
-    Reduction class for a NON-Stationary NS problem
+    Reduction class for a NON-Stationary turbulent NS problem
 
 SourceFiles
-    unsteadyNS.C   
+    unsteadyNSturb.C   
 
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the unsteadyNS class.
+/// Header file of the unsteadyNSturb class.
 /// \dir
-/// Directory containing the header and source files for the unsteadyNS class.
+/// Directory containing the header and source files for the unsteadyNSturb class.
 
 #ifndef unsteadyNSturb_H
 #define unsteadyNSturb_H
@@ -89,8 +89,9 @@ public:
     /// List of POD modes for eddy viscosity 
     PtrList<volScalarField> nuTmodes;
 
-    // Create a SAMPLES and Rbf splines for interpolation
+    // Create a Rbf splines for interpolation
     std::vector<SPLINTER::DataTable*> SAMPLES;
+    // Create a SAMPLES for interpolation
     std::vector<SPLINTER::RBFSpline*> rbfsplines;
  
     /** @name Reduced Matrices

@@ -276,15 +276,16 @@ public:
     ///
     static Eigen::MatrixXd get_coeffs_ortho(PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes);
 
-    /**
-     * @brief      Gets the coeffs ortho.
-     *
-     * @param[in]  snapshots  The snapshots
-     * @param      modes      The modes
-     *
-     * @return     The coeffs ortho.
-     */
-    static Eigen::VectorXd get_coeffs_ortho(volScalarField snapshots, PtrList<volScalarField>& modes);
+    //--------------------------------------------------------------------------
+    /// Project a snapshot scalar field on an orthogonal basis function
+    /// and get the coefficients of the projection
+    ///
+    /// @param[in]  snapshot  The snapshot.
+    /// @param[in]  modes     The modes.
+    ///
+    /// @return     The coefficients of the projection.
+    ///
+    static Eigen::VectorXd get_coeffs_ortho(volScalarField snapshot, PtrList<volScalarField>& modes);
 
 
     //--------------------------------------------------------------------------
