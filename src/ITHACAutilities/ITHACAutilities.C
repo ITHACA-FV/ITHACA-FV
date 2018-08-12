@@ -409,6 +409,21 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volVectorField> snapsh
     return coeff;
 }
 
+Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot, PtrList<volScalarField>& modes)
+{
+    label Msize = modes.size();
+
+    Eigen::VectorXd b(Msize);
+
+    // Project everything
+    for (label i = 0; i < Msize; i++)
+    {
+        b(i) = fvc::domainIntegrate(snapshot * modes[i]).value();
+    }
+
+    return b;
+}
+
 
 double ITHACAutilities::L2norm(volScalarField field)
 {

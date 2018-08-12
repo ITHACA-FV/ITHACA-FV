@@ -233,8 +233,11 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd& vel_now, label startSna
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
     tmp_sol.col(0).tail(y.rows()) = y;
-    online_solution[counter] = tmp_sol;
-    counter ++;
+    if(time!=0)
+    {
+        online_solution[counter] = tmp_sol;
+        counter ++;
+    }
 
     // Create nonlinear solver object
     Eigen::HybridNonLinearSolver<newton_unsteadyNS_sup> hnls(newton_object_sup);
@@ -333,8 +336,11 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd& vel_now, label startSna
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
     tmp_sol.col(0).tail(y.rows()) = y;
-    online_solution[counter] = tmp_sol;
-    counter ++;
+    if(time!=0)
+    {
+        online_solution[counter] = tmp_sol;
+        counter ++;
+    }
 
     // Create nonlinear solver object
     Eigen::HybridNonLinearSolver<newton_unsteadyNS_PPE> hnls(newton_object_PPE);
@@ -416,6 +422,10 @@ void reducedUnsteadyNS::reconstruct_PPE(fileName folder, int printevery)
             }
             problem->exportSolution(P_rec, name(counter2), folder);
             nextwrite += printevery;
+            
+            double timenow = online_solution[i](0,0);
+            std::ofstream of(folder + name(counter2) + "/" + name(timenow));    
+
             counter2 ++;
 
             UREC.append(U_rec);

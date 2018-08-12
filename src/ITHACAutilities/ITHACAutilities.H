@@ -276,6 +276,17 @@ public:
     ///
     static Eigen::MatrixXd get_coeffs_ortho(PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes);
 
+    /**
+     * @brief      Gets the coeffs ortho.
+     *
+     * @param[in]  snapshots  The snapshots
+     * @param      modes      The modes
+     *
+     * @return     The coeffs ortho.
+     */
+    static Eigen::VectorXd get_coeffs_ortho(volScalarField snapshots, PtrList<volScalarField>& modes);
+
+
     //--------------------------------------------------------------------------
     /// Export a field (template function)
     ///
