@@ -1,3 +1,0 @@
-POD_RBF_cylinder.C
-
-EXE = $(FOAM_USER_APPBIN)/POD_RBF_cylinder
