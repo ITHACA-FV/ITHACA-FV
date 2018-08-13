@@ -61,12 +61,12 @@ struct newton_steadyNSturb: public newton_argument<double>
 public:
     newton_steadyNSturb() {}
     newton_steadyNSturb(int Nx, int Ny, steadyNSturb& problem): newton_argument<double>(Nx, Ny),
-        problem(&problem),
-        Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-        Nphi_nut(problem.Nnutmodes),
-        Nphi_p(problem.NPmodes),
-        N_BC(problem.inletIndex.rows()),
-        nu_c(problem.Nnutmodes)
+    problem(&problem),
+    Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
+    Nphi_nut(problem.Nnutmodes),
+    Nphi_p(problem.NPmodes),
+    N_BC(problem.inletIndex.rows()),
+    nu_c(problem.Nnutmodes)
     {}
 
     int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const;
@@ -100,7 +100,10 @@ public:
     // Constructors
     /// Construct Null
     reducedSteadyNSturb();
-
+    /// Construct Null
+    ///
+    /// @param      problem  a full order steadyNSturb problem
+    ///
     reducedSteadyNSturb(steadyNSturb& problem);
 
     ~reducedSteadyNSturb() {};
@@ -124,23 +127,25 @@ public:
     /// Pointer to the FOM problem
     steadyNSturb* problem;
 
-    /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
-    /// stabilisation method
     ///
-    /// @param      problem     a steadyNS full order problem.
-    /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
-    /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
+    /// Method to perform an online solve using a supremizer stabilisation method
+    ///
+    /// @param[in]  vel_now   The vector of online velocity. It is defined in 
+    /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+    /// of parametrized boundary conditions.
+    /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
+    /// and used to get the reduced initial condition.
     ///
     void solveOnline_sup(Eigen::MatrixXd vel_now);
 
-    /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique.
+    /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
     /// stabilisation method
     ///
-    /// @param      problem     a steadyNS full order problem.
-    /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
-    /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
+    /// @param[in]  folder      The folder where to output the solutions
+    /// @param[in]  printevery  The printevery
     ///
     void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
+
 
 };
 

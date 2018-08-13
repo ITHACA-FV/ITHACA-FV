@@ -462,6 +462,10 @@ void reducedUnsteadyNS::reconstruct_sup(fileName folder, int printevery)
             }
             problem->exportSolution(P_rec, name(counter2), folder);
             nextwrite += printevery;
+
+            double timenow = online_solution[i](0,0);
+            std::ofstream of(folder + name(counter2) + "/" + name(timenow));   
+            
             counter2 ++;
 
             UREC.append(U_rec);

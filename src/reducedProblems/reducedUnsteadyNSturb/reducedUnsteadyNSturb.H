@@ -134,9 +134,8 @@ public:
    	reducedUnsteadyNSturb();
     /// Construct Null
     ///
-    /// @param[in]  problem  a full order unsteadyNS problem
-    /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
-    /// 
+    /// @param      problem  a full order unsteadyNSturb problem
+    ///
 	explicit reducedUnsteadyNSturb(unsteadyNSturb& problem);
 
 	~reducedUnsteadyNSturb() {};
@@ -196,18 +195,16 @@ public:
     /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
     /// stabilisation method
     ///
-    /// @param      problem     a steadyNS full order problem.
-    /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
-    /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
+    /// @param[in]  folder      The folder where to output the solutions
+    /// @param[in]  printevery  The printevery
     ///
 	void reconstruct_PPE(fileName folder = "./online_rec", int printevery = 1);
 
-    /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique.
+    /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
     /// stabilisation method
     ///
-    /// @param      problem     a steadyNS full order problem.
-    /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
-    /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
+    /// @param[in]  folder      The folder where to output the solutions
+    /// @param[in]  printevery  The printevery
     ///
 	void reconstruct_sup(fileName folder = "./online_rec", int printevery = 1);
 

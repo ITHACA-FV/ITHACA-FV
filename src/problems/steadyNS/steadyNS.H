@@ -214,7 +214,11 @@ public:
     /// Perform a truthsolve
     void truthSolve();
 
-    /// Solve the supremizer problem
+    ///
+    /// solve the supremizer either with the use of the pressure snaphots or the pressure modes
+    ///
+    /// @param[in]  type  The type of the supremizer approach, either done on the pressure snapshots or on pressure modes.
+    ///
     void solvesupremizer(word type="snapshots");
     
     /// Perform a lift solve
@@ -243,7 +247,7 @@ public:
     void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes);
 
     //--------------------------------------------------------------------------
-    // Projection Methods Momentum Equation    
+    //  Projection Methods Momentum Equation    
     /// Diffusive Term
     ///
     /// @param[in]  NUmodes    The number of velocity modes.

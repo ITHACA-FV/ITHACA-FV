@@ -75,14 +75,14 @@ class unsteadyNSturb: public unsteadyNS
 {
 public:
     // Constructors
-        /// Construct Null
+    /// Construct Null
     unsteadyNSturb();
 
-        /// Construct with argc and argv
+    /// Construct with argc and argv
     unsteadyNSturb(int argc, char *argv[]);
 
     // Specific variable for the unstationary case
-        // Member Functions
+    // Member Functions
     /// List of snapshots for the solution for eddy viscosity 
     PtrList<volScalarField> nutFields;
     
@@ -91,6 +91,7 @@ public:
 
     // Create a Rbf splines for interpolation
     std::vector<SPLINTER::DataTable*> SAMPLES;
+
     // Create a SAMPLES for interpolation
     std::vector<SPLINTER::RBFSpline*> rbfsplines;
  
@@ -114,6 +115,7 @@ public:
     /// Total B Matrix
     Eigen::MatrixXd B_total_matrix;
     ///@}
+    //
 
     /// Number of viscoisty modes used for the projection
     label Nnutmodes;
@@ -121,10 +123,12 @@ public:
     
     /// Eddy viscosity field
     autoPtr<volScalarField> _nut;
-    autoPtr<volScalarField> _nuTilda;
 
 
 
+
+
+    ///
     /// @brief      BT added matrix for the turbulence treatement
     ///
     /// @param[in]  NUmodes    The N of velocity modes.s
@@ -157,20 +161,34 @@ public:
     ///
     List < Eigen::MatrixXd > turbulence_term2(label NUmodes, label NSUPmodes, label Nnutmodes);
 
+    ///
+    /// Perform a truth solve
+    ///
+    /// @param[in]  mu_now  The mu now
+    ///
     void truthSolve(List<scalar> mu_now);
 
 
-    /**
-     * @brief      { function_description }
-     *
-     * @param[in]  folder     The folder
-     * @param[in]  NUmodes    The number of velocity modes.
-     * @param[in]  NPmodes    The number of pressure modes.
-     * @param[in]  NSUPmodes  The number of supremizer modes.
-     * @param[in]  Nnutmodes  The number of eddy viscosity modes.
-     */
+    ///
+    /// Project using a supremizer approach
+    ///
+    /// @param[in]  folder     The folder
+    /// @param[in]  NUmodes    The n umodes
+    /// @param[in]  NPmodes    The n pmodes
+    /// @param[in]  NSUPmodes  The nsu pmodes
+    /// @param[in]  Nnutmodes  The nnutmodes
+    ///
     void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes, label Nnutmodes);
     
+    ///
+    /// Project using the Poisson Equation for pressure
+    ///
+    /// @param[in]  folder     The folder
+    /// @param[in]  NUmodes    The n umodes
+    /// @param[in]  NPmodes    The n pmodes
+    /// @param[in]  NSUPmodes  The nsu pmodes
+    /// @param[in]  Nnutmodes  The nnutmodes
+    ///
     void projectPPE(fileName folder, label NUmodes, label NPmodes, label NSUPmodes, label Nnutmodes);
 
 };

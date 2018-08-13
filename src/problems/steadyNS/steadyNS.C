@@ -103,9 +103,14 @@ void steadyNS::solvesupremizer(word type)
     {
         P_sup = Pmodes;
     }
-    else
+    else if (type == "snapshots")
     {
         P_sup = Pfield;
+    }
+    else
+    {
+        std::cout << "You must specify the variable type with either snapshots or modes" << std::endl;
+        exit(0);
     }
     if (supex == 1)
     {
@@ -158,29 +163,57 @@ void steadyNS::solvesupremizer(word type)
             assignBC(Usup, i, v);
             assignIF(Usup, v);
         }
-
-        for (label i = 0; i < P_sup.size(); i++)
+        if (type == "snapshots")
         {
+            for (label i = 0; i < P_sup.size(); i++)
+            {
 
-            fvVectorMatrix u_sup_eqn
-            (
-                - fvm::laplacian(nu_fake, Usup)
-                );
-            solve
-            (
-                u_sup_eqn == fvc::grad(P_sup[i])
-                );
-            supfield.append(Usup);
-            exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
+                fvVectorMatrix u_sup_eqn
+                (
+                    - fvm::laplacian(nu_fake, Usup)
+                    );
+                solve
+                (
+                    u_sup_eqn == fvc::grad(P_sup[i])
+                    );
+                supfield.append(Usup);
+                exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
+            }
+            int systemRet = system("ln -s ../../constant ./ITHACAoutput/supfield/constant");
+            systemRet += system("ln -s ../../0 ./ITHACAoutput/supfield/0");
+            systemRet += system("ln -s ../../system ./ITHACAoutput/supfield/system");
+            if (systemRet < 0)
+            {
+                Info << "System Command Failed in steadyNS.C" << endl;
+                exit(0);
+            }
         }
-        int systemRet = system("ln -s ../../constant ./ITHACAoutput/supfield/constant");
-        systemRet += system("ln -s ../../0 ./ITHACAoutput/supfield/0");
-        systemRet += system("ln -s ../../system ./ITHACAoutput/supfield/system");
-        if (systemRet < 0)
+        else
         {
-            Info << "System Command Failed in steadyNS.C" << endl;
-            exit(0);
+            for (label i = 0; i < Pmodes.size(); i++)
+            {
+
+                fvVectorMatrix u_sup_eqn
+                (
+                    - fvm::laplacian(nu_fake, Usup)
+                    );
+                solve
+                (
+                    u_sup_eqn == fvc::grad(Pmodes[i])
+                    );
+                supmodes.append(Usup);
+                exportSolution(Usup, name(i+1), "./ITHACAoutput/supremizer/");
+            }
+            int systemRet = system("ln -s ../../constant ./ITHACAoutput/supremizer/constant");
+            systemRet += system("ln -s ../../0 ./ITHACAoutput/supremizer/0");
+            systemRet += system("ln -s ../../system ./ITHACAoutput/supremizer/system");
+            if (systemRet < 0)
+            {
+                Info << "System Command Failed in steadyNS.C" << endl;
+                exit(0);
+            }
         }
+        
     }
 }
 

@@ -183,25 +183,23 @@ public:
     /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
     /// stabilisation method
     ///
-    /// @param      problem     a steadyNS full order problem.
-    /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
-    /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
+    /// @param[in]  folder      The folder where to output the solutions
+    /// @param[in]  printevery  The printevery
     ///
     void reconstruct_PPE(fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
 
-    /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique.
+    /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
     /// stabilisation method
     ///
-    /// @param      problem     a steadyNS full order problem.
-    /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
-    /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
+    /// @param[in]  folder      The folder where to output the solutions
+    /// @param[in]  printevery  The printevery
     ///
     void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
 
-    /// @brief      { function_description }
+    /// Method to compute the reduced order forces
     ///
-    /// @param      problem  The problem
-    /// @param[in]  folder   The folder
+    /// @param      problem  a steadyNS full order problem.
+    /// @param[in]  folder   The folder where to output the forces matrices
     ///
     void reconstruct_LiftandDrag(steadyNS & problem, fileName folder);
 
