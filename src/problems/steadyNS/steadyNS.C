@@ -45,12 +45,12 @@ steadyNS::steadyNS(int argc, char *argv[])
 #include "createTime.H"
 #include "createMesh.H"
     _simple = autoPtr<simpleControl>
-              (
-                  new simpleControl
-                  (
-                      mesh
-                  )
-              );
+    (
+      new simpleControl
+      (
+          mesh
+          )
+      );
     simpleControl& simple = _simple();
 #include "createFields.H"
 #include "createFvOptions.H"
@@ -65,8 +65,8 @@ steadyNS::steadyNS(int argc, char *argv[])
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-        )
-    );
+            )
+        );
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
 }
@@ -95,8 +95,23 @@ void steadyNS::truthSolve()
 }
 
 // Method to solve the supremizer problem
-void steadyNS::solvesupremizer()
-{
+void steadyNS::solvesupremizer(word type)
+{   
+    PtrList<volScalarField> P_sup;
+    
+    if (type == "modes")
+    {
+        P_sup = Pmodes;
+    }
+    else if (type == "snapshots")
+    {
+        P_sup = Pfield;
+    }
+    else
+    {
+        std::cout << "You must specify the variable type with either snapshots or modes" << std::endl;
+        exit(0);
+    }
     if (supex == 1)
     {
         volVectorField U = _U();
@@ -110,10 +125,10 @@ void steadyNS::solvesupremizer()
                 U.mesh(),
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
-            ),
+                ),
             U.mesh(),
             dimensionedVector("zero", U.dimensions(), vector::zero)
-        );
+            );
         ITHACAstream::read_fields(supfield, Usup, "./ITHACAoutput/supfield/");
     }
     else
@@ -129,17 +144,17 @@ void steadyNS::solvesupremizer()
                 U.mesh(),
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
-            ),
+                ),
             U.mesh(),
             dimensionedVector("zero", U.dimensions(), vector::zero)
-        );
+            );
 
         dimensionedScalar nu_fake
         (
             "nu_fake",
             dimensionSet(0, 2, -1, 0, 0, 0, 0),
             scalar(1)
-        );
+            );
 
         Vector<double> v(0, 0, 0);
         for (label i = 0; i < Usup.boundaryField().size(); i++)
@@ -148,29 +163,57 @@ void steadyNS::solvesupremizer()
             assignBC(Usup, i, v);
             assignIF(Usup, v);
         }
-
-        for (label i = 0; i < Pfield.size(); i++)
+        if (type == "snapshots")
         {
+            for (label i = 0; i < P_sup.size(); i++)
+            {
 
-            fvVectorMatrix u_sup_eqn
-            (
-                - fvm::laplacian(nu_fake, Usup)
-            );
-            solve
-            (
-                u_sup_eqn == fvc::grad(Pfield[i])
-            );
-            supfield.append(Usup);
-            exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
+                fvVectorMatrix u_sup_eqn
+                (
+                    - fvm::laplacian(nu_fake, Usup)
+                    );
+                solve
+                (
+                    u_sup_eqn == fvc::grad(P_sup[i])
+                    );
+                supfield.append(Usup);
+                exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
+            }
+            int systemRet = system("ln -s ../../constant ./ITHACAoutput/supfield/constant");
+            systemRet += system("ln -s ../../0 ./ITHACAoutput/supfield/0");
+            systemRet += system("ln -s ../../system ./ITHACAoutput/supfield/system");
+            if (systemRet < 0)
+            {
+                Info << "System Command Failed in steadyNS.C" << endl;
+                exit(0);
+            }
         }
-        int systemRet = system("ln -s ../../constant ./ITHACAoutput/supfield/constant");
-        systemRet += system("ln -s ../../0 ./ITHACAoutput/supfield/0");
-        systemRet += system("ln -s ../../system ./ITHACAoutput/supfield/system");
-        if (systemRet < 0)
+        else
         {
-            Info << "System Command Failed in steadyNS.C" << endl;
-            exit(0);
+            for (label i = 0; i < Pmodes.size(); i++)
+            {
+
+                fvVectorMatrix u_sup_eqn
+                (
+                    - fvm::laplacian(nu_fake, Usup)
+                    );
+                solve
+                (
+                    u_sup_eqn == fvc::grad(Pmodes[i])
+                    );
+                supmodes.append(Usup);
+                exportSolution(Usup, name(i+1), "./ITHACAoutput/supremizer/");
+            }
+            int systemRet = system("ln -s ../../constant ./ITHACAoutput/supremizer/constant");
+            systemRet += system("ln -s ../../0 ./ITHACAoutput/supremizer/0");
+            systemRet += system("ln -s ../../system ./ITHACAoutput/supremizer/system");
+            if (systemRet < 0)
+            {
+                Info << "System Command Failed in steadyNS.C" << endl;
+                exit(0);
+            }
         }
+        
     }
 }
 
@@ -225,11 +268,11 @@ void steadyNS::liftSolve()
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::NO_WRITE
-            ),
+                ),
             mesh,
             dimensionedScalar("Phi", dimLength * dimVelocity, 0),
             p.boundaryField().types()
-        );
+            );
 
         label PhiRefCell = 0;
         scalar PhiRefValue = 0;
@@ -239,7 +282,7 @@ void steadyNS::liftSolve()
             potentialFlow.dict(),
             PhiRefCell,
             PhiRefValue
-        );
+            );
 
         mesh.setFluxRequired(Phi.name());
 
@@ -256,7 +299,7 @@ void steadyNS::liftSolve()
                 fvm::laplacian(dimensionedScalar("1", dimless, 1), Phi)
                 ==
                 fvc::div(phi)
-            );
+                );
 
             PhiEqn.setReference(PhiRefCell, PhiRefValue);
             PhiEqn.solve();
@@ -270,16 +313,16 @@ void steadyNS::liftSolve()
         MRF.makeAbsolute(phi);
 
         Info << "Continuity error = "
-             << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
-             << endl;
+        << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
+        << endl;
 
         Ulift = fvc::reconstruct(phi);
         Ulift.correctBoundaryConditions();
 
         Info << "Interpolated velocity error = "
-             << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
-                 / sum(mesh.magSf())).value()
-             << endl;
+        << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
+           / sum(mesh.magSf())).value()
+        << endl;
         Ulift.write();
         liftfield.append(Ulift);
     }
@@ -826,8 +869,8 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-        )
-    );
+            )
+        );
 
     IOdictionary transportProperties
     (
@@ -838,8 +881,8 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-        )
-    );
+            )
+        );
 
     word pName = FORCESdict.lookup("pName");
     word UName = FORCESdict.lookup("UName");

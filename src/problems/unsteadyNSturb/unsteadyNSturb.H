@@ -27,31 +27,33 @@ License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    steadyNSturb
+    unsteadyNSturb
 
 Description
-    Reduction class for a Stationary turbulent Navier-Stokes problem.
+    Reduction class for a NON-Stationary turbulent NS problem
 
 SourceFiles
-    steadyNSturb.C
+    unsteadyNSturb.C   
 
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the steadyNSturb class.
+/// Header file of the unsteadyNSturb class.
 /// \dir
-/// Directory containing the header and source files for the steadyNSturb class.
+/// Directory containing the header and source files for the unsteadyNSturb class.
 
-#ifndef steadyNSturb_H
-#define steadyNSturb_H
+#ifndef unsteadyNSturb_H
+#define unsteadyNSturb_H
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
-#include "simpleControl.H"
-#include "pisoControl.H"
+#include "pimpleControl.H"
 #include "fvOptions.H"
-#include "reductionProblem.H"
-#include "ITHACAstream.H"
+#include "IOporosityModelList.H"
+#include "IOMRFZoneList.H"
+#include "fixedFluxPressureFvPatchScalarField.H"
+#include "steadyNS.H"
+#include "unsteadyNS.H"
 #include <iostream>
 #include <datatable.h>
 #include <bspline.h>
@@ -62,22 +64,24 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*---------------------------------------------------------------------------*\
-                        Class SteadyNSturb Declaration
+                        Class SteadyNS Declaration
 \*---------------------------------------------------------------------------*/
 
-/// Implementation of a parametrized full order <b> steady turbulent Navier Stokes problem </b> and preparation of the the reduced matrices for the online solve.
-/** In this class are implemented the methods for the offline solve of a turbulent steady NS problem and the for the generation of the reduced matrices for subsequent online solve, this class is a son
-of the reduction problem class */
-class steadyNSturb: public steadyNS
+/// Implementation of a parametrized full order <b> unsteady NS problem </b> and preparation of the the reduced matrices for the online solve.
+/** In this class are implemented the methods for the offline solve of a unsteady NS problem
+and the for the generation of the reduced matrices for subsequent online solve, this class is a son
+of the steadyNS class */
+class unsteadyNSturb: public unsteadyNS
 {
-
-
 public:
     // Constructors
-    steadyNSturb();
-    /// Construct with argc and argv
-    steadyNSturb(int argc, char *argv[]);
+    /// Construct Null
+    unsteadyNSturb();
 
+    /// Construct with argc and argv
+    unsteadyNSturb(int argc, char *argv[]);
+
+    // Specific variable for the unstationary case
     // Member Functions
     /// List of snapshots for the solution for eddy viscosity 
     PtrList<volScalarField> nutFields;
@@ -87,23 +91,22 @@ public:
 
     // Create a Rbf splines for interpolation
     std::vector<SPLINTER::DataTable*> SAMPLES;
+
     // Create a SAMPLES for interpolation
     std::vector<SPLINTER::RBFSpline*> rbfsplines;
-
-
-
+ 
     /** @name Reduced Matrices
     *
     */
     ///@{   
     //
-    /// Turbulent viscosity matrix
+    /// Turbulent viscosity term
     Eigen::MatrixXd BT_matrix;
 
-    /// Turbulent viscosity tensor
+    /// Turbulent viscosity term
     List <Eigen::MatrixXd> CT2_matrix;
 
-    /// Turbulent viscosity tensor
+    /// Turbulent viscosity term
     List <Eigen::MatrixXd> CT1_matrix;
 
     /// Total C Matrix
@@ -112,35 +115,24 @@ public:
     /// Total B Matrix
     Eigen::MatrixXd B_total_matrix;
     ///@}
+    //
 
     /// Number of viscoisty modes used for the projection
     label Nnutmodes;
 
+    
     /// Eddy viscosity field
     autoPtr<volScalarField> _nut;
-    autoPtr<volScalarField> _nuTilda;
-
-    /// @brief    Perform a truth solve
-    ///
-    void truthSolve();
 
 
-    /// Project using a supremizer approach
-    ///
-    /// @param[in]  folder     The folder used to save the reduced matrices.
-    /// @param[in]  NUmodes    The number of velocity modes.
-    /// @param[in]  NPmodes    The number of pressure modes.
-    /// @param[in]  NSUPmodes  The number of supremizer modes.
-    /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
-    ///
-    void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes, label Nnutmodes);
+
 
 
     ///
     /// @brief      BT added matrix for the turbulence treatement
     ///
-    /// @param[in]  NUmodes    The number of velocity modes.
-    /// @param[in]  NSUPmodes  The number of supremizer modes.
+    /// @param[in]  NUmodes    The N of velocity modes.s
+    /// @param[in]  NSUPmodes  The N of supremizer modes.
     ///
     /// @return     BT matrix for turbulence treatment
     ///
@@ -169,9 +161,42 @@ public:
     ///
     List < Eigen::MatrixXd > turbulence_term2(label NUmodes, label NSUPmodes, label Nnutmodes);
 
+    ///
+    /// Perform a truth solve
+    ///
+    /// @param[in]  mu_now  The mu now
+    ///
+    void truthSolve(List<scalar> mu_now);
+
+
+    ///
+    /// Project using a supremizer approach
+    ///
+    /// @param[in]  folder     The folder
+    /// @param[in]  NUmodes    The n umodes
+    /// @param[in]  NPmodes    The n pmodes
+    /// @param[in]  NSUPmodes  The nsu pmodes
+    /// @param[in]  Nnutmodes  The nnutmodes
+    ///
+    void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes, label Nnutmodes);
+    
+    ///
+    /// Project using the Poisson Equation for pressure
+    ///
+    /// @param[in]  folder     The folder
+    /// @param[in]  NUmodes    The n umodes
+    /// @param[in]  NPmodes    The n pmodes
+    /// @param[in]  NSUPmodes  The nsu pmodes
+    /// @param[in]  Nnutmodes  The nnutmodes
+    ///
+    void projectPPE(fileName folder, label NUmodes, label NPmodes, label NSUPmodes, label Nnutmodes);
+
 };
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 #endif
+
 
 
 
