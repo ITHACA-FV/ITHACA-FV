@@ -652,6 +652,160 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd 
     }
 }
 
+Eigen::MatrixXd ITHACAutilities::bsplineInterp_univar(Eigen::VectorXd origInput,
+        Eigen::MatrixXd origOutput, Eigen::VectorXd splInput, int degree)
+{
+    label nrows = origOutput.rows();
+    label ncols = origOutput.cols();
+    label ncols_intrp = splInput.size();
+    Eigen::MatrixXd splOutput(nrows, ncols_intrp);
+
+    // Looping over nrows
+    for (label i = 0; i < nrows; i++)
+    {
+        // Sampling
+        SPLINTER::DataTable samples;
+
+        for (label j = 0; j < ncols; j++)
+        {
+            samples.addSample(origInput(j), origOutput(i, j));
+        }
+
+        // Constructing the BSpline based on the sampled data
+        SPLINTER::BSpline bspline = SPLINTER::BSpline::Builder(samples).degree(
+                                        degree).build();
+
+        // Evaluate bspline model at the splInput points for the i-th row
+        for (label k = 0; k < ncols_intrp; k++)
+        {
+            SPLINTER::DenseVector x(1);
+            x(0) = splInput(k);
+            splOutput(i, k) = bspline.eval(x);
+        }
+    }
+
+    return splOutput;
+}
+
+Eigen::VectorXd ITHACAutilities::bsplineInterp_univar(Eigen::VectorXd origInput,
+        Eigen::VectorXd origOutput, Eigen::VectorXd splInput, int degree)
+{
+    label ncols = origOutput.size();
+    label ncols_intrp = splInput.size();
+    Eigen::VectorXd splOutput(ncols_intrp);
+    // Sampling
+    SPLINTER::DataTable samples;
+
+    for (label j = 0; j < ncols; j++)
+    {
+        samples.addSample(origInput(j), origOutput(j));
+    }
+
+    // Constructing the BSpline based on the sampled data
+    SPLINTER::BSpline bspline = SPLINTER::BSpline::Builder(samples).degree(
+                                    degree).build();
+
+    // Evaluate bspline model at the splInput points
+    for (label k = 0; k < ncols_intrp; k++)
+    {
+        SPLINTER::DenseVector x(1);
+        x(0) = splInput(k);
+        splOutput(k) = bspline.eval(x);
+    }
+
+    return splOutput;
+}
+
+
+Eigen::MatrixXd ITHACAutilities::bsplineInterp_bivar(Eigen::VectorXd
+        origInput_1, Eigen::VectorXd origInput_2, Eigen::MatrixXd origOutput,
+        Eigen::VectorXd splInput_1, Eigen::VectorXd splInput_2, int degree)
+{
+    label nrows = origOutput.rows();
+    label ncols_1 = origInput_1.size();
+    label ncols_2 = origInput_2.size();
+    label ncols_intrp_1 = splInput_1.size();
+    label ncols_intrp_2 = splInput_2.size();
+    Eigen::MatrixXd splOutput(nrows, ncols_intrp_1 * ncols_intrp_2);
+
+    // Looping over nrows
+    for (label i = 0; i < nrows; i++)
+    {
+        // Sampling
+        SPLINTER::DataTable samples;
+
+        for (label j = 0; j < ncols_2; j++)
+        {
+            for (label k = 0; k < ncols_1; k++)
+            {
+                SPLINTER::DenseVector x(2);
+                x(0) = origInput_1(k);
+                x(1) = origInput_2(j);
+                samples.addSample(x, origOutput(i, k + j * ncols_1));
+            }
+        }
+
+        // Constructing the BSpline based on the sampled data
+        SPLINTER::BSpline bspline = SPLINTER::BSpline::Builder(samples).degree(
+                                        degree).build();
+
+        // Evaluate bspline model at the splInput points for the i-th row
+        for (label j = 0; j < ncols_intrp_2; j++)
+        {
+            for (label k = 0; k < ncols_intrp_1; k++)
+            {
+                SPLINTER::DenseVector x(2);
+                x(0) = splInput_1(k);
+                x(1) = splInput_2(j);
+                splOutput(i, k + j * ncols_intrp_1) = bspline.eval(x);
+            }
+        }
+    }
+
+    return splOutput;
+}
+
+Eigen::VectorXd ITHACAutilities::bsplineInterp_bivar(Eigen::VectorXd
+        origInput_1, Eigen::VectorXd origInput_2, Eigen::VectorXd origOutput,
+        Eigen::VectorXd splInput_1, Eigen::VectorXd splInput_2, int degree)
+{
+    label ncols_1 = origInput_1.size();
+    label ncols_2 = origInput_2.size();
+    label ncols_intrp_1 = splInput_1.size();
+    label ncols_intrp_2 = splInput_2.size();
+    Eigen::VectorXd splOutput(ncols_intrp_1 * ncols_intrp_2);
+    // Sampling
+    SPLINTER::DataTable samples;
+
+    for (label j = 0; j < ncols_2; j++)
+    {
+        for (label k = 0; k < ncols_1; k++)
+        {
+            SPLINTER::DenseVector x(2);
+            x(0) = origInput_1(k);
+            x(1) = origInput_2(j);
+            samples.addSample(x, origOutput(k + j * ncols_1));
+        }
+    }
+
+    // Constructing the BSpline based on the sampled data
+    SPLINTER::BSpline bspline = SPLINTER::BSpline::Builder(samples).degree(
+                                    degree).build();
+
+    // Evaluate bspline model at the splInput points for the i-th row
+    for (label j = 0; j < ncols_intrp_2; j++)
+    {
+        for (label k = 0; k < ncols_intrp_1; k++)
+        {
+            SPLINTER::DenseVector x(2);
+            x(0) = splInput_1(k);
+            x(1) = splInput_2(j);
+            splOutput(k + j * ncols_intrp_1) = bspline.eval(x);
+        }
+    }
+
+    return splOutput;
+}
 
 
 

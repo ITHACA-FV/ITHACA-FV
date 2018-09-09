@@ -57,6 +57,10 @@ SourceFiles
 #include <functional>
 #include "./colormod.H"
 
+#include <datatable.h>
+#include <bspline.h>
+#include <bsplinebuilder.h>
+
 using namespace std::placeholders;
 
 #include "Foam2Eigen.H"
@@ -447,6 +451,69 @@ public:
     ///
     template<typename T>
     static Eigen::MatrixXd get_mass_matrix_Eigen(PtrList<T>& fields);
+
+        //--------------------------------------------------------------------------
+        /// Perform univariate BSpline interpolation on a row matrix of outputs, sharing same input data
+        ///
+        /// @param[in]      origInput   Coordinates where data are sampled at
+        /// @param[in]      origOutput  Row matrix set of data samples. Each row is sampled at origInput points
+        /// @param[in]      splInput    Coordinates where to interpolate the samples at
+        /// @param[in]      degree      BSpline degree
+        ///
+        /// @return         Row matrix set of interpolated data samples at the splInput points.
+        ///
+        static Eigen::MatrixXd bsplineInterp_univar(Eigen::VectorXd origInput,
+                Eigen::MatrixXd origOutput, Eigen::VectorXd splInput, int degree);
+
+        //--------------------------------------------------------------------------
+        /// Perform univariate BSpline interpolation on a vector of output data
+        ///
+        /// @param[in]      origInput   Coordinates where data are sampled at
+        /// @param[in]      origOutput  Vector of data samples corresponding to origInput points
+        /// @param[in]      splInput    Coordinates where to interpolate the samples at
+        /// @param[in]      degree      BSpline degree
+        ///
+        /// @return         Vector of interpolated data samples at the splInput points.
+        ///
+        static Eigen::VectorXd bsplineInterp_univar(Eigen::VectorXd origInput,
+                Eigen::VectorXd origOutput, Eigen::VectorXd splInput, int degree);
+
+        //--------------------------------------------------------------------------
+        /// Perform bivariate BSpline interpolation on a row matrix of outputs, sharing same 2D input data
+        ///
+        /// @param[in]      origInput_1     First Coordinates where data are sampled at. Also the
+        ///                                 fine/element iterate in the flattened matrix of samples
+        /// @param[in]      origInput_2     Second Coordinates where data are sampled at. Also the
+        ///                                 coarse/block iterate in the flattened matrix of samples
+        /// @param[in]      origOutput      Row matrix set of data samples. Each row is sampled at the 2D origInput points
+        /// @param[in]      splInput_1      First Coordinates where to interpolate the samples at
+        /// @param[in]      splInput_1      Second Coordinates where to interpolate the samples at
+        /// @param[in]      degree          BSpline degree
+        ///
+        /// @return         Row matrix set of interpolated data samples at the 2D splInput points.
+        ///
+        static Eigen::MatrixXd bsplineInterp_bivar(Eigen::VectorXd origInput_1,
+                Eigen::VectorXd origInput_2, Eigen::MatrixXd origOutput,
+                Eigen::VectorXd splInput_1, Eigen::VectorXd splInput_2, int degree);
+
+        //--------------------------------------------------------------------------
+        /// Perform bivariate BSpline interpolation on a vector of output data
+        ///
+        /// @param[in]      origInput_1     First Coordinates where data are sampled at. Also the
+        ///                                 fine/element iterate in the flattened matrix of samples
+        /// @param[in]      origInput_2     Second Coordinates where data are sampled at. Also the
+        ///                                 coarse/block iterate in the flattened matrix of samples
+        /// @param[in]      origOutput      Vector of data samples corresponding to the 2D origInput points
+        /// @param[in]      splInput_1      First Coordinates where to interpolate the samples at
+        /// @param[in]      splInput_2      Second Coordinates where to interpolate the samples at
+        /// @param[in]      degree          BSpline degree
+        ///
+        /// @return         Vector of interpolated data samples at the 2D splInput points.
+        ///
+        static Eigen::VectorXd bsplineInterp_bivar(Eigen::VectorXd origInput_1,
+                Eigen::VectorXd origInput_2, Eigen::VectorXd origOutput,
+                Eigen::VectorXd splInput_1, Eigen::VectorXd splInput_2, int degree);
+    
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
