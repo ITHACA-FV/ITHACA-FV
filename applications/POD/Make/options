@@ -27,6 +27,7 @@ EXE_INC = \
     -I../../src/ITHACAutilities \
     -I../../src/ITHACAPOD \
     -I../../src/ITHACAstream \
+    -I../../src/thirdparty/splinter/include \
     -w \
     -std=c++11
 

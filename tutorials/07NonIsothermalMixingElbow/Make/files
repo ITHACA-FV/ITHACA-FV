@@ -1,5 +1,0 @@
-06NonIsothermalMixingElbow.C
-
-
-EXE = $(FOAM_USER_APPBIN)/06NonIsothermalMixingElbow
-
