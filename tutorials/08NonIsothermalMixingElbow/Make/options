@@ -3,7 +3,6 @@ EXE_INC = \
     -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
     -I$(LIB_SRC)/transportModels \
     -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
-    -I$(LIB_SRC)/transportModels/incompressible/viscosityModels/viscosityModel \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
@@ -14,39 +13,41 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
     -I../../src/problems/reductionProblem \
-    -I../../src/problems/laplacianProblem \
     -I../../src/problems/steadyNS \
     -I../../src/problems/unsteadyNS \
-    -I../../src/problems/glassFurnace \
+    -I../../src/problems/unsteadyNST \
+    -I../../src/POD \
     -I../../src/reducedProblems/reducedProblem \
     -I../../src/reducedProblems/reducedUnsteadyNS \
+    -I../../src/reducedProblems/reducedUnsteadyNST \
     -I../../src/reducedProblems/reducedSteadyNS \
-    -I../../src/reducedProblems/reducedLaplacian \
+    -I../../src/ITHACAutilities \
+    -I../../src/ForceCoeff \
+    -I../../src/ITHACAstream \
+    -I../../src/ITHACAPOD \
     -I../../src/NonLinearSolvers \
     -I../../src/thirdparty/Eigen \
-    -I../../src/ITHACAutilities \
-    -I../../src/ITHACAPOD \
-    -I../../src/ITHACAstream \
-    -I../../src/thirdparty/spectra-0.6.1/include \
     -I../../src/Foam2Eigen \
     -I../../src/EigenFunctions \
+    -I../../src/thirdparty/spectra-0.6.1/include \
     -I../../src/thirdparty/splinter/include \
     -w \
-    -std=c++11 \
-    -DOFVER=$${WM_PROJECT_VERSION%.*}
+    -DOFVER=$${WM_PROJECT_VERSION%.*} \
+    -std=c++11
 
 EXE_LIBS = \
     -lturbulenceModels \
+    -lincompressibleTransportModels \
+    -lincompressibleTurbulenceModels \
     -lfiniteVolume \
     -lmeshTools \
     -lfvOptions \
     -lsampling \
-    -lfluidThermophysicalModels \
-    -lradiationModels \
-    -lspecie \
     -lforces \
-    -lfileFormats \
     -lITHACA-FV-Problems \
     -L$(FOAM_USER_LIBBIN) \
 
+
+ 

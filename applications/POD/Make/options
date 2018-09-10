@@ -23,6 +23,7 @@ EXE_INC = \
     -I../../src/EigenFunctions \
     -I../../src/thirdparty/Eigen \
     -I../../src/thirdparty/spectra-0.6.1/include \
+    -I../../src/thirdparty/splinter/include \
     -I../../src/thirdparty/ \
     -I../../src/ITHACAutilities \
     -I../../src/ITHACAPOD \
