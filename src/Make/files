@@ -18,6 +18,7 @@ ITHACAutilities/ITHACAforces.C
 ITHACAPOD/ITHACAPOD.C
 Foam2Eigen/Foam2Eigen.C
 EigenFunctions/EigenFunctions.C
+DEIM/DEIM.C
 thirdparty/splinter/src/bspline.C
 thirdparty/splinter/src/bsplinebasis.C
 thirdparty/splinter/src/bsplinebasis1d.C
