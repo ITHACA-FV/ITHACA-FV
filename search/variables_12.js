@@ -1,12 +1,19 @@
 var searchData=
 [
-  ['u',['U',['../classtutorial03.html#ac8f3095d6763f532a1ab2ba2503fa936',1,'tutorial03::U()'],['../classtutorial04.html#a84a66fb3ac8a6a6c0b85cfcc4341d0a8',1,'tutorial04::U()'],['../classtutorial05.html#a7c7f815162be6e356fe8b49fc9cbcb1d',1,'tutorial05::U()'],['../src_2problems_2steadyNS_2createFields_8H.html#ae4919c063fc0646445cdcafee89ebd60',1,'U():&#160;createFields.H'],['../steadyNS_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862',1,'U():&#160;pEqn.H'],['../src_2problems_2steadyNSturb_2createFields_8H.html#ae4919c063fc0646445cdcafee89ebd60',1,'U():&#160;createFields.H'],['../steadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862',1,'U():&#160;pEqn.H'],['../src_2problems_2unsteadyNS_2createFields_8H.html#ae4919c063fc0646445cdcafee89ebd60',1,'U():&#160;createFields.H'],['../unsteadyNS_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862',1,'U():&#160;pEqn.H']]],
-  ['ueqn',['UEqn',['../steadyNS_2UEqn_8H.html#aeeb518d883492fb109c93a7959833ffb',1,'UEqn():&#160;UEqn.H'],['../steadyNSturb_2UEqn_8H.html#aeeb518d883492fb109c93a7959833ffb',1,'UEqn():&#160;UEqn.H'],['../unsteadyNS_2UEqn_8H.html#aeeb518d883492fb109c93a7959833ffb',1,'UEqn():&#160;UEqn.H']]],
-  ['ufield',['Ufield',['../classsteadyNS.html#a4efe3474afaa557ad5a211631115124f',1,'steadyNS']]],
-  ['umodes',['Umodes',['../classsteadyNS.html#a9d89c2a89e63f397ec44b54d78485ba3',1,'steadyNS::Umodes()'],['../classreducedSteadyNS.html#acb99e7bdb9d75bb18a4d848b79a09786',1,'reducedSteadyNS::Umodes()']]],
-  ['uname_5f',['UName_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a1cac36aefbde06e6a369adfc7475017a',1,'Foam::functionObjects::ITHACAforces']]],
-  ['uomfield',['Uomfield',['../classsteadyNS.html#a90ad18c91dc2643525fa5197317d8cfb',1,'steadyNS']]],
-  ['urec',['UREC',['../classreducedSteadyNS.html#ade80fc6ce4032c56f11de6c5f440af66',1,'reducedSteadyNS']]],
-  ['uresidual',['uresidual',['../steadyNS_2NLsolve_8H.html#ae16ccc15605287ff9960de5be47b576c',1,'uresidual():&#160;NLsolve.H'],['../steadyNSturb_2NLsolve_8H.html#ae16ccc15605287ff9960de5be47b576c',1,'uresidual():&#160;NLsolve.H']]],
-  ['usnapshots',['Usnapshots',['../classreducedSteadyNS.html#ac4156955acf7dd3864f0e4771ebae5fa',1,'reducedSteadyNS']]]
+  ['t',['T',['../classtutorial02.html#a87a7f080f040be6a9ba99ff0c7ea50e7',1,'tutorial02::T()'],['../classtutorial06.html#a58c08a3569cd2b17877f7bf100d76a2f',1,'tutorial06::T()'],['../src_2problems_2laplacianProblem_2createFields_8H.html#ab35c96e5601691f7270cfadc745a12d3',1,'T():&#160;createFields.H']]],
+  ['t_5frec',['T_rec',['../classreducedUnsteadyNST.html#a4d5991bd661cf3950c5a28e6aa3b260e',1,'reducedUnsteadyNST']]],
+  ['tau_5fmatrix',['tau_matrix',['../classsteadyNS.html#a320421bde0f7a9346cdd86546e4a1e34',1,'steadyNS']]],
+  ['tfield',['Tfield',['../classlaplacianProblem.html#ad79501e2e6be69c1846b01d62dd8328a',1,'laplacianProblem::Tfield()'],['../classunsteadyNST.html#a2816aa022d3a6a7d50d15993b2b6a99e',1,'unsteadyNST::Tfield()']]],
+  ['theta',['theta',['../classlaplacianProblem.html#a43d9eb706296997b1cf876423e044fb3',1,'laplacianProblem']]],
+  ['time',['time',['../classreducedUnsteadyNS.html#ad69b7399b933c4b2a19fe03736c087f0',1,'reducedUnsteadyNS::time()'],['../classreducedUnsteadyNST.html#adb3116a4ab7f69d225a771bfb7cb6398',1,'reducedUnsteadyNST::time()'],['../classreducedUnsteadyNSturb.html#a747fd0e1e6df3c54349c4bd7c6b545d8',1,'reducedUnsteadyNSturb::time()']]],
+  ['timestep',['timeStep',['../classunsteadyNS.html#ade5c5f7d24b5627b08bf730e8dd867ef',1,'unsteadyNS::timeStep()'],['../classunsteadyNST.html#a649be2ac23c53d76dc40f3d67608e3bd',1,'unsteadyNST::timeStep()']]],
+  ['tmodes',['Tmodes',['../classlaplacianProblem.html#aed3481d24a6cd4ff96ffb469aedc6ba3',1,'laplacianProblem']]],
+  ['tnumber',['Tnumber',['../classreductionProblem.html#a69051f3541cecdb2f68bf8520e33837b',1,'reductionProblem']]],
+  ['tolerance',['tolerance',['../classsteadyNS.html#a5eac551eb39d6755385b17698b227670',1,'steadyNS']]],
+  ['tomfield',['Tomfield',['../classunsteadyNST.html#a5dbbf6572aff7f4d74dc9405baa32218',1,'unsteadyNST']]],
+  ['tonline',['Tonline',['../classlaplacianProblem.html#a55636a057bf8438a177d75e09f0c2c2d',1,'laplacianProblem']]],
+  ['trec',['TREC',['../classreducedUnsteadyNST.html#a06d7391c69631d8e9b3f48d76fdefa49',1,'reducedUnsteadyNST']]],
+  ['tsnapshots',['Tsnapshots',['../classreducedUnsteadyNST.html#ad2798296a3534e28f8cf04d02922fd12',1,'reducedUnsteadyNST']]],
+  ['tstart',['tstart',['../classreducedUnsteadyNS.html#aaa15bd6d26ec6a9ebbe9016bc23ffe92',1,'reducedUnsteadyNS::tstart()'],['../classreducedUnsteadyNST.html#a8009de6f8d18304f18a06e156e312467',1,'reducedUnsteadyNST::tstart()'],['../classreducedUnsteadyNSturb.html#a673a5079aa8dd4a1ba4de5c3a8dac39c',1,'reducedUnsteadyNSturb::tstart()']]],
+  ['turbulence',['turbulence',['../classsteadyNS.html#aaca30267f4ac8d166f95d08ea674cbfe',1,'steadyNS::turbulence()'],['../classunsteadyNS.html#a4814163617149be2b0d33515dcb96ec4',1,'unsteadyNS::turbulence()'],['../src_2problems_2steadyNS_2createFields_8H.html#a7eb708ed6afd5d2b8cec73f71e0ff2d4',1,'turbulence():&#160;createFields.H'],['../src_2problems_2steadyNSturb_2createFields_8H.html#a7eb708ed6afd5d2b8cec73f71e0ff2d4',1,'turbulence():&#160;createFields.H'],['../src_2problems_2unsteadyNS_2createFields_8H.html#a7eb708ed6afd5d2b8cec73f71e0ff2d4',1,'turbulence():&#160;createFields.H'],['../src_2problems_2unsteadyNST_2createFields_8H.html#a7eb708ed6afd5d2b8cec73f71e0ff2d4',1,'turbulence():&#160;createFields.H'],['../src_2problems_2unsteadyNSturb_2createFields_8H.html#a7eb708ed6afd5d2b8cec73f71e0ff2d4',1,'turbulence():&#160;createFields.H']]]
 ];

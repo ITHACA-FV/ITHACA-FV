@@ -11,6 +11,10 @@ var searchData=
   ['reducedsteadynsturb_2eh',['reducedSteadyNSturb.H',['../reducedSteadyNSturb_8H.html',1,'']]],
   ['reducedunsteadyns_2ec',['reducedUnsteadyNS.C',['../reducedUnsteadyNS_8C.html',1,'']]],
   ['reducedunsteadyns_2eh',['reducedUnsteadyNS.H',['../reducedUnsteadyNS_8H.html',1,'']]],
+  ['reducedunsteadynst_2ec',['reducedUnsteadyNST.C',['../reducedUnsteadyNST_8C.html',1,'']]],
+  ['reducedunsteadynst_2eh',['reducedUnsteadyNST.H',['../reducedUnsteadyNST_8H.html',1,'']]],
+  ['reducedunsteadynsturb_2ec',['reducedUnsteadyNSturb.C',['../reducedUnsteadyNSturb_8C.html',1,'']]],
+  ['reducedunsteadynsturb_2eh',['reducedUnsteadyNSturb.H',['../reducedUnsteadyNSturb_8H.html',1,'']]],
   ['reductionproblem_2ec',['reductionProblem.C',['../reductionProblem_8C.html',1,'']]],
   ['reductionproblem_2eh',['reductionProblem.H',['../reductionProblem_8H.html',1,'']]],
   ['reductionproblemtemplates_2ec',['reductionProblemTemplates.C',['../reductionProblemTemplates_8C.html',1,'']]]

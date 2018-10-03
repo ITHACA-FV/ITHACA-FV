@@ -98,7 +98,11 @@ Inheritance diagram for reductionProblem:</div>
 <area href="classtutorial03.html" alt="tutorial03" shape="rect" coords="242,112,353,136"/>
 <area href="classtutorial05.html" alt="tutorial05" shape="rect" coords="363,112,474,136"/>
 <area href="classunsteadyNS.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNS" shape="rect" coords="484,112,595,136"/>
-<area href="classtutorial04.html" alt="tutorial04" shape="rect" coords="484,168,595,192"/>
+<area href="classtutorial06.html" alt="tutorial06" shape="rect" coords="121,168,232,192"/>
+<area href="classtutorial04.html" alt="tutorial04" shape="rect" coords="363,168,474,192"/>
+<area href="classunsteadyNST.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNST" shape="rect" coords="484,168,595,192"/>
+<area href="classunsteadyNSturb.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNSturb" shape="rect" coords="605,168,716,192"/>
+<area href="classtutorial06.html" alt="tutorial06" shape="rect" coords="484,224,595,248"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -154,9 +158,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a721118b3bbc4db412781c6c7bdedad71"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a721118b3bbc4db412781c6c7bdedad71">computeLift</a> (<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;Lfield, <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;liftfield, <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;omfield)</td></tr>
 <tr class="memdesc:a721118b3bbc4db412781c6c7bdedad71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Homogenize the snapshot matrix, it works with PtrList of volVectorField and volScalarField.  <a href="#a721118b3bbc4db412781c6c7bdedad71">More...</a><br /></td></tr>
 <tr class="separator:a721118b3bbc4db412781c6c7bdedad71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae4c79d58a1fca9dbc817413b023880d"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aae4c79d58a1fca9dbc817413b023880d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#aae4c79d58a1fca9dbc817413b023880d">computeLiftT</a> (<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;Lfield, <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;liftfield, <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;omfield)</td></tr>
+<tr class="memdesc:aae4c79d58a1fca9dbc817413b023880d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function to compute the lifting function.  <a href="#aae4c79d58a1fca9dbc817413b023880d">More...</a><br /></td></tr>
+<tr class="separator:aae4c79d58a1fca9dbc817413b023880d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc318cab24b21ea4e96e261fb9ecc63d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#adc318cab24b21ea4e96e261fb9ecc63d">liftSolve</a> ()</td></tr>
-<tr class="memdesc:adc318cab24b21ea4e96e261fb9ecc63d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function to compute the lifting function.  <a href="#adc318cab24b21ea4e96e261fb9ecc63d">More...</a><br /></td></tr>
+<tr class="memdesc:adc318cab24b21ea4e96e261fb9ecc63d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function to compute the lifting function for scalar field.  <a href="#adc318cab24b21ea4e96e261fb9ecc63d">More...</a><br /></td></tr>
 <tr class="separator:adc318cab24b21ea4e96e261fb9ecc63d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafeabfc2c81617d6b50ba44b5b2f5540"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#aafeabfc2c81617d6b50ba44b5b2f5540">liftSolveT</a> ()</td></tr>
+<tr class="separator:aafeabfc2c81617d6b50ba44b5b2f5540"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13f8de83a6998544001ac79839b31d84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a13f8de83a6998544001ac79839b31d84">project</a> ()</td></tr>
 <tr class="memdesc:a13f8de83a6998544001ac79839b31d84"><td class="mdescLeft">&#160;</td><td class="mdescRight">General projection operation.  <a href="#a13f8de83a6998544001ac79839b31d84">More...</a><br /></td></tr>
 <tr class="separator:a13f8de83a6998544001ac79839b31d84"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,6 +203,8 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:adc1b2c7979c863816a17ddd85b040634"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXi&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#adc1b2c7979c863816a17ddd85b040634">inletIndex</a></td></tr>
 <tr class="memdesc:adc1b2c7979c863816a17ddd85b040634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix that contains informations about the inlet boundaries.  <a href="#adc1b2c7979c863816a17ddd85b040634">More...</a><br /></td></tr>
 <tr class="separator:adc1b2c7979c863816a17ddd85b040634"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06749e2d7072b18b2683df4b4b229539"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXi&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a06749e2d7072b18b2683df4b4b229539">inletIndexT</a></td></tr>
+<tr class="separator:a06749e2d7072b18b2683df4b4b229539"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">A general class for the implementation of a full order parametrized problem. </p>
@@ -383,7 +395,7 @@ template&lt;typename T , typename G &gt; </div>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a16">02thermalBlock.C</a>, and <a class="el" href="03steadyNS_8C-example.html#a15">03steadyNS.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a17">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a16">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a15">04unsteadyNS.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="reductionProblemTemplates_8C_source.html#l00045">45</a> of file <a class="el" href="reductionProblemTemplates_8C_source.html">reductionProblemTemplates.C</a>.</p>
 
@@ -531,7 +543,47 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblemTemplates_8C_source.html#l00055">55</a> of file <a class="el" href="reductionProblemTemplates_8C_source.html">reductionProblemTemplates.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblemTemplates_8C_source.html#l00054">54</a> of file <a class="el" href="reductionProblemTemplates_8C_source.html">reductionProblemTemplates.C</a>.</p>
+
+</div>
+</div>
+<a id="aae4c79d58a1fca9dbc817413b023880d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae4c79d58a1fca9dbc817413b023880d">&#9670;&nbsp;</a></span>computeLiftT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void reductionProblem::computeLiftT </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;&#160;</td>
+          <td class="paramname"><em>Lfield</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;&#160;</td>
+          <td class="paramname"><em>liftfield</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;&#160;</td>
+          <td class="paramname"><em>omfield</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Virtual function to compute the lifting function. </p>
+
+<p class="definition">Definition at line <a class="el" href="reductionProblemTemplates_8C_source.html#l00084">84</a> of file <a class="el" href="reductionProblemTemplates_8C_source.html">reductionProblemTemplates.C</a>.</p>
 
 </div>
 </div>
@@ -674,9 +726,28 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Virtual function to compute the lifting function. </p>
+<p>Virtual function to compute the lifting function for scalar field. </p>
 
 <p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00257">257</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+
+</div>
+</div>
+<a id="aafeabfc2c81617d6b50ba44b5b2f5540"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafeabfc2c81617d6b50ba44b5b2f5540">&#9670;&nbsp;</a></span>liftSolveT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reductionProblem::liftSolveT </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00263">263</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -909,6 +980,22 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a06749e2d7072b18b2683df4b4b229539"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06749e2d7072b18b2683df4b4b229539">&#9670;&nbsp;</a></span>inletIndexT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXi reductionProblem::inletIndexT</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00151">151</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+
+</div>
+</div>
 <a id="abedd4f6fb3a1a01f448ff3faba507cc6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abedd4f6fb3a1a01f448ff3faba507cc6">&#9670;&nbsp;</a></span>ITHACAdict</h2>
 
@@ -940,7 +1027,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Matrix of parameters. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a14">02thermalBlock.C</a>, and <a class="el" href="03steadyNS_8C-example.html#a13">03steadyNS.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a15">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a14">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a14">04unsteadyNS.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00086">86</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
@@ -995,7 +1082,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Boolean variable, it is 1 if the Offline phase has already been computed, else 0. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a11">02thermalBlock.C</a>, and <a class="el" href="03steadyNS_8C-example.html#a9">03steadyNS.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a11">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a9">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a9">04unsteadyNS.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00094">94</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 

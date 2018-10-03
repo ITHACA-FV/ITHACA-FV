@@ -162,9 +162,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a721118b3bbc4db412781c6c7bdedad71 inherit pub_methods_classreductionProblem"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a721118b3bbc4db412781c6c7bdedad71">computeLift</a> (<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;Lfield, <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;liftfield, <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;omfield)</td></tr>
 <tr class="memdesc:a721118b3bbc4db412781c6c7bdedad71 inherit pub_methods_classreductionProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Homogenize the snapshot matrix, it works with PtrList of volVectorField and volScalarField.  <a href="classreductionProblem.html#a721118b3bbc4db412781c6c7bdedad71">More...</a><br /></td></tr>
 <tr class="separator:a721118b3bbc4db412781c6c7bdedad71 inherit pub_methods_classreductionProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae4c79d58a1fca9dbc817413b023880d inherit pub_methods_classreductionProblem"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aae4c79d58a1fca9dbc817413b023880d inherit pub_methods_classreductionProblem"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#aae4c79d58a1fca9dbc817413b023880d">computeLiftT</a> (<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;Lfield, <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;liftfield, <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;omfield)</td></tr>
+<tr class="memdesc:aae4c79d58a1fca9dbc817413b023880d inherit pub_methods_classreductionProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function to compute the lifting function.  <a href="classreductionProblem.html#aae4c79d58a1fca9dbc817413b023880d">More...</a><br /></td></tr>
+<tr class="separator:aae4c79d58a1fca9dbc817413b023880d inherit pub_methods_classreductionProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc318cab24b21ea4e96e261fb9ecc63d inherit pub_methods_classreductionProblem"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#adc318cab24b21ea4e96e261fb9ecc63d">liftSolve</a> ()</td></tr>
-<tr class="memdesc:adc318cab24b21ea4e96e261fb9ecc63d inherit pub_methods_classreductionProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function to compute the lifting function.  <a href="classreductionProblem.html#adc318cab24b21ea4e96e261fb9ecc63d">More...</a><br /></td></tr>
+<tr class="memdesc:adc318cab24b21ea4e96e261fb9ecc63d inherit pub_methods_classreductionProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function to compute the lifting function for scalar field.  <a href="classreductionProblem.html#adc318cab24b21ea4e96e261fb9ecc63d">More...</a><br /></td></tr>
 <tr class="separator:adc318cab24b21ea4e96e261fb9ecc63d inherit pub_methods_classreductionProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafeabfc2c81617d6b50ba44b5b2f5540 inherit pub_methods_classreductionProblem"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#aafeabfc2c81617d6b50ba44b5b2f5540">liftSolveT</a> ()</td></tr>
+<tr class="separator:aafeabfc2c81617d6b50ba44b5b2f5540 inherit pub_methods_classreductionProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13f8de83a6998544001ac79839b31d84 inherit pub_methods_classreductionProblem"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a13f8de83a6998544001ac79839b31d84">project</a> ()</td></tr>
 <tr class="memdesc:a13f8de83a6998544001ac79839b31d84 inherit pub_methods_classreductionProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">General projection operation.  <a href="classreductionProblem.html#a13f8de83a6998544001ac79839b31d84">More...</a><br /></td></tr>
 <tr class="separator:a13f8de83a6998544001ac79839b31d84 inherit pub_methods_classreductionProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,6 +253,8 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:adc1b2c7979c863816a17ddd85b040634 inherit pub_attribs_classreductionProblem"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXi&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#adc1b2c7979c863816a17ddd85b040634">inletIndex</a></td></tr>
 <tr class="memdesc:adc1b2c7979c863816a17ddd85b040634 inherit pub_attribs_classreductionProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix that contains informations about the inlet boundaries.  <a href="classreductionProblem.html#adc1b2c7979c863816a17ddd85b040634">More...</a><br /></td></tr>
 <tr class="separator:adc1b2c7979c863816a17ddd85b040634 inherit pub_attribs_classreductionProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06749e2d7072b18b2683df4b4b229539 inherit pub_attribs_classreductionProblem"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXi&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a06749e2d7072b18b2683df4b4b229539">inletIndexT</a></td></tr>
+<tr class="separator:a06749e2d7072b18b2683df4b4b229539 inherit pub_attribs_classreductionProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Class to implement a full order laplacian parametrized problem. </p>
@@ -380,7 +388,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Perform a truthsolve. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a17">02thermalBlock.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a18">02thermalBlock.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="laplacianProblem_8C_source.html#l00052">52</a> of file <a class="el" href="laplacianProblem_8C_source.html">laplacianProblem.C</a>.</p>
 
@@ -426,7 +434,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Diffusivity. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a28">02thermalBlock.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a29">02thermalBlock.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="laplacianProblem_8H_source.html#l00103">103</a> of file <a class="el" href="laplacianProblem_8H_source.html">laplacianProblem.H</a>.</p>
 
@@ -463,7 +471,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Source Term. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a30">02thermalBlock.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a31">02thermalBlock.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="laplacianProblem_8H_source.html#l00101">101</a> of file <a class="el" href="laplacianProblem_8H_source.html">laplacianProblem.H</a>.</p>
 
@@ -482,7 +490,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Temperature field. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a27">02thermalBlock.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a28">02thermalBlock.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="laplacianProblem_8H_source.html#l00099">99</a> of file <a class="el" href="laplacianProblem_8H_source.html">laplacianProblem.H</a>.</p>
 
@@ -519,7 +527,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Other Variables. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a21">02thermalBlock.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a22">02thermalBlock.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="laplacianProblem_8H_source.html#l00095">95</a> of file <a class="el" href="laplacianProblem_8H_source.html">laplacianProblem.H</a>.</p>
 
@@ -556,7 +564,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Nu (diffusivity) </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a23">02thermalBlock.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a24">02thermalBlock.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="laplacianProblem_8H_source.html#l00083">83</a> of file <a class="el" href="laplacianProblem_8H_source.html">laplacianProblem.H</a>.</p>
 
@@ -575,7 +583,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>List of operators. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a32">02thermalBlock.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a33">02thermalBlock.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="laplacianProblem_8H_source.html#l00077">77</a> of file <a class="el" href="laplacianProblem_8H_source.html">laplacianProblem.H</a>.</p>
 
@@ -631,7 +639,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Theta (coefficients of the affine expansion) </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a15">02thermalBlock.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a16">02thermalBlock.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="laplacianProblem_8H_source.html#l00080">80</a> of file <a class="el" href="laplacianProblem_8H_source.html">laplacianProblem.H</a>.</p>
 

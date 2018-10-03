@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['s',['S',['../classtutorial02.html#a025667b519d7447221cea6056b13e78f',1,'tutorial02']]],
-  ['samples',['SAMPLES',['../classsteadyNSturb.html#af50e2f520aa0d296ff9de415e9926633',1,'steadyNSturb']]],
-  ['source',['source',['../classlaplacianProblem.html#abe844ac55089584af4cb7aed7792f019',1,'laplacianProblem']]],
-  ['splines',['SPLINES',['../structnewton__steadyNSturb.html#ac05b93ea7515f80dc285ad390aa810ab',1,'newton_steadyNSturb']]],
-  ['starttime',['startTime',['../classunsteadyNS.html#a963e77fca351cbb998d95845532c84fd',1,'unsteadyNS']]],
-  ['supex',['supex',['../classsteadyNS.html#a1bf99fedc2b7bffafb5dcdc1d9566596',1,'steadyNS']]],
-  ['supfield',['supfield',['../classsteadyNS.html#abf270832efeb641ba8d663a8c7c21941',1,'steadyNS']]],
-  ['supmodes',['supmodes',['../classsteadyNS.html#a0ba463d3ccb68f74c564c60986751f25',1,'steadyNS']]]
+  ['rbfsplines',['rbfsplines',['../classsteadyNSturb.html#acf2322c8f09b3557800ab3981cebc23d',1,'steadyNSturb::rbfsplines()'],['../classunsteadyNSturb.html#a5b31bdf8a7fd1d9ea54cd2787aebe537',1,'unsteadyNSturb::rbfsplines()']]],
+  ['res_5fos',['res_os',['../steadyNS_2NLsolve_8H.html#ab6fb264df463877cab0dc303a96285b9',1,'res_os():&#160;NLsolve.H'],['../steadyNSturb_2NLsolve_8H.html#ab6fb264df463877cab0dc303a96285b9',1,'res_os():&#160;NLsolve.H']]],
+  ['residual',['residual',['../steadyNS_2NLsolve_8H.html#af4cd48a0192c75c3d6f1bbe7557cc02c',1,'residual():&#160;NLsolve.H'],['../steadyNSturb_2NLsolve_8H.html#af4cd48a0192c75c3d6f1bbe7557cc02c',1,'residual():&#160;NLsolve.H']]],
+  ['rhoname_5f',['rhoName_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#acb660175cfe7082141f2e80bafe6aae8',1,'Foam::functionObjects::ITHACAforces']]],
+  ['rhoref_5f',['rhoRef_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a3171d02a62e2bef6640c063c9ba2d7b0',1,'Foam::functionObjects::ITHACAforces']]],
+  ['runtime',['runTime',['../laplacianProblem_2createTime_8H.html#a477812c93e1698f206b3c3266041d0fd',1,'runTime():&#160;createTime.H'],['../steadyNS_2createTime_8H.html#a477812c93e1698f206b3c3266041d0fd',1,'runTime():&#160;createTime.H'],['../steadyNSturb_2createTime_8H.html#a477812c93e1698f206b3c3266041d0fd',1,'runTime():&#160;createTime.H'],['../unsteadyNS_2createTime_8H.html#a477812c93e1698f206b3c3266041d0fd',1,'runTime():&#160;createTime.H'],['../unsteadyNST_2createTime_8H.html#a477812c93e1698f206b3c3266041d0fd',1,'runTime():&#160;createTime.H'],['../unsteadyNSturb_2createTime_8H.html#a477812c93e1698f206b3c3266041d0fd',1,'runTime():&#160;createTime.H']]]
 ];

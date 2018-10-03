@@ -1,15 +1,11 @@
 var searchData=
 [
-  ['t',['T',['../classtutorial02.html#a87a7f080f040be6a9ba99ff0c7ea50e7',1,'tutorial02::T()'],['../src_2problems_2laplacianProblem_2createFields_8H.html#ab35c96e5601691f7270cfadc745a12d3',1,'T():&#160;createFields.H']]],
-  ['tau_5fmatrix',['tau_matrix',['../classsteadyNS.html#a320421bde0f7a9346cdd86546e4a1e34',1,'steadyNS']]],
-  ['tfield',['Tfield',['../classlaplacianProblem.html#ad79501e2e6be69c1846b01d62dd8328a',1,'laplacianProblem']]],
-  ['theta',['theta',['../classlaplacianProblem.html#a43d9eb706296997b1cf876423e044fb3',1,'laplacianProblem']]],
-  ['time',['time',['../classreducedUnsteadyNS.html#ad69b7399b933c4b2a19fe03736c087f0',1,'reducedUnsteadyNS']]],
-  ['timestep',['timeStep',['../classunsteadyNS.html#ade5c5f7d24b5627b08bf730e8dd867ef',1,'unsteadyNS']]],
-  ['tmodes',['Tmodes',['../classlaplacianProblem.html#aed3481d24a6cd4ff96ffb469aedc6ba3',1,'laplacianProblem']]],
-  ['tnumber',['Tnumber',['../classreductionProblem.html#a69051f3541cecdb2f68bf8520e33837b',1,'reductionProblem']]],
-  ['tolerance',['tolerance',['../classsteadyNS.html#a5eac551eb39d6755385b17698b227670',1,'steadyNS']]],
-  ['tonline',['Tonline',['../classlaplacianProblem.html#a55636a057bf8438a177d75e09f0c2c2d',1,'laplacianProblem']]],
-  ['tstart',['tstart',['../classreducedUnsteadyNS.html#aaa15bd6d26ec6a9ebbe9016bc23ffe92',1,'reducedUnsteadyNS']]],
-  ['turbulence',['turbulence',['../classsteadyNS.html#aaca30267f4ac8d166f95d08ea674cbfe',1,'steadyNS::turbulence()'],['../classunsteadyNS.html#a4814163617149be2b0d33515dcb96ec4',1,'unsteadyNS::turbulence()'],['../src_2problems_2steadyNS_2createFields_8H.html#a7eb708ed6afd5d2b8cec73f71e0ff2d4',1,'turbulence():&#160;createFields.H'],['../src_2problems_2steadyNSturb_2createFields_8H.html#a7eb708ed6afd5d2b8cec73f71e0ff2d4',1,'turbulence():&#160;createFields.H'],['../src_2problems_2unsteadyNS_2createFields_8H.html#a7eb708ed6afd5d2b8cec73f71e0ff2d4',1,'turbulence():&#160;createFields.H']]]
+  ['s',['S',['../classtutorial02.html#a025667b519d7447221cea6056b13e78f',1,'tutorial02']]],
+  ['samples',['SAMPLES',['../classsteadyNSturb.html#af50e2f520aa0d296ff9de415e9926633',1,'steadyNSturb::SAMPLES()'],['../classunsteadyNSturb.html#ae6d41ae76b272ceddcec1400bac0954a',1,'unsteadyNSturb::SAMPLES()']]],
+  ['source',['source',['../classlaplacianProblem.html#abe844ac55089584af4cb7aed7792f019',1,'laplacianProblem']]],
+  ['splines',['SPLINES',['../structnewton__steadyNSturb.html#ac05b93ea7515f80dc285ad390aa810ab',1,'newton_steadyNSturb::SPLINES()'],['../structnewton__unsteadyNSturb__sup.html#a354b9730386cf240a2f1f352f9c2f96f',1,'newton_unsteadyNSturb_sup::SPLINES()'],['../structnewton__unsteadyNSturb__PPE.html#a661a2b815c9a42829e73595dffc65848',1,'newton_unsteadyNSturb_PPE::SPLINES()']]],
+  ['starttime',['startTime',['../classunsteadyNS.html#a963e77fca351cbb998d95845532c84fd',1,'unsteadyNS::startTime()'],['../classunsteadyNST.html#ab5bc0a743c8e87b29c11d36e55bb8e6f',1,'unsteadyNST::startTime()']]],
+  ['supex',['supex',['../classsteadyNS.html#a1bf99fedc2b7bffafb5dcdc1d9566596',1,'steadyNS']]],
+  ['supfield',['supfield',['../classsteadyNS.html#abf270832efeb641ba8d663a8c7c21941',1,'steadyNS']]],
+  ['supmodes',['supmodes',['../classsteadyNS.html#a0ba463d3ccb68f74c564c60986751f25',1,'steadyNS']]]
 ];
