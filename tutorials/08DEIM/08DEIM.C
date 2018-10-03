@@ -9,23 +9,22 @@
  * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
-
 License
     This file is part of ITHACA-FV
-
     ITHACA-FV is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     ITHACA-FV is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License for more details.
-
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
-
+Description
+    Example of the reconstruction of a non-linear function using the DEIM
+SourceFiles
+    08DEIM.C
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
@@ -128,3 +127,31 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+/// \dir 08DEIM Folder of the turorial 8
+/// \file 
+/// \brief Implementation of tutorial 8 for an unsteady Navier-Stokes problem
+
+/// \example 08DEIM.C
+/// \section intro_08DEIM Introduction to tutorial 8
+/// In this tutorial we implement test
+///
+/// The following image illustrates blabla
+/// \image html cylinder.png
+///
+/// \section code08 A detailed look into the code
+///
+/// In this section we explain the main steps necessary to construct the tutorial N°9
+/// 
+/// \subsection header ITHACA-FV header files
+///
+/// First of all let's have a look at the header files that need to be included and what they are responsible for.
+/// 
+/// The header files of ITHACA-FV necessary for this tutorial are: <unsteadyNS.H> for the full order unsteady NS problem,
+/// <ITHACAPOD.H> for the POD decomposition, <reducedUnsteadyNS.H> for the construction of the reduced order problem,
+/// and finally <ITHACAstream.H> for some ITHACA input-output operations.
+/// 
+/// \section plaincode The plain program
+/// Here there's the plain code
+
+
