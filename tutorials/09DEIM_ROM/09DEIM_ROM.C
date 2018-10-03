@@ -9,23 +9,22 @@
  * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
-
 License
     This file is part of ITHACA-FV
-
     ITHACA-FV is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     ITHACA-FV is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License for more details.
-
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
-
+Description
+    Example of model reduction problem using the DEIM for a Heat Transfer Problem
+SourceFiles
+    09DEIM_ROM.C
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
@@ -60,7 +59,6 @@ public:
             nu[i] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1, 2) - 2 * std::pow(yPos[i] - mu(1) - 0.5 , 2)) + 1;
         }
         nu.correctBoundaryConditions();
-
         dimensionedScalar correct
         (
             "correct",
@@ -134,11 +132,9 @@ public:
         NmodesDEIMB = readInt(ITHACAdict->lookup("N_modes_DEIM_B"));
     }
 
-    /// Temperature field
+  
     volScalarField& T;
-    /// Diffusivity field
     volScalarField& nu;
-    /// Source term field
     volScalarField& S;
 
     DEIM_function* DEIMmatrice;
@@ -147,13 +143,10 @@ public:
     std::vector<Eigen::MatrixXd> ReducedMatricesA;
     std::vector<Eigen::MatrixXd> ReducedVectorsB;
 
-
-
     int NTmodes;
     int NmodesDEIMA;
     int NmodesDEIMB;
 
-    /// Time full
     double time_full;
     double time_rom;
 
@@ -168,9 +161,7 @@ public:
             for (int i = 0; i < par.rows(); i++)
             {
                 fvScalarMatrix Teqn = DEIMmatrice->evaluate_expression(T, par.row(i));
-                // Solve
                 Teqn.solve();
-                // Export
                 Mlist.append(Teqn);
                 ITHACAutilities::exportSolution(T, "./ITHACAoutput/" + Folder, name(i + 1));
                 Tfield.append(T);
@@ -187,13 +178,11 @@ public:
         for (int i = 0; i < par.rows(); i++)
         {
             fvScalarMatrix Teqn = DEIMmatrice->evaluate_expression(T, par.row(i));
-            // Solve
             t1 = std::chrono::high_resolution_clock::now();
             Teqn.solve();
             t2 = std::chrono::high_resolution_clock::now();
             time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
             time_full += time_span.count();
-            // Export
             ITHACAutilities::exportSolution(T, "./ITHACAoutput/" + Folder, name(i + 1));
             Tfield.append(T);
         }
@@ -254,32 +243,32 @@ public:
 
 int main(int argc, char *argv[])
 {
-    /// Construct the case
+    // Construct the case
     DEIMlaplacian example(argc, argv);
 
-    /// Create the offline parameters for the solve
+    // Create the offline parameters for the solve
     example.mu = ITHACAutilities::rand(100, 2, -0.5, 0.5);
 
-    /// Solve the offline problem to compute the snapshots for the projections
+    // Solve the offline problem to compute the snapshots for the projections
     example.OfflineSolve(example.mu, "Offline");
 
-    /// Compute the POD modes
+    // Compute the POD modes
     ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.podex, 0, 0, 20);
 
-    /// Compute the offline part of the DEIM procedure
+    // Compute the offline part of the DEIM procedure
     example.PODDEIM();
 
-    /// Construct a new set of parameters
+    // Construct a new set of parameters
     Eigen::MatrixXd par_new1 = ITHACAutilities::rand(100, 2, -0.5, 0.5);
 
-    /// Solve the online problem with the new parameters
+    // Solve the online problem with the new parameters
     example.OnlineSolve(par_new1, "Online_red");
 
-    /// Solve a new full problem with the new parameters (necessary to compute speed up and error)
+    // Solve a new full problem with the new parameters (necessary to compute speed up and error)
     DEIMlaplacian example_new(argc, argv);
     example_new.OnlineSolveFull(par_new1, "Online_full");
 
-    /// Output some infos
+    // Output some infos
     std::cout << std::endl << "The FOM Solve took: " << example_new.time_full  << " seconds." << std::endl;
     std::cout << std::endl << "The ROM Solve took: " << example.time_rom  << " seconds." << std::endl;
     std::cout << std::endl << "The Speed-up is: " << example_new.time_full / example.time_rom  << std::endl << std::endl;
@@ -288,7 +277,34 @@ int main(int argc, char *argv[])
 
     std::cout << "The mean L2 error is: " << error.mean() << std::endl;
 
-
-
     exit(0);
 }
+
+/// \dir 09DEIM_ROM Folder of the turorial 9
+/// \file 
+/// \brief Implementation of tutorial 9 for an unsteady Navier-Stokes problem
+
+/// \example 09DEIM_ROM.C
+/// \section intro_09DEIM_ROM Introduction to tutorial 9
+/// In this tutorial we implement test
+///
+/// The following image illustrates blabla
+/// \image html cylinder.png
+///
+/// \section code09 A detailed look into the code
+///
+/// In this section we explain the main steps necessary to construct the tutorial N°9
+/// 
+/// \subsection header ITHACA-FV header files
+///
+/// First of all let's have a look at the header files that need to be included and what they are responsible for.
+/// 
+/// The header files of ITHACA-FV necessary for this tutorial are: <unsteadyNS.H> for the full order unsteady NS problem,
+/// <ITHACAPOD.H> for the POD decomposition, <reducedUnsteadyNS.H> for the construction of the reduced order problem,
+/// and finally <ITHACAstream.H> for some ITHACA input-output operations.
+/// 
+/// \section plaincode The plain program
+/// Here there's the plain code
+/// 
+
+
