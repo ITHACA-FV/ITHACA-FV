@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['while',['while',['../steadyNS_2NLsolve_8H.html#ab3054d40c4b392345c99955e3511789e',1,'while(simple.loop() &amp;&amp;residual &gt; tolerance):&#160;NLsolve.H'],['../steadyNS_2pEqn_8H.html#a80a1a15f423dbb405b1a80b4354d5793',1,'while(simple.correctNonOrthogonal()):&#160;pEqn.H'],['../unsteadyNS_2NLsolve_8H.html#a8d2d515e1fd5d81dbe4aa0df7b7749dd',1,'while(runTime.run()):&#160;NLsolve.H'],['../unsteadyNS_2pEqn_8H.html#ab13470e79e249d04c443bf59be9ff31d',1,'while(pimple.correctNonOrthogonal()):&#160;pEqn.H']]],
-  ['writeevery',['writeEvery',['../classunsteadyNS.html#ae472c4559e86168553b7300f7f79e44b',1,'unsteadyNS']]],
-  ['writemu',['writeMu',['../classreductionProblem.html#a190ccbfacec0dc99a55f4324f48f4c99',1,'reductionProblem']]]
+  ['values',['values',['../classnewton__argument.html#aff62a840303fc1397e5057981494f374',1,'newton_argument']]],
+  ['valuesatcompiletime',['ValuesAtCompileTime',['../classnewton__argument.html#a341713196d03fab64ef1debcdb45c634a80cdf1b7794fe40e71871c91ea4e8049',1,'newton_argument']]],
+  ['valuetype',['ValueType',['../classnewton__argument.html#a0e3b2179dc299a52383989e6f8fdd286',1,'newton_argument']]],
+  ['vectorize',['vectorize',['../classEigenFunctions.html#ab96ee3dbee53e86afc6f34c9cfe6f36c',1,'EigenFunctions']]],
+  ['vectortodensevector',['vectorToDenseVector',['../namespaceSPLINTER.html#a6bef743c45d103474ed294dc29724f5b',1,'SPLINTER']]],
+  ['vectorvectortodensematrix',['vectorVectorToDenseMatrix',['../namespaceSPLINTER.html#a542e026907501d0170a82d363e2a6307',1,'SPLINTER']]]
 ];

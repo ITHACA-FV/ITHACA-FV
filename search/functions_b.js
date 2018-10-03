@@ -1,5 +1,10 @@
 var searchData=
 [
-  ['offlinesolve',['offlineSolve',['../classtutorial02.html#a0b174fe05d81e9900fa26e14f36f4eea',1,'tutorial02::offlineSolve()'],['../classtutorial03.html#a41a2601617d4770355c53c3b50f2692e',1,'tutorial03::offlineSolve()'],['../classtutorial04.html#a77204ed6266f44aad66503d46b81b917',1,'tutorial04::offlineSolve()']]],
-  ['operator_28_29',['operator()',['../classnewton__argument.html#ae9ac684e53c3ec637b2ae35bbe16853c',1,'newton_argument::operator()()'],['../structnewton__steadyNS.html#a82968a835efcd079ba1d47b11867a406',1,'newton_steadyNS::operator()()'],['../structnewton__unsteadyNS__sup.html#ad957f56473e68e371c9b12fe973c3dbc',1,'newton_unsteadyNS_sup::operator()()'],['../structnewton__unsteadyNS__PPE.html#a16ce6ee2dcf55ad0d9743bdd3273ecd7',1,'newton_unsteadyNS_PPE::operator()()']]]
+  ['l2norm',['L2norm',['../classITHACAutilities.html#ac55995f882c098eedd705faa97ee9764',1,'ITHACAutilities::L2norm(volScalarField field)'],['../classITHACAutilities.html#aeda82c812f044220514135c545ef2af7',1,'ITHACAutilities::L2norm(volVectorField field)']]],
+  ['laplacian_5fpressure',['laplacian_pressure',['../classsteadyNS.html#adce6c14ad56c3c733e9c6dc84fdf2a20',1,'steadyNS']]],
+  ['laplacianproblem',['laplacianProblem',['../classlaplacianProblem.html#a7b70e752393c730c39ff25c4fb0ddbec',1,'laplacianProblem::laplacianProblem()'],['../classlaplacianProblem.html#a65fc85de11e796ab5c033a661febba29',1,'laplacianProblem::laplacianProblem(int argc, char *argv[])']]],
+  ['lfvmatrix2lsm',['LFvMatrix2LSM',['../classFoam2Eigen.html#a1b0166d89fff0e69e28dfe9635742c4a',1,'Foam2Eigen']]],
+  ['liftsolve',['liftSolve',['../classreductionProblem.html#adc318cab24b21ea4e96e261fb9ecc63d',1,'reductionProblem::liftSolve()'],['../classsteadyNS.html#af11a2fa8637db86b8b129ee9d84de091',1,'steadyNS::liftSolve()'],['../classunsteadyNST.html#aceefbecc9fdba66a2cac147c9a88b4d4',1,'unsteadyNST::liftSolve()']]],
+  ['liftsolvet',['liftSolveT',['../classreductionProblem.html#aafeabfc2c81617d6b50ba44b5b2f5540',1,'reductionProblem::liftSolveT()'],['../classunsteadyNST.html#affb4ce927a3e6409728a8b64c793dd8f',1,'unsteadyNST::liftSolveT()']]],
+  ['linspace',['linspace',['../namespaceSPLINTER.html#aae6b9c8badd4fbc550698791bf98941a',1,'SPLINTER']]]
 ];

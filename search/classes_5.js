@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['steadyns',['steadyNS',['../classsteadyNS.html',1,'']]]
+  ['modifier',['Modifier',['../classColor_1_1Modifier.html',1,'Color']]]
 ];

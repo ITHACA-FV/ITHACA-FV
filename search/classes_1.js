@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['laplacianproblem',['laplacianProblem',['../classlaplacianProblem.html',1,'']]]
+  ['eigenfunctions',['EigenFunctions',['../classEigenFunctions.html',1,'']]]
 ];

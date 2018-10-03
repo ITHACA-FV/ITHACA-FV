@@ -1,12 +1,16 @@
 var searchData=
 [
-  ['u',['U',['../classtutorial03.html#ac8f3095d6763f532a1ab2ba2503fa936',1,'tutorial03::U()'],['../classtutorial04.html#a84a66fb3ac8a6a6c0b85cfcc4341d0a8',1,'tutorial04::U()'],['../src_2problems_2steadyNS_2createFields_8H.html#ae4919c063fc0646445cdcafee89ebd60',1,'U():&#160;createFields.H'],['../steadyNS_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862',1,'U():&#160;pEqn.H'],['../src_2problems_2unsteadyNS_2createFields_8H.html#ae4919c063fc0646445cdcafee89ebd60',1,'U():&#160;createFields.H'],['../unsteadyNS_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862',1,'U():&#160;pEqn.H']]],
-  ['ueqn',['UEqn',['../steadyNS_2UEqn_8H.html#aeeb518d883492fb109c93a7959833ffb',1,'UEqn():&#160;UEqn.H'],['../unsteadyNS_2UEqn_8H.html#aeeb518d883492fb109c93a7959833ffb',1,'UEqn():&#160;UEqn.H']]],
-  ['ufield',['Ufield',['../classsteadyNS.html#a4efe3474afaa557ad5a211631115124f',1,'steadyNS']]],
-  ['umodes',['Umodes',['../classsteadyNS.html#a9d89c2a89e63f397ec44b54d78485ba3',1,'steadyNS::Umodes()'],['../classreducedSteadyNS.html#acb99e7bdb9d75bb18a4d848b79a09786',1,'reducedSteadyNS::Umodes()']]],
-  ['uomfield',['Uomfield',['../classsteadyNS.html#a90ad18c91dc2643525fa5197317d8cfb',1,'steadyNS']]],
-  ['urec',['UREC',['../classreducedSteadyNS.html#ade80fc6ce4032c56f11de6c5f440af66',1,'reducedSteadyNS']]],
-  ['uresidual',['uresidual',['../steadyNS_2NLsolve_8H.html#ae16ccc15605287ff9960de5be47b576c',1,'NLsolve.H']]],
-  ['uresidual_5fv',['uresidual_v',['../steadyNS_2NLsolve_8H.html#a986237fa1091d70a2eba5bcfdd83e89e',1,'NLsolve.H']]],
-  ['usnapshots',['Usnapshots',['../classreducedSteadyNS.html#ac4156955acf7dd3864f0e4771ebae5fa',1,'reducedSteadyNS']]]
+  ['s',['S',['../classtutorial02.html#a025667b519d7447221cea6056b13e78f',1,'tutorial02']]],
+  ['samples',['SAMPLES',['../classsteadyNSturb.html#af50e2f520aa0d296ff9de415e9926633',1,'steadyNSturb::SAMPLES()'],['../classunsteadyNSturb.html#ae6d41ae76b272ceddcec1400bac0954a',1,'unsteadyNSturb::SAMPLES()']]],
+  ['sizem',['sizeM',['../classDEIM.html#a6ed7c28e3558393275ab7d1dd86bc100',1,'DEIM']]],
+  ['snapshotsmatrix',['SnapShotsMatrix',['../classDEIM.html#a773f34cbd0ae0f776ed166a93d504f9b',1,'DEIM']]],
+  ['source',['source',['../classDEIM.html#aaa49d9b41f47151d5daa740ab4ee63b9',1,'DEIM::source()'],['../classlaplacianProblem.html#abe844ac55089584af4cb7aed7792f019',1,'laplacianProblem::source()']]],
+  ['splines',['SPLINES',['../structnewton__steadyNSturb.html#ac05b93ea7515f80dc285ad390aa810ab',1,'newton_steadyNSturb::SPLINES()'],['../structnewton__unsteadyNSturb__sup.html#a354b9730386cf240a2f1f352f9c2f96f',1,'newton_unsteadyNSturb_sup::SPLINES()'],['../structnewton__unsteadyNSturb__PPE.html#a661a2b815c9a42829e73595dffc65848',1,'newton_unsteadyNSturb_PPE::SPLINES()']]],
+  ['starttime',['startTime',['../classunsteadyNS.html#a963e77fca351cbb998d95845532c84fd',1,'unsteadyNS::startTime()'],['../classunsteadyNST.html#ab5bc0a743c8e87b29c11d36e55bb8e6f',1,'unsteadyNST::startTime()']]],
+  ['submeshlist',['submeshList',['../classDEIM.html#a97e6c443cadc79621915a1cb35bb8a13',1,'DEIM']]],
+  ['submeshlista',['submeshListA',['../classDEIM.html#a0afb8050d1112895c12145df33b297cd',1,'DEIM']]],
+  ['submeshlistb',['submeshListB',['../classDEIM.html#a84098aaadfa42aa8df93d3aeed96be86',1,'DEIM']]],
+  ['supex',['supex',['../classsteadyNS.html#a1bf99fedc2b7bffafb5dcdc1d9566596',1,'steadyNS']]],
+  ['supfield',['supfield',['../classsteadyNS.html#abf270832efeb641ba8d663a8c7c21941',1,'steadyNS']]],
+  ['supmodes',['supmodes',['../classsteadyNS.html#a0ba463d3ccb68f74c564c60986751f25',1,'steadyNS']]]
 ];
