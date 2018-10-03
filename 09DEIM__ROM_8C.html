@@ -83,6 +83,9 @@ $(function() {
 <div class="title">09DEIM_ROM.C File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Implementation of tutorial 9 for an unsteady Navier-Stokes problem.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;fvCFD.H&quot;</code><br />
 <code>#include &quot;IOmanip.H&quot;</code><br />
 <code>#include &quot;fvOptions.H&quot;</code><br />
@@ -114,7 +117,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="09DEIM__ROM_8C.html#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])</td></tr>
 <tr class="separator:a0ddf1224851353fc92bfbff6f499fa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p class="">Implementation of tutorial 9 for an unsteady Navier-Stokes problem. </p>
+
+<p class="definition">Definition in file <a class="el" href="09DEIM__ROM_8C_source.html">09DEIM_ROM.C</a>.</p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a0ddf1224851353fc92bfbff6f499fa97"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0ddf1224851353fc92bfbff6f499fa97">&#9670;&nbsp;</a></span>main()</h2>
 
@@ -140,17 +147,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p class="">Construct the case</p>
-<p class="">Create the offline parameters for the solve</p>
-<p class="">Solve the offline problem to compute the snapshots for the projections</p>
-<p class="">Compute the POD modes</p>
-<p class="">Compute the offline part of the <a class="el" href="classDEIM.html">DEIM</a> procedure</p>
-<p class="">Construct a new set of parameters</p>
-<p class="">Solve the online problem with the new parameters</p>
-<p class="">Solve a new full problem with the new parameters (necessary to compute speed up and error)</p>
-<p class="">Output some infos </p>
-
-<p class="definition">Definition at line <a class="el" href="09DEIM__ROM_8C_source.html#l00255">255</a> of file <a class="el" href="09DEIM__ROM_8C_source.html">09DEIM_ROM.C</a>.</p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="09DEIM_ROM_8C-example.html#a58">09DEIM_ROM.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="09DEIM__ROM_8C_source.html#l00244">244</a> of file <a class="el" href="09DEIM__ROM_8C_source.html">09DEIM_ROM.C</a>.</p>
 
 </div>
 </div>
