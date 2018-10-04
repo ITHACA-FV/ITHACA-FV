@@ -9,7 +9,7 @@ var searchData=
   ['readdensematrixlist',['ReadDenseMatrixList',['../classITHACAstream.html#a0b8ce677121762a0d9799ff5e196d25b',1,'ITHACAstream']]],
   ['readmatrix',['readMatrix',['../classITHACAstream.html#a1b1605dfbed6b82596cbf7749dd6b182',1,'ITHACAstream::readMatrix(word filename)'],['../classITHACAstream.html#aa259fffbddd2f4a42cc3a4a76f839ef6',1,'ITHACAstream::readMatrix(word folder, word mat_name)']]],
   ['readsparsematrix',['ReadSparseMatrix',['../classITHACAstream.html#adfd305d55760cc15eb90766890d5db5d',1,'ITHACAstream']]],
-  ['readsparsematrixlist',['ReadSparseMatrixList',['../classITHACAstream.html#a28365009d0d73500cbf65b39a6280f69',1,'ITHACAstream']]],
+  ['readsparsematrixlist',['ReadSparseMatrixList',['../classITHACAstream.html#acc3e6122d4b3086e99706fc568dab56f',1,'ITHACAstream']]],
   ['reconstruct',['reconstruct',['../classreducedLaplacian.html#a08d24fc8d8ba4a0fb5481c5cf8f40029',1,'reducedLaplacian']]],
   ['reconstruct_5ffrom_5fmatrix',['reconstruct_from_matrix',['../classreductionProblem.html#a42eda6f52676143bf5c7216a3fd04ddd',1,'reductionProblem::reconstruct_from_matrix(PtrList&lt; volVectorField &gt; &amp;rec_field2, PtrList&lt; volVectorField &gt; &amp;modes, label Nmodes, Eigen::MatrixXd coeff_matrix)'],['../classreductionProblem.html#ac8f0cfd2d6835d4fdb5ed1e6e825b6df',1,'reductionProblem::reconstruct_from_matrix(PtrList&lt; volScalarField &gt; &amp;rec_field2, PtrList&lt; volScalarField &gt; &amp;modes, label Nmodes, Eigen::MatrixXd coeff_matrix)']]],
   ['reconstruct_5fliftanddrag',['reconstruct_LiftandDrag',['../classreducedSteadyNS.html#a652184d49a977f58a0fbe23655740cb8',1,'reducedSteadyNS']]],
