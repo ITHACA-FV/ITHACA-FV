@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 License
@@ -37,52 +37,52 @@ SourceFiles
 
 class tutorial04: public unsteadyNS
 {
-public:
-    explicit tutorial04(int argc, char *argv[])
-        :
-        unsteadyNS(argc, argv),
-        U(_U()),
-        p(_p())
-    {}
+    public:
+        explicit tutorial04(int argc, char* argv[])
+            :
+            unsteadyNS(argc, argv),
+            U(_U()),
+            p(_p())
+        {}
 
-    // Fields To Perform
-    volVectorField& U;
-    volScalarField& p;
+        // Fields To Perform
+        volVectorField& U;
+        volScalarField& p;
 
-    void offlineSolve()
-    {
-        Vector<double> inl(0, 0, 0);
-        label BCind = 1;
-        List<scalar> mu_now(1);
-        Info << "here" << endl;
-        if (offline)
+        void offlineSolve()
         {
-            ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-            ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-        }
-        else
-        {
-            for (label i = 0; i < mu.cols(); i++)
+            Vector<double> inl(0, 0, 0);
+            label BCind = 1;
+            List<scalar> mu_now(1);
+            Info << "here" << endl;
+
+            if (offline)
             {
-                inl[0] = mu(0, i);
-                mu_now[0] = mu(0, i);
-                //assignBC(U, BCind, inl);
-                assignIF(U, inl);
-                change_viscosity( mu(0, i));
-                truthSolve(mu_now);
+                ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+                ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+            }
+            else
+            {
+                for (label i = 0; i < mu.cols(); i++)
+                {
+                    inl[0] = mu(0, i);
+                    mu_now[0] = mu(0, i);
+                    //assignBC(U, BCind, inl);
+                    assignIF(U, inl);
+                    change_viscosity( mu(0, i));
+                    truthSolve(mu_now);
+                }
             }
         }
-    }
 };
 
 /*---------------------------------------------------------------------------*\
                                Starting the MAIN
 \*---------------------------------------------------------------------------*/
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     // Construct the tutorial04 object
     tutorial04 example(argc, argv);
-
     // Read parameters from ITHACAdict file
     ITHACAparameters para;
     int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
@@ -91,8 +91,6 @@ int main(int argc, char *argv[])
     int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
     int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
     int NmodesSUPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
-
-
     /// Set the number of parameters
     example.Pnumber = 1;
     /// Set samples
@@ -104,45 +102,37 @@ int main(int argc, char *argv[])
     example.mu_range(0, 1) = 0.01;
     // Generate equispaced samples inside the parameter range
     example.genEquiPar();
-
     // Set the inlet boundaries where we have non homogeneous boundary conditions
     example.inletIndex.resize(1, 2);
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
-
     // Time parameters
     example.startTime = 0;
     example.finalTime = 20;
     example.timeStep = 0.01;
     example.writeEvery = 1.0;
-
     // Perform The Offline Solve;
     example.offlineSolve();
-
     // Solve the supremizer problem
     example.solvesupremizer();
-
     // Search the lift function
     example.liftSolve();
-
     // Create homogeneous basis functions for velocity
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
-    
     // Perform a POD decomposition for velocity and pressure
-    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0, NmodesUout);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0, NmodesPout);
-    ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex, example.supex, 1, NmodesSUPout);
-
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0,
+                        NmodesUout);
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
+                        NmodesPout);
+    ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex,
+                        example.supex, 1, NmodesSUPout);
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
-    
     reducedUnsteadyNS reduced(example);
-
     // Set values of the reduced stuff
     reduced.nu = 0.055;
     reduced.tstart = 0;
     reduced.finalTime = 15;
     reduced.dt = 0.01;
-
     // Set the online velocity
     Eigen::MatrixXd vel_now(1, 1);
     vel_now(0, 0) = 2;
@@ -156,7 +146,7 @@ int main(int argc, char *argv[])
 
 
 /// \dir 04unsteadyNS Folder of the turorial 4
-/// \file 
+/// \file
 /// \brief Implementation of tutorial 4 for an unsteady Navier-Stokes problem
 
 /// \example 04unsteadyNS.C
@@ -172,51 +162,51 @@ int main(int argc, char *argv[])
 /// \section code04 A detailed look into the code
 ///
 /// In this section we explain the main steps necessary to construct the tutorial N°4
-/// 
+///
 /// \subsection header ITHACA-FV header files
 ///
 /// First of all let's have a look at the header files that need to be included and what they are responsible for.
-/// 
+///
 /// The header files of ITHACA-FV necessary for this tutorial are: <unsteadyNS.H> for the full order unsteady NS problem,
 /// <ITHACAPOD.H> for the POD decomposition, <reducedUnsteadyNS.H> for the construction of the reduced order problem,
 /// and finally <ITHACAstream.H> for some ITHACA input-output operations.
-/// 
+///
 /// \dontinclude 04unsteadyNS.C
 /// \skip unsteadyNS
 /// \until ITHACAstream
-/// 
+///
 /// \subsection classtutorial04 Definition of the tutorial04 class
-/// 
+///
 /// We define the tutorial04 class as a child of the unsteadyNS class.
 /// The constructor is defined with members that are the fields need to be manipulated
 /// during the resolution of the full order problem using pimpleFoam. Such fields are
 /// also initialized with the same initial conditions in the solver.
 /// \skipline tutorial04
 /// \until {}
-/// 
+///
 /// Inside the tutorial04 class we define the offlineSolve method according to the
 /// specific parametrized problem that needs to be solved. If the offline solve has
 /// been previously performed then the method just reads the existing snapshots from the Offline directory.
 /// Otherwise it loops over all the parameters, changes the system viscosity with the iterable parameter
 /// then performs the offline solve.
-/// 
+///
 /// \skipline offlineSolve
 /// \until }
 /// \skipline else
 /// \until }
 /// \skipline }
 /// \skipline }
-/// 
+///
 /// We note that in the commented line we show that it is possible to parametrize the boundary conditions.
 /// For further details we refer to the classes: reductionProblem, and unsteadyNS.
 ///
 /// \subsection main Definition of the main function
-/// 
+///
 /// In this section we show the definition of the main function.
 /// First we construct the object "example" of type tutorial04:
-/// 
+///
 /// \skipline example
-/// 
+///
 /// Then we parse the ITHACAdict file to determine the number of modes
 /// to be written out and also the ones to be used for projection of
 /// the velocity, pressure, and the supremizer:
@@ -253,11 +243,11 @@ int main(int argc, char *argv[])
 /// Now we are ready to perform the offline stage:
 ///
 /// \skipline Solve()
-/// 
+///
 /// and to solve the supremizer problem:
 ///
 /// \skipline supremizer()
-/// 
+///
 /// In order to search and compute the lifting function (which should be a step function of value
 /// equals to the unitary inlet velocity), we perform the following:
 ///
@@ -268,18 +258,18 @@ int main(int argc, char *argv[])
 /// \skipline computeLift
 ///
 /// After that, the modes for velocity, pressure and supremizers are obtained:
-/// 
+///
 /// \skipline getModes
 /// \until supfield
-/// 
+///
 /// then the projection onto the POD modes is performed with:
-/// 
+///
 /// \skipline projectSUP
-/// 
+///
 /// Now that we obtained all the necessary information from the POD decomposition and the reduced matrices,
-/// we are now ready to construct the dynamical system for the reduced order model (ROM). We proceed 
+/// we are now ready to construct the dynamical system for the reduced order model (ROM). We proceed
 /// by constructing the object "reduced" of type reducedUnsteadyNS:
-/// 
+///
 /// \skipline reducedUnsteadyNS
 ///
 /// And then we can use the new constructed ROM to perform the online procedure, from which we can simulate the
@@ -303,8 +293,8 @@ int main(int argc, char *argv[])
 /// We note that all the previous evaluations of the pressure were based on the supremizers approach.
 /// We can also use the Pressure Poisson Equation (PPE) instead of SUP so as to be implemented for the
 /// projections, the online solve, and the fields reconstructions.
-/// 
-/// 
+///
+///
 /// \section plaincode The plain program
 /// Here there's the plain code
-/// 
+///

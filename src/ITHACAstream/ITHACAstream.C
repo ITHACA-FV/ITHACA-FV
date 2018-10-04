@@ -41,33 +41,40 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
-void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder, word fieldname)
+void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder,
+                                word fieldname)
 {
     for (label j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
     }
+
     ITHACAutilities::createSymLink(folder);
 }
 
-void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder, word fieldname)
+void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder,
+                                word fieldname)
 {
     for (label j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
     }
+
     ITHACAutilities::createSymLink(folder);
 }
 
-void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo, word folder)
+void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
+                                word folder)
 {
     mkDir(folder);
     word est;
+
     if (tipo == "python")
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
         str << Name << "=np.array([";
+
         for (label i = 0; i < matrice.rows(); i++)
         {
             for (label j = 0; j < matrice.cols(); j++)
@@ -81,29 +88,35 @@ void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo, 
                     str << "," << setprecision(10) << matrice(i, j);
                 }
             }
+
             if (i != (matrice.rows() - 1))
             {
                 str << "]," << endl;
             }
         }
+
         str << "]])" << endl;
     }
+
     if (tipo == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
         str << Name << "=[";
+
         for (label i = 0; i < matrice.rows(); i++)
         {
             for (label j = 0; j < matrice.cols(); j++)
             {
                 str << " " << setprecision(10) << matrice(i, j);
             }
+
             if (i != (matrice.rows() - 1))
             {
                 str << ";" << endl;
             }
         }
+
         str << "];" << endl;
     }
 
@@ -115,10 +128,10 @@ void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo, 
         ofs << matrice << std::endl;
         ofs.close();
     }
-
 }
 
-void ITHACAstream::exportMatrix(List < Eigen::MatrixXd > & matrice, word Name, word tipo, word folder)
+void ITHACAstream::exportMatrix(List < Eigen::MatrixXd >& matrice, word Name,
+                                word tipo, word folder)
 {
     mkDir(folder);
     word est;
@@ -128,10 +141,13 @@ void ITHACAstream::exportMatrix(List < Eigen::MatrixXd > & matrice, word Name, w
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
-        str << Name <<  "=np.zeros([" << matrice.size() << "," << matrice[0].rows() << "," << matrice[0].cols() << "])\n";
+        str << Name <<  "=np.zeros([" << matrice.size() << "," << matrice[0].rows() <<
+            "," << matrice[0].cols() << "])\n";
+
         for (label i = 0; i < matrice.size(); i++)
         {
             str << Name << "[" << i << ",:,:]=np.array([";
+
             for (label j = 0; j < matrice[0].rows(); j++)
             {
                 for (label k = 0; k < matrice[0].cols(); k++)
@@ -145,34 +161,39 @@ void ITHACAstream::exportMatrix(List < Eigen::MatrixXd > & matrice, word Name, w
                         str << "," << setprecision(10) << matrice[i](j, k);
                     }
                 }
+
                 if (j != (matrice[0].rows() - 1))
                 {
                     str << "]," << endl;
                 }
             }
+
             str << "]])\n" << endl;
         }
     }
-
     // Matlab case
     else if (tipo == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
+
         for (label i = 0; i < matrice.size(); i++)
         {
             str << Name << "(" << i + 1 << ",:,:)=[";
+
             for (label j = 0; j < matrice[0].rows(); j++)
             {
                 for (label k = 0; k < matrice[0].cols(); k++)
                 {
                     str << " " << setprecision(10) << matrice[i](j, k);
                 }
+
                 if (j != (matrice[0].rows() - 1))
                 {
                     str << ";" << endl;
                 }
             }
+
             str << "];" << endl;
         }
     }
@@ -183,18 +204,19 @@ void ITHACAstream::exportMatrix(List < Eigen::MatrixXd > & matrice, word Name, w
             word Namei = Name + name(i);
             ITHACAstream::exportMatrix(matrice[i], Namei, "eigen", folder);
         }
-
     }
 }
 
 List< Eigen::MatrixXd > ITHACAstream::readMatrix(word folder, word mat_name)
 {
     int file_count = 0;
-    DIR * dirp;
-    struct dirent * entry;
+    DIR* dirp;
+    struct dirent* entry;
     dirp = opendir(folder.c_str());
     List <Eigen::MatrixXd > result;
-    while ((entry = readdir(dirp)) != NULL) {
+
+    while ((entry = readdir(dirp)) != NULL)
+    {
         if (entry->d_type == DT_REG)
         {
             file_count++;
@@ -209,42 +231,48 @@ List< Eigen::MatrixXd > ITHACAstream::readMatrix(word folder, word mat_name)
         Eigen::MatrixXd temp = readMatrix(matname);
         result.append(temp);
     }
-    return result;
 
+    return result;
 }
 
 Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
 {
     int cols = 0, rows = 0;
     double buff[MAXBUFSIZE];
-
     // Read numbers from file into buffer.
     ifstream infile;
     infile.open(filename.c_str());
+
     while (! infile.eof())
     {
         string line;
         getline(infile, line);
-
         int temp_cols = 0;
         std::stringstream stream(line);
+
         while (! stream.eof())
+        {
             stream >> buff[cols * rows + temp_cols++];
+        }
 
         if (temp_cols == 0)
+        {
             continue;
+        }
 
         if (cols == 0)
+        {
             cols = temp_cols;
+        }
 
         rows++;
     }
+
     infile.close();
-
     rows--;
-
     // Populate matrix with numbers.
     Eigen::MatrixXd result(rows, cols);
+
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
@@ -252,17 +280,17 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
             result(i, j) = buff[ cols * i + j ];
         }
     }
+
     return result;
 }
 
-void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name, fileName casename, label first_snap, label n_snap)
+void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name,
+                               fileName casename, label first_snap, label n_snap)
 {
     Info << "######### Reading the Data for " << Name << " #########" << endl;
     fileName rootpath(".");
     label last_s;
-
     Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-
     fvMesh mesh
     (
         Foam::IOobject
@@ -276,7 +304,8 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name, fileN
 
     if (first_snap >= runTime2.times().size())
     {
-        Info << "Error the index of the first snapshot must be smaller than the number of snapshots" << endl;
+        Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+             << endl;
         exit(0);
     }
 
@@ -304,16 +333,17 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name, fileN
         );
         Lfield.append(tmp_field);
     }
+
     std::cout << std::endl;
 }
 
-void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name, fileName casename, label first_snap, label n_snap)
+void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name,
+                               fileName casename, label first_snap, label n_snap)
 {
     Info << " ######### Reading the Data for " << Name << " #########" << endl;
     fileName rootpath(".");
     Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
     label last_s;
-
     fvMesh mesh
     (
         Foam::IOobject
@@ -327,7 +357,8 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name, fileN
 
     if (first_snap >= runTime2.times().size())
     {
-        Info << "Error the index of the first snapshot must be smaller than the number of snapshots" << endl;
+        Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+             << endl;
         exit(0);
     }
 
@@ -355,19 +386,23 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name, fileN
         );
         Lfield.append(tmp_field);
     }
+
     std::cout << std::endl;
 }
 
-void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, volScalarField & field, fileName casename, label first_snap, label n_snap)
+void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
+                               volScalarField& field, fileName casename, label first_snap, label n_snap)
 {
-    Info << "######### Reading the Data for " << field.name() << " #########" << endl;
+    Info << "######### Reading the Data for " << field.name() << " #########" <<
+         endl;
     fileName rootpath(".");
     Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
     label last_s;
 
     if (first_snap >= runTime2.times().size())
     {
-        Info << "Error the index of the first snapshot must be smaller than the number of snapshots" << endl;
+        Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+             << endl;
         exit(0);
     }
 
@@ -395,19 +430,23 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, volScalarField &
         );
         Lfield.append(tmp_field);
     }
+
     std::cout << std::endl;
 }
 
-void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, volVectorField & field, fileName casename, label first_snap, label n_snap)
+void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
+                               volVectorField& field, fileName casename, label first_snap, label n_snap)
 {
-    Info << "######### Reading the Data for " << field.name() << " #########" << endl;
+    Info << "######### Reading the Data for " << field.name() << " #########" <<
+         endl;
     fileName rootpath(".");
     Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
     label last_s;
 
     if (first_snap >= runTime2.times().size())
     {
-        Info << "Error the index of the first snapshot must be smaller than the number of snapshots" << endl;
+        Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+             << endl;
         exit(0);
     }
 
@@ -434,8 +473,8 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, volVectorField &
             field.mesh()
         );
         Lfield.append(tmp_field);
-
     }
+
     std::cout << std::endl;
 }
 
@@ -444,12 +483,15 @@ int ITHACAstream::numberOfFiles(word folder, word MatrixName)
     int number_of_files = 0;
     std::ifstream in;
     in.open(folder + MatrixName + name(0), std::ios::in | std::ios::binary);
+
     while (in.good())
     {
         in.close();
         number_of_files++;
-        in.open(folder + MatrixName + name(number_of_files), std::ios::in | std::ios::binary);
+        in.open(folder + MatrixName + name(number_of_files),
+                std::ios::in | std::ios::binary);
     }
+
     in.close();
     return number_of_files;
 }

@@ -3,38 +3,30 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
-
 License
     This file is part of ITHACA-FV
-
     ITHACA-FV is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     ITHACA-FV is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License for more details.
-
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
-
 Class
     unsteadyNS
-
 Description
     Reduction class for a NON-Stationary NS problem
-
 SourceFiles
-    unsteadyNS.C   
-
+    unsteadyNS.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
@@ -67,15 +59,15 @@ and the for the generation of the reduced matrices for subsequent online solve, 
 of the steadyNS class */
 class unsteadyNS: public steadyNS
 {
-	public:
-    // Constructors
+    public:
+        // Constructors
         /// Construct Null
         unsteadyNS();
 
         /// Construct with argc and argv
-        unsteadyNS(int argc, char *argv[]);
+        unsteadyNS(int argc, char* argv[]);
 
-    // Specific variable for the unstationary case
+        // Specific variable for the unstationary case
         /// Start Time (initial time to start storing the snapshots)
         scalar startTime;
 
@@ -91,7 +83,7 @@ class unsteadyNS: public steadyNS
         /// Auxiliary variable to store the next writing instant
         scalar nextWrite;
 
-    // Dummy variables to transform pimplefoam into a class
+        // Dummy variables to transform pimplefoam into a class
         /// pimpleControl
         autoPtr<pimpleControl> _pimple;
 
@@ -107,17 +99,17 @@ class unsteadyNS: public steadyNS
         /// maxDeltaT
         scalar maxDeltaT;
 
-    // Functions
+        // Functions
 
-        //--------------------------------------------------------------------------        
+        //--------------------------------------------------------------------------
         /// @brief      Perform a truthsolve
         ///
-        /// @param[in]  mu_now  The actual value of the parameter, used only to write it 
+        /// @param[in]  mu_now  The actual value of the parameter, used only to write it
         /// in the Offline folder together with the snapshot.
         ///
         void truthSolve(List<scalar> mu_now);
 
-        //--------------------------------------------------------------------------        
+        //--------------------------------------------------------------------------
         /// Function to check if the solution must be exported.
         ///
         /// @param      timeObject  The time object of OpenFOAM.

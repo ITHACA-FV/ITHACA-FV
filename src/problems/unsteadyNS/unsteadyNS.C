@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
-	 ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
-	 ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
-	 ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
-	 ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-	 ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-	 ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
+     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
+     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
+     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -39,102 +39,106 @@
 unsteadyNS::unsteadyNS() {}
 
 // Construct from zero
-unsteadyNS::unsteadyNS(int argc, char *argv[])
+unsteadyNS::unsteadyNS(int argc, char* argv[])
 {
 #include "setRootCase.H"
 #include "createTime.H"
 #include "createMesh.H"
-		_pimple = autoPtr<pimpleControl>
-			  (
-				  new pimpleControl
-				  (
-					  mesh
-				  )
-			  );
+    _pimple = autoPtr<pimpleControl>
+              (
+                  new pimpleControl
+                  (
+                      mesh
+                  )
+              );
 #include "createFields.H"
 #include "createFvOptions.H"
-
-	supex = ITHACAutilities::check_sup();
+    supex = ITHACAutilities::check_sup();
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void unsteadyNS::truthSolve(List<scalar> mu_now)
 {
-	#include "initContinuityErrs.H"
-	Time& runTime = _runTime();
-	surfaceScalarField& phi = _phi();
-	fvMesh& mesh = _mesh();
-	fv::options& fvOptions = _fvOptions();
-	pimpleControl& pimple = _pimple();
-	volScalarField p = _p();
-	volVectorField U = _U();
-	IOMRFZoneList& MRF = _MRF();
-	singlePhaseTransportModel& laminarTransport = _laminarTransport();
+#include "initContinuityErrs.H"
+    Time& runTime = _runTime();
+    surfaceScalarField& phi = _phi();
+    fvMesh& mesh = _mesh();
+    fv::options& fvOptions = _fvOptions();
+    pimpleControl& pimple = _pimple();
+    volScalarField p = _p();
+    volVectorField U = _U();
+    IOMRFZoneList& MRF = _MRF();
+    singlePhaseTransportModel& laminarTransport = _laminarTransport();
+    instantList Times = runTime.times();
+    runTime.setEndTime(finalTime);
+    // Perform a TruthSolve
+    runTime.setTime(Times[1], 1);
+    runTime.setDeltaT(timeStep);
+    nextWrite = startTime;
 
-	instantList Times = runTime.times();
-	runTime.setEndTime(finalTime);
-	// Perform a TruthSolve
-	runTime.setTime(Times[1], 1);
-	runTime.setDeltaT(timeStep);
-	nextWrite = startTime;
-
-	// Start the time loop
-	while (runTime.run())
-	{
+    // Start the time loop
+    while (runTime.run())
+    {
 #include "readTimeControls.H"
 #include "CourantNo.H"
 #include "setDeltaT.H"
-		runTime.setEndTime(finalTime+timeStep);
-		Info << "Time = " << runTime.timeName() << nl << endl;
+        runTime.setEndTime(finalTime + timeStep);
+        Info << "Time = " << runTime.timeName() << nl << endl;
 
-		// --- Pressure-velocity PIMPLE corrector loop
-		while (pimple.loop())
-		{
+        // --- Pressure-velocity PIMPLE corrector loop
+        while (pimple.loop())
+        {
 #include "UEqn.H"
-			// --- Pressure corrector loop
-			while (pimple.correct())
-			{
-#include "pEqn.H"
-			}
-			if (pimple.turbCorr())
-			{
-				laminarTransport.correct();
-				turbulence->correct();
-			}
-		}
 
-		Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-			 << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-			 << nl << endl;
-		if (checkWrite(runTime))
-		{
-			exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-			exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-			std::ofstream of("./ITHACAoutput/Offline/"+name(counter)+"/"+runTime.timeName());
-			Ufield.append(U);
-			Pfield.append(p);
-			counter++;
-			nextWrite += writeEvery;
-			writeMu(mu_now);
-		}
-		runTime++;
-	}
+            // --- Pressure corrector loop
+            while (pimple.correct())
+            {
+#include "pEqn.H"
+            }
+
+            if (pimple.turbCorr())
+            {
+                laminarTransport.correct();
+                turbulence->correct();
+            }
+        }
+
+        Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+             << nl << endl;
+
+        if (checkWrite(runTime))
+        {
+            exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+            exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+            std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
+                             runTime.timeName());
+            Ufield.append(U);
+            Pfield.append(p);
+            counter++;
+            nextWrite += writeEvery;
+            writeMu(mu_now);
+        }
+
+        runTime++;
+    }
 }
 
 bool unsteadyNS::checkWrite(Time& timeObject)
 {
-	scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
+    scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
+    scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
+                          timeObject.deltaTValue());
 
-	scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) - timeObject.deltaTValue());
-	if ( diffnow < diffnext)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    if ( diffnow < diffnext)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

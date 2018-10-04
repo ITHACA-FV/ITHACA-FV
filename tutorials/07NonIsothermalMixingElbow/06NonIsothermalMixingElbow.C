@@ -36,52 +36,52 @@ SourceFiles
 
 class tutorial06: public unsteadyNST
 {
-public:
-    explicit tutorial06(int argc, char *argv[])
-        :
-        unsteadyNST(argc, argv),
-        U(_U()),
-        p(_p()),
-        T(_T())
-    {}
+    public:
+        explicit tutorial06(int argc, char* argv[])
+            :
+            unsteadyNST(argc, argv),
+            U(_U()),
+            p(_p()),
+            T(_T())
+        {}
 
-    // Fields To Perform
-    volVectorField& U;
-    volScalarField& p;
-    volScalarField& T;
+        // Fields To Perform
+        volVectorField& U;
+        volScalarField& p;
+        volScalarField& T;
 
-void offlineSolve()
-    {
-        Vector<double> inl(0, 0, 0);
-        label BCind = 1;
-        List<scalar> mu_now(1);
-        Info << "here" << endl;
-        if (offline)
+        void offlineSolve()
         {
-            ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-            ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-            ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
-        }
-        else
-        {
-            for (label i = 0; i < mu.cols(); i++)
+            Vector<double> inl(0, 0, 0);
+            label BCind = 1;
+            List<scalar> mu_now(1);
+            Info << "here" << endl;
+
+            if (offline)
             {
-                mu_now[0] = mu(0, i);
-                truthSolve(mu_now);
+                ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+                ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+                ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
+            }
+            else
+            {
+                for (label i = 0; i < mu.cols(); i++)
+                {
+                    mu_now[0] = mu(0, i);
+                    truthSolve(mu_now);
+                }
             }
         }
-    }
 };
 
 
 /*---------------------------------------------------------------------------*\
                                Starting the MAIN
 \*---------------------------------------------------------------------------*/
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     // Construct the tutorial object
     tutorial06 example(argc, argv);
-
     // Read some parameters from file
     ITHACAparameters para;
     int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 5);
@@ -92,7 +92,6 @@ int main(int argc, char *argv[])
     int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 15);
     int NmodesTproj = para.ITHACAdict->lookupOrDefault<int>("NmodesTproj", 5);
     int NmodesSUPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
- 
     /// Set the number of parameters
     example.Pnumber = 1;
     /// Set samples
@@ -104,25 +103,20 @@ int main(int argc, char *argv[])
     example.mu_range(0, 1) = 0.1;
     //Generate equispaced samples inside the parameter range
     example.genEquiPar();
-
     // Set the inlet boundaries where you have non homogeneous boundary conditions
-    example.inletIndex.resize(2,2);
-    example.inletIndex << 3,0,2,1;
-    example.inletIndexT.resize(3,1);
-    example.inletIndexT << 3,2,0;
-    
+    example.inletIndex.resize(2, 2);
+    example.inletIndex << 3, 0, 2, 1;
+    example.inletIndexT.resize(3, 1);
+    example.inletIndexT << 3, 2, 0;
     // Time parameters
     example.startTime = 0;
     example.finalTime = 50;
     example.timeStep = 0.05;
     example.writeEvery = 0.1;
-
     // Perform The Offline Solve;
     example.offlineSolve();
-
     // Solve the supremizer problem
     example.solvesupremizer();
-
     // Search the lift function for the velocity
     example.liftSolve();
     // Search the lift function for the temperature
@@ -131,16 +125,18 @@ int main(int argc, char *argv[])
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     // Create homogeneous basis functions for temperature
     example.computeLiftT(example.Tfield, example.liftfieldT, example.Tomfield);
-    
     // Perform a POD decomposition for velocity temperature and pressure fields
-    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0, NmodesUout);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0, NmodesPout); 
-    ITHACAPOD::getModes(example.Tomfield, example.LTmodes, example.podex, 0, 0, NmodesTout);
-    ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex, example.supex, 1, NmodesSUPout);
-    
-    example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesTproj, NmodesSUPproj);    
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0,
+                        NmodesUout);
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
+                        NmodesPout);
+    ITHACAPOD::getModes(example.Tomfield, example.LTmodes, example.podex, 0, 0,
+                        NmodesTout);
+    ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex,
+                        example.supex, 1, NmodesSUPout);
+    example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesTproj,
+                       NmodesSUPproj);
     reducedUnsteadyNST reduced(example);
-
     // Set values of the ridotto stuff
     reduced.nu = 0.1;
     reduced.tstart = 0;
@@ -149,18 +145,16 @@ int main(int argc, char *argv[])
     reduced.DT = 1e-06;
     // Set the online velocity
     Eigen::MatrixXd vel_now;
-    vel_now.resize(2,1);
+    vel_now.resize(2, 1);
     vel_now << 0.6, 1.2;
-  
-    // Set the online temperature and the value of the internal field 
+    // Set the online temperature and the value of the internal field
     Eigen::MatrixXd temp_now;
-    temp_now.resize(3,1);
+    temp_now.resize(3, 1);
     temp_now << 60, 70, 60;
-    reduced.solveOnline_sup(vel_now, temp_now);   
+    reduced.solveOnline_sup(vel_now, temp_now);
     // Reconstruct the solution and export it
     reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 2);
     reduced.reconstruct_supt("./ITHACAoutput/ReconstructionSUP/", 2);
-  
     exit(0);
 }
 

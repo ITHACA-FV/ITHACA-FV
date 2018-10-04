@@ -1,25 +1,30 @@
 /*---------------------------------------------------------------------------*\
-Copyright (C) 2017 by the ITHACA-FV authors
+     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
+     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
+     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
+     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
 
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
+ * Copyright (C) 2017 by the ITHACA-FV authors
+-------------------------------------------------------------------------------
 License
     This file is part of ITHACA-FV
-
     ITHACA-FV is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     ITHACA-FV is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License for more details.
-
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
-
 Description
-    Example of NS-Stokes Reduction Problem
-
+    Example of a heat transfer Reduction Problem
+SourceFiles
+    02thermalBlock.C
 \*---------------------------------------------------------------------------*/
 
 #include <iostream>
@@ -39,149 +44,142 @@ Description
 /// functions are overridden to be adapted to the specific case.
 class tutorial02: public laplacianProblem
 {
-public:
-    explicit tutorial02(int argc, char *argv[])
-        :
-        laplacianProblem(argc, argv),
-        T(_T()),
-        nu(_nu()),
-        S(_S())
-    {}
-//! [tutorial02]
-    /// Temperature field
-    volScalarField& T;
-    /// Diffusivity field
-    volScalarField& nu;
-    /// Source term field
-    volScalarField& S;
+    public:
+        explicit tutorial02(int argc, char* argv[])
+            :
+            laplacianProblem(argc, argv),
+            T(_T()),
+            nu(_nu()),
+            S(_S())
+        {}
+        //! [tutorial02]
+        /// Temperature field
+        volScalarField& T;
+        /// Diffusivity field
+        volScalarField& nu;
+        /// Source term field
+        volScalarField& S;
 
-    /// It perform an offline Solve
-    void offlineSolve()
-    {
-        if (offline)
+        /// It perform an offline Solve
+        void offlineSolve()
         {
-            ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
-        }
-        else
-        {
-            scalar IF = 0;
-            for (label i = 0; i < mu.rows(); i++)
+            if (offline)
             {
-                for (label j = 0; j < mu.cols() ; j++)
-                {
-                    theta[j] = mu(i, j);
-                }
-                assignIF(T, IF);
-                Info << i << endl;
-                truthSolve();
+                ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
             }
+            else
+            {
+                scalar IF = 0;
 
+                for (label i = 0; i < mu.rows(); i++)
+                {
+                    for (label j = 0; j < mu.cols() ; j++)
+                    {
+                        theta[j] = mu(i, j);
+                    }
+
+                    assignIF(T, IF);
+                    Info << i << endl;
+                    truthSolve();
+                }
+            }
         }
-    }
 
-    /// Define the source term function
-    void SetSource()
-    {
-        volScalarField yPos = T.mesh().C().component(vector::Y);
-        volScalarField xPos = T.mesh().C().component(vector::X);
-        forAll(S, counter)
+        /// Define the source term function
+        void SetSource()
         {
-            S[counter] = Foam::sin(xPos[counter] / 0.9 * M_PI) + Foam::sin(yPos[counter] / 0.9 * M_PI);
+            volScalarField yPos = T.mesh().C().component(vector::Y);
+            volScalarField xPos = T.mesh().C().component(vector::X);
+            forAll(S, counter)
+            {
+                S[counter] = Foam::sin(xPos[counter] / 0.9 * M_PI) + Foam::sin(
+                                 yPos[counter] / 0.9 * M_PI);
+            }
         }
-    }
 
-    /// Compute the diffusivity in each subdomain
-    void compute_nu()
-    {
-        nu_list.resize(9);
-
-        volScalarField nu1(nu);
-        volScalarField nu2(nu);
-        volScalarField nu3(nu);
-        volScalarField nu4(nu);
-        volScalarField nu5(nu);
-        volScalarField nu6(nu);
-        volScalarField nu7(nu);
-        volScalarField nu8(nu);
-        volScalarField nu9(nu);
-
-        Eigen::MatrixXd Box1(2, 3);
-        Box1 << 0, 0, 0, 0.3, 0.3, 0.1;
-        Eigen::MatrixXd Box2(2, 3);
-        Box2 << 0.3, 0, 0, 0.6, 0.3, 0.1;
-        Eigen::MatrixXd Box3(2, 3);
-        Box3 << 0.6, 0, 0, 0.91, 0.3, 0.1;
-        Eigen::MatrixXd Box4(2, 3);
-        Box4 << 0, 0.3, 0, 0.3, 0.6, 0.1;
-        Eigen::MatrixXd Box5(2, 3);
-        Box5 << 0.3, 0.3, 0, 0.6, 0.6, 0.1;
-        Eigen::MatrixXd Box6(2, 3);
-        Box6 << 0.6, 0.3, 0, 0.91, 0.6, 0.1;
-        Eigen::MatrixXd Box7(2, 3);
-        Box7 << 0, 0.6, 0, 0.3, 0.91, 0.1;
-        Eigen::MatrixXd Box8(2, 3);
-        Box8 << 0.3, 0.61, 0, 0.6, 0.91, 0.1;
-        Eigen::MatrixXd Box9(2, 3);
-        Box9 << 0.6, 0.6, 0, 0.9, 0.91, 0.1;
-
-        ITHACAutilities::setBoxToValue(nu1, Box1, 1);
-        ITHACAutilities::setBoxToValue(nu2, Box2, 1);
-        ITHACAutilities::setBoxToValue(nu3, Box3, 1);
-        ITHACAutilities::setBoxToValue(nu4, Box4, 1);
-        ITHACAutilities::setBoxToValue(nu5, Box5, 1);
-        ITHACAutilities::setBoxToValue(nu6, Box6, 1);
-        ITHACAutilities::setBoxToValue(nu7, Box7, 1);
-        ITHACAutilities::setBoxToValue(nu8, Box8, 1);
-        ITHACAutilities::setBoxToValue(nu9, Box9, 1);
-
-        nu_list.set(0, nu1);
-        nu_list.set(1, nu2);
-        nu_list.set(2, nu3);
-        nu_list.set(3, nu4);
-        nu_list.set(4, nu5);
-        nu_list.set(5, nu6);
-        nu_list.set(6, nu7);
-        nu_list.set(7, nu8);
-        nu_list.set(8, nu9);
-    }
-
-    /// Construct the operator_list where each term of the affine decomposition is stored
-    void assemble_operator()
-    {
-        for (int i = 0; i < nu_list.size(); i++)
+        /// Compute the diffusivity in each subdomain
+        void compute_nu()
         {
-            operator_list.append(fvm::laplacian(nu_list[i], T));
+            nu_list.resize(9);
+            volScalarField nu1(nu);
+            volScalarField nu2(nu);
+            volScalarField nu3(nu);
+            volScalarField nu4(nu);
+            volScalarField nu5(nu);
+            volScalarField nu6(nu);
+            volScalarField nu7(nu);
+            volScalarField nu8(nu);
+            volScalarField nu9(nu);
+            Eigen::MatrixXd Box1(2, 3);
+            Box1 << 0, 0, 0, 0.3, 0.3, 0.1;
+            Eigen::MatrixXd Box2(2, 3);
+            Box2 << 0.3, 0, 0, 0.6, 0.3, 0.1;
+            Eigen::MatrixXd Box3(2, 3);
+            Box3 << 0.6, 0, 0, 0.91, 0.3, 0.1;
+            Eigen::MatrixXd Box4(2, 3);
+            Box4 << 0, 0.3, 0, 0.3, 0.6, 0.1;
+            Eigen::MatrixXd Box5(2, 3);
+            Box5 << 0.3, 0.3, 0, 0.6, 0.6, 0.1;
+            Eigen::MatrixXd Box6(2, 3);
+            Box6 << 0.6, 0.3, 0, 0.91, 0.6, 0.1;
+            Eigen::MatrixXd Box7(2, 3);
+            Box7 << 0, 0.6, 0, 0.3, 0.91, 0.1;
+            Eigen::MatrixXd Box8(2, 3);
+            Box8 << 0.3, 0.61, 0, 0.6, 0.91, 0.1;
+            Eigen::MatrixXd Box9(2, 3);
+            Box9 << 0.6, 0.6, 0, 0.9, 0.91, 0.1;
+            ITHACAutilities::setBoxToValue(nu1, Box1, 1);
+            ITHACAutilities::setBoxToValue(nu2, Box2, 1);
+            ITHACAutilities::setBoxToValue(nu3, Box3, 1);
+            ITHACAutilities::setBoxToValue(nu4, Box4, 1);
+            ITHACAutilities::setBoxToValue(nu5, Box5, 1);
+            ITHACAutilities::setBoxToValue(nu6, Box6, 1);
+            ITHACAutilities::setBoxToValue(nu7, Box7, 1);
+            ITHACAutilities::setBoxToValue(nu8, Box8, 1);
+            ITHACAutilities::setBoxToValue(nu9, Box9, 1);
+            nu_list.set(0, nu1);
+            nu_list.set(1, nu2);
+            nu_list.set(2, nu3);
+            nu_list.set(3, nu4);
+            nu_list.set(4, nu5);
+            nu_list.set(5, nu6);
+            nu_list.set(6, nu7);
+            nu_list.set(7, nu8);
+            nu_list.set(8, nu9);
         }
-    }
+
+        /// Construct the operator_list where each term of the affine decomposition is stored
+        void assemble_operator()
+        {
+            for (int i = 0; i < nu_list.size(); i++)
+            {
+                operator_list.append(fvm::laplacian(nu_list[i], T));
+            }
+        }
 
 };
 
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     // Create the example object of the tutorial02 type
     tutorial02 example(argc, argv);
-
     // Read some parameters from file
     ITHACAparameters para;
     int NmodesTout = para.ITHACAdict->lookupOrDefault<int>("NmodesTout", 15);
     int NmodesTproj = para.ITHACAdict->lookupOrDefault<int>("NmodesTproj", 10);
-
     // Set the number of parameters
     example.Pnumber = 9;
     // Set the parameters
     example.setParameters();
-
     // Set the parameter ranges, in all the subdomains the diffusivity varies between
     // 0.001 and 0.1
     example.mu_range.col(0) = Eigen::MatrixXd::Ones(9, 1) * 0.001;
     example.mu_range.col(1) = Eigen::MatrixXd::Ones(9, 1) * 0.1;
-
     // Generate the Parameters
     example.genRandPar(500);
     // Set the size of the list of values that are multiplying the affine forms
     example.theta.resize(9);
-
     // Set the source term
     example.SetSource();
     // Compute the diffusivity field for each subdomain
@@ -190,15 +188,13 @@ int main(int argc, char *argv[])
     example.assemble_operator();
     // Perform an Offline Solve
     example.offlineSolve();
-
     // Perform a POD decomposition and get the modes
-    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.podex, 0, 0, NmodesTout);
-
+    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.podex, 0, 0,
+                        NmodesTout);
     // Perform the Galerkin projection onto the space spanned by the POD modes
     /// [project]
     example.project(NmodesTproj);
     /// [project]
-
     // Create a reduced object
     reducedLaplacian reduced(example);
 

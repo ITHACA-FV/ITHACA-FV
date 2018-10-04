@@ -45,6 +45,7 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(volVectorField& field)
         out(field.size() +  l ) = field[l][1];
         out(2 * field.size() + l ) = field[l][2];
     }
+
     return out;
 }
 
@@ -53,11 +54,12 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(volScalarField& field)
 {
     Eigen::VectorXd out;
     out.resize(int(field.size()));
+
     for (int l = 0; l < field.size(); l++)
     {
-
         out(l) = field[l];
     }
+
     return out;
 }
 
@@ -66,10 +68,12 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(fvMesh const& field)
 {
     Eigen::VectorXd out;
     out.resize(int(field.V().size()));
+
     for (int l = 0; l < field.V().size(); l++)
     {
         out(l) = field.V()[l];
     }
+
     return out;
 }
 
@@ -79,10 +83,12 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volVectorField& field)
     List<Eigen::VectorXd> Out;
     unsigned int size = field.boundaryField().size();
     Out.resize(size);
+
     for (unsigned int i = 0; i < size; i++ )
     {
         unsigned int sizei = field.boundaryField()[i].size();
         Out[i].resize(sizei * 3);
+
         for (unsigned int k = 0; k < sizei ; k++)
         {
             Out[i](k) = field.boundaryField()[i][k][0];
@@ -90,6 +96,7 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volVectorField& field)
             Out[i](k + 2 * sizei) = field.boundaryField()[i][k][2];
         }
     }
+
     return Out;
 }
 
@@ -99,93 +106,128 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volScalarField& field)
     List<Eigen::VectorXd> Out;
     unsigned int size = field.boundaryField().size();
     Out.resize(size);
+
     for (unsigned int i = 0; i < size; i++ )
     {
         unsigned int sizei = field.boundaryField()[i].size();
         Out[i].resize(sizei);
+
         for (unsigned int k = 0; k < sizei ; k++)
         {
             Out[i](k) = field.boundaryField()[i][k];
         }
     }
+
     return Out;
 }
 
 template<>
-List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volScalarField>& fields, int Nfields)
+List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volScalarField>&
+        fields, int Nfields)
 {
     unsigned int Nf;
-    if (Nfields > fields.size()) Nf = fields.size();
-    else  Nf = Nfields;
+
+    if (Nfields > fields.size())
+    {
+        Nf = fields.size();
+    }
+    else
+    {
+        Nf = Nfields;
+    }
+
     List<Eigen::MatrixXd> Out;
     unsigned int NBound = fields[0].boundaryField().size();
     Out.resize(NBound);
+
     for (unsigned int i = 0; i < NBound; i++)
     {
         int sizei = fields[0].boundaryField()[i].size();
         Out[i].resize(sizei, Nf);
     }
+
     for (unsigned int k = 0; k < Nf; k++)
     {
         List<Eigen::VectorXd> temp;
         temp = field2EigenBC(fields[k]);
+
         for (unsigned int i = 0; i < NBound; i++)
         {
             Out[i].col(k) = temp[i];
         }
     }
+
     return Out;
 }
 
 template<>
-List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volVectorField>& fields, int Nfields)
+List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volVectorField>&
+        fields, int Nfields)
 {
     unsigned int Nf;
-    if (Nfields > fields.size()) Nf = fields.size();
-    else  Nf = Nfields;
+
+    if (Nfields > fields.size())
+    {
+        Nf = fields.size();
+    }
+    else
+    {
+        Nf = Nfields;
+    }
+
     List<Eigen::MatrixXd> Out;
     unsigned int NBound = fields[0].boundaryField().size();
     Out.resize(NBound);
+
     for (unsigned int i = 0; i < NBound; i++)
     {
         int sizei = fields[0].boundaryField()[i].size();
         Out[i].resize(sizei * 3, Nf);
     }
+
     for (unsigned int k = 0; k < Nf; k++)
     {
         List<Eigen::VectorXd> temp;
         temp = field2EigenBC(fields[k]);
+
         for (unsigned int i = 0; i < NBound; i++)
         {
             Out[i].col(k) = temp[i];
         }
     }
+
     return Out;
 }
 
 
 template<>
-volVectorField Foam2Eigen::Eigen2field(volVectorField& field_in, Eigen::VectorXd& eigen_vector)
+volVectorField Foam2Eigen::Eigen2field(volVectorField& field_in,
+                                       Eigen::VectorXd& eigen_vector)
 {
     volVectorField field_out(field_in);
+
     for (auto i = 0; i < field_out.size(); i++)
     {
         field_out.ref()[i][0] = eigen_vector(i);
         field_out.ref()[i][1] = eigen_vector(i + field_out.size());
         field_out.ref()[i][2] = eigen_vector(i + field_out.size() * 2);
     }
+
     field_out.correctBoundaryConditions();
     return field_out;
 }
 
 template<>
-volScalarField Foam2Eigen::Eigen2field(volScalarField& field_in, Eigen::VectorXd& eigen_vector)
+volScalarField Foam2Eigen::Eigen2field(volScalarField& field_in,
+                                       Eigen::VectorXd& eigen_vector)
 {
     volScalarField field_out(field_in);
+
     for (auto i = 0; i < field_out.size(); i++)
     {
         field_out.ref()[i] = eigen_vector(i);
     }
+
     field_out.correctBoundaryConditions();
     return field_out;
 }
@@ -195,9 +237,11 @@ volScalarField Foam2Eigen::Eigen2field(volScalarField& field_in, Eigen::VectorXd
 
 
 template<>
-Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volVectorField>& fields, int Nfields)
+Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volVectorField>& fields,
+        int Nfields)
 {
     int Nf;
+
     if (Nfields > fields.size())
     {
         Nf = fields.size();
@@ -214,14 +258,16 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volVectorField>& fields, int N
     {
         out.col(k) = field2Eigen<volVectorField>(fields[k]);
     }
+
     return out;
 }
 
 template<>
-Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volScalarField>& fields, int Nfields)
+Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volScalarField>& fields,
+        int Nfields)
 {
-
     int Nf;
+
     if (Nfields > fields.size())
     {
         Nf = fields.size();
@@ -238,15 +284,16 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volScalarField>& fields, int N
     {
         out.col(k) = field2Eigen<volScalarField>(fields[k]);
     }
+
     return out;
 }
 
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::MatrixXd& A, Eigen::VectorXd& b)
+void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::MatrixXd& A,
+                                Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
-
     A.setZero(sizeA, sizeA);
     b.setZero(sizeA);
 
@@ -259,16 +306,14 @@ void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::MatrixXd& A,
     const lduAddressing& addr = foam_matrix.lduAddr();
     const labelList& lowerAddr = addr.lowerAddr();
     const labelList& upperAddr = addr.upperAddr();
-
     forAll(lowerAddr, i)
     {
         A(lowerAddr[i], upperAddr[i]) = foam_matrix.upper()[i];
         A(upperAddr[i], lowerAddr[i]) = foam_matrix.lower()[i];
-
     }
     forAll(foam_matrix.psi().boundaryField(), I)
     {
-        const fvPatch &ptch = foam_matrix.psi().boundaryField()[I].patch();
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
         forAll(ptch, J)
         {
             int w = ptch.faceCells()[J];
@@ -279,7 +324,8 @@ void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::MatrixXd& A,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix, Eigen::MatrixXd& A, Eigen::VectorXd& b)
+void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix, Eigen::MatrixXd& A,
+                                Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
     A.resize(sizeA * 3, sizeA * 3);
@@ -294,6 +340,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix, Eigen::MatrixXd& A,
         b(sizeA + i) = foam_matrix.source()[i][1];
         b(2 * sizeA + i) = foam_matrix.source()[i][2];
     }
+
     const lduAddressing& addr = foam_matrix.lduAddr();
     const labelList& lowerAddr = addr.lowerAddr();
     const labelList& upperAddr = addr.upperAddr();
@@ -308,7 +355,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix, Eigen::MatrixXd& A,
     }
     forAll(foam_matrix.psi().boundaryField(), I)
     {
-        const fvPatch &ptch = foam_matrix.psi().boundaryField()[I].patch();
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
         forAll(ptch, J)
         {
             int w = ptch.faceCells()[J];
@@ -323,15 +370,15 @@ void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix, Eigen::MatrixXd& A,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
+void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix,
+                                Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
-    int nel = foam_matrix.diag().size() + foam_matrix.upper().size() + foam_matrix.lower().size();
-
+    int nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
+              foam_matrix.lower().size();
     A.resize(sizeA, sizeA);
     b.resize(sizeA);
     A.reserve(nel);
-
     typedef Eigen::Triplet<double> Trip;
     std::vector<Trip> tripletList;
     tripletList.reserve(nel);
@@ -345,7 +392,6 @@ void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::SparseMatrix
     const lduAddressing& addr = foam_matrix.lduAddr();
     const labelList& lowerAddr = addr.lowerAddr();
     const labelList& upperAddr = addr.upperAddr();
-
     forAll(lowerAddr, i)
     {
         tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
@@ -353,7 +399,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::SparseMatrix
     }
     forAll(foam_matrix.psi().boundaryField(), I)
     {
-        const fvPatch &ptch = foam_matrix.psi().boundaryField()[I].patch();
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
         forAll(ptch, J)
         {
             int w = ptch.faceCells()[J];
@@ -365,14 +411,15 @@ void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::SparseMatrix
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix, Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
+void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix,
+                                Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
-    int nel = foam_matrix.diag().size() + foam_matrix.upper().size() + foam_matrix.lower().size();
+    int nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
+              foam_matrix.lower().size();
     A.resize(sizeA * 3, sizeA * 3);
     A.reserve(nel * 3);
     b.resize(sizeA * 3);
-
     typedef Eigen::Triplet<double> Trip;
     std::vector<Trip> tripletList;
     tripletList.reserve(nel * 3);
@@ -381,37 +428,44 @@ void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix, Eigen::SparseMatrix
     {
         tripletList.push_back(Trip(i, i, foam_matrix.diag()[i]));
         tripletList.push_back(Trip(sizeA + i, sizeA + i, foam_matrix.diag()[i]));
-        tripletList.push_back(Trip(2 * sizeA + i, 2 * sizeA + i, foam_matrix.diag()[i]));
+        tripletList.push_back(Trip(2 * sizeA + i, 2 * sizeA + i,
+                                   foam_matrix.diag()[i]));
         b(i) = foam_matrix.source()[i][0];
         b(sizeA + i) = foam_matrix.source()[i][1];
         b(2 * sizeA + i) = foam_matrix.source()[i][2];
     }
+
     const lduAddressing& addr = foam_matrix.lduAddr();
     const labelList& lowerAddr = addr.lowerAddr();
     const labelList& upperAddr = addr.upperAddr();
     forAll(lowerAddr, i)
     {
         tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(lowerAddr[i] + sizeA, upperAddr[i] + sizeA, foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2, foam_matrix.upper()[i]));
+        tripletList.push_back(Trip(lowerAddr[i] + sizeA, upperAddr[i] + sizeA,
+                                   foam_matrix.upper()[i]));
+        tripletList.push_back(Trip(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2,
+                                   foam_matrix.upper()[i]));
         tripletList.push_back(Trip(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]));
-        tripletList.push_back(Trip(upperAddr[i] + sizeA, lowerAddr[i] + sizeA, foam_matrix.lower()[i]));
-        tripletList.push_back(Trip(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2, foam_matrix.lower()[i]));
+        tripletList.push_back(Trip(upperAddr[i] + sizeA, lowerAddr[i] + sizeA,
+                                   foam_matrix.lower()[i]));
+        tripletList.push_back(Trip(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2,
+                                   foam_matrix.lower()[i]));
     }
     forAll(foam_matrix.psi().boundaryField(), I)
     {
-        const fvPatch &ptch = foam_matrix.psi().boundaryField()[I].patch();
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
         forAll(ptch, J)
         {
             int w = ptch.faceCells()[J];
             tripletList.push_back(Trip(w, w, foam_matrix.internalCoeffs()[I][J][0]));
-            tripletList.push_back(Trip(w + sizeA, w + sizeA, foam_matrix.internalCoeffs()[I][J][1]));
-            tripletList.push_back(Trip(w + sizeA * 2, w + sizeA * 2, foam_matrix.internalCoeffs()[I][J][2]));
+            tripletList.push_back(Trip(w + sizeA, w + sizeA,
+                                       foam_matrix.internalCoeffs()[I][J][1]));
+            tripletList.push_back(Trip(w + sizeA * 2, w + sizeA * 2,
+                                       foam_matrix.internalCoeffs()[I][J][2]));
             b(w)   += foam_matrix.boundaryCoeffs()[I][J][0];
             b(w + sizeA)   += foam_matrix.boundaryCoeffs()[I][J][1];
             b(w + sizeA * 2)   += foam_matrix.boundaryCoeffs()[I][J][2];
         }
     }
     A.setFromTriplets(tripletList.begin(), tripletList.end());
-
 }
