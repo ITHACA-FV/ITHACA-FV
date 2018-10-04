@@ -38,23 +38,29 @@ DataPoint::DataPoint(DenseVector x, double y)
     setData(newX, y);
 }
 
-void DataPoint::setData(const std::vector<double> &x, double y)
+void DataPoint::setData(const std::vector<double>& x, double y)
 {
     this->x = x;
     this->y = y;
 }
 
-bool DataPoint::operator<(const DataPoint &rhs) const
+bool DataPoint::operator<(const DataPoint& rhs) const
 {
     if (this->getDimX() != rhs.getDimX())
+    {
         throw Exception("DataPoint::operator<: Cannot compare data points of different dimensions");
+    }
 
     for (unsigned int i = 0; i < this->getDimX(); i++)
     {
         if (x.at(i) < rhs.getX().at(i))
+        {
             return true;
+        }
         else if (x.at(i) > rhs.getX().at(i))
+        {
             return false;
+        }
     }
 
     return false;
@@ -66,10 +72,17 @@ bool DataPoint::operator<(const DataPoint &rhs) const
 double dist(const std::vector<double> x, const std::vector<double> y)
 {
     if (x.size() != y.size())
+    {
         throw Exception("DataPoint::dist: Cannot measure distance between two points of different dimension");
+    }
+
     double sum = 0.0;
-    for (unsigned int i=0; i<x.size(); i++)
-        sum += (x.at(i)-y.at(i))*(x.at(i)-y.at(i));
+
+    for (unsigned int i = 0; i < x.size(); i++)
+    {
+        sum += (x.at(i) - y.at(i)) * (x.at(i) - y.at(i));
+    }
+
     return std::sqrt(sum);
 }
 
@@ -87,7 +100,7 @@ bool dist_sort(const DataPoint x, const DataPoint y)
     DataPoint origin(zeros, 0.0);
     double x_dist = dist(x, origin);
     double y_dist = dist(y, origin);
-    return (x_dist<y_dist);
+    return (x_dist < y_dist);
 }
 
 } // namespace SPLINTER

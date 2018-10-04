@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -90,15 +90,15 @@ IOdictionary transportProperties
         IOobject::NO_WRITE
     )
 );
-_nu = autoPtr<dimensionedScalar> 
-(
-new dimensionedScalar
-(
-    "nu",
-    dimViscosity,
-    transportProperties.lookup("nu")
-)
-);
+_nu = autoPtr<dimensionedScalar>
+      (
+          new dimensionedScalar
+          (
+              "nu",
+              dimViscosity,
+              transportProperties.lookup("nu")
+          )
+      );
 #include "createPhi.H"
 
 
@@ -108,26 +108,26 @@ setRefCell(p, mesh.solutionDict().subDict("PISO"), pRefCell, pRefValue);
 mesh.setFluxRequired(p.name());
 
 _laminarTransport = autoPtr<singlePhaseTransportModel>
-(
-  new singlePhaseTransportModel( U, phi )
-  );
+                    (
+                        new singlePhaseTransportModel( U, phi )
+                    );
 singlePhaseTransportModel& laminarTransport = _laminarTransport();
 
 turbulence = autoPtr<incompressible::turbulenceModel>
-(
- incompressible::turbulenceModel::New(U, phi, laminarTransport)
- );
+             (
+                 incompressible::turbulenceModel::New(U, phi, laminarTransport)
+             );
 _MRF = autoPtr<IOMRFZoneList>
-(
- new IOMRFZoneList(mesh)
- );
+       (
+           new IOMRFZoneList(mesh)
+       );
 _DT = autoPtr<dimensionedScalar>
-(
-new  dimensionedScalar
-(
-     transportProperties.lookup("DT")
-)
-);
+      (
+          new  dimensionedScalar
+          (
+              transportProperties.lookup("DT")
+          )
+      );
 
 
 

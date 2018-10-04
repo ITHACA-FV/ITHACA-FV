@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -39,12 +39,11 @@ License
 // Constructor
 reducedLaplacian::reducedLaplacian()
 {
-
 }
 
 reducedLaplacian::reducedLaplacian(laplacianProblem& problem)
-:
-problem(&problem)
+    :
+    problem(&problem)
 {
 }
 
@@ -55,17 +54,21 @@ void reducedLaplacian::solveOnline(Eigen::MatrixXd mu)
         Info << "wrong dimension of online parameters" << endl;
         exit(0);
     }
+
     Eigen::MatrixXd A;
     A.setZero(problem->NTmodes, problem->NTmodes);
+
     for (int i = 0; i < problem->A_matrices.size() ; i++)
     {
         A += problem->A_matrices[i] * mu(0, i);
     }
+
     Eigen::MatrixXd x;
     x = A.colPivHouseholderQr().solve(-problem->source);
     online_solution.conservativeResize(count_online_solve, problem->NTmodes + 1);
     online_solution(count_online_solve - 1, 0) = count_online_solve;
-    online_solution.row(count_online_solve - 1).tail(problem->NTmodes) = x.transpose();
+    online_solution.row(count_online_solve - 1).tail(problem->NTmodes) =
+        x.transpose();
     count_online_solve += 1;
 }
 
@@ -73,7 +76,6 @@ void reducedLaplacian::reconstruct(fileName folder, int printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-
     int counter = 0;
     int nextwrite = 0;
 
@@ -82,13 +84,16 @@ void reducedLaplacian::reconstruct(fileName folder, int printevery)
         if (counter == nextwrite)
         {
             volScalarField T_rec("T_rec", problem->Tmodes[0] * 0);
+
             for (label j = 0; j < problem->NTmodes; j++)
             {
                 T_rec += problem->Tmodes[j] * online_solution(i, j + 1);
             }
+
             problem->exportSolution(T_rec, name(online_solution(i, 0)), folder);
             nextwrite += printevery;
         }
+
         counter++;
     }
 }

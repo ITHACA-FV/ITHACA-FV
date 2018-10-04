@@ -49,14 +49,14 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class ITHACAforces
-:
+    :
     public fvMeshFunctionObject,
     public logFiles
 {
 
-protected:
+    protected:
 
-    // Protected data
+        // Protected data
 
         //- Enumeration for ensuring the right file is accessed
         enum fileID
@@ -74,66 +74,66 @@ protected:
 
         // Read from dictionary
 
-            //- Patches to integrate forces over
-            labelHashSet patchSet_;
+        //- Patches to integrate forces over
+        labelHashSet patchSet_;
 
-            //- Name of pressure field
-            word pName_;
+        //- Name of pressure field
+        word pName_;
 
-            //- Name of velocity field
-            word UName_;
+        //- Name of velocity field
+        word UName_;
 
-            //- Name of density field (optional)
-            word rhoName_;
+        //- Name of density field (optional)
+        word rhoName_;
 
-            //- Is the force density being supplied directly?
-            Switch directForceDensity_;
+        //- Is the force density being supplied directly?
+        Switch directForceDensity_;
 
-            //- The name of the force density (fD) field
-            word fDName_;
+        //- The name of the force density (fD) field
+        word fDName_;
 
-            //- Reference density needed for incompressible calculations
-            scalar rhoRef_;
+        //- Reference density needed for incompressible calculations
+        scalar rhoRef_;
 
-            //- Reference pressure
-            scalar pRef_;
+        //- Reference pressure
+        scalar pRef_;
 
-            //- Coordinate system used when evaluting forces/moments
-            coordinateSystem coordSys_;
+        //- Coordinate system used when evaluting forces/moments
+        coordinateSystem coordSys_;
 
-            //- Flag to indicate whether we are using a local co-ordinate sys
-            bool localSystem_;
+        //- Flag to indicate whether we are using a local co-ordinate sys
+        bool localSystem_;
 
-            //- Flag to include porosity effects
-            bool porosity_;
-
-
-            // Bin information
-
-                //- Number of bins
-                label nBin_;
-
-                //- Direction used to determine bin orientation
-                vector binDir_;
-
-                //- Distance between bin divisions
-                scalar binDx_;
-
-                //- Minimum bin bounds
-                scalar binMin_;
-
-                //- Bin positions along binDir
-                List<point> binPoints_;
-
-                //- Should bin data be cumulative?
-                bool binCumulative_;
+        //- Flag to include porosity effects
+        bool porosity_;
 
 
-            //- Initialised flag
-            bool initialised_;
+        // Bin information
+
+        //- Number of bins
+        label nBin_;
+
+        //- Direction used to determine bin orientation
+        vector binDir_;
+
+        //- Distance between bin divisions
+        scalar binDx_;
+
+        //- Minimum bin bounds
+        scalar binMin_;
+
+        //- Bin positions along binDir
+        List<point> binPoints_;
+
+        //- Should bin data be cumulative?
+        bool binCumulative_;
 
 
-    // Protected Member Functions
+        //- Initialised flag
+        bool initialised_;
+
+
+        // Protected Member Functions
 
         //- Create file names for forces and bins
         wordList createFileNames(const dictionary& dict) const;
@@ -180,13 +180,13 @@ protected:
         void operator=(const ITHACAforces&);
 
 
-public:
+    public:
 
-    //- Runtime type information
-    TypeName("ITHACAforces");
+        //- Runtime type information
+        TypeName("ITHACAforces");
 
 
-    // Constructors
+        // Constructors
 
         //- Construct from Time and dictionary
         ITHACAforces
@@ -205,11 +205,11 @@ public:
         );
 
 
-    //- Destructor
-    virtual ~ITHACAforces();
+        //- Destructor
+        virtual ~ITHACAforces();
 
 
-    // Member Functions
+        // Member Functions
 
         //- Read the forces data
         virtual bool read(const dictionary&);
@@ -228,7 +228,7 @@ public:
 
         //- Return the pressure forces
         virtual vector force_pressure() const;
-        
+
         //- Return the porous forces
         virtual vector force_porous() const;
 

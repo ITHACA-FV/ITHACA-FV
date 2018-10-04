@@ -52,18 +52,22 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
     {
         Umodes.append(problem->liftfield[k]);
     }
+
     for (label k = 0; k < problem->NUmodes; k++)
     {
         Umodes.append(problem->Umodes[k]);
     }
+
     for (label k = 0; k < problem->NSUPmodes; k++)
     {
         Umodes.append(problem->supmodes[k]);
     }
-    newton_object = newton_steadyNS(Nphi_u + Nphi_p , Nphi_u + Nphi_p, FOMproblem);
+
+    newton_object = newton_steadyNS(Nphi_u + Nphi_p, Nphi_u + Nphi_p, FOMproblem);
 }
 
-int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const
+int newton_steadyNS::operator()(const Eigen::VectorXd& x,
+                                Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_tmp(Nphi_u);
     Eigen::VectorXd b_tmp(Nphi_p);
@@ -83,20 +87,23 @@ int newton_steadyNS::operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec)
         cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
         fvec(i) = M1(i) - cc(0, 0) - M2(i);
     }
+
     for (label j = 0; j < Nphi_p; j++)
     {
         label k = j + Nphi_u;
         fvec(k) = M3(j);
     }
+
     for (label j = 0; j < N_BC; j++)
     {
         fvec(j) = x(j) - BC(j);
     }
+
     return 0;
 }
 
 
-int newton_steadyNS::df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) const
+int newton_steadyNS::df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_steadyNS> numDiff(*this);
     numDiff.df(x, fjac);
@@ -108,13 +115,13 @@ int newton_steadyNS::df(const Eigen::VectorXd &x,  Eigen::MatrixXd &fjac) const
 
 void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now)
 {
-    Info << "This function is still not implemented for the stationary case" << endl;
+    Info << "This function is still not implemented for the stationary case" <<
+         endl;
     exit(0);
 }
 
 void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
 {
-
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
 
@@ -122,31 +129,37 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
     {
         y(j) = vel_now(j, 0);
     }
+
     Color::Modifier red(Color::FG_RED);
     Color::Modifier green(Color::FG_GREEN);
     Color::Modifier def(Color::FG_DEFAULT);
     Eigen::HybridNonLinearSolver<newton_steadyNS> hnls(newton_object);
     newton_object.BC.resize(N_BC);
+
     for (label j = 0; j < N_BC; j++)
     {
         newton_object.BC(j) = vel_now(j, 0);
     }
+
     newton_object.nu = nu;
     hnls.solve(y);
-
     Eigen::VectorXd res(y);
     newton_object.operator()(y, res);
-
-    std::cout << "################## Online solve N° " << count_online_solve << " ##################" << std::endl;
+    std::cout << "################## Online solve N° " << count_online_solve <<
+              " ##################" << std::endl;
     std::cout << "Solving for the parameter: " << vel_now << std::endl;
+
     if (res.norm() < 1e-5)
     {
-        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " << hnls.iter << " iterations " << def << std::endl << std::endl;
+        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
     }
     else
     {
-        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " << hnls.iter << " iterations " << def << std::endl << std::endl;
+        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
     }
+
     count_online_solve += 1;
 }
 
@@ -157,7 +170,6 @@ void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-
     int counter = 0;
     int nextwrite = 0;
 
@@ -166,19 +178,24 @@ void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
         if (counter == nextwrite)
         {
             volVectorField U_rec("U_rec", Umodes[0] * 0);
+
             for (label j = 0; j < Nphi_u; j++)
             {
                 U_rec += Umodes[j] * online_solution[i](j + 1, 0);
             }
+
             problem->exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
             volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
+
             for (label j = 0; j < Nphi_p; j++)
             {
                 P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
+
             problem->exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
             nextwrite += printevery;
         }
+
         counter++;
     }
 }
@@ -187,7 +204,6 @@ void reducedSteadyNS::reconstruct_sup(fileName folder, int printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-
     int counter = 0;
     int nextwrite = 0;
 
@@ -196,22 +212,26 @@ void reducedSteadyNS::reconstruct_sup(fileName folder, int printevery)
         if (counter == nextwrite)
         {
             volVectorField U_rec("U_rec", Umodes[0] * 0);
+
             for (label j = 0; j < Nphi_u; j++)
             {
                 U_rec += Umodes[j] * online_solution[i](j + 1, 0);
             }
+
             problem->exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
             volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
+
             for (label j = 0; j < Nphi_p; j++)
             {
                 P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
+
             problem->exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
             nextwrite += printevery;
-
             UREC.append(U_rec);
             PREC.append(P_rec);
         }
+
         counter++;
     }
 }
@@ -221,35 +241,37 @@ double reducedSteadyNS::inf_sup_constant()
     double a;
     Eigen::VectorXd sup(Nphi_u);
     Eigen::VectorXd inf(Nphi_p);
+
     for (int i = 0; i < Nphi_p; i++)
     {
         for (int j = 0; j < Nphi_u; j++)
         {
-            sup(j) = fvc::domainIntegrate(fvc::div(Umodes[j]) * Pmodes[i]).value() / ITHACAutilities::H1seminorm(Umodes[j]) / ITHACAutilities::L2norm(Pmodes[i]);
+            sup(j) = fvc::domainIntegrate(fvc::div(Umodes[j]) * Pmodes[i]).value() /
+                     ITHACAutilities::H1seminorm(Umodes[j]) / ITHACAutilities::L2norm(Pmodes[i]);
         }
+
         inf(i) = sup.maxCoeff();
     }
+
     a = inf.minCoeff();
     return a;
 }
 
 
-void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS & problem, fileName folder)
+void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS& problem,
+        fileName folder)
 {
     mkDir(folder);
     system("ln -s ../../constant " + folder + "/constant");
     system("ln -s ../../0 " + folder + "/0");
     system("ln -s ../../system " + folder + "/system");
-
     label NUmodes = problem.NUmodes;
     label NSUPmodes = problem.NSUPmodes;
     label NPmodes = problem.NPmodes;
     label liftfieldSize = problem.liftfield.size();
     label totalSize = NUmodes + NSUPmodes + liftfieldSize;
-
     Eigen::VectorXd cl(online_solution.size());
     Eigen::VectorXd cd(online_solution.size());
-
     //Read FORCESdict
     IOdictionary FORCESdict
     (
@@ -262,17 +284,16 @@ void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS & problem, fileName folde
             IOobject::NO_WRITE
         )
     );
-
-    Eigen::MatrixXd TAU = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/tau_mat.txt");
-    Eigen::MatrixXd N = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/n_mat.txt");
+    Eigen::MatrixXd TAU =
+        ITHACAstream::readMatrix("./ITHACAoutput/Matrices/tau_mat.txt");
+    Eigen::MatrixXd N =
+        ITHACAstream::readMatrix("./ITHACAoutput/Matrices/n_mat.txt");
     Eigen::VectorXd temp1;
-
     f_tau.setZero(online_solution.size(), 3);
     f_n.setZero(online_solution.size(), 3);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
-
         for (label j = 0; j < totalSize; j++)
         {
             f_tau.row(i) += TAU.row(j) * online_solution[i](j + 1, 0);

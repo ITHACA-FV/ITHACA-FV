@@ -1,46 +1,42 @@
-    if (runTime.writeTime())
-    {
-        volVectorField gradT(fvc::grad(T));
 
-        volScalarField gradTx
+if (runTime.writeTime())
+{
+    volVectorField gradT(fvc::grad(T));
+    volScalarField gradTx
+    (
+        IOobject
         (
-            IOobject
-            (
-                "gradTx",
-                runTime.timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
-            gradT.component(vector::X)
-        );
-
-        volScalarField gradTy
+            "gradTx",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        gradT.component(vector::X)
+    );
+    volScalarField gradTy
+    (
+        IOobject
         (
-            IOobject
-            (
-                "gradTy",
-                runTime.timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
-            gradT.component(vector::Y)
-        );
-
-        volScalarField gradTz
+            "gradTy",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        gradT.component(vector::Y)
+    );
+    volScalarField gradTz
+    (
+        IOobject
         (
-            IOobject
-            (
-                "gradTz",
-                runTime.timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
-            gradT.component(vector::Z)
-        );
-
-
-        runTime.write();
-    }
+            "gradTz",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        gradT.component(vector::Z)
+    );
+    runTime.write();
+}

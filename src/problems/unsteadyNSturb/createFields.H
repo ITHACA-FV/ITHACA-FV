@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -29,55 +29,55 @@
  \*---------------------------------------------------------------------------*/
 Info << "Reading field p\n" << endl;
 _p = autoPtr<volScalarField>
-(
- new volScalarField
- (
-   IOobject
-   (
-     "p",
-     runTime.timeName(),
-     mesh,
-     IOobject::MUST_READ,
-     IOobject::AUTO_WRITE
-     ),
-   mesh
-   )
- );
+     (
+         new volScalarField
+         (
+             IOobject
+             (
+                 "p",
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::MUST_READ,
+                 IOobject::AUTO_WRITE
+             ),
+             mesh
+         )
+     );
 volScalarField& p = _p();
 
 Info << "Reading field U\n" << endl;
 _U = autoPtr<volVectorField>
-(
- new volVectorField
- (
-   IOobject
-   (
-     "U",
-     runTime.timeName(),
-     mesh,
-     IOobject::MUST_READ,
-     IOobject::AUTO_WRITE
-     ),
-   mesh
-   )
- );
+     (
+         new volVectorField
+         (
+             IOobject
+             (
+                 "U",
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::MUST_READ,
+                 IOobject::AUTO_WRITE
+             ),
+             mesh
+         )
+     );
 volVectorField& U = _U();
 
 _nut = autoPtr<volScalarField>
-(
- new volScalarField
- (
-   IOobject
-   (
-     "nut",
-     runTime.timeName(),
-     mesh,
-     IOobject::MUST_READ,
-     IOobject::AUTO_WRITE
-     ),
-   mesh
-   )
- );
+       (
+           new volScalarField
+           (
+               IOobject
+               (
+                   "nut",
+                   runTime.timeName(),
+                   mesh,
+                   IOobject::MUST_READ,
+                   IOobject::AUTO_WRITE
+               ),
+               mesh
+           )
+       );
 volScalarField& nut = _nut();
 
 #include "createPhi.H"
@@ -88,17 +88,17 @@ scalar pRefValue = 0.0;
 setRefCell(p, mesh.solutionDict().subDict("SIMPLE"), pRefCell, pRefValue);
 
 _laminarTransport = autoPtr<singlePhaseTransportModel>
-(
-  new singlePhaseTransportModel( U, phi )
-  );
+                    (
+                        new singlePhaseTransportModel( U, phi )
+                    );
 singlePhaseTransportModel& laminarTransport = _laminarTransport();
 
 turbulence = autoPtr<incompressible::turbulenceModel>
-(
- incompressible::turbulenceModel::New(U, phi, laminarTransport)
- );
+             (
+                 incompressible::turbulenceModel::New(U, phi, laminarTransport)
+             );
 
 _MRF = autoPtr<IOMRFZoneList>
-(
- new IOMRFZoneList(mesh)
- );
+       (
+           new IOMRFZoneList(mesh)
+       );

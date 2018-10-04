@@ -46,49 +46,58 @@ SourceFiles
 /// system folder.
 class ITHACAparameters
 {
-public:
-    ITHACAparameters()
-    {
-        Foam::Time runTime(Foam::Time::controlDictName, "./", "");
-        Foam::fvMesh mesh
-        (
-            Foam::IOobject
+    public:
+        ITHACAparameters()
+        {
+            Foam::Time runTime(Foam::Time::controlDictName, "./", "");
+            Foam::fvMesh mesh
             (
-                Foam::fvMesh::defaultRegion,
-                runTime.timeName(),
-                runTime,
-                Foam::IOobject::MUST_READ
-            )
-        );
-        ITHACAdict = new IOdictionary
-        (
-            IOobject
+                Foam::IOobject
+                (
+                    Foam::fvMesh::defaultRegion,
+                    runTime.timeName(),
+                    runTime,
+                    Foam::IOobject::MUST_READ
+                )
+            );
+            ITHACAdict = new IOdictionary
             (
-                "ITHACAdict",
-                "./system",
-                mesh,
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE
-            )
-        );
-        precision = ITHACAdict->lookupOrDefault<int>("OutPrecision", 10);
-        word typeout = ITHACAdict->lookupOrDefault<word>("OutType", "fixed");
-        if (typeout == "fixed") {outytpe = std::ios_base::fixed;}
-        if (typeout == "scientific") {outytpe = std::ios_base::scientific;}
-        eigensolver = ITHACAdict->lookupOrDefault<word>("EigenSolver", "spectra");
-    }
-    /// type of eigensolver used in the eigenvalue decomposition can be either be eigen or spectra
-    word eigensolver;
+                IOobject
+                (
+                    "ITHACAdict",
+                    "./system",
+                    mesh,
+                    IOobject::MUST_READ,
+                    IOobject::NO_WRITE
+                )
+            );
+            precision = ITHACAdict->lookupOrDefault<int>("OutPrecision", 10);
+            word typeout = ITHACAdict->lookupOrDefault<word>("OutType", "fixed");
 
-    /// precision of the output Market Matrix objects (i.e. reduced matrices, eigenvalues, ...)
-    int precision;
+            if (typeout == "fixed")
+            {
+                outytpe = std::ios_base::fixed;
+            }
 
-    /// type of output format can be fixed or scientific
-    std::_Ios_Fmtflags outytpe;
+            if (typeout == "scientific")
+            {
+                outytpe = std::ios_base::scientific;
+            }
 
-    /// Dictionary for input objects from file
-    IOdictionary* ITHACAdict;
-private:
+            eigensolver = ITHACAdict->lookupOrDefault<word>("EigenSolver", "spectra");
+        }
+        /// type of eigensolver used in the eigenvalue decomposition can be either be eigen or spectra
+        word eigensolver;
+
+        /// precision of the output Market Matrix objects (i.e. reduced matrices, eigenvalues, ...)
+        int precision;
+
+        /// type of output format can be fixed or scientific
+        std::_Ios_Fmtflags outytpe;
+
+        /// Dictionary for input objects from file
+        IOdictionary* ITHACAdict;
+    private:
 
 };
 

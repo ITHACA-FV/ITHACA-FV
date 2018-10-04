@@ -43,42 +43,41 @@ std::ofstream res_os;
 res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
 
 #if OFVER == 6
+
 while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
 #else
-  while (simple.loop() && residual > tolerance && csolve < maxIter )
+while (simple.loop() && residual > tolerance && csolve < maxIter )
 #endif
-  {
+{
     Info << "Time = " << runTime.timeName() << nl << endl;
     {
 #include "UEqn.H"
 #include "pEqn.H"
-      scalar C = 0;
-      for (label i = 0; i < 3; i++)
-      {
-        if (C < uresidual_v[i])
+        scalar C = 0;
+
+        for (label i = 0; i < 3; i++)
         {
-          C = uresidual_v[i];
+            if (C < uresidual_v[i])
+            {
+                C = uresidual_v[i];
+            }
         }
 
-      }
-
-      uresidual = C;
-      residual = max(presidual, uresidual);
-
-      Info << "\nResidual: " << residual << endl << endl;
+        uresidual = C;
+        residual = max(presidual, uresidual);
+        Info << "\nResidual: " << residual << endl << endl;
     }
     laminarTransport.correct();
     turbulence->correct();
-
-    csolve = csolve+1;
-    
+    csolve = csolve + 1;
     Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-    << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-    << nl << endl;
-  }
-  res_os << residual << std::endl;
-  res_os.close();
-  runTime.setTime(runTime.startTime(), 0);
+         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+         << nl << endl;
+}
+
+res_os << residual << std::endl;
+res_os.close();
+runTime.setTime(runTime.startTime(), 0);
 
 
 

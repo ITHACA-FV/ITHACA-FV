@@ -60,24 +60,24 @@ SourceFiles
 /// Base class for the implementation of a reduced problem
 class reducedProblem
 {
-public:
-    // Constructors
-    /// Construct Null
-    reducedProblem();
-    virtual ~reducedProblem(){};
+    public:
+        // Constructors
+        /// Construct Null
+        reducedProblem();
+        virtual ~reducedProblem() {};
 
-    /// Construct with reduced Problem
-    ///
-    /// @param  problem a reductionProblem or a child of it
-    ///
-    explicit reducedProblem(reductionProblem& problem);
+        /// Construct with reduced Problem
+        ///
+        /// @param  problem a reductionProblem or a child of it
+        ///
+        explicit reducedProblem(reductionProblem& problem);
 
-    /// Viscosity
-    scalar nu;
+        /// Viscosity
+        scalar nu;
 
-    // Function
-    /// Virtual Method to perform and online Solve
-    virtual void solveOnline();
+        // Function
+        /// Virtual Method to perform and online Solve
+        virtual void solveOnline();
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

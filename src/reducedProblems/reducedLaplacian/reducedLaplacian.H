@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -60,40 +60,41 @@ SourceFiles
     This class is used together with the laplacianProblem class */
 class reducedLaplacian: public reducedProblem
 {
-private:
+    private:
 
-public:
-    // Constructors
-    /// Construct Null
-    reducedLaplacian();
+    public:
+        // Constructors
+        /// Construct Null
+        reducedLaplacian();
 
-    /// Construct from a laplacian problem
-    explicit reducedLaplacian(laplacianProblem& problem);
+        /// Construct from a laplacian problem
+        explicit reducedLaplacian(laplacianProblem& problem);
 
-    ~reducedLaplacian(){};
+        ~reducedLaplacian() {};
 
-    /// Problem object
-    laplacianProblem* problem;
+        /// Problem object
+        laplacianProblem* problem;
 
-    /// Online solution
-    Eigen::MatrixXd online_solution;
+        /// Online solution
+        Eigen::MatrixXd online_solution;
 
-    /// Counter for online sol
-    label count_online_solve = 1;
+        /// Counter for online sol
+        label count_online_solve = 1;
 
-    /// Function to perform an online solve given a certain mu
-    ///
-    /// @param[in]  mu    Actual value of the parameters that are multiplying,
-    /// the affine expansion of the operators.
-    ///
-    void solveOnline(Eigen::MatrixXd mu);
+        /// Function to perform an online solve given a certain mu
+        ///
+        /// @param[in]  mu    Actual value of the parameters that are multiplying,
+        /// the affine expansion of the operators.
+        ///
+        void solveOnline(Eigen::MatrixXd mu);
 
-    /// Function to recover the solution given the online solution
-    ///
-    /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec")
-    /// @param[in]  printevery  Variable to recover only every printevery the online solutions
-    ///
-    void reconstruct(fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
+        /// Function to recover the solution given the online solution
+        ///
+        /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec")
+        /// @param[in]  printevery  Variable to recover only every printevery the online solutions
+        ///
+        void reconstruct(fileName folder = "./ITHACAOutput/online_rec",
+                         int printevery = 1);
 
 };
 

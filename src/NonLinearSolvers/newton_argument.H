@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file for the implementation of the newton_argument class, a simple 
+/// Header file for the implementation of the newton_argument class, a simple
 /// general object for the resolution of nonlinear problems with the Eigen library.
 
 
@@ -51,68 +51,81 @@ SourceFiles
 template<typename _Scalar, int NX = Eigen::Dynamic, int NY = Eigen::Dynamic>
 class newton_argument
 {
-public:
-    typedef _Scalar Scalar;
-    enum {
-        InputsAtCompileTime = NX,
-        ValuesAtCompileTime = NY
-    };
-    typedef Eigen::Matrix<Scalar, InputsAtCompileTime, 1> InputType;
-    typedef Eigen::Matrix<Scalar, ValuesAtCompileTime, 1> ValueType;
-    typedef Eigen::Matrix<Scalar, ValuesAtCompileTime, InputsAtCompileTime> JacobianType;
+    public:
+        typedef _Scalar Scalar;
+        enum
+        {
+            InputsAtCompileTime = NX,
+            ValuesAtCompileTime = NY
+        };
+        typedef Eigen::Matrix<Scalar, InputsAtCompileTime, 1> InputType;
+        typedef Eigen::Matrix<Scalar, ValuesAtCompileTime, 1> ValueType;
+        typedef Eigen::Matrix<Scalar, ValuesAtCompileTime, InputsAtCompileTime>
+        JacobianType;
 
-    int m_inputs, m_values;
+        int m_inputs, m_values;
 
 
-    /// @brief      Constructor
-    ///
-    newton_argument() : m_inputs(InputsAtCompileTime), m_values(ValuesAtCompileTime) {}
-    
-    /// @brief      Constructor
-    ///
-    /// @param[in]  inputs  The inputs
-    /// @param[in]  values  The values
-    ///
-    newton_argument(int inputs, int values) : m_inputs(inputs), m_values(values) {}
+        /// @brief      Constructor
+        ///
+        newton_argument() : m_inputs(InputsAtCompileTime),
+            m_values(ValuesAtCompileTime) {}
 
-    /// @brief Operator to compute the residual vector      
-    ///
-    /// @param[in]  x     The x value used to compute the residual
-    /// @param      fvec  The residual vector
-    ///
-    /// @return     0
-    ///
-    int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const
-    {
-        std::cout << "This is a virtual method, it needs to be overriden with a suitable residual function" << std::endl;
-        return 0;
-    }
+        /// @brief      Constructor
+        ///
+        /// @param[in]  inputs  The inputs
+        /// @param[in]  values  The values
+        ///
+        newton_argument(int inputs, int values) : m_inputs(inputs), m_values(values) {}
 
-    /// @brief Operator to compute the jacobian matrix      
-    ///
-    /// @param[in]  x     The x value used to compute the jacobian
-    /// @param      fvec  The jacobian vector
-    ///
-    /// @return     0
-    ///
-    int df(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const
-    {
-        std::cout << "This is a virtual method, it needs to be overriden with a suitable jacobian function" << std::endl;
-        return 0;
-    }
+        /// @brief Operator to compute the residual vector
+        ///
+        /// @param[in]  x     The x value used to compute the residual
+        /// @param      fvec  The residual vector
+        ///
+        /// @return     0
+        ///
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
+        {
+            std::cout <<
+                      "This is a virtual method, it needs to be overriden with a suitable residual function"
+                      << std::endl;
+            return 0;
+        }
 
-    /// @brief      Return the inputs
-    ///
-    /// @return     inputs
-    ///
-    int inputs() const { return m_inputs; }
-    
+        /// @brief Operator to compute the jacobian matrix
+        ///
+        /// @param[in]  x     The x value used to compute the jacobian
+        /// @param      fvec  The jacobian vector
+        ///
+        /// @return     0
+        ///
+        int df(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
+        {
+            std::cout <<
+                      "This is a virtual method, it needs to be overriden with a suitable jacobian function"
+                      << std::endl;
+            return 0;
+        }
 
-    /// @brief      Return the values
-    ///
-    /// @return     inputs
-    ///
-    int values() const { return m_values; }
+        /// @brief      Return the inputs
+        ///
+        /// @return     inputs
+        ///
+        int inputs() const
+        {
+            return m_inputs;
+        }
+
+
+        /// @brief      Return the values
+        ///
+        /// @return     inputs
+        ///
+        int values() const
+        {
+            return m_values;
+        }
 };
 
 #endif

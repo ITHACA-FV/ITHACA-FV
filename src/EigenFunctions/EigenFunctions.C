@@ -33,16 +33,20 @@ License
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-void EigenFunctions::sortEigenvalues(Eigen::VectorXd& eigenvalues, Eigen::MatrixXd& eigenvectors)
+void EigenFunctions::sortEigenvalues(Eigen::VectorXd& eigenvalues,
+                                     Eigen::MatrixXd& eigenvectors)
 {
     labelList order;
     scalarField eigenValues(eigenvalues.size());
+
     for (int i = 0; i < eigenvalues.size(); i++)
     {
         eigenValues[i] = eigenvalues(i);
     }
+
     sortedOrder(eigenValues, order);
     scalarField eigenValues2(eigenValues);
+
     for (int i = 0; i < order.size(); i++)
     {
         eigenvalues(i) = eigenValues[order[order.size() - i - 1]];
@@ -57,5 +61,6 @@ void EigenFunctions::sortEigenvalues(Eigen::VectorXd& eigenvalues, Eigen::Matrix
             eigenvectors2(i, k) = eigenvectors(k, order[order.size() - i - 1]);
         }
     }
+
     eigenvectors = eigenvectors2;
 }

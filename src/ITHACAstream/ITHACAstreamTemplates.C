@@ -33,7 +33,8 @@ License
 /// several methods for input output operations.
 
 template<typename T>
-void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder, word fieldName)
+void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder,
+                                  word fieldName)
 {
     mkDir(folder + "/" + subfolder);
     T act(fieldName, s);

@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 License
@@ -39,71 +39,68 @@ SourceFiles
 
 class tutorial05 : public steadyNS
 {
-public:
-	/// Constructor
-	explicit tutorial05(int argc, char *argv[])
-		:
-		steadyNS(argc, argv),
-		U(_U()),
-		p(_p())
-	{}
+    public:
+        /// Constructor
+        explicit tutorial05(int argc, char* argv[])
+            :
+            steadyNS(argc, argv),
+            U(_U()),
+            p(_p())
+        {}
 
-	/// Velocity field
-	volVectorField& U;
-	/// Pressure field
-	volScalarField& p;
+        /// Velocity field
+        volVectorField& U;
+        /// Pressure field
+        volScalarField& p;
 
-	/// Perform an Offline solve
-	void offlineSolve()
-	{
-		Vector<double> inl(0, 0, 0);
-		List<scalar> mu_now(1);
-		// if the offline solution is already performed read the fields
-		if (offline)
-		{
-			ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-			ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-		}
-		else
-		{
-			Vector<double> Uinl(0, 0, 0);
-			label BCind = 0;
-			for (label i = 0; i < mu.rows(); i++)
-			{
-				change_viscosity( mu(i, 0));
-				assignIF(U, Uinl);
-				truthSolve();
-			}
+        /// Perform an Offline solve
+        void offlineSolve()
+        {
+            Vector<double> inl(0, 0, 0);
+            List<scalar> mu_now(1);
 
-		}
-	}
+            // if the offline solution is already performed read the fields
+            if (offline)
+            {
+                ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+                ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+            }
+            else
+            {
+                Vector<double> Uinl(0, 0, 0);
+                label BCind = 0;
+
+                for (label i = 0; i < mu.rows(); i++)
+                {
+                    change_viscosity( mu(i, 0));
+                    assignIF(U, Uinl);
+                    truthSolve();
+                }
+            }
+        }
 
 };
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-	// Construct the tutorial object
-	tutorial05 example(argc, argv);
-
-	// Read some parameters from file
-	ITHACAparameters para;
-	int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
-	int NmodesPout = para.ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
-	// int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
-	// int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
-
-	// Read the par file where the parameters are stored
-	word filename("./par");
-	example.mu = ITHACAstream::readMatrix(filename);
-
-	// Perform the offline solve
-	example.offlineSolve();
-
-	// Perform POD on velocity pressure and supremizers and store the first 10 modes
-	ITHACAPOD::getModes(example.Ufield, example.Umodes, example.podex, 0, 0, NmodesUout);
-	ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0, NmodesPout);
-
+    // Construct the tutorial object
+    tutorial05 example(argc, argv);
+    // Read some parameters from file
+    ITHACAparameters para;
+    int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+    int NmodesPout = para.ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
+    // int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
+    // int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+    // Read the par file where the parameters are stored
+    word filename("./par");
+    example.mu = ITHACAstream::readMatrix(filename);
+    // Perform the offline solve
+    example.offlineSolve();
+    // Perform POD on velocity pressure and supremizers and store the first 10 modes
+    ITHACAPOD::getModes(example.Ufield, example.Umodes, example.podex, 0, 0,
+                        NmodesUout);
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
+                        NmodesPout);
     // ITHACAUTILITIES
-	
-	exit(0);
+    exit(0);
 }

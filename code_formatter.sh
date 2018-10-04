@@ -4,6 +4,7 @@
 
 required_command="astyle"
 code_directory="src/"
+tutorial_directory="tutorials/"
 
 #######################################
 
@@ -32,9 +33,12 @@ done
 
 # Set the files to format
 [[ $# != 0 ]] && src_files=$@ || src_files="--recursive $code_directory*.C,*.H"
+[[ $# != 0 ]] && tutorial_files=$@ || tutorial_files="--recursive $tutorial_directory*.C,*.H"
 
+echo $tutorial_files
+echo $src_files
 
-# Here the important part: astyle formats the files.
+# Here the important part: astyle formats the src files.
 astyle --style=bsd\
        --indent=spaces=4\
        --indent-classes\
@@ -53,3 +57,23 @@ astyle --style=bsd\
        --max-code-length=80\
        --mode=c\
        $src_files
+
+# Here the important part: astyle formats the tutorial files.
+astyle --style=bsd\
+       --indent=spaces=4\
+       --indent-classes\
+       --indent-switches\
+       --indent-col1-comments\
+       --break-blocks\
+       --pad-oper\
+       --pad-comma\
+       --pad-header\
+       --delete-empty-lines\
+       --align-pointer=type\
+       --align-reference=type\
+       --add-braces\
+       --convert-tabs\
+       --close-templates\
+       --max-code-length=80\
+       --mode=c\
+       $tutorial_files

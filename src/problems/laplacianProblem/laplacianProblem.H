@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 License
@@ -56,68 +56,68 @@ SourceFiles
 class laplacianProblem: public reductionProblem
 {
 
-public:
-    // Constructors
-    laplacianProblem();
-    /// Construct with argc and argv
-    laplacianProblem(int argc, char *argv[]);
-    ~laplacianProblem(){};
+    public:
+        // Constructors
+        laplacianProblem();
+        /// Construct with argc and argv
+        laplacianProblem(int argc, char* argv[]);
+        ~laplacianProblem() {};
 
-    // Member Functions
-    /// List of snapshots for the solution
-    PtrList<volScalarField> Tfield;
+        // Member Functions
+        /// List of snapshots for the solution
+        PtrList<volScalarField> Tfield;
 
-    /// List of snapshots for the solution
-    PtrList<volScalarField> Tonline;
-    
-    /// List of POD modes    
-    PtrList<volScalarField> Tmodes;
+        /// List of snapshots for the solution
+        PtrList<volScalarField> Tonline;
 
-    /// List of operators
-    PtrList<fvScalarMatrix> operator_list;
+        /// List of POD modes
+        PtrList<volScalarField> Tmodes;
 
-    /// Theta (coefficients of the affine expansion)
-    List<scalar> theta;
+        /// List of operators
+        PtrList<fvScalarMatrix> operator_list;
 
-    /// Nu (diffusivity)
-    PtrList<volScalarField> nu_list;
+        /// Theta (coefficients of the affine expansion)
+        List<scalar> theta;
 
-    /// Number of modes reduced problem
-    label NTmodes;
+        /// Nu (diffusivity)
+        PtrList<volScalarField> nu_list;
 
-    // Reduced Matrices
-    /// A matrices
-    List<Eigen::MatrixXd> A_matrices;
-    /// Source vector
-    Eigen::MatrixXd source;
+        /// Number of modes reduced problem
+        label NTmodes;
 
-    /// Other Variables
-    label counter = 1;
+        // Reduced Matrices
+        /// A matrices
+        List<Eigen::MatrixXd> A_matrices;
+        /// Source vector
+        Eigen::MatrixXd source;
 
-    // Dummy variables to transform laplacianFoam into a class
-    /// Temperature field
-    autoPtr<volScalarField> _T;
-    /// Source Term 
-    autoPtr<volScalarField> _S;
-    /// Diffusivity
-    autoPtr<volScalarField> _nu;
-    /// Mesh
-    mutable autoPtr<fvMesh> _mesh;
-    /// Time
-    autoPtr<Time> _runTime;
+        /// Other Variables
+        label counter = 1;
 
-    // Functions
-    
-    //--------------------------------------------------------------------------
-    /// Perform a truthsolve
-    void truthSolve();
+        // Dummy variables to transform laplacianFoam into a class
+        /// Temperature field
+        autoPtr<volScalarField> _T;
+        /// Source Term
+        autoPtr<volScalarField> _S;
+        /// Diffusivity
+        autoPtr<volScalarField> _nu;
+        /// Mesh
+        mutable autoPtr<fvMesh> _mesh;
+        /// Time
+        autoPtr<Time> _runTime;
 
-    //--------------------------------------------------------------------------
-    /// Perform a projection onto the POD modes
-    ///
-    /// @param[in]  Nmodes  The number of modes used for the projection
-    ///
-    void project(label Nmodes);
+        // Functions
+
+        //--------------------------------------------------------------------------
+        /// Perform a truthsolve
+        void truthSolve();
+
+        //--------------------------------------------------------------------------
+        /// Perform a projection onto the POD modes
+        ///
+        /// @param[in]  Nmodes  The number of modes used for the projection
+        ///
+        void project(label Nmodes);
 };
 
 #endif

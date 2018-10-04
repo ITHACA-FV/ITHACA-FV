@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -33,12 +33,12 @@ MRF.correctBoundaryVelocity(U);
 
 tmp<fvVectorMatrix> tUEqn
 (
-  fvm::div(phi, U)
-  + MRF.DDt(U)
-  + turbulence->divDevReff(U)
-  ==
-  fvOptions(U)
-);
+    fvm::div(phi, U)
+    + MRF.DDt(U)
+    + turbulence->divDevReff(U)
+    ==
+    fvOptions(U)
+    );
 fvVectorMatrix& UEqn = tUEqn.ref();
 
 UEqn.relax();
@@ -47,7 +47,6 @@ fvOptions.constrain(UEqn);
 
 if (simple.momentumPredictor())
 {
-  uresidual_v = solve(UEqn == -fvc::grad(p)).initialResidual();
-
-  fvOptions.correct(U);
+    uresidual_v = solve(UEqn == -fvc::grad(p)).initialResidual();
+    fvOptions.correct(U);
 }

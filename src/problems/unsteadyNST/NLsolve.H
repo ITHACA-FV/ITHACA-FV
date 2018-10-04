@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -30,32 +30,27 @@
 
 while (runTime.run())
 {
-//#include "readTimeControls.H"
-//#include "setDeltaT.H"
+    //#include "readTimeControls.H"
+    //#include "setDeltaT.H"
 #include "CourantNo.H"
+    runTime++;
+    Info << "Time = " << runTime.timeName() << nl << endl;
+    // --- Pressure-velocity PISO corrector loop
+    {
+#include "UEqn.H"
 
- runTime++;
-
- Info << "Time = " << runTime.timeName() << nl << endl;
-
-		// --- Pressure-velocity PISO corrector loop
-  {
-    #include "UEqn.H"
-                  
-			// --- PISO loop
-		while (piso.correct())
-		{
-      #include "pEqn.H"
-		}
-	}
-  {
-  #include "TEqn.H"
-	}
-
-		Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-		     << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-		     << nl << endl;
-
+        // --- PISO loop
+        while (piso.correct())
+        {
+#include "pEqn.H"
+        }
+    }
+    {
+#include "TEqn.H"
+    }
+    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+         << nl << endl;
 }
 
 

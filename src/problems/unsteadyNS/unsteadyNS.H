@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ Description
     Reduction class for a NON-Stationary NS problem
 
 SourceFiles
-    unsteadyNS.C   
+    unsteadyNS.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -67,15 +67,15 @@ and the for the generation of the reduced matrices for subsequent online solve, 
 of the steadyNS class */
 class unsteadyNS: public steadyNS
 {
-	public:
-    // Constructors
+    public:
+        // Constructors
         /// Construct Null
         unsteadyNS();
 
         /// Construct with argc and argv
-        unsteadyNS(int argc, char *argv[]);
+        unsteadyNS(int argc, char* argv[]);
 
-    // Specific variable for the unstationary case
+        // Specific variable for the unstationary case
         /// Start Time (initial time to start storing the snapshots)
         scalar startTime;
 
@@ -91,7 +91,7 @@ class unsteadyNS: public steadyNS
         /// Auxiliary variable to store the next writing instant
         scalar nextWrite;
 
-    // Dummy variables to transform pimplefoam into a class
+        // Dummy variables to transform pimplefoam into a class
         /// pimpleControl
         autoPtr<pimpleControl> _pimple;
 
@@ -107,17 +107,17 @@ class unsteadyNS: public steadyNS
         /// maxDeltaT
         scalar maxDeltaT;
 
-    // Functions
+        // Functions
 
-        //--------------------------------------------------------------------------        
+        //--------------------------------------------------------------------------
         /// @brief      Perform a truthsolve
         ///
-        /// @param[in]  mu_now  The actual value of the parameter, used only to write it 
+        /// @param[in]  mu_now  The actual value of the parameter, used only to write it
         /// in the Offline folder together with the snapshot.
         ///
         void truthSolve(List<scalar> mu_now);
 
-        //--------------------------------------------------------------------------        
+        //--------------------------------------------------------------------------
         /// Function to check if the solution must be exported.
         ///
         /// @param      timeObject  The time object of OpenFOAM.

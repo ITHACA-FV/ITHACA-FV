@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 License
@@ -33,79 +33,85 @@ License
 template<typename T>
 void reductionProblem::exportSolution(T& s, fileName subfolder, fileName folder)
 {
-	mkDir(folder+"/"+subfolder);
-	fileName fieldname = folder+"/"+subfolder + "/" + s.name();
-	Info << fieldname << endl;
-	OFstream os(fieldname);
-	s.writeHeader(os);
-	os << s << endl;
+    mkDir(folder + "/" + subfolder);
+    fileName fieldname = folder + "/" + subfolder + "/" + s.name();
+    Info << fieldname << endl;
+    OFstream os(fieldname);
+    s.writeHeader(os);
+    os << s << endl;
 }
 
 template<typename T, typename G>
-void reductionProblem::assignIF(T & s, G & value)
+void reductionProblem::assignIF(T& s, G& value)
 {
-	for (label i = 0; i < s.internalField().size(); i++)
-	{
-		s.ref()[i] = value;
-	}
+    for (label i = 0; i < s.internalField().size(); i++)
+    {
+        s.ref()[i] = value;
+    }
 }
 
 template<typename T>
 void reductionProblem::computeLift(T& Lfield, T& liftfield, T& omfield)
 {
-	scalar u_bc;
-	scalar average_u;
-	scalar area;
-	
-	for(label k=0; k<inletIndex.rows(); k++)
-	{	
-		label p = inletIndex(k,0);
-		label l = inletIndex(k,1);
-		area = gSum(Lfield[0].mesh().magSf().boundaryField()[p]);
-		for(label j=0; j<Lfield.size(); j++)
-		{
-			if(k == 0)
-			{
-			u_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] * Lfield[j].boundaryField()[p]).component(l) / area;
-			volVectorField C("U", Lfield[j] - liftfield[k]*u_bc);
-			omfield.append(C);
-			}
-			else
-			{
-				u_bc = gSum(omfield[j].mesh().magSf().boundaryField()[p] * omfield[j].boundaryField()[p]).component(l) / area;
-				volVectorField C("U", omfield[j] - liftfield[k]*u_bc);
-				omfield.set(j,C);	
-			}
-		}
-	}
+    scalar u_bc;
+    scalar average_u;
+    scalar area;
+
+    for (label k = 0; k < inletIndex.rows(); k++)
+    {
+        label p = inletIndex(k, 0);
+        label l = inletIndex(k, 1);
+        area = gSum(Lfield[0].mesh().magSf().boundaryField()[p]);
+
+        for (label j = 0; j < Lfield.size(); j++)
+        {
+            if (k == 0)
+            {
+                u_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] *
+                            Lfield[j].boundaryField()[p]).component(l) / area;
+                volVectorField C("U", Lfield[j] - liftfield[k]*u_bc);
+                omfield.append(C);
+            }
+            else
+            {
+                u_bc = gSum(omfield[j].mesh().magSf().boundaryField()[p] *
+                            omfield[j].boundaryField()[p]).component(l) / area;
+                volVectorField C("U", omfield[j] - liftfield[k]*u_bc);
+                omfield.set(j, C);
+            }
+        }
+    }
 }
 
 template<typename T>
 void reductionProblem::computeLiftT(T& Lfield, T& liftfield, T& omfield)
 {
-	scalar t_bc;
-	scalar area;
-	for(label k=0; k<inletIndexT.rows(); k++)
-	{	
-		label p = inletIndexT(k,0);
-		area = gSum(Lfield[0].mesh().magSf().boundaryField()[p]);
-		for(label j=0; j<Lfield.size(); j++)
-		{
-			if(k == 0)
-			{
-			t_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] * Lfield[j].boundaryField()[p]) / area;
-			volScalarField C(Lfield[0].name(), Lfield[j] - liftfield[k]*t_bc);
-			omfield.append(C);
-			}
-			else
-			{
-				t_bc = gSum(omfield[j].mesh().magSf().boundaryField()[p] * omfield[j].boundaryField()[p]) / area;
-				volScalarField C(Lfield[0].name(), omfield[j] - liftfield[k]*t_bc);
-				omfield.set(j,C);	
-			}
-		}
-	}
+    scalar t_bc;
+    scalar area;
 
+    for (label k = 0; k < inletIndexT.rows(); k++)
+    {
+        label p = inletIndexT(k, 0);
+        area = gSum(Lfield[0].mesh().magSf().boundaryField()[p]);
+
+        for (label j = 0; j < Lfield.size(); j++)
+        {
+            if (k == 0)
+            {
+                t_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] *
+                            Lfield[j].boundaryField()[p]) / area;
+                volScalarField C(Lfield[0].name(), Lfield[j] - liftfield[k]*t_bc);
+                omfield.append(C);
+            }
+            else
+            {
+                t_bc = gSum(omfield[j].mesh().magSf().boundaryField()[p] *
+                            omfield[j].boundaryField()[p]) / area;
+                volScalarField C(Lfield[0].name(), omfield[j] - liftfield[k]*t_bc);
+                omfield.set(j, C);
+            }
+        }
+    }
 }
 
 
