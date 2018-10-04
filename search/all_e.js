@@ -30,7 +30,7 @@ var searchData=
   ['mesh',['mesh',['../laplacianProblem_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../steadyNS_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../steadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNS_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNST_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H']]],
   ['min',['min',['../classEigenFunctions.html#a8e7e6f337330b823774dcacb76c9c0d6',1,'EigenFunctions']]],
   ['mlist',['Mlist',['../classDEIMlaplacian.html#aadc8e1528486b573634ea160fb09f3be',1,'DEIMlaplacian']]],
-  ['mmproduct',['MMproduct',['../classEigenFunctions.html#ae224f60bcea321a7a583b0b86dc4fcc0',1,'EigenFunctions']]],
+  ['mmproduct',['MMproduct',['../classEigenFunctions.html#a5ac71dd90570133cb7f2bf2f220ffd26',1,'EigenFunctions']]],
   ['modes',['modes',['../classDEIM.html#a049cc0b159a2dee23c5a1b6bed03839b',1,'DEIM']]],
   ['modesteig',['ModesTEig',['../classDEIMlaplacian.html#ac0317b741fc9bb11cc412c700fab4562',1,'DEIMlaplacian']]],
   ['modifier',['Modifier',['../classColor_1_1Modifier.html',1,'Color::Modifier'],['../classColor_1_1Modifier.html#a4e86bdba11de09223b46de053b835ec9',1,'Color::Modifier::Modifier()']]],
@@ -41,7 +41,7 @@ var searchData=
   ['mu',['mu',['../classreductionProblem.html#acca797c9e7595c83d45d40c286b9a6ee',1,'reductionProblem::mu()'],['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a40bde2055095a0920f736c9be9ff6404',1,'Foam::functionObjects::ITHACAforces::mu()']]],
   ['mu_5fcur',['mu_cur',['../classreductionProblem.html#ac19844d1554be353399c857c8b1a6aeb',1,'reductionProblem']]],
   ['mu_5frange',['mu_range',['../classreductionProblem.html#ad00cb98fdeda644d4cb784c5773b0884',1,'reductionProblem']]],
-  ['mvproduct',['MVproduct',['../classEigenFunctions.html#a51853adc2da904a0e8d658c9f3c7a3b8',1,'EigenFunctions::MVproduct(List&lt; Eigen::SparseMatrix&lt; T &gt; &gt; &amp;A, Eigen::DenseBase&lt; Eigen::Matrix&lt; T, Eigen::Dynamic, Eigen::Dynamic &gt; &gt; &amp;C)'],['../classEigenFunctions.html#a1d93dc63840e9c0cdf9ad865a1614919',1,'EigenFunctions::MVproduct(const std::vector&lt; Eigen::Matrix&lt; T, Eigen::Dynamic, Eigen::Dynamic &gt; &gt; &amp;A, Eigen::DenseBase&lt; Eigen::Matrix&lt; T, Eigen::Dynamic, Eigen::Dynamic &gt; &gt; &amp;C)']]],
+  ['mvproduct',['MVproduct',['../classEigenFunctions.html#a947439756f8e35223e2f84ee1ac2d75c',1,'EigenFunctions::MVproduct(List&lt; Eigen::SparseMatrix&lt; T &gt;&gt; &amp;A, Eigen::DenseBase&lt; Eigen::Matrix&lt; T, Eigen::Dynamic, Eigen::Dynamic &gt;&gt; &amp;C)'],['../classEigenFunctions.html#a38b9b9308ef60f25efad35d98de7f601',1,'EigenFunctions::MVproduct(const std::vector&lt; Eigen::Matrix&lt; T, Eigen::Dynamic, Eigen::Dynamic &gt;&gt; &amp;A, Eigen::DenseBase&lt; Eigen::Matrix&lt; T, Eigen::Dynamic, Eigen::Dynamic &gt;&gt; &amp;C)']]],
   ['mykroneckerproduct',['myKroneckerProduct',['../namespaceSPLINTER.html#a9f7d15e08a3546cdfa4c136264acc08b',1,'SPLINTER']]],
   ['mykroneckerproduct_2ec',['mykroneckerproduct.C',['../mykroneckerproduct_8C.html',1,'']]]
 ];
