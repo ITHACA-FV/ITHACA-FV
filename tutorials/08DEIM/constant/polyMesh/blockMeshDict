@@ -1,9 +1,3 @@
-// generated using Lx1=2, Lx2=5, Ly1=.66666666666666666666, Ly2=1, Lz=0.1, Nx1=20, Nx2=50, Ny1=20, Ny2=20 
- 
- 
-// generated using H0/H=1 
-
-
 FoamFile
 {
 version 2.0;

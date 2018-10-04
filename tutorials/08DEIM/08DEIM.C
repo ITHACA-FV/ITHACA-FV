@@ -31,10 +31,9 @@ SourceFiles
 #include "fvOptions.H"
 #include "simpleControl.H"
 #include "simpleControl.H"
+#include "fvMeshSubset.H"
 #include "ITHACAutilities.H"
 #include "Foam2Eigen.H"
-#include <chrono>
-#include "fvMeshSubset.H"
 #include "ITHACAstream.H"
 #include "ITHACAPOD.H"
 #include "DEIM.H"
@@ -73,6 +72,10 @@ class DEIM_function : public DEIM<PtrList<volScalarField>, volScalarField >
 
 int main(int argc, char* argv[])
 {
+    // Read parameters from ITHACAdict file
+    ITHACAparameters para;
+    int NDEIM = para.ITHACAdict->lookupOrDefault<int>("NDEIM", 15);   
+
 #include "setRootCase.H"
 #include "createTime.H"
 #include "createMesh.H"
@@ -106,7 +109,7 @@ int main(int argc, char* argv[])
     }
 
     // Create DEIM object with given number of basis functions
-    DEIM_function c(Sp, 30, "Gaussian_function");
+    DEIM_function c(Sp, NDEIM, "Gaussian_function");
     // Generate the submeshes with the depth of the layer
     c.generateSubmeshes(2, mesh, S);
     // Define a new online parameter
@@ -117,36 +120,98 @@ int main(int argc, char* argv[])
     Eigen::VectorXd aprfield = c.MatrixOnline * c.onlineCoeffs(par_new);
     // Transform to an OpenFOAM field and export
     volScalarField S2("S_online", Foam2Eigen::Eigen2field(S, aprfield));
-    ITHACAutilities::exportSolution(S2, "./ITHACAoutput/Online/", name(1));
+    ITHACAutilities::exportSolution(S2, "./ITHACAoutput/Online", name(1));
     // Evaluate the full order function and export it
     DEIM_function::evaluate_expression(S, par_new);
-    ITHACAutilities::exportSolution(S, "./ITHACAoutput/Online/", name(1));
+    ITHACAutilities::exportSolution(S, "./ITHACAoutput/Online", name(1));
+
+    // Compute the L2 error and print it
+    Info << ITHACAutilities::error_fields(S2, S) << endl;
     return 0;
 }
 
 /// \dir 08DEIM Folder of the turorial 8
 /// \file
-/// \brief Implementation of tutorial 8 for an unsteady Navier-Stokes problem
+/// \brief Implementation of tutorial 8 for DEIM reconstruction of a non linear function
 
 /// \example 08DEIM.C
 /// \section intro_08DEIM Introduction to tutorial 8
-/// In this tutorial we implement test
+/// In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Method (implemented in the DEIM class) for the approximation of a non-linear function. 
+/// The following image illustrates the computational domain used to discretize the problem
+/// \htmlonly <style>div.image img[src="mesh.png"]{width:500px;}</style> \endhtmlonly @image html mesh.png "Computational Domain"
 ///
-/// The following image illustrates blabla
-/// \image html cylinder.png
+/// The non-liner function is described by a parametric Gaussian function:
+/// \f[
+/// S(\mathbf{x},\mathbf{\mu}) = e^{-2(x-\mu_x-1)^2 - 2(y-\mu_y-0.5)^2},
+///  \f]
+/// that is depending on the parameter vector \f$\mathbf{\mu} = [\mu_x, \mu_y] \f$ and on the location inside the domain \f$ \mathbf{x} = [x,y] \f$. A training set of 100 samples is used to construct the DEIM modes which are later used for the approximation.
+///
+/// \subsection header The necessary header files
+/// First of all let's have a look to the header files that needs to be included and what they are responsible for:
+/// The header files of ITHACA-FV necessary for this tutorial are: <Foam2Eigen.H> for Eigen to OpenFOAM conversion of objects, <ITHACAstream.H> for ITHACA-FV input-output operations. <ITHACAPOD.H> for the POD decomposition, <DEIM.H> for the DEIM approximation.
+///
 ///
 /// \section code08 A detailed look into the code
 ///
-/// In this section we explain the main steps necessary to construct the tutorial N°9
+/// \dontinclude 08DEIM.C
+/// The OpenFOAM heder files:
+/// \skip #include "fvCFD.H"
+/// \until fvMeshSubset
 ///
-/// \subsection header ITHACA-FV header files
+/// ITHACA-FV header files
 ///
-/// First of all let's have a look at the header files that need to be included and what they are responsible for.
+/// \until DEIM
 ///
-/// The header files of ITHACA-FV necessary for this tutorial are: <unsteadyNS.H> for the full order unsteady NS problem,
-/// <ITHACAPOD.H> for the POD decomposition, <reducedUnsteadyNS.H> for the construction of the reduced order problem,
-/// and finally <ITHACAstream.H> for some ITHACA input-output operations.
+/// chrono to compute the speedup
+/// \until chrono
+/// 
+/// Construction of the function to be approximated with the DEIM method. 
+/// \skip class
+/// \until DEIM::DEIM
 ///
+/// Method with the explicit definition of the non-linear function
+/// \skip evaluate_expression
+/// \until }
+/// \until }
+///
+/// Method with the expression for the evaluation of the online coefficients
+/// \skip onlineCoeffs
+/// \until }
+/// \until }
+///
+/// Now let's have a look to important command in the main function. 
+/// Read parameters from the ITHACAdict file
+/// \skip ITHACApara
+/// \until int
+/// 
+/// Definition of the parameter samples to train the non-linear function
+/// \skipline Eigen
+/// Offline training of the function and assembly of the snapshots list
+/// \skip for
+/// \until }
+/// Construction of the DEIM object passing the list of snapshots Sp, the maximum number of DEIM modes NDEIM, and the name used to store the output "Gaussian_function". 
+/// \skipline DEIM_function
+/// Command to generate the submeshes used for pointwise evaluation of the function
+/// \skipline c.
+/// Definition of a new sample value to test the accuracy of the method \f$ \mu* = (0,0) \f$
+/// \skip Eigen
+/// \until 1,
+///
+/// Evaluation of the function using DEIM and reconstruction of the field
+/// \skip Eigen
+/// \until volSca
+/// 
+/// Export the approximation 
+///
+/// \skipline ITHACA
+///
+/// Evaluate the function on in \f$\mu*\f$ using the FOM
+/// \skipline DEIM
+/// Export the FOM field
+/// \skipline ITHACA
+/// Compute the error and print it
+/// \skipline Info
+/// 
 /// \section plaincode The plain program
 /// Here there's the plain code
 
