@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
     }
 
     // Create DEIM object with given number of basis functions
-    DEIM_function c(Sp, 30, "Gaussiana");
+    DEIM_function c(Sp, 30, "Gaussian_function");
     // Generate the submeshes with the depth of the layer
     c.generateSubmeshes(2, mesh, S);
     // Define a new online parameter

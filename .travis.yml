@@ -1,6 +1,6 @@
 # Travis CI setup ITHACA-FV
 
-sudo: required
+sudo: false
 dist: trusty
 language: cpp
 
