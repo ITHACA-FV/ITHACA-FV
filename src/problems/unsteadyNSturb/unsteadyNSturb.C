@@ -77,6 +77,8 @@ void unsteadyNSturb::truthSolve(List<scalar> mu_now)
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
+    // Initialize Nsnapshots
+    int nsnapshots = 0;
 
     // Start the time loop
     while (runTime.run())
@@ -111,6 +113,7 @@ void unsteadyNSturb::truthSolve(List<scalar> mu_now)
 
         if (checkWrite(runTime))
         {
+            nsnapshots += 1;
             volScalarField nut = turbulence->nut();
             exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
             exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
@@ -123,9 +126,29 @@ void unsteadyNSturb::truthSolve(List<scalar> mu_now)
             counter++;
             nextWrite += writeEvery;
             writeMu(mu_now);
+            // --- Fill in the mu_samples with parameters (time, mu) to be used for the PODI sample points
+            mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
+            mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
+
+            for (int i = 0; i < mu_now.size(); i++)
+            {
+                mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
+            }
         }
 
         runTime++;
+    }
+
+    // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
+    if (mu.cols() == 0)
+    {
+        mu.resize(1, 1);
+    }
+
+    if (mu_samples.rows() == nsnapshots * mu.cols())
+    {
+        ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
+                                   "./ITHACAoutput/Offline");
     }
 }
 

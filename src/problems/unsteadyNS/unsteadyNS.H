@@ -103,9 +103,9 @@ class unsteadyNS: public steadyNS
 
         //--------------------------------------------------------------------------
         /// @brief      Perform a truthsolve
-        ///
-        /// @param[in]  mu_now  The actual value of the parameter, used only to write it
-        /// in the Offline folder together with the snapshot.
+        /// @param[in]  mu_now  The actual value of the parameter for this truthSolve. Used only
+        /// to construct mu_interp matrix which is written out in the Offline folder, also for par file in
+        /// the Parameters folder.
         ///
         void truthSolve(List<scalar> mu_now);
 

@@ -31,6 +31,7 @@ EXE_INC = \
     -I../../src/thirdparty/RedSVD \
     -I../../src/thirdparty/spectra-0.6.1/include \
     -I../../src/thirdparty/multivariate-splines-master/include \
+    -I../../src/thirdparty/splinter/include \
     -w \
     -std=c++11
 

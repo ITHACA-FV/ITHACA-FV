@@ -72,6 +72,41 @@ class reducedProblem
         virtual void solveOnline();
 };
 
+
+/// Class for the online evaluation of the coefficient manifold for PODI
+class onlineInterp
+{
+    public:
+        // Constructors
+        /// Construct Null
+        onlineInterp();
+        virtual ~onlineInterp() {};
+
+        /// Number of parameters in the mu_samples matrix in the FOM
+        int Nmu_samples;
+
+        //--------------------------------------------------------------------------
+        /// @brief      Get interpolated coefficients evaluated at points from matrix "mu_interp" using the constructed parameters-coefficients manifold
+        /// @param[in]  model       Type of the interpolator model, either "rbf" or spl", which must be the same as in the constructed model in the offline phase (see "buildCoeffManifold" method)
+        /// @param[in]  mu_interp   The matrix of points required to be evaluated using the constructed interpolator model. The matrix has a shape (n x m) where "n" is the number of points need to be evaluated (i.e. Nsnapshots) for parametric simulations, while "m" is the number of parameters
+        ///
+        /// @return     Interpolated coefficient matrix
+        ///
+        Eigen::MatrixXd getInterpCoeffRBF(std::vector<SPLINTER::RBFSpline> rbfVec,
+                                          Eigen::MatrixXd mu_interp);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Get interpolated coefficients evaluated at points from matrix "mu_interp" using the constructed parameters-coefficients manifold
+        /// @param[in]  model       Type of the interpolator model, either "rbf" or spl", which must be the same as in the constructed model in the offline phase (see "buildCoeffManifold" method)
+        /// @param[in]  mu_interp   The matrix of points required to be evaluated using the constructed interpolator model. The matrix has a shape (n x m) where "n" is the number of points need to be evaluated (i.e. Nsnapshots) for parametric simulations, while "m" is the number of parameters
+        ///
+        /// @return     Interpolated coefficient matrix
+        ///
+        Eigen::MatrixXd getInterpCoeffSPL(std::vector<SPLINTER::BSpline> splVec,
+                                          Eigen::MatrixXd mu_interp);
+};
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif

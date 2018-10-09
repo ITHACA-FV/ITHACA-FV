@@ -28,6 +28,7 @@ EXE_INC = \
     -I../../src/DEIM \
     -I../../src/EigenFunctions \
     -I../../src/thirdparty/spectra-0.6.1/include \
+    -I../../src/thirdparty/splinter/include \
     -w \
     -std=c++11
 
