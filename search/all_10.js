@@ -7,6 +7,7 @@ var searchData=
   ['onlinecoeffs',['onlineCoeffs',['../classDEIM.html#a466e3ac6c9139df8aaabbcc49fb0bbdc',1,'DEIM::onlineCoeffs()'],['../classDEIM__function.html#acb1bf84005f1c7b4d9237d2c2c3d088f',1,'DEIM_function::onlineCoeffs()']]],
   ['onlinecoeffsa',['onlineCoeffsA',['../classDEIM__function.html#a0eb445f866b435431b38770b999165df',1,'DEIM_function']]],
   ['onlinecoeffsb',['onlineCoeffsB',['../classDEIM__function.html#a80411c4d87bf13005e537d37dcd72944',1,'DEIM_function']]],
+  ['onlineinterp',['onlineInterp',['../classonlineInterp.html',1,'onlineInterp'],['../classonlineInterp.html#ae18cfea98587396bda0be82b513d0fee',1,'onlineInterp::onlineInterp()']]],
   ['onlinesolve',['OnlineSolve',['../classDEIMlaplacian.html#a26a0728a4254e9fd98b7f27d394bddaa',1,'DEIMlaplacian']]],
   ['onlinesolvefull',['OnlineSolveFull',['../classDEIMlaplacian.html#ac6f560e784c42b742ad78825ec2004c8',1,'DEIMlaplacian']]],
   ['open',['open',['../steadyNS_2NLsolve_8H.html#ab29e2569e1f37a5c002ed1746576c8c5',1,'open(&quot;./ITHACAoutput/Offline/residuals&quot;, std::ios_base::app):&#160;NLsolve.H'],['../steadyNSturb_2NLsolve_8H.html#ab29e2569e1f37a5c002ed1746576c8c5',1,'open(&quot;./ITHACAoutput/Offline/residuals&quot;, std::ios_base::app):&#160;NLsolve.H']]],
