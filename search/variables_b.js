@@ -27,5 +27,6 @@ var searchData=
   ['mt_5fmatrix',['MT_matrix',['../classunsteadyNST.html#ad05be916d7f16856b9c1cc43e60e7cf4',1,'unsteadyNST::MT_matrix()'],['../classreducedUnsteadyNST.html#a027712b3ffd2a7fd38cbc677138c2f12',1,'reducedUnsteadyNST::MT_matrix()']]],
   ['mu',['mu',['../classreductionProblem.html#acca797c9e7595c83d45d40c286b9a6ee',1,'reductionProblem']]],
   ['mu_5fcur',['mu_cur',['../classreductionProblem.html#ac19844d1554be353399c857c8b1a6aeb',1,'reductionProblem']]],
-  ['mu_5frange',['mu_range',['../classreductionProblem.html#ad00cb98fdeda644d4cb784c5773b0884',1,'reductionProblem']]]
+  ['mu_5frange',['mu_range',['../classreductionProblem.html#ad00cb98fdeda644d4cb784c5773b0884',1,'reductionProblem']]],
+  ['mu_5fsamples',['mu_samples',['../classreductionProblem.html#a30a31093d96229e8a53c26d26dbf96c1',1,'reductionProblem']]]
 ];

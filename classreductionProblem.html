@@ -172,8 +172,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a13f8de83a6998544001ac79839b31d84"><td class="mdescLeft">&#160;</td><td class="mdescRight">General projection operation.  <a href="#a13f8de83a6998544001ac79839b31d84">More...</a><br /></td></tr>
 <tr class="separator:a13f8de83a6998544001ac79839b31d84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a190ccbfacec0dc99a55f4324f48f4c99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a190ccbfacec0dc99a55f4324f48f4c99">writeMu</a> (List&lt; scalar &gt; mu_now)</td></tr>
-<tr class="memdesc:a190ccbfacec0dc99a55f4324f48f4c99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write out a list of scalar.  <a href="#a190ccbfacec0dc99a55f4324f48f4c99">More...</a><br /></td></tr>
+<tr class="memdesc:a190ccbfacec0dc99a55f4324f48f4c99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write out a list of scalar corresponding to the parameters used in the truthSolve.  <a href="#a190ccbfacec0dc99a55f4324f48f4c99">More...</a><br /></td></tr>
 <tr class="separator:a190ccbfacec0dc99a55f4324f48f4c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed2cc1bfb82298f25561b6b51a852c2b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; SPLINTER::RBFSpline &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#aed2cc1bfb82298f25561b6b51a852c2b">getCoeffManifoldRBF</a> (PtrList&lt; volVectorField &gt; snapshots, PtrList&lt; volVectorField &gt; &amp;modes, word rbfBasis=&quot;GAUSSIAN&quot;)</td></tr>
+<tr class="memdesc:aed2cc1bfb82298f25561b6b51a852c2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the parameters-coefficients manifold for vector fields, based on RBF-spline model.  <a href="#aed2cc1bfb82298f25561b6b51a852c2b">More...</a><br /></td></tr>
+<tr class="separator:aed2cc1bfb82298f25561b6b51a852c2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af100bb56325193781206437010c35bfe"><td class="memItemLeft" align="right" valign="top">std::vector&lt; SPLINTER::RBFSpline &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#af100bb56325193781206437010c35bfe">getCoeffManifoldRBF</a> (PtrList&lt; volScalarField &gt; snapshots, PtrList&lt; volScalarField &gt; &amp;modes, word rbfBasis=&quot;GAUSSIAN&quot;)</td></tr>
+<tr class="memdesc:af100bb56325193781206437010c35bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the parameters-coefficients manifold for scalar fields, based on RBF-spline model.  <a href="#af100bb56325193781206437010c35bfe">More...</a><br /></td></tr>
+<tr class="separator:af100bb56325193781206437010c35bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecc4b03c579be46862ecff0625423370"><td class="memItemLeft" align="right" valign="top">std::vector&lt; SPLINTER::BSpline &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#aecc4b03c579be46862ecff0625423370">getCoeffManifoldSPL</a> (PtrList&lt; volVectorField &gt; snapshots, PtrList&lt; volVectorField &gt; &amp;modes, label splDeg=3)</td></tr>
+<tr class="memdesc:aecc4b03c579be46862ecff0625423370"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the parameters-coefficients manifold for vector fields, based on the B-spline model.  <a href="#aecc4b03c579be46862ecff0625423370">More...</a><br /></td></tr>
+<tr class="separator:aecc4b03c579be46862ecff0625423370"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5098ea4955161b6714792350413f4244"><td class="memItemLeft" align="right" valign="top">std::vector&lt; SPLINTER::BSpline &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a5098ea4955161b6714792350413f4244">getCoeffManifoldSPL</a> (PtrList&lt; volScalarField &gt; snapshots, PtrList&lt; volScalarField &gt; &amp;modes, label splDeg=3)</td></tr>
+<tr class="memdesc:a5098ea4955161b6714792350413f4244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the parameters-coefficients manifold for scalar fields, based on the B-spline model.  <a href="#a5098ea4955161b6714792350413f4244">More...</a><br /></td></tr>
+<tr class="separator:a5098ea4955161b6714792350413f4244"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -184,11 +196,14 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a69051f3541cecdb2f68bf8520e33837b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dimension of the training set (used only when gerating parameters without input)  <a href="#a69051f3541cecdb2f68bf8520e33837b">More...</a><br /></td></tr>
 <tr class="separator:a69051f3541cecdb2f68bf8520e33837b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acca797c9e7595c83d45d40c286b9a6ee"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#acca797c9e7595c83d45d40c286b9a6ee">mu</a></td></tr>
-<tr class="memdesc:acca797c9e7595c83d45d40c286b9a6ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix of parameters.  <a href="#acca797c9e7595c83d45d40c286b9a6ee">More...</a><br /></td></tr>
+<tr class="memdesc:acca797c9e7595c83d45d40c286b9a6ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Row matrix of parameters.  <a href="#acca797c9e7595c83d45d40c286b9a6ee">More...</a><br /></td></tr>
 <tr class="separator:acca797c9e7595c83d45d40c286b9a6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad00cb98fdeda644d4cb784c5773b0884"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#ad00cb98fdeda644d4cb784c5773b0884">mu_range</a></td></tr>
 <tr class="memdesc:ad00cb98fdeda644d4cb784c5773b0884"><td class="mdescLeft">&#160;</td><td class="mdescRight">Range of the parameter spaces.  <a href="#ad00cb98fdeda644d4cb784c5773b0884">More...</a><br /></td></tr>
 <tr class="separator:ad00cb98fdeda644d4cb784c5773b0884"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30a31093d96229e8a53c26d26dbf96c1"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a30a31093d96229e8a53c26d26dbf96c1">mu_samples</a></td></tr>
+<tr class="memdesc:a30a31093d96229e8a53c26d26dbf96c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix of parameters to be used for PODI, where each row corresponds to a sample point. In this matrix the time dimension is regarded as a parameter for unsteady problems.  <a href="#a30a31093d96229e8a53c26d26dbf96c1">More...</a><br /></td></tr>
+<tr class="separator:a30a31093d96229e8a53c26d26dbf96c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac19844d1554be353399c857c8b1a6aeb"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#ac19844d1554be353399c857c8b1a6aeb">mu_cur</a></td></tr>
 <tr class="memdesc:ac19844d1554be353399c857c8b1a6aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current value of the parameter.  <a href="#ac19844d1554be353399c857c8b1a6aeb">More...</a><br /></td></tr>
 <tr class="separator:ac19844d1554be353399c857c8b1a6aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -210,7 +225,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">A general class for the implementation of a full order parametrized problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00061">61</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00067">67</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a410dcbf3d97c7df2aa6a1b291afaa111"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a410dcbf3d97c7df2aa6a1b291afaa111">&#9670;&nbsp;</a></span>reductionProblem()</h2>
@@ -256,7 +271,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00070">70</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00076">76</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -303,7 +318,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00176">176</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00169">169</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -349,7 +364,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00122">122</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00116">116</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -396,7 +411,7 @@ template&lt;typename T , typename G &gt; </div>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a17">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a16">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a15">04unsteadyNS.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a19">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a18">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a17">04unsteadyNS.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="reductionProblemTemplates_8C_source.html#l00045">45</a> of file <a class="el" href="reductionProblemTemplates_8C_source.html">reductionProblemTemplates.C</a>.</p>
 
@@ -444,7 +459,7 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00099">99</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00098">98</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -490,7 +505,7 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00106">106</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00103">103</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -659,7 +674,7 @@ template&lt;typename T &gt; </div>
 
 <p>Generate Equidistributed Numbers. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00088">88</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00087">87</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -708,7 +723,195 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00070">70</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00069">69</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+
+</div>
+</div>
+<a id="aed2cc1bfb82298f25561b6b51a852c2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed2cc1bfb82298f25561b6b51a852c2b">&#9670;&nbsp;</a></span>getCoeffManifoldRBF() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; SPLINTER::RBFSpline &gt; reductionProblem::getCoeffManifoldRBF </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volVectorField &gt;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>rbfBasis</em> = <code>&quot;GAUSSIAN&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs the parameters-coefficients manifold for vector fields, based on RBF-spline model. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">snapshots</td><td>Snapshots vector fields, used to compute the coefficient matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modes</td><td>POD modes vector fields, used to compute the coefficient matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">rbfBasis</td><td>The RBF basis type. Implemented bases are "GAUSSIAN", "THIN_PLATE", "MULTI_QUADRIC", "INVERSE_QUADRIC", and "INVERSE_MULTI_QUADRIC". Default basis is "Gaussian"</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of objects to the RBF splines corresponding to each mode </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00269">269</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+
+</div>
+</div>
+<a id="af100bb56325193781206437010c35bfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af100bb56325193781206437010c35bfe">&#9670;&nbsp;</a></span>getCoeffManifoldRBF() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; SPLINTER::RBFSpline &gt; reductionProblem::getCoeffManifoldRBF </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>rbfBasis</em> = <code>&quot;GAUSSIAN&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs the parameters-coefficients manifold for scalar fields, based on RBF-spline model. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">snapshots</td><td>Snapshots scalar fields, used to compute the coefficient matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modes</td><td>POD modes scalar fields, used to compute the coefficient matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">rbfBasis</td><td>The RBF basis type. Implemented bases are "GAUSSIAN", "THIN_PLATE", "MULTI_QUADRIC", "INVERSE_QUADRIC", and "INVERSE_MULTI_QUADRIC". Default basis is "Gaussian"</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of objects to the RBF splines corresponding to each mode </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00325">325</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+
+</div>
+</div>
+<a id="aecc4b03c579be46862ecff0625423370"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecc4b03c579be46862ecff0625423370">&#9670;&nbsp;</a></span>getCoeffManifoldSPL() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; SPLINTER::BSpline &gt; reductionProblem::getCoeffManifoldSPL </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volVectorField &gt;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>splDeg</em> = <code>3</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs the parameters-coefficients manifold for vector fields, based on the B-spline model. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">snapshots</td><td>Snapshots vector fields, used to compute the coefficient matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modes</td><td>POD modes vector fields, used to compute the coefficient matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">splDeg</td><td>The B-spline degree. Default value is 3</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of objects to the B-splines corresponding to each mode </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00381">381</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+
+</div>
+</div>
+<a id="a5098ea4955161b6714792350413f4244"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5098ea4955161b6714792350413f4244">&#9670;&nbsp;</a></span>getCoeffManifoldSPL() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; SPLINTER::BSpline &gt; reductionProblem::getCoeffManifoldSPL </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>splDeg</em> = <code>3</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs the parameters-coefficients manifold for scalar fields, based on the B-spline model. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">snapshots</td><td>Snapshots scalar fields, used to compute the coefficient matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modes</td><td>POD modes scalar fields, used to compute the coefficient matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">splDeg</td><td>The B-spline degree. Default value is 3</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of objects to the B-splines corresponding to each mode </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00424">424</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -729,7 +932,7 @@ template&lt;typename T &gt; </div>
 
 <p>Virtual function to compute the lifting function for scalar field. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00272">272</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00257">257</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -748,7 +951,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00279">279</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00263">263</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -769,7 +972,7 @@ template&lt;typename T &gt; </div>
 
 <p>General projection operation. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00251">251</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00238">238</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -822,7 +1025,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00209">209</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00200">200</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -876,7 +1079,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <p>Exact reconstruction using a certain number of modes for scalar list of fields </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00231">231</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00220">220</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -917,8 +1120,9 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p>Perform a TruthSolve. </p>
-
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00114">114</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a20">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a19">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a19">04unsteadyNS.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00109">109</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -938,7 +1142,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Write out a list of scalar. </p>
+<p>Write out a list of scalar corresponding to the parameters used in the truthSolve. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">mu_now</td><td>The list of scalars. </td></tr>
@@ -946,7 +1150,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00258">258</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8C_source.html#l00244">244</a> of file <a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a>.</p>
 
 </div>
 </div>
@@ -977,7 +1181,7 @@ template&lt;typename T &gt; </div>
  2 for z <br />
  The Matrix should be implemented in the following way: \[ \mbox{inletIndex}=\begin{bmatrix} \mbox{BC1_index} &amp; \mbox{Direction of BC1} \\ \ \mbox{BC2_index} &amp; \mbox{Direction of BC3} \\ \ \vdots &amp; \vdots \\ \ \mbox{BCN_index} &amp; \mbox{Direction of BCN} \ \ \end{bmatrix} \] </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00115">115</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00123">123</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -993,7 +1197,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00143">143</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00151">151</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1012,7 +1216,7 @@ template&lt;typename T &gt; </div>
 <p>dictionary to store input output infos </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="09DEIM_ROM_8C-example.html#a30">09DEIM_ROM.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00088">88</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00096">96</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1028,10 +1232,10 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Matrix of parameters. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a15">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a14">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a14">04unsteadyNS.C</a>.</dd>
+<p>Row matrix of parameters. </p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a17">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a16">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a16">04unsteadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00078">78</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00084">84</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1049,7 +1253,7 @@ template&lt;typename T &gt; </div>
 
 <p>Current value of the parameter. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00082">82</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00090">90</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1067,7 +1271,26 @@ template&lt;typename T &gt; </div>
 
 <p>Range of the parameter spaces. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00080">80</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00086">86</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+
+</div>
+</div>
+<a id="a30a31093d96229e8a53c26d26dbf96c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30a31093d96229e8a53c26d26dbf96c1">&#9670;&nbsp;</a></span>mu_samples</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXd reductionProblem::mu_samples</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Matrix of parameters to be used for PODI, where each row corresponds to a sample point. In this matrix the time dimension is regarded as a parameter for unsteady problems. </p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a14">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a13">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a13">04unsteadyNS.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00088">88</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1086,7 +1309,7 @@ template&lt;typename T &gt; </div>
 <p>Boolean variable, it is 1 if the Offline phase has already been computed, else 0. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a11">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a9">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a9">04unsteadyNS.C</a>, and <a class="el" href="09DEIM_ROM_8C-example.html#a42">09DEIM_ROM.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00086">86</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00094">94</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1104,7 +1327,7 @@ template&lt;typename T &gt; </div>
 
 <p>Number of parameters. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00070">70</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00076">76</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1122,7 +1345,7 @@ template&lt;typename T &gt; </div>
 
 <p>Boolean variable, it is 1 if the POD has already been computed, else 0. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00084">84</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00092">92</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1140,7 +1363,7 @@ template&lt;typename T &gt; </div>
 
 <p>Dimension of the training set (used only when gerating parameters without input) </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00076">76</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00082">82</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>

@@ -41,6 +41,7 @@ var searchData=
   ['mu',['mu',['../classreductionProblem.html#acca797c9e7595c83d45d40c286b9a6ee',1,'reductionProblem::mu()'],['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a40bde2055095a0920f736c9be9ff6404',1,'Foam::functionObjects::ITHACAforces::mu()']]],
   ['mu_5fcur',['mu_cur',['../classreductionProblem.html#ac19844d1554be353399c857c8b1a6aeb',1,'reductionProblem']]],
   ['mu_5frange',['mu_range',['../classreductionProblem.html#ad00cb98fdeda644d4cb784c5773b0884',1,'reductionProblem']]],
+  ['mu_5fsamples',['mu_samples',['../classreductionProblem.html#a30a31093d96229e8a53c26d26dbf96c1',1,'reductionProblem']]],
   ['mvproduct',['MVproduct',['../classEigenFunctions.html#a947439756f8e35223e2f84ee1ac2d75c',1,'EigenFunctions::MVproduct(List&lt; Eigen::SparseMatrix&lt; T &gt;&gt; &amp;A, Eigen::DenseBase&lt; Eigen::Matrix&lt; T, Eigen::Dynamic, Eigen::Dynamic &gt;&gt; &amp;C)'],['../classEigenFunctions.html#a38b9b9308ef60f25efad35d98de7f601',1,'EigenFunctions::MVproduct(const std::vector&lt; Eigen::Matrix&lt; T, Eigen::Dynamic, Eigen::Dynamic &gt;&gt; &amp;A, Eigen::DenseBase&lt; Eigen::Matrix&lt; T, Eigen::Dynamic, Eigen::Dynamic &gt;&gt; &amp;C)']]],
   ['mykroneckerproduct',['myKroneckerProduct',['../namespaceSPLINTER.html#a9f7d15e08a3546cdfa4c136264acc08b',1,'SPLINTER']]],
   ['mykroneckerproduct_2ec',['mykroneckerproduct.C',['../mykroneckerproduct_8C.html',1,'']]]
