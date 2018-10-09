@@ -27,6 +27,7 @@ Description
     Reduction class for a NON-Stationary turbulent NS problem
 SourceFiles
     unsteadyNSturb.C
+
 \*---------------------------------------------------------------------------*/
 
 /// \file
@@ -155,10 +156,11 @@ class unsteadyNSturb: public unsteadyNS
         List < Eigen::MatrixXd > turbulence_term2(label NUmodes, label NSUPmodes,
                 label Nnutmodes);
 
-        ///
-        /// Perform a truth solve
-        ///
-        /// @param[in]  mu_now  The mu now
+        //--------------------------------------------------------------------------
+        /// @brief      Perform a truthsolve
+        /// @param[in]  mu_now  The actual value of the parameter for this truthSolve. Used only
+        /// to construct mu_interp matrix which is written out in the Offline folder, also for par file in
+        /// the Parameters folder.
         ///
         void truthSolve(List<scalar> mu_now);
 

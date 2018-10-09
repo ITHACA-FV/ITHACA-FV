@@ -103,7 +103,7 @@ class laplacianProblem: public reductionProblem
 
         //--------------------------------------------------------------------------
         /// Perform a truthsolve
-        void truthSolve();
+        void truthSolve(List<scalar> mu_now);
 
         //--------------------------------------------------------------------------
         /// Perform a projection onto the POD modes

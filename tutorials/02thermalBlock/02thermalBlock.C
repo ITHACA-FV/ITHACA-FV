@@ -66,21 +66,25 @@ class tutorial02: public laplacianProblem
             if (offline)
             {
                 ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
+                mu_samples =
+                    ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }
             else
             {
+                List<scalar> mu_now(9);
                 scalar IF = 0;
 
                 for (label i = 0; i < mu.rows(); i++)
                 {
                     for (label j = 0; j < mu.cols() ; j++)
                     {
+                        // mu_now[i] =
                         theta[j] = mu(i, j);
                     }
 
                     assignIF(T, IF);
                     Info << i << endl;
-                    truthSolve();
+                    truthSolve(mu_now);
                 }
             }
         }

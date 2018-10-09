@@ -74,8 +74,7 @@ int main(int argc, char* argv[])
 {
     // Read parameters from ITHACAdict file
     ITHACAparameters para;
-    int NDEIM = para.ITHACAdict->lookupOrDefault<int>("NDEIM", 15);   
-
+    int NDEIM = para.ITHACAdict->lookupOrDefault<int>("NDEIM", 15);
 #include "setRootCase.H"
 #include "createTime.H"
 #include "createMesh.H"
@@ -124,7 +123,6 @@ int main(int argc, char* argv[])
     // Evaluate the full order function and export it
     DEIM_function::evaluate_expression(S, par_new);
     ITHACAutilities::exportSolution(S, "./ITHACAoutput/Online", name(1));
-
     // Compute the L2 error and print it
     Info << ITHACAutilities::error_fields(S2, S) << endl;
     return 0;
@@ -136,7 +134,7 @@ int main(int argc, char* argv[])
 
 /// \example 08DEIM.C
 /// \section intro_08DEIM Introduction to tutorial 8
-/// In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Method (implemented in the DEIM class) for the approximation of a non-linear function. 
+/// In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Method (implemented in the DEIM class) for the approximation of a non-linear function.
 /// The following image illustrates the computational domain used to discretize the problem
 /// \htmlonly <style>div.image img[src="mesh.png"]{width:500px;}</style> \endhtmlonly @image html mesh.png "Computational Domain"
 ///
@@ -164,8 +162,8 @@ int main(int argc, char* argv[])
 ///
 /// chrono to compute the speedup
 /// \until chrono
-/// 
-/// Construction of the function to be approximated with the DEIM method. 
+///
+/// Construction of the function to be approximated with the DEIM method.
 /// \skip class
 /// \until DEIM::DEIM
 ///
@@ -179,17 +177,17 @@ int main(int argc, char* argv[])
 /// \until }
 /// \until }
 ///
-/// Now let's have a look to important command in the main function. 
+/// Now let's have a look to important command in the main function.
 /// Read parameters from the ITHACAdict file
 /// \skip ITHACApara
 /// \until int
-/// 
+///
 /// Definition of the parameter samples to train the non-linear function
 /// \skipline Eigen
 /// Offline training of the function and assembly of the snapshots list
 /// \skip for
 /// \until }
-/// Construction of the DEIM object passing the list of snapshots Sp, the maximum number of DEIM modes NDEIM, and the name used to store the output "Gaussian_function". 
+/// Construction of the DEIM object passing the list of snapshots Sp, the maximum number of DEIM modes NDEIM, and the name used to store the output "Gaussian_function".
 /// \skipline DEIM_function
 /// Command to generate the submeshes used for pointwise evaluation of the function
 /// \skipline c.
@@ -200,8 +198,8 @@ int main(int argc, char* argv[])
 /// Evaluation of the function using DEIM and reconstruction of the field
 /// \skip Eigen
 /// \until volSca
-/// 
-/// Export the approximation 
+///
+/// Export the approximation
 ///
 /// \skipline ITHACA
 ///
@@ -211,7 +209,7 @@ int main(int argc, char* argv[])
 /// \skipline ITHACA
 /// Compute the error and print it
 /// \skipline Info
-/// 
+///
 /// \section plaincode The plain program
 /// Here there's the plain code
 

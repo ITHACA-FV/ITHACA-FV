@@ -32,6 +32,7 @@ EXE_INC = \
     -I../../src/Foam2Eigen \
     -I../../src/EigenFunctions \
     -I../../src/thirdparty/spectra-0.6.1/include \
+    -I../../src/thirdparty/splinter/include \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11

@@ -77,9 +77,9 @@ class steadyNSturb: public steadyNS
         /// List of POD modes for eddy viscosity
         PtrList<volScalarField> nuTmodes;
 
-        // Create a Rbf splines for interpolation
-        std::vector<SPLINTER::DataTable*> SAMPLES;
         // Create a SAMPLES for interpolation
+        std::vector<SPLINTER::DataTable*> SAMPLES;
+        // Create a RBF splines for interpolation
         std::vector<SPLINTER::RBFSpline*> rbfsplines;
 
 
@@ -112,12 +112,16 @@ class steadyNSturb: public steadyNS
         autoPtr<volScalarField> _nut;
         autoPtr<volScalarField> _nuTilda;
 
-        /// @brief    Perform a truth solve
+        //--------------------------------------------------------------------------
+        /// @brief      Perform a truthsolve
+        /// @param[in]  mu_now  The actual value of the parameter for this truthSolve. Used only
+        /// to construct mu_interp matrix which is written out in the Offline folder, also for par file in
+        /// the Parameters folder.
         ///
-        void truthSolve();
+        void truthSolve(List<scalar> mu_now);
 
 
-        /// Project using a supremizer approach
+        /// @brief      Project using a supremizer approach
         ///
         /// @param[in]  folder     The folder used to save the reduced matrices.
         /// @param[in]  NUmodes    The number of velocity modes.

@@ -62,17 +62,20 @@ class tutorial03 : public steadyNS
             {
                 ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+                mu_samples =
+                    ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }
             else
             {
                 Vector<double> Uinl(0, 0, 0);
                 label BCind = 0;
 
-                for (label i = 0; i < mu.rows(); i++)
+                for (label i = 0; i < mu.cols(); i++)
                 {
-                    change_viscosity( mu(i, 0));
+                    mu_now[0] = mu(0, i);
+                    change_viscosity(mu(0, i));
                     assignIF(U, Uinl);
-                    truthSolve();
+                    truthSolve(mu_now);
                 }
             }
         }

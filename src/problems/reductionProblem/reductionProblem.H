@@ -49,6 +49,12 @@ SourceFiles
 #include "ITHACAstream.H"
 #include "../thirdparty/Eigen/Eigen/Eigen"
 
+#include <datatable.h>
+#include <bspline.h>
+#include <bsplinebuilder.h>
+#include <rbfspline.h>
+// #include <spline.h>
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,206 +66,249 @@ SourceFiles
 /// A general class for the implementation of a full order parametrized problem
 class reductionProblem
 {
-    private:
+private:
 
-    public:
-        // Constructors
+public:
+    // Constructors
 
-        /// Construct Null
-        reductionProblem();
-        ~reductionProblem() {};
+    /// Construct Null
+    reductionProblem();
+    ~reductionProblem() {};
 
-        // Members
-        /// Number of parameters
-        label Pnumber;
-        /// Dimension of the training set (used only when gerating parameters without input)
-        label Tnumber;
-        /// Matrix of parameters
-        Eigen::MatrixXd mu;
-        /// Range of the parameter spaces
-        Eigen::MatrixXd mu_range;
-        /// Current value of the parameter
-        double mu_cur;
-        /// Boolean variable, it is 1 if the POD has already been computed, else 0
-        bool podex;
-        /// Boolean variable, it is 1 if the Offline phase has already been computed, else 0
-        bool offline;
-        /// dictionary to store input output infos
-        IOdictionary* ITHACAdict;
+    // Members
+    /// Number of parameters
+    label Pnumber;
+    /// Dimension of the training set (used only when gerating parameters without input)
+    label Tnumber;
+    /// Row matrix of parameters
+    Eigen::MatrixXd mu;
+    /// Range of the parameter spaces
+    Eigen::MatrixXd mu_range;
+    /// Matrix of parameters to be used for PODI, where each row corresponds to a sample point. In this matrix the time dimension is regarded as a parameter for unsteady problems
+    Eigen::MatrixXd mu_samples;
+    /// Current value of the parameter
+    double mu_cur;
+    /// Boolean variable, it is 1 if the POD has already been computed, else 0
+    bool podex;
+    /// Boolean variable, it is 1 if the Offline phase has already been computed, else 0
+    bool offline;
+    /// dictionary to store input output infos
+    IOdictionary* ITHACAdict;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
-        /// Matrix that contains informations about the inlet boundaries
-        /// @details The dimension is: <br>
-        /// Rows = Number of parametrized boundary conditions <br>
-        /// Cols = 2 <br>
-        /// Example: <br>
-        /// example.inletIndex.resize(1, 2); <br>
-        /// example.inletIndex(0, 0) = 0; <br>
-        /// example.inletIndex(0, 1) = 0; <br>
-        /// Means that there is one parametrized boundary conditions, the first col contains the
-        /// index of the parametrized boundary, the second col contains the direction along which
-        /// the BC is parametrized: <br>
-        /// 0 for x <br>
-        /// 1 for y <br>
-        /// 2 for z <br>
-        /// The Matrix should be implemented in the following way:
-        /// \\[
-        /// \\mbox{inletIndex}=\\begin{bmatrix}
-        /// \\mbox{BC1_index} & \\mbox{Direction of BC1} \\\\ \
-        /// \\mbox{BC2_index} & \\mbox{Direction of BC3} \\\\ \
-        /// \\vdots & \\vdots \\\\ \
-        /// \\mbox{BCN_index} & \\mbox{Direction of BCN} \\ \
-        /// \\end{bmatrix}
-        /// \\]
-        Eigen::MatrixXi inletIndex;
+    /// Matrix that contains informations about the inlet boundaries
+    /// @details The dimension is: <br>
+    /// Rows = Number of parametrized boundary conditions <br>
+    /// Cols = 2 <br>
+    /// Example: <br>
+    /// example.inletIndex.resize(1, 2); <br>
+    /// example.inletIndex(0, 0) = 0; <br>
+    /// example.inletIndex(0, 1) = 0; <br>
+    /// Means that there is one parametrized boundary conditions, the first col contains the
+    /// index of the parametrized boundary, the second col contains the direction along which
+    /// the BC is parametrized: <br>
+    /// 0 for x <br>
+    /// 1 for y <br>
+    /// 2 for z <br>
+    /// The Matrix should be implemented in the following way:
+    /// \\[
+    /// \\mbox{inletIndex}=\\begin{bmatrix}
+    /// \\mbox{BC1_index} & \\mbox{Direction of BC1} \\\\ \
+    /// \\mbox{BC2_index} & \\mbox{Direction of BC3} \\\\ \
+    /// \\vdots & \\vdots \\\\ \
+    /// \\mbox{BCN_index} & \\mbox{Direction of BCN} \\ \
+    /// \\end{bmatrix}
+    /// \\]
+    Eigen::MatrixXi inletIndex;
 #pragma GCC diagnostic pop
 
-        // Functions
+    // Functions
+     
+    //--------------------------------------------------------------------------
+    /// Set Parameters Problems
+    void setParameters();
 
-        //--------------------------------------------------------------------------
-        /// Set Parameters Problems
-        void setParameters();
+    //--------------------------------------------------------------------------
+    /// Generate Random Numbers
+    void genRandPar();
 
-        //--------------------------------------------------------------------------
-        /// Generate Random Numbers
-        void genRandPar();
+    //--------------------------------------------------------------------------
+    /// Generate Random Numbers given the dimension of the training set
+    ///
+    /// @param[in]  tsize  Dimension of the training set.
+    ///
+    void genRandPar(int tsize);
 
-        //--------------------------------------------------------------------------
-        /// Generate Random Numbers given the dimension of the training set
-        ///
-        /// @param[in]  tsize  Dimension of the training set.
-        ///
-        void genRandPar(int tsize);
+    //--------------------------------------------------------------------------
+    /// Generate Equidistributed Numbers
+    void genEquiPar();
 
-        //--------------------------------------------------------------------------
-        /// Generate Equidistributed Numbers
-        void genEquiPar();
+    //--------------------------------------------------------------------------
+    /// Perform a TruthSolve
+    void truthSolve();
 
-        //--------------------------------------------------------------------------
-        /// Perform a TruthSolve
-        void truthSolve();
+    Eigen::MatrixXi inletIndexT;
 
-        Eigen::MatrixXi inletIndexT;
+    //--------------------------------------------------------------------------
+    /// Export a field (template function)
+    ///
+    /// @param[in]  s          field you want to export.
+    /// @param[in]  subfolder  The subfolder used to save the snapshot.
+    /// @param[in]  folder     The folder used to save the snapshot.
+    ///
+    /// @tparam     T          Type of parameter you want to export (volVectorField or volScalarField).
+    ///
+    template<typename T>
+    void exportSolution(T& s, fileName subfolder, fileName folder = "./Offline");
 
-        //--------------------------------------------------------------------------
-        /// Export a field (template function)
-        ///
-        /// @param[in]  s          field you want to export.
-        /// @param[in]  subfolder  The subfolder used to save the snapshot.
-        /// @param[in]  folder     The folder used to save the snapshot.
-        ///
-        /// @tparam     T          Type of parameter you want to export (volVectorField or volScalarField).
-        ///
-        template<typename T>
-        void exportSolution(T& s, fileName subfolder, fileName folder = "./Offline");
+    //--------------------------------------------------------------------------
+    /// Assign Boundary Condition to a volVectorField
+    ///
+    /// @param[in]  s       field where you want to assign the BC.
+    /// @param[in]  BC_ind  The BC index.
+    /// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
+    ///
+    void assignBC(volVectorField& s, label BC_ind, Vector<double>& value);
 
-        //--------------------------------------------------------------------------
-        /// Assign Boundary Condition to a volVectorField
-        ///
-        /// @param[in]  s       field where you want to assign the BC.
-        /// @param[in]  BC_ind  The BC index.
-        /// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
-        ///
-        void assignBC(volVectorField& s, label BC_ind, Vector<double>& value);
+    //--------------------------------------------------------------------------
+    /// Assign Boundary Condition to a volScalarField
+    ///
+    /// @param[in]  s       field where you want to assign the BC.
+    /// @param[in]  BC_ind  The BC index.
+    /// @param[in]  value   The value you want to assign (it must be a double).
+    ///
+    void assignBC(volScalarField& s, label BC_ind, double& value);
 
-        //--------------------------------------------------------------------------
-        /// Assign Boundary Condition to a volScalarField
-        ///
-        /// @param[in]  s       field where you want to assign the BC.
-        /// @param[in]  BC_ind  The BC index.
-        /// @param[in]  value   The value you want to assign (it must be a double).
-        ///
-        void assignBC(volScalarField& s, label BC_ind, double& value);
+    //--------------------------------------------------------------------------
+    /// Change the boundary condition type for a volVectorField
+    ///
+    /// @param[in]  field   The field
+    /// @param[in]  BCtype  The BC type you want to set
+    /// @param[in]  BC_ind  The BC index
+    ///
+    void changeBCtype(volVectorField& field, word BCtype, label BC_ind);
 
-        //--------------------------------------------------------------------------
-        /// Change the boundary condition type for a volVectorField
-        ///
-        /// @param[in]  field   The field
-        /// @param[in]  BCtype  The BC type you want to set
-        /// @param[in]  BC_ind  The BC index
-        ///
-        void changeBCtype(volVectorField& field, word BCtype, label BC_ind);
+    //--------------------------------------------------------------------------
+    /// Change the boundary condition type for a volScalarField
+    ///
+    /// @param[in]  field   The field
+    /// @param[in]  BCtype  The BC type you want to set
+    /// @param[in]  BC_ind  The BC index
+    void changeBCtype(volScalarField& field, word BCtype, label BC_ind);
 
-        //--------------------------------------------------------------------------
-        /// Change the boundary condition type for a volScalarField
-        ///
-        /// @param[in]  field   The field
-        /// @param[in]  BCtype  The BC type you want to set
-        /// @param[in]  BC_ind  The BC index
-        void changeBCtype(volScalarField& field, word BCtype, label BC_ind);
+    //--------------------------------------------------------------------------
+    /// Exact reconstruction using a certain number of modes for vector list of
+    /// fields and the projection coefficients (volVectorField)
+    ///
+    /// @param[out] rec_field2    The reconstructed field as PtrList of volVectorField.
+    /// @param[in]  modes         The modes used for reconstruction as PtrList of volVectorField.
+    /// @param[in]  Nmodes        The number of modes you want to use.
+    /// @param[in]  coeff_matrix  The matrix of coefficients.
+    ///
+    void reconstruct_from_matrix(PtrList<volVectorField>& rec_field2, PtrList<volVectorField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
-        //--------------------------------------------------------------------------
-        /// Exact reconstruction using a certain number of modes for vector list of
-        /// fields and the projection coefficients (volVectorField)
-        ///
-        /// @param[out] rec_field2    The reconstructed field as PtrList of volVectorField.
-        /// @param[in]  modes         The modes used for reconstruction as PtrList of volVectorField.
-        /// @param[in]  Nmodes        The number of modes you want to use.
-        /// @param[in]  coeff_matrix  The matrix of coefficients.
-        ///
-        void reconstruct_from_matrix(PtrList<volVectorField>& rec_field2,
-                                     PtrList<volVectorField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
+    //--------------------------------------------------------------------------
+    /// Exact reconstruction using a certain number of modes for vector list of
+    /// fields and the projection coefficients (volScalarField)
+    ///
+    /// @param[out] rec_field2    The reconstructed field as PtrList of volScalarField.
+    /// @param[in]  modes         The modes used for reconstruction as PtrList of volScalarField.
+    /// @param[in]  Nmodes        The number of modes you want to use.
+    /// @param[in]  coeff_matrix  The matrix of coefficients.
+    ///
+    /// Exact reconstruction using a certain number of modes for scalar list of fields
+    void reconstruct_from_matrix(PtrList<volScalarField>& rec_field2, PtrList<volScalarField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
-        //--------------------------------------------------------------------------
-        /// Exact reconstruction using a certain number of modes for vector list of
-        /// fields and the projection coefficients (volScalarField)
-        ///
-        /// @param[out] rec_field2    The reconstructed field as PtrList of volScalarField.
-        /// @param[in]  modes         The modes used for reconstruction as PtrList of volScalarField.
-        /// @param[in]  Nmodes        The number of modes you want to use.
-        /// @param[in]  coeff_matrix  The matrix of coefficients.
-        ///
-        /// Exact reconstruction using a certain number of modes for scalar list of fields
-        void reconstruct_from_matrix(PtrList<volScalarField>& rec_field2,
-                                     PtrList<volScalarField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
+    //--------------------------------------------------------------------------
+    /// Assign internal field condition
+    ///
+    /// @param[in,out]  s      field where you want to assign the internal field condition
+    /// @param          value  The value you want to assign
+    ///
+    /// @tparam         T      type of field (volVectorField or volScalarField)
+    /// @tparam         G      type of value you want to assign (OpenFOAM vector or scalar)
+    ///
+    template<typename T, typename G>
+    void assignIF(T& s, G& value);
 
-        //--------------------------------------------------------------------------
-        /// Assign internal field condition
-        ///
-        /// @param[in,out]  s      field where you want to assign the internal field condition
-        /// @param          value  The value you want to assign
-        ///
-        /// @tparam         T      type of field (volVectorField or volScalarField)
-        /// @tparam         G      type of value you want to assign (OpenFOAM vector or scalar)
-        ///
-        template<typename T, typename G>
-        void assignIF(T& s, G& value);
+    //--------------------------------------------------------------------------
+    /// Homogenize the snapshot matrix, it works with PtrList of volVectorField and volScalarField
+    ///
+    /// @param[in]      Lfield     The list of snapshots to be homogenized.
+    /// @param[in]      liftfield  The list containing.
+    /// @param[out]     omfield    The homogenized snapshot matrix.
+    ///
+    /// @tparam     T          { description }
+    ///
+    template<typename T>
+    void computeLift(T& Lfield, T& liftfield, T& omfield);
 
-        //--------------------------------------------------------------------------
-        /// Homogenize the snapshot matrix, it works with PtrList of volVectorField and volScalarField
-        ///
-        /// @param[in]      Lfield     The list of snapshots to be homogenized.
-        /// @param[in]      liftfield  The list containing.
-        /// @param[out]     omfield    The homogenized snapshot matrix.
-        ///
-        /// @tparam     T          { description }
-        ///
-        template<typename T>
-        void computeLift(T& Lfield, T& liftfield, T& omfield);
+    //--------------------------------------------------------------------------
+    /// Virtual function to compute the lifting function
+    ///
 
-        //--------------------------------------------------------------------------
-        /// Virtual function to compute the lifting function
-        ///
+    template<typename T>
+    void computeLiftT(T& Lfield, T& liftfield, T& omfield);
+    //--------------------------------------------------------------------------
+    /// Virtual function to compute the lifting function for scalar field
+    ///
+    void liftSolve();
+    void liftSolveT();
+    //--------------------------------------------------------------------------
+    /// General projection operation
+    ///
+    void project();
 
-        template<typename T>
-        void computeLiftT(T& Lfield, T& liftfield, T& omfield);
-        //--------------------------------------------------------------------------
-        /// Virtual function to compute the lifting function for scalar field
-        ///
-        void liftSolve();
-        void liftSolveT();
-        //--------------------------------------------------------------------------
-        /// General projection operation
-        ///
-        void project();
+    //--------------------------------------------------------------------------
+    /// Write out a list of scalar corresponding to the parameters used in the truthSolve
+    ///
+    /// @param[in]  mu_now  The list of scalars.
+    ///
+    void writeMu(List<scalar> mu_now);
 
-        //--------------------------------------------------------------------------
-        /// Write out a list of scalar
-        ///
-        /// @param[in]  mu_now  The list of scalars.
-        ///
-        void writeMu(List<scalar> mu_now);
+    //--------------------------------------------------------------------------
+    /// @brief      Constructs the parameters-coefficients manifold for vector fields, based on RBF-spline model 
+    /// @param[in]  snapshots   Snapshots vector fields, used to compute the coefficient matrix
+    /// @param[in]  modes       POD modes vector fields, used to compute the coefficient matrix
+    /// @param[in]  rbfBasis    The RBF basis type. Implemented bases are "GAUSSIAN", "THIN_PLATE",
+    /// "MULTI_QUADRIC", "INVERSE_QUADRIC", and "INVERSE_MULTI_QUADRIC". Default basis is "Gaussian"
+    ///
+    /// @return     Vector of objects to the RBF splines corresponding to each mode
+    ///
+    std::vector<SPLINTER::RBFSpline> getCoeffManifoldRBF(PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes, word rbfBasis="GAUSSIAN");
+
+    //--------------------------------------------------------------------------
+    /// @brief      Constructs the parameters-coefficients manifold for scalar fields, based on RBF-spline model
+    /// @param[in]  snapshots   Snapshots scalar fields, used to compute the coefficient matrix
+    /// @param[in]  modes       POD modes scalar fields, used to compute the coefficient matrix
+    /// @param[in]  rbfBasis    The RBF basis type. Implemented bases are "GAUSSIAN", "THIN_PLATE",
+    /// "MULTI_QUADRIC", "INVERSE_QUADRIC", and "INVERSE_MULTI_QUADRIC". Default basis is "Gaussian"
+    ///
+    /// @return     Vector of objects to the RBF splines corresponding to each mode
+    ///
+    std::vector<SPLINTER::RBFSpline> getCoeffManifoldRBF(PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes, word rbfBasis="GAUSSIAN");
+
+    //--------------------------------------------------------------------------
+    /// @brief      Constructs the parameters-coefficients manifold for vector fields, based on the B-spline model
+    /// @param[in]  snapshots   Snapshots vector fields, used to compute the coefficient matrix
+    /// @param[in]  modes       POD modes vector fields, used to compute the coefficient matrix
+    /// @param[in]  splDeg      The B-spline degree. Default value is 3
+    ///
+    /// @return     Vector of objects to the B-splines corresponding to each mode
+    ///
+    // std::vector<SPLINTER::BSpline*> getCoeffManifoldSPL(PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes, label splDeg=3);
+    std::vector<SPLINTER::BSpline> getCoeffManifoldSPL(PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes, label splDeg=3);
+
+    //--------------------------------------------------------------------------
+    /// @brief      Constructs the parameters-coefficients manifold for scalar fields, based on the B-spline model
+    /// @param[in]  snapshots   Snapshots scalar fields, used to compute the coefficient matrix
+    /// @param[in]  modes       POD modes scalar fields, used to compute the coefficient matrix
+    /// @param[in]  splDeg      The B-spline degree. Default value is 3
+    ///
+    /// @return     Vector of objects to the B-splines corresponding to each mode
+    ///
+    std::vector<SPLINTER::BSpline> getCoeffManifoldSPL(PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes, label splDeg=3);
 
 };
 
@@ -325,9 +374,5 @@ Doi                      = {10.1016/j.compfluid.2018.01.035}}
 And cite the ITHACA-FV [website](https://mathlab.sissa.it/ithaca-fv).
 
  */
-
-
-
-
 
 

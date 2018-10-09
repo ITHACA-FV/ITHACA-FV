@@ -203,8 +203,14 @@ class steadyNS: public reductionProblem
         scalar cumulativeContErr = 0;
 
         // Functions
-        /// Perform a truthsolve
-        void truthSolve();
+
+        //--------------------------------------------------------------------------
+        /// @brief      Perform a truthsolve
+        /// @param[in]  mu_now  The actual value of the parameter for this truthSolve. Used only
+        /// to construct mu_interp matrix which is written out in the Offline folder, also for par file in
+        /// the Parameters folder.
+        ///
+        void truthSolve(List<scalar> mu_now);
 
         ///
         /// solve the supremizer either with the use of the pressure snaphots or the pressure modes

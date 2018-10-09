@@ -74,7 +74,7 @@ steadyNSturb::steadyNSturb(int argc, char* argv[])
 // * * * * * * * * * * * * * * Full Order Methods * * * * * * * * * * * * * * //
 
 // Method to performa a truthSolve
-void steadyNSturb::truthSolve()
+void steadyNSturb::truthSolve(List<scalar> mu_now)
 {
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
@@ -97,6 +97,26 @@ void steadyNSturb::truthSolve()
     nutFields.append(_nut);
     counter++;
     bool notconverged = 1;
+    writeMu(mu_now);
+    // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points
+    mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
+
+    for (int i = 0; i < mu_now.size(); i++)
+    {
+        mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
+    }
+
+    // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
+    if (mu.cols() == 0)
+    {
+        mu.resize(1, 1);
+    }
+
+    if (mu_samples.rows() == mu.cols())
+    {
+        ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
+                                   "./ITHACAoutput/Offline");
+    }
 }
 
 List < Eigen::MatrixXd > steadyNSturb::turbulence_term1(label NUmodes,
