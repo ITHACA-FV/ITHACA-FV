@@ -97,6 +97,8 @@ class reductionProblem
         bool podex;
         /// Boolean variable, it is 1 if the Offline phase has already been computed, else 0
         bool offline;
+        /// Boolean variable, it is 1 if the Online phase has already been computed, else 0
+        bool online;
         /// dictionary to store input output infos
         IOdictionary* ITHACAdict;
 

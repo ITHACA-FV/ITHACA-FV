@@ -1,0 +1,114 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         backward;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    default         none;
+
+    div(phi,U)      Gauss upwind;
+    div(phi,T)      Gauss upwind;
+    div(phi,R)      Gauss upwind;
+    div(R)          Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+
+    div((nuEff*dev(T(grad(U)))))        Gauss linear;
+    div((nuEff*dev2(T(grad(U)))))       Gauss linear;
+    div((nuEff*dev2(T(grad(Ua)))))      Gauss linear;
+
+    div(U)                              Gauss linear;
+    div(phi,Tlift0)                     Gauss upwind;
+    div(phi,Tlift1)                     Gauss upwind;
+    div(phi,Tlift2)                     Gauss upwind;
+    div(phi,Tlift3)                     Gauss upwind;
+    div((interpolate(U)&S),U)           Gauss upwind;
+    div((interpolate(U)&S),Tlift0)      Gauss upwind;
+    div((interpolate(U)&S),Tlift1)      Gauss upwind;
+    div((interpolate(U)&S),Tlift2)      Gauss upwind;
+    div((interpolate(U)&S),Tlift3)      Gauss upwind;
+    div((interpolate(U)&S),T)           Gauss upwind;
+
+
+}
+
+laplacianSchemes
+{
+    default                            Gauss linear orthogonal; 
+    laplacian(nu,U)                    Gauss linear orthogonal;
+    laplacian((1|A(U)),p) 	       Gauss linear orthogonal;
+    laplacian(nu,Phi)                  Gauss linear orthogonal;
+    laplacian(DT,T)                    Gauss linear orthogonal;
+    laplacian(nuEff,U)                 Gauss linear orthogonal;
+    laplacian(DT,Tlift0)               Gauss linear orthogonal;
+    laplacian(DT,Tlift1)               Gauss linear orthogonal;
+    laplacian(DT,Tlift2)               Gauss linear orthogonal;
+    laplacian(DT,Tlift3)               Gauss linear orthogonal;
+    laplacian(nu,Tlift0)               Gauss linear orthogonal;
+    laplacian(nu,Tlift1)               Gauss linear orthogonal;
+    laplacian(nu,Tlift2)               Gauss linear orthogonal;
+    laplacian(nu,Tlift3)               Gauss linear orthogonal;
+    laplacian(1,Phi)                   Gauss linear orthogonal;
+    laplacian(nu_fake,Usup)            Gauss linear orthogonal;
+    laplacian(1,Ulift0)                Gauss linear orthogonal;
+    laplacian(1,Ulift1)                Gauss linear orthogonal;
+    laplacian(1,Tlift0)                Gauss linear orthogonal;
+    laplacian(1,Tlift1)                Gauss linear orthogonal; 
+    laplacian(1,Tlift2)                Gauss linear orthogonal;
+    laplacian(1,Tlift3)                Gauss linear orthogonal;
+    laplacian(1,U)                     Gauss linear orthogonal;
+    laplacian(1,Usup)                  Gauss linear orthogonal;
+    laplacian(Tlift0)                  Gauss linear orthogonal;
+    laplacian(Tlift1)                  Gauss linear orthogonal;
+    laplacian(Tlift2)                  Gauss linear orthogonal;
+    laplacian(Tlift3)                  Gauss linear orthogonal;
+    laplacian(T)                       Gauss linear orthogonal;
+    laplacian(alphaEff,T)              Gauss linear orthogonal;
+    laplacian(alphaEff,Tlift0)         Gauss linear orthogonal;
+    laplacian(alphaEff,Tlift1)         Gauss linear orthogonal;
+    laplacian(alphaEff,Tlift2)         Gauss linear orthogonal;
+    laplacian(alphaEff,Tlift3)         Gauss linear orthogonal;
+
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         orthogonal;
+}
+
+fluxRequired
+{
+    default                           no;
+    p;
+    Phi;
+}
+
+
+// ************************************************************************* //
