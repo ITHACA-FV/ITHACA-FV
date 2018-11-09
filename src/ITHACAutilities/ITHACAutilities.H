@@ -137,6 +137,13 @@ class ITHACAutilities
         static bool check_off();
 
         //--------------------------------------------------------------------------
+        /// Check if the online data folder exists
+        ///
+        /// @return     1 if the folder exists 0 elsewhere.
+        ///
+        static bool check_on();
+
+        //--------------------------------------------------------------------------
         /// Check if the POD data folder exists
         ///
         /// @return     1 if the folder exists 0 elsewhere.
@@ -192,6 +199,48 @@ class ITHACAutilities
         static Eigen::MatrixXd error_listfields(PtrList<volScalarField>& fields1,
                                                 PtrList<volScalarField>& fields2);
 
+                //--------------------------------------------------------------------------
+        /// Function to compute the relative error between two volVectorFields in L2 norm
+        ///
+        /// @param[in]  field1  The field 1
+        /// @param[in]  field2  The field 2
+        ///
+        /// @return     L2 norm of the relative error.
+        ///
+        static double error_fields_relative(volVectorField& field1, volVectorField& field2);
+
+        //--------------------------------------------------------------------------
+        /// Function to compute the relative error between two volScalarFields in L2 norm
+        ///
+        /// @param[in]  field1  The field 1
+        /// @param[in]  field2  The field 2
+        ///
+        /// @return     L2 norm of the relative error.
+        ///
+        static double error_fields_relative(volScalarField& field1, volScalarField& field2);
+
+        //--------------------------------------------------------------------------
+        /// Function to compute the relative error in L2 norm between two lists of volVectorFields
+        ///
+        /// @param[in]  fields1  The fields 1
+        /// @param[in]  fields2  The fields 2
+        ///
+        /// @return     A vector containing the error between the two fields in Eigen::MatrixXd form.
+        ///
+        static Eigen::MatrixXd error_listfields_relative(PtrList<volVectorField>& fields1,
+                                                PtrList<volVectorField>& fields2);
+
+        //--------------------------------------------------------------------------
+        /// Function to compute the relative error in L2 norm between two lists of volScalarFields
+        ///
+        /// @param[in]  fields1  The fields 1
+        /// @param[in]  fields2  The fields 2
+        ///
+        /// @return     A vector containing the error between the two fields in Eigen::MatrixXd form.
+        ///
+        static Eigen::MatrixXd error_listfields_relative(PtrList<volScalarField>& fields1,
+                                                PtrList<volScalarField>& fields2);
+
         //--------------------------------------------------------------------------
         /// Function to compute a Mass Matrix from a list of Basis Functions (vectorial) for L2 projection
         ///
@@ -199,7 +248,7 @@ class ITHACAutilities
         ///
         /// @return     The mass matrix in Eigen::MatrixXd form.
         ///
-        static Eigen::MatrixXd get_mass_matrix(PtrList<volVectorField> modes);
+        static Eigen::MatrixXd get_mass_matrix(PtrList<volVectorField> modes, int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Function to compute a Mass Matrix from a list of Basis Functions (scalar) for L2 projection
@@ -208,7 +257,7 @@ class ITHACAutilities
         ///
         /// @return     The mass matrix in Eigen::MatrixXd form.
         ///
-        static Eigen::MatrixXd get_mass_matrix(PtrList<volScalarField> modes);
+        static Eigen::MatrixXd get_mass_matrix(PtrList<volScalarField> modes,  int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Project a snapshot scalar field on a non-orthogonal basis function and get the coefficients of the projection
@@ -219,7 +268,7 @@ class ITHACAutilities
         /// @return     The coefficients of the projection.
         ///
         static Eigen::MatrixXd get_coeffs(PtrList<volScalarField> snapshots,
-                                          PtrList<volScalarField> modes);
+                                          PtrList<volScalarField> modes,  int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection
@@ -230,7 +279,7 @@ class ITHACAutilities
         /// @return     The coefficients of the projection.
         ///
         static Eigen::MatrixXd get_coeffs(PtrList<volVectorField> snapshots,
-                                          PtrList<volVectorField> modes);
+                                          PtrList<volVectorField> modes, int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection
@@ -241,7 +290,7 @@ class ITHACAutilities
         /// @return     The coefficients of the projection.
         ///
         static Eigen::VectorXd get_coeffs(volVectorField snapshot,
-                                          PtrList<volVectorField>& modes);
+                                          PtrList<volVectorField>& modes, int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Project a snapshot vector field on a non-orthogonal basis function
@@ -253,7 +302,7 @@ class ITHACAutilities
         /// @return     The coefficients of the projection.
         ///
         static Eigen::VectorXd get_coeffs(volScalarField snapshot,
-                                          PtrList<volScalarField>& modes);
+                                          PtrList<volScalarField>& modes, int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// @brief      Gets the coeffs ortho.
@@ -264,7 +313,7 @@ class ITHACAutilities
         /// @return     The coeffs ortho.
         ///
         static Eigen::MatrixXd get_coeffs_ortho(PtrList<volScalarField> snapshots,
-                                                PtrList<volScalarField>& modes);
+                                                PtrList<volScalarField>& modes, int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// @brief      Gets the coeffs ortho.
@@ -275,7 +324,7 @@ class ITHACAutilities
         /// @return     The coeffs ortho.
         ///
         static Eigen::MatrixXd get_coeffs_ortho(PtrList<volVectorField> snapshots,
-                                                PtrList<volVectorField>& modes);
+                                                PtrList<volVectorField>& modes, int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Project a snapshot scalar field on an orthogonal basis function
@@ -287,8 +336,10 @@ class ITHACAutilities
         /// @return     The coefficients of the projection.
         ///
         static Eigen::VectorXd get_coeffs_ortho(volScalarField snapshot,
-                                                PtrList<volScalarField>& modes);
+                                                PtrList<volScalarField>& modes, int Nmodes = 0);
 
+        static Eigen::VectorXd get_coeffs_ortho(volVectorField snapshot,
+                                                PtrList<volVectorField>& modes, int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Export a field (template function)
