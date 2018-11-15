@@ -4,6 +4,7 @@ var searchData=
   ['samples',['SAMPLES',['../classsteadyNSturb.html#af50e2f520aa0d296ff9de415e9926633',1,'steadyNSturb::SAMPLES()'],['../classunsteadyNSturb.html#ae6d41ae76b272ceddcec1400bac0954a',1,'unsteadyNSturb::SAMPLES()']]],
   ['savedensematrix',['SaveDenseMatrix',['../classITHACAstream.html#a7010b247c96ae01fce8a8ef01d12fa4a',1,'ITHACAstream']]],
   ['savedensematrixlist',['SaveDenseMatrixList',['../classITHACAstream.html#a95309779e7aae89700ca8ba460628cf8',1,'ITHACAstream']]],
+  ['savedensetensor',['SaveDenseTensor',['../classITHACAstream.html#ad91f47911a1d72753c73cfc224f25998',1,'ITHACAstream']]],
   ['savemarketvector',['saveMarketVector',['../namespaceEigen.html#a26ff8eaebc2532433557944b083d3e82',1,'Eigen']]],
   ['savesparsematrix',['SaveSparseMatrix',['../classITHACAstream.html#ab3662e39b9b10d11bc391ca00ec7cc5c',1,'ITHACAstream']]],
   ['savesparsematrixlist',['SaveSparseMatrixList',['../classITHACAstream.html#aa37598c28aca085f3d66c51f0cd5785c',1,'ITHACAstream']]],
