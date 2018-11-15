@@ -17,5 +17,6 @@ var searchData=
   ['exportfvmatrix',['exportFvMatrix',['../classITHACAstream.html#aa7f09cd6933cbcc927938398704c2a3a',1,'ITHACAstream']]],
   ['exportlist',['exportList',['../classITHACAstream.html#a5d09ae79be293199609de1101e828fc3',1,'ITHACAstream']]],
   ['exportmatrix',['exportMatrix',['../classITHACAstream.html#af50c379dc3bb43014fe7735030273b71',1,'ITHACAstream::exportMatrix(Eigen::MatrixXd &amp;matrice, word name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)'],['../classITHACAstream.html#a086b719ba599e8ef5ce60b608e9186e3',1,'ITHACAstream::exportMatrix(List&lt; Eigen::MatrixXd &gt; &amp;matrice, word name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)']]],
-  ['exportsolution',['exportSolution',['../classITHACAstream.html#a77447bb623ea2510f255437b827e7700',1,'ITHACAstream::exportSolution()'],['../classITHACAutilities.html#a0c5f4131185cd184265de90bafa7c8bb',1,'ITHACAutilities::exportSolution()'],['../classreductionProblem.html#a00460fb159836e8d6b88b60dcb862f0b',1,'reductionProblem::exportSolution()']]]
+  ['exportsolution',['exportSolution',['../classITHACAstream.html#a77447bb623ea2510f255437b827e7700',1,'ITHACAstream::exportSolution()'],['../classITHACAutilities.html#a0c5f4131185cd184265de90bafa7c8bb',1,'ITHACAutilities::exportSolution()'],['../classreductionProblem.html#a00460fb159836e8d6b88b60dcb862f0b',1,'reductionProblem::exportSolution()']]],
+  ['extract_5ftime_5fevolution_2ec',['extract_time_evolution.C',['../extract__time__evolution_8C.html',1,'']]]
 ];
