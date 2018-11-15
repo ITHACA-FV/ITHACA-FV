@@ -51,6 +51,7 @@ SourceFiles
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #include "../thirdparty/Eigen/Eigen/Eigen"
+#include "../thirdparty/Eigen/unsupported/Eigen/CXX11/Tensor"
 #pragma GCC diagnostic pop
 
 #define MAXBUFSIZE (static_cast<int> (1e6))
@@ -279,6 +280,32 @@ class ITHACAstream
         template <typename MatrixType>
         static void ReadDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
 
+
+        //----------------------------------------------------------------------
+        /// @brief      Saves a dense tensor.
+        ///
+        /// @param      Tensor      The tensor
+        /// @param[in]  folder      The folder
+        /// @param[in]  MatrixName  The matrix name
+        ///
+        /// @tparam     TensorType  type of the tensor, i.e. double, float, ...
+        ///
+        template <typename TensorType>
+        static void SaveDenseTensor(TensorType& Tensor, word folder, word MatrixName);
+
+
+        //----------------------------------------------------------------------
+        /// @brief      Reads a dense tensor.
+        ///
+        /// @param      Tensor      The tensor
+        /// @param[in]  folder      The folder
+        /// @param[in]  MatrixName  The matrix name
+        ///
+        /// @tparam     TensorType   type of the tensor, i.e. double, float, ...
+        ///
+        template <typename TensorType>
+        static void ReadDenseTensor(TensorType& Tensor, word folder, word MatrixName);
+
         //--------------------------------------------------------------------------
         /// @brief      Saves a sparse matrix list to bynary files
         ///
@@ -484,6 +511,50 @@ void ITHACAstream::ReadDenseMatrix(MatrixType& Matrix, word folder,
                  rows * cols * sizeof(typename MatrixType::Scalar) );
         in.close();
     }
+}
+
+
+template <typename TensorType>
+void ITHACAstream::SaveDenseTensor(TensorType& Tensor, word folder,
+                                   word MatrixName)
+{
+    std::ofstream out(folder + MatrixName,
+                      std::ios::out | std::ios::binary | std::ios::trunc);
+    typename TensorType::Dimensions dim = Tensor.dimensions();
+    int tot = 1;
+
+    for (unsigned int k = 0; k < dim.size(); k++)
+    {
+        tot *= dim[k];
+    }
+
+    out.write(reinterpret_cast<char*> (&dim),
+              sizeof(typename TensorType::Dimensions));
+    out.write(reinterpret_cast<char*> (Tensor.data()),
+              tot * sizeof(typename TensorType::Scalar) );
+    out.close();
+}
+
+template <typename TensorType>
+void ITHACAstream::ReadDenseTensor(TensorType& Tensor, word folder,
+                                   word MatrixName)
+{
+    std::ifstream in;
+    in.open(folder + MatrixName, std::ios::in | std::ios::binary);
+    typename TensorType::Dimensions dim;
+    in.read(reinterpret_cast<char*> (&dim),
+            sizeof(typename TensorType::Dimensions));
+    int tot = 1;
+
+    for (unsigned int k = 0; k < dim.size(); k++)
+    {
+        tot *= dim[k];
+    }
+
+    Tensor.resize(dim);
+    in.read( reinterpret_cast<char*>(Tensor.data()),
+             tot * sizeof(typename TensorType::Scalar) );
+    in.close();
 }
 
 template <typename MatrixType>
