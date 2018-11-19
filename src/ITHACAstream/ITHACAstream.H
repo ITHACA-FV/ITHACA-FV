@@ -34,7 +34,7 @@ SourceFiles
 /// Header file of the ITHACAstream class, it contains the implementation of
 /// several methods for input output operations.
 /// \dir
-/// Directory containing the header, source and template files for the ITHACAstream class, ITHACAparameters and Assert Functions
+/// Directory containing the header, source and template files for the ITHACAstream class, ITHACAparameters and Assert Functions.
 
 #ifndef ITHACAstream_H
 #define ITHACAstream_H
