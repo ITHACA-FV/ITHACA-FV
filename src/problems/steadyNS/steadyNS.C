@@ -150,7 +150,15 @@ void steadyNS::solvesupremizer(word type)
             U.mesh(),
             dimensionedVector("zero", U.dimensions(), vector::zero)
         );
-        ITHACAstream::read_fields(supfield, Usup, "./ITHACAoutput/supfield/");
+
+        if (type == "snapshots")
+        {
+            ITHACAstream::read_fields(supfield, Usup, "./ITHACAoutput/supfield/");
+        }
+        else
+        {
+            ITHACAstream::read_fields(supmodes, Usup, "./ITHACAoutput/supremizer/");
+        }
     }
     else
     {
