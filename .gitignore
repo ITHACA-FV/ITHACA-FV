@@ -6,6 +6,7 @@ Working_examples
 **/Offline
 *.pdf
 *.dep
+*.orig
 examples
 tutorials_dev
 *~
