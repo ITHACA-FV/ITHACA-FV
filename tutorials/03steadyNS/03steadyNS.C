@@ -117,6 +117,7 @@ int main(int argc, char* argv[])
                         example.supex, 1, NmodesSUPout);
     // Perform the Galerkin Projection
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
+
     // Create the reduced object
     reducedSteadyNS ridotto(example);
     // Set the inlet velocity

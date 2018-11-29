@@ -243,6 +243,12 @@ bool ITHACAutilities::check_folder(word folder)
     return exist;
 }
 
+bool ITHACAutilities::check_file(std::string fileName)
+{
+    std::ifstream infile(fileName);
+    return infile.good();
+}
+
 
 double ITHACAutilities::error_fields(volVectorField& field1,
                                      volVectorField& field2)
