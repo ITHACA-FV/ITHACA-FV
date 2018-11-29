@@ -42,6 +42,7 @@ SourceFiles
 #include "reducedProblem.H"
 #include "steadyNS.H"
 #include "ITHACAutilities.H"
+#include "EigenFunctions.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>

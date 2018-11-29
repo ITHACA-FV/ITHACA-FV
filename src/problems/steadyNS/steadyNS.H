@@ -44,9 +44,11 @@ SourceFiles
 #include "fvOptions.H"
 #include "reductionProblem.H"
 #include "ITHACAstream.H"
+#include "ITHACAparameters.H"
 #include "ITHACAforces.H"
 #include "volFields.H"
 #include <iostream>
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,6 +72,8 @@ class steadyNS: public reductionProblem
         /// Construct with argc and argv
         steadyNS(int argc, char* argv[]);
         ~steadyNS() {};
+
+        ITHACAparameters* para;
 
         // Member Functions
         /// List of pointers used to form the pressure snapshots matrix

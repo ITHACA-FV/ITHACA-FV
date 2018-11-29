@@ -136,6 +136,16 @@ class ITHACAutilities
         ///
         static bool check_off();
 
+
+        //--------------------------------------------------------------------------
+        /// @brief      function that returns true if a file exists
+        ///
+        /// @param[in]  fileName  The name of the file
+        ///
+        /// @return     1 if the file exists 0 elsewhere.
+        ///
+        static bool check_file(std::string fileName);
+
         //--------------------------------------------------------------------------
         /// Check if the POD data folder exists
         ///

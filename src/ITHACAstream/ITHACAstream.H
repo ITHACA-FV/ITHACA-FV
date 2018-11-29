@@ -545,10 +545,8 @@ void ITHACAstream::ReadDenseTensor(TensorType& Tensor, word folder,
     in.read(reinterpret_cast<char*> (&dim),
             sizeof(typename TensorType::Dimensions));
     auto dims = Tensor.dimensions();
-    std::cerr << "debug point 1" << std::endl;
     M_Assert(dims.size() == dim.size(),
              "The rank of the tensor you want to fill does not coincide with the rank of the tensor you are reading");
-    std::cerr << "debug point 2" << std::endl;
     int tot = 1;
 
     for (unsigned int k = 0; k < dim.size(); k++)

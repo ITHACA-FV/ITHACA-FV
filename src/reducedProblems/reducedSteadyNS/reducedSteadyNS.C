@@ -84,7 +84,8 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
+        cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor,0,i) * a_tmp;
+        // cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
         fvec(i) = M1(i) - cc(0, 0) - M2(i);
     }
 
