@@ -437,12 +437,8 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     else
     {
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-        <<< <<< < HEAD
         C_matrix = convective_term(NUmodes, NPmodes, NSUPmodes);
-        == == == =
-            C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
-        >>> >>> > 58e4f4b... changed steadyNS to tensors
-        and inserted clever way to export matrices
+        C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
         M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
@@ -628,8 +624,6 @@ List < Eigen::MatrixXd > steadyNS::convective_term(label NUmodes, label NPmodes,
     ITHACAstream::exportMatrix(C_matrix, "C", "matlab", "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(C_matrix, "C", "eigen", "./ITHACAoutput/Matrices/C");
     return C_matrix;
-    <<< <<< < HEAD
-    == == == =
 }
 
 Eigen::Tensor<double, 3 > steadyNS::convective_term_tens(label NUmodes,
@@ -898,8 +892,6 @@ Eigen::Tensor<double, 3 > steadyNS::convective_term_tens(label NUmodes,
                                   "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                       NSUPmodes) + "_t");
     return C_tensor;
-    >>> >>> > 58e4f4b... changed steadyNS to tensors
-    and inserted clever way to export matrices
 }
 
 Eigen::MatrixXd steadyNS::mass_term(label NUmodes, label NPmodes,
