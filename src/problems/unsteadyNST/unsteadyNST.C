@@ -188,17 +188,16 @@ void unsteadyNST::liftSolveT()
             if (j == BCind)
             {
                 assignBC(Tlift, j, t1);
-                assignIF(Tlift, t0);
-
-                if (T.boundaryField()[BCind].type() == "zeroGradient")
-                {
-                    assignBC(Tlift, j, t0);
-                    assignIF(Tlift, t1);
-                }
+            }
+            else if (T.boundaryField()[BCind].type() == "zeroGradient")
+            {
+                assignBC(Tlift, j, t0);
+                assignIF(Tlift, t1);
             }
             else if (T.boundaryField()[BCind].type() == "fixedValue")
             {
                 assignBC(Tlift, j, t0);
+                assignIF(Tlift, t0);
             }
             else
             {

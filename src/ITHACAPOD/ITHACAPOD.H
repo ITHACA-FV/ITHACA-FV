@@ -105,7 +105,6 @@ class ITHACAPOD
         static void getModesSVD(PtrList<volScalarField>& snapshotsP,
                                 PtrList<volScalarField>& modesP, bool podex, bool supex = 0, bool sup = 0,
                                 int nmodes = 0);
-
         //--------------------------------------------------------------------------
         /// @brief      Gets the bases for a vector field using SVD instead of the method of snapshots
         ///
@@ -119,6 +118,55 @@ class ITHACAPOD
         static void getModesSVD(PtrList<volVectorField>& snapshotsU,
                                 PtrList<volVectorField>& modesU, bool podex, bool supex = 0, bool sup = 0,
                                 int nmodes = 0);
+        //--------------------------------------------------------------------------
+        /// Nested-POD approach. Compute the nested snapshot matrix and weighted bases for a vector field
+        ///
+        /// @param[in]  snapshotsU  a PtrList of volVectorField snapshots.
+        /// @param[out] modesU      a PtrList of volVectorField where the weighted modes of the nested snapshot matrix are stored (it must be passed empty).
+        /// @param[in]  Npar        int variable which is equal with the number of parameters
+        /// @param[in]  NnestedOut      int variable to set the number of weighted modes to be stored for the assembly of the nested matrix
+        ///
+        static void getNestedSnapshotMatrix(PtrList<volVectorField>& snapshotsU,
+                                            PtrList<volVectorField>& modesU, int Npar, int NnestedOut);
+
+        //--------------------------------------------------------------------------
+        /// Nested-POD approach. Compute the nested snapshot matrix and weighted bases for a scalar field
+        ///
+        /// @param[in]  snapshotsP  a PtrList of volScalarField snapshots.
+        /// @param[out] modesP      a PtrList of volScalarField where the weighted modes of the nested snapshot matrix are stored (it must be passed empty).
+        /// @param[in]  Npar        int variable which is equal with the number of parameters
+        /// @param[in]  NnestedOut      int variable to set the number of weighted modes to be stored for the assembly of the nested matrix
+        ///
+        static void getNestedSnapshotMatrix(PtrList<volScalarField>& snapshotsP,
+                                            PtrList<volScalarField>& modesP, int Npar, int NnestedOut);
+
+        //--------------------------------------------------------------------------
+
+        /// Compute the weighted bases (using the nested-pod approach) or read them for a vector field
+        ///
+        /// @param[in]  snapshotsP  a PtrList of volVectorField snapshots.
+        /// @param[out] modesP      a PtrList of volVectorField where the modes are stored (it must be passed empty).
+        /// @param[in]  podex       boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
+        /// @param[in]  supex       boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
+        /// @param[in]  sup         boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
+        /// @param[in]  nmodes      int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
+        ///
+        static void getWeightedModes(PtrList<volVectorField>& snapshotsU,
+                                     PtrList<volVectorField>& modesU, bool podex, bool supex = 0, bool sup = 0,
+                                     int nmodes = 0);
+
+        //--------------------------------------------------------------------------
+        /// Compute the weighted bases (using the nested-pod approach) or read them for a scalar field
+        ///
+        /// @param[in]  snapshotsU  a PtrList of volScalarField snapshots.
+        /// @param[out] modesU      a PtrList of volScalarField where the modes are stored (it must be passed empty).
+        /// @param[in]  podex       boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
+        /// @param[in]  supex       boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
+        /// @param[in]  sup         boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
+        ///
+        static void getWeightedModes(PtrList<volScalarField>& snapshotsU,
+                                     PtrList<volScalarField>& modesU, bool podex, bool supex = 0, bool sup = 0,
+                                     int nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// @brief      Perform GrammSchmidt orthonormalization on an Eigen Matrix
