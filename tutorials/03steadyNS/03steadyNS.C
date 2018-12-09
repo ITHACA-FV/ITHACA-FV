@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
     for (label k = 0; k < 20; k++)
     {
         // Set the reduced viscosity
-        ridotto.nu = example.mu(k, 0);
+        ridotto.nu = example.mu(0, k);
         ridotto.solveOnline_sup(vel_now);
         Eigen::MatrixXd tmp_sol(ridotto.y.rows() + 1, 1);
         tmp_sol(0) = k + 1;
