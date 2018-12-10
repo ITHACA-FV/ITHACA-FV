@@ -150,7 +150,7 @@ bool ITHACAutilities::check_pod()
         pod_exist = false;
         Info << "POD don't exist, performing a POD decomposition" << endl;
         mkDir("./ITHACAoutput/POD");
-        createSymLink("./ITHACAoutput/POD")
+        createSymLink("./ITHACAoutput/POD");
     }
     return pod_exist;
 }
