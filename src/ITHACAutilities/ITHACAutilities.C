@@ -140,7 +140,7 @@ bool ITHACAutilities::check_pod()
     bool pod_exist;
     int c = 0;
 
-    if (stat("./ITHACAoutput/POD", &sb) == 0 && S_ISDIR(sb.st_mode))
+    if (check_folder("./ITHACAoutput/POD"))
     {
         pod_exist = true;
         Info << "POD data already exist, reading existing modes" << endl;
@@ -162,7 +162,7 @@ bool ITHACAutilities::check_off()
     bool off_exist;
     int c = 0;
 
-    if (stat("./ITHACAoutput/Offline", &sb) == 0 && S_ISDIR(sb.st_mode))
+    if (check_folder("./ITHACAoutput/Offline"))
     {
         off_exist = true;
         Info << "Offline data already exist, reading existing data" << endl;
@@ -184,7 +184,7 @@ bool ITHACAutilities::check_sup()
     bool sup_exist;
     int c = 0;
 
-    if (stat("./ITHACAoutput/supremizer", &sb) == 0 && S_ISDIR(sb.st_mode))
+    if (check_folder("./ITHACAoutput/supremizer"))
     {
         sup_exist = true;
         Info << "Supremizer data already exist, reading existing data" << endl;
