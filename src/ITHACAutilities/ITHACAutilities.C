@@ -140,7 +140,7 @@ bool ITHACAutilities::check_pod()
     bool pod_exist;
     int c = 0;
 
-    if (stat("./ITHACAoutput/POD", &sb) == 0 && S_ISDIR(sb.st_mode))
+    if (check_folder("./ITHACAoutput/POD"))
     {
         pod_exist = true;
         Info << "POD data already exist, reading existing modes" << endl;
@@ -150,17 +150,8 @@ bool ITHACAutilities::check_pod()
         pod_exist = false;
         Info << "POD don't exist, performing a POD decomposition" << endl;
         mkDir("./ITHACAoutput/POD");
-        c += abs(system("ln -s ../../constant ./ITHACAoutput/POD/constant"));
-        c += abs(system("ln -s ../../0 ./ITHACAoutput/POD/0"));
-        c += abs(system("ln -s ../../system ./ITHACAoutput/POD/system"));
+        createSymLink("./ITHACAoutput/POD")
     }
-
-    if (c > 0)
-    {
-        Info << "Error in system operation" << endl;
-        exit(0);
-    }
-
     return pod_exist;
 }
 
@@ -171,7 +162,7 @@ bool ITHACAutilities::check_off()
     bool off_exist;
     int c = 0;
 
-    if (stat("./ITHACAoutput/Offline", &sb) == 0 && S_ISDIR(sb.st_mode))
+    if (check_folder("./ITHACAoutput/Offline"))
     {
         off_exist = true;
         Info << "Offline data already exist, reading existing data" << endl;
@@ -181,17 +172,8 @@ bool ITHACAutilities::check_off()
         off_exist = false;
         Info << "Offline don't exist, performing the Offline Solve" << endl;
         mkDir("./ITHACAoutput/Offline");
-        c += abs(system("ln -s ../../constant ./ITHACAoutput/Offline/constant"));
-        c += abs(system("ln -s ../../0 ./ITHACAoutput/Offline/0"));
-        c += abs(system("ln -s ../../system ./ITHACAoutput/Offline/system"));
+        createSymLink("./ITHACAoutput/Offline");
     }
-
-    if (c > 0)
-    {
-        Info << "Error in system operation" << endl;
-        exit(0);
-    }
-
     return off_exist;
 }
 
@@ -202,7 +184,7 @@ bool ITHACAutilities::check_sup()
     bool sup_exist;
     int c = 0;
 
-    if (stat("./ITHACAoutput/supremizer", &sb) == 0 && S_ISDIR(sb.st_mode))
+    if (check_folder("./ITHACAoutput/supremizer"))
     {
         sup_exist = true;
         Info << "Supremizer data already exist, reading existing data" << endl;
@@ -212,17 +194,8 @@ bool ITHACAutilities::check_sup()
         sup_exist = false;
         Info << "Supremizers don't exist, performing a POD decomposition" << endl;
         mkDir("./ITHACAoutput/supremizer");
-        c += abs(system("ln -s ../../constant ./ITHACAoutput/supremizer/constant"));
-        c += abs(system("ln -s ../../0 ./ITHACAoutput/supremizer/0"));
-        c += abs(system("ln -s ../../system ./ITHACAoutput/supremizer/system"));
+        createSymLink("./ITHACAoutput/supremizer");
     }
-
-    if (c > 0)
-    {
-        Info << "Error in system operation" << endl;
-        exit(0);
-    }
-
     return sup_exist;
 }
 

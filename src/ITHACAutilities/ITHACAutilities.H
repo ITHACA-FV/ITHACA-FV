@@ -41,6 +41,7 @@ SourceFiles
 #include "IOmanip.H"
 #include "freestreamFvPatchField.H"
 #include <sys/stat.h>
+#include <unistd.h>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #include "../thirdparty/Eigen/Eigen/Eigen"
