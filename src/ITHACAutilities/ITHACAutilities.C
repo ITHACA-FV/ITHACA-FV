@@ -150,17 +150,8 @@ bool ITHACAutilities::check_pod()
         pod_exist = false;
         Info << "POD don't exist, performing a POD decomposition" << endl;
         mkDir("./ITHACAoutput/POD");
-        c += abs(system("ln -s ../../constant ./ITHACAoutput/POD/constant"));
-        c += abs(system("ln -s ../../0 ./ITHACAoutput/POD/0"));
-        c += abs(system("ln -s ../../system ./ITHACAoutput/POD/system"));
+        createSymLink("./ITHACAoutput/POD")
     }
-
-    if (c > 0)
-    {
-        Info << "Error in system operation" << endl;
-        exit(0);
-    }
-
     return pod_exist;
 }
 
@@ -181,17 +172,8 @@ bool ITHACAutilities::check_off()
         off_exist = false;
         Info << "Offline don't exist, performing the Offline Solve" << endl;
         mkDir("./ITHACAoutput/Offline");
-        c += abs(system("ln -s ../../constant ./ITHACAoutput/Offline/constant"));
-        c += abs(system("ln -s ../../0 ./ITHACAoutput/Offline/0"));
-        c += abs(system("ln -s ../../system ./ITHACAoutput/Offline/system"));
+        createSymLink("./ITHACAoutput/Offline");
     }
-
-    if (c > 0)
-    {
-        Info << "Error in system operation" << endl;
-        exit(0);
-    }
-
     return off_exist;
 }
 
@@ -212,17 +194,8 @@ bool ITHACAutilities::check_sup()
         sup_exist = false;
         Info << "Supremizers don't exist, performing a POD decomposition" << endl;
         mkDir("./ITHACAoutput/supremizer");
-        c += abs(system("ln -s ../../constant ./ITHACAoutput/supremizer/constant"));
-        c += abs(system("ln -s ../../0 ./ITHACAoutput/supremizer/0"));
-        c += abs(system("ln -s ../../system ./ITHACAoutput/supremizer/system"));
+        createSymLink("./ITHACAoutput/supremizer");
     }
-
-    if (c > 0)
-    {
-        Info << "Error in system operation" << endl;
-        exit(0);
-    }
-
     return sup_exist;
 }
 
