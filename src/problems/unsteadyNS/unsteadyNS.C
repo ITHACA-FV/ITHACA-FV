@@ -54,6 +54,7 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
 #include "createFields.H"
 #include "createFvOptions.H"
     supex = ITHACAutilities::check_sup();
+    para = new ITHACAparameters;
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
