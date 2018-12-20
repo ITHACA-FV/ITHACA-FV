@@ -233,17 +233,7 @@ void steadyNS::solvesupremizer(word type)
                 supmodes.append(Usup);
                 exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
             }
-
-            int systemRet =
-                system("ln -s ../../constant ./ITHACAoutput/supremizer/constant");
-            systemRet += system("ln -s ../../0 ./ITHACAoutput/supremizer/0");
-            systemRet += system("ln -s ../../system ./ITHACAoutput/supremizer/system");
-
-            if (systemRet < 0)
-            {
-                Info << "System Command Failed in steadyNS.C" << endl;
-                exit(0);
-            }
+        ITHACAutilities::createSymLink("./ITHACAoutput/supremizer");
         }
     }
 }
