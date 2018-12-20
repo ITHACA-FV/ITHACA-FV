@@ -11,29 +11,24 @@ EXE_INC = \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/radiationModels/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
-    -I../../src/problems/reductionProblem \
-    -I../../src/problems/laplacianProblem \
-    -I../../src/reducedProblems/reducedProblem \
-    -I../../src/reducedProblems/reducedUnsteadyNS \
-    -I../../src/reducedProblems/reducedSteadyNS \
-    -I../../src/reducedProblems/reducedLaplacian \
-    -I../../src/NonLinearSolvers \
+    -I../../src/ITHACA_FOMPROBLEMS/reductionProblem \
+    -I../../src/ITHACA_FOMPROBLEMS/laplacianProblem \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedProblem \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedLaplacian \
+    -I../../src/ITHACA_ROMPROBLEMS/NonLinearSolvers \
+    -I../../src/ITHACA_DEIM \
+    -I../../src/ITHACA_CORE/ITHACAutilities \
+    -I../../src/ITHACA_CORE/ITHACAPOD \
+    -I../../src/ITHACA_CORE/ITHACAstream \
+    -I../../src/ITHACA_CORE/Foam2Eigen \
+    -I../../src/ITHACA_CORE/EigenFunctions \
     -I../../src/thirdparty/Eigen \
-    -I../../src/ITHACAutilities \
-    -I../../src/ITHACAPOD \
-    -I../../src/ITHACAstream \
-    -I../../src/Foam2Eigen \
-    -I../../src/EigenFunctions \
-    -I../../src/DEIM \
-    -I../../src/thirdparty/RedSVD \
     -I../../src/thirdparty/spectra-0.6.1/include \
-    -I../../src/thirdparty/multivariate-splines-master/include \
-    -I../../src/thirdparty/splinter/include \
-    -w \
-    -std=c++11
+    -I../../src/ITHACA_THIRD_PARTY/splinter/include \
+    -Wno-comment \
+    -std=c++11 \
 
 
 EXE_LIBS = \
@@ -47,7 +42,11 @@ EXE_LIBS = \
     -lradiationModels \
     -lspecie \
     -lforces \
-    -L$(FOAM_USER_LIBBIN) \
     -lfileFormats \
-    -lITHACA-FV-Problems 
+    -L$(FOAM_USER_LIBBIN) \
+    -lITHACA_FOMPROBLEMS \
+    -lITHACA_ROMPROBLEMS \
+    -lITHACA_THIRD_PARTY \
+    -lITHACA_CORE \
+    -lITHACA_DEIM
 

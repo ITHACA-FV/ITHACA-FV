@@ -172,7 +172,6 @@ int main(int argc, char *argv[])
         scalar nmodes = readScalar(subDict.lookup("nmodes"));
         word field_name = subDict.lookup("field_name");
         word field_type = subDict.lookup("field_type");
-        label snapI = 0;
 
         for (label i = startTime; i < endTime + 1; i++)
         {

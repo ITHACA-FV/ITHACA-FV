@@ -70,7 +70,6 @@ class tutorial05 : public steadyNS
             else
             {
                 Vector<double> Uinl(0, 0, 0);
-                label BCind = 0;
 
                 for (label i = 0; i < mu.cols(); i++)
                 {
@@ -92,8 +91,6 @@ int main(int argc, char* argv[])
     ITHACAparameters para;
     int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
     int NmodesPout = para.ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
-    // int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
-    // int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
     // Read the par file where the parameters are stored
     word filename("./par");
     example.mu = ITHACAstream::readMatrix(filename);
@@ -104,6 +101,5 @@ int main(int argc, char* argv[])
                         NmodesUout);
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
                         NmodesPout);
-    // ITHACAUTILITIES
     exit(0);
 }

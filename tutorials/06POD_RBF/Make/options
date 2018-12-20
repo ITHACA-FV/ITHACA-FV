@@ -10,36 +10,30 @@ EXE_INC = \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/radiationModels/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
-    -I$(FOAM_SRC)/postProcessing/functionObjects/forces/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
-    -I../../src/problems/reductionProblem \
-    -I../../src/problems/steadyNS \
-    -I../../src/problems/steadyNSturb \
-    -I../../src/problems/unsteadyNS \
-    -I../../src/ITHACAPOD \
-    -I../../src/Foam2Eigen \
-    -I../../src/EigenFunctions \
-    -I../../src/reducedProblems/reducedProblem \
-    -I../../src/reducedProblems/reducedUnsteadyNS \
-    -I../../src/reducedProblems/reducedSteadyNS \
-    -I../../src/reducedProblems/reducedSteadyNSturb \
-    -I../../src/lnInclude \
-    -I../../src/ITHACAutilities \
-    -I../../src/ForceCoeff \
-    -I../../src/ITHACAstream \
-    -I../../src/ITHACAPOD \
-    -I../../src/NonLinearSolvers \
+    -I../../src/ITHACA_FOMPROBLEMS/reductionProblem \
+    -I../../src/ITHACA_FOMPROBLEMS/laplacianProblem \
+    -I../../src/ITHACA_FOMPROBLEMS/steadyNS \
+    -I../../src/ITHACA_FOMPROBLEMS/steadyNSturb \
+    -I../../src/ITHACA_FOMPROBLEMS/unsteadyNS \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedProblem \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedSteadyNS \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedSteadyNSturb \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedLaplacian \
+    -I../../src/ITHACA_ROMPROBLEMS/NonLinearSolvers \
+    -I../../src/ITHACA_CORE/ITHACAutilities \
+    -I../../src/ITHACA_CORE/ITHACAPOD \
+    -I../../src/ITHACA_CORE/ITHACAstream \
+    -I../../src/ITHACA_CORE/Foam2Eigen \
+    -I../../src/ITHACA_CORE/EigenFunctions \
     -I../../src/thirdparty/Eigen \
-    -I../../src/Foam2Eigen \
-    -I../../src/EigenFunctions \
     -I../../src/thirdparty/spectra-0.6.1/include \
-    -I../../src/thirdparty/splinter/include \
-    -w \
+    -I../../src/ITHACA_THIRD_PARTY/splinter/include \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11
+    -Wno-comment \
+    -std=c++11 \
 
 EXE_LIBS = \
     -lturbulenceModels \
@@ -50,5 +44,8 @@ EXE_LIBS = \
     -lfvOptions \
     -lsampling \
     -lforces \
-    -L$(FOAM_USER_LIBBIN) \
-    -lITHACA-FV-Problems \
+    -lITHACA_FOMPROBLEMS \
+    -lITHACA_ROMPROBLEMS \
+    -lITHACA_THIRD_PARTY \
+    -lITHACA_CORE \
+    -L$(FOAM_USER_LIBBIN)

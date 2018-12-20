@@ -14,20 +14,14 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
-    -I../../src/reductionMethods/reducedProblem \
-    -I../../src/reductionMethods/unsteadyNSreduced \
-    -I../../src/reductionMethods/steadyNSreduced \
-    -I../../src/reductionMethods/laplacianReduced \
-    -I../../src/NonLinearSolvers \
-    -I../../src/Foam2Eigen \
-    -I../../src/EigenFunctions \
+    -I../../src/ITHACA_CORE/Foam2Eigen \
+    -I../../src/ITHACA_CORE/EigenFunctions \
+    -I../../src/ITHACA_CORE/ITHACAutilities \
+    -I../../src/ITHACA_CORE/ITHACAPOD \
+    -I../../src/ITHACA_CORE/ITHACAstream \
     -I../../src/thirdparty/Eigen \
     -I../../src/thirdparty/spectra-0.6.1/include \
-    -I../../src/thirdparty/ \
-    -I../../src/ITHACAutilities \
-    -I../../src/ITHACAPOD \
-    -I../../src/ITHACAstream \
-    -w \
+    -Wno-comment \
     -std=c++11
 
 EXE_LIBS = \
@@ -41,6 +35,6 @@ EXE_LIBS = \
     -lspecie \
     -lforces \
     -lfileFormats \
-    -lITHACA-FV-Problems \
-    -L$(FOAM_USER_LIBBIN) 
+    -L$(FOAM_USER_LIBBIN) \
+    -lITHACA_CORE
 

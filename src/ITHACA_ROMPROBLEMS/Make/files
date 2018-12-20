@@ -1,0 +1,9 @@
+reducedProblem/reducedProblem.C
+reducedUnsteadyNS/reducedUnsteadyNS.C
+reducedUnsteadyNSturb/reducedUnsteadyNSturb.C
+reducedUnsteadyNST/reducedUnsteadyNST.C
+reducedSteadyNS/reducedSteadyNS.C
+reducedSteadyNSturb/reducedSteadyNSturb.C
+reducedLaplacian/reducedLaplacian.C
+
+LIB = $(FOAM_USER_LIBBIN)/libITHACA_ROMPROBLEMS

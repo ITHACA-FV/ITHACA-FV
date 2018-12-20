@@ -76,8 +76,17 @@ int main(int argc, char* argv[])
     ITHACAparameters para;
     int NDEIM = para.ITHACAdict->lookupOrDefault<int>("NDEIM", 15);
 #include "setRootCase.H"
-#include "createTime.H"
-#include "createMesh.H"
+    Foam::Time runTime(Foam::Time::controlDictName, args);
+    Foam::fvMesh mesh
+    (
+        Foam::IOobject
+        (
+            Foam::fvMesh::defaultRegion,
+            runTime.timeName(),
+            runTime,
+            Foam::IOobject::MUST_READ
+        )
+    );
     simpleControl simple(mesh);
 #include "createFields.H"
     // List of volScalarField where the snapshots are stored

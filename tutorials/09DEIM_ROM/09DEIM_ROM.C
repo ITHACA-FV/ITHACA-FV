@@ -140,10 +140,10 @@ class DEIMlaplacian: public laplacianProblem
             NmodesDEIMB = readInt(ITHACAdict->lookup("N_modes_DEIM_B"));
         }
 
-
-        volScalarField& T;
         volScalarField& nu;
         volScalarField& S;
+        volScalarField& T;
+
 
         DEIM_function* DEIMmatrice;
         PtrList<fvScalarMatrix> Mlist;

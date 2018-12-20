@@ -151,7 +151,6 @@ class tutorial06 : public steadyNSturb
             Pfield.append(p);
             nutFields.append(_nut);
             counter++;
-            bool notconverged = 1;
         }
 };
 
@@ -174,8 +173,6 @@ int main(int argc, char* argv[])
     int NmodesSUP = para.ITHACAdict->lookupOrDefault<int>("NmodesSUP", 5);
     int NmodesNUT = para.ITHACAdict->lookupOrDefault<int>("NmodesNUT", 5);
     int NmodesProject = para.ITHACAdict->lookupOrDefault<int>("NmodesProject", 5);
-    int NmodesMatrixRec = para.ITHACAdict->lookupOrDefault<int>("NmodesMatrixRec",
-                          5);
     example.offlineSolve();
     // Solve the supremizer problem
     example.solvesupremizer();

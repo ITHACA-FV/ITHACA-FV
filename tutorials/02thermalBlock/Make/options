@@ -14,27 +14,26 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
-    -I../../src/problems/reductionProblem \
-    -I../../src/problems/laplacianProblem \
-    -I../../src/problems/steadyNS \
-    -I../../src/problems/unsteadyNS \
-    -I../../src/problems/glassFurnace \
-    -I../../src/reducedProblems/reducedProblem \
-    -I../../src/reducedProblems/reducedUnsteadyNS \
-    -I../../src/reducedProblems/reducedSteadyNS \
-    -I../../src/reducedProblems/reducedLaplacian \
-    -I../../src/NonLinearSolvers \
+    -I../../src/ITHACA_FOMPROBLEMS/reductionProblem \
+    -I../../src/ITHACA_FOMPROBLEMS/laplacianProblem \
+    -I../../src/ITHACA_FOMPROBLEMS/steadyNS \
+    -I../../src/ITHACA_FOMPROBLEMS/unsteadyNS \
+    -I../../src/ITHACA_FOMPROBLEMS/glassFurnace \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedProblem \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedUnsteadyNS \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedSteadyNS \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedLaplacian \
+    -I../../src/ITHACA_ROMPROBLEMS/NonLinearSolvers \
+    -I../../src/ITHACA_CORE/ITHACAutilities \
+    -I../../src/ITHACA_CORE/ITHACAPOD \
+    -I../../src/ITHACA_CORE/ITHACAstream \
+    -I../../src/ITHACA_CORE/Foam2Eigen \
+    -I../../src/ITHACA_CORE/EigenFunctions \
     -I../../src/thirdparty/Eigen \
-    -I../../src/ITHACAutilities \
-    -I../../src/ITHACAPOD \
-    -I../../src/ITHACAstream \
     -I../../src/thirdparty/spectra-0.6.1/include \
-    -I../../src/Foam2Eigen \
-    -I../../src/EigenFunctions \
-    -I../../src/thirdparty/splinter/include \
-    -w \
+    -I../../src/ITHACA_THIRD_PARTY/splinter/include \
+    -Wno-comment \
     -std=c++11 \
-    -DOFVER=$${WM_PROJECT_VERSION%.*}
 
 EXE_LIBS = \
     -lturbulenceModels \
@@ -47,6 +46,9 @@ EXE_LIBS = \
     -lspecie \
     -lforces \
     -lfileFormats \
-    -lITHACA-FV-Problems \
+    -lITHACA_ROMPROBLEMS \
+    -lITHACA_FOMPROBLEMS \
+    -lITHACA_THIRD_PARTY \
+    -lITHACA_CORE \
     -L$(FOAM_USER_LIBBIN) \
 
