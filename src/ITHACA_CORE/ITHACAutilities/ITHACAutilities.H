@@ -300,19 +300,6 @@ class ITHACAutilities
         static Eigen::VectorXd get_coeffs_ortho(volScalarField snapshot,
                                                 PtrList<volScalarField>& modes);
 
-
-        //--------------------------------------------------------------------------
-        /// Export a field (template function)
-        ///
-        /// @param[in]  s          field you want to export.
-        /// @param[in]  subfolder  The subfolder used to save the snapshot.
-        /// @param[in]  folder     The folder used to save the snapshot.
-        ///
-        /// @tparam     T          Type of parameter you want to export (volVectorField or volScalarField).
-        ///
-        template<typename T>
-        static void exportSolution(T& s, fileName subfolder, fileName folder);
-
         //--------------------------------------------------------------------------
         /// Assign internal field condition
         ///
@@ -464,18 +451,6 @@ class ITHACAutilities
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
-
-template<typename T>
-void ITHACAutilities::exportSolution(T& s, fileName folder, fileName subfolder)
-{
-    mkDir(folder + "/" + subfolder);
-    createSymLink(folder);
-    fileName fieldname = folder + "/" + subfolder + "/" + s.name();
-    Info << fieldname << endl;
-    OFstream os(fieldname);
-    s.writeHeader(os);
-    os << s << endl;
-}
 
 template<typename T, typename G>
 void ITHACAutilities::assignIF(T& s, G& value)
