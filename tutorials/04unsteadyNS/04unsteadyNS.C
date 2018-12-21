@@ -52,9 +52,7 @@ class tutorial04: public unsteadyNS
         void offlineSolve()
         {
             Vector<double> inl(0, 0, 0);
-            label BCind = 1;
             List<scalar> mu_now(1);
-            Info << "here" << endl;
 
             if (offline)
             {

@@ -1,0 +1,10 @@
+reductionProblem/reductionProblem.C
+steadyNS/steadyNS.C
+steadyNSturb/steadyNSturb.C
+unsteadyNS/unsteadyNS.C
+unsteadyNSturb/unsteadyNSturb.C
+unsteadyNST/unsteadyNST.C
+laplacianProblem/laplacianProblem.C
+
+
+LIB = $(FOAM_USER_LIBBIN)/libITHACA_FOMPROBLEMS

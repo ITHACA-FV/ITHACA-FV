@@ -1,0 +1,10 @@
+EXE_INC = \
+    -Isplinter/include \
+    -I../thirdparty/Eigen \
+    -std=c++11 \
+    -Wno-old-style-cast \
+    -Wno-non-virtual-dtor \
+    -Wno-return-type \
+    -Wno-sign-compare
+
+EXE_LIBS = 

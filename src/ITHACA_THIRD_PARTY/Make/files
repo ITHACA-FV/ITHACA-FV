@@ -1,0 +1,15 @@
+splinter/src/bspline.C
+splinter/src/bsplinebasis.C
+splinter/src/bsplinebasis1d.C
+splinter/src/bsplinebuilder.C
+splinter/src/datapoint.C
+splinter/src/datatable.C
+splinter/src/function.C
+splinter/src/knots.C
+splinter/src/mykroneckerproduct.C
+splinter/src/serializer.C
+splinter/src/utilities.C
+splinter/src/rbfspline.C
+
+
+LIB = $(FOAM_USER_LIBBIN)/libITHACA_THIRD_PARTY

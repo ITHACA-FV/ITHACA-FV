@@ -68,7 +68,6 @@ class tutorial03 : public steadyNS
             else
             {
                 Vector<double> Uinl(0, 0, 0);
-                label BCind = 0;
 
                 for (label i = 0; i < mu.cols(); i++)
                 {

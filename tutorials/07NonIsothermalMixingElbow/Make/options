@@ -14,26 +14,24 @@ EXE_INC = \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
-    -I../../src/problems/reductionProblem \
-    -I../../src/problems/steadyNS \
-    -I../../src/problems/unsteadyNS \
-    -I../../src/problems/unsteadyNST \
-    -I../../src/POD \
-    -I../../src/reducedProblems/reducedProblem \
-    -I../../src/reducedProblems/reducedUnsteadyNS \
-    -I../../src/reducedProblems/reducedUnsteadyNST \
-    -I../../src/reducedProblems/reducedSteadyNS \
-    -I../../src/ITHACAutilities \
-    -I../../src/ForceCoeff \
-    -I../../src/ITHACAstream \
-    -I../../src/ITHACAPOD \
-    -I../../src/NonLinearSolvers \
+    -I../../src/ITHACA_CORE/ITHACAutilities \
+    -I../../src/ITHACA_CORE/ITHACAPOD \
+    -I../../src/ITHACA_CORE/ITHACAstream \
+    -I../../src/ITHACA_CORE/Foam2Eigen \
+    -I../../src/ITHACA_CORE/EigenFunctions \
+    -I../../src/ITHACA_FOMPROBLEMS/reductionProblem \
+    -I../../src/ITHACA_FOMPROBLEMS/steadyNS \
+    -I../../src/ITHACA_FOMPROBLEMS/unsteadyNS \
+    -I../../src/ITHACA_FOMPROBLEMS/unsteadyNST \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedProblem \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedUnsteadyNS \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedUnsteadyNST \
+    -I../../src/ITHACA_ROMPROBLEMS/reducedSteadyNS \
+    -I../../src/ITHACA_ROMPROBLEMS/NonLinearSolvers \
     -I../../src/thirdparty/Eigen \
-    -I../../src/Foam2Eigen \
-    -I../../src/EigenFunctions \
     -I../../src/thirdparty/spectra-0.6.1/include \
-    -I../../src/thirdparty/splinter/include \
-    -w \
+    -I../../src/ITHACA_THIRD_PARTY/splinter/include \
+    -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11
 
@@ -46,8 +44,11 @@ EXE_LIBS = \
     -lfvOptions \
     -lsampling \
     -lforces \
-    -lITHACA-FV-Problems \
-    -L$(FOAM_USER_LIBBIN) \
+    -lITHACA_FOMPROBLEMS \
+    -lITHACA_ROMPROBLEMS \
+    -lITHACA_THIRD_PARTY \
+    -lITHACA_CORE \
+    -L$(FOAM_USER_LIBBIN)
 
 
  
