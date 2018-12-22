@@ -36,7 +36,7 @@ SourceFiles
 
 #ifndef EigenFunctions_H
 #define EigenFunctions_H
-
+#include <mutex>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #include "Eigen/Eigen"
@@ -45,7 +45,7 @@ SourceFiles
 #include "unsupported/Eigen/CXX11/Tensor"
 #pragma GCC diagnostic pop
 #include "fvCFD.H"
-#include <mutex>
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
@@ -246,14 +246,14 @@ Eigen::SparseMatrix<T> EigenFunctions::vectorize(Eigen::SparseMatrix<T>& Matrix)
 }
 
 template <typename T>
-T EigenFunctions::max(Eigen::SparseMatrix<T>& MP, int& ind_row, int& ind_col)
+T EigenFunctions::max(Eigen::SparseMatrix<T>& mat, int& ind_row, int& ind_col)
 {
     int i = 0;
     T max = 0;
 
-    for (int k = 0; k < MP.outerSize(); ++k)
+    for (int k = 0; k < mat.outerSize(); ++k)
     {
-        for (typename Eigen::SparseMatrix<T>::InnerIterator it(MP, k); it; ++it)
+        for (typename Eigen::SparseMatrix<T>::InnerIterator it(mat, k); it; ++it)
         {
             if (max < it.value() || i == 0)
             {
@@ -269,14 +269,14 @@ T EigenFunctions::max(Eigen::SparseMatrix<T>& MP, int& ind_row, int& ind_col)
 }
 
 template <typename T>
-T EigenFunctions::min(Eigen::SparseMatrix<T>& MP, int& ind_row, int& ind_col)
+T EigenFunctions::min(Eigen::SparseMatrix<T>& mat, int& ind_row, int& ind_col)
 {
     int i = 0;
     T min = 0;
 
-    for (int k = 0; k < MP.outerSize(); ++k)
+    for (int k = 0; k < mat.outerSize(); ++k)
     {
-        for (typename Eigen::SparseMatrix<T>::InnerIterator it(MP, k); it; ++it)
+        for (typename Eigen::SparseMatrix<T>::InnerIterator it(mat, k); it; ++it)
         {
             if (min > it.value() || i == 0)
             {

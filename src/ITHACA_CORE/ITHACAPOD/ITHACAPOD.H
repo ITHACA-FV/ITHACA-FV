@@ -68,14 +68,14 @@ class ITHACAPOD
         /// Compute the bases or read them for a vector field
         ///
         /// @param[in]  snapshotsU  a PtrList of volVectorField snapshots.
-        /// @param[out] modesU      a PtrList of volVectorField where the modes are stored (it must be passed empty).
+        /// @param[out] modes      a PtrList of volVectorField where the modes are stored (it must be passed empty).
         /// @param[in]  podex       boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
         /// @param[in]  supex       boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
         /// @param[in]  sup         boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
         /// @param[in]  nmodes      int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
         ///
         static void getModes(PtrList<volVectorField>& snapshotsU,
-                             PtrList<volVectorField>& modesU, bool podex, bool supex = 0, bool sup = 0,
+                             PtrList<volVectorField>& modes, bool podex, bool supex = 0, bool sup = 0,
                              int nmodes = 0);
 
         //--------------------------------------------------------------------------
@@ -89,56 +89,56 @@ class ITHACAPOD
         /// @param[in]  nmodes      int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
         ///
         static void getModes(PtrList<volScalarField>& snapshotsP,
-                             PtrList<volScalarField>& modesP, bool podex, bool supex = 0, bool sup = 0,
+                             PtrList<volScalarField>& modes, bool podex, bool supex = 0, bool sup = 0,
                              int nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// @brief      Gets the bases for a scalar field using SVD instead of the method of snapshots
         ///
         /// @param[in]  snapshotsP  a PtrList of volScalarField snapshots.
-        /// @param[out] modesP      a PtrList of volScalarField where the modes are stored (it must be passed empty).
+        /// @param[out] modes      a PtrList of volScalarField where the modes are stored (it must be passed empty).
         /// @param[in]  podex       boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
         /// @param[in]  supex       boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
         /// @param[in]  sup         boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
         /// @param[in]  nmodes      int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
         ///
         static void getModesSVD(PtrList<volScalarField>& snapshotsP,
-                                PtrList<volScalarField>& modesP, bool podex, bool supex = 0, bool sup = 0,
+                                PtrList<volScalarField>& modes, bool podex, bool supex = 0, bool sup = 0,
                                 int nmodes = 0);
         //--------------------------------------------------------------------------
         /// @brief      Gets the bases for a vector field using SVD instead of the method of snapshots
         ///
         /// @param[in]  snapshotsP  a PtrList of volScalarField snapshots.
-        /// @param[out] modesP      a PtrList of volScalarField where the modes are stored (it must be passed empty).
+        /// @param[out] modes      a PtrList of volScalarField where the modes are stored (it must be passed empty).
         /// @param[in]  podex       boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
         /// @param[in]  supex       boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
         /// @param[in]  sup         boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
         /// @param[in]  nmodes      int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
         ///
         static void getModesSVD(PtrList<volVectorField>& snapshotsU,
-                                PtrList<volVectorField>& modesU, bool podex, bool supex = 0, bool sup = 0,
+                                PtrList<volVectorField>& modes, bool podex, bool supex = 0, bool sup = 0,
                                 int nmodes = 0);
         //--------------------------------------------------------------------------
         /// Nested-POD approach. Compute the nested snapshot matrix and weighted bases for a vector field
         ///
-        /// @param[in]  snapshotsU  a PtrList of volVectorField snapshots.
-        /// @param[out] modesU      a PtrList of volVectorField where the weighted modes of the nested snapshot matrix are stored (it must be passed empty).
-        /// @param[in]  Npar        int variable which is equal with the number of parameters
+        /// @param[in]  snapshotsU      a PtrList of volVectorField snapshots.
+        /// @param[out] UModesGlobal    a PtrList of volVectorField where the weighted modes of the nested snapshot matrix are stored (it must be passed empty).
+        /// @param[in]  Npar            int variable which is equal with the number of parameters
         /// @param[in]  NnestedOut      int variable to set the number of weighted modes to be stored for the assembly of the nested matrix
         ///
         static void getNestedSnapshotMatrix(PtrList<volVectorField>& snapshotsU,
-                                            PtrList<volVectorField>& modesU, int Npar, int NnestedOut);
+                                            PtrList<volVectorField>& UModesGlobal, int Npar, int NnestedOut);
 
         //--------------------------------------------------------------------------
         /// Nested-POD approach. Compute the nested snapshot matrix and weighted bases for a scalar field
         ///
-        /// @param[in]  snapshotsP  a PtrList of volScalarField snapshots.
-        /// @param[out] modesP      a PtrList of volScalarField where the weighted modes of the nested snapshot matrix are stored (it must be passed empty).
-        /// @param[in]  Npar        int variable which is equal with the number of parameters
+        /// @param[in]  snapshotsP      a PtrList of volScalarField snapshots.
+        /// @param[out] PModesGlobal    a PtrList of volScalarField where the weighted modes of the nested snapshot matrix are stored (it must be passed empty).
+        /// @param[in]  Npar            int variable which is equal with the number of parameters
         /// @param[in]  NnestedOut      int variable to set the number of weighted modes to be stored for the assembly of the nested matrix
         ///
         static void getNestedSnapshotMatrix(PtrList<volScalarField>& snapshotsP,
-                                            PtrList<volScalarField>& modesP, int Npar, int NnestedOut);
+                                            PtrList<volScalarField>& PModesGlobal, int Npar, int NnestedOut);
 
         //--------------------------------------------------------------------------
 
@@ -241,37 +241,37 @@ class ITHACAPOD
         //--------------------------------------------------------------------------
         /// Normalize the Bases for a scalar field
         ///
-        /// @param[in] s    a PtrList of volScalarField where the bases are stored.
+        /// @param[in] Bases    a PtrList of volScalarField where the bases are stored.
         ///
-        static void normalizeBases(PtrList<volScalarField>& s);
+        static void normalizeBases(PtrList<volScalarField>& Bases);
 
         //--------------------------------------------------------------------------
         /// Normalize a volScalarField field using a volVectorField
         ///
-        /// @param[in] s    a PtrList of volVectorField where the bases used for normalization are stored.
-        /// @param[in] p    a PtrList of volScalarField  where the bases are stored.
+        /// @param[in] Bases   a PtrList of volVectorField where the bases used for normalization are stored.
+        /// @param[in] p       a PtrList of volScalarField  where the bases are stored.
         ///
-        static void normalizeBases(PtrList<volVectorField>& s,
+        static void normalizeBases(PtrList<volVectorField>& Bases,
                                    PtrList<volScalarField>& p);
 
         //--------------------------------------------------------------------------
         /// Export the eigenvalues as a txt file
         ///
-        /// @param[in] eigenValues  a scalarField of eigenvalues.
+        /// @param[in] Eigenvalues  a scalarField of eigenvalues.
         /// @param[in] name         a fileName to indicate the name of the txt file.
         /// @param[in] sup          a boolean variable 1 if you want to export the eigenValues (in ITHACAOutput/supremizer) 0 elsewhere (Default is 0).
         ///
-        static void exportEigenvalues(scalarField eigenValues, fileName name,
+        static void exportEigenvalues(scalarField Eigenvalues, fileName name,
                                       bool sup = 0);
 
         //--------------------------------------------------------------------------
         /// Export the cumulative eigenvalues as a txt file
         ///
-        /// @param[in] cumEigenValues   a scalarField of cumEigenValues.
+        /// @param[in] cumEigenvalues   a scalarField of cumEigenvalues.
         /// @param[in] name             a fileName to indicate the name of the txt file.
         /// @param[in] sup              a boolean variable 1 if you want to export the cumEigenValues (in ITHACAOutput/supremizer) 0 elsewhere (Default is 0).
         ///
-        static void exportcumEigenvalues(scalarField cumEigenValues,  fileName name,
+        static void exportcumEigenvalues(scalarField cumEigenvalues,  fileName name,
                                          bool sup = 0);
 
         //--------------------------------------------------------------------------
@@ -375,7 +375,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
             eigenValueseigB = esB.eigenvalues().real();
             eigenVectorseigB = esB.eigenvectors().real();
         }
-        else if (nmodesB == 1)
+        else
         {
             eigenValueseigB.resize(1);
             eigenVectorseigB.resize(MatrixList.size(), nmodesB);
