@@ -68,9 +68,9 @@ void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volVectorField>& snapshotsU,
     {
         y = UModesNested[i];
 
-        for (int i = 0; i < y.size(); i++)
+        for (int j = 0; j < y.size(); j++)
         {
-            UModesGlobal.append(y[i]);
+            UModesGlobal.append(y[j]);
         }
     }
 }
@@ -109,9 +109,9 @@ void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volScalarField>& snapshotsP,
     {
         y = PModesNested[i];
 
-        for (int i = 0; i < y.size(); i++)
+        for (int j = 0; i < y.size(); j++)
         {
-            PModesGlobal.append(y[i]);
+            PModesGlobal.append(y[j]);
         }
     }
 }
@@ -965,7 +965,7 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(List<Eigen::VectorXd>& snapshots)
 
 /// Export the Bases
 void ITHACAPOD::exportBases(PtrList<volVectorField>& s,
-                            PtrList<volVectorField>& _snapshots, bool sup)
+                            PtrList<volVectorField>& bases, bool sup)
 {
     if (sup)
     {
@@ -975,9 +975,9 @@ void ITHACAPOD::exportBases(PtrList<volVectorField>& s,
         {
             mkDir("./ITHACAoutput/supremizer/" + name(i + 1));
             fieldname = "./ITHACAoutput/supremizer/" + name(i + 1) + "/" +
-                        _snapshots[i].name();
+                        bases[i].name();
             OFstream os(fieldname);
-            _snapshots[i].writeHeader(os);
+            bases[i].writeHeader(os);
             os << s[i] << endl;
         }
     }
@@ -988,9 +988,9 @@ void ITHACAPOD::exportBases(PtrList<volVectorField>& s,
         for (label i = 0; i < s.size(); i++)
         {
             mkDir("./ITHACAoutput/POD/" + name(i + 1));
-            fieldname = "./ITHACAoutput/POD/" + name(i + 1) + "/" + _snapshots[i].name();
+            fieldname = "./ITHACAoutput/POD/" + name(i + 1) + "/" + bases[i].name();
             OFstream os(fieldname);
-            _snapshots[i].writeHeader(os);
+            bases[i].writeHeader(os);
             os << s[i] << endl;
         }
     }
@@ -999,7 +999,7 @@ void ITHACAPOD::exportBases(PtrList<volVectorField>& s,
 
 /// Export the Bases
 void ITHACAPOD::exportBases(PtrList<volScalarField>& s,
-                            PtrList<volScalarField>& _snapshots, bool sup)
+                            PtrList<volScalarField>& bases, bool sup)
 {
     if (sup)
     {
@@ -1009,9 +1009,9 @@ void ITHACAPOD::exportBases(PtrList<volScalarField>& s,
         {
             mkDir("./ITHACAoutput/supremizer/" + name(i + 1));
             fieldname = "./ITHACAoutput/supremizer/" + name(i + 1) + "/" +
-                        _snapshots[i].name();
+                        bases[i].name();
             OFstream os(fieldname);
-            _snapshots[i].writeHeader(os);
+            bases[i].writeHeader(os);
             os << s[i] << endl;
         }
     }
@@ -1022,9 +1022,9 @@ void ITHACAPOD::exportBases(PtrList<volScalarField>& s,
         for (label i = 0; i < s.size(); i++)
         {
             mkDir("./ITHACAoutput/POD/" + name(i + 1));
-            fieldname = "./ITHACAoutput/POD/" + name(i + 1) + "/" + _snapshots[i].name();
+            fieldname = "./ITHACAoutput/POD/" + name(i + 1) + "/" + bases[i].name();
             OFstream os(fieldname);
-            _snapshots[i].writeHeader(os);
+            bases[i].writeHeader(os);
             os << s[i] << endl;
         }
     }

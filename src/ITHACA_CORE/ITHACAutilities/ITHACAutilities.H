@@ -357,18 +357,18 @@ class ITHACAutilities
         ///
         /// @param[in]  s       field where you want to assign the BC.
         /// @param[in]  BC_ind  The BC index.
-        /// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
+        /// @param[in]  valueVec   The value you want to assign (it must be an OpenFOAM vector).
         ///
-        static void assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd value);
+        static void assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd valueVec);
 
         //--------------------------------------------------------------------------
         /// Assign Boundary Condition to a volScalarField
         ///
         /// @param[in]  s       field where you want to assign the BC.
         /// @param[in]  BC_ind  The BC index.
-        /// @param[in]  value   The value you want to assign (it must be a double).
+        /// @param[in]  valueVec   The value you want to assign (it must be a double).
         ///
-        static void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd value);
+        static void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd valueVec);
 
 
 

@@ -75,25 +75,25 @@ class ITHACAstream
         //--------------------------------------------------------------------------
         /// @brief      Export an Fv Matrix to folder together with its source term
         ///
-        /// @param      Matrix     The matrix
-        /// @param[in]  folder     The folder
-        /// @param[in]  fieldname  The fieldname
+        /// @param      Matrix      The matrix
+        /// @param[in]  folder      The folder
+        /// @param[in]  MatrixName  The fieldname
         ///
-        /// @tparam     T          can be scalar or vector
+        /// @tparam     T           can be scalar or vector
         ///
         template<typename T>
-        static void exportFvMatrix(fvMatrix<T>& Matrix, word folder, word fieldname);
+        static void exportFvMatrix(fvMatrix<T>& Matrix, word folder, word MatrixName);
 
         //--------------------------------------------------------------------------
         /// Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format
         /* In this case the function is implemented for a second order matrix  */
         ///
         /// @param[in] matrice Eigen::MatrixXd that you want to export.
-        /// @param[in] name string to identify the name you want to use to save the file.
+        /// @param[in] Name string to identify the name you want to use to save the file.
         /// @param[in] tipo string to identify format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
         /// @param[in] folder string to identify the folder where you want to save the file.
         ///
-        static void exportMatrix(Eigen::MatrixXd& matrice, word name,
+        static void exportMatrix(Eigen::MatrixXd& matrice, word Name,
                                  word tipo = "python", word folder = "./Matrices");
 
         //--------------------------------------------------------------------------
@@ -103,11 +103,11 @@ class ITHACAstream
         each matrix is in a different file */
         ///
         /// @param[in] matrice List < Eigen::MatrixXd > that you want to export.
-        /// @param[in] name string to identify the name you want to use to save the file.
+        /// @param[in] Name string to identify the name you want to use to save the file.
         /// @param[in] tipo format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
         /// @param[in] folder string to identify the folder where you want to save the file.
         ///
-        static void exportMatrix(List < Eigen::MatrixXd >& matrice, word name,
+        static void exportMatrix(List < Eigen::MatrixXd >& matrice, word Name,
                                  word tipo = "python", word folder = "./Matrices");
 
         //--------------------------------------------------------------------------
@@ -115,47 +115,47 @@ class ITHACAstream
         ///
         /// @param[in]  Lfield      a PtrList of volVectorField where you want to store the field.
         /// @param[in]  Name        The name of the field you want to read.
-        /// @param[in]  caseName    The folder where the field is stored.
+        /// @param[in]  casename    The folder where the field is stored.
         /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
         /// @param[in]  n_snap      The number of snapshots you want to read.
         ///
         static void read_fields(PtrList<volVectorField>& Lfield, word Name,
-                                fileName caseName, label first_snap = 0, label n_snap = 0);
+                                fileName casename, label first_snap = 0, label n_snap = 0);
 
         //--------------------------------------------------------------------------
         /// Funtion to read a list of volScalarField from name of the field and folder name
         ///
         /// @param[in]  Lfield      a PtrList of volScalarField where you want to store the field.
         /// @param[in]  Name        The name of the field you want to read.
-        /// @param[in]  caseName    The folder where the field is stored.
+        /// @param[in]  casename    The folder where the field is stored.
         /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
         /// @param[in]  n_snap      The number of snapshots you want to read.
         ///
         static void read_fields(PtrList<volScalarField>& Lfield, word Name,
-                                fileName caseName, label first_snap = 0, label n_snap = 0);
+                                fileName casename, label first_snap = 0, label n_snap = 0);
 
         //--------------------------------------------------------------------------
         /// Funtion to read a list of volVectorField from name of the field a volVectorField if it is already existing
         ///
         /// @param[in]  Lfield      a PtrList of volVectorField where you want to store the field.
         /// @param[in]  field       The field used as template to read other fields.
-        /// @param[in]  caseName    The folder where the field is stored.
+        /// @param[in]  casename    The folder where the field is stored.
         /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
         /// @param[in]  n_snap      The number of snapshots you want to read.
         ///
         static void read_fields(PtrList<volVectorField>& Lfield, volVectorField& field,
-                                fileName caseName, label first_snap = 0, label n_snap = 0);
+                                fileName casename, label first_snap = 0, label n_snap = 0);
 
         //--------------------------------------------------------------------------
         /// Funtion to read a list of volScalarField from casename and a list of volScalarField with the same name
         ///
         /// @param[in]  Lfield      a PtrList of volScalarField where you want to store the field.
         /// @param[in]  field       The field used as template to read other fields.
-        /// @param[in]  caseName    The folder where the field is stored.
+        /// @param[in]  casename    The folder where the field is stored.
         /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
         /// @param[in]  n_snap      The number of snapshots you want to read.
         static void read_fields(PtrList<volScalarField>& Lfield, volScalarField& field,
-                                fileName caseName, label first_snap = 0, label n_snap = 0);
+                                fileName casename, label first_snap = 0, label n_snap = 0);
 
         //--------------------------------------------------------------------------
         /// Function to export volVectorFields
@@ -363,12 +363,12 @@ class ITHACAstream
         //--------------------------------------------------------------------------
         /// @brief      Count the number of files with a certain name prefix, used by reading functions of list of matrices
         ///
-        /// @param[in]  Folder      The folder
+        /// @param[in]  folder      The folder
         /// @param[in]  MatrixName  The matrix name
         ///
         /// @return     the number of files matching the request
         ///
-        static int numberOfFiles(word Folder, word MatrixName);
+        static int numberOfFiles(word folder, word MatrixName);
 };
 
 template<typename T>
