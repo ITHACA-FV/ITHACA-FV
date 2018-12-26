@@ -225,7 +225,8 @@ void steadyNS::solvesupremizer(word type)
                 supmodes.append(Usup);
                 exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
             }
-        ITHACAutilities::createSymLink("./ITHACAoutput/supremizer");
+
+            ITHACAutilities::createSymLink("./ITHACAoutput/supremizer");
         }
     }
 }
