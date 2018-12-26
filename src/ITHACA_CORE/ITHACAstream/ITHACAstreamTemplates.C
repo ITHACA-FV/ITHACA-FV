@@ -32,16 +32,5 @@ License
 /// Template function file of the ITHACAstream class, it contains the implementation of
 /// several methods for input output operations.
 
-template<typename T>
-void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder,
-                                  word fieldName)
-{
-    mkDir(folder + "/" + subfolder);
-    T act(fieldName, s);
-    fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
-    OFstream os(fieldname);
-    act.writeHeader(os);
-    os << act << endl;
-}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

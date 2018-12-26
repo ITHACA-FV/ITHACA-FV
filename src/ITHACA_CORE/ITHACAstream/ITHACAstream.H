@@ -215,6 +215,17 @@ class ITHACAstream
                                    word fieldName);
 
         //--------------------------------------------------------------------------
+        /// Export a generic field to file in a certain folder and subfolder
+        /* This is a function to export a generic field into a certain subfolder */
+        ///
+        /// @param[in] s volVectorField or volScalarField.
+        /// @param[in] subfolder string to indicated the subfolder where the field is stored.
+        /// @param[in] folder string to indicated the folder where the field is stored.
+        ///
+        template<typename T>
+        static void exportSolution(T& s, fileName subfolder, fileName folder);
+
+        //--------------------------------------------------------------------------
         /// @brief      Export a list type object to file
         ///
         /// @param[in]  list      The list
@@ -392,6 +403,16 @@ void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder,
     OFstream os(fieldname);
     act.writeHeader(os);
     os << act << endl;
+}
+
+template<typename T>
+void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder)
+{
+    mkDir(folder + "/" + subfolder);
+    fileName fieldname = folder + "/" + subfolder + "/" + s.name();
+    OFstream os(fieldname);
+    s.writeHeader(os);
+    os << s << endl;
 }
 
 

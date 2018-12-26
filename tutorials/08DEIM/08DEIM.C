@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
     {
         DEIM_function::evaluate_expression(S, pars.row(i));
         Sp.append(S);
-        ITHACAutilities::exportSolution(S, "./ITHACAoutput/Offline/", name(i + 1));
+        ITHACAstream::exportSolution(S, "./ITHACAoutput", "Offline", name(i + 1));
     }
 
     // Create DEIM object with given number of basis functions
@@ -128,10 +128,10 @@ int main(int argc, char* argv[])
     Eigen::VectorXd aprfield = c.MatrixOnline * c.onlineCoeffs(par_new);
     // Transform to an OpenFOAM field and export
     volScalarField S2("S_online", Foam2Eigen::Eigen2field(S, aprfield));
-    ITHACAutilities::exportSolution(S2, "./ITHACAoutput/Online", name(1));
+    ITHACAstream::exportSolution(S2, "./ITHACAoutput", "Online", name(1));
     // Evaluate the full order function and export it
     DEIM_function::evaluate_expression(S, par_new);
-    ITHACAutilities::exportSolution(S, "./ITHACAoutput/Online", name(1));
+    ITHACAstream::exportSolution(S, "./ITHACAoutput", "Online", name(1));
     // Compute the L2 error and print it
     Info << ITHACAutilities::error_fields(S2, S) << endl;
     return 0;
