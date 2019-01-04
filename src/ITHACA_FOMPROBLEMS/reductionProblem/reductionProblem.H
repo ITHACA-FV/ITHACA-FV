@@ -102,6 +102,7 @@ class reductionProblem
         IOdictionary* ITHACAdict;
         /// argList
         autoPtr<argList> _args;
+
         /// parallel handling
         ITHACAparallel<scalar>* paral;
 
