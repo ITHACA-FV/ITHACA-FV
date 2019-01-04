@@ -41,8 +41,17 @@
 steadyNS::steadyNS() {}
 steadyNS::steadyNS(int argc, char* argv[])
 {
+    _args = autoPtr<argList>
+            (
+             new argList(argc, argv)
+            );
+
+    if (!_args->checkRootCase())
+    {
+            Foam::FatalError.exit();
+    }
     argList& args = _args();
-#include "setRootCase.H"
+//#include "setRootCase.H"
 #include "createTime.H"
 #include "createMesh.H"
     _simple = autoPtr<simpleControl>

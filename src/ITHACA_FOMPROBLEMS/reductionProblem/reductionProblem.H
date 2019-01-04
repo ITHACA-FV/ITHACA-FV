@@ -99,6 +99,8 @@ class reductionProblem
         bool offline;
         /// dictionary to store input output infos
         IOdictionary* ITHACAdict;
+        /// argList
+        autoPtr<argList> _args;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
