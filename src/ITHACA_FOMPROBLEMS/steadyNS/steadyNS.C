@@ -41,6 +41,7 @@
 steadyNS::steadyNS() {}
 steadyNS::steadyNS(int argc, char* argv[])
 {
+    argList& args = _args();
 #include "setRootCase.H"
 #include "createTime.H"
 #include "createMesh.H"
