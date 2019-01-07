@@ -46,6 +46,7 @@ SourceFiles
 #include "freestreamFvPatchField.H"
 #include <sys/stat.h>
 #include "ITHACAutilities.H"
+#include "ITHACAparallel.H"
 #include "ITHACAstream.H"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -101,6 +102,8 @@ class reductionProblem
         IOdictionary* ITHACAdict;
         /// argList
         autoPtr<argList> _args;
+        /// parallel handling
+        ITHACAparallel<scalar>* paral;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"

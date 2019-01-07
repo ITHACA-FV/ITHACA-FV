@@ -42,29 +42,29 @@ steadyNS::steadyNS() {}
 steadyNS::steadyNS(int argc, char* argv[])
 {
     _args = autoPtr<argList>
-            (
-             new argList(argc, argv)
-            );
+    (
+       new argList(argc, argv)
+       );
 
     if (!_args->checkRootCase())
     {
-            Foam::FatalError.exit();
+        Foam::FatalError.exit();
     }
     argList& args = _args();
 //#include "setRootCase.H"
 #include "createTime.H"
 #include "createMesh.H"
     _simple = autoPtr<simpleControl>
-              (
-                  new simpleControl
-                  (
-                      mesh
-                  )
-              );
+    (
+      new simpleControl
+      (
+          mesh
+          )
+      );
     simpleControl& simple = _simple();
 #include "createFields.H"
 #include "createFvOptions.H"
-    supex = ITHACAutilities::check_sup();
+     
     turbulence->validate();
     ITHACAdict = new IOdictionary
     (
@@ -75,11 +75,18 @@ steadyNS::steadyNS(int argc, char* argv[])
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-        )
-    );
+            )
+        );
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
     para = new ITHACAparameters;
+    paral = new ITHACAparallel<scalar>(p);
+
+    paral->suspendMPI();
+    offline = ITHACAutilities::check_off();
+    podex = ITHACAutilities::check_pod();
+    supex = ITHACAutilities::check_sup();
+    paral->resumeMPI();
 }
 
 
@@ -89,6 +96,7 @@ steadyNS::steadyNS(int argc, char* argv[])
 void steadyNS::truthSolve(List<scalar> mu_now)
 {
     Time& runTime = _runTime();
+    argList& args = _args();
     fvMesh& mesh = _mesh();
     volScalarField& p = _p();
     volVectorField& U = _U();
@@ -97,9 +105,10 @@ void steadyNS::truthSolve(List<scalar> mu_now)
     simpleControl& simple = _simple();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
+    std::cerr << "debug point 8" << std::endl;
 #include "NLsolve.H"
-    exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-    exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+    //exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+    //exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     Ufield.append(U);
     Pfield.append(p);
     counter++;
@@ -121,7 +130,7 @@ void steadyNS::truthSolve(List<scalar> mu_now)
     if (mu_samples.rows() == mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-                                   "./ITHACAoutput/Offline");
+         "./ITHACAoutput/Offline");
     }
 }
 
@@ -141,7 +150,7 @@ void steadyNS::solvesupremizer(word type)
     else
     {
         std::cout << "You must specify the variable type with either snapshots or modes"
-                  << std::endl;
+        << std::endl;
         exit(0);
     }
 
@@ -157,10 +166,10 @@ void steadyNS::solvesupremizer(word type)
                 U.mesh(),
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
-            ),
+                ),
             U.mesh(),
             dimensionedVector("zero", U.dimensions(), vector::zero)
-        );
+            );
 
         if (type == "snapshots")
         {
@@ -183,16 +192,16 @@ void steadyNS::solvesupremizer(word type)
                 U.mesh(),
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE
-            ),
+                ),
             U.mesh(),
             dimensionedVector("zero", U.dimensions(), vector::zero)
-        );
+            );
         dimensionedScalar nu_fake
         (
             "nu_fake",
             dimensionSet(0, 2, -1, 0, 0, 0, 0),
             scalar(1)
-        );
+            );
         Vector<double> v(0, 0, 0);
 
         for (label i = 0; i < Usup.boundaryField().size(); i++)
@@ -209,11 +218,11 @@ void steadyNS::solvesupremizer(word type)
                 fvVectorMatrix u_sup_eqn
                 (
                     - fvm::laplacian(nu_fake, Usup)
-                );
+                    );
                 solve
                 (
                     u_sup_eqn == fvc::grad(P_sup[i])
-                );
+                    );
                 supfield.append(Usup);
                 exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
             }
@@ -227,11 +236,11 @@ void steadyNS::solvesupremizer(word type)
                 fvVectorMatrix u_sup_eqn
                 (
                     - fvm::laplacian(nu_fake, Usup)
-                );
+                    );
                 solve
                 (
                     u_sup_eqn == fvc::grad(Pmodes[i])
-                );
+                    );
                 supmodes.append(Usup);
                 exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
             }
@@ -290,11 +299,11 @@ void steadyNS::liftSolve()
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::NO_WRITE
-            ),
+                ),
             mesh,
             dimensionedScalar("Phi", dimLength * dimVelocity, 0),
             p.boundaryField().types()
-        );
+            );
         label PhiRefCell = 0;
         scalar PhiRefValue = 0;
         setRefCell
@@ -303,7 +312,7 @@ void steadyNS::liftSolve()
             potentialFlow.dict(),
             PhiRefCell,
             PhiRefValue
-        );
+            );
         mesh.setFluxRequired(Phi.name());
         runTime.functionObjects().start();
         MRF.makeRelative(phi);
@@ -316,7 +325,7 @@ void steadyNS::liftSolve()
                 fvm::laplacian(dimensionedScalar("1", dimless, 1), Phi)
                 ==
                 fvc::div(phi)
-            );
+                );
             PhiEqn.setReference(PhiRefCell, PhiRefValue);
             PhiEqn.solve();
 
@@ -328,14 +337,14 @@ void steadyNS::liftSolve()
 
         MRF.makeAbsolute(phi);
         Info << "Continuity error = "
-             << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
-             << endl;
+        << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
+        << endl;
         Ulift = fvc::reconstruct(phi);
         Ulift.correctBoundaryConditions();
         Info << "Interpolated velocity error = "
-             << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
-                 / sum(mesh.magSf())).value()
-             << endl;
+        << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
+           / sum(mesh.magSf())).value()
+        << endl;
         Ulift.write();
         liftfield.append(Ulift);
     }
@@ -368,7 +377,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
     {
         word B_str = "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                         NSUPmodes);
+           NSUPmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + B_str))
         {
@@ -380,7 +389,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         }
 
         word K_str = "K_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                         NSUPmodes) + "_" + name(NPmodes);
+           NSUPmodes) + "_" + name(NPmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + K_str))
         {
@@ -392,7 +401,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         }
 
         word P_str = "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                         NSUPmodes) + "_" + name(NPmodes);
+           NSUPmodes) + "_" + name(NPmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + P_str))
         {
@@ -404,7 +413,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         }
 
         word M_str = "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                         NSUPmodes);
+           NSUPmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + M_str))
         {
@@ -416,7 +425,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         }
 
         word C_str = "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                         NSUPmodes) + "_t";
+           NSUPmodes) + "_t";
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + C_str))
         {
@@ -466,7 +475,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
 // * * * * * * * * * * * * * * Momentum Eq. Methods * * * * * * * * * * * * * //
 
 Eigen::MatrixXd steadyNS::diffusive_term(label NUmodes, label NPmodes,
-        label NSUPmodes)
+    label NSUPmodes)
 {
     label Bsize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::MatrixXd B_matrix;
@@ -503,17 +512,17 @@ Eigen::MatrixXd steadyNS::diffusive_term(label NUmodes, label NPmodes,
         for (label j = 0; j < Bsize; j++)
         {
             B_matrix(i, j) = fvc::domainIntegrate(Together[i] & fvc::laplacian(
-                    dimensionedScalar("1", dimless, 1), Together[j])).value();
+                dimensionedScalar("1", dimless, 1), Together[j])).value();
         }
     }
 
     ITHACAstream::SaveDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/",
-                                  "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+      "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
     return B_matrix;
 }
 
 Eigen::MatrixXd steadyNS::pressure_gradient_term(label NUmodes, label NPmodes,
-        label NSUPmodes)
+    label NSUPmodes)
 {
     label K1size = NUmodes + NSUPmodes + liftfield.size();
     label K2size = NPmodes;
@@ -551,18 +560,18 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term(label NUmodes, label NPmodes,
         for (label j = 0; j < K2size; j++)
         {
             K_matrix(i, j) = fvc::domainIntegrate(Together[i] & fvc::grad(
-                    Pmodes[j])).value();
+                Pmodes[j])).value();
         }
     }
 
     ITHACAstream::SaveDenseMatrix(K_matrix, "./ITHACAoutput/Matrices/",
-                                  "K_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_" + name(NPmodes));
+      "K_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+          NSUPmodes) + "_" + name(NPmodes));
     return K_matrix;
 }
 
 List < Eigen::MatrixXd > steadyNS::convective_term(label NUmodes, label NPmodes,
-        label NSUPmodes)
+    label NSUPmodes)
 {
     label Csize = NUmodes + NSUPmodes + liftfield.size();
     List < Eigen::MatrixXd > C_matrix;
@@ -607,7 +616,7 @@ List < Eigen::MatrixXd > steadyNS::convective_term(label NUmodes, label NPmodes,
             for (label k = 0; k < Csize; k++)
             {
                 C_matrix[i](j, k) = fvc::domainIntegrate(Together[i] & fvc::div(
-                                        linearInterpolate(Together[j]) & Together[j].mesh().Sf(), Together[k])).value();
+                    linearInterpolate(Together[j]) & Together[j].mesh().Sf(), Together[k])).value();
             }
         }
     }
@@ -620,8 +629,8 @@ List < Eigen::MatrixXd > steadyNS::convective_term(label NUmodes, label NPmodes,
 }
 
 Eigen::Tensor<double, 3 > steadyNS::convective_term_tens(label NUmodes,
-        label NPmodes,
-        label NSUPmodes)
+    label NPmodes,
+    label NSUPmodes)
 {
     label Csize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::Tensor<double, 3> C_tensor;
@@ -635,246 +644,246 @@ Eigen::Tensor<double, 3 > steadyNS::convective_term_tens(label NUmodes,
             {
                 //Cambio tutte le k
                 if (liftfield.size() != 0 && i < liftfield.size() && j < liftfield.size()
-                        && k < liftfield.size())
+                    && k < liftfield.size())
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(liftfield[i] & fvc::div(
-                                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
-                                            liftfield[k])).value();
+                        linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
+                        liftfield[k])).value();
                 }
                 else if ( (liftfield.size() != 0 && i < liftfield.size()
-                           && j < liftfield.size()) && (NUmodes != 0 && k >= liftfield.size()
-                                                        && k < liftfield.size() + NUmodes))
+                 && j < liftfield.size()) && (NUmodes != 0 && k >= liftfield.size()
+                 && k < liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(liftfield[i] & fvc::div(
-                                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
-                                            Umodes[k - liftfield.size()])).value();
+                        linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
+                        Umodes[k - liftfield.size()])).value();
                 }
                 else if ((liftfield.size() != 0 && i < liftfield.size()
-                          && j < liftfield.size()) && (NSUPmodes != 0 && k >= liftfield.size() + NUmodes))
+                  && j < liftfield.size()) && (NSUPmodes != 0 && k >= liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(liftfield[i] & fvc::div(
-                                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
-                                            supmodes[k - liftfield.size() - NUmodes])).value();
+                        linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
+                        supmodes[k - liftfield.size() - NUmodes])).value();
                 }
                 // Cambio tutte le j
                 else if ((liftfield.size() != 0 && i < liftfield.size()
-                          && k < liftfield.size()) && (NUmodes != 0 && j >= liftfield.size()
-                                                       && j < liftfield.size() + NUmodes ))
+                  && k < liftfield.size()) && (NUmodes != 0 && j >= liftfield.size()
+                  && j < liftfield.size() + NUmodes ))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(liftfield[i] & fvc::div(
-                                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
-                                                    liftfield.size()].mesh().Sf(), liftfield[k])).value();
+                        linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
+                            liftfield.size()].mesh().Sf(), liftfield[k])).value();
                 }
                 else if ((liftfield.size() != 0 && i < liftfield.size()) && (NUmodes != 0
-                         && j >= liftfield.size() && j < liftfield.size() + NUmodes
-                         && k >= liftfield.size() && k < liftfield.size() + NUmodes))
+                   && j >= liftfield.size() && j < liftfield.size() + NUmodes
+                   && k >= liftfield.size() && k < liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(liftfield[i] & fvc::div(
-                                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
-                                                    liftfield.size()].mesh().Sf(), Umodes[k - liftfield.size()])).value();
+                        linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
+                            liftfield.size()].mesh().Sf(), Umodes[k - liftfield.size()])).value();
                 }
                 else if ((liftfield.size() != 0 && i < liftfield.size()) && (NUmodes != 0
-                         && j >= liftfield.size() && j < liftfield.size() + NUmodes) && (NSUPmodes != 0
-                                 && k >= liftfield.size() + NUmodes))
+                   && j >= liftfield.size() && j < liftfield.size() + NUmodes) && (NSUPmodes != 0
+                   && k >= liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(liftfield[i] & fvc::div(
-                                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
-                                                    liftfield.size()].mesh().Sf(),
-                                            supmodes[k - liftfield.size() - NUmodes])).value();
+                        linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
+                            liftfield.size()].mesh().Sf(),
+                        supmodes[k - liftfield.size() - NUmodes])).value();
                 }
                 else if ((liftfield.size() != 0 && i < liftfield.size()
-                          && k < liftfield.size()) && (NSUPmodes != 0 && j >= liftfield.size() + NUmodes))
+                  && k < liftfield.size()) && (NSUPmodes != 0 && j >= liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(liftfield[i] & fvc::div(
-                                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
-                                                    liftfield.size() - NUmodes].mesh().Sf(), liftfield[k])).value();
+                        linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
+                            liftfield.size() - NUmodes].mesh().Sf(), liftfield[k])).value();
                 }
                 else if ((liftfield.size() != 0 && i < liftfield.size()) && (NSUPmodes != 0
-                         && j >= liftfield.size() + NUmodes) && (NUmodes != 0 && k >= liftfield.size()
-                                 && k < liftfield.size() + NUmodes))
+                   && j >= liftfield.size() + NUmodes) && (NUmodes != 0 && k >= liftfield.size()
+                   && k < liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(liftfield[i] & fvc::div(
-                                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
-                                                    liftfield.size() - NUmodes].mesh().Sf(), Umodes[k - liftfield.size()])).value();
+                        linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
+                            liftfield.size() - NUmodes].mesh().Sf(), Umodes[k - liftfield.size()])).value();
                 }
                 else if ((liftfield.size() != 0 && i < liftfield.size()) && (NSUPmodes != 0
-                         && j >= liftfield.size() + NUmodes && k >= liftfield.size() + NUmodes))
+                   && j >= liftfield.size() + NUmodes && k >= liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(liftfield[i] & fvc::div(
-                                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
-                                                    liftfield.size() - NUmodes].mesh().Sf(),
-                                            supmodes[k - liftfield.size() - NUmodes])).value();
+                        linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
+                            liftfield.size() - NUmodes].mesh().Sf(),
+                        supmodes[k - liftfield.size() - NUmodes])).value();
                 }
                 // Cambio tutte le i
                 else if ((NUmodes != 0 && i >= liftfield.size()
-                          && i < liftfield.size() + NUmodes) && (liftfield.size() != 0
-                                  && j < liftfield.size() && k < liftfield.size()))
+                  && i < liftfield.size() + NUmodes) && (liftfield.size() != 0
+                  && j < liftfield.size() && k < liftfield.size()))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(Umodes[i - liftfield.size()] &
-                                        fvc::div(
-                                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
-                                            liftfield[k])).value();
+                        fvc::div(
+                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
+                            liftfield[k])).value();
                 }
                 else if ((NUmodes != 0 && i >= liftfield.size()
-                          && i < liftfield.size() + NUmodes && k >= liftfield.size()
-                          && k < liftfield.size() + NUmodes) && (liftfield.size() != 0
-                                  && j < liftfield.size()))
+                  && i < liftfield.size() + NUmodes && k >= liftfield.size()
+                  && k < liftfield.size() + NUmodes) && (liftfield.size() != 0
+                  && j < liftfield.size()))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(Umodes[i - liftfield.size()] &
-                                        fvc::div(
-                                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
-                                            Umodes[k - liftfield.size()])).value();
+                        fvc::div(
+                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
+                            Umodes[k - liftfield.size()])).value();
                 }
                 else if ((NUmodes != 0 && i >= liftfield.size()
-                          && i < liftfield.size() + NUmodes) && (liftfield.size() != 0
-                                  && j < liftfield.size()) && (NSUPmodes != 0 && k >= liftfield.size() + NUmodes))
+                  && i < liftfield.size() + NUmodes) && (liftfield.size() != 0
+                  && j < liftfield.size()) && (NSUPmodes != 0 && k >= liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(Umodes[i - liftfield.size()] &
-                                        fvc::div(
-                                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
-                                            supmodes[k - liftfield.size() - NUmodes])).value();
+                        fvc::div(
+                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
+                            supmodes[k - liftfield.size() - NUmodes])).value();
                 }
                 else if ((NUmodes != 0 && i >= liftfield.size()
-                          && i < liftfield.size() + NUmodes && j >= liftfield.size()
-                          && j < liftfield.size() + NUmodes) && (liftfield.size() != 0
-                                  && k < liftfield.size()))
+                  && i < liftfield.size() + NUmodes && j >= liftfield.size()
+                  && j < liftfield.size() + NUmodes) && (liftfield.size() != 0
+                  && k < liftfield.size()))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(Umodes[i - liftfield.size()] &
-                                        fvc::div(
-                                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
-                                                    liftfield.size()].mesh().Sf(), liftfield[k])).value();
+                        fvc::div(
+                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
+                                liftfield.size()].mesh().Sf(), liftfield[k])).value();
                 }
                 else if (NUmodes != 0 && i >= liftfield.size()
-                         && i < liftfield.size() + NUmodes && j >= liftfield.size()
-                         && j < liftfield.size() + NUmodes && k >= liftfield.size()
-                         && k < liftfield.size() + NUmodes)
+                   && i < liftfield.size() + NUmodes && j >= liftfield.size()
+                   && j < liftfield.size() + NUmodes && k >= liftfield.size()
+                   && k < liftfield.size() + NUmodes)
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(Umodes[i - liftfield.size()] &
-                                        fvc::div(
-                                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
-                                                    liftfield.size()].mesh().Sf(), Umodes[k - liftfield.size()])).value();
+                        fvc::div(
+                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
+                                liftfield.size()].mesh().Sf(), Umodes[k - liftfield.size()])).value();
                 }
                 else if ((NUmodes != 0 && i >= liftfield.size()
-                          && i < liftfield.size() + NUmodes && j >= liftfield.size()
-                          && j < liftfield.size() + NUmodes) && (NSUPmodes != 0
-                                  && k >= liftfield.size() + NUmodes))
+                  && i < liftfield.size() + NUmodes && j >= liftfield.size()
+                  && j < liftfield.size() + NUmodes) && (NSUPmodes != 0
+                  && k >= liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(Umodes[i - liftfield.size()] &
-                                        fvc::div(
-                                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
-                                                    liftfield.size()].mesh().Sf(),
-                                            supmodes[k - liftfield.size() - NUmodes])).value();
+                        fvc::div(
+                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
+                                liftfield.size()].mesh().Sf(),
+                            supmodes[k - liftfield.size() - NUmodes])).value();
                 }
                 else if ((NUmodes != 0 && i >= liftfield.size()
-                          && i < liftfield.size() + NUmodes) && (NSUPmodes != 0
-                                  && j >= liftfield.size() + NUmodes) && (liftfield.size() != 0
-                                          && k < liftfield.size()))
+                  && i < liftfield.size() + NUmodes) && (NSUPmodes != 0
+                  && j >= liftfield.size() + NUmodes) && (liftfield.size() != 0
+                  && k < liftfield.size()))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(Umodes[i - liftfield.size()] &
-                                        fvc::div(
-                                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
-                                                    liftfield.size() - NUmodes].mesh().Sf(), liftfield[k])).value();
+                        fvc::div(
+                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
+                                liftfield.size() - NUmodes].mesh().Sf(), liftfield[k])).value();
                 }
                 else if ((NUmodes != 0 && i >= liftfield.size()
-                          && i < liftfield.size() + NUmodes && k >= liftfield.size()
-                          && k < liftfield.size() + NUmodes) && (NSUPmodes != 0
-                                  && j >= liftfield.size() + NUmodes))
+                  && i < liftfield.size() + NUmodes && k >= liftfield.size()
+                  && k < liftfield.size() + NUmodes) && (NSUPmodes != 0
+                  && j >= liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(Umodes[i - liftfield.size()] &
-                                        fvc::div(
-                                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
-                                                    liftfield.size() - NUmodes].mesh().Sf(), Umodes[k - liftfield.size()])).value();
+                        fvc::div(
+                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
+                                liftfield.size() - NUmodes].mesh().Sf(), Umodes[k - liftfield.size()])).value();
                 }
                 else if ((NUmodes != 0 && i >= liftfield.size()
-                          && i < liftfield.size() + NUmodes) && (NSUPmodes != 0
-                                  && j >= liftfield.size() + NUmodes && k >= liftfield.size() + NUmodes))
+                  && i < liftfield.size() + NUmodes) && (NSUPmodes != 0
+                  && j >= liftfield.size() + NUmodes && k >= liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(Umodes[i - liftfield.size()] &
-                                        fvc::div(
-                                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
-                                                    liftfield.size() - NUmodes].mesh().Sf(),
-                                            supmodes[k - liftfield.size() - NUmodes])).value();
+                        fvc::div(
+                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
+                                liftfield.size() - NUmodes].mesh().Sf(),
+                            supmodes[k - liftfield.size() - NUmodes])).value();
                 }
                 else if ((NSUPmodes != 0 && i >= liftfield.size() + NUmodes)
-                         && (liftfield.size() != 0 && j < liftfield.size() && k < liftfield.size()))
+                   && (liftfield.size() != 0 && j < liftfield.size() && k < liftfield.size()))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(supmodes[i - liftfield.size() -
-                                          NUmodes] & fvc::div(
-                                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
-                                            liftfield[k])).value();
+                      NUmodes] & fvc::div(
+                      linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
+                      liftfield[k])).value();
                 }
                 else if ((NSUPmodes != 0 && i >= liftfield.size() + NUmodes)
-                         && (liftfield.size() != 0 && j < liftfield.size()) && (NUmodes != 0
-                                 && k >= liftfield.size() && k < liftfield.size() + NUmodes))
+                   && (liftfield.size() != 0 && j < liftfield.size()) && (NUmodes != 0
+                       && k >= liftfield.size() && k < liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(supmodes[i - liftfield.size() -
-                                          NUmodes] & fvc::div(
-                                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
-                                            Umodes[k - liftfield.size()])).value();
+                      NUmodes] & fvc::div(
+                      linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
+                      Umodes[k - liftfield.size()])).value();
                 }
                 else if ((NSUPmodes != 0 && i >= liftfield.size() + NUmodes
-                          && k >= liftfield.size() + NUmodes) && (liftfield.size() != 0
-                                  && j < liftfield.size()) )
+                  && k >= liftfield.size() + NUmodes) && (liftfield.size() != 0
+                  && j < liftfield.size()) )
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(supmodes[i - liftfield.size() -
-                                          NUmodes] & fvc::div(
-                                            linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
-                                            supmodes[k - liftfield.size() - NUmodes])).value();
+                      NUmodes] & fvc::div(
+                      linearInterpolate(liftfield[j]) & liftfield[j].mesh().Sf(),
+                      supmodes[k - liftfield.size() - NUmodes])).value();
                 }
                 else if ((NSUPmodes != 0 && i >= liftfield.size() + NUmodes) && (NUmodes != 0
-                         && j >= liftfield.size() && j < liftfield.size() + NUmodes)
-                         && (liftfield.size() != 0 && k < liftfield.size()))
+                   && j >= liftfield.size() && j < liftfield.size() + NUmodes)
+                   && (liftfield.size() != 0 && k < liftfield.size()))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(supmodes[i - liftfield.size() -
-                                          NUmodes] & fvc::div(
-                                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
-                                                    liftfield.size()].mesh().Sf(), liftfield[k])).value();
+                      NUmodes] & fvc::div(
+                      linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
+                        liftfield.size()].mesh().Sf(), liftfield[k])).value();
                 }
                 else if ((NSUPmodes != 0 && i >= liftfield.size() + NUmodes) && (NUmodes != 0
-                         && j >= liftfield.size() && j < liftfield.size() + NUmodes
-                         && k >= liftfield.size() && k < liftfield.size() + NUmodes))
+                   && j >= liftfield.size() && j < liftfield.size() + NUmodes
+                   && k >= liftfield.size() && k < liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(supmodes[i - liftfield.size() -
-                                          NUmodes] & fvc::div(
-                                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
-                                                    liftfield.size()].mesh().Sf(), Umodes[k - liftfield.size()])).value();
+                      NUmodes] & fvc::div(
+                      linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
+                        liftfield.size()].mesh().Sf(), Umodes[k - liftfield.size()])).value();
                 }
                 else if ((NSUPmodes != 0 && i >= liftfield.size() + NUmodes
-                          && k >= liftfield.size() + NUmodes) && (NUmodes != 0 && j >= liftfield.size()
-                                  && j < liftfield.size() + NUmodes))
+                  && k >= liftfield.size() + NUmodes) && (NUmodes != 0 && j >= liftfield.size()
+                  && j < liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(supmodes[i - liftfield.size() -
-                                          NUmodes] & fvc::div(
-                                            linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
-                                                    liftfield.size()].mesh().Sf(),
-                                            supmodes[k - liftfield.size() - NUmodes])).value();
+                      NUmodes] & fvc::div(
+                      linearInterpolate(Umodes[j - liftfield.size()]) & Umodes[j -
+                        liftfield.size()].mesh().Sf(),
+                      supmodes[k - liftfield.size() - NUmodes])).value();
                 }
                 else if ((NSUPmodes != 0 && i >= liftfield.size() + NUmodes
-                          && j >= liftfield.size() + NUmodes) && (liftfield.size() != 0
-                                  && k < liftfield.size()))
+                  && j >= liftfield.size() + NUmodes) && (liftfield.size() != 0
+                  && k < liftfield.size()))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(supmodes[i - liftfield.size() -
-                                          NUmodes] & fvc::div(
-                                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
-                                                    liftfield.size() - NUmodes].mesh().Sf(), liftfield[k])).value();
+                      NUmodes] & fvc::div(
+                      linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
+                        liftfield.size() - NUmodes].mesh().Sf(), liftfield[k])).value();
                 }
                 else if ((NSUPmodes != 0 && i >= liftfield.size() + NUmodes
-                          && j >= liftfield.size() + NUmodes) && (NUmodes != 0 && k >= liftfield.size()
-                                  && k < liftfield.size() + NUmodes))
+                  && j >= liftfield.size() + NUmodes) && (NUmodes != 0 && k >= liftfield.size()
+                  && k < liftfield.size() + NUmodes))
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(supmodes[i - liftfield.size() -
-                                          NUmodes] & fvc::div(
-                                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
-                                                    liftfield.size() - NUmodes].mesh().Sf(), Umodes[k - liftfield.size()])).value();
+                      NUmodes] & fvc::div(
+                      linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
+                        liftfield.size() - NUmodes].mesh().Sf(), Umodes[k - liftfield.size()])).value();
                 }
                 else if (NSUPmodes != 0 && i >= liftfield.size() + NUmodes
-                         && j >= liftfield.size() + NUmodes && k >= liftfield.size() + NUmodes)
+                   && j >= liftfield.size() + NUmodes && k >= liftfield.size() + NUmodes)
                 {
                     C_tensor(i, j, k) = fvc::domainIntegrate(supmodes[i - liftfield.size() -
-                                          NUmodes] & fvc::div(
-                                            linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
-                                                    liftfield.size() - NUmodes].mesh().Sf(),
-                                            supmodes[k - liftfield.size() - NUmodes])).value();
+                      NUmodes] & fvc::div(
+                      linearInterpolate(supmodes[j - liftfield.size() - NUmodes]) & supmodes[j -
+                        liftfield.size() - NUmodes].mesh().Sf(),
+                      supmodes[k - liftfield.size() - NUmodes])).value();
                 }
             }
         }
@@ -882,13 +891,13 @@ Eigen::Tensor<double, 3 > steadyNS::convective_term_tens(label NUmodes,
 
     // Export the tensor
     ITHACAstream::SaveDenseTensor(C_tensor, "./ITHACAoutput/Matrices/",
-                                  "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_t");
+      "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+          NSUPmodes) + "_t");
     return C_tensor;
 }
 
 Eigen::MatrixXd steadyNS::mass_term(label NUmodes, label NPmodes,
-                                    label NSUPmodes)
+    label NSUPmodes)
 {
     label Msize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::MatrixXd M_matrix(Msize, Msize);
@@ -929,14 +938,14 @@ Eigen::MatrixXd steadyNS::mass_term(label NUmodes, label NPmodes,
     }
 
     ITHACAstream::SaveDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/",
-                                  "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+      "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
     return M_matrix;
 }
 
 // * * * * * * * * * * * * * * Continuity Eq. Methods * * * * * * * * * * * * * //
 
 Eigen::MatrixXd steadyNS::divergence_term(label NUmodes, label NPmodes,
-        label NSUPmodes)
+    label NSUPmodes)
 {
     label P1size = NPmodes;
     label P2size = NUmodes + NSUPmodes + liftfield.size();
@@ -974,13 +983,13 @@ Eigen::MatrixXd steadyNS::divergence_term(label NUmodes, label NPmodes,
         for (label j = 0; j < P2size; j++)
         {
             P_matrix(i, j) = fvc::domainIntegrate(Pmodes[i] * fvc::div (
-                    Together[j])).value();
+                Together[j])).value();
         }
     }
 
     ITHACAstream::SaveDenseMatrix(P_matrix, "./ITHACAoutput/Matrices/",
-                                  "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_" + name(NPmodes));
+      "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+          NSUPmodes) + "_" + name(NPmodes));
     return P_matrix;
 }
 
@@ -1023,7 +1032,7 @@ List < Eigen::MatrixXd > steadyNS::div_momentum(label NUmodes, label NPmodes)
             for (label k = 0; k < G2size; k++)
             {
                 G_matrix[i](j, k) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & (fvc::div(
-                                        fvc::interpolate(Together[j]) & Together[j].mesh().Sf(), Together[k]))).value();
+                    fvc::interpolate(Together[j]) & Together[j].mesh().Sf(), Together[k]))).value();
             }
         }
     }
@@ -1046,7 +1055,7 @@ Eigen::MatrixXd steadyNS::laplacian_pressure(label NPmodes)
         for (label j = 0; j < Dsize; j++)
         {
             D_matrix(i, j) = fvc::domainIntegrate(fvc::grad(Pmodes[i])&fvc::grad(
-                    Pmodes[j])).value();
+                Pmodes[j])).value();
         }
     }
 
@@ -1087,7 +1096,7 @@ Eigen::MatrixXd steadyNS::pressure_BC1(label NUmodes, label NPmodes)
         for (label j = 0; j < P_BC2size; j++)
         {
             surfaceScalarField lpl((fvc::interpolate(fvc::laplacian(
-                                        Together[j]))&mesh.Sf())*fvc::interpolate(Pmodes[i]));
+                Together[j]))&mesh.Sf())*fvc::interpolate(Pmodes[i]));
             double s = 0;
 
             for (label k = 0; k < lpl.boundaryField().size(); k++)
@@ -1142,7 +1151,7 @@ List < Eigen::MatrixXd > steadyNS::pressure_BC2(label NUmodes, label NPmodes)
             for (label k = 0; k < P2_BC2size; k++)
             {
                 surfaceScalarField div_m(fvc::interpolate(fvc::div(fvc::interpolate(
-                                             Together[j]) & mesh.Sf(), Together[k]))&mesh.Sf()*fvc::interpolate(Pmodes[i]));
+                   Together[j]) & mesh.Sf(), Together[k]))&mesh.Sf()*fvc::interpolate(Pmodes[i]));
                 double s = 0;
 
                 for (label k = 0; k < div_m.boundaryField().size(); k++)
@@ -1259,8 +1268,8 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-        )
-    );
+            )
+        );
     IOdictionary transportProperties
     (
         IOobject
@@ -1270,8 +1279,8 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-        )
-    );
+            )
+        );
     word pName = FORCESdict.lookup("pName");
     word UName = FORCESdict.lookup("UName");
     functionObjects::ITHACAforces f("Forces", mesh, FORCESdict);
@@ -1305,11 +1314,11 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
     }
 
     ITHACAstream::exportMatrix(tau_matrix, "tau", "python",
-                               "./ITHACAoutput/Matrices/");
+     "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(tau_matrix, "tau", "matlab",
-                               "./ITHACAoutput/Matrices/");
+     "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(tau_matrix, "tau", "eigen",
-                               "./ITHACAoutput/Matrices/");
+     "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(n_matrix, "n", "python", "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(n_matrix, "n", "matlab", "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(n_matrix, "n", "eigen", "./ITHACAoutput/Matrices/");

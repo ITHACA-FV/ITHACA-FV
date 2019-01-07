@@ -57,6 +57,8 @@ class tutorial03 : public steadyNS
             Vector<double> inl(0, 0, 0);
             List<scalar> mu_now(1);
 
+            Info << "Offline is: " << offline << endl;
+
             // if the offline solution is already performed read the fields
             if (offline)
             {
@@ -68,6 +70,7 @@ class tutorial03 : public steadyNS
             else
             {
                 Vector<double> Uinl(0, 0, 0);
+                std::cerr << "debug point 10" << std::endl;
 
                 for (label i = 0; i < mu.cols(); i++)
                 {

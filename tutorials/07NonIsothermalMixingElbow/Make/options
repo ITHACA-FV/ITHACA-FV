@@ -15,6 +15,7 @@ EXE_INC = \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I../../src/ITHACA_CORE/ITHACAutilities \
+    -I../../src/ITHACA_CORE/ITHACAparallel \
     -I../../src/ITHACA_CORE/ITHACAPOD \
     -I../../src/ITHACA_CORE/ITHACAstream \
     -I../../src/ITHACA_CORE/Foam2Eigen \

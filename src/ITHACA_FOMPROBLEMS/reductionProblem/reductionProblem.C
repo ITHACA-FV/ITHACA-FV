@@ -40,8 +40,6 @@ License
 // Constructor
 reductionProblem::reductionProblem()
 {
-    offline = ITHACAutilities::check_off();
-    podex = ITHACAutilities::check_pod();
 }
 
 
