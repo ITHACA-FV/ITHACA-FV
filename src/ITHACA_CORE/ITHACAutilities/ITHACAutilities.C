@@ -278,7 +278,7 @@ PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
 }
 
 double ITHACAutilities::error_fields(volVectorField& field1,
- volVectorField& field2)
+volVectorField& field2)
 {
     double err = L2norm(field1 - field2) / L2norm(field1);
     return err;
@@ -337,7 +337,7 @@ Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volVectorField>&
 }
 
 double ITHACAutilities::error_fields(volScalarField& field1,
- volScalarField& field2)
+volScalarField& field2)
 {
     double err = L2norm(field1 - field2) / L2norm(field1);
     return err;
@@ -831,7 +831,7 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
 
 // Assign a BC for a scalar field
 void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
-   Vector<double>& value)
+Vector<double>& value)
 {
     if (s.boundaryField()[BC_ind].type() == "fixedValue")
     {
@@ -936,6 +936,7 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
         {
             Vector<double> value(valueVec(i), valueVec(i + sizeBC),
              valueVec(i + sizeBC * 2));
+
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
 
