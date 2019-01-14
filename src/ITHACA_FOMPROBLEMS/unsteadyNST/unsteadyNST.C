@@ -324,15 +324,15 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
     }
     else
     {
-	    B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-	    C_matrix = convective_term(NUmodes, NPmodes, NSUPmodes);
-	    Q_matrix = convective_term_temperature(NUmodes, NTmodes, NSUPmodes);
-	    Y_matrix = diffusive_term_temperature(NUmodes, NTmodes, NSUPmodes);
-	    K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
-	    P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
-	    M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
-	    MT_matrix = mass_term_temperature(NUmodes, NTmodes, NSUPmodes);
-	}
+        B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
+        C_matrix = convective_term(NUmodes, NPmodes, NSUPmodes);
+        Q_matrix = convective_term_temperature(NUmodes, NTmodes, NSUPmodes);
+        Y_matrix = diffusive_term_temperature(NUmodes, NTmodes, NSUPmodes);
+        K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
+        P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
+        M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
+        MT_matrix = mass_term_temperature(NUmodes, NTmodes, NSUPmodes);
+    }
 }
 
 
@@ -443,10 +443,10 @@ Eigen::MatrixXd unsteadyNST::diffusive_term_temperature(label NUmodes,
         for (label i = 0; i < Ysize; i++)
         {
             for (label j = 0; j < Ysize; j++)
-        	{
+            {
 
             Y_matrix(i, j) = fvc::domainIntegrate(Togethert[i] * fvc::laplacian(dimensionedScalar("1", dimless, 1), Togethert[j])).value();
-        	}
+            }
         }
     }
 
