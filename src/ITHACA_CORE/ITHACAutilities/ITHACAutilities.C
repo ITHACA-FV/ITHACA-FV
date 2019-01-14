@@ -227,6 +227,14 @@ double ITHACAutilities::error_fields(volVectorField& field1,
     return err;
 }
 
+
+double ITHACAutilities::error_fields_abs(volVectorField& field1,
+                                     volVectorField& field2)
+{
+    double err = L2norm(field1 - field2);
+    return err;
+}
+
 Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volVectorField>&
         fields1, PtrList<volVectorField>& fields2)
 {
@@ -249,6 +257,28 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volVectorField>&
     return err;
 }
 
+Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volVectorField>&
+        fields1, PtrList<volVectorField>& fields2)
+{
+    Eigen::VectorXd err;
+
+    if (fields1.size() != fields2.size())
+    {
+        Info << "The two fields does not have the same size, code will abort" << endl;
+        exit(0);
+    }
+
+    err.resize(fields1.size(), 1);
+
+    for (label k = 0; k < fields1.size(); k++)
+    {
+        err(k, 0) = error_fields_abs(fields1[k], fields2[k]);
+        Info << " Error is " << err[k] << endl;
+    }
+
+    return err;
+}
+
 double ITHACAutilities::error_fields(volScalarField& field1,
                                      volScalarField& field2)
 {
@@ -256,6 +286,13 @@ double ITHACAutilities::error_fields(volScalarField& field1,
     return err;
 }
 
+
+double ITHACAutilities::error_fields_abs(volScalarField& field1,
+                                     volScalarField& field2)
+{
+    double err = L2norm(field1 - field2);
+    return err;
+}
 
 Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volScalarField>&
         fields1, PtrList<volScalarField>& fields2)
@@ -273,6 +310,28 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volScalarField>&
     for (label k = 0; k < fields1.size(); k++)
     {
         err(k, 0) = error_fields(fields1[k], fields2[k]);
+        Info << " Error is " << err[k] << endl;
+    }
+
+    return err;
+}
+
+Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volScalarField>&
+        fields1, PtrList<volScalarField>& fields2)
+{
+    Eigen::VectorXd err;
+
+    if (fields1.size() != fields2.size())
+    {
+        Info << "The two fields does not have the same size, code will abort" << endl;
+        exit(0);
+    }
+
+    err.resize(fields1.size(), 1);
+
+    for (label k = 0; k < fields1.size(); k++)
+    {
+        err(k, 0) = error_fields_abs(fields1[k], fields2[k]);
         Info << " Error is " << err[k] << endl;
     }
 
