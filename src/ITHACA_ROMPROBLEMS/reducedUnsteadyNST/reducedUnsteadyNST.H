@@ -139,6 +139,9 @@ class reducedUnsteadyNST: public reducedUnsteadyNS
         /// Gradient of pressure
         Eigen::MatrixXd K_matrix;
 
+        /// Turbulent thermal term
+        List <Eigen::MatrixXd> S_matrix;
+
         /// Convective Term
         List <Eigen::MatrixXd> C_matrix;
 
@@ -158,7 +161,7 @@ class reducedUnsteadyNST: public reducedUnsteadyNS
         List < Eigen::MatrixXd> online_solutiont;
 
         /// List of pointers to store the modes for temperature
-        PtrList<volScalarField> LTmodes;
+        PtrList<volScalarField> Tmodes;
 
         /// List of pointers to store the snapshots for temperature
         PtrList<volScalarField> Tsnapshots;

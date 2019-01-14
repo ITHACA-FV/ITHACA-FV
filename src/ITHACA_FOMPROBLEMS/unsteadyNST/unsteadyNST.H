@@ -102,7 +102,7 @@ class unsteadyNST: public unsteadyNS
         autoPtr<volScalarField> _T;
 
         /// List of pointers used to form the temperature modes
-        PtrList<volScalarField> LTmodes;
+        PtrList<volScalarField> Tmodes;
 
         ///dimensionedScalar DT;
         autoPtr<dimensionedScalar> _DT;
@@ -115,6 +115,18 @@ class unsteadyNST: public unsteadyNS
 
         /// List of pointers used to form the homogeneous temperature snapshots
         PtrList<volScalarField> Tomfield;
+
+        /// List of pointers used to form the Weighted nested-POD modes for velocity field
+        PtrList<volVectorField> UModesWeighted;
+
+        /// List of pointers used to form the Weighted nested-POD modes for pressure field
+        PtrList<volScalarField> PModesWeighted;
+
+        /// List of pointers used to form the Weighted nested-POD modes for temperature field
+        PtrList<volScalarField> TModesWeighted;
+
+        /// List of pointers used to form the Weighted nested-POD modes for nut-field 
+        PtrList<volScalarField> NUTModesWeighted;
 
         /// pisoControl
         autoPtr<pisoControl> _piso;
@@ -152,6 +164,13 @@ class unsteadyNST: public unsteadyNS
         /// Perform a truthsolve
         void truthSolve(List<scalar> mu_now);
 
+        //--------------------------------------------------------------------------
+        /// Function to check if the solution must be exported.
+        ///
+        /// @param      timeObject  The time object of OpenFOAM.
+        ///
+        /// @return     1 if we must write 0 elsewhere.
+        ///
         bool checkWrite(Time& timeObject);
 
         /// Specific variable for the unstationary case

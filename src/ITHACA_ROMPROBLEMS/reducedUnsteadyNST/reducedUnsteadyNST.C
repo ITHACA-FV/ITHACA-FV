@@ -77,13 +77,13 @@ reducedUnsteadyNST::reducedUnsteadyNST(unsteadyNST& FOMproblem)
 
     for (label k = 0; k < problem->liftfieldT.size(); k++)
     {
-        LTmodes.append(problem->liftfieldT[k]);
+        Tmodes.append(problem->liftfieldT[k]);
     }
 
     // Create locally the temperature modes
     for (label k = 0; k < problem->NTmodes; k++)
     {
-        LTmodes.append(problem->LTmodes[k]);
+        Tmodes.append(problem->Tmodes[k]);
     }
 
     // Store locally the snapshots for projections
@@ -172,7 +172,7 @@ int newton_unsteadyNST_sup_t::operator()(const Eigen::VectorXd& t,
     for (label i = 0; i < Nphi_t; i++)
     {
         qq = a_tmp.transpose() * problem-> Q_matrix[i] * c_tmp;
-        fvect(i) = M8(i) - M6(i) + qq(0, 0);
+        fvect(i) = -M8(i) + M6(i) - qq(0, 0);
     }
 
     for (label j = 0; j < N_BC_t; j++)
@@ -201,13 +201,10 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
     z.setZero();
 
     // Set Initial Conditions
-    if (this->tstart != 0)
-    {
-        y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
-        y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
-        z.head(Nphi_t) = ITHACAutilities::get_coeffs(Tsnapshots[startSnap], LTmodes);
-    }
-
+    y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
+    y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
+    z.head(Nphi_t) = ITHACAutilities::get_coeffs(Tsnapshots[startSnap], Tmodes);
+ 
     // Change initial condition for the lifting function
     for (label j = 0; j < N_BC; j++)
     {
@@ -418,11 +415,11 @@ void reducedUnsteadyNST::reconstruct_supt(fileName folder, int printevery)
     {
         if (counter == nextwrite)
         {
-            volScalarField T_rec("T_rec", LTmodes[0] * 0);
+            volScalarField T_rec("T_rec", Tmodes[0] * 0);
 
             for (label j = 0; j < Nphi_t; j++)
             {
-                T_rec += LTmodes[j] * online_solutiont[i](j + 1, 0);
+                T_rec += Tmodes[j] * online_solutiont[i](j + 1, 0);
             }
 
             problem->exportSolution(T_rec,  name(counter2), folder);
