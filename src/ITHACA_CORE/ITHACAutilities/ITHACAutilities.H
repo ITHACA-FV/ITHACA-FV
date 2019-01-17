@@ -225,7 +225,7 @@ class ITHACAutilities
         static Eigen::MatrixXd error_listfields(PtrList<volScalarField>& fields1,
                                                 PtrList<volScalarField>& fields2);
 
-         //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
         /// Function to compute the absolute error in L2 norm between two lists of volVectorFields
         ///
         /// @param[in]  fields1  The fields 1
@@ -234,7 +234,7 @@ class ITHACAutilities
         /// @return     A vector containing the error between the two fields in Eigen::MatrixXd form.
         ///
         static Eigen::MatrixXd error_listfields_abs(PtrList<volVectorField>& fields1,
-                                                PtrList<volVectorField>& fields2);
+                PtrList<volVectorField>& fields2);
 
         //--------------------------------------------------------------------------
         /// Function to compute the absolute error in L2 norm between two lists of volScalarFields
@@ -245,7 +245,7 @@ class ITHACAutilities
         /// @return     A vector containing the error between the two fields in Eigen::MatrixXd form.
         ///
         static Eigen::MatrixXd error_listfields_abs(PtrList<volScalarField>& fields1,
-                                                PtrList<volScalarField>& fields2);
+                PtrList<volScalarField>& fields2);
 
 
         //--------------------------------------------------------------------------

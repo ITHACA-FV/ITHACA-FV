@@ -1,12 +1,12 @@
 // Solve pressure equation
-volScalarField rAU(1.0/UEqn.A());
-volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+volScalarField rAU(1.0 / UEqn.A());
+volVectorField HbyA(constrainHbyA(rAU* UEqn.H(), U, p));
 surfaceScalarField phiHbyA
 (
     "phiHbyA",
     fvc::flux(HbyA)
-  + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi)
-);
+    + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi)
+    );
 
 MRF.makeRelative(phiHbyA);
 
@@ -23,9 +23,7 @@ while (piso.correctNonOrthogonal())
     (
         fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
     );
-
     pEqn.setReference(pRefCell, pRefValue);
-
     pEqn.solve(mesh.solver(p.select(piso.finalInnerIter())));
 
     if (piso.finalNonOrthogonalIter())
@@ -36,6 +34,6 @@ while (piso.correctNonOrthogonal())
 
 #include "continuityErrs.H"
 
-U = HbyA - rAU*fvc::grad(p);
+U = HbyA - rAU * fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);

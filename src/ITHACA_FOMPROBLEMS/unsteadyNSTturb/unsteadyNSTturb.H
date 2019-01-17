@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ Description
     Reduction class for a NON-Stationary NS problem
 
 SourceFiles
-    unsteadyNS.C   
+    unsteadyNS.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -73,174 +73,178 @@ and the for the generation of the reduced matrices for subsequent online solve, 
 of the steadyNS class */
 class unsteadyNSTturb: public unsteadyNST
 {
-public:
-    // Constructors
+    public:
+        // Constructors
         /// Construct Null
-    unsteadyNSTturb();
+        unsteadyNSTturb();
 
         /// Construct with argc and argv
-    unsteadyNSTturb(int argc, char *argv[]);
-    ~unsteadyNSTturb(){};
+        unsteadyNSTturb(int argc, char* argv[]);
+        ~unsteadyNSTturb() {};
 
-    // Specific variable for the unstationary case
-    
-    // Member Functions
+        // Specific variable for the unstationary case
 
-    /// List of snapshots for the solution for eddy viscosity 
-    PtrList<volScalarField> nutFields;
+        // Member Functions
 
-    /// List of snapshots for the solution for eddy viscosity 
-    PtrList<volScalarField> liftfieldnut;
-    
-    /// List of snapshots to form the homogeneous eddy viscosity fields
-    PtrList<volScalarField> nutomFields;
-    
-    /// List of POD modes for eddy viscosity 
-    PtrList<volScalarField> nuTmodes;
+        /// List of snapshots for the solution for eddy viscosity
+        PtrList<volScalarField> nutFields;
 
-    /// Eddy diffusivity field
-    PtrList<volScalarField> alphatfield;
+        /// List of snapshots for the solution for eddy viscosity
+        PtrList<volScalarField> liftfieldnut;
 
-    /// Scalar to store the turbulent Prandtl number
-    scalar Prt;
+        /// List of snapshots to form the homogeneous eddy viscosity fields
+        PtrList<volScalarField> nutomFields;
 
-    /// Scalar to store the Prandtl number
-    scalar Pr;
+        /// List of POD modes for eddy viscosity
+        PtrList<volScalarField> nuTmodes;
 
-    /// Number of nut field modes
-    int Nphi_nut;
+        /// Eddy diffusivity field
+        PtrList<volScalarField> alphatfield;
 
-    /// Create a Rbf splines for interpolation
-    std::vector<SPLINTER::DataTable*> SAMPLES;
+        /// Scalar to store the turbulent Prandtl number
+        scalar Prt;
 
-    /// Create a SAMPLES for interpolation
-    std::vector<SPLINTER::RBFSpline*> rbfsplines;
+        /// Scalar to store the Prandtl number
+        scalar Pr;
 
-    /// Number of viscoisty modes used for the projection
-    label Nnutmodes;
+        /// Number of nut field modes
+        int Nphi_nut;
 
-    /** @name Reduced Matrices
-    *
-    */
-    ///@{   
-    //
-    /// Turbulent viscosity term
-    Eigen::MatrixXd BT_matrix;
+        /// Create a Rbf splines for interpolation
+        std::vector<SPLINTER::DataTable*> SAMPLES;
 
-    /// Turbulent viscosity term
-    List <Eigen::MatrixXd> CT2_matrix;
+        /// Create a SAMPLES for interpolation
+        std::vector<SPLINTER::RBFSpline*> rbfsplines;
 
-    /// Turbulent viscosity term
-    List <Eigen::MatrixXd> CT1_matrix;
+        /// Number of viscoisty modes used for the projection
+        label Nnutmodes;
 
-    /// Turbulent diffusivity term
-    List <Eigen::MatrixXd> S_matrix;
+        /** @name Reduced Matrices
+        *
+        */
+        ///@{
+        //
+        /// Turbulent viscosity term
+        Eigen::MatrixXd BT_matrix;
 
-    /// Total C Matrix
-    List <Eigen::MatrixXd> C_total_matrix;
+        /// Turbulent viscosity term
+        List <Eigen::MatrixXd> CT2_matrix;
 
-    /// Total B Matrix
-    Eigen::MatrixXd B_total_matrix;
-    ///@}
+        /// Turbulent viscosity term
+        List <Eigen::MatrixXd> CT1_matrix;
 
-    /// Eddy viscosity field
-    autoPtr<volScalarField> _nut;
-    autoPtr<volScalarField> _nuTilda;
+        /// Turbulent diffusivity term
+        List <Eigen::MatrixXd> S_matrix;
 
-    /// Turbulent Prandtl number
-    autoPtr<dimensionedScalar> _Prt;
+        /// Total C Matrix
+        List <Eigen::MatrixXd> C_total_matrix;
 
-    ///Prandtl number
-    autoPtr<dimensionedScalar> _Pr;
+        /// Total B Matrix
+        Eigen::MatrixXd B_total_matrix;
+        ///@}
 
-    /// Turbulent thermal diffusivity
-    autoPtr<volScalarField> _alphat;
+        /// Eddy viscosity field
+        autoPtr<volScalarField> _nut;
+        autoPtr<volScalarField> _nuTilda;
 
-    /// @brief      BT added matrix for the turbulence treatement
-    ///
-    /// @param[in]  NUmodes    The N of velocity modes.s
-    /// @param[in]  NSUPmodes  The N of supremizer modes.
-    ///
-    /// @return     BT matrix for turbulence treatment
-    ///
-    Eigen::MatrixXd BT_turbulence(label NUmodes, label NSUPmodes);
+        /// Turbulent Prandtl number
+        autoPtr<dimensionedScalar> _Prt;
 
-    ///
-    /// @brief      CT1 added matrix for the turbulence treatement
-    ///
-    /// @param[in]  NUmodes    The number of velocity modes.
-    /// @param[in]  NSUPmodes  The number of supremizer modes.
-    /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
-    ///
-    /// @return     CT1 matrix for turbulence treatment
-    ///
-    List < Eigen::MatrixXd > turbulence_term1(label NUmodes, label NSUPmodes, label Nnutmodes);
+        ///Prandtl number
+        autoPtr<dimensionedScalar> _Pr;
 
-    ///
-    /// @brief      S added matrix for the thermal turbulence treatement
-    ///
-    /// @param[in]  NUmodes    The number of velocity modes.
-    /// @param[in]  NSUPmodes  The number of supremizer modes.
-    /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
-    ///
-    /// @return     S matrix for turbulence treatment
-    ///
-    List < Eigen::MatrixXd > temperature_turbulence_term(label NTmodes, label Nnutmodes);
-    
-    ///
-    /// @brief      CT2 added matrix for the turbulence treatement
-    ///
-    /// @param[in]  NUmodes    The number of velocity modes.
-    /// @param[in]  NSUPmodes  The number of supremizer modes.
-    /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
-    ///
-    /// @return     CT2 matrix for turbulence treatment
-    ///
-    List < Eigen::MatrixXd > turbulence_term2(label NUmodes, label NSUPmodes, label Nnutmodes);
+        /// Turbulent thermal diffusivity
+        autoPtr<volScalarField> _alphat;
 
-    /// Perform a truthsolve for full order solution
-    //void truthSolve(fileName folder = "./ITHACAOutput/Offline");
-    /// Function to check if the solution must be exported.
-    ///
-    /// @param      timeObject  The time object of OpenFOAM.
-    ///
-    /// @return     1 if we must write 0 elsewhere.
-    ///
-    void truthSolve(List<scalar> mu_now);
+        /// @brief      BT added matrix for the turbulence treatement
+        ///
+        /// @param[in]  NUmodes    The N of velocity modes.s
+        /// @param[in]  NSUPmodes  The N of supremizer modes.
+        ///
+        /// @return     BT matrix for turbulence treatment
+        ///
+        Eigen::MatrixXd BT_turbulence(label NUmodes, label NSUPmodes);
 
-    /// Function to check if the solution must be exported.
-    ///
-    /// @param      timeObject  The time object of OpenFOAM.
-    ///
-    /// @return     1 if we must write 0 elsewhere.
-    ///
-    bool checkWrite(Time& timeObject);
-    
-    /// Perform a lift solve for temperature
-    void liftSolveT();
-    /**
-     * @brief      { function_description }
-     *
-     * @param[in]  folder     The folder
-     * @param[in]  NUmodes    The number of velocity modes.
-     * @param[in]  NPmodes    The number of pressure modes.
-     * @param[in]  NSUPmodes  The number of supremizer modes.
-     * @param[in]  Nnutmodes  The number of eddy viscosity modes.
+        ///
+        /// @brief      CT1 added matrix for the turbulence treatement
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
+        ///
+        /// @return     CT1 matrix for turbulence treatment
+        ///
+        List < Eigen::MatrixXd > turbulence_term1(label NUmodes, label NSUPmodes,
+                label Nnutmodes);
+
+        ///
+        /// @brief      S added matrix for the thermal turbulence treatement
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
+        ///
+        /// @return     S matrix for turbulence treatment
+        ///
+        List < Eigen::MatrixXd > temperature_turbulence_term(label NTmodes,
+                label Nnutmodes);
+
+        ///
+        /// @brief      CT2 added matrix for the turbulence treatement
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
+        ///
+        /// @return     CT2 matrix for turbulence treatment
+        ///
+        List < Eigen::MatrixXd > turbulence_term2(label NUmodes, label NSUPmodes,
+                label Nnutmodes);
+
+        /// Perform a truthsolve for full order solution
+        //void truthSolve(fileName folder = "./ITHACAOutput/Offline");
+        /// Function to check if the solution must be exported.
+        ///
+        /// @param      timeObject  The time object of OpenFOAM.
+        ///
+        /// @return     1 if we must write 0 elsewhere.
+        ///
+        void truthSolve(List<scalar> mu_now);
+
+        /// Function to check if the solution must be exported.
+        ///
+        /// @param      timeObject  The time object of OpenFOAM.
+        ///
+        /// @return     1 if we must write 0 elsewhere.
+        ///
+        bool checkWrite(Time& timeObject);
+
+        /// Perform a lift solve for temperature
+        void liftSolveT();
+        /**
+         * @brief      { function_description }
+         *
+         * @param[in]  folder     The folder
+         * @param[in]  NUmodes    The number of velocity modes.
+         * @param[in]  NPmodes    The number of pressure modes.
+         * @param[in]  NSUPmodes  The number of supremizer modes.
+         * @param[in]  Nnutmodes  The number of eddy viscosity modes.
 
 
-     */
+         */
 
-    ///
-    /// Project using a supremizer approach
-    ///
-    /// @param[in]  folder     The folder
-    /// @param[in]  NUmodes    The n umodes
-    /// @param[in]  NPmodes    The n pmodes
-    /// @param[in]  NSUPmodes  The nsu pmodes
-    /// @param[in]  Nnutmodes  The nnutmodes
-    ///
-    void projectSUP(fileName folder, label NU, label NP, label NSUP, label Nnut, label NT);
-    
+        ///
+        /// Project using a supremizer approach
+        ///
+        /// @param[in]  folder     The folder
+        /// @param[in]  NUmodes    The n umodes
+        /// @param[in]  NPmodes    The n pmodes
+        /// @param[in]  NSUPmodes  The nsu pmodes
+        /// @param[in]  Nnutmodes  The nnutmodes
+        ///
+        void projectSUP(fileName folder, label NU, label NP, label NSUP, label Nnut,
+                        label NT);
+
 
 };
 

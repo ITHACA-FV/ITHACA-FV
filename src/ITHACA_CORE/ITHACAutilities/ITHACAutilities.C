@@ -229,7 +229,7 @@ double ITHACAutilities::error_fields(volVectorField& field1,
 
 
 double ITHACAutilities::error_fields_abs(volVectorField& field1,
-                                     volVectorField& field2)
+        volVectorField& field2)
 {
     double err = L2norm(field1 - field2);
     return err;
@@ -288,7 +288,7 @@ double ITHACAutilities::error_fields(volScalarField& field1,
 
 
 double ITHACAutilities::error_fields_abs(volScalarField& field1,
-                                     volScalarField& field2)
+        volScalarField& field2)
 {
     double err = L2norm(field1 - field2);
     return err;

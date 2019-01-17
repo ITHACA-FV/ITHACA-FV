@@ -199,12 +199,11 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
     y.setZero();
     z.resize(Nphi_t, 1);
     z.setZero();
-
     // Set Initial Conditions
     y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
     y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
     z.head(Nphi_t) = ITHACAutilities::get_coeffs(Tsnapshots[startSnap], Tmodes);
- 
+
     // Change initial condition for the lifting function
     for (label j = 0; j < N_BC; j++)
     {

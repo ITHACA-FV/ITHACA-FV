@@ -106,15 +106,14 @@ void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volScalarField>& snapshotsP,
     }
 
     for (int i = 0; i < Npar; i++)
-    { 	
+    {
         y = PModesNested[i];
-        
+
         for (int j = 0; j < y.size(); j++)
         {
             PModesGlobal.append(y[j]);
-        }    
+        }
     }
-
 }
 void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
                          PtrList<volVectorField>& modes, bool podex, bool supex, bool sup, int nmodes)

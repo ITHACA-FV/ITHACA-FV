@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -33,23 +33,23 @@
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Info<< "Reading/calculating face flux field phi\n" << endl;
+Info << "Reading/calculating face flux field phi\n" << endl;
 
 _phi = autoPtr<surfaceScalarField>
-(
-    new surfaceScalarField
-    (
-        IOobject
-        (
-            "phi",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        linearInterpolate(U) & mesh.Sf()
-    )
-);
+       (
+           new surfaceScalarField
+           (
+               IOobject
+               (
+                   "phi",
+                   runTime.timeName(),
+                   mesh,
+                   IOobject::READ_IF_PRESENT,
+                   IOobject::AUTO_WRITE
+               ),
+               linearInterpolate(U) & mesh.Sf()
+           )
+       );
 surfaceScalarField& phi = _phi();
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

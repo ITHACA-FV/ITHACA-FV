@@ -234,7 +234,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
     NTmodes = NT;
     NSUPmodes = NSUP;
 
-   if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
+    if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
     {
         word M_str = "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                          NSUPmodes);
@@ -284,8 +284,6 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
             K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         }
 
-        
-
         word MT_str = "MT_" + name(liftfieldT.size()) + "_" + name(NTmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + MT_str))
@@ -298,7 +296,6 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         }
 
         Q_matrix = convective_term_temperature(NUmodes, NTmodes, NSUPmodes);
-
         word Y_str = "Y_" + name(liftfieldT.size()) + "_" + name(NTmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + Y_str))
@@ -341,7 +338,6 @@ List< Eigen::MatrixXd > unsteadyNST::convective_term_temperature(label NUmodes,
 {
     label Qsize = NUmodes + liftfield.size() + NSUPmodes;
     label Qsizet = NTmodes + liftfieldT.size() ;
-
     List < Eigen::MatrixXd > Q_matrix;
     Q_matrix.setSize(Qsizet);
 
@@ -444,8 +440,8 @@ Eigen::MatrixXd unsteadyNST::diffusive_term_temperature(label NUmodes,
         {
             for (label j = 0; j < Ysize; j++)
             {
-
-            Y_matrix(i, j) = fvc::domainIntegrate(Togethert[i] * fvc::laplacian(dimensionedScalar("1", dimless, 1), Togethert[j])).value();
+                Y_matrix(i, j) = fvc::domainIntegrate(Togethert[i] * fvc::laplacian(
+                        dimensionedScalar("1", dimless, 1), Togethert[j])).value();
             }
         }
     }

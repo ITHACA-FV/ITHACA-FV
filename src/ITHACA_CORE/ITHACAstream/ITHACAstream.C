@@ -269,7 +269,6 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     }
 
     infile.close();
-
     rows--;
     // Populate matrix with numbers.
     Eigen::MatrixXd result(rows, cols);

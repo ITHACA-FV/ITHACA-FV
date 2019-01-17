@@ -125,7 +125,7 @@ class unsteadyNST: public unsteadyNS
         /// List of pointers used to form the Weighted nested-POD modes for temperature field
         PtrList<volScalarField> TModesWeighted;
 
-        /// List of pointers used to form the Weighted nested-POD modes for nut-field 
+        /// List of pointers used to form the Weighted nested-POD modes for nut-field
         PtrList<volScalarField> NUTModesWeighted;
 
         /// pisoControl
