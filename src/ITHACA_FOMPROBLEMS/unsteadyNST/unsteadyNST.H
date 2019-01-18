@@ -24,9 +24,9 @@ License
 Class
     unsteadyNS
 Description
-    Reduction class for a NON-Stationary NS problem
+    Reduction class for a NON-Stationary NS plus energy equation problem
 SourceFiles
-    unsteadyNS.C
+    unsteadyNST.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
@@ -50,13 +50,13 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*---------------------------------------------------------------------------*\
-                        Class SteadyNS Declaration
+                        Class unsteadyNST Declaration
 \*---------------------------------------------------------------------------*/
 
-/// Implementation of a parametrized full order <b> unsteady NS problem </b> and preparation of the the reduced matrices for the online solve.
-/** In this class are implemented the methods for the offline solve of a unsteady NS problem
+/// Implementation of a parametrized full order <b> unsteady NS problem weakly coupled with the energy equation </b> and preparation of the the reduced matrices for the online solve.
+/** In this class are implemented the methods for the offline solve of a unsteady NST problem
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
-of the steadyNS class */
+of the unsteadyNS class */
 class unsteadyNST: public unsteadyNS
 {
 
@@ -102,7 +102,7 @@ class unsteadyNST: public unsteadyNS
         autoPtr<volScalarField> _T;
 
         /// List of pointers used to form the temperature modes
-        PtrList<volScalarField> LTmodes;
+        PtrList<volScalarField> Tmodes;
 
         ///dimensionedScalar DT;
         autoPtr<dimensionedScalar> _DT;
@@ -115,6 +115,18 @@ class unsteadyNST: public unsteadyNS
 
         /// List of pointers used to form the homogeneous temperature snapshots
         PtrList<volScalarField> Tomfield;
+
+        /// List of pointers used to form the Weighted nested-POD modes for velocity field
+        PtrList<volVectorField> UModesWeighted;
+
+        /// List of pointers used to form the Weighted nested-POD modes for pressure field
+        PtrList<volScalarField> PModesWeighted;
+
+        /// List of pointers used to form the Weighted nested-POD modes for temperature field
+        PtrList<volScalarField> TModesWeighted;
+
+        /// List of pointers used to form the Weighted nested-POD modes for nut-field
+        PtrList<volScalarField> NUTModesWeighted;
 
         /// pisoControl
         autoPtr<pisoControl> _piso;
@@ -152,6 +164,13 @@ class unsteadyNST: public unsteadyNS
         /// Perform a truthsolve
         void truthSolve(List<scalar> mu_now);
 
+        //--------------------------------------------------------------------------
+        /// Function to check if the solution must be exported.
+        ///
+        /// @param      timeObject  The time object of OpenFOAM.
+        ///
+        /// @return     1 if we must write 0 elsewhere.
+        ///
         bool checkWrite(Time& timeObject);
 
         /// Specific variable for the unstationary case
@@ -162,7 +181,7 @@ class unsteadyNST: public unsteadyNS
         /// @param[in]  folder     The folder used to save the reduced matrices.
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NPmodes    The number of pressure modes.
-        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NTmodes    The number of temperature modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes, 0 by default and it must remain always zero.
         ///
         void projectSUP(fileName folder, label NUmodes, label NPmodes, label NTmodes,
@@ -203,8 +222,6 @@ class unsteadyNST: public unsteadyNS
         ///
         Eigen::MatrixXd mass_term_temperature(label NUmodes,  label NTmodes,
                                               label NSUPmodes);
-
-
 };
 
 #endif

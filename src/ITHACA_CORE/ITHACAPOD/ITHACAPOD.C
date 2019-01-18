@@ -109,7 +109,7 @@ void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volScalarField>& snapshotsP,
     {
         y = PModesNested[i];
 
-        for (int j = 0; i < y.size(); j++)
+        for (int j = 0; j < y.size(); j++)
         {
             PModesGlobal.append(y[j]);
         }

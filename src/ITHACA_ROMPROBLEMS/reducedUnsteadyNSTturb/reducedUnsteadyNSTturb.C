@@ -1,5 +1,4 @@
 /*---------------------------------------------------------------------------*\
-v/*---------------------------------------------------------------------------*\
      ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
@@ -30,20 +29,21 @@ License
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Source file of the reducedUnsteadyNST class
+/// Source file of the reducedUnsteadyNS class
 
 
-#include "reducedUnsteadyNST.H"
+#include "reducedUnsteadyNSTturb.H"
 
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-reducedUnsteadyNST::reducedUnsteadyNST()
+reducedUnsteadyNSTturb::reducedUnsteadyNSTturb()
 {
 }
 
-reducedUnsteadyNST::reducedUnsteadyNST(unsteadyNST& FOMproblem)
+reducedUnsteadyNSTturb::reducedUnsteadyNSTturb(unsteadyNSTturb& FOMproblem)
+
 //problem(&FOMproblem)
 {
     problem   = &FOMproblem;
@@ -52,6 +52,7 @@ reducedUnsteadyNST::reducedUnsteadyNST(unsteadyNST& FOMproblem)
     Nphi_u    = problem->B_matrix.rows();
     Nphi_p    = problem->K_matrix.cols();
     Nphi_t    = problem->Y_matrix.rows();
+    Nphi_nut  = problem->CT2_matrix[0].rows();
 
     // Create locally the velocity modes
     for (label k = 0; k < problem->liftfield.size(); k++)
@@ -98,16 +99,16 @@ reducedUnsteadyNST::reducedUnsteadyNST(unsteadyNST& FOMproblem)
         Tsnapshots.append(problem->Tfield[k]);
     }
 
-    newton_object_sup = newton_unsteadyNST_sup(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
+    newton_object_sup = newton_unsteadyNSTturb_sup(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
                         FOMproblem);
-    newton_object_sup_t = newton_unsteadyNST_sup_t(Nphi_t, Nphi_t, FOMproblem);
+    newton_object_sup_t = newton_unsteadyNSTturb_sup_t(Nphi_t, Nphi_t, FOMproblem);
 }
 
-
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
-//Operator to evaluate the residual for the supremizer approach
-int newton_unsteadyNST_sup::operator()(const Eigen::VectorXd& x,
-                                       Eigen::VectorXd& fvec) const
+
+// Operator to evaluate the residual for the supremizer approach
+int newton_unsteadyNSTturb_sup::operator()(const Eigen::VectorXd& x,
+        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -117,19 +118,22 @@ int newton_unsteadyNST_sup::operator()(const Eigen::VectorXd& x,
     a_dot = (x.head(Nphi_u) - y_old.head(Nphi_u)) / dt;
     // Convective term
     Eigen::MatrixXd cc(1, 1);
-    // Momentum Term
-    Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
+    // Mom Term
+    Eigen::VectorXd M1 = problem ->B_total_matrix * a_tmp * nu;
     // Gradient of pressure
     Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
-    // Mass Term Velocity
+    // Mass Term
     Eigen::VectorXd M5 = problem->M_matrix * a_dot;
     // Pressure Term
     Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
 
+    //std::cerr << "I am here 5" << std::endl;
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
+        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp - nu_c.transpose() *
+             problem->C_total_matrix[i] * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M2(i);
+        //Info << "Non-turb part is " << a_tmp.transpose() * C_matrix[i] * a_tmp << endl;   //Info << "Turb part is " << nu_c.transpose() * C_total_matrix[i] * a_tmp << endl
     }
 
     for (label j = 0; j < Nphi_p; j++)
@@ -147,32 +151,36 @@ int newton_unsteadyNST_sup::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newton_unsteadyNST_sup::df(const Eigen::VectorXd& x,
-                               Eigen::MatrixXd& fjac) const
+int newton_unsteadyNSTturb_sup::df(const Eigen::VectorXd& x,
+                                   Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNST_sup> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNSTturb_sup> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
 
-int newton_unsteadyNST_sup_t::operator()(const Eigen::VectorXd& t,
+
+int newton_unsteadyNSTturb_sup_t::operator()(const Eigen::VectorXd& t,
         Eigen::VectorXd& fvect) const
 {
+    // Eigen::VectorXd a_tmp(Nphi_u);
     Eigen::VectorXd c_dot(Nphi_t);
     Eigen::VectorXd c_tmp(Nphi_t);
     c_tmp = t.head(Nphi_t);
     c_dot = (t.head(Nphi_t) - z_old.head(Nphi_t)) / dt;
     // Convective term temperature
     Eigen::MatrixXd qq(1, 1);
+    Eigen::MatrixXd st(1, 1);
     // diffusive term temperature
-    Eigen::VectorXd M6 = problem->Y_matrix * c_tmp * DT;
+    Eigen::VectorXd M6 = problem->Y_matrix * c_tmp * nu / Pr;
     // Mass Term Temperature
     Eigen::VectorXd M8 = problem->MT_matrix * c_dot;
 
     for (label i = 0; i < Nphi_t; i++)
     {
-        qq = a_tmp.transpose() * problem-> Q_matrix[i] * c_tmp;
-        fvect(i) = -M8(i) + M6(i) - qq(0, 0);
+        qq = a_tmp.transpose() * problem->Q_matrix[i] * c_tmp;
+        st = nu_c.transpose() * problem->S_matrix[i] * c_tmp;
+        fvect(i) = -M8(i) + M6(i) - qq(0, 0) + st(0, 0) / Prt;
     }
 
     for (label j = 0; j < N_BC_t; j++)
@@ -182,16 +190,17 @@ int newton_unsteadyNST_sup_t::operator()(const Eigen::VectorXd& t,
 
     return 0;
 }
-int newton_unsteadyNST_sup_t::df(const Eigen::VectorXd& t,
-                                 Eigen::MatrixXd& fjact) const
+int newton_unsteadyNSTturb_sup_t::df(const Eigen::VectorXd& t,
+                                     Eigen::MatrixXd& fjact) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNST_sup_t> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNSTturb_sup_t> numDiff(*this);
     numDiff.df(t, fjact);
     return 0;
 }
 
+
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
+void reducedUnsteadyNSTturb::solveOnline_sup(Eigen::MatrixXd& vel_now,
         Eigen::MatrixXd& temp_now, label startSnap)
 {
     // Create and resize the solution vector
@@ -199,10 +208,25 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
     y.setZero();
     z.resize(Nphi_t, 1);
     z.setZero();
-    // Set Initial Conditions
+    volScalarField T_IC("T_IC", problem->Tfield[0]);
+
+    for (label j = 0; j < T_IC.boundaryField().size(); j++)
+    {
+        for (label i = 0; i < N_BC_t; i++)
+        {
+            if (j == problem->inletIndexT(i, 0))
+            {
+                T_IC.boundaryFieldRef()[problem->inletIndexT(i, 0)][j] = temp_now(i, 0);
+            }
+            else
+            {
+            }
+        }
+    }
+
     y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
     y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
-    z.head(Nphi_t) = ITHACAutilities::get_coeffs(Tsnapshots[startSnap], Tmodes);
+    z.head(Nphi_t) = ITHACAutilities::get_coeffs(T_IC, Tmodes);
 
     // Change initial condition for the lifting function
     for (label j = 0; j < N_BC; j++)
@@ -220,19 +244,21 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
     newton_object_sup.y_old = y;
     newton_object_sup.dt = dt;
     newton_object_sup_t.DT = DT;
-    newton_object_sup_t.z_old = z;
+    newton_object_sup_t.Prt = Prt;
+    newton_object_sup_t.Pr = Pr;
     newton_object_sup_t.dt = dt;
+    newton_object_sup_t.z_old = z;
     newton_object_sup.BC.resize(N_BC);
     newton_object_sup_t.BC_t.resize(N_BC_t);
-
-    for (label j = 0; j < N_BC_t; j++)
-    {
-        newton_object_sup_t.BC_t(j) = temp_now(j, 0);
-    }
 
     for (label j = 0; j < N_BC; j++)
     {
         newton_object_sup.BC(j) = vel_now(j, 0);
+    }
+
+    for (label j = 0; j < N_BC_t; j++)
+    {
+        newton_object_sup_t.BC_t(j) = temp_now(j, 0);
     }
 
     // Set number of online solutions
@@ -253,9 +279,9 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
     tmp_solt.col(0).tail(z.rows()) = z;
     online_solutiont[counter] = tmp_solt;
     counter ++;
-    // Create nonlinear solver object
-    Eigen::HybridNonLinearSolver<newton_unsteadyNST_sup> hnls(newton_object_sup);
-    Eigen::HybridNonLinearSolver<newton_unsteadyNST_sup_t> hnlst(
+    Eigen::HybridNonLinearSolver<newton_unsteadyNSTturb_sup> hnls(
+        newton_object_sup);
+    Eigen::HybridNonLinearSolver<newton_unsteadyNSTturb_sup_t> hnlst(
         newton_object_sup_t);
     // Set output colors for fancy output
     Color::Modifier red(Color::FG_RED);
@@ -266,6 +292,24 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
     while (time < finalTime)
     {
         time = time + dt;
+        std::vector<double> tv;
+        tv.resize(1);
+        tv[0] = time;
+
+        for (label i = 0; i < Nphi_nut; i++)
+        {
+            newton_object_sup.nu_c(i) = problem->rbfsplines[i]->eval(vel_now);
+        }
+
+        volScalarField nut_rec("nut_rec", problem->nuTmodes[0] * 0);
+
+        for (label j = 0; j < Nphi_nut; j++)
+        {
+            nut_rec += problem->nuTmodes[j] * newton_object_sup.nu_c(j);
+        }
+
+        nutREC.append(nut_rec);
+        newton_object_sup_t.nu_c = newton_object_sup.nu_c;
         Eigen::VectorXd res(y);
         Eigen::VectorXd rest(z);
         res.setZero();
@@ -277,8 +321,6 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
             y(j) = vel_now(j, 0);
         }
 
-        // set the a_temp
-        // solve for temperature
         newton_object_sup_t.a_tmp = y.head(Nphi_u);
         hnlst.solve(z);
 
@@ -295,7 +337,6 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
                   " ##################" << std::endl;
         Info << "Time = " << time << endl;
         std::cout << "Solving for the parameter: " << vel_now << std::endl;
-        std::cout << "Solving for the parameter: " << temp_now << std::endl;
 
         if (res.norm() < 1e-5)
         {
@@ -306,17 +347,6 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
         {
             std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
                       hnls.iter << " iterations " << def << std::endl << std::endl;
-        }
-
-        if (rest.norm() < 1e-5)
-        {
-            std::cout << green << "|F(x)| = " << rest.norm() << " - Minimun reached in " <<
-                      hnlst.iter << " iterations " << def << std::endl << std::endl;
-        }
-        else
-        {
-            std::cout << red << "|F(x)| = " << rest.norm() << " - Minimun reached in " <<
-                      hnlst.iter << " iterations " << def << std::endl << std::endl;
         }
 
         count_online_solve += 1;
@@ -356,14 +386,18 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
                                "./ITHACAoutput/red_coeff_t");
     ITHACAstream::exportMatrix(online_solutiont, "red_coeff", "matlab",
                                "./ITHACAoutput/red_coeff_t");
+    ITHACAstream::exportFields(nutREC, "nutfield", "./ITHACAoutput/nutfield/");
     count_online_solve += 1;
 }
 
+// * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void reducedUnsteadyNST::reconstruct_sup(fileName folder, int printevery)
+void reducedUnsteadyNSTturb::reconstruct_sup(fileName folder, int printevery)
 {
     mkDir(folder);
-    ITHACAutilities::createSymLink(folder);
+    system("ln -s ../../constant " + folder + "/constant");
+    system("ln -s ../../0 " + folder + "/0");
+    system("ln -s ../../system " + folder + "/system");
     int counter = 0;
     int nextwrite = 0;
     int counter2 = 1;
@@ -379,7 +413,6 @@ void reducedUnsteadyNST::reconstruct_sup(fileName folder, int printevery)
                 U_rec += Umodes[j] * online_solution[i](j + 1, 0);
             }
 
-            //problem.exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
             problem->exportSolution(U_rec,  name(counter2), folder);
             volScalarField P_rec("P_rec", Pmodes[0] * 0);
 
@@ -388,8 +421,8 @@ void reducedUnsteadyNST::reconstruct_sup(fileName folder, int printevery)
                 P_rec += Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
 
-            //problem.exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
             problem->exportSolution(P_rec, name(counter2), folder);
+            problem->exportSolution(nutREC[nextwrite], name(counter2), folder);
             nextwrite += printevery;
             counter2 ++;
             UREC.append(U_rec);
@@ -400,12 +433,12 @@ void reducedUnsteadyNST::reconstruct_sup(fileName folder, int printevery)
     }
 }
 
-
-
-void reducedUnsteadyNST::reconstruct_supt(fileName folder, int printevery)
+void reducedUnsteadyNSTturb::reconstruct_supt(fileName folder, int printevery)
 {
     mkDir(folder);
-    ITHACAutilities::createSymLink(folder);
+    system("ln -s ../../constant " + folder + "/constant");
+    system("ln -s ../../0 " + folder + "/0");
+    system("ln -s ../../system " + folder + "/system");
     int counter = 0;
     int nextwrite = 0;
     int counter2 = 1;
@@ -430,5 +463,5 @@ void reducedUnsteadyNST::reconstruct_supt(fileName folder, int printevery)
         counter++;
     }
 }
-
 // ************************************************************************* //
+

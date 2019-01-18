@@ -233,14 +233,103 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
     NPmodes = NP;
     NTmodes = NT;
     NSUPmodes = NSUP;
-    B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-    C_matrix = convective_term(NUmodes, NPmodes, NSUPmodes);
-    Q_matrix = convective_term_temperature(NUmodes, NTmodes, NSUPmodes);
-    Y_matrix = diffusive_term_temperature(NUmodes, NTmodes, NSUPmodes);
-    K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
-    P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
-    M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
-    MT_matrix = mass_term_temperature(NUmodes, NTmodes, NSUPmodes);
+
+    if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
+    {
+        word M_str = "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + M_str))
+        {
+            ITHACAstream::ReadDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/", M_str);
+        }
+        else
+        {
+            M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word B_str = "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + B_str))
+        {
+            ITHACAstream::ReadDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/", B_str);
+        }
+        else
+        {
+            B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word C_str = "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + C_str))
+        {
+            ITHACAstream::ReadDenseTensor(C_tensor, "./ITHACAoutput/Matrices/", C_str);
+        }
+        else
+        {
+            C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word K_str = "K_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_" + name(NPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + K_str))
+        {
+            ITHACAstream::ReadDenseMatrix(K_matrix, "./ITHACAoutput/Matrices/", K_str);
+        }
+        else
+        {
+            K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word MT_str = "MT_" + name(liftfieldT.size()) + "_" + name(NTmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + MT_str))
+        {
+            ITHACAstream::ReadDenseMatrix(MT_matrix, "./ITHACAoutput/Matrices/", MT_str);
+        }
+        else
+        {
+            MT_matrix = mass_term_temperature(NUmodes, NTmodes, NSUPmodes);
+        }
+
+        Q_matrix = convective_term_temperature(NUmodes, NTmodes, NSUPmodes);
+        word Y_str = "Y_" + name(liftfieldT.size()) + "_" + name(NTmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + Y_str))
+        {
+            ITHACAstream::ReadDenseMatrix(Y_matrix, "./ITHACAoutput/Matrices/", Y_str);
+        }
+        else
+        {
+            Y_matrix = diffusive_term_temperature(NUmodes, NTmodes, NSUPmodes);
+        }
+
+        word P_str = "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_" + name(NPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + P_str))
+        {
+            ITHACAstream::ReadDenseMatrix(P_matrix, "./ITHACAoutput/Matrices/", P_str);
+        }
+        else
+        {
+            P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
+        }
+    }
+    else
+    {
+        B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
+        C_matrix = convective_term(NUmodes, NPmodes, NSUPmodes);
+        Q_matrix = convective_term_temperature(NUmodes, NTmodes, NSUPmodes);
+        Y_matrix = diffusive_term_temperature(NUmodes, NTmodes, NSUPmodes);
+        K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
+        P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
+        M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
+        MT_matrix = mass_term_temperature(NUmodes, NTmodes, NSUPmodes);
+    }
 }
 
 
@@ -296,7 +385,7 @@ List< Eigen::MatrixXd > unsteadyNST::convective_term_temperature(label NUmodes,
     {
         for (label k = 0; k < NTmodes; k++)
         {
-            Togethert.append(LTmodes[k]);
+            Togethert.append(Tmodes[k]);
         }
     }
 
@@ -342,7 +431,7 @@ Eigen::MatrixXd unsteadyNST::diffusive_term_temperature(label NUmodes,
     {
         for (label k = 0; k < NTmodes; k++)
         {
-            Togethert.append(LTmodes[k]);
+            Togethert.append(Tmodes[k]);
         }
     }
 
@@ -352,15 +441,14 @@ Eigen::MatrixXd unsteadyNST::diffusive_term_temperature(label NUmodes,
             for (label j = 0; j < Ysize; j++)
             {
                 Y_matrix(i, j) = fvc::domainIntegrate(Togethert[i] * fvc::laplacian(
-                        Togethert[j])).value();
+                        dimensionedScalar("1", dimless, 1), Togethert[j])).value();
             }
         }
     }
 
     // Export the matrix
-    ITHACAstream::exportMatrix(Y_matrix, "Y", "python", "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(Y_matrix, "Y", "matlab", "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(Y_matrix, "Y", "eigen", "./ITHACAoutput/Matrices/");
+    ITHACAstream::SaveDenseMatrix(Y_matrix, "./ITHACAoutput/Matrices/",
+                                  "Y_" + name(liftfieldT.size()) + "_" + name(NTmodes));
     return Y_matrix;
 }
 
@@ -384,7 +472,7 @@ Eigen::MatrixXd unsteadyNST::mass_term_temperature(label NUmodes, label NTmodes,
     {
         for (label k = 0; k < NTmodes; k++)
         {
-            Togethert.append(LTmodes[k]);
+            Togethert.append(Tmodes[k]);
         }
     }
 
@@ -397,12 +485,8 @@ Eigen::MatrixXd unsteadyNST::mass_term_temperature(label NUmodes, label NTmodes,
     }
 
     // Export the matrix
-    ITHACAstream::exportMatrix(MT_matrix, "MT", "python",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(MT_matrix, "MT", "matlab",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(MT_matrix, "MT", "eigen",
-                               "./ITHACAoutput/Matrices/");
+    ITHACAstream::SaveDenseMatrix(MT_matrix, "./ITHACAoutput/Matrices/",
+                                  "MT_" + name(liftfieldT.size()) + "_" + name(NTmodes));
     return MT_matrix;
 }
 // Calculate lifting function for velocity

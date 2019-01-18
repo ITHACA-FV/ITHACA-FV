@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
                         NmodesUout);
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
                         NmodesPout);
-    ITHACAPOD::getModes(example.Tomfield, example.LTmodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Tomfield, example.Tmodes, example.podex, 0, 0,
                         NmodesTout);
     ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex,
                         example.supex, 1, NmodesSUPout);

@@ -23,6 +23,7 @@ EXE_INC = \
     -I../steadyNSturb \
     -I../unsteadyNS \
     -I../unsteadyNSturb \
+    -I../unsteadyNSTturb \
     -I../unsteadyNST \
     -I../NonLinearSolvers \
     -I../ITHACA_THIRD_PARTY/splinter/include \
