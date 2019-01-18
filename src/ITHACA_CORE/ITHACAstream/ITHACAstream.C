@@ -495,11 +495,3 @@ int ITHACAstream::numberOfFiles(word folder, word MatrixName)
     in.close();
     return number_of_files;
 }
-
-
-
-// * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * * //
-
-
-// ************************************************************************* //
-

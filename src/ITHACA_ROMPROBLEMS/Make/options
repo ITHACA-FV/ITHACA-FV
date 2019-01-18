@@ -22,11 +22,13 @@ EXE_INC = \
     -I../ITHACA_FOMPROBLEMS/steadyNS \
     -I../ITHACA_FOMPROBLEMS/steadyNSturb \
     -I../ITHACA_FOMPROBLEMS/unsteadyNS \
+    -I../ITHACA_FOMPROBLEMS/unsteadyBB \
     -I../ITHACA_FOMPROBLEMS/unsteadyNSturb \
     -I../ITHACA_FOMPROBLEMS/unsteadyNST \ 
     -I../ITHACA_FOMPROBLEMS/unsteadyNSTturb \
     -IreducedProblem \
     -IreducedUnsteadyNS \
+    -IreducedUnsteadyBB \
     -IreducedUnsteadyNSturb \
     -IreducedUnsteadyNSTturb \
     -IreducedUnsteadyNST \

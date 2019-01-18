@@ -22,6 +22,7 @@ EXE_INC = \
     -I../steadyNS \
     -I../steadyNSturb \
     -I../unsteadyNS \
+    -I../unsteadyBB \
     -I../unsteadyNSturb \
     -I../unsteadyNSTturb \
     -I../unsteadyNST \

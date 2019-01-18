@@ -29,6 +29,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ITHACAutilities.H"
+#include "ITHACAstream.H"
 
 /// \file
 /// Source file of the ITHACAutilities class.
@@ -219,6 +220,55 @@ bool ITHACAutilities::check_file(std::string fileName)
     return infile.good();
 }
 
+template<>
+PtrList<volVectorField> ITHACAutilities::reconstruct_from_coeff(
+    PtrList<volVectorField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes)
+{
+    PtrList<volVectorField> rec_field;
+    rec_field.resize(0);
+
+    for (label k = 0; k < coeff_matrix.cols(); k++)
+    {
+        for (label i = 0; i < Nmodes; i++)
+        {
+            if ( i == 0)
+            {
+                rec_field.append(modes[i]*coeff_matrix(i, k));
+            }
+            else
+            {
+                rec_field[k] +=  modes[i] * coeff_matrix(i, k);
+            }
+        }
+    }
+
+    return rec_field;
+}
+
+template<>
+PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
+    PtrList<volScalarField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes)
+{
+    PtrList<volScalarField> rec_field;
+    rec_field.resize(0);
+
+    for (label k = 0; k < coeff_matrix.cols(); k++)
+    {
+        for (label i = 0; i < Nmodes; i++)
+        {
+            if ( i == 0)
+            {
+                rec_field.append(modes[i]*coeff_matrix(i, k));
+            }
+            else
+            {
+                rec_field[k] +=  modes[i] * coeff_matrix(i, k);
+            }
+        }
+    }
+
+    return rec_field;
+}
 
 double ITHACAutilities::error_fields(volVectorField& field1,
                                      volVectorField& field2)
@@ -338,9 +388,22 @@ Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volScalarField>&
     return err;
 }
 
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes)
+Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes,
+        int Nmodes)
 {
-    label Msize = modes.size();
+    label Msize;
+
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd M_matrix(Msize, Msize);
 
     // Project everything
@@ -355,9 +418,22 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes)
     return M_matrix;
 }
 
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes)
+Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
+        int Nmodes)
 {
-    label Msize = modes.size();
+    label Msize;
+
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd M_matrix(Msize, Msize);
 
     // Project everything
@@ -373,10 +449,22 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes)
 }
 
 Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,
-        PtrList<volVectorField>& modes)
+        PtrList<volVectorField>& modes, int Nmodes)
 {
-    label Msize = modes.size();
-    Eigen::MatrixXd M_matrix = get_mass_matrix(modes);
+    label Msize;
+
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
+    Eigen::MatrixXd M_matrix = get_mass_matrix(modes, Nmodes);
     Eigen::VectorXd a(Msize);
     Eigen::VectorXd b(Msize);
 
@@ -391,10 +479,22 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,
 }
 
 Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot,
-        PtrList<volScalarField>& modes)
+        PtrList<volScalarField>& modes, int Nmodes)
 {
-    label Msize = modes.size();
-    Eigen::MatrixXd M_matrix = get_mass_matrix(modes);
+    label Msize;
+
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
+    Eigen::MatrixXd M_matrix = get_mass_matrix(modes, Msize);
     Eigen::VectorXd a(Msize);
     Eigen::VectorXd b(Msize);
 
@@ -409,13 +509,26 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot,
 }
 
 Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<volScalarField>  snapshots,
-        PtrList<volScalarField> modes)
+        PtrList<volScalarField> modes, int Nmodes)
 {
-    label Msize = modes.size();
-    Eigen::MatrixXd M_matrix = get_mass_matrix(modes);
+    label Msize;
+
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
+    Eigen::MatrixXd M_matrix = get_mass_matrix(modes, Msize);
     Eigen::VectorXd a(Msize);
     Eigen::VectorXd b(Msize);
-    Eigen::MatrixXd coeff(modes.size(), snapshots.size());
+    //Eigen::MatrixXd coeff(modes.size(), snapshots.size());
+    Eigen::MatrixXd coeff(Msize, snapshots.size());
 
     for (auto i = 0; i < snapshots.size(); i++)
     {
@@ -431,13 +544,25 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<volScalarField>  snapshots,
 }
 
 Eigen::MatrixXd ITHACAutilities::get_coeffs( PtrList<volVectorField>  snapshots,
-        PtrList<volVectorField> modes)
+        PtrList<volVectorField> modes, int Nmodes)
 {
-    label Msize = modes.size();
-    Eigen::MatrixXd M_matrix = get_mass_matrix(modes);
+    label Msize;
+
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
+    Eigen::MatrixXd M_matrix = get_mass_matrix(modes, Msize);
     Eigen::VectorXd a(Msize);
     Eigen::VectorXd b(Msize);
-    Eigen::MatrixXd coeff(modes.size(), snapshots.size());
+    Eigen::MatrixXd coeff(Msize, snapshots.size());
 
     for (auto i = 0; i < snapshots.size(); i++)
     {
@@ -454,11 +579,24 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs( PtrList<volVectorField>  snapshots,
 
 
 Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volScalarField>
-        snapshots, PtrList<volScalarField>& modes)
+        snapshots, PtrList<volScalarField>& modes, int Nmodes)
 {
-    Eigen::MatrixXd coeff(modes.size(), snapshots.size());
+    label Msize;
 
-    for (auto i = 0; i < modes.size(); i++)
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
+    Eigen::MatrixXd coeff(Msize, snapshots.size());
+
+    for (auto i = 0; i < Msize; i++)
     {
         for (auto j = 0; j < snapshots.size(); j++)
         {
@@ -471,11 +609,24 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volScalarField>
 
 
 Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volVectorField>
-        snapshots, PtrList<volVectorField>& modes)
+        snapshots, PtrList<volVectorField>& modes, int Nmodes)
 {
-    Eigen::MatrixXd coeff(modes.size(), snapshots.size());
+    label Msize;
 
-    for (auto i = 0; i < modes.size(); i++)
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
+    Eigen::MatrixXd coeff(Msize, snapshots.size());
+
+    for (auto i = 0; i < Msize; i++)
     {
         for (auto j = 0; j < snapshots.size(); j++)
         {
@@ -487,9 +638,21 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volVectorField>
 }
 
 Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
-        PtrList<volScalarField>& modes)
+        PtrList<volScalarField>& modes, int Nmodes)
 {
-    label Msize = modes.size();
+    label Msize;
+
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
     Eigen::VectorXd b(Msize);
 
     // Project everything
@@ -500,6 +663,34 @@ Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
 
     return b;
 }
+
+Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volVectorField
+        snapshot, PtrList<volVectorField>& modes, int Nmodes)
+{
+    label Msize;
+
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+    }
+
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
+    Eigen::VectorXd b(Msize);
+
+    // Project everything
+    for (label i = 0; i < Msize; i++)
+    {
+        b(i) = fvc::domainIntegrate(snapshot & modes[i]).value();
+    }
+
+    return b;
+}
+
 
 
 double ITHACAutilities::L2norm(volScalarField field)
@@ -752,13 +943,3 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
         }
     }
 }
-
-
-
-
-
-// * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * * //
-
-
-// ************************************************************************* //
-
