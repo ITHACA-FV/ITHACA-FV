@@ -205,7 +205,6 @@ class unsteadyBB: public unsteadyNS
         void projectSUP(fileName folder, label NUmodes, label NPmodes, label NTmodes,
                         label NSUPmodes);
 
-
         //--------------------------------------------------------------------------
         /// Gradient of pressure
         ///
@@ -229,7 +228,6 @@ class unsteadyBB: public unsteadyNS
         ///
         Eigen::MatrixXd diffusive_term_temperature(label NUmodes, label NTmodes,
                 label NSUPmodes);
-
 
         //--------------------------------------------------------------------------
         /// Divergence Term (supremizer approach)
