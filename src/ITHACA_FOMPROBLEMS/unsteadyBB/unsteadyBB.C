@@ -44,13 +44,13 @@ unsteadyBB::unsteadyBB(int argc, char* argv[])
 #include "setRootCase.H"
 #include "createTime.H"
 #include "createMesh.H"
-	_pimple = autoPtr<pimpleControl>
-		(
-			new pimpleControl
-			(
-				mesh
-			)
-		);
+    _pimple = autoPtr<pimpleControl>
+              (
+                  new pimpleControl
+                  (
+                      mesh
+                  )
+              );
 #include "createFields.H"
 #include "createFvOptions.H"
     supex = ITHACAutilities::check_sup();
@@ -64,7 +64,6 @@ unsteadyBB::unsteadyBB(int argc, char* argv[])
 void unsteadyBB::truthSolve(List<scalar> mu_now)
 {
 #include "initContinuityErrs.H"
-
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
     volScalarField& p = _p();
@@ -74,17 +73,14 @@ void unsteadyBB::truthSolve(List<scalar> mu_now)
     volScalarField& nut = _nut();
     volScalarField& alphat = _alphat();
     volScalarField& rhok = _rhok();
-
     dimensionedVector& g = _g();
     volScalarField& gh = _gh();
     surfaceScalarField& ghf = _ghf();
-
     surfaceScalarField& phi = _phi();
     fv::options& fvOptions = _fvOptions();
     pimpleControl& pimple = _pimple();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
-
     dimensionedScalar& nu = _nu();
     dimensionedScalar& beta = _beta();
     dimensionedScalar& hRef = _hRef();
@@ -92,127 +88,24 @@ void unsteadyBB::truthSolve(List<scalar> mu_now)
     dimensionedScalar& TRef = _TRef();
     dimensionedScalar& Pr = _Pr();
     dimensionedScalar& Prt = _Prt();
-
-	instantList Times = runTime.times();
-	runTime.setEndTime(finalTime);
-	runTime.setTime(Times[1], 1);
-	runTime.setDeltaT(timeStep);
-	nextWrite = startTime;
-
-    // save initial condition in folder 0 
-    exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-    exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-    exportSolution(p_rgh, name(counter), "./ITHACAoutput/Offline/");
-    exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
-    std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" + runTime.timeName());
-    Ufield.append(U);
-    Pfield.append(p);
-    Prghfield.append(p_rgh);
-    Tfield.append(T);
-
-    counter++;
-    nextWrite += writeEvery;
-
-
-	// Start the time loop
-	while (runTime.run())
-	{
-#include "readTimeControls.H"
-#include "CourantNo.H"
-#include "setDeltaT.H"
-		runTime.setEndTime(finalTime+timeStep);
-		Info << "Time = " << runTime.timeName() << nl << endl;
-
-		// --- Pressure-velocity PIMPLE corrector loop
-		while (pimple.loop())
-		{
-#include "UEqn.H"
-#include "TEqn.H"
-
-			// --- Pressure corrector loop
-			while (pimple.correct())
-			{
-#include "pEqn.H"
-			}
-			if (pimple.turbCorr())
-			{
-				laminarTransport.correct();
-				turbulence->correct();
-			}
-		}
-
-		Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-			 << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-			 << nl << endl;
-
-
-		if (checkWrite(runTime))
-		{
-			exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-			exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(p_rgh, name(counter), "./ITHACAoutput/Offline/");
-   			exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
-			std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" + runTime.timeName());
-			Ufield.append(U);
-			Pfield.append(p);
-            Prghfield.append(p_rgh);
-			Tfield.append(T);
-			counter++;
-			nextWrite += writeEvery;
-			writeMu(mu_now);
-		}
-		runTime++;
-	}
-}
-
-void unsteadyBB::truthSolve(fileName folder)
-{
-#include "initContinuityErrs.H"
-
-    Time& runTime = _runTime();
-    fvMesh& mesh = _mesh();
-    volScalarField& p = _p();
-    volVectorField& U = _U();
-    volScalarField& p_rgh = _p_rgh();
-    volScalarField& T = _T();
-    volScalarField& nut = _nut();
-    volScalarField& alphat = _alphat();
-    volScalarField& rhok = _rhok();
-
-    dimensionedVector& g = _g();
-    volScalarField& gh = _gh();
-    surfaceScalarField& ghf = _ghf();
-
-    surfaceScalarField& phi = _phi();
-    fv::options& fvOptions = _fvOptions();
-    pimpleControl& pimple = _pimple();
-    IOMRFZoneList& MRF = _MRF();
-    singlePhaseTransportModel& laminarTransport = _laminarTransport();
-
-    dimensionedScalar& nu = _nu();
-    dimensionedScalar& beta = _beta();
-    dimensionedScalar& hRef = _hRef();
-    dimensionedScalar& ghRef = _ghRef();
-    dimensionedScalar& TRef = _TRef();
-    dimensionedScalar& Pr = _Pr();
-    dimensionedScalar& Prt = _Prt();
-
     instantList Times = runTime.times();
     runTime.setEndTime(finalTime);
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
-
-    // Save initial condition
-    exportSolution(U, name(counter), folder);
-    exportSolution(p, name(counter), folder);
-    exportSolution(T, name(counter), folder);
-    exportSolution(p_rgh, name(counter), folder);
-    std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
-
+    // save initial condition in folder 0
+    exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+    exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+    exportSolution(p_rgh, name(counter), "./ITHACAoutput/Offline/");
+    exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
+    std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
+                     runTime.timeName());
+    Ufield.append(U);
+    Pfield.append(p);
+    Prghfield.append(p_rgh);
+    Tfield.append(T);
     counter++;
     nextWrite += writeEvery;
-
 
     // Start the time loop
     while (runTime.run())
@@ -220,7 +113,7 @@ void unsteadyBB::truthSolve(fileName folder)
 #include "readTimeControls.H"
 #include "CourantNo.H"
 #include "setDeltaT.H"
-        runTime.setEndTime(finalTime+timeStep);
+        runTime.setEndTime(finalTime + timeStep);
         Info << "Time = " << runTime.timeName() << nl << endl;
 
         // --- Pressure-velocity PIMPLE corrector loop
@@ -228,11 +121,13 @@ void unsteadyBB::truthSolve(fileName folder)
         {
 #include "UEqn.H"
 #include "TEqn.H"
+
             // --- Pressure corrector loop
             while (pimple.correct())
             {
 #include "pEqn.H"
             }
+
             if (pimple.turbCorr())
             {
                 laminarTransport.correct();
@@ -244,6 +139,99 @@ void unsteadyBB::truthSolve(fileName folder)
              << "  ClockTime = " << runTime.elapsedClockTime() << " s"
              << nl << endl;
 
+        if (checkWrite(runTime))
+        {
+            exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+            exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+            exportSolution(p_rgh, name(counter), "./ITHACAoutput/Offline/");
+            exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
+            std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
+                             runTime.timeName());
+            Ufield.append(U);
+            Pfield.append(p);
+            Prghfield.append(p_rgh);
+            Tfield.append(T);
+            counter++;
+            nextWrite += writeEvery;
+            writeMu(mu_now);
+        }
+
+        runTime++;
+    }
+}
+
+void unsteadyBB::truthSolve(fileName folder)
+{
+#include "initContinuityErrs.H"
+    Time& runTime = _runTime();
+    fvMesh& mesh = _mesh();
+    volScalarField& p = _p();
+    volVectorField& U = _U();
+    volScalarField& p_rgh = _p_rgh();
+    volScalarField& T = _T();
+    volScalarField& nut = _nut();
+    volScalarField& alphat = _alphat();
+    volScalarField& rhok = _rhok();
+    dimensionedVector& g = _g();
+    volScalarField& gh = _gh();
+    surfaceScalarField& ghf = _ghf();
+    surfaceScalarField& phi = _phi();
+    fv::options& fvOptions = _fvOptions();
+    pimpleControl& pimple = _pimple();
+    IOMRFZoneList& MRF = _MRF();
+    singlePhaseTransportModel& laminarTransport = _laminarTransport();
+    dimensionedScalar& nu = _nu();
+    dimensionedScalar& beta = _beta();
+    dimensionedScalar& hRef = _hRef();
+    dimensionedScalar& ghRef = _ghRef();
+    dimensionedScalar& TRef = _TRef();
+    dimensionedScalar& Pr = _Pr();
+    dimensionedScalar& Prt = _Prt();
+    instantList Times = runTime.times();
+    runTime.setEndTime(finalTime);
+    runTime.setTime(Times[1], 1);
+    runTime.setDeltaT(timeStep);
+    nextWrite = startTime;
+    // Save initial condition
+    exportSolution(U, name(counter), folder);
+    exportSolution(p, name(counter), folder);
+    exportSolution(T, name(counter), folder);
+    exportSolution(p_rgh, name(counter), folder);
+    std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
+    counter++;
+    nextWrite += writeEvery;
+
+    // Start the time loop
+    while (runTime.run())
+    {
+#include "readTimeControls.H"
+#include "CourantNo.H"
+#include "setDeltaT.H"
+        runTime.setEndTime(finalTime + timeStep);
+        Info << "Time = " << runTime.timeName() << nl << endl;
+
+        // --- Pressure-velocity PIMPLE corrector loop
+        while (pimple.loop())
+        {
+#include "UEqn.H"
+#include "TEqn.H"
+
+            // --- Pressure corrector loop
+            while (pimple.correct())
+            {
+#include "pEqn.H"
+            }
+
+            if (pimple.turbCorr())
+            {
+                laminarTransport.correct();
+                turbulence->correct();
+            }
+        }
+
+        Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+             << nl << endl;
 
         if (checkWrite(runTime))
         {
@@ -255,6 +243,7 @@ void unsteadyBB::truthSolve(fileName folder)
             counter++;
             nextWrite += writeEvery;
         }
+
         runTime++;
     }
 }
@@ -265,8 +254,9 @@ void unsteadyBB::truthSolve(fileName folder)
 bool unsteadyBB::checkWrite(Time& timeObject)
 {
     scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
+    scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
+                          timeObject.deltaTValue());
 
-    scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) - timeObject.deltaTValue());
     if ( diffnow < diffnext)
     {
         return true;
@@ -428,39 +418,31 @@ void unsteadyBB::liftSolveT()
         volVectorField& U = _U();
         surfaceScalarField& phi = _phi();
         phi = linearInterpolate(U) & mesh.Sf();
-
         simpleControl simple(mesh);
-    	IOMRFZoneList& MRF = _MRF();
-    	singlePhaseTransportModel& laminarTransport = _laminarTransport();
-        
+        IOMRFZoneList& MRF = _MRF();
+        singlePhaseTransportModel& laminarTransport = _laminarTransport();
         volScalarField& nut = _nut();
         volScalarField& alphat = _alphat();
-    	dimensionedScalar& nu = _nu();
-    	dimensionedScalar& Pr = _Pr();
-    	dimensionedScalar& Prt = _Prt();
-
-        label BCind = inletIndexT(k,0);
+        dimensionedScalar& nu = _nu();
+        dimensionedScalar& Pr = _Pr();
+        dimensionedScalar& Prt = _Prt();
+        label BCind = inletIndexT(k, 0);
         volScalarField Tlift("Tlift" + name(k), T);
-       
         instantList Times = runTime.times();
         runTime.setTime(Times[1], 1);
-
-	    Info << "Solving a lifting Problem" << endl;
+        Info << "Solving a lifting Problem" << endl;
         scalar t1 = 1;
         scalar t0 = 0;
-
-        alphat = turbulence->nut()/Prt;
+        alphat = turbulence->nut() / Prt;
         alphat.correctBoundaryConditions();
-
-        volScalarField alphaEff("alphaEff", turbulence->nu()/Pr + alphat);
-
+        volScalarField alphaEff("alphaEff", turbulence->nu() / Pr + alphat);
 
         for (label j = 0; j < T.boundaryField().size(); j++)
         {
             if (j == BCind)
             {
                 assignBC(Tlift, j, t1);
-                 assignIF(Tlift, t0);
+                assignIF(Tlift, t0);
             }
             else if (T.boundaryField()[BCind].type() == "fixedValue")
             {
@@ -484,15 +466,15 @@ void unsteadyBB::liftSolveT()
                  << "  ClockTime = " << runTime.elapsedClockTime() << " s"
                  << nl << endl;
         }
-        
+
         Tlift.write();
-      	liftfieldT.append(Tlift);      
-    }    
+        liftfieldT.append(Tlift);
+    }
 }
 
 // * * * * * * * * * * * * * * Projection Methods * * * * * * * * * * * * * * //
 
-void unsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT, 
+void unsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
                             label NSUP)
 {
     NUmodes = NU;
@@ -500,7 +482,7 @@ void unsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
     NSUPmodes = NSUP;
     NPrghmodes = NP;
 
-   if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
+    if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
     {
         word M_str = "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                          NSUPmodes);
@@ -574,7 +556,6 @@ void unsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
         }
 
         Q_matrix = convective_term_temperature(NUmodes, NTmodes, NSUPmodes);
-
         word Y_str = "Y_" + name(liftfieldT.size()) + "_" + name(NTmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + Y_str))
@@ -613,7 +594,8 @@ void unsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
 }
 
 // * * * * * * * * * * * * * * Momentum Eq. Methods * * * * * * * * * * * * * //
-Eigen::MatrixXd unsteadyBB::pressure_gradient_term(label NUmodes, label NPrghmodes,
+Eigen::MatrixXd unsteadyBB::pressure_gradient_term(label NUmodes,
+        label NPrghmodes,
         label NSUPmodes)
 {
     label K1size = NUmodes + NSUPmodes + liftfield.size();
@@ -621,8 +603,7 @@ Eigen::MatrixXd unsteadyBB::pressure_gradient_term(label NUmodes, label NPrghmod
     Eigen::MatrixXd K_matrix(K1size, K2size);
     // Create PTRLIST with lift, velocities and supremizers
     PtrList<volVectorField> Together(0);
-     PtrList<volScalarField> TogetherT(0);
-
+    PtrList<volScalarField> TogetherT(0);
     dimensionedVector g = _g();
 
     if (liftfield.size() != 0)
@@ -654,14 +635,15 @@ Eigen::MatrixXd unsteadyBB::pressure_gradient_term(label NUmodes, label NPrghmod
     {
         for (label j = 0; j < K2size; j++)
         {
-        K_matrix(i, j) = fvc::domainIntegrate(Together[i] & 
-        fvc::reconstruct(fvc::snGrad(Prghmodes[j])*Prghmodes[j].mesh().magSf())).value();
+            K_matrix(i, j) = fvc::domainIntegrate(Together[i] &
+                                                  fvc::reconstruct(fvc::snGrad(Prghmodes[j]) *
+                                                          Prghmodes[j].mesh().magSf())).value();
         }
     }
 
     // Export the matrix
     ITHACAstream::SaveDenseMatrix(K_matrix, "./ITHACAoutput/Matrices/",
-                                  "K_" + name(liftfield.size()) + "_" + name(NUmodes) 
+                                  "K_" + name(liftfield.size()) + "_" + name(NUmodes)
                                   + "_" + name(NSUPmodes) + "_" + name(NPrghmodes));
     return K_matrix;
 }
@@ -676,7 +658,6 @@ Eigen::MatrixXd unsteadyBB::divergence_term(label NUmodes, label NPrghmodes,
     Eigen::MatrixXd P_matrix(P1size, P2size);
     // Create PTRLIST with lift, velocities and supremizers
     PtrList<volVectorField> Together(0);
-
 
     if (liftfield.size() != 0)
     {
@@ -714,25 +695,22 @@ Eigen::MatrixXd unsteadyBB::divergence_term(label NUmodes, label NPrghmodes,
 
     //Export the matrix
     ITHACAstream::SaveDenseMatrix(P_matrix, "./ITHACAoutput/Matrices/",
-                                  "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" 
+                                  "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_"
                                   + name(NSUPmodes) + "_" + name(NPrghmodes));
     return P_matrix;
 }
 
-Eigen::MatrixXd unsteadyBB::buoyant_term(label NUmodes, label NTmodes, label NSUPmodes)
+Eigen::MatrixXd unsteadyBB::buoyant_term(label NUmodes, label NTmodes,
+        label NSUPmodes)
 {
-
     label H1size = NUmodes + liftfield.size() + NSUPmodes;
     label H2size = NTmodes + liftfieldT.size() ;
     Eigen::MatrixXd H_matrix(H1size, H2size);
-
     // Create PTRLIST with lift, velocities and temperatures
     PtrList<volVectorField> Together(0);
     PtrList<volScalarField> TogetherT(0);
-
     dimensionedScalar beta = _beta();
     dimensionedScalar TRef = _TRef();
-
     dimensionedVector g = _g();
     volScalarField& gh = _gh();
     surfaceScalarField& ghf = _ghf();
@@ -783,25 +761,25 @@ Eigen::MatrixXd unsteadyBB::buoyant_term(label NUmodes, label NTmodes, label NSU
         for (label j = 0; j < H2size; j++)
         {
             H_matrix(i, j) = fvc::domainIntegrate(Together[i] & fvc::reconstruct(
-            ghf * fvc::snGrad(1.0-(beta*(TogetherT[j]-TRef)))
-            *TogetherT[j].mesh().magSf())).value();
+                    ghf * fvc::snGrad(1.0 - (beta * (TogetherT[j] - TRef)))
+                    * TogetherT[j].mesh().magSf())).value();
         }
     }
 
     //Export the matrix
     ITHACAstream::SaveDenseMatrix(H_matrix, "./ITHACAoutput/Matrices/",
-                                  "H_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" 
-                                  + name(NSUPmodes) +  "_" + name(liftfieldT.size()) + "_" 
+                                  "H_" + name(liftfield.size()) + "_" + name(NUmodes) + "_"
+                                  + name(NSUPmodes) +  "_" + name(liftfieldT.size()) + "_"
                                   + name(NTmodes));
     return H_matrix;
 }
 
 // * * * * * * * * * * * * * * Energy Eq. Methods * * * * * * * * * * * * * //
-List< Eigen::MatrixXd > unsteadyBB::convective_term_temperature(label NUmodes, label NTmodes, label NSUPmodes)
+List< Eigen::MatrixXd > unsteadyBB::convective_term_temperature(label NUmodes,
+        label NTmodes, label NSUPmodes)
 {
     label Qsize = NUmodes + liftfield.size() + NSUPmodes;
     label Qsizet = NTmodes + liftfieldT.size() ;
-
     List < Eigen::MatrixXd > Q_matrix;
     Q_matrix.setSize(Qsizet);
 
@@ -844,7 +822,7 @@ List< Eigen::MatrixXd > unsteadyBB::convective_term_temperature(label NUmodes, l
             TogetherT.append(liftfieldT[k]);
         }
     }
-    
+
     if (NTmodes != 0)
     {
         for (label k = 0; k < NTmodes; k++)
@@ -853,14 +831,14 @@ List< Eigen::MatrixXd > unsteadyBB::convective_term_temperature(label NUmodes, l
         }
     }
 
-    
     for (label i = 0; i < Qsizet; i++)
     {
         for (label j = 0; j < Qsize; j++)
         {
             for (label k = 0; k < Qsizet; k++)
             {
-                Q_matrix[i](j, k) = fvc::domainIntegrate(TogetherT[i] * fvc::div(fvc::interpolate(Together[j]) & Together[j].mesh().Sf(), TogetherT[k])).value();
+                Q_matrix[i](j, k) = fvc::domainIntegrate(TogetherT[i] * fvc::div(
+                                        fvc::interpolate(Together[j]) & Together[j].mesh().Sf(), TogetherT[k])).value();
             }
         }
     }
@@ -874,8 +852,10 @@ List< Eigen::MatrixXd > unsteadyBB::convective_term_temperature(label NUmodes, l
 
 
 
-Eigen::MatrixXd unsteadyBB::diffusive_term_temperature(label NUmodes, label NTmodes, label NSUPmodes)
-{   label Ysize = NTmodes  + liftfieldT.size();
+Eigen::MatrixXd unsteadyBB::diffusive_term_temperature(label NUmodes,
+        label NTmodes, label NSUPmodes)
+{
+    label Ysize = NTmodes  + liftfieldT.size();
     PtrList<volScalarField> TogetherT(0);
     Eigen::MatrixXd Y_matrix(Ysize, Ysize);
 
@@ -887,7 +867,7 @@ Eigen::MatrixXd unsteadyBB::diffusive_term_temperature(label NUmodes, label NTmo
             TogetherT.append(liftfieldT[k]);
         }
     }
-    
+
     if (NTmodes != 0)
     {
         for (label k = 0; k < NTmodes; k++)
@@ -900,27 +880,25 @@ Eigen::MatrixXd unsteadyBB::diffusive_term_temperature(label NUmodes, label NTmo
     {
         for (label j = 0; j < Ysize; j++)
         {
-
-            Y_matrix(i, j) = fvc::domainIntegrate(TogetherT[i] * fvc::laplacian(dimensionedScalar("1", dimless, 1), TogetherT[j])).value();
+            Y_matrix(i, j) = fvc::domainIntegrate(TogetherT[i] * fvc::laplacian(
+                    dimensionedScalar("1", dimless, 1), TogetherT[j])).value();
         }
     }
 
     // Export the matrix
-   ITHACAstream::SaveDenseMatrix(Y_matrix, "./ITHACAoutput/Matrices/",
+    ITHACAstream::SaveDenseMatrix(Y_matrix, "./ITHACAoutput/Matrices/",
                                   "Y_" + name(liftfieldT.size()) + "_" + name(NTmodes));
     return Y_matrix;
 }
 
 
-Eigen::MatrixXd unsteadyBB::mass_term_temperature(label NUmodes, label NTmodes, label NSUPmodes)
+Eigen::MatrixXd unsteadyBB::mass_term_temperature(label NUmodes, label NTmodes,
+        label NSUPmodes)
 {
     label Wsize = NTmodes  + liftfieldT.size();
-
     Eigen::MatrixXd W_matrix(Wsize, Wsize);
-
     // Create PTRLIST with lift, temperatures and supremizers
     PtrList<volScalarField> TogetherT(0);
-
 
     // Project everything
     if (liftfieldT.size() != 0)
@@ -939,7 +917,6 @@ Eigen::MatrixXd unsteadyBB::mass_term_temperature(label NUmodes, label NTmodes, 
         }
     }
 
-
     for (label i = 0; i < Wsize; i++)
     {
         for (label j = 0; j < Wsize; j++)
@@ -947,8 +924,9 @@ Eigen::MatrixXd unsteadyBB::mass_term_temperature(label NUmodes, label NTmodes, 
             W_matrix(i, j) = fvc::domainIntegrate(TogetherT[i] * TogetherT[j]).value();
         }
     }
+
     // Export the matrix
-   ITHACAstream::SaveDenseMatrix(W_matrix, "./ITHACAoutput/Matrices/",
+    ITHACAstream::SaveDenseMatrix(W_matrix, "./ITHACAoutput/Matrices/",
                                   "W_" + name(liftfieldT.size()) + "_" + name(NTmodes));
     return W_matrix;
 }
@@ -1021,12 +999,10 @@ void unsteadyBB::liftSolve()
             PhiRefCell,
             PhiRefValue
         );
-  
         mesh.setFluxRequired(Phi.name());
         runTime.functionObjects().start();
         MRF.makeRelative(phi);
         adjustPhi(phi, Ulift, UliftBC);
-
 
         while (potentialFlow.correctNonOrthogonal())
         {
@@ -1035,10 +1011,10 @@ void unsteadyBB::liftSolve()
                 fvm::laplacian(dimensionedScalar("1", dimless, 1), Phi)
                 ==
                 fvc::div(phi)
-                
             );
             PhiEqn.setReference(PhiRefCell, PhiRefValue);
             PhiEqn.solve();
+
             if (potentialFlow.finalNonOrthogonalIter())
             {
                 phi -= PhiEqn.flux();

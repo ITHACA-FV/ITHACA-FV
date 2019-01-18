@@ -96,7 +96,7 @@ class unsteadyBB: public unsteadyNS
         /// List of pointers used to form the homogeneous velocity snapshots
         PtrList<volScalarField> Tomfield;
 
-         // Dummy variables to transform simplefoam into a class
+        // Dummy variables to transform simplefoam into a class
         autoPtr<volScalarField> _UliftBC;
 
         /// Number of temperature modes used for the projection
@@ -105,18 +105,18 @@ class unsteadyBB: public unsteadyNS
         /// Number of pressure modes used for the projection
         label NPrghmodes;
 
-     	/// Buoyancy term - momentum equation
-   	    Eigen::MatrixXd H_matrix;
+        /// Buoyancy term - momentum equation
+        Eigen::MatrixXd H_matrix;
 
-   	    /// Diffusive term - energy equation
-   	    Eigen::MatrixXd Y_matrix;
+        /// Diffusive term - energy equation
+        Eigen::MatrixXd Y_matrix;
 
-  	    /// Non linear convective term - energy equation
-  	    List <Eigen::MatrixXd> Q_matrix;
+        /// Non linear convective term - energy equation
+        List <Eigen::MatrixXd> Q_matrix;
         Eigen::Tensor<double, 3 > Q_tensor;
 
-  	    /// Mass Matrix - energy equation
-  	    Eigen::MatrixXd W_matrix;
+        /// Mass Matrix - energy equation
+        Eigen::MatrixXd W_matrix;
 
         // Other Variables
         /// Counter used for the output of the full order solutions
@@ -202,7 +202,8 @@ class unsteadyBB: public unsteadyNS
         /// @param[in]  NPmodes    The number of pressure modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
         ///
-        void projectSUP(fileName folder, label NUmodes, label NPmodes, label NTmodes, label NSUPmodes);
+        void projectSUP(fileName folder, label NUmodes, label NPmodes, label NTmodes,
+                        label NSUPmodes);
 
 
         //--------------------------------------------------------------------------
@@ -226,7 +227,8 @@ class unsteadyBB: public unsteadyNS
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
         ///
-        Eigen::MatrixXd diffusive_term_temperature(label NUmodes, label NTmodes, label NSUPmodes);
+        Eigen::MatrixXd diffusive_term_temperature(label NUmodes, label NTmodes,
+                label NSUPmodes);
 
 
         //--------------------------------------------------------------------------
@@ -238,7 +240,8 @@ class unsteadyBB: public unsteadyNS
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the divergence term.
         ///
-        Eigen::MatrixXd divergence_term(label NUmodes, label NPrghmodes, label NSUPmodes);
+        Eigen::MatrixXd divergence_term(label NUmodes, label NPrghmodes,
+                                        label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Convective Term Energy Equation
@@ -249,7 +252,8 @@ class unsteadyBB: public unsteadyNS
         ///
         /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the convective term.
         ///
-	    List< Eigen::MatrixXd > convective_term_temperature(label NUmodes, label NTmodes, label NSUPmodes);
+        List< Eigen::MatrixXd > convective_term_temperature(label NUmodes,
+                label NTmodes, label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Mass Term Energy Equation
@@ -260,7 +264,8 @@ class unsteadyBB: public unsteadyNS
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the mass matrix.
         ///
-	    Eigen::MatrixXd mass_term_temperature(label NUmodes, label NTmodes, label NSUPmodes);
+        Eigen::MatrixXd mass_term_temperature(label NUmodes, label NTmodes,
+                                              label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Buoyant Term Momentum Equation

@@ -170,7 +170,8 @@ class ITHACAutilities
         /// @return     rec_field     The reconstructed field as PtrList.
         ///
         template<typename T>
-        static PtrList<T> reconstruct_from_coeff(PtrList<T>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
+        static PtrList<T> reconstruct_from_coeff(PtrList<T>& modes,
+                Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
         //--------------------------------------------------------------------------
         /// Function to compute the relative error between two volVectorFields in L2 norm
@@ -263,7 +264,8 @@ class ITHACAutilities
         ///
         /// @return     The mass matrix in Eigen::MatrixXd form.
         ///
-        static Eigen::MatrixXd get_mass_matrix(PtrList<volVectorField> modes, int Nmodes = 0);
+        static Eigen::MatrixXd get_mass_matrix(PtrList<volVectorField> modes,
+                                               int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Function to compute a Mass Matrix from a list of Basis Functions (scalar) for L2 projection
@@ -272,7 +274,8 @@ class ITHACAutilities
         ///
         /// @return     The mass matrix in Eigen::MatrixXd form.
         ///
-        static Eigen::MatrixXd get_mass_matrix(PtrList<volScalarField> modes,  int Nmodes = 0);
+        static Eigen::MatrixXd get_mass_matrix(PtrList<volScalarField> modes,
+                                               int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Project a snapshot scalar field on a non-orthogonal basis function and get the coefficients of the projection
@@ -535,10 +538,12 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix_Eigen(PtrList<T>& fields)
 }
 
 template<>
-PtrList<volVectorField> ITHACAutilities::reconstruct_from_coeff(PtrList<volVectorField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
+PtrList<volVectorField> ITHACAutilities::reconstruct_from_coeff(
+    PtrList<volVectorField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
 template<>
-PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(PtrList<volScalarField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
+PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
+    PtrList<volScalarField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
 #endif
 

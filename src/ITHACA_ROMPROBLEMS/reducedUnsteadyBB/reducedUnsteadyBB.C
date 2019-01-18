@@ -44,15 +44,14 @@ reducedUnsteadyBB::reducedUnsteadyBB()
 }
 
 reducedUnsteadyBB::reducedUnsteadyBB(unsteadyBB& FOMproblem)
-:
-problem(&FOMproblem)
+    :
+    problem(&FOMproblem)
 {
     N_BC_t    = problem->inletIndexT.rows();
     N_BC      = problem->inletIndex.rows();
     Nphi_u    = problem->B_matrix.rows();
     Nphi_prgh = problem->K_matrix.cols();
     Nphi_t    = problem->Y_matrix.rows();
-
 
     // Create locally the velocity modes
     for (label k = 0; k < problem->liftfield.size(); k++)
@@ -81,16 +80,16 @@ problem(&FOMproblem)
         LTmodes.append(problem->Tmodes[k]);
     }
 
-    newton_object_sup = newton_unsteadyBB_sup(Nphi_u + Nphi_prgh+ Nphi_t, Nphi_u+ Nphi_prgh + Nphi_t,
-        FOMproblem);
-
+    newton_object_sup = newton_unsteadyBB_sup(Nphi_u + Nphi_prgh + Nphi_t,
+                        Nphi_u + Nphi_prgh + Nphi_t,
+                        FOMproblem);
 }
 
 
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 //Operator to evaluate the residual for the supremizer approach
 int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
- Eigen::VectorXd& fvec) const
+                                      Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -99,10 +98,9 @@ int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd c_tmp(Nphi_t);
     a_tmp = x.head(Nphi_u);
     a_dot = (x.head(Nphi_u) - y_old.head(Nphi_u)) / dt;
-    b_tmp = x.segment(Nphi_u,Nphi_prgh);
+    b_tmp = x.segment(Nphi_u, Nphi_prgh);
     c_tmp = x.tail(Nphi_t);
     c_dot = (x.tail(Nphi_t) - y_old.tail(Nphi_t)) / dt;
-
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Diffusive Term
@@ -115,7 +113,6 @@ int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
     // Buoyancy Term
     Eigen::VectorXd M10 = problem->H_matrix * c_tmp;
-
     // Convective term temperature
     Eigen::MatrixXd qq(1, 1);
     // diffusive term temperature
@@ -159,33 +156,33 @@ int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
- Eigen::MatrixXd& fjac) const
+                              Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyBB_sup> numDiff(*this);
     numDiff.df(x, fjac);
-
     return 0;
 }
 
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC, Eigen::MatrixXd& vel_now_BC, label NParaSet, label startSnap)
+Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
+        Eigen::MatrixXd& vel_now_BC, label NParaSet, label startSnap)
 {
-    std::cout << "################## Online solve N° " << NParaSet << " ##################" << std::endl;
+    std::cout << "################## Online solve N° " << NParaSet <<
+              " ##################" << std::endl;
     std::cout << "Solving for the parameter: " << temp_now_BC << std::endl;
-
     // Count number of time steps
     int counter = 0;
     time = tstart;
-    while (time < finalTime - 0.5*dt)
+
+    while (time < finalTime - 0.5 * dt)
     {
         time = time + dt;
-        counter ++; 
-    }      
+        counter ++;
+    }
 
     // Set size of online solution
-    online_solutiont.resize(Nphi_u + Nphi_prgh+ Nphi_t + 1, counter + 1);
-
+    online_solutiont.resize(Nphi_u + Nphi_prgh + Nphi_t + 1, counter + 1);
     // Set initial condition for online solve
     volScalarField T_IC("T_IC", problem->Tfield[0]);
 
@@ -193,9 +190,9 @@ Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
     {
         for (label i = 0; i < N_BC_t; i++)
         {
-            if (j == problem->inletIndexT(i,0))
+            if (j == problem->inletIndexT(i, 0))
             {
-                T_IC.boundaryFieldRef()[problem->inletIndexT(i,0)][j] = temp_now_BC(i, 0);
+                T_IC.boundaryFieldRef()[problem->inletIndexT(i, 0)][j] = temp_now_BC(i, 0);
             }
             else
             {
@@ -204,16 +201,19 @@ Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
     }
 
     // Create and resize the solution vector
-    y.resize(Nphi_u + Nphi_prgh +Nphi_t, 1);
+    y.resize(Nphi_u + Nphi_prgh + Nphi_t, 1);
     y.setZero();
-
     // Calculate the time-dependent coefficients
-    y.head(Nphi_u) = ITHACAutilities::get_coeffs(problem->Ufield[startSnap],LUmodes);
+    y.head(Nphi_u) = ITHACAutilities::get_coeffs(problem->Ufield[startSnap],
+                     LUmodes);
+
     if  (Nphi_prgh != 0)
     {
-    y.segment(Nphi_u,Nphi_prgh) =  ITHACAutilities::get_coeffs_ortho(problem->Prghfield[2], 
-                                    problem->Prghmodes);
+        y.segment(Nphi_u, Nphi_prgh) =  ITHACAutilities::get_coeffs_ortho(
+                                            problem->Prghfield[2],
+                                            problem->Prghmodes);
     }
+
     y.tail(Nphi_t) = ITHACAutilities::get_coeffs(T_IC, LTmodes);
     // Set some properties of the newton object
     newton_object_sup.nu = nu;
@@ -237,15 +237,12 @@ Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
     // Set the initial time
     time = tstart;
     // Create vector to store temporal solution and save initial condition as first solution
-    Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_prgh+ Nphi_t + 1, 1);
+    Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_prgh + Nphi_t + 1, 1);
     tmp_sol(0) = time;
     tmp_sol.col(0).tail(y.rows()) = y;
-
     online_solutiont.col(0) = tmp_sol;
-
     // Create nonlinear solver object
     Eigen::HybridNonLinearSolver<newton_unsteadyBB_sup> hnls(newton_object_sup);
-
     // Set output colors for fancy output
     Color::Modifier red(Color::FG_RED);
     Color::Modifier green(Color::FG_GREEN);
@@ -258,6 +255,7 @@ Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
         Eigen::VectorXd res(y);
         res.setZero();
         hnls.solve(y);
+
         for (label j = 0; j < N_BC; j++)
         {
             y(j) = vel_now_BC(j, 0);
@@ -265,36 +263,37 @@ Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
 
         for (label j = 0; j < N_BC_t; j++)
         {
-            label k = j + Nphi_prgh +Nphi_u;
+            label k = j + Nphi_prgh + Nphi_u;
             y(k) = temp_now_BC(j, 0);
         }
 
         newton_object_sup.operator()(y, res);
         newton_object_sup.y_old = y;
-    
         Info << "Time = " << time << endl;
 
         if (res.norm() < 1e-5)
         {
             std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-            hnls.iter << " iterations " << def << std::endl << std::endl;
+                      hnls.iter << " iterations " << def << std::endl << std::endl;
         }
         else
         {
             std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-            hnls.iter << " iterations " << def << std::endl << std::endl;
+                      hnls.iter << " iterations " << def << std::endl << std::endl;
         }
 
         tmp_sol(0) = time;
         tmp_sol.col(0).tail(y.rows()) = y;
-
         online_solutiont.col(i) = tmp_sol;
     }
 
     // Save the current solution
-    ITHACAstream::exportMatrix(online_solutiont, "red_coeff", "python","./ITHACAoutput/red_coeff/" + name(NParaSet) + "/");
-    ITHACAstream::exportMatrix(online_solutiont, "red_coeff", "matlab","./ITHACAoutput/red_coeff/" + name(NParaSet)  + "/");
-    ITHACAstream::exportMatrix(online_solutiont, "red_coeff", "eigen","./ITHACAoutput/red_coeff/" + name(NParaSet)  + "/");
+    ITHACAstream::exportMatrix(online_solutiont, "red_coeff", "python",
+                               "./ITHACAoutput/red_coeff/" + name(NParaSet) + "/");
+    ITHACAstream::exportMatrix(online_solutiont, "red_coeff", "matlab",
+                               "./ITHACAoutput/red_coeff/" + name(NParaSet)  + "/");
+    ITHACAstream::exportMatrix(online_solutiont, "red_coeff", "eigen",
+                               "./ITHACAoutput/red_coeff/" + name(NParaSet)  + "/");
     return online_solutiont;
 }
 
@@ -302,15 +301,14 @@ Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
 
 void reducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
 {
-
     if (ITHACAutilities::check_folder(folder))
     {
     }
     else
     {
-            mkDir(folder);
-            ITHACAutilities::createSymLink(folder);
-    }    
+        mkDir(folder);
+        ITHACAutilities::createSymLink(folder);
+    }
 
     int counter = 0;
     int nextwrite = 0;
@@ -321,37 +319,43 @@ void reducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
         if (counter == nextwrite)
         {
             volVectorField U_rec("U_rec", LUmodes[0] * 0);
+
             for (label j = 0; j < Nphi_u; j++)
             {
                 U_rec += LUmodes[j] * online_solutiont(j + 1, i);
             }
+
             problem->exportSolution(U_rec,  name(counter2), folder);
 
             if  (Nphi_prgh != 0)
             {
-            volScalarField P_rec("P_rec", problem->Prghmodes[0] * 0);
-            for (label j = 0; j < Nphi_prgh; j++)
-            {
-                P_rec += problem->Prghmodes[j] * online_solutiont(j + Nphi_u+ 1, i);
-            }
-            problem->exportSolution(P_rec,  name(counter2), folder);
-            PREC.append(P_rec);
+                volScalarField P_rec("P_rec", problem->Prghmodes[0] * 0);
+
+                for (label j = 0; j < Nphi_prgh; j++)
+                {
+                    P_rec += problem->Prghmodes[j] * online_solutiont(j + Nphi_u + 1, i);
+                }
+
+                problem->exportSolution(P_rec,  name(counter2), folder);
+                PREC.append(P_rec);
             }
 
             volScalarField T_rec("T_rec", LTmodes[0] * 0);
+
             for (label j = 0; j < Nphi_t; j++)
             {
                 T_rec += LTmodes[j] * online_solutiont(j + Nphi_prgh + Nphi_u + 1, i);
             }
+
             problem->exportSolution(T_rec, name(counter2), folder);
-            
             nextwrite += printevery;
-            double timenow = online_solutiont(0,i);
-            std::ofstream of(folder + name(counter2) + "/" + name(timenow));    
+            double timenow = online_solutiont(0, i);
+            std::ofstream of(folder + name(counter2) + "/" + name(timenow));
             counter2 ++;
             UREC.append(U_rec);
             TREC.append(T_rec);
         }
+
         counter++;
     }
 }

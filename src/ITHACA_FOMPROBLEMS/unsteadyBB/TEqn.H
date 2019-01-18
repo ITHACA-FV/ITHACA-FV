@@ -23,23 +23,23 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
 {
-  alphat = turbulence->nut()/Prt;
-  alphat.correctBoundaryConditions();
+    alphat = turbulence->nut() / Prt;
+    alphat.correctBoundaryConditions();
 
-  volScalarField alphaEff("alphaEff", turbulence->nu()/Pr + alphat);
+    volScalarField alphaEff("alphaEff", turbulence->nu() / Pr + alphat);
 
-  fvScalarMatrix TEqn
-  (
-    fvm::ddt(T)
-    + fvm::div(phi, T)
-    - fvm::laplacian(alphaEff, T)
-  );
+    fvScalarMatrix TEqn
+    (
+        fvm::ddt(T)
+        + fvm::div(phi, T)
+        - fvm::laplacian(alphaEff, T)
+    );
 
-  TEqn.relax();
+    TEqn.relax();
 
-  TEqn.solve();
+    TEqn.solve();
 
-  rhok = 1.0 - beta*(T - TRef);
+    rhok = 1.0 - beta * (T - TRef);
 }
 
 

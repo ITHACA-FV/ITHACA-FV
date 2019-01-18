@@ -51,9 +51,9 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
     public:
         newton_unsteadyBB_sup() {}
         newton_unsteadyBB_sup(int Nx, int Ny,
-                               unsteadyBB& problem): newton_argument<double>(Nx, Ny),
+                              unsteadyBB& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size()+ problem.NSUPmodes),
+            Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
             N_BC_t(problem.inletIndexT.rows()),
             N_BC(problem.inletIndex.rows()),
@@ -73,7 +73,7 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
         scalar nu;
         scalar Pr;
         scalar dt;
-        
+
         Eigen::VectorXd y_old;
         Eigen::VectorXd BC_t;
         Eigen::VectorXd BC;
@@ -135,7 +135,7 @@ class reducedUnsteadyBB: public reducedUnsteadyNS
 
         /// Pointer to the FOM problem
         unsteadyBB* problem;
-        
+
         // Functions
 
         /// Method to perform an online solve using a supremizer stabilisation method
@@ -150,7 +150,8 @@ class reducedUnsteadyBB: public reducedUnsteadyNS
         /// @param[in]  startSnap The first snapshot taken from the offline snapshots
         /// and used to get the reduced initial condition default = 0.
         ///
-        Eigen::MatrixXd solveOnline_sup(Eigen::MatrixXd& temp_now_BC, Eigen::MatrixXd& vel_now_BC, label NParaSet = 0, label startSnap = 0);
+        Eigen::MatrixXd solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
+                                        Eigen::MatrixXd& vel_now_BC, label NParaSet = 0, label startSnap = 0);
 
 
         /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique.
@@ -159,7 +160,8 @@ class reducedUnsteadyBB: public reducedUnsteadyNS
         /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
-        void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec", int printevery = 1);
+        void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec",
+                             int printevery = 1);
 };
 
 

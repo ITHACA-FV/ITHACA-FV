@@ -18,7 +18,7 @@ License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Example of Boussinesq approximation for two way coupling NS-momentum equation 
+    Example of Boussinesq approximation for two way coupling NS-momentum equation
     and heat transport equation for open flows where pressure connot be neglected.
 SourceFiles
     11unsteadyBB_open.C
@@ -71,119 +71,112 @@ class tutorial11: public unsteadyBB
                         {
                             mu_now[0] = mu(0, i);
                         }
+
                         assignBC(T, inletIndexT(j, 0), par_BC(k, j));
                     }
+
                     truthSolve(mu_now);
                 }
             }
         }
 
 
-    void onlineSolveFull(Eigen::MatrixXd par_BC, label para_set_BC, fileName folder)
-    {
-
-        if (ITHACAutilities::check_folder(folder))
+        void onlineSolveFull(Eigen::MatrixXd par_BC, label para_set_BC, fileName folder)
         {
-        }
-        else
-        {
-            ITHACAutilities::createSymLink(folder);
-
-            label i = para_set_BC;
-            for (label j = 0; j < par_BC.cols(); j++)
+            if (ITHACAutilities::check_folder(folder))
             {
-                assignBC(T, inletIndexT(j, 0), par_BC(i, j));
             }
-            truthSolve(folder);
-        }
-    }
-
-    void onlineSolveRead(fileName folder)
-    {
-
-        if (ITHACAutilities::check_folder(folder))
-        {
-            ITHACAstream::read_fields(Ufield_on, U, folder);
-            ITHACAstream::read_fields(Tfield_on, T, folder);
-        }
-        else
-        {
-        }
-    }
-
-
-    // Method to compute the lifting function for temperature
-void liftSolveT()
-{
-    for (label k = 0; k < inletIndexT.rows(); k++)
-    {
-        Time& runTime = _runTime();
-        fvMesh& mesh = _mesh();
-        volScalarField& T = _T();
-        volVectorField& U = _U();
-        surfaceScalarField& phi = _phi();
-        phi = linearInterpolate(U) & mesh.Sf();
-
-        simpleControl simple(mesh);
-        IOMRFZoneList& MRF = _MRF();
-        singlePhaseTransportModel& laminarTransport = _laminarTransport();
-        
-        volScalarField& nut = _nut();
-        volScalarField& alphat = _alphat();
-        dimensionedScalar& nu = _nu();
-        dimensionedScalar& Pr = _Pr();
-        dimensionedScalar& Prt = _Prt();
-
-        label BCind = inletIndexT(k,0);
-        volScalarField Tlift("Tlift" + name(k), T);
-       
-        instantList Times = runTime.times();
-        runTime.setTime(Times[1], 1);
-
-        Info << "Solving a lifting Problem" << endl;
-        scalar t1 = 1;
-        scalar t0 = 0;
-
-        alphat = turbulence->nut()/Prt;
-        alphat.correctBoundaryConditions();
-
-        volScalarField alphaEff("alphaEff", turbulence->nu()/Pr + alphat);
-
-
-        for (label j = 0; j < T.boundaryField().size(); j++)
-        {
-            if (j == BCind)
+            else
             {
-                assignBC(Tlift, j, t1);
-                 assignIF(Tlift, t0);
+                ITHACAutilities::createSymLink(folder);
+                label i = para_set_BC;
+
+                for (label j = 0; j < par_BC.cols(); j++)
+                {
+                    assignBC(T, inletIndexT(j, 0), par_BC(i, j));
+                }
+
+                truthSolve(folder);
             }
-            else if (T.boundaryField()[BCind].type() == "fixedValue")
+        }
+
+        void onlineSolveRead(fileName folder)
+        {
+            if (ITHACAutilities::check_folder(folder))
             {
-                assignBC(Tlift, j, t0);
-                assignIF(Tlift, t0);
+                ITHACAstream::read_fields(Ufield_on, U, folder);
+                ITHACAstream::read_fields(Tfield_on, T, folder);
             }
             else
             {
             }
         }
 
-        while (simple.correctNonOrthogonal())
+
+        // Method to compute the lifting function for temperature
+        void liftSolveT()
         {
-            fvScalarMatrix TEqn
-            (
-                fvm::div(phi, Tlift)
-                - fvm::laplacian(alphaEff, Tlift)
-            );
-            TEqn.solve();
-            Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-                 << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-                 << nl << endl;
+            for (label k = 0; k < inletIndexT.rows(); k++)
+            {
+                Time& runTime = _runTime();
+                fvMesh& mesh = _mesh();
+                volScalarField& T = _T();
+                volVectorField& U = _U();
+                surfaceScalarField& phi = _phi();
+                phi = linearInterpolate(U) & mesh.Sf();
+                simpleControl simple(mesh);
+                IOMRFZoneList& MRF = _MRF();
+                singlePhaseTransportModel& laminarTransport = _laminarTransport();
+                volScalarField& nut = _nut();
+                volScalarField& alphat = _alphat();
+                dimensionedScalar& nu = _nu();
+                dimensionedScalar& Pr = _Pr();
+                dimensionedScalar& Prt = _Prt();
+                label BCind = inletIndexT(k, 0);
+                volScalarField Tlift("Tlift" + name(k), T);
+                instantList Times = runTime.times();
+                runTime.setTime(Times[1], 1);
+                Info << "Solving a lifting Problem" << endl;
+                scalar t1 = 1;
+                scalar t0 = 0;
+                alphat = turbulence->nut() / Prt;
+                alphat.correctBoundaryConditions();
+                volScalarField alphaEff("alphaEff", turbulence->nu() / Pr + alphat);
+
+                for (label j = 0; j < T.boundaryField().size(); j++)
+                {
+                    if (j == BCind)
+                    {
+                        assignBC(Tlift, j, t1);
+                        assignIF(Tlift, t0);
+                    }
+                    else if (T.boundaryField()[BCind].type() == "fixedValue")
+                    {
+                        assignBC(Tlift, j, t0);
+                        assignIF(Tlift, t0);
+                    }
+                    else
+                    {
+                    }
+                }
+
+                while (simple.correctNonOrthogonal())
+                {
+                    fvScalarMatrix TEqn
+                    (
+                        fvm::div(phi, Tlift)
+                        - fvm::laplacian(alphaEff, Tlift)
+                    );
+                    TEqn.solve();
+                    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+                         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+                         << nl << endl;
+                }
+
+                Tlift.write();
+                liftfieldT.append(Tlift);
+            }
         }
-        
-        Tlift.write();
-        liftfieldT.append(Tlift);      
-    }    
-}
 
 };
 
@@ -196,22 +189,22 @@ int main(int argc, char* argv[])
     // Construct the tutorial object
     tutorial11 example(argc, argv);
     // the offline samples for the boundary conditions
-    word par_offline_BC("./par_offline_BC"); 
+    word par_offline_BC("./par_offline_BC");
     // the samples which will be used for setting the boundary condition in the online stage
-    word par_online_BC("./par_online_BC");  
+    word par_online_BC("./par_online_BC");
     Eigen::MatrixXd par_off_BC = ITHACAstream::readMatrix(par_offline_BC);
     Eigen::MatrixXd par_on_BC = ITHACAstream::readMatrix(par_online_BC);
     // Read some parameters from file
     ITHACAparameters para;
     int NmodesUproj   = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 5);
     int NmodesPproj   = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 5);
-    int NmodesPrghproj= para.ITHACAdict->lookupOrDefault<int>("NmodesPrghproj", 5);
+    int NmodesPrghproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPrghproj", 5);
     int NmodesTproj   = para.ITHACAdict->lookupOrDefault<int>("NmodesTproj", 5);
     int NmodesSUPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
     int NmodesOut     = para.ITHACAdict->lookupOrDefault<int>("NmodesOut", 15);
     // Set the number of parameters
     example.Pnumber = 1;
-    // Set samples 
+    // Set samples
     example.Tnumber = 1;
     // Set the parameters infos
     example.setParameters();
@@ -254,63 +247,75 @@ int main(int argc, char* argv[])
     example.solvesupremizer("modes");
     // Create a list with number of modes for which the projection needs to be performed
     Eigen::MatrixXd List_of_modes(NmodesOut - 5, 1);
+
     for (int i = 0; i < List_of_modes.rows(); i++)
     {
         List_of_modes(i, 0) = i + 1;
     }
+
     // Export with number of modes for which the projection needs to be performed
     ITHACAstream::exportMatrix(List_of_modes, "List_of_modes", "eigen",
                                "./ITHACAoutput/l2error");
     // Create locally the temperature modes
     PtrList<volScalarField> TLmodes;
+
     for (label k = 0; k < example.liftfieldT.size(); k++)
     {
         TLmodes.append(example.liftfieldT[k]);
     }
+
     for (label k = 0; k < List_of_modes.size(); k++)
     {
         TLmodes.append(example.Tmodes[k]);
     }
+
     // Create locally the velocity modes
     PtrList<volVectorField> ULmodes;
+
     for (label k = 0; k < example.liftfield.size(); k++)
     {
         ULmodes.append(example.liftfield[k]);
     }
+
     for (label k = 0; k < List_of_modes.size(); k++)
     {
         ULmodes.append(example.Umodes[k]);
     }
+
     for (label k = 0; k < NmodesSUPproj; k++)
     {
         ULmodes.append(example.supmodes[k]);
     }
+
     // Perform the projection for all number of modes in List_of_modes for temperature and velocity
     Eigen::MatrixXd L2errorProjMatrixU(example.Ufield.size(), List_of_modes.rows());
     Eigen::MatrixXd L2errorProjMatrixT(example.Tfield.size(), List_of_modes.rows());
+
     // Calculate the coefficients and L2 error and store the error in a matrix for each number of modes
     for (int i = 0; i < List_of_modes.rows(); i++)
     {
-        Eigen::MatrixXd coeffU = ITHACAutilities::get_coeffs(example.Ufield, ULmodes, 
-            List_of_modes(i, 0)+ example.liftfield.size()+NmodesSUPproj);
+        Eigen::MatrixXd coeffU = ITHACAutilities::get_coeffs(example.Ufield, ULmodes,
+                                 List_of_modes(i, 0) + example.liftfield.size() + NmodesSUPproj);
         Eigen::MatrixXd coeffT = ITHACAutilities::get_coeffs(example.Tfield, TLmodes,
-            List_of_modes(i, 0) + example.liftfieldT.size());
+                                 List_of_modes(i, 0) + example.liftfieldT.size());
         PtrList<volVectorField> rec_fieldU = ITHACAutilities::reconstruct_from_coeff(
-                ULmodes, coeffU, List_of_modes(i, 0)+ example.liftfield.size()+NmodesSUPproj);
+                ULmodes, coeffU, List_of_modes(i,
+                                               0) + example.liftfield.size() + NmodesSUPproj);
         PtrList<volScalarField> rec_fieldT = ITHACAutilities::reconstruct_from_coeff(
                 TLmodes, coeffT, List_of_modes(i, 0) + example.liftfieldT.size());
         Eigen::MatrixXd L2errorProjU = ITHACAutilities::error_listfields(example.Ufield,
                                        rec_fieldU);
         Eigen::MatrixXd L2errorProjT = ITHACAutilities::error_listfields(example.Tfield,
-                                      rec_fieldT);
+                                       rec_fieldT);
         L2errorProjMatrixU.col(i) = L2errorProjU;
         L2errorProjMatrixT.col(i) = L2errorProjT;
     }
+
     // Export the matrix containing the error
     ITHACAstream::exportMatrix(L2errorProjMatrixU, "L2errorProjMatrixU", "eigen",
                                "./ITHACAoutput/l2error");
     ITHACAstream::exportMatrix(L2errorProjMatrixT, "L2errorProjMatrixT", "eigen",
-                                "./ITHACAoutput/l2error");
+                               "./ITHACAoutput/l2error");
     // Get reduced matrices
     example.projectSUP("./Matrices", NmodesUproj, NmodesPrghproj, NmodesTproj,
                        NmodesSUPproj);
@@ -330,6 +335,7 @@ int main(int argc, char* argv[])
     // Set the online velocity
     Eigen::MatrixXd vel_now_BC(1, 1);
     vel_now_BC(0, 0) = 0.0157;
+
     // Set the online temperature BC and solve reduced model
     for (label k = 0; k < par_on_BC.rows(); k++)
     {
@@ -343,7 +349,6 @@ int main(int argc, char* argv[])
 
     // Performing full order simulation for second parameter set of temp_now_BC
     tutorial11 HFonline2(argc, argv);
-
     HFonline2.Pnumber = 1;
     HFonline2.Tnumber = 1;
     HFonline2.setParameters();
@@ -351,7 +356,7 @@ int main(int argc, char* argv[])
     HFonline2.mu_range(0, 1) = 0.00001;
     HFonline2.genEquiPar();
     HFonline2.inletIndexT.resize(3, 1);
-    HFonline2.inletIndexT << 1, 2,3;
+    HFonline2.inletIndexT << 1, 2, 3;
     HFonline2.inletIndex.resize(1, 2);
     HFonline2.inletIndex << 3, 0;
     HFonline2.startTime = 0.0;
@@ -360,8 +365,7 @@ int main(int argc, char* argv[])
     HFonline2.writeEvery = 0.01;
     // Reconstruct the online solution
     HFonline2.onlineSolveFull(par_on_BC, 1,
-     "./ITHACAoutput/high_fidelity_online2");
-
+                              "./ITHACAoutput/high_fidelity_online2");
     // Reading in the high-fidelity solutions for the parameter set
     // for which the offline solve has been performed
     example.onlineSolveRead("./ITHACAoutput/Offline/");
@@ -369,14 +373,14 @@ int main(int argc, char* argv[])
     example.onlineSolveRead("./ITHACAoutput/high_fidelity_online2/");
     // Calculate error between online- and corresponding full order solution
     Eigen::MatrixXd L2errorMatrixU = ITHACAutilities::error_listfields(
-     example.Ufield_on, reduced.UREC);
+                                         example.Ufield_on, reduced.UREC);
     Eigen::MatrixXd L2errorMatrixT = ITHACAutilities::error_listfields(
-     example.Tfield_on, reduced.TREC);
+                                         example.Tfield_on, reduced.TREC);
     //Export the matrix containing the error
     ITHACAstream::exportMatrix(L2errorMatrixU, "L2errorMatrixU", "eigen",
-       "./ITHACAoutput/l2error");
+                               "./ITHACAoutput/l2error");
     ITHACAstream::exportMatrix(L2errorMatrixT, "L2errorMatrixT", "eigen",
-       "./ITHACAoutput/l2error");
+                               "./ITHACAoutput/l2error");
     exit(0);
 }
 
@@ -388,10 +392,10 @@ int main(int argc, char* argv[])
 /// \section intro_unsteadyBB Introduction to tutorial 11
 /// In this tutorial an unsteady Buoyant Boussinesq (BB) 2D problem with paramerized temperature boundary conditions is implemented.
 /// The physical problem represents an differentially heated cavity with an inlet and outlet. A uniform temperature is
-/// set to the left (hot) and the right (cold) sides of the cavity while the other surfaces are set to adiabatic. 
-/// The cavity aspect ratio is 1.0 and the ratio between the height of the inlet/outlet and the cavity is 0.1. 
+/// set to the left (hot) and the right (cold) sides of the cavity while the other surfaces are set to adiabatic.
+/// The cavity aspect ratio is 1.0 and the ratio between the height of the inlet/outlet and the cavity is 0.1.
 /// The flow is laminar with Re = 10 and Ri = 1.2*10^4. The working fluid is air with Pr = 0.72.
-/// The ambient temperature is 300 K. The hot wall, Th, has a temperature of 310 K, while the cold wall, Tc, 
+/// The ambient temperature is 300 K. The hot wall, Th, has a temperature of 310 K, while the cold wall, Tc,
 /// and inlet BC's are set to 300 K. The inlet velocity is 0.0157 m/s.
 ///
 /// The following image illustrates the simulated system at time = 5 s:
@@ -440,7 +444,7 @@ int main(int argc, char* argv[])
 /// \skipline }
 ///
 /// In order to calculate the L2 error between the online solved reduced order model and the corresponding full order solution
-/// at the end of this tutorial, the full order solve can be performed with the onlineSolveFull for a parameter set for which 
+/// at the end of this tutorial, the full order solve can be performed with the onlineSolveFull for a parameter set for which
 /// the reduced order model has been solved online.
 ///
 /// \skipline onlineSolveFull
@@ -451,9 +455,9 @@ int main(int argc, char* argv[])
 /// \skipline }
 /// \skipline }
 ///
-/// If the full order solve has been performed previously then the existing snapshots can be read in from the 
+/// If the full order solve has been performed previously then the existing snapshots can be read in from the
 /// specified directory.
-/// 
+///
 /// \skipline onlineSolveRead
 /// \until }
 /// \skipline else
@@ -485,12 +489,12 @@ int main(int argc, char* argv[])
 /// to be written out and also the ones to be used for projection of
 /// the velocity, pressure, temperature and the supremizer:
 /// \skipline ITHACAparameters
-/// \until NmodesOut 
+/// \until NmodesOut
 ///
 /// We note that a default value can be assigned in case the parser did
 /// not find the corresponding string in the ITHACAdict file.
 ///
-/// Now the kinematic viscosity is set to 0.00001 m^2/s. It is possible to parametrize the viscosity. For more 
+/// Now the kinematic viscosity is set to 0.00001 m^2/s. It is possible to parametrize the viscosity. For more
 /// info take a look at tutorial04
 ///
 /// \skipline example.Pnumber
@@ -529,10 +533,10 @@ int main(int argc, char* argv[])
 /// Then we create homogeneous basis functions for the velocity:
 ///
 /// \skipline computeLift(example.Ufield, example.liftfield, example.Uomfield)
-///    
+///
 /// And temperature:
 ///
-/// \skipline computeLiftT(example.Tfield, example.liftfieldT, example.Tomfield)    
+/// \skipline computeLiftT(example.Tfield, example.liftfieldT, example.Tomfield)
 ///
 /// And after that, we obtain the modes for velocity, pressure, shifted pressure and temperature:
 ///
@@ -545,15 +549,15 @@ int main(int argc, char* argv[])
 ///
 /// \skipline example.solvesupremizer("modes")
 ///
-/// Before continuiting, the projection error is calculated for a range of number of modes for 
-/// temperature and velocity.    
+/// Before continuiting, the projection error is calculated for a range of number of modes for
+/// temperature and velocity.
 ///
 /// \skipline List_of_modes
 /// \until }
 /// \skipline exportMatrix
-/// 
+///
 /// The temperature and velcoity modes are created locally
-/// 
+///
 /// \skipline TLmodes
 /// \until }
 /// \skipline for
@@ -561,34 +565,34 @@ int main(int argc, char* argv[])
 /// \skipline ULmodes
 /// \until }
 /// \skipline for
-/// \until }       
+/// \until }
 /// \skipline for
-/// \until }       
+/// \until }
 ///
 /// and the projection onto the POD modes is performed with:
 ///
 /// \skipline L2errorProjMatrixU
-/// \skipline L2errorProjMatrixT    
+/// \skipline L2errorProjMatrixT
 ///
 /// Finally the L2 error between full order solution and projection of the basis are calculated
 /// \skipline for
-/// \until }    
-/// 
+/// \until }
+///
 /// and exported
-/// 
-/// \skipline L2errorProjMatrixU    
+///
+/// \skipline L2errorProjMatrixU
 /// \until L2errorProjMatrixT
 /// \skipline "./ITHACAoutput/l2error");
 ///
 /// Then the projection onto the POD modes is performed to get the reduced matrices
 ///
-/// \skipline projectSUP   
-/// \until NmodesSUPproj  
-/// 
-/// and the modes are resized to the number for which the projection has been performed 
-///    
+/// \skipline projectSUP
+/// \until NmodesSUPproj
+///
+/// and the modes are resized to the number for which the projection has been performed
+///
 /// \skipline Tmodes
-/// \until Prghmodes     
+/// \until Prghmodes
 ///
 /// Now that we obtained all the necessary information from the POD decomposition and the reduced matrices,
 /// we are now ready to construct the dynamical system for the reduced order model (ROM). We proceed
@@ -612,23 +616,23 @@ int main(int argc, char* argv[])
 /// file. And he ROM solution is reconstructed and exported:
 ///
 /// \skipline for
-/// \until }   
-///    
+/// \until }
+///
 /// For the second parameter set the full order solution is calculated
-/// 
+///
 /// \skipline // Performing full order simulation for second parameter set of temp_now_BC
-/// \until "./ITHACAoutput/HFonline2/");  
+/// \until "./ITHACAoutput/HFonline2/");
 ///
 /// and the solutions are read in:
 /// \skipline example.onlineSolveRead("./ITHACAoutput/Offline/");
-/// \until example.onlineSolveRead("./ITHACAoutput/HFonline2/"); 
+/// \until example.onlineSolveRead("./ITHACAoutput/HFonline2/");
 ///
 /// Finally the L2 error between full and reduced order solutions is calculated
 ///
 /// \skipline Ufield_on
 /// \until Tfield_on
 /// \skipline L2errorMatrixU
-/// \until L2errorMatrixT 
+/// \until L2errorMatrixT
 /// \skipline "./ITHACAoutput/l2error");
 ///
 ///

@@ -49,7 +49,7 @@ void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder,
         exportSolution(field[j], name(j + 1), folder, fieldname);
     }
 
-    ITHACAutilities::createSymLink(folder); 
+    ITHACAutilities::createSymLink(folder);
 }
 
 void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder,
@@ -267,7 +267,6 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
 
         rows++;
     }
-    
 
     infile.close();
     rows--;
@@ -496,11 +495,3 @@ int ITHACAstream::numberOfFiles(word folder, word MatrixName)
     in.close();
     return number_of_files;
 }
-
-
-
-// * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * * //
-
-
-// ************************************************************************* //
-
