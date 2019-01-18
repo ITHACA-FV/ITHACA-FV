@@ -137,7 +137,6 @@ class ITHACAutilities
         ///
         static bool check_off();
 
-
         //--------------------------------------------------------------------------
         /// @brief      function that returns true if a file exists
         ///
@@ -171,8 +170,6 @@ class ITHACAutilities
         ///
         static double error_fields(volVectorField& field1, volVectorField& field2);
 
-
-
         //--------------------------------------------------------------------------
         /// Function to compute the absolute error between two volVectorFields in L2 norm
         ///
@@ -193,16 +190,16 @@ class ITHACAutilities
         ///
         static double error_fields(volScalarField& field1, volScalarField& field2);
 
-
         //--------------------------------------------------------------------------
         /// Function to compute the absolute error between two volScalarFields in L2 norm
         ///
         /// @param[in]  field1  The field 1
         /// @param[in]  field2  The field 2
         ///
-        /// @return     L2 norm of the relative error.
+        /// @return     L2 norm of the absolute error.
         ///
         static double error_fields_abs(volScalarField& field1, volScalarField& field2);
+
         //--------------------------------------------------------------------------
         /// Function to compute the relative error in L2 norm between two lists of volVectorFields
         ///
@@ -246,7 +243,6 @@ class ITHACAutilities
         ///
         static Eigen::MatrixXd error_listfields_abs(PtrList<volScalarField>& fields1,
                 PtrList<volScalarField>& fields2);
-
 
         //--------------------------------------------------------------------------
         /// Function to compute a Mass Matrix from a list of Basis Functions (vectorial) for L2 projection
@@ -401,8 +397,6 @@ class ITHACAutilities
         /// @param[in]  valueVec   The value you want to assign (it must be a double).
         ///
         static void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd valueVec);
-
-
 
         //--------------------------------------------------------------------------
         /// Evaluate the L2 norm of a volScalarField

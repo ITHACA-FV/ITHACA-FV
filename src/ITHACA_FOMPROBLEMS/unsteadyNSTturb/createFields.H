@@ -111,7 +111,6 @@ _alphat = autoPtr<volScalarField>
           );
 volScalarField& alphat = _alphat();
 
-
 _nut = autoPtr<volScalarField>
        (
            new volScalarField
@@ -141,9 +140,6 @@ _nu = autoPtr<dimensionedScalar>
 
 
 #include "createPhi.H"
-
-
-
 _DT = autoPtr<dimensionedScalar>
       (
           new  dimensionedScalar

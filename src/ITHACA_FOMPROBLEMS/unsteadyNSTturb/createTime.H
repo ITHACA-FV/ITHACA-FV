@@ -27,8 +27,6 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-Info << "Reading field p\n" << endl;
-
 
 Foam::Info << "Create time\n" << Foam::endl;
 _runTime = autoPtr<Foam::Time>( new Foam::Time( Foam::Time::controlDictName,

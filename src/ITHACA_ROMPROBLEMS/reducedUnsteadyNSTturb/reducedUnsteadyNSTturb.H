@@ -30,17 +30,17 @@ Class
     reducedProblem
 
 Description
-    A reduced problem for the unsteady NS equations
+    A reduced problem for the unsteady NS plus the energy equations for turbulence modelling
 
 SourceFiles
-    reducedUnsteadyNS.C
+    reducedUnsteadyNSTturb.C
 
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the reducedUnsteadyNS class.
+/// Header file of the reducedUnsteadyNSTturb class.
 /// \dir
-/// Directory containing the header and source files for the reducedUnsteadyNS class
+/// Directory containing the header and source files for the reducedUnsteadyNSTturb class
 
 #ifndef reducedUnsteadyNSTturb_H
 #define reducedUnsteadyNSTturb_H
@@ -53,7 +53,6 @@ SourceFiles
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
-
 
 struct newton_unsteadyNSTturb_sup: public newton_argument<double>
 {
@@ -71,7 +70,6 @@ struct newton_unsteadyNSTturb_sup: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-
         int Nphi_u;
         int Nphi_nut;
         int Nphi_p;
@@ -126,9 +124,9 @@ struct newton_unsteadyNSTturb_sup_t: public newton_argument<double>
                         Class reducedProblem Declaration
 \*---------------------------------------------------------------------------*/
 
-/// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem.
-/** In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes
-equations. This class must be used together with the steadyNS class */
+/// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes weakly coupled with the energy equation </b> problem.
+/** In this class are implemented the methods to solve a reduced version of the non-stationary Navier-stokes coupled with the energy
+equations. This class must be used together with the unsteadyNST class */
 class reducedUnsteadyNSTturb: public reducedUnsteadyNST
 {
     private:
@@ -138,6 +136,7 @@ class reducedUnsteadyNSTturb: public reducedUnsteadyNST
         /// Construct Null
         //
         reducedUnsteadyNSTturb();
+
         /// Construct Null
         ///
         /// @param[in]  problem  a full order unsteadyNS problem
@@ -180,25 +179,19 @@ class reducedUnsteadyNSTturb: public reducedUnsteadyNST
         /// Scalar to store the final time if the online simulation
         double tstart;
 
+        /// Pointer to the FOM problem
         unsteadyNSTturb* problem;
 
         /// Number of nut field modes
         int Nphi_nut;
 
         // Functions
-
-        /// Method to perform an online solve using a PPE stabilisation method
+        /// Method to perform an online solve using a supremizer stabilisation method
         ///
         /// @param[in]  vel_now   The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
-        /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
-        /// and used to get the reduced initial condition.
-        ///
-
-        /// Method to perform an online solve using a supremizer stabilisation method
-        ///
-        /// @param[in]  vel_now   The vector of online velocity. It is defined in
+        /// @param[in]  temp_now   The vector of online temperature. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
@@ -207,29 +200,19 @@ class reducedUnsteadyNSTturb: public reducedUnsteadyNST
         //void solveOnline_sup(Eigen::MatrixXd, label startSnap=0);
         void solveOnline_sup(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& temp_now,
                              label startSnap = 0);
-        /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
-        /// stabilisation method
-        ///
-        /// @param      problem     a steadyNS full order problem.
-        /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
-        /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
-        ///
-        // void reconstruct_PPE(unsteadyNSturb& problem, fileName folder = "./online_rec", int printevery = 1);
 
-        /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique.
+        /// Method to reconstruct a solution for velocity and pressure from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
         ///
-        /// @param      problem     a steadyNS full order problem.
         /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
         void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec",
                              int printevery = 1);
 
-        /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique temperature field.
+        /// Method to reconstruct a solution for temperature from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
         ///
-        /// @param      problem     a steadyNS full order problem.
         /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
@@ -237,10 +220,7 @@ class reducedUnsteadyNSTturb: public reducedUnsteadyNST
                               int printevery = 1);
 };
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-
 
 #endif
 

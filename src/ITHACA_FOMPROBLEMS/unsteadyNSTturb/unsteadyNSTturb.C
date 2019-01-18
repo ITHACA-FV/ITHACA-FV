@@ -34,7 +34,7 @@
 
 
 /// \file
-/// Source file of the unsteadyNS class.
+/// Source file of the unsteadyNSTturb class.
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 

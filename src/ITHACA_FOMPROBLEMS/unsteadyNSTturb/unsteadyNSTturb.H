@@ -30,17 +30,17 @@ Class
     unsteadyNS
 
 Description
-    Reduction class for a NON-Stationary NS problem
+    Reduction class for a NON-Stationary NS plus Energy Equation turbulent problem
 
 SourceFiles
-    unsteadyNS.C
+    unsteadyNSTturb.C
 
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the unsteadyNS class.
+/// Header file of the unsteadyNSTturb class.
 /// \dir
-/// Directory containing the header and source files for the unsteadyNS class.
+/// Directory containing the header and source files for the unsteadyNSTturb class.
 
 #ifndef unsteadyNSTturb_H
 #define unsteadyNSTturb_H
@@ -64,13 +64,13 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*---------------------------------------------------------------------------*\
-                        Class SteadyNS Declaration
+                        Class SteadyNSTturb Declaration
 \*---------------------------------------------------------------------------*/
 
-/// Implementation of a parametrized full order <b> unsteady NS problem </b> and preparation of the the reduced matrices for the online solve.
-/** In this class are implemented the methods for the offline solve of a unsteady NS problem
+/// Implementation of a parametrized full order <b> unsteady NST problem weakly coupled with the energy equation </b> and preparation of the the reduced matrices for the online solve.
+/** In this class are implemented the methods for the offline solve of a unsteady NSTturb problem
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
-of the steadyNS class */
+of the unsteadyNST class */
 class unsteadyNSTturb: public unsteadyNST
 {
     public:
@@ -145,6 +145,8 @@ class unsteadyNSTturb: public unsteadyNST
 
         /// Eddy viscosity field
         autoPtr<volScalarField> _nut;
+
+        ///Eddy viscosity for the Spalart-Allmaras turbulence model
         autoPtr<volScalarField> _nuTilda;
 
         /// Turbulent Prandtl number
@@ -180,8 +182,7 @@ class unsteadyNSTturb: public unsteadyNST
         ///
         /// @brief      S added matrix for the thermal turbulence treatement
         ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  NTmodes    The number of temperature modes.
         /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
         ///
         /// @return     S matrix for turbulence treatment
@@ -201,13 +202,11 @@ class unsteadyNSTturb: public unsteadyNST
         List < Eigen::MatrixXd > turbulence_term2(label NUmodes, label NSUPmodes,
                 label Nnutmodes);
 
-        /// Perform a truthsolve for full order solution
-        //void truthSolve(fileName folder = "./ITHACAOutput/Offline");
-        /// Function to check if the solution must be exported.
-        ///
-        /// @param      timeObject  The time object of OpenFOAM.
-        ///
-        /// @return     1 if we must write 0 elsewhere.
+        //--------------------------------------------------------------------------
+        /// @brief      Perform a truthsolve
+        /// @param[in]  mu_now  The actual value of the parameter for this truthSolve. Used only
+        /// to construct mu_interp matrix which is written out in the Offline folder, also for par file in
+        /// the Parameters folder.
         ///
         void truthSolve(List<scalar> mu_now);
 
@@ -219,19 +218,8 @@ class unsteadyNSTturb: public unsteadyNST
         ///
         bool checkWrite(Time& timeObject);
 
-        /// Perform a lift solve for temperature
+        /// Perform a lift solve for temperature field
         void liftSolveT();
-        /**
-         * @brief      { function_description }
-         *
-         * @param[in]  folder     The folder
-         * @param[in]  NUmodes    The number of velocity modes.
-         * @param[in]  NPmodes    The number of pressure modes.
-         * @param[in]  NSUPmodes  The number of supremizer modes.
-         * @param[in]  Nnutmodes  The number of eddy viscosity modes.
-
-
-         */
 
         ///
         /// Project using a supremizer approach
@@ -244,8 +232,6 @@ class unsteadyNSTturb: public unsteadyNST
         ///
         void projectSUP(fileName folder, label NU, label NP, label NSUP, label Nnut,
                         label NT);
-
-
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

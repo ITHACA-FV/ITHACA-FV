@@ -24,19 +24,18 @@ License
 Class
     reducedUnsteadyNST
 Description
-    A reduced problem for the unsteady NST equations
+    A reduced problem for the unsteady NS plus the energy equations
 SourceFiles
     reducedUnsteadyNST.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the reducedUnsteadyNS class.
+/// Header file of the reducedUnsteadyNST class.
 /// \dir
-/// Directory containing the header and source files for the reducedUnsteadyNS class
+/// Directory containing the header and source files for the reducedUnsteadyNST class
 
 #ifndef reducedUnsteadyNST_H
 #define reducedUnsteadyNST_H
-
 #include "fvCFD.H"
 #include "IOmanip.H"
 #include "reducedUnsteadyNS.H"
@@ -60,8 +59,6 @@ struct newton_unsteadyNST_sup: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-
-        unsteadyNST* problem;
         int Nphi_u;
         int Nphi_p;
         int N_BC;
@@ -69,6 +66,7 @@ struct newton_unsteadyNST_sup: public newton_argument<double>
         scalar dt;
         Eigen::VectorXd y_old;
         Eigen::VectorXd BC;
+        unsteadyNST* problem;
 };
 
 struct newton_unsteadyNST_sup_t: public newton_argument<double>
@@ -84,29 +82,25 @@ struct newton_unsteadyNST_sup_t: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-
-        unsteadyNST* problem;
         int Nphi_t;
         int N_BC_t;
         int Nphi_u;
-
         scalar nu;
         scalar DT;
         scalar dt;
         Eigen::VectorXd a_tmp;
         Eigen::VectorXd z_old;
         Eigen::VectorXd BC_t;
-
+        unsteadyNST* problem;
 };
-
 
 /*---------------------------------------------------------------------------*\
                         Class reducedProblem Declaration
 \*---------------------------------------------------------------------------*/
 
-/// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem.
-/** In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes
-equations. This class must be used together with the steadyNS class */
+/// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes weakly coupled with the energy equation </b> problem.
+/** In this class are implemented the methods to solve a reduced version of the non-stationary Navier-stokes and energy
+equations. This class must be used together with the unsteadyNST class */
 class reducedUnsteadyNST: public reducedUnsteadyNS
 {
     private:
@@ -205,7 +199,9 @@ class reducedUnsteadyNST: public reducedUnsteadyNS
         /// Scalar to store the final time if the online simulation
         scalar tstart;
 
+        ///pointer to the FOM problem
         unsteadyNST* problem;
+
         // Functions
 
         /// Method to perform an online solve using a supremizer stabilisation method
@@ -239,12 +235,8 @@ class reducedUnsteadyNST: public reducedUnsteadyNS
         ///
         void reconstruct_supt(fileName folder = "./ITHACAOutput/online_rec",
                               int printevery = 1);
-
 };
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 
 #endif
 
