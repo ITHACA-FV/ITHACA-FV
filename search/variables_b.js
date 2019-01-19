@@ -18,15 +18,15 @@ var searchData=
   ['maxmodes',['MaxModes',['../classDEIM.html#ad9e0bf903fa906c6e0fd185bfd6ca42c',1,'DEIM']]],
   ['maxmodesa',['MaxModesA',['../classDEIM.html#aa20acce99c1a37d1208f8673fd4ad1d1',1,'DEIM']]],
   ['maxmodesb',['MaxModesB',['../classDEIM.html#a934b1fcaa79d03dea33693afaaedf233',1,'DEIM']]],
-  ['mesh',['mesh',['../laplacianProblem_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../steadyNS_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../steadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNS_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNST_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H']]],
+  ['mesh',['mesh',['../laplacianProblem_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../steadyNS_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../steadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNS_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNST_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNSTturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H'],['../unsteadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d',1,'mesh():&#160;createMesh.H']]],
   ['mlist',['Mlist',['../classDEIMlaplacian.html#aadc8e1528486b573634ea160fb09f3be',1,'DEIMlaplacian']]],
   ['modes',['modes',['../classDEIM.html#a049cc0b159a2dee23c5a1b6bed03839b',1,'DEIM']]],
   ['modesteig',['ModesTEig',['../classDEIMlaplacian.html#ac0317b741fc9bb11cc412c700fab4562',1,'DEIMlaplacian']]],
   ['moment_5f',['moment_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a7698977a027959c5fcbb3c42c4ccf29c',1,'Foam::functionObjects::ITHACAforces']]],
-  ['mrf',['MRF',['../src_2problems_2steadyNSturb_2createFields_8H.html#abfb4e4c9cc56c3f4f3e7d7829b33671f',1,'createFields.H']]],
-  ['mt_5fmatrix',['MT_matrix',['../classunsteadyNST.html#ad05be916d7f16856b9c1cc43e60e7cf4',1,'unsteadyNST::MT_matrix()'],['../classreducedUnsteadyNST.html#a027712b3ffd2a7fd38cbc677138c2f12',1,'reducedUnsteadyNST::MT_matrix()']]],
+  ['mt_5fmatrix',['MT_matrix',['../classunsteadyNST.html#ad05be916d7f16856b9c1cc43e60e7cf4',1,'unsteadyNST::MT_matrix()'],['../classreducedUnsteadyNST.html#a027712b3ffd2a7fd38cbc677138c2f12',1,'reducedUnsteadyNST::MT_matrix()'],['../structnewton__unsteadyNSTturb__sup__t.html#a5fc77114143e98fafd044cc8773ba5f8',1,'newton_unsteadyNSTturb_sup_t::MT_matrix()']]],
   ['mu',['mu',['../classreductionProblem.html#acca797c9e7595c83d45d40c286b9a6ee',1,'reductionProblem']]],
   ['mu_5fcur',['mu_cur',['../classreductionProblem.html#ac19844d1554be353399c857c8b1a6aeb',1,'reductionProblem']]],
+  ['mu_5fnow',['mu_now',['../structnewton__unsteadyNSTturb__sup.html#ad54faa8f1bf7e9f9b70e779827e0fbf5',1,'newton_unsteadyNSTturb_sup::mu_now()'],['../structnewton__unsteadyNSTturb__sup__t.html#acc2d365582fb80f2c7e7df7dc40161fa',1,'newton_unsteadyNSTturb_sup_t::mu_now()']]],
   ['mu_5frange',['mu_range',['../classreductionProblem.html#ad00cb98fdeda644d4cb784c5773b0884',1,'reductionProblem']]],
   ['mu_5fsamples',['mu_samples',['../classreductionProblem.html#a30a31093d96229e8a53c26d26dbf96c1',1,'reductionProblem']]]
 ];

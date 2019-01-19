@@ -101,9 +101,10 @@ Inheritance diagram for reductionProblem:</div>
 <area href="classunsteadyNS.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNS" shape="rect" coords="605,112,716,136"/>
 <area href="classtutorial06.html" alt="tutorial06" shape="rect" coords="242,168,353,192"/>
 <area href="classtutorial04.html" alt="tutorial04" shape="rect" coords="484,168,595,192"/>
-<area href="classunsteadyNST.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNST" shape="rect" coords="605,168,716,192"/>
+<area href="classunsteadyNST.html" title="Implementation of a parametrized full order  unsteady NS problem weakly coupled with the energy equat..." alt="unsteadyNST" shape="rect" coords="605,168,716,192"/>
 <area href="classunsteadyNSturb.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNSturb" shape="rect" coords="726,168,837,192"/>
-<area href="classtutorial06.html" alt="tutorial06" shape="rect" coords="605,224,716,248"/>
+<area href="classtutorial07.html" alt="tutorial07" shape="rect" coords="544,224,655,248"/>
+<area href="classunsteadyNSTturb.html" title="Implementation of a parametrized full order  unsteady NST problem weakly coupled with the energy equa..." alt="unsteadyNSTturb" shape="rect" coords="665,224,776,248"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -225,7 +226,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">A general class for the implementation of a full order parametrized problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00067">67</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00072">72</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a410dcbf3d97c7df2aa6a1b291afaa111"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a410dcbf3d97c7df2aa6a1b291afaa111">&#9670;&nbsp;</a></span>reductionProblem()</h2>
@@ -271,7 +272,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00076">76</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00081">81</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -599,7 +600,7 @@ template&lt;typename T &gt; </div>
 
 <p>Virtual function to compute the lifting function. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblemTemplates_8C_source.html#l00087">87</a> of file <a class="el" href="reductionProblemTemplates_8C_source.html">reductionProblemTemplates.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblemTemplates_8C_source.html#l00086">86</a> of file <a class="el" href="reductionProblemTemplates_8C_source.html">reductionProblemTemplates.C</a>.</p>
 
 </div>
 </div>
@@ -1181,7 +1182,7 @@ template&lt;typename T &gt; </div>
  2 for z <br />
  The Matrix should be implemented in the following way: \[ \mbox{inletIndex}=\begin{bmatrix} \mbox{BC1_index} &amp; \mbox{Direction of BC1} \\ \ \mbox{BC2_index} &amp; \mbox{Direction of BC3} \\ \ \vdots &amp; \vdots \\ \ \mbox{BCN_index} &amp; \mbox{Direction of BCN} \ \ \end{bmatrix} \] </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00123">123</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00128">128</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1197,7 +1198,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00151">151</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00156">156</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1216,7 +1217,7 @@ template&lt;typename T &gt; </div>
 <p>dictionary to store input output infos </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="09DEIM_ROM_8C-example.html#a30">09DEIM_ROM.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00096">96</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00101">101</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1235,7 +1236,7 @@ template&lt;typename T &gt; </div>
 <p>Row matrix of parameters. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a17">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a16">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a16">04unsteadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00084">84</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00089">89</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1253,7 +1254,7 @@ template&lt;typename T &gt; </div>
 
 <p>Current value of the parameter. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00090">90</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00095">95</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1271,7 +1272,7 @@ template&lt;typename T &gt; </div>
 
 <p>Range of the parameter spaces. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00086">86</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00091">91</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1290,7 +1291,7 @@ template&lt;typename T &gt; </div>
 <p>Matrix of parameters to be used for PODI, where each row corresponds to a sample point. In this matrix the time dimension is regarded as a parameter for unsteady problems. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a14">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a13">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a13">04unsteadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00088">88</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00093">93</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1309,7 +1310,7 @@ template&lt;typename T &gt; </div>
 <p>Boolean variable, it is 1 if the Offline phase has already been computed, else 0. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a11">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a9">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a9">04unsteadyNS.C</a>, and <a class="el" href="09DEIM_ROM_8C-example.html#a42">09DEIM_ROM.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00094">94</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00099">99</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1327,7 +1328,7 @@ template&lt;typename T &gt; </div>
 
 <p>Number of parameters. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00076">76</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00081">81</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1345,7 +1346,7 @@ template&lt;typename T &gt; </div>
 
 <p>Boolean variable, it is 1 if the POD has already been computed, else 0. </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00092">92</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00097">97</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
@@ -1363,14 +1364,14 @@ template&lt;typename T &gt; </div>
 
 <p>Dimension of the training set (used only when gerating parameters without input) </p>
 
-<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00082">82</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reductionProblem_8H_source.html#l00087">87</a> of file <a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/problems/reductionProblem/<a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a></li>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/problems/reductionProblem/<a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a></li>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/problems/reductionProblem/<a class="el" href="reductionProblemTemplates_8C_source.html">reductionProblemTemplates.C</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_FOMPROBLEMS/reductionProblem/<a class="el" href="reductionProblem_8H_source.html">reductionProblem.H</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_FOMPROBLEMS/reductionProblem/<a class="el" href="reductionProblem_8C_source.html">reductionProblem.C</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_FOMPROBLEMS/reductionProblem/<a class="el" href="reductionProblemTemplates_8C_source.html">reductionProblemTemplates.C</a></li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.14-->

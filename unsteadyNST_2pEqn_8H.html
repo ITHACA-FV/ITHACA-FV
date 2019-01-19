@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ITHACA-FV: /scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/problems/unsteadyNST/pEqn.H File Reference</title>
+<title>ITHACA-FV: /scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_FOMPROBLEMS/unsteadyNST/pEqn.H File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ee269017dc86a19705f7227ce435229f.html">problems</a></li><li class="navelem"><a class="el" href="dir_664d17f7b36cf5222edbd0bd8da772d3.html">unsteadyNST</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_06304612c7fd919b7ee5de6be7fde926.html">ITHACA_FOMPROBLEMS</a></li><li class="navelem"><a class="el" href="dir_a75cdf5a85b94373f2a34a1647ec486b.html">unsteadyNST</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -91,13 +91,13 @@ $(function() {
 Functions</h2></td></tr>
 <tr class="memitem:a4ae3ff6f0732a8a206a641d7ff2d9f7d"><td class="memItemLeft" align="right" valign="top">volScalarField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a> (1.0/UEqn.A())</td></tr>
 <tr class="separator:a4ae3ff6f0732a8a206a641d7ff2d9f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a748dcc48c958062d58a54c8687c51b88"><td class="memItemLeft" align="right" valign="top">volVectorField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#a748dcc48c958062d58a54c8687c51b88">HbyA</a> (constrainHbyA(<a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a> *UEqn.H(), <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, <a class="el" href="src_2problems_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>))</td></tr>
+<tr class="memitem:a748dcc48c958062d58a54c8687c51b88"><td class="memItemLeft" align="right" valign="top">volVectorField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#a748dcc48c958062d58a54c8687c51b88">HbyA</a> (constrainHbyA(<a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a> *UEqn.H(), <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, <a class="el" href="src_2ITHACA__FOMPROBLEMS_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>))</td></tr>
 <tr class="separator:a748dcc48c958062d58a54c8687c51b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adce7bb248bb2637da015f9062ce8b8b5"><td class="memItemLeft" align="right" valign="top">surfaceScalarField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#adce7bb248bb2637da015f9062ce8b8b5">phiHbyA</a> (&quot;phiHbyA&quot;, fvc::flux(<a class="el" href="unsteadyNSturb_2pEqn_8H.html#a748dcc48c958062d58a54c8687c51b88">HbyA</a>)+fvc::interpolate(<a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a>) *fvc::ddtCorr(<a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, <a class="el" href="unsteadyNSturb_2createPhi_8H.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>))</td></tr>
 <tr class="separator:adce7bb248bb2637da015f9062ce8b8b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2763a4e809e5ae1f9caf5fb4bc42a66e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#a2763a4e809e5ae1f9caf5fb4bc42a66e">adjustPhi</a> (<a class="el" href="unsteadyNSturb_2pEqn_8H.html#adce7bb248bb2637da015f9062ce8b8b5">phiHbyA</a>, <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, <a class="el" href="src_2problems_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)</td></tr>
+<tr class="memitem:a2763a4e809e5ae1f9caf5fb4bc42a66e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#a2763a4e809e5ae1f9caf5fb4bc42a66e">adjustPhi</a> (<a class="el" href="unsteadyNSturb_2pEqn_8H.html#adce7bb248bb2637da015f9062ce8b8b5">phiHbyA</a>, <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, <a class="el" href="src_2ITHACA__FOMPROBLEMS_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)</td></tr>
 <tr class="separator:a2763a4e809e5ae1f9caf5fb4bc42a66e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48c1c20ac22781a51afc3041c36531b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#a48c1c20ac22781a51afc3041c36531b3">constrainPressure</a> (<a class="el" href="src_2problems_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, <a class="el" href="unsteadyNSturb_2pEqn_8H.html#adce7bb248bb2637da015f9062ce8b8b5">phiHbyA</a>, <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a>)</td></tr>
+<tr class="memitem:a48c1c20ac22781a51afc3041c36531b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#a48c1c20ac22781a51afc3041c36531b3">constrainPressure</a> (<a class="el" href="src_2ITHACA__FOMPROBLEMS_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, <a class="el" href="unsteadyNSturb_2pEqn_8H.html#adce7bb248bb2637da015f9062ce8b8b5">phiHbyA</a>, <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a>)</td></tr>
 <tr class="separator:a48c1c20ac22781a51afc3041c36531b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaa72f220d04393911bfb42f0e8b6bb6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#aaaa72f220d04393911bfb42f0e8b6bb6">while</a> (piso.correctNonOrthogonal())</td></tr>
 <tr class="separator:aaaa72f220d04393911bfb42f0e8b6bb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,7 +106,7 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a81cf6107131a3583e2b0b762cb9c2862"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a> = <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a748dcc48c958062d58a54c8687c51b88">HbyA</a> - <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a> * fvc::grad(<a class="el" href="src_2problems_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)</td></tr>
+<tr class="memitem:a81cf6107131a3583e2b0b762cb9c2862"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNST_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a> = <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a748dcc48c958062d58a54c8687c51b88">HbyA</a> - <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a> * fvc::grad(<a class="el" href="src_2ITHACA__FOMPROBLEMS_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)</td></tr>
 <tr class="separator:a81cf6107131a3583e2b0b762cb9c2862"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -131,7 +131,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="src_2problems_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="src_2ITHACA__FOMPROBLEMS_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -153,7 +153,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">constrainPressure </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="src_2problems_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="src_2ITHACA__FOMPROBLEMS_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -210,7 +210,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">volVectorField HbyA </td>
           <td>(</td>
-          <td class="paramtype">constrainHbyA(<a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a> *UEqn.H(), <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, <a class="el" href="src_2problems_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)&#160;</td>
+          <td class="paramtype">constrainHbyA(<a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a> *UEqn.H(), <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, <a class="el" href="src_2ITHACA__FOMPROBLEMS_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -293,7 +293,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">U = <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a748dcc48c958062d58a54c8687c51b88">HbyA</a> - <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a> * fvc::grad(<a class="el" href="src_2problems_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)</td>
+          <td class="memname">U = <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a748dcc48c958062d58a54c8687c51b88">HbyA</a> - <a class="el" href="unsteadyNSturb_2pEqn_8H.html#a4ae3ff6f0732a8a206a641d7ff2d9f7d">rAU</a> * fvc::grad(<a class="el" href="src_2ITHACA__FOMPROBLEMS_2unsteadyNSturb_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">

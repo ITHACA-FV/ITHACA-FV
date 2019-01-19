@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ITHACA-FV: /scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/EigenFunctions/EigenFunctions.H File Reference</title>
+<title>ITHACA-FV: /scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_CORE/EigenFunctions/EigenFunctions.H File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_413fc886fbe28f00e12349362ac88453.html">EigenFunctions</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_78ba4416d6f26cc85d99b49fd9a566c2.html">ITHACA_CORE</a></li><li class="navelem"><a class="el" href="dir_43847628eec50ec2374ee5724dce31bc.html">EigenFunctions</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -87,11 +87,12 @@ $(function() {
 
 <p>Header file of the <a class="el" href="classEigenFunctions.html" title="Class to perform operation on Eigen objects.">EigenFunctions</a> class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;../thirdparty/Eigen/Eigen/Eigen&quot;</code><br />
-<code>#include &quot;../thirdparty/Eigen/Eigen/LU&quot;</code><br />
-<code>#include &quot;fvCFD.H&quot;</code><br />
-<code>#include &lt;mutex&gt;</code><br />
+<div class="textblock"><code>#include &lt;mutex&gt;</code><br />
+<code>#include &quot;Eigen/Eigen&quot;</code><br />
+<code>#include &quot;Eigen/LU&quot;</code><br />
 <code>#include &quot;unsupported/Eigen/SparseExtra&quot;</code><br />
+<code>#include &quot;unsupported/Eigen/CXX11/Tensor&quot;</code><br />
+<code>#include &quot;fvCFD.H&quot;</code><br />
 </div>
 <p><a href="EigenFunctions_8H_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -111,6 +112,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a26ff8eaebc2532433557944b083d3e82"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
 <tr class="memitem:a26ff8eaebc2532433557944b083d3e82"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceEigen.html#a26ff8eaebc2532433557944b083d3e82">Eigen::saveMarketVector</a> (const VectorType &amp;vec, const std::string &amp;filename, int prec, std::_Ios_Fmtflags outytpe=std::ios_base::scientific)</td></tr>
 <tr class="separator:a26ff8eaebc2532433557944b083d3e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd89cbb8c477c3bf4b606f401765a998"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
+<tr class="memitem:afd89cbb8c477c3bf4b606f401765a998"><td class="memTemplItemLeft" align="right" valign="top">Matrix&lt; VectorType, Dynamic, Dynamic &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceEigen.html#afd89cbb8c477c3bf4b606f401765a998">Eigen::SliceFromTensor</a> (Eigen::Tensor&lt; VectorType, 3 &gt; &amp;tensor, int dim, int index1)</td></tr>
+<tr class="separator:afd89cbb8c477c3bf4b606f401765a998"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Header file of the <a class="el" href="classEigenFunctions.html" title="Class to perform operation on Eigen objects.">EigenFunctions</a> class. </p>

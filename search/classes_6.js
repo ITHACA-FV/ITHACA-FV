@@ -8,6 +8,8 @@ var searchData=
   ['newton_5funsteadyns_5fsup',['newton_unsteadyNS_sup',['../structnewton__unsteadyNS__sup.html',1,'']]],
   ['newton_5funsteadynst_5fsup',['newton_unsteadyNST_sup',['../structnewton__unsteadyNST__sup.html',1,'']]],
   ['newton_5funsteadynst_5fsup_5ft',['newton_unsteadyNST_sup_t',['../structnewton__unsteadyNST__sup__t.html',1,'']]],
+  ['newton_5funsteadynstturb_5fsup',['newton_unsteadyNSTturb_sup',['../structnewton__unsteadyNSTturb__sup.html',1,'']]],
+  ['newton_5funsteadynstturb_5fsup_5ft',['newton_unsteadyNSTturb_sup_t',['../structnewton__unsteadyNSTturb__sup__t.html',1,'']]],
   ['newton_5funsteadynsturb_5fppe',['newton_unsteadyNSturb_PPE',['../structnewton__unsteadyNSturb__PPE.html',1,'']]],
   ['newton_5funsteadynsturb_5fsup',['newton_unsteadyNSturb_sup',['../structnewton__unsteadyNSturb__sup.html',1,'']]]
 ];
