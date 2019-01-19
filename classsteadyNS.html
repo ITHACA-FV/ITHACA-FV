@@ -98,9 +98,10 @@ Inheritance diagram for steadyNS:</div>
 <area href="classunsteadyNS.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNS" shape="rect" coords="363,112,474,136"/>
 <area href="classtutorial06.html" alt="tutorial06" shape="rect" coords="0,168,111,192"/>
 <area href="classtutorial04.html" alt="tutorial04" shape="rect" coords="242,168,353,192"/>
-<area href="classunsteadyNST.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNST" shape="rect" coords="363,168,474,192"/>
+<area href="classunsteadyNST.html" title="Implementation of a parametrized full order  unsteady NS problem weakly coupled with the energy equat..." alt="unsteadyNST" shape="rect" coords="363,168,474,192"/>
 <area href="classunsteadyNSturb.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNSturb" shape="rect" coords="484,168,595,192"/>
-<area href="classtutorial06.html" alt="tutorial06" shape="rect" coords="363,224,474,248"/>
+<area href="classtutorial07.html" alt="tutorial07" shape="rect" coords="302,224,413,248"/>
+<area href="classunsteadyNSTturb.html" title="Implementation of a parametrized full order  unsteady NST problem weakly coupled with the energy equa..." alt="unsteadyNSTturb" shape="rect" coords="423,224,534,248"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -165,6 +166,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1f0593cf687a06a926c0a1d22623e586"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a1f0593cf687a06a926c0a1d22623e586">Forces_matrices</a> (label <a class="el" href="classsteadyNS.html#a6afdfb31a8d0fdf0e4c604e5c13b331d">NUmodes</a>, label <a class="el" href="classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19">NPmodes</a>, label <a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">NSUPmodes</a>)</td></tr>
 <tr class="memdesc:a1f0593cf687a06a926c0a1d22623e586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute lift and drag matrices.  <a href="#a1f0593cf687a06a926c0a1d22623e586">More...</a><br /></td></tr>
 <tr class="separator:a1f0593cf687a06a926c0a1d22623e586"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac904d94cbb69c6e48e7358b705f5071"><td class="memItemLeft" align="right" valign="top">Eigen::Tensor&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#aac904d94cbb69c6e48e7358b705f5071">convective_term_tens</a> (label <a class="el" href="classsteadyNS.html#a6afdfb31a8d0fdf0e4c604e5c13b331d">NUmodes</a>, label <a class="el" href="classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19">NPmodes</a>, label <a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">NSUPmodes</a>)</td></tr>
+<tr class="memdesc:aac904d94cbb69c6e48e7358b705f5071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export convective term as a tensor.  <a href="#aac904d94cbb69c6e48e7358b705f5071">More...</a><br /></td></tr>
+<tr class="separator:aac904d94cbb69c6e48e7358b705f5071"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreductionProblem"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreductionProblem')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreductionProblem.html">reductionProblem</a></td></tr>
 <tr class="memitem:a410dcbf3d97c7df2aa6a1b291afaa111 inherit pub_methods_classreductionProblem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a410dcbf3d97c7df2aa6a1b291afaa111">reductionProblem</a> ()</td></tr>
 <tr class="memdesc:a410dcbf3d97c7df2aa6a1b291afaa111 inherit pub_methods_classreductionProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct Null.  <a href="classreductionProblem.html#a410dcbf3d97c7df2aa6a1b291afaa111">More...</a><br /></td></tr>
@@ -246,6 +250,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a8a08f32ba7817588d13e5266ebdb1373"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classITHACAparameters.html">ITHACAparameters</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a8a08f32ba7817588d13e5266ebdb1373">para</a></td></tr>
+<tr class="separator:a8a08f32ba7817588d13e5266ebdb1373"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30b8d9c76cc7f7f4d7dd6406cedba537"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a30b8d9c76cc7f7f4d7dd6406cedba537">Pfield</a></td></tr>
 <tr class="memdesc:a30b8d9c76cc7f7f4d7dd6406cedba537"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers used to form the pressure snapshots matrix.  <a href="#a30b8d9c76cc7f7f4d7dd6406cedba537">More...</a><br /></td></tr>
 <tr class="separator:a30b8d9c76cc7f7f4d7dd6406cedba537"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -349,6 +355,8 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aabf0fbe0a0d5810bd12c8162c63158f0"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#aabf0fbe0a0d5810bd12c8162c63158f0">C_matrix</a></td></tr>
 <tr class="memdesc:aabf0fbe0a0d5810bd12c8162c63158f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non linear term.  <a href="#aabf0fbe0a0d5810bd12c8162c63158f0">More...</a><br /></td></tr>
 <tr class="separator:aabf0fbe0a0d5810bd12c8162c63158f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ae2d433003b5ac4e4ba4be9c8b8fda5"><td class="memItemLeft" align="right" valign="top">Eigen::Tensor&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a2ae2d433003b5ac4e4ba4be9c8b8fda5">C_tensor</a></td></tr>
+<tr class="separator:a2ae2d433003b5ac4e4ba4be9c8b8fda5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8998c39e2c5a2b1937e8ce5937b9cef"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#ac8998c39e2c5a2b1937e8ce5937b9cef">P_matrix</a></td></tr>
 <tr class="memdesc:ac8998c39e2c5a2b1937e8ce5937b9cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Div of velocity.  <a href="#ac8998c39e2c5a2b1937e8ce5937b9cef">More...</a><br /></td></tr>
 <tr class="separator:ac8998c39e2c5a2b1937e8ce5937b9cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -406,7 +414,7 @@ Public Attributes</h2></td></tr>
 <p class="">In this class are implemented the methods for the offline solve of a steady NS problem and the for the generation of the reduced matrices for subsequent online solve, this class is a son of the reduction problem class </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#_a0">03steadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00061">61</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00063">63</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5a0ea36df404eaea97a213efb3d7c529"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5a0ea36df404eaea97a213efb3d7c529">&#9670;&nbsp;</a></span>steadyNS() <span class="overload">[1/2]</span></h2>
@@ -485,7 +493,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00072">72</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00074">74</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -515,7 +523,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#a17">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a18">04unsteadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00855">855</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01201">1201</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -562,7 +570,54 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced third order tensor in List &lt;Eigen::MatrixXd&gt; format for the convective term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00473">473</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00554">554</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+
+</div>
+</div>
+<a id="aac904d94cbb69c6e48e7358b705f5071"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac904d94cbb69c6e48e7358b705f5071">&#9670;&nbsp;</a></span>convective_term_tens()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::Tensor&lt; double, 3 &gt; steadyNS::convective_term_tens </td>
+          <td>(</td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>NUmodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>NPmodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>NSUPmodes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Export convective term as a tensor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">NUmodes</td><td>The N of velocity modes </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">NPmodes</td><td>The N of pressure modes </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">NSUPmodes</td><td>The N of supremizer modes</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>tensor_C </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00612">612</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -609,7 +664,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the diffusion term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00374">374</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00458">458</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -649,7 +704,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced third order tensor in List &lt;Eigen::MatrixXd&gt; format for the divergence of conv. term (used only with a PPE approach). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00632">632</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00978">978</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -696,7 +751,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the divergence term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00581">581</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00928">928</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -742,7 +797,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00868">868</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01214">1214</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -771,7 +826,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the laplacian of pressure. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00682">682</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01028">1028</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -792,7 +847,7 @@ Public Attributes</h2></td></tr>
 
 <p>Perform a lift solve. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00243">243</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00235">235</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -839,7 +894,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the mass matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00531">531</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00880">880</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -879,7 +934,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the BC1 using a PPE approach. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00704">704</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01050">1050</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -919,7 +974,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the BC2 using a PPE approach. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00750">750</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01096">1096</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -959,7 +1014,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced third order tensor in List &lt;Eigen::MatrixXd&gt; format for the BC3 using a PPE approach. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00806">806</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01152">1152</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1006,7 +1061,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the Gradient of pressure term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00423">423</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00505">505</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1059,7 +1114,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00344">344</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00336">336</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1112,7 +1167,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00360">360</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00352">352</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1140,7 +1195,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00118">118</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00119">119</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1168,7 +1223,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00078">78</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00079">79</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1187,7 +1242,7 @@ Public Attributes</h2></td></tr>
 
 <p>fvOptions </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00179">179</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00184">184</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1205,7 +1260,7 @@ Public Attributes</h2></td></tr>
 
 <p>Laminar transport (used by turbulence model) </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00191">191</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00196">196</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1231,7 +1286,7 @@ Public Attributes</h2></td></tr>
 
 <p>Mesh. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00173">173</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00178">178</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1249,7 +1304,7 @@ Public Attributes</h2></td></tr>
 
 <p>MRF variable. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00194">194</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00199">199</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1268,7 +1323,7 @@ Public Attributes</h2></td></tr>
 <p>Pressure field. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#a7">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a7">04unsteadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00167">167</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00172">172</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1286,7 +1341,7 @@ Public Attributes</h2></td></tr>
 
 <p>Flux. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00185">185</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00190">190</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1304,7 +1359,7 @@ Public Attributes</h2></td></tr>
 
 <p>Time. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00182">182</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00187">187</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1322,7 +1377,7 @@ Public Attributes</h2></td></tr>
 
 <p>simpleControl </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00176">176</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00181">181</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1341,7 +1396,7 @@ Public Attributes</h2></td></tr>
 <p>Velocity field. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#a5">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a5">04unsteadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00170">170</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00175">175</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1359,7 +1414,7 @@ Public Attributes</h2></td></tr>
 
 <p>Diffusion term. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00120">120</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00124">124</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1377,7 +1432,7 @@ Public Attributes</h2></td></tr>
 
 <p>PPE BC1. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00141">141</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00146">146</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1395,7 +1450,7 @@ Public Attributes</h2></td></tr>
 
 <p>PPE BC2. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00144">144</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00149">149</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1413,7 +1468,7 @@ Public Attributes</h2></td></tr>
 
 <p>PPE BC3. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00147">147</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00152">152</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1431,7 +1486,23 @@ Public Attributes</h2></td></tr>
 
 <p>Non linear term. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00129">129</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00133">133</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+
+</div>
+</div>
+<a id="a2ae2d433003b5ac4e4ba4be9c8b8fda5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ae2d433003b5ac4e4ba4be9c8b8fda5">&#9670;&nbsp;</a></span>C_tensor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::Tensor&lt;double, 3 &gt; steadyNS::C_tensor</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00134">134</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1449,7 +1520,7 @@ Public Attributes</h2></td></tr>
 
 <p>Cunter used for the output of the full order solutions. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00163">163</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00168">168</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1467,7 +1538,7 @@ Public Attributes</h2></td></tr>
 
 <p>continuity error </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00203">203</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00208">208</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1485,7 +1556,7 @@ Public Attributes</h2></td></tr>
 
 <p>Laplacian term PPE. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00135">135</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00140">140</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1503,7 +1574,7 @@ Public Attributes</h2></td></tr>
 
 <p>Divergence of momentum PPE. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00138">138</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00143">143</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1521,7 +1592,7 @@ Public Attributes</h2></td></tr>
 
 <p>Gradient of pressure matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00126">126</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00130">130</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1539,7 +1610,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers used to form the list of lifting functions. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00094">94</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00098">98</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1557,7 +1628,7 @@ Public Attributes</h2></td></tr>
 
 <p>Mass Matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00123">123</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00127">127</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1575,7 +1646,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of maximum iterations to be done for the computation of the truth solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00103">103</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00107">107</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1593,7 +1664,7 @@ Public Attributes</h2></td></tr>
 
 <p>Pressure forces. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00155">155</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00160">160</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1611,7 +1682,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of pressure modes used for the projection. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00109">109</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00113">113</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1629,7 +1700,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of supremizer modes used for the projection. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00112">112</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00116">116</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1647,7 +1718,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of velocity modes used for the projection. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00106">106</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00110">110</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1665,7 +1736,24 @@ Public Attributes</h2></td></tr>
 
 <p>Div of velocity. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00132">132</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00137">137</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+
+</div>
+</div>
+<a id="a8a08f32ba7817588d13e5266ebdb1373"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a08f32ba7817588d13e5266ebdb1373">&#9670;&nbsp;</a></span>para</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classITHACAparameters.html">ITHACAparameters</a>* steadyNS::para</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="04unsteadyNS_8C-example.html#a21">04unsteadyNS.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00074">74</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1684,7 +1772,7 @@ Public Attributes</h2></td></tr>
 <p>List of pointers used to form the pressure snapshots matrix. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#a12">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a12">04unsteadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00072">72</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00080">80</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1702,7 +1790,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers used to form the pressure modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00085">85</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00089">89</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1720,7 +1808,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reference pressure cell. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00197">197</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00202">202</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1738,7 +1826,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reference pressure value. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00200">200</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00205">205</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1756,7 +1844,7 @@ Public Attributes</h2></td></tr>
 
 <p>Boolean variable to check the existence of the supremizer modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00160">160</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00165">165</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1774,7 +1862,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers used to form the supremizer snapshots matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00082">82</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00086">86</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1792,7 +1880,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers used to form the supremizer modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00091">91</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00095">95</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1810,7 +1898,7 @@ Public Attributes</h2></td></tr>
 
 <p>Viscous forces. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00152">152</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00157">157</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1828,7 +1916,7 @@ Public Attributes</h2></td></tr>
 
 <p>Tolerance for the residual of the stationary problems, there is the same tolerance for velocity and pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00100">100</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00104">104</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1846,7 +1934,7 @@ Public Attributes</h2></td></tr>
 
 <p>Turbulence model. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00188">188</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00193">193</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1865,7 +1953,7 @@ Public Attributes</h2></td></tr>
 <p>List of pointers used to form the velocity snapshots matrix. </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#a11">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a11">04unsteadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00079">79</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00083">83</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1883,7 +1971,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers used to form the velocity modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00088">88</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00092">92</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -1901,13 +1989,13 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers used to form the homogeneous velocity snapshots. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00097">97</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00101">101</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/problems/steadyNS/<a class="el" href="steadyNS_8H_source.html">steadyNS.H</a></li>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/problems/steadyNS/<a class="el" href="steadyNS_8C_source.html">steadyNS.C</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_FOMPROBLEMS/steadyNS/<a class="el" href="steadyNS_8H_source.html">steadyNS.H</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_FOMPROBLEMS/steadyNS/<a class="el" href="steadyNS_8C_source.html">steadyNS.C</a></li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.14-->

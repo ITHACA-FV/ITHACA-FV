@@ -81,7 +81,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Implementation of a parametrized full order <b> unsteady NS problem </b> and preparation of the the reduced matrices for the online solve.  
+<p>Implementation of a parametrized full order <b> unsteady NS problem weakly coupled with the energy equation </b> and preparation of the the reduced matrices for the online solve.  
  <a href="classunsteadyNST.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>&gt;</code></p>
@@ -91,10 +91,11 @@ Inheritance diagram for unsteadyNST:</div>
  <div class="center">
   <img src="classunsteadyNST.png" usemap="#unsteadyNST_map" alt=""/>
   <map id="unsteadyNST_map" name="unsteadyNST_map">
-<area href="classunsteadyNS.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNS" shape="rect" coords="0,112,111,136"/>
-<area href="classsteadyNS.html" title="Implementation of a parametrized full order  steady NS problem  and preparation of the the reduced ma..." alt="steadyNS" shape="rect" coords="0,56,111,80"/>
-<area href="classreductionProblem.html" title="A general class for the implementation of a full order parametrized problem." alt="reductionProblem" shape="rect" coords="0,0,111,24"/>
-<area href="classtutorial06.html" alt="tutorial06" shape="rect" coords="0,224,111,248"/>
+<area href="classunsteadyNS.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ..." alt="unsteadyNS" shape="rect" coords="60,112,171,136"/>
+<area href="classsteadyNS.html" title="Implementation of a parametrized full order  steady NS problem  and preparation of the the reduced ma..." alt="steadyNS" shape="rect" coords="60,56,171,80"/>
+<area href="classreductionProblem.html" title="A general class for the implementation of a full order parametrized problem." alt="reductionProblem" shape="rect" coords="60,0,171,24"/>
+<area href="classtutorial07.html" alt="tutorial07" shape="rect" coords="0,224,111,248"/>
+<area href="classunsteadyNSTturb.html" title="Implementation of a parametrized full order  unsteady NST problem weakly coupled with the energy equa..." alt="unsteadyNSTturb" shape="rect" coords="121,224,232,248"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -118,6 +119,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a70af7736f4833b95c7a6205519f3da72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a truthsolve.  <a href="#a70af7736f4833b95c7a6205519f3da72">More...</a><br /></td></tr>
 <tr class="separator:a70af7736f4833b95c7a6205519f3da72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82d548bb51e07ba9a3f12caa97b81e0f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#a82d548bb51e07ba9a3f12caa97b81e0f">checkWrite</a> (Time &amp;timeObject)</td></tr>
+<tr class="memdesc:a82d548bb51e07ba9a3f12caa97b81e0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to check if the solution must be exported.  <a href="#a82d548bb51e07ba9a3f12caa97b81e0f">More...</a><br /></td></tr>
 <tr class="separator:a82d548bb51e07ba9a3f12caa97b81e0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c2da0024c36a19e38bddaf31afdd5fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#a7c2da0024c36a19e38bddaf31afdd5fd">projectSUP</a> (fileName folder, label <a class="el" href="classsteadyNS.html#a6afdfb31a8d0fdf0e4c604e5c13b331d">NUmodes</a>, label <a class="el" href="classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19">NPmodes</a>, label <a class="el" href="classunsteadyNST.html#a85ec1372997918414c7007ef1ec4ac1b">NTmodes</a>, label <a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">NSUPmodes</a>)</td></tr>
 <tr class="memdesc:a7c2da0024c36a19e38bddaf31afdd5fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specific variable for the unstationary case.  <a href="#a7c2da0024c36a19e38bddaf31afdd5fd">More...</a><br /></td></tr>
@@ -204,6 +206,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1f0593cf687a06a926c0a1d22623e586 inherit pub_methods_classsteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a1f0593cf687a06a926c0a1d22623e586">Forces_matrices</a> (label <a class="el" href="classsteadyNS.html#a6afdfb31a8d0fdf0e4c604e5c13b331d">NUmodes</a>, label <a class="el" href="classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19">NPmodes</a>, label <a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">NSUPmodes</a>)</td></tr>
 <tr class="memdesc:a1f0593cf687a06a926c0a1d22623e586 inherit pub_methods_classsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute lift and drag matrices.  <a href="classsteadyNS.html#a1f0593cf687a06a926c0a1d22623e586">More...</a><br /></td></tr>
 <tr class="separator:a1f0593cf687a06a926c0a1d22623e586 inherit pub_methods_classsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac904d94cbb69c6e48e7358b705f5071 inherit pub_methods_classsteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::Tensor&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#aac904d94cbb69c6e48e7358b705f5071">convective_term_tens</a> (label <a class="el" href="classsteadyNS.html#a6afdfb31a8d0fdf0e4c604e5c13b331d">NUmodes</a>, label <a class="el" href="classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19">NPmodes</a>, label <a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">NSUPmodes</a>)</td></tr>
+<tr class="memdesc:aac904d94cbb69c6e48e7358b705f5071 inherit pub_methods_classsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export convective term as a tensor.  <a href="classsteadyNS.html#aac904d94cbb69c6e48e7358b705f5071">More...</a><br /></td></tr>
+<tr class="separator:aac904d94cbb69c6e48e7358b705f5071 inherit pub_methods_classsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreductionProblem"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreductionProblem')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreductionProblem.html">reductionProblem</a></td></tr>
 <tr class="memitem:a410dcbf3d97c7df2aa6a1b291afaa111 inherit pub_methods_classreductionProblem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreductionProblem.html#a410dcbf3d97c7df2aa6a1b291afaa111">reductionProblem</a> ()</td></tr>
 <tr class="memdesc:a410dcbf3d97c7df2aa6a1b291afaa111 inherit pub_methods_classreductionProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct Null.  <a href="classreductionProblem.html#a410dcbf3d97c7df2aa6a1b291afaa111">More...</a><br /></td></tr>
@@ -315,9 +320,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:abccdb958cbcd4014d95417e1ffc79a65"><td class="memItemLeft" align="right" valign="top">autoPtr&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#abccdb958cbcd4014d95417e1ffc79a65">_T</a></td></tr>
 <tr class="memdesc:abccdb958cbcd4014d95417e1ffc79a65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temperature field.  <a href="#abccdb958cbcd4014d95417e1ffc79a65">More...</a><br /></td></tr>
 <tr class="separator:abccdb958cbcd4014d95417e1ffc79a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e6a28793895829bdad58d21acbe8ef0"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#a4e6a28793895829bdad58d21acbe8ef0">LTmodes</a></td></tr>
-<tr class="memdesc:a4e6a28793895829bdad58d21acbe8ef0"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers used to form the temperature modes.  <a href="#a4e6a28793895829bdad58d21acbe8ef0">More...</a><br /></td></tr>
-<tr class="separator:a4e6a28793895829bdad58d21acbe8ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea451368e7fbf9ae8c0972e9107a6964"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#aea451368e7fbf9ae8c0972e9107a6964">Tmodes</a></td></tr>
+<tr class="memdesc:aea451368e7fbf9ae8c0972e9107a6964"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers used to form the temperature modes.  <a href="#aea451368e7fbf9ae8c0972e9107a6964">More...</a><br /></td></tr>
+<tr class="separator:aea451368e7fbf9ae8c0972e9107a6964"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad31055c80812348c9e8a6affd827f5d7"><td class="memItemLeft" align="right" valign="top">autoPtr&lt; dimensionedScalar &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#ad31055c80812348c9e8a6affd827f5d7">_DT</a></td></tr>
 <tr class="memdesc:ad31055c80812348c9e8a6affd827f5d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">dimensionedScalar DT;  <a href="#ad31055c80812348c9e8a6affd827f5d7">More...</a><br /></td></tr>
 <tr class="separator:ad31055c80812348c9e8a6affd827f5d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -330,6 +335,18 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a5dbbf6572aff7f4d74dc9405baa32218"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#a5dbbf6572aff7f4d74dc9405baa32218">Tomfield</a></td></tr>
 <tr class="memdesc:a5dbbf6572aff7f4d74dc9405baa32218"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers used to form the homogeneous temperature snapshots.  <a href="#a5dbbf6572aff7f4d74dc9405baa32218">More...</a><br /></td></tr>
 <tr class="separator:a5dbbf6572aff7f4d74dc9405baa32218"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09760e985110751e197391a3648ed8a2"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volVectorField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#a09760e985110751e197391a3648ed8a2">UModesWeighted</a></td></tr>
+<tr class="memdesc:a09760e985110751e197391a3648ed8a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers used to form the Weighted nested-POD modes for velocity field.  <a href="#a09760e985110751e197391a3648ed8a2">More...</a><br /></td></tr>
+<tr class="separator:a09760e985110751e197391a3648ed8a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95db70d185843e391b1e933043248fe1"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#a95db70d185843e391b1e933043248fe1">PModesWeighted</a></td></tr>
+<tr class="memdesc:a95db70d185843e391b1e933043248fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers used to form the Weighted nested-POD modes for pressure field.  <a href="#a95db70d185843e391b1e933043248fe1">More...</a><br /></td></tr>
+<tr class="separator:a95db70d185843e391b1e933043248fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef6c973195bb42abdbd8084f4d775702"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#aef6c973195bb42abdbd8084f4d775702">TModesWeighted</a></td></tr>
+<tr class="memdesc:aef6c973195bb42abdbd8084f4d775702"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers used to form the Weighted nested-POD modes for temperature field.  <a href="#aef6c973195bb42abdbd8084f4d775702">More...</a><br /></td></tr>
+<tr class="separator:aef6c973195bb42abdbd8084f4d775702"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c85633a94c10f76fd05a7e8f669bea9"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#a4c85633a94c10f76fd05a7e8f669bea9">NUTModesWeighted</a></td></tr>
+<tr class="memdesc:a4c85633a94c10f76fd05a7e8f669bea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers used to form the Weighted nested-POD modes for nut-field.  <a href="#a4c85633a94c10f76fd05a7e8f669bea9">More...</a><br /></td></tr>
+<tr class="separator:a4c85633a94c10f76fd05a7e8f669bea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abddcb06d6489ae36fe1cc07d7641cae8"><td class="memItemLeft" align="right" valign="top">autoPtr&lt; pisoControl &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classunsteadyNST.html#abddcb06d6489ae36fe1cc07d7641cae8">_piso</a></td></tr>
 <tr class="memdesc:abddcb06d6489ae36fe1cc07d7641cae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">pisoControl  <a href="#abddcb06d6489ae36fe1cc07d7641cae8">More...</a><br /></td></tr>
 <tr class="separator:abddcb06d6489ae36fe1cc07d7641cae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -389,6 +406,8 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a95cf6236d609b1974898a0db915782df inherit pub_attribs_classunsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">maxDeltaT  <a href="classunsteadyNS.html#a95cf6236d609b1974898a0db915782df">More...</a><br /></td></tr>
 <tr class="separator:a95cf6236d609b1974898a0db915782df inherit pub_attribs_classunsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classsteadyNS"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classsteadyNS')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classsteadyNS.html">steadyNS</a></td></tr>
+<tr class="memitem:a8a08f32ba7817588d13e5266ebdb1373 inherit pub_attribs_classsteadyNS"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classITHACAparameters.html">ITHACAparameters</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a8a08f32ba7817588d13e5266ebdb1373">para</a></td></tr>
+<tr class="separator:a8a08f32ba7817588d13e5266ebdb1373 inherit pub_attribs_classsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30b8d9c76cc7f7f4d7dd6406cedba537 inherit pub_attribs_classsteadyNS"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a30b8d9c76cc7f7f4d7dd6406cedba537">Pfield</a></td></tr>
 <tr class="memdesc:a30b8d9c76cc7f7f4d7dd6406cedba537 inherit pub_attribs_classsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers used to form the pressure snapshots matrix.  <a href="classsteadyNS.html#a30b8d9c76cc7f7f4d7dd6406cedba537">More...</a><br /></td></tr>
 <tr class="separator:a30b8d9c76cc7f7f4d7dd6406cedba537 inherit pub_attribs_classsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -491,6 +510,8 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aabf0fbe0a0d5810bd12c8162c63158f0 inherit pub_attribs_classsteadyNS"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#aabf0fbe0a0d5810bd12c8162c63158f0">C_matrix</a></td></tr>
 <tr class="memdesc:aabf0fbe0a0d5810bd12c8162c63158f0 inherit pub_attribs_classsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non linear term.  <a href="classsteadyNS.html#aabf0fbe0a0d5810bd12c8162c63158f0">More...</a><br /></td></tr>
 <tr class="separator:aabf0fbe0a0d5810bd12c8162c63158f0 inherit pub_attribs_classsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ae2d433003b5ac4e4ba4be9c8b8fda5 inherit pub_attribs_classsteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::Tensor&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a2ae2d433003b5ac4e4ba4be9c8b8fda5">C_tensor</a></td></tr>
+<tr class="separator:a2ae2d433003b5ac4e4ba4be9c8b8fda5 inherit pub_attribs_classsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8998c39e2c5a2b1937e8ce5937b9cef inherit pub_attribs_classsteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#ac8998c39e2c5a2b1937e8ce5937b9cef">P_matrix</a></td></tr>
 <tr class="memdesc:ac8998c39e2c5a2b1937e8ce5937b9cef inherit pub_attribs_classsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Div of velocity.  <a href="classsteadyNS.html#ac8998c39e2c5a2b1937e8ce5937b9cef">More...</a><br /></td></tr>
 <tr class="separator:ac8998c39e2c5a2b1937e8ce5937b9cef inherit pub_attribs_classsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -544,8 +565,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a06749e2d7072b18b2683df4b4b229539 inherit pub_attribs_classreductionProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p class="">Implementation of a parametrized full order <b> unsteady NS problem </b> and preparation of the the reduced matrices for the online solve. </p>
-<p class="">In this class are implemented the methods for the offline solve of a unsteady NS problem and the for the generation of the reduced matrices for subsequent online solve, this class is a son of the <a class="el" href="classsteadyNS.html" title="Implementation of a parametrized full order  steady NS problem  and preparation of the the reduced ma...">steadyNS</a> class </p>
+<div class="textblock"><p class="">Implementation of a parametrized full order <b> unsteady NS problem weakly coupled with the energy equation </b> and preparation of the the reduced matrices for the online solve. </p>
+<p class="">In this class are implemented the methods for the offline solve of a unsteady NST problem and the for the generation of the reduced matrices for subsequent online solve, this class is a son of the <a class="el" href="classunsteadyNS.html" title="Implementation of a parametrized full order  unsteady NS problem  and preparation of the the reduced ...">unsteadyNS</a> class </p>
 
 <p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00060">60</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -647,7 +668,16 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00144">144</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
+<p>Function to check if the solution must be exported. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timeObject</td><td>The time object of OpenFOAM.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 if we must write 0 elsewhere. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00142">142</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
 
 </div>
 </div>
@@ -694,7 +724,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced third order tensor in List &lt;Eigen::MatrixXd&gt; format for the convective term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00253">253</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00336">336</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
 
 </div>
 </div>
@@ -741,7 +771,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the diffusion term for the temperature equation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00330">330</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00413">413</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
 
 </div>
 </div>
@@ -762,7 +792,7 @@ Public Attributes</h2></td></tr>
 
 <p>Perform a lift solve for velocity field. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00415">415</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00493">493</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
 
 </div>
 </div>
@@ -783,7 +813,7 @@ Public Attributes</h2></td></tr>
 
 <p>Perform a lift solve for temperature field. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00161">161</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00159">159</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
 
 </div>
 </div>
@@ -830,7 +860,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the mass matrix for the temperature equation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00373">373</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00455">455</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
 
 </div>
 </div>
@@ -885,13 +915,13 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder used to save the reduced matrices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">NUmodes</td><td>The number of velocity modes. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">NPmodes</td><td>The number of pressure modes. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">NPmodes</td><td>The number of pressure modes. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">NTmodes</td><td>The number of temperature modes. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">NSUPmodes</td><td>The number of supremizer modes, 0 by default and it must remain always zero. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00235">235</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8C_source.html#l00229">229</a> of file <a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a>.</p>
 
 </div>
 </div>
@@ -958,7 +988,7 @@ Public Attributes</h2></td></tr>
 
 <p>Mesh. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00129">129</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00141">141</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -994,7 +1024,7 @@ Public Attributes</h2></td></tr>
 
 <p>pisoControl </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00120">120</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00132">132</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1012,7 +1042,7 @@ Public Attributes</h2></td></tr>
 
 <p>Time. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00144">144</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00156">156</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1088,24 +1118,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a4e6a28793895829bdad58d21acbe8ef0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e6a28793895829bdad58d21acbe8ef0">&#9670;&nbsp;</a></span>LTmodes</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">PtrList&lt;volScalarField&gt; unsteadyNST::LTmodes</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>List of pointers used to form the temperature modes. </p>
-
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00105">105</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
-
-</div>
-</div>
 <a id="a6bc75080f04e0144cd722925d16add91"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6bc75080f04e0144cd722925d16add91">&#9670;&nbsp;</a></span>maxCo</h2>
 
@@ -1156,7 +1168,7 @@ Public Attributes</h2></td></tr>
 
 <p>Mass Matrix T. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00141">141</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00153">153</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1192,7 +1204,43 @@ Public Attributes</h2></td></tr>
 
 <p>Number of temperature modes used for the projection. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00132">132</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00144">144</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+
+</div>
+</div>
+<a id="a4c85633a94c10f76fd05a7e8f669bea9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c85633a94c10f76fd05a7e8f669bea9">&#9670;&nbsp;</a></span>NUTModesWeighted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt;volScalarField&gt; unsteadyNST::NUTModesWeighted</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>List of pointers used to form the Weighted nested-POD modes for nut-field. </p>
+
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00129">129</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+
+</div>
+</div>
+<a id="a95db70d185843e391b1e933043248fe1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95db70d185843e391b1e933043248fe1">&#9670;&nbsp;</a></span>PModesWeighted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt;volScalarField&gt; unsteadyNST::PModesWeighted</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>List of pointers used to form the Weighted nested-POD modes for pressure field. </p>
+
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00123">123</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1210,7 +1258,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reference pressure cell. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00123">123</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00135">135</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1228,7 +1276,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reference pressure value. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00126">126</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00138">138</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1246,7 +1294,7 @@ Public Attributes</h2></td></tr>
 
 <p>Non linear term. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00138">138</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00150">150</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1304,6 +1352,42 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aea451368e7fbf9ae8c0972e9107a6964"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea451368e7fbf9ae8c0972e9107a6964">&#9670;&nbsp;</a></span>Tmodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt;volScalarField&gt; unsteadyNST::Tmodes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>List of pointers used to form the temperature modes. </p>
+
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00105">105</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+
+</div>
+</div>
+<a id="aef6c973195bb42abdbd8084f4d775702"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef6c973195bb42abdbd8084f4d775702">&#9670;&nbsp;</a></span>TModesWeighted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt;volScalarField&gt; unsteadyNST::TModesWeighted</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>List of pointers used to form the Weighted nested-POD modes for temperature field. </p>
+
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00126">126</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+
+</div>
+</div>
 <a id="a5dbbf6572aff7f4d74dc9405baa32218"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5dbbf6572aff7f4d74dc9405baa32218">&#9670;&nbsp;</a></span>Tomfield</h2>
 
@@ -1319,6 +1403,24 @@ Public Attributes</h2></td></tr>
 <p>List of pointers used to form the homogeneous temperature snapshots. </p>
 
 <p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00117">117</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+
+</div>
+</div>
+<a id="a09760e985110751e197391a3648ed8a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09760e985110751e197391a3648ed8a2">&#9670;&nbsp;</a></span>UModesWeighted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt;volVectorField&gt; unsteadyNST::UModesWeighted</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>List of pointers used to form the Weighted nested-POD modes for velocity field. </p>
+
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00120">120</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1354,13 +1456,13 @@ Public Attributes</h2></td></tr>
 
 <p>Gradient of pressure matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00135">135</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNST_8H_source.html#l00147">147</a> of file <a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/problems/unsteadyNST/<a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a></li>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/problems/unsteadyNST/<a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_FOMPROBLEMS/unsteadyNST/<a class="el" href="unsteadyNST_8H_source.html">unsteadyNST.H</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_FOMPROBLEMS/unsteadyNST/<a class="el" href="unsteadyNST_8C_source.html">unsteadyNST.C</a></li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.14-->

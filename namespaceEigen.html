@@ -84,6 +84,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a26ff8eaebc2532433557944b083d3e82"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
 <tr class="memitem:a26ff8eaebc2532433557944b083d3e82"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceEigen.html#a26ff8eaebc2532433557944b083d3e82">saveMarketVector</a> (const VectorType &amp;vec, const std::string &amp;filename, int prec, std::_Ios_Fmtflags outytpe=std::ios_base::scientific)</td></tr>
 <tr class="separator:a26ff8eaebc2532433557944b083d3e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd89cbb8c477c3bf4b606f401765a998"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
+<tr class="memitem:afd89cbb8c477c3bf4b606f401765a998"><td class="memTemplItemLeft" align="right" valign="top">Matrix&lt; VectorType, Dynamic, Dynamic &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceEigen.html#afd89cbb8c477c3bf4b606f401765a998">SliceFromTensor</a> (Eigen::Tensor&lt; VectorType, 3 &gt; &amp;tensor, int dim, int index1)</td></tr>
+<tr class="separator:afd89cbb8c477c3bf4b606f401765a998"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a26ff8eaebc2532433557944b083d3e82"></a>
@@ -127,6 +130,44 @@ template&lt;typename VectorType &gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="EigenFunctions_8H_source.html#l00412">412</a> of file <a class="el" href="EigenFunctions_8H_source.html">EigenFunctions.H</a>.</p>
+
+</div>
+</div>
+<a id="afd89cbb8c477c3bf4b606f401765a998"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd89cbb8c477c3bf4b606f401765a998">&#9670;&nbsp;</a></span>SliceFromTensor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VectorType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Matrix&lt;VectorType, Dynamic, Dynamic&gt; Eigen::SliceFromTensor </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::Tensor&lt; VectorType, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>dim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index1</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="EigenFunctions_8H_source.html#l00448">448</a> of file <a class="el" href="EigenFunctions_8H_source.html">EigenFunctions.H</a>.</p>
 
 </div>
 </div>

@@ -9,8 +9,10 @@ var searchData=
   ['_7ereducedsteadynsturb',['~reducedSteadyNSturb',['../classreducedSteadyNSturb.html#a15686707445c988bc44881a784d026b9',1,'reducedSteadyNSturb']]],
   ['_7ereducedunsteadyns',['~reducedUnsteadyNS',['../classreducedUnsteadyNS.html#aff7c6864f4c78cf5b66cea3e3c666d00',1,'reducedUnsteadyNS']]],
   ['_7ereducedunsteadynst',['~reducedUnsteadyNST',['../classreducedUnsteadyNST.html#ae831fa6d182905b0d525428e55d98b9a',1,'reducedUnsteadyNST']]],
+  ['_7ereducedunsteadynstturb',['~reducedUnsteadyNSTturb',['../classreducedUnsteadyNSTturb.html#acb6705cafa1ef189460eaf5aac835dac',1,'reducedUnsteadyNSTturb']]],
   ['_7ereducedunsteadynsturb',['~reducedUnsteadyNSturb',['../classreducedUnsteadyNSturb.html#aa44ea7eaed41f607467e09ce191293bd',1,'reducedUnsteadyNSturb']]],
   ['_7ereductionproblem',['~reductionProblem',['../classreductionProblem.html#aa77fd72def423bc06a6c973e02398a1b',1,'reductionProblem']]],
   ['_7esteadyns',['~steadyNS',['../classsteadyNS.html#a47b6767ff18b45c1573483b7f28dec51',1,'steadyNS']]],
-  ['_7eunsteadynst',['~unsteadyNST',['../classunsteadyNST.html#a6adaaec15747879c74eb7febce768199',1,'unsteadyNST']]]
+  ['_7eunsteadynst',['~unsteadyNST',['../classunsteadyNST.html#a6adaaec15747879c74eb7febce768199',1,'unsteadyNST']]],
+  ['_7eunsteadynstturb',['~unsteadyNSTturb',['../classunsteadyNSTturb.html#aedf9cff2fba61f017f33208296cfba75',1,'unsteadyNSTturb']]]
 ];

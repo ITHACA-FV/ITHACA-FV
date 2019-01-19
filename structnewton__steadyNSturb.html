@@ -127,6 +127,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:ae515147fbc93dac5f2f43d5044220d63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsteadyNSturb.html">steadyNSturb</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#ae515147fbc93dac5f2f43d5044220d63">problem</a></td></tr>
+<tr class="separator:ae515147fbc93dac5f2f43d5044220d63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade89714e2da9bade6f72b03ce430f960"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#ade89714e2da9bade6f72b03ce430f960">Nphi_u</a></td></tr>
 <tr class="separator:ade89714e2da9bade6f72b03ce430f960"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abddac6e054089ad96d14a511aaf1e74c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#abddac6e054089ad96d14a511aaf1e74c">Nphi_nut</a></td></tr>
@@ -135,14 +137,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ad96f11beef9ca3dc1fa748249758cf8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a153c6f54dfa4cea39bbd1adbf9e987c8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#a153c6f54dfa4cea39bbd1adbf9e987c8">N_BC</a></td></tr>
 <tr class="separator:a153c6f54dfa4cea39bbd1adbf9e987c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70a8440afb03ead4e503b375b8b16a94"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#a70a8440afb03ead4e503b375b8b16a94">nu_c</a></td></tr>
+<tr class="separator:a70a8440afb03ead4e503b375b8b16a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac96c35516fe016861286dbb6a0836d6a"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#ac96c35516fe016861286dbb6a0836d6a">nu</a></td></tr>
 <tr class="separator:ac96c35516fe016861286dbb6a0836d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a393270e4573fd700501d346530566dec"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#a393270e4573fd700501d346530566dec">BC</a></td></tr>
 <tr class="separator:a393270e4573fd700501d346530566dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae515147fbc93dac5f2f43d5044220d63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classsteadyNSturb.html">steadyNSturb</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#ae515147fbc93dac5f2f43d5044220d63">problem</a></td></tr>
-<tr class="separator:ae515147fbc93dac5f2f43d5044220d63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70a8440afb03ead4e503b375b8b16a94"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#a70a8440afb03ead4e503b375b8b16a94">nu_c</a></td></tr>
-<tr class="separator:a70a8440afb03ead4e503b375b8b16a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac05b93ea7515f80dc285ad390aa810ab"><td class="memItemLeft" align="right" valign="top">std::vector&lt; SPLINTER::RBFSpline * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__steadyNSturb.html#ac05b93ea7515f80dc285ad390aa810ab">SPLINES</a></td></tr>
 <tr class="separator:ac05b93ea7515f80dc285ad390aa810ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classnewton__argument"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classnewton__argument')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classnewton__argument.html">newton_argument&lt; double &gt;</a></td></tr>
@@ -315,7 +315,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00073">73</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00075">75</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
 
 </div>
 </div>
@@ -331,7 +331,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00071">71</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00072">72</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
 
 </div>
 </div>
@@ -347,7 +347,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00069">69</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00070">70</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
 
 </div>
 </div>
@@ -363,7 +363,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00070">70</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00071">71</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
 
 </div>
 </div>
@@ -379,7 +379,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00068">68</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00069">69</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
 
 </div>
 </div>
@@ -395,7 +395,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00072">72</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00074">74</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
 
 </div>
 </div>
@@ -411,7 +411,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00075">75</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00073">73</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
 
 </div>
 </div>
@@ -427,7 +427,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00074">74</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNSturb_8H_source.html#l00068">68</a> of file <a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a>.</p>
 
 </div>
 </div>
@@ -448,8 +448,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/reducedProblems/reducedSteadyNSturb/<a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a></li>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/reducedProblems/reducedSteadyNSturb/<a class="el" href="reducedSteadyNSturb_8C_source.html">reducedSteadyNSturb.C</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_ROMPROBLEMS/reducedSteadyNSturb/<a class="el" href="reducedSteadyNSturb_8H_source.html">reducedSteadyNSturb.H</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_ROMPROBLEMS/reducedSteadyNSturb/<a class="el" href="reducedSteadyNSturb_8C_source.html">reducedSteadyNSturb.C</a></li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.14-->
