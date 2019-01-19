@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['while',['while',['../steadyNS_2NLsolve_8H.html#ad9e5ed67fc5ac9fe24dc3b50772e9513',1,'while(simple.loop() &amp;&amp;residual &gt; tolerance &amp;&amp;csolve&lt; maxIter):&#160;NLsolve.H'],['../steadyNS_2pEqn_8H.html#a80a1a15f423dbb405b1a80b4354d5793',1,'while(simple.correctNonOrthogonal()):&#160;pEqn.H'],['../steadyNSturb_2NLsolve_8H.html#ad9e5ed67fc5ac9fe24dc3b50772e9513',1,'while(simple.loop() &amp;&amp;residual &gt; tolerance &amp;&amp;csolve&lt; maxIter):&#160;NLsolve.H'],['../steadyNSturb_2pEqn_8H.html#a80a1a15f423dbb405b1a80b4354d5793',1,'while(simple.correctNonOrthogonal()):&#160;pEqn.H'],['../unsteadyNS_2NLsolve_8H.html#a8d2d515e1fd5d81dbe4aa0df7b7749dd',1,'while(runTime.run()):&#160;NLsolve.H'],['../unsteadyNS_2pEqn_8H.html#ab13470e79e249d04c443bf59be9ff31d',1,'while(pimple.correctNonOrthogonal()):&#160;pEqn.H'],['../unsteadyNST_2NLsolve_8H.html#a8d2d515e1fd5d81dbe4aa0df7b7749dd',1,'while(runTime.run()):&#160;NLsolve.H'],['../unsteadyNST_2pEqn_8H.html#aaaa72f220d04393911bfb42f0e8b6bb6',1,'while(piso.correctNonOrthogonal()):&#160;pEqn.H'],['../unsteadyNSTturb_2NLsolve_8H.html#a8d2d515e1fd5d81dbe4aa0df7b7749dd',1,'while(runTime.run()):&#160;NLsolve.H'],['../unsteadyNSTturb_2pEqn_8H.html#aaaa72f220d04393911bfb42f0e8b6bb6',1,'while(piso.correctNonOrthogonal()):&#160;pEqn.H'],['../unsteadyNSturb_2NLsolve_8H.html#a8d2d515e1fd5d81dbe4aa0df7b7749dd',1,'while(runTime.run()):&#160;NLsolve.H'],['../unsteadyNSturb_2pEqn_8H.html#ab13470e79e249d04c443bf59be9ff31d',1,'while(pimple.correctNonOrthogonal()):&#160;pEqn.H']]],
-  ['write',['write',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#abada2136c5540da5ac1c83e718b679a3',1,'Foam::functionObjects::ITHACAforces']]],
-  ['write_2eh',['write.H',['../write_8H.html',1,'']]],
-  ['writebins',['writeBins',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a56a23f3e8bc38af253d023a36c45a2fb',1,'Foam::functionObjects::ITHACAforces']]],
-  ['writeevery',['writeEvery',['../classunsteadyNS.html#ae472c4559e86168553b7300f7f79e44b',1,'unsteadyNS::writeEvery()'],['../classunsteadyNST.html#ac0088dc2079a59f633053bb07932236b',1,'unsteadyNST::writeEvery()']]],
-  ['writefileheader',['writeFileHeader',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a2a45de62f6056a7217e384bfb9cd73e5',1,'Foam::functionObjects::ITHACAforces']]],
-  ['writeforces',['writeForces',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a70b473e475c1d518b26ff32ba6bbb7ad',1,'Foam::functionObjects::ITHACAforces']]],
-  ['writemu',['writeMu',['../classreductionProblem.html#a190ccbfacec0dc99a55f4324f48f4c99',1,'reductionProblem']]]
+  ['values',['values',['../classnewton__argument.html#aff62a840303fc1397e5057981494f374',1,'newton_argument']]],
+  ['valuesatcompiletime',['ValuesAtCompileTime',['../classnewton__argument.html#a341713196d03fab64ef1debcdb45c634a80cdf1b7794fe40e71871c91ea4e8049',1,'newton_argument']]],
+  ['valuetype',['ValueType',['../classnewton__argument.html#a0e3b2179dc299a52383989e6f8fdd286',1,'newton_argument']]],
+  ['vectorize',['vectorize',['../classEigenFunctions.html#ab96ee3dbee53e86afc6f34c9cfe6f36c',1,'EigenFunctions']]],
+  ['vectortodensevector',['vectorToDenseVector',['../namespaceSPLINTER.html#a6bef743c45d103474ed294dc29724f5b',1,'SPLINTER']]],
+  ['vectorvectortodensematrix',['vectorVectorToDenseMatrix',['../namespaceSPLINTER.html#a542e026907501d0170a82d363e2a6307',1,'SPLINTER']]]
 ];

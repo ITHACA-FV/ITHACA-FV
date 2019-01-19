@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['eigenfunctions_2ec',['EigenFunctions.C',['../EigenFunctions_8C.html',1,'']]],
-  ['eigenfunctions_2eh',['EigenFunctions.H',['../EigenFunctions_8H.html',1,'']]],
-  ['extract_5ftime_5fevolution_2ec',['extract_time_evolution.C',['../extract__time__evolution_8C.html',1,'']]]
+  ['datapoint_2ec',['datapoint.C',['../datapoint_8C.html',1,'']]],
+  ['datatable_2ec',['datatable.C',['../datatable_8C.html',1,'']]],
+  ['deim_2ec',['DEIM.C',['../DEIM_8C.html',1,'']]],
+  ['deim_2eh',['DEIM.H',['../DEIM_8H.html',1,'']]]
 ];

@@ -73,6 +73,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classITHACAutilities-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -85,6 +86,15 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a8a6b0256de923f1ee1f4ee5ba490250f"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a8a6b0256de923f1ee1f4ee5ba490250f"><td class="memTemplItemLeft" align="right" valign="top">PtrList&lt; volVectorField &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a8a6b0256de923f1ee1f4ee5ba490250f">reconstruct_from_coeff</a> (PtrList&lt; volVectorField &gt; &amp;modes, Eigen::MatrixXd &amp;coeff_matrix, label Nmodes)</td></tr>
+<tr class="separator:a8a6b0256de923f1ee1f4ee5ba490250f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3598e82741ab9eb3e543e9a78c0102a7"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a3598e82741ab9eb3e543e9a78c0102a7"><td class="memTemplItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a3598e82741ab9eb3e543e9a78c0102a7">reconstruct_from_coeff</a> (PtrList&lt; volScalarField &gt; &amp;modes, Eigen::MatrixXd &amp;coeff_matrix, label Nmodes)</td></tr>
+<tr class="separator:a3598e82741ab9eb3e543e9a78c0102a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a5d48719f723109d36e97326bca1aec7e"><td class="memItemLeft" align="right" valign="top">static List&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a5d48719f723109d36e97326bca1aec7e">getIndices</a> (fvMesh &amp;<a class="el" href="unsteadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d">mesh</a>, int index, int layers)</td></tr>
@@ -117,6 +127,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:abdd3136cf11a3cbf4ae4b12a0c15528e"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#abdd3136cf11a3cbf4ae4b12a0c15528e">check_sup</a> ()</td></tr>
 <tr class="memdesc:abdd3136cf11a3cbf4ae4b12a0c15528e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the supremizer folder exists.  <a href="#abdd3136cf11a3cbf4ae4b12a0c15528e">More...</a><br /></td></tr>
 <tr class="separator:abdd3136cf11a3cbf4ae4b12a0c15528e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdb5806b63571589cd4cff1afca933f0"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:abdb5806b63571589cd4cff1afca933f0"><td class="memTemplItemLeft" align="right" valign="top">static PtrList&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#abdb5806b63571589cd4cff1afca933f0">reconstruct_from_coeff</a> (PtrList&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;modes, Eigen::MatrixXd &amp;coeff_matrix, label Nmodes)</td></tr>
+<tr class="memdesc:abdb5806b63571589cd4cff1afca933f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exact reconstruction using a certain number of modes for a list of fields and the projection coefficients.  <a href="#abdb5806b63571589cd4cff1afca933f0">More...</a><br /></td></tr>
+<tr class="separator:abdb5806b63571589cd4cff1afca933f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab52c344c37c8f4e5aaf9535231618448"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#ab52c344c37c8f4e5aaf9535231618448">error_fields</a> (volVectorField &amp;field1, volVectorField &amp;field2)</td></tr>
 <tr class="memdesc:ab52c344c37c8f4e5aaf9535231618448"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to compute the relative error between two volVectorFields in L2 norm.  <a href="#ab52c344c37c8f4e5aaf9535231618448">More...</a><br /></td></tr>
 <tr class="separator:ab52c344c37c8f4e5aaf9535231618448"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,33 +155,36 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aba87c48723bd5179bd886e17e8659dbb"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#aba87c48723bd5179bd886e17e8659dbb">error_listfields_abs</a> (PtrList&lt; volScalarField &gt; &amp;fields1, PtrList&lt; volScalarField &gt; &amp;fields2)</td></tr>
 <tr class="memdesc:aba87c48723bd5179bd886e17e8659dbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to compute the absolute error in L2 norm between two lists of volScalarFields.  <a href="#aba87c48723bd5179bd886e17e8659dbb">More...</a><br /></td></tr>
 <tr class="separator:aba87c48723bd5179bd886e17e8659dbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9974071877ff1fed291876930555181"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#ac9974071877ff1fed291876930555181">get_mass_matrix</a> (PtrList&lt; volVectorField &gt; modes)</td></tr>
-<tr class="memdesc:ac9974071877ff1fed291876930555181"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to compute a Mass Matrix from a list of Basis Functions (vectorial) for L2 projection.  <a href="#ac9974071877ff1fed291876930555181">More...</a><br /></td></tr>
-<tr class="separator:ac9974071877ff1fed291876930555181"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabacd4a1e935c5d234e4e3aad5a53beb"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#aabacd4a1e935c5d234e4e3aad5a53beb">get_mass_matrix</a> (PtrList&lt; volScalarField &gt; modes)</td></tr>
-<tr class="memdesc:aabacd4a1e935c5d234e4e3aad5a53beb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to compute a Mass Matrix from a list of Basis Functions (scalar) for L2 projection.  <a href="#aabacd4a1e935c5d234e4e3aad5a53beb">More...</a><br /></td></tr>
-<tr class="separator:aabacd4a1e935c5d234e4e3aad5a53beb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bb3e567d55c40193662982733317123"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a5bb3e567d55c40193662982733317123">get_coeffs</a> (PtrList&lt; volScalarField &gt; snapshots, PtrList&lt; volScalarField &gt; modes)</td></tr>
-<tr class="memdesc:a5bb3e567d55c40193662982733317123"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot scalar field on a non-orthogonal basis function and get the coefficients of the projection.  <a href="#a5bb3e567d55c40193662982733317123">More...</a><br /></td></tr>
-<tr class="separator:a5bb3e567d55c40193662982733317123"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a171a3d12ebb56acadbd6ccac7f81d7c0"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a171a3d12ebb56acadbd6ccac7f81d7c0">get_coeffs</a> (PtrList&lt; volVectorField &gt; snapshots, PtrList&lt; volVectorField &gt; modes)</td></tr>
-<tr class="memdesc:a171a3d12ebb56acadbd6ccac7f81d7c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection.  <a href="#a171a3d12ebb56acadbd6ccac7f81d7c0">More...</a><br /></td></tr>
-<tr class="separator:a171a3d12ebb56acadbd6ccac7f81d7c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40f0c41f06cdd1000b96da2b57b3fe60"><td class="memItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a40f0c41f06cdd1000b96da2b57b3fe60">get_coeffs</a> (volVectorField snapshot, PtrList&lt; volVectorField &gt; &amp;modes)</td></tr>
-<tr class="memdesc:a40f0c41f06cdd1000b96da2b57b3fe60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection.  <a href="#a40f0c41f06cdd1000b96da2b57b3fe60">More...</a><br /></td></tr>
-<tr class="separator:a40f0c41f06cdd1000b96da2b57b3fe60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbec31cccf0ec518973cdb4a20dfe45e"><td class="memItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#afbec31cccf0ec518973cdb4a20dfe45e">get_coeffs</a> (volScalarField snapshot, PtrList&lt; volScalarField &gt; &amp;modes)</td></tr>
-<tr class="memdesc:afbec31cccf0ec518973cdb4a20dfe45e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection.  <a href="#afbec31cccf0ec518973cdb4a20dfe45e">More...</a><br /></td></tr>
-<tr class="separator:afbec31cccf0ec518973cdb4a20dfe45e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab55bab8f09570a2ddeddf4a5a66a2d41"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#ab55bab8f09570a2ddeddf4a5a66a2d41">get_coeffs_ortho</a> (PtrList&lt; volScalarField &gt; snapshots, PtrList&lt; volScalarField &gt; &amp;modes)</td></tr>
-<tr class="memdesc:ab55bab8f09570a2ddeddf4a5a66a2d41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the coeffs ortho.  <a href="#ab55bab8f09570a2ddeddf4a5a66a2d41">More...</a><br /></td></tr>
-<tr class="separator:ab55bab8f09570a2ddeddf4a5a66a2d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8addcc842e2c1630c8761bab3bcd8abe"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a8addcc842e2c1630c8761bab3bcd8abe">get_coeffs_ortho</a> (PtrList&lt; volVectorField &gt; snapshots, PtrList&lt; volVectorField &gt; &amp;modes)</td></tr>
-<tr class="memdesc:a8addcc842e2c1630c8761bab3bcd8abe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the coeffs ortho.  <a href="#a8addcc842e2c1630c8761bab3bcd8abe">More...</a><br /></td></tr>
-<tr class="separator:a8addcc842e2c1630c8761bab3bcd8abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ce888d0943e0f76108ac8b5514159b7"><td class="memItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a2ce888d0943e0f76108ac8b5514159b7">get_coeffs_ortho</a> (volScalarField snapshot, PtrList&lt; volScalarField &gt; &amp;modes)</td></tr>
-<tr class="memdesc:a2ce888d0943e0f76108ac8b5514159b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot scalar field on an orthogonal basis function and get the coefficients of the projection.  <a href="#a2ce888d0943e0f76108ac8b5514159b7">More...</a><br /></td></tr>
-<tr class="separator:a2ce888d0943e0f76108ac8b5514159b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34a2dc1540b59d7a2145ef176438e277"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a34a2dc1540b59d7a2145ef176438e277">get_mass_matrix</a> (PtrList&lt; volVectorField &gt; modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:a34a2dc1540b59d7a2145ef176438e277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to compute a Mass Matrix from a list of Basis Functions (vectorial) for L2 projection.  <a href="#a34a2dc1540b59d7a2145ef176438e277">More...</a><br /></td></tr>
+<tr class="separator:a34a2dc1540b59d7a2145ef176438e277"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29de4e88f266255577bd2a7ac9865cf7"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a29de4e88f266255577bd2a7ac9865cf7">get_mass_matrix</a> (PtrList&lt; volScalarField &gt; modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:a29de4e88f266255577bd2a7ac9865cf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to compute a Mass Matrix from a list of Basis Functions (scalar) for L2 projection.  <a href="#a29de4e88f266255577bd2a7ac9865cf7">More...</a><br /></td></tr>
+<tr class="separator:a29de4e88f266255577bd2a7ac9865cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a611397c6e67929a14330f3dfb9cd70e1"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a611397c6e67929a14330f3dfb9cd70e1">get_coeffs</a> (PtrList&lt; volScalarField &gt; snapshots, PtrList&lt; volScalarField &gt; modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:a611397c6e67929a14330f3dfb9cd70e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot scalar field on a non-orthogonal basis function and get the coefficients of the projection.  <a href="#a611397c6e67929a14330f3dfb9cd70e1">More...</a><br /></td></tr>
+<tr class="separator:a611397c6e67929a14330f3dfb9cd70e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05532fd923d37809452b2721ef9325da"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a05532fd923d37809452b2721ef9325da">get_coeffs</a> (PtrList&lt; volVectorField &gt; snapshots, PtrList&lt; volVectorField &gt; modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:a05532fd923d37809452b2721ef9325da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection.  <a href="#a05532fd923d37809452b2721ef9325da">More...</a><br /></td></tr>
+<tr class="separator:a05532fd923d37809452b2721ef9325da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e7190e72e1e77eac058bcc788e364a2"><td class="memItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a0e7190e72e1e77eac058bcc788e364a2">get_coeffs</a> (volVectorField snapshot, PtrList&lt; volVectorField &gt; &amp;modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:a0e7190e72e1e77eac058bcc788e364a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection.  <a href="#a0e7190e72e1e77eac058bcc788e364a2">More...</a><br /></td></tr>
+<tr class="separator:a0e7190e72e1e77eac058bcc788e364a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1e5ce22d883801427c93019d4bb1334"><td class="memItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#ad1e5ce22d883801427c93019d4bb1334">get_coeffs</a> (volScalarField snapshot, PtrList&lt; volScalarField &gt; &amp;modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:ad1e5ce22d883801427c93019d4bb1334"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot vector field on a non-orthogonal basis function and get the coefficients of the projection.  <a href="#ad1e5ce22d883801427c93019d4bb1334">More...</a><br /></td></tr>
+<tr class="separator:ad1e5ce22d883801427c93019d4bb1334"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c3fc07c79f3c2c26f6fe7bef009509f"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a0c3fc07c79f3c2c26f6fe7bef009509f">get_coeffs_ortho</a> (PtrList&lt; volScalarField &gt; snapshots, PtrList&lt; volScalarField &gt; &amp;modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:a0c3fc07c79f3c2c26f6fe7bef009509f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the coeffs ortho.  <a href="#a0c3fc07c79f3c2c26f6fe7bef009509f">More...</a><br /></td></tr>
+<tr class="separator:a0c3fc07c79f3c2c26f6fe7bef009509f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa51fd931231d8925b364de7c038de31"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#afa51fd931231d8925b364de7c038de31">get_coeffs_ortho</a> (PtrList&lt; volVectorField &gt; snapshots, PtrList&lt; volVectorField &gt; &amp;modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:afa51fd931231d8925b364de7c038de31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the coeffs ortho.  <a href="#afa51fd931231d8925b364de7c038de31">More...</a><br /></td></tr>
+<tr class="separator:afa51fd931231d8925b364de7c038de31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa87998c081691daec090eb30db5ef1c2"><td class="memItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#aa87998c081691daec090eb30db5ef1c2">get_coeffs_ortho</a> (volScalarField snapshot, PtrList&lt; volScalarField &gt; &amp;modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:aa87998c081691daec090eb30db5ef1c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot scalar field on an orthogonal basis function and get the coefficients of the projection.  <a href="#aa87998c081691daec090eb30db5ef1c2">More...</a><br /></td></tr>
+<tr class="separator:aa87998c081691daec090eb30db5ef1c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1202c99c78458e15aca290b42fd8f9e"><td class="memItemLeft" align="right" valign="top">static Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#ad1202c99c78458e15aca290b42fd8f9e">get_coeffs_ortho</a> (volVectorField snapshot, PtrList&lt; volVectorField &gt; &amp;modes, int Nmodes=0)</td></tr>
+<tr class="memdesc:ad1202c99c78458e15aca290b42fd8f9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Project a snapshot scalar field on an orthogonal basis function and get the coefficients of the projection.  <a href="#ad1202c99c78458e15aca290b42fd8f9e">More...</a><br /></td></tr>
+<tr class="separator:ad1202c99c78458e15aca290b42fd8f9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95fe0dead6d078a43ba9e51913b0c778"><td class="memTemplParams" colspan="2">template&lt;typename T , typename G &gt; </td></tr>
 <tr class="memitem:a95fe0dead6d078a43ba9e51913b0c778"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a95fe0dead6d078a43ba9e51913b0c778">assignIF</a> (<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;s, G &amp;value)</td></tr>
 <tr class="memdesc:a95fe0dead6d078a43ba9e51913b0c778"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign internal field condition.  <a href="#a95fe0dead6d078a43ba9e51913b0c778">More...</a><br /></td></tr>
@@ -268,7 +285,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00635">635</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00826">826</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -322,7 +339,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00581">581</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00772">772</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -376,7 +393,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00715">715</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00906">906</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -430,7 +447,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00667">667</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00858">858</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -486,7 +503,7 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00495">495</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00522">522</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
 
 </div>
 </div>
@@ -533,7 +550,7 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00572">572</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00763">763</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -570,7 +587,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>1 if the file exists 0 elsewhere. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00216">216</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00217">217</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -606,8 +623,9 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>1 if the folder exists 0 elsewhere. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00199">199</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="10unsteadyBB_enclosed_8C-example.html#a23">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a25">11unsteadyBB_open.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00200">200</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -637,7 +655,7 @@ template&lt;typename T , typename G &gt; </div>
 <p>Check if the offline data folder exists. </p>
 <dl class="section return"><dt>Returns</dt><dd>1 if the folder exists 0 elsewhere. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00158">158</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00159">159</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -667,7 +685,7 @@ template&lt;typename T , typename G &gt; </div>
 <p>Check if the POD data folder exists. </p>
 <dl class="section return"><dt>Returns</dt><dd>1 if the folder exists 0 elsewhere. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00137">137</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00138">138</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -697,7 +715,7 @@ template&lt;typename T , typename G &gt; </div>
 <p>Check if the supremizer folder exists. </p>
 <dl class="section return"><dt>Returns</dt><dd>1 if the folder exists 0 elsewhere. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00179">179</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00180">180</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -732,8 +750,9 @@ template&lt;typename T , typename G &gt; </div>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00096">96</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="10unsteadyBB_enclosed_8C-example.html#a24">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a26">11unsteadyBB_open.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00097">97</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -782,7 +801,7 @@ template&lt;typename T , typename G &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the relative error. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="08DEIM_8C-example.html#a14">08DEIM.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00223">223</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00273">273</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -830,7 +849,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the absolute error. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00282">282</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00332">332</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -878,7 +897,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the absolute error. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00231">231</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00281">281</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -926,7 +945,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the absolute error. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00290">290</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00340">340</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -973,9 +992,9 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the error between the two fields in Eigen::MatrixXd form. </dd></dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="09DEIM_ROM_8C-example.html#a61">09DEIM_ROM.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="09DEIM_ROM_8C-example.html#a62">09DEIM_ROM.C</a>, <a class="el" href="10unsteadyBB_enclosed_8C-example.html#a52">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a63">11unsteadyBB_open.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00238">238</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00288">288</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1023,7 +1042,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the error between the two fields in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00297">297</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00347">347</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1090,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the error between the two fields in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00260">260</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00310">310</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1119,7 +1138,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the error between the two fields in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00319">319</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00369">369</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1193,8 +1212,8 @@ template&lt;typename T , typename G &gt; </div>
 
 </div>
 </div>
-<a id="a5bb3e567d55c40193662982733317123"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5bb3e567d55c40193662982733317123">&#9670;&nbsp;</a></span>get_coeffs() <span class="overload">[1/4]</span></h2>
+<a id="a611397c6e67929a14330f3dfb9cd70e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a611397c6e67929a14330f3dfb9cd70e1">&#9670;&nbsp;</a></span>get_coeffs() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1212,7 +1231,13 @@ template&lt;typename T , typename G &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">PtrList&lt; volScalarField &gt;&#160;</td>
-          <td class="paramname"><em>modes</em>&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1236,13 +1261,14 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00411">411</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="10unsteadyBB_enclosed_8C-example.html#a50">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a61">11unsteadyBB_open.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00511">511</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
-<a id="a171a3d12ebb56acadbd6ccac7f81d7c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a171a3d12ebb56acadbd6ccac7f81d7c0">&#9670;&nbsp;</a></span>get_coeffs() <span class="overload">[2/4]</span></h2>
+<a id="a05532fd923d37809452b2721ef9325da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05532fd923d37809452b2721ef9325da">&#9670;&nbsp;</a></span>get_coeffs() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1260,7 +1286,13 @@ template&lt;typename T , typename G &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">PtrList&lt; volVectorField &gt;&#160;</td>
-          <td class="paramname"><em>modes</em>&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1285,12 +1317,12 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00433">433</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00546">546</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
-<a id="a40f0c41f06cdd1000b96da2b57b3fe60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40f0c41f06cdd1000b96da2b57b3fe60">&#9670;&nbsp;</a></span>get_coeffs() <span class="overload">[3/4]</span></h2>
+<a id="a0e7190e72e1e77eac058bcc788e364a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e7190e72e1e77eac058bcc788e364a2">&#9670;&nbsp;</a></span>get_coeffs() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1308,7 +1340,13 @@ template&lt;typename T , typename G &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
-          <td class="paramname"><em>modes</em>&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1333,12 +1371,12 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00375">375</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00451">451</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
-<a id="afbec31cccf0ec518973cdb4a20dfe45e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afbec31cccf0ec518973cdb4a20dfe45e">&#9670;&nbsp;</a></span>get_coeffs() <span class="overload">[4/4]</span></h2>
+<a id="ad1e5ce22d883801427c93019d4bb1334"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1e5ce22d883801427c93019d4bb1334">&#9670;&nbsp;</a></span>get_coeffs() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1356,7 +1394,13 @@ template&lt;typename T , typename G &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
-          <td class="paramname"><em>modes</em>&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1381,12 +1425,12 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00393">393</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00481">481</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
-<a id="ab55bab8f09570a2ddeddf4a5a66a2d41"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab55bab8f09570a2ddeddf4a5a66a2d41">&#9670;&nbsp;</a></span>get_coeffs_ortho() <span class="overload">[1/3]</span></h2>
+<a id="a0c3fc07c79f3c2c26f6fe7bef009509f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c3fc07c79f3c2c26f6fe7bef009509f">&#9670;&nbsp;</a></span>get_coeffs_ortho() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1404,7 +1448,13 @@ template&lt;typename T , typename G &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
-          <td class="paramname"><em>modes</em>&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1429,12 +1479,12 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coeffs ortho. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00456">456</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00581">581</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
-<a id="a8addcc842e2c1630c8761bab3bcd8abe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8addcc842e2c1630c8761bab3bcd8abe">&#9670;&nbsp;</a></span>get_coeffs_ortho() <span class="overload">[2/3]</span></h2>
+<a id="afa51fd931231d8925b364de7c038de31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa51fd931231d8925b364de7c038de31">&#9670;&nbsp;</a></span>get_coeffs_ortho() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1452,7 +1502,13 @@ template&lt;typename T , typename G &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
-          <td class="paramname"><em>modes</em>&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1477,12 +1533,12 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coeffs ortho. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00473">473</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00611">611</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
-<a id="a2ce888d0943e0f76108ac8b5514159b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ce888d0943e0f76108ac8b5514159b7">&#9670;&nbsp;</a></span>get_coeffs_ortho() <span class="overload">[3/3]</span></h2>
+<a id="aa87998c081691daec090eb30db5ef1c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa87998c081691daec090eb30db5ef1c2">&#9670;&nbsp;</a></span>get_coeffs_ortho() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1500,7 +1556,13 @@ template&lt;typename T , typename G &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
-          <td class="paramname"><em>modes</em>&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1525,12 +1587,66 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00489">489</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00640">640</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
-<a id="ac9974071877ff1fed291876930555181"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9974071877ff1fed291876930555181">&#9670;&nbsp;</a></span>get_mass_matrix() <span class="overload">[1/2]</span></h2>
+<a id="ad1202c99c78458e15aca290b42fd8f9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1202c99c78458e15aca290b42fd8f9e">&#9670;&nbsp;</a></span>get_coeffs_ortho() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorXd ITHACAutilities::get_coeffs_ortho </td>
+          <td>(</td>
+          <td class="paramtype">volVectorField&#160;</td>
+          <td class="paramname"><em>snapshot</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Project a snapshot scalar field on an orthogonal basis function and get the coefficients of the projection. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">snapshot</td><td>The snapshot. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">modes</td><td>The modes.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00667">667</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="a34a2dc1540b59d7a2145ef176438e277"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34a2dc1540b59d7a2145ef176438e277">&#9670;&nbsp;</a></span>get_mass_matrix() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1542,8 +1658,18 @@ template&lt;typename T , typename G &gt; </div>
           <td class="memname">Eigen::MatrixXd ITHACAutilities::get_mass_matrix </td>
           <td>(</td>
           <td class="paramtype">PtrList&lt; volVectorField &gt;&#160;</td>
-          <td class="paramname"><em>modes</em></td><td>)</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -1562,12 +1688,12 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The mass matrix in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00341">341</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00391">391</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
-<a id="aabacd4a1e935c5d234e4e3aad5a53beb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aabacd4a1e935c5d234e4e3aad5a53beb">&#9670;&nbsp;</a></span>get_mass_matrix() <span class="overload">[2/2]</span></h2>
+<a id="a29de4e88f266255577bd2a7ac9865cf7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29de4e88f266255577bd2a7ac9865cf7">&#9670;&nbsp;</a></span>get_mass_matrix() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1579,8 +1705,18 @@ template&lt;typename T , typename G &gt; </div>
           <td class="memname">Eigen::MatrixXd ITHACAutilities::get_mass_matrix </td>
           <td>(</td>
           <td class="paramtype">PtrList&lt; volScalarField &gt;&#160;</td>
-          <td class="paramname"><em>modes</em></td><td>)</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>Nmodes</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -1599,7 +1735,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The mass matrix in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00358">358</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00421">421</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1644,7 +1780,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The mass matrix eigen. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00504">504</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00531">531</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
 
 </div>
 </div>
@@ -1699,7 +1835,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The indices. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00041">41</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00042">42</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1760,7 +1896,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The indices. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00067">67</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00068">68</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1797,7 +1933,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>H1 seminorm of the volScalarField. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00519">519</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00710">710</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1834,7 +1970,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>H1 seminorm of the volVectorField. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00527">527</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00718">718</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1871,7 +2007,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the volScalarField. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00505">505</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00696">696</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1908,7 +2044,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the volVectorField. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00512">512</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00703">703</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1969,9 +2105,9 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the matrix </dd></dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="08DEIM_8C-example.html#a9">08DEIM.C</a>, and <a class="el" href="09DEIM_ROM_8C-example.html#a59">09DEIM_ROM.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="08DEIM_8C-example.html#a9">08DEIM.C</a>, and <a class="el" href="09DEIM_ROM_8C-example.html#a60">09DEIM_ROM.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00111">111</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00112">112</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -2019,7 +2155,135 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the matrix </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00121">121</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00122">122</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="abdb5806b63571589cd4cff1afca933f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdb5806b63571589cd4cff1afca933f0">&#9670;&nbsp;</a></span>reconstruct_from_coeff() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static PtrList&lt;<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>&gt; ITHACAutilities::reconstruct_from_coeff </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
+          <td class="paramname"><em>coeff_matrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>Nmodes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Exact reconstruction using a certain number of modes for a list of fields and the projection coefficients. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">modes</td><td>The modes used for reconstruction as PtrList. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Nmodes</td><td>The number of modes you want to use. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">coeff_matrix</td><td>The matrix of coefficients. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>rec_field The reconstructed field as PtrList. </dd></dl>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="10unsteadyBB_enclosed_8C-example.html#a51">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a62">11unsteadyBB_open.C</a>.</dd>
+</dl>
+</div>
+</div>
+<a id="a8a6b0256de923f1ee1f4ee5ba490250f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a6b0256de923f1ee1f4ee5ba490250f">&#9670;&nbsp;</a></span>reconstruct_from_coeff() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt; volVectorField &gt; ITHACAutilities::reconstruct_from_coeff </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
+          <td class="paramname"><em>coeff_matrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>Nmodes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00224">224</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="a3598e82741ab9eb3e543e9a78c0102a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3598e82741ab9eb3e543e9a78c0102a7">&#9670;&nbsp;</a></span>reconstruct_from_coeff() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt; volScalarField &gt; ITHACAutilities::reconstruct_from_coeff </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
+          <td class="paramname"><em>coeff_matrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>Nmodes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00249">249</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -2077,7 +2341,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a27">02thermalBlock.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00535">535</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00726">726</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
