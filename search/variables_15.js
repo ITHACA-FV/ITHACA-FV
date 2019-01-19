@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['xpos',['xPos',['../tutorials_202thermalBlock_2createFields_8H.html#a1270eea4f90e7d2a7bf7fd356be6cb14',1,'createFields.H']]],
-  ['xyz_5fa',['xyz_A',['../classDEIM.html#a886fd06a2cb335502ff971d6100366ac',1,'DEIM']]],
-  ['xyz_5fb',['xyz_B',['../classDEIM.html#ae90cd82bbd862f6f7d95a528d1ef7f88',1,'DEIM']]]
+  ['w_5fmatrix',['W_matrix',['../classunsteadyBB.html#a55b13f473b6c17b998bcdab9f9047f4a',1,'unsteadyBB']]],
+  ['writeevery',['writeEvery',['../classunsteadyNS.html#ae472c4559e86168553b7300f7f79e44b',1,'unsteadyNS::writeEvery()'],['../classunsteadyNST.html#ac0088dc2079a59f633053bb07932236b',1,'unsteadyNST::writeEvery()']]]
 ];

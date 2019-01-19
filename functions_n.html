@@ -78,6 +78,7 @@ $(function() {
 <li>N_BC
 : <a class="el" href="structnewton__steadyNS.html#ac59a6844a90d8cd5e526044ba9ffdcac">newton_steadyNS</a>
 , <a class="el" href="structnewton__steadyNSturb.html#a153c6f54dfa4cea39bbd1adbf9e987c8">newton_steadyNSturb</a>
+, <a class="el" href="structnewton__unsteadyBB__sup.html#a1a420c6945929ee338fcd7e6cbc5c448">newton_unsteadyBB_sup</a>
 , <a class="el" href="structnewton__unsteadyNS__PPE.html#aa291924d4968606289d5cf794c79457a">newton_unsteadyNS_PPE</a>
 , <a class="el" href="structnewton__unsteadyNS__sup.html#a6facce07b6183a0f706ff7d429789d57">newton_unsteadyNS_sup</a>
 , <a class="el" href="structnewton__unsteadyNST__sup.html#a0ff0b92beb22ee92c4de83c6c231904c">newton_unsteadyNST_sup</a>
@@ -87,8 +88,10 @@ $(function() {
 , <a class="el" href="classreducedSteadyNS.html#ad1c7cdbbe4c19ad88135546f9be8356d">reducedSteadyNS</a>
 </li>
 <li>N_BC_t
-: <a class="el" href="structnewton__unsteadyNST__sup__t.html#ab69da6183a56d8c52b89f6be6ce6b4ae">newton_unsteadyNST_sup_t</a>
+: <a class="el" href="structnewton__unsteadyBB__sup.html#a8e98ce7f567e0140718a3af70250db78">newton_unsteadyBB_sup</a>
+, <a class="el" href="structnewton__unsteadyNST__sup__t.html#ab69da6183a56d8c52b89f6be6ce6b4ae">newton_unsteadyNST_sup_t</a>
 , <a class="el" href="structnewton__unsteadyNSTturb__sup__t.html#acef89f638734d6e5d3d6630083441f18">newton_unsteadyNSTturb_sup_t</a>
+, <a class="el" href="classreducedUnsteadyBB.html#aa54156614b50f97ce4f8cfe0bd28373c">reducedUnsteadyBB</a>
 , <a class="el" href="classreducedUnsteadyNST.html#a227de76b1852269d253e47b55bda84e7">reducedUnsteadyNST</a>
 </li>
 <li>N_IF_glob
@@ -115,7 +118,8 @@ $(function() {
 , <a class="el" href="classreducedUnsteadyNSturb.html#a78dca32ba02afd9b850d5cac94b8180f">reducedUnsteadyNSturb</a>
 </li>
 <li>newton_object_sup
-: <a class="el" href="classreducedUnsteadyNS.html#a50e9b9836dbaf6400a72c3d57e263ab1">reducedUnsteadyNS</a>
+: <a class="el" href="classreducedUnsteadyBB.html#ae49cd5cef2804c497fec87bb0730fb69">reducedUnsteadyBB</a>
+, <a class="el" href="classreducedUnsteadyNS.html#a50e9b9836dbaf6400a72c3d57e263ab1">reducedUnsteadyNS</a>
 , <a class="el" href="classreducedUnsteadyNST.html#ac712bb829f1ba3223270fe4df25cf5df">reducedUnsteadyNST</a>
 , <a class="el" href="classreducedUnsteadyNSTturb.html#ae1ee7214af44fb65cdffb1321436bb69">reducedUnsteadyNSTturb</a>
 , <a class="el" href="classreducedUnsteadyNSturb.html#af5feebe5d25debb325f1dfb65e58be8b">reducedUnsteadyNSturb</a>
@@ -128,7 +132,10 @@ $(function() {
 : <a class="el" href="structnewton__steadyNS.html#abff450aca8d8825219e5be19069ecc1c">newton_steadyNS</a>
 </li>
 <li>newton_steadyNSturb()
-: <a class="el" href="structnewton__steadyNSturb.html#a6ca7494591b2f142fa889c844b2ec1c6">newton_steadyNSturb</a>
+: <a class="el" href="structnewton__steadyNSturb.html#a460439999e4651e6a3d72aa71cbd6aab">newton_steadyNSturb</a>
+</li>
+<li>newton_unsteadyBB_sup()
+: <a class="el" href="structnewton__unsteadyBB__sup.html#a79181f8d1187847b71b6c1d91d6ddba8">newton_unsteadyBB_sup</a>
 </li>
 <li>newton_unsteadyNS_PPE()
 : <a class="el" href="structnewton__unsteadyNS__PPE.html#a5b4717728e7e677d2d9be3ea30a4db23">newton_unsteadyNS_PPE</a>
@@ -173,7 +180,7 @@ $(function() {
 , <a class="el" href="classunsteadyNSturb.html#a94ea2f6baf1ffbb7ce4cd6b377d7dc07">unsteadyNSturb</a>
 </li>
 <li>normalizeBases()
-: <a class="el" href="classITHACAPOD.html#a0f954cb84a1069f13f9c69dd5bba3cdd">ITHACAPOD</a>
+: <a class="el" href="classITHACAPOD.html#a5c0db90b7d4a0268b322505a9ce0e4ee">ITHACAPOD</a>
 </li>
 <li>Nphi_nut
 : <a class="el" href="structnewton__steadyNSturb.html#abddac6e054089ad96d14a511aaf1e74c">newton_steadyNSturb</a>
@@ -197,17 +204,24 @@ $(function() {
 , <a class="el" href="structnewton__unsteadyNSturb__sup.html#a2f28a40e92f16fb3e74151e7b4229603">newton_unsteadyNSturb_sup</a>
 , <a class="el" href="classreducedSteadyNS.html#a3f27ce281691522a5c3b349290f93b5a">reducedSteadyNS</a>
 </li>
+<li>Nphi_prgh
+: <a class="el" href="structnewton__unsteadyBB__sup.html#a6a5e3a2d9a7e70a6c33758b58cfc7913">newton_unsteadyBB_sup</a>
+, <a class="el" href="classreducedUnsteadyBB.html#a4325d1377cfda1947347939585d8fb29">reducedUnsteadyBB</a>
+</li>
 <li>Nphi_sup
 : <a class="el" href="classreducedSteadyNS.html#a0e16eef65f0a1588941b75ab45cb6c8c">reducedSteadyNS</a>
 </li>
 <li>Nphi_t
-: <a class="el" href="structnewton__unsteadyNST__sup__t.html#a53a202adf718374cd07b7f16eefa70ed">newton_unsteadyNST_sup_t</a>
+: <a class="el" href="structnewton__unsteadyBB__sup.html#a6026602ea3afe722382c0fe0f6ed9c79">newton_unsteadyBB_sup</a>
+, <a class="el" href="structnewton__unsteadyNST__sup__t.html#a53a202adf718374cd07b7f16eefa70ed">newton_unsteadyNST_sup_t</a>
 , <a class="el" href="structnewton__unsteadyNSTturb__sup__t.html#abff6e90e94908a338f24f203acffdec6">newton_unsteadyNSTturb_sup_t</a>
+, <a class="el" href="classreducedUnsteadyBB.html#aecabfa09393ee1c973299cab4ca188c5">reducedUnsteadyBB</a>
 , <a class="el" href="classreducedUnsteadyNST.html#a94b87aec7a7d68f503a1fd70185b1a64">reducedUnsteadyNST</a>
 </li>
 <li>Nphi_u
 : <a class="el" href="structnewton__steadyNS.html#a9b9796e07139a8e6855e62ccda91773f">newton_steadyNS</a>
 , <a class="el" href="structnewton__steadyNSturb.html#ade89714e2da9bade6f72b03ce430f960">newton_steadyNSturb</a>
+, <a class="el" href="structnewton__unsteadyBB__sup.html#a015b205ce65351a9733ccbb78a46a2d7">newton_unsteadyBB_sup</a>
 , <a class="el" href="structnewton__unsteadyNS__PPE.html#a5a1e9f0c0c35e32257a4435eb11f7bb1">newton_unsteadyNS_PPE</a>
 , <a class="el" href="structnewton__unsteadyNS__sup.html#a3f4d66fa5282115347937ab52ebce742">newton_unsteadyNS_sup</a>
 , <a class="el" href="structnewton__unsteadyNST__sup.html#ad8e544bf1195e69e39e19fec84e50c3b">newton_unsteadyNST_sup</a>
@@ -221,18 +235,23 @@ $(function() {
 <li>NPmodes
 : <a class="el" href="classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19">steadyNS</a>
 </li>
+<li>NPrghmodes
+: <a class="el" href="classunsteadyBB.html#a8fc18753b887de608613c5e1e9a5b542">unsteadyBB</a>
+</li>
 <li>NSUPmodes
 : <a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">steadyNS</a>
 </li>
 <li>NTmodes
 : <a class="el" href="classDEIMlaplacian.html#a3f21c9777baef43df39efea219c50297">DEIMlaplacian</a>
 , <a class="el" href="classlaplacianProblem.html#af0ff25ddcfbae8d2263e8d954204ded7">laplacianProblem</a>
+, <a class="el" href="classunsteadyBB.html#a9a9385a45a02c22e72140a20cda9f0cd">unsteadyBB</a>
 , <a class="el" href="classunsteadyNST.html#a85ec1372997918414c7007ef1ec4ac1b">unsteadyNST</a>
 </li>
 <li>nu
 : <a class="el" href="classDEIMlaplacian.html#a9ed2b045c5f504069a2ee7619db9364f">DEIMlaplacian</a>
 , <a class="el" href="structnewton__steadyNS.html#aaa438e52de4f0180e31fafc3e309e518">newton_steadyNS</a>
 , <a class="el" href="structnewton__steadyNSturb.html#ac96c35516fe016861286dbb6a0836d6a">newton_steadyNSturb</a>
+, <a class="el" href="structnewton__unsteadyBB__sup.html#ad4e9f337a85a69684828480e82f85a49">newton_unsteadyBB_sup</a>
 , <a class="el" href="structnewton__unsteadyNS__PPE.html#af34b6738e986630161866c1f89d31f1c">newton_unsteadyNS_PPE</a>
 , <a class="el" href="structnewton__unsteadyNS__sup.html#a07b7ce2c2254957a6d3e05ec4d236d50">newton_unsteadyNS_sup</a>
 , <a class="el" href="structnewton__unsteadyNST__sup.html#a85477f05ec53c5fe51e712971d209178">newton_unsteadyNST_sup</a>

@@ -1,21 +1,7 @@
 var searchData=
 [
-  ['l2norm',['L2norm',['../classITHACAutilities.html#ac55995f882c098eedd705faa97ee9764',1,'ITHACAutilities::L2norm(volScalarField field)'],['../classITHACAutilities.html#aeda82c812f044220514135c545ef2af7',1,'ITHACAutilities::L2norm(volVectorField field)']]],
-  ['laminartransport',['laminarTransport',['../src_2ITHACA__FOMPROBLEMS_2steadyNS_2createFields_8H.html#aaa15f2fa61d58ef55036975f0a15cd3d',1,'laminarTransport():&#160;createFields.H'],['../src_2ITHACA__FOMPROBLEMS_2steadyNSturb_2createFields_8H.html#aaa15f2fa61d58ef55036975f0a15cd3d',1,'laminarTransport():&#160;createFields.H'],['../src_2ITHACA__FOMPROBLEMS_2unsteadyNS_2createFields_8H.html#aaa15f2fa61d58ef55036975f0a15cd3d',1,'laminarTransport():&#160;createFields.H'],['../src_2ITHACA__FOMPROBLEMS_2unsteadyNST_2createFields_8H.html#aaa15f2fa61d58ef55036975f0a15cd3d',1,'laminarTransport():&#160;createFields.H'],['../src_2ITHACA__FOMPROBLEMS_2unsteadyNSTturb_2createFields_8H.html#aaa15f2fa61d58ef55036975f0a15cd3d',1,'laminarTransport():&#160;createFields.H'],['../src_2ITHACA__FOMPROBLEMS_2unsteadyNSturb_2createFields_8H.html#aaa15f2fa61d58ef55036975f0a15cd3d',1,'laminarTransport():&#160;createFields.H']]],
-  ['laplacian_5fpressure',['laplacian_pressure',['../classsteadyNS.html#adce6c14ad56c3c733e9c6dc84fdf2a20',1,'steadyNS']]],
-  ['laplacianproblem',['laplacianProblem',['../classlaplacianProblem.html',1,'laplacianProblem'],['../classlaplacianProblem.html#a7b70e752393c730c39ff25c4fb0ddbec',1,'laplacianProblem::laplacianProblem()'],['../classlaplacianProblem.html#a65fc85de11e796ab5c033a661febba29',1,'laplacianProblem::laplacianProblem(int argc, char *argv[])']]],
-  ['laplacianproblem_2ec',['laplacianProblem.C',['../laplacianProblem_8C.html',1,'']]],
-  ['laplacianproblem_2eh',['laplacianProblem.H',['../laplacianProblem_8H.html',1,'']]],
-  ['lfvmatrix2lsm',['LFvMatrix2LSM',['../classFoam2Eigen.html#a1b0166d89fff0e69e28dfe9635742c4a',1,'Foam2Eigen']]],
-  ['lift_5fand_5fdrag_2ec',['lift_and_drag.C',['../lift__and__drag_8C.html',1,'']]],
-  ['liftfield',['liftfield',['../classsteadyNS.html#a6e6f9d485657cc2c1fea709aa8ad5ec9',1,'steadyNS']]],
-  ['liftfieldnut',['liftfieldnut',['../classunsteadyNSTturb.html#a294a455f93a6e44a9ecf1a14a5b547de',1,'unsteadyNSTturb']]],
-  ['liftfieldt',['liftfieldT',['../classunsteadyNST.html#a57d3058cbf024ca20dec9675d7ac21a0',1,'unsteadyNST']]],
-  ['liftsolve',['liftSolve',['../classreductionProblem.html#adc318cab24b21ea4e96e261fb9ecc63d',1,'reductionProblem::liftSolve()'],['../classsteadyNS.html#af11a2fa8637db86b8b129ee9d84de091',1,'steadyNS::liftSolve()'],['../classunsteadyNST.html#aceefbecc9fdba66a2cac147c9a88b4d4',1,'unsteadyNST::liftSolve()']]],
-  ['liftsolvet',['liftSolveT',['../classreductionProblem.html#aafeabfc2c81617d6b50ba44b5b2f5540',1,'reductionProblem::liftSolveT()'],['../classunsteadyNST.html#affb4ce927a3e6409728a8b64c793dd8f',1,'unsteadyNST::liftSolveT()'],['../classunsteadyNSTturb.html#a4dc6717a34aae0de6304284b0127bee8',1,'unsteadyNSTturb::liftSolveT()']]],
-  ['linspace',['linspace',['../namespaceSPLINTER.html#aae6b9c8badd4fbc550698791bf98941a',1,'SPLINTER']]],
-  ['localmagicpoints',['localMagicPoints',['../classDEIM.html#a73ab091095c57d2a4876b5f5e6d6c7ac',1,'DEIM']]],
-  ['localmagicpointsa',['localMagicPointsA',['../classDEIM.html#a06dea5aedd7aa479d863b3be2c4b20a5',1,'DEIM']]],
-  ['localmagicpointsb',['localMagicPointsB',['../classDEIM.html#a5084ab0abf23f0a7a2caca05f275986a',1,'DEIM']]],
-  ['localsystem_5f',['localSystem_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#ac566ea1f2ea178e996d849ec8babbb9e',1,'Foam::functionObjects::ITHACAforces']]]
+  ['k_5fmatrix',['K_matrix',['../classsteadyNS.html#aaae9f3b0ebcad6bb0ee9938e7743dd70',1,'steadyNS::K_matrix()'],['../classreducedUnsteadyNST.html#a39b1b6cacd2734cd0c54f32690f30035',1,'reducedUnsteadyNST::K_matrix()']]],
+  ['knots_2ec',['knots.C',['../knots_8C.html',1,'']]],
+  ['kroneckerproductmatrices',['kroneckerProductMatrices',['../namespaceSPLINTER.html#a990dff9d6b3bc0d21d3a604563d01ff9',1,'SPLINTER']]],
+  ['kroneckerproductvectors',['kroneckerProductVectors',['../namespaceSPLINTER.html#afa8170929efea2b69345dd65adb7e39c',1,'SPLINTER::kroneckerProductVectors(const std::vector&lt; SparseVector &gt; &amp;vectors)'],['../namespaceSPLINTER.html#a43e72ad5caa029ac9f566f765a7f9951',1,'SPLINTER::kroneckerProductVectors(const std::vector&lt; DenseVector &gt; &amp;vectors)']]]
 ];
