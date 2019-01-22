@@ -63,8 +63,10 @@ git commit -m "meaningfull commit message"
    you have to fetch the new changes, pull the `master` branch then adjust the
    history of your `new_branch_name` branch. Shortly:
    ```
+   git checkout master
    git fetch mathlab
-   git pull mathlab/master master
+   git pull mathlab master
+   git checkout new_branch_name
    git rebase master new_branch_name
    ```
    For a detailed discussion about rebasing and synching, you can read
@@ -98,7 +100,7 @@ git push origin new_branch_name
 ```
 git checkout master
 git fetch mathlab
-git pull mathlab/master master
+git pull mathlab master
 git branch -D new_branch_name
 git push origin --delete new_branch_name
 git push origin master
