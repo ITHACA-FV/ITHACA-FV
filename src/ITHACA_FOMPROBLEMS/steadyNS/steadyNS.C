@@ -130,11 +130,7 @@ void steadyNS::truthSolve(List<scalar> mu_now)
     if (mu_samples.rows() == mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-<<<<<<< HEAD
            "./ITHACAoutput/Offline");
-=======
-         "./ITHACAoutput/Offline");
->>>>>>> c523e34... last modifications from laptop
     }
 }
 
@@ -347,11 +343,7 @@ void steadyNS::liftSolve()
         Ulift.correctBoundaryConditions();
         Info << "Interpolated velocity error = "
         << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
-<<<<<<< HEAD
-         / sum(mesh.magSf())).value()
-=======
            / sum(mesh.magSf())).value()
->>>>>>> c523e34... last modifications from laptop
         << endl;
         Ulift.write();
         liftfield.append(Ulift);
@@ -1185,11 +1177,7 @@ List < Eigen::MatrixXd > steadyNS::pressure_BC2(label NUmodes, label NPmodes)
             for (label k = 0; k < P2_BC2size; k++)
             {
                 surfaceScalarField div_m(fvc::interpolate(fvc::div(fvc::interpolate(
-<<<<<<< HEAD
                  Together[j]) & mesh.Sf(), Together[k]))&mesh.Sf()*fvc::interpolate(Pmodes[i]));
-=======
-                   Together[j]) & mesh.Sf(), Together[k]))&mesh.Sf()*fvc::interpolate(Pmodes[i]));
->>>>>>> c523e34... last modifications from laptop
                 double s = 0;
 
                 for (label k = 0; k < div_m.boundaryField().size(); k++)
@@ -1352,19 +1340,11 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
     }
 
     ITHACAstream::exportMatrix(tau_matrix, "tau", "python",
-<<<<<<< HEAD
        "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(tau_matrix, "tau", "matlab",
        "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(tau_matrix, "tau", "eigen",
        "./ITHACAoutput/Matrices/");
-=======
-     "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(tau_matrix, "tau", "matlab",
-     "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(tau_matrix, "tau", "eigen",
-     "./ITHACAoutput/Matrices/");
->>>>>>> c523e34... last modifications from laptop
     ITHACAstream::exportMatrix(n_matrix, "n", "python", "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(n_matrix, "n", "matlab", "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(n_matrix, "n", "eigen", "./ITHACAoutput/Matrices/");

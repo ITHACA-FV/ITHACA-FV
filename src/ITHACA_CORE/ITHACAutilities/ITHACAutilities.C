@@ -936,7 +936,6 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
         {
             Vector<double> value(valueVec(i), valueVec(i + sizeBC),
              valueVec(i + sizeBC * 2));
-
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
 
