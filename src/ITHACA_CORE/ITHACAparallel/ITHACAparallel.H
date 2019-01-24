@@ -47,40 +47,40 @@ class ITHACAparallel
         ITHACAparallel(fvMesh& mesh);
 
 
-    /// Function to sumpend MPI
-    static void suspendMPI();
+        /// Function to sumpend MPI
+        static void suspendMPI();
 
-    /// Function to resume MPI
-    static void resumeMPI();
+        /// Function to resume MPI
+        static void resumeMPI();
 
-    /// Totoal number of internal field cells
-    int N_IF_glob;
+        /// Totoal number of internal field cells
+        int N_IF_glob;
 
-    int N_BF;
-    
-    /// Cell proc addressing
-    autoPtr<labelIOList> indices;
+        int N_BF;
 
-    /// Face proc addressing
-    autoPtr<labelIOList> indicesF;
+        /// Cell proc addressing
+        autoPtr<labelIOList> indices;
 
-    /// Boundary Field variables representing the total number of faces for each processor
-    autoPtr<labelList> Gsize_BF;
+        /// Face proc addressing
+        autoPtr<labelIOList> indicesF;
 
-    /// Indexing 
-    autoPtr< List<labelList> > IndFaceLocal;
+        /// Boundary Field variables representing the total number of faces for each processor
+        autoPtr<labelList> Gsize_BF;
 
-    /// Local size at the boundary
-    autoPtr<labelList> Lsize_BF;    
+        /// Indexing
+        autoPtr< List<labelList>> IndFaceLocal;
 
-    /// StartFace on the gloabl Mesh
-    autoPtr<labelList> Start;
+        /// Local size at the boundary
+        autoPtr<labelList> Lsize_BF;
 
-    //-
-    static List<label> oldProcIDs_;
+        /// StartFace on the gloabl Mesh
+        autoPtr<labelList> Start;
 
-    //-
-    static List<label> newProcIDs_;
+        //-
+        static List<label> oldProcIDs_;
+
+        //-
+        static List<label> newProcIDs_;
 
 };
 

@@ -56,7 +56,6 @@ class tutorial03 : public steadyNS
         {
             Vector<double> inl(0, 0, 0);
             List<scalar> mu_now(1);
-
             Info << "Offline is: " << offline << endl;
 
             // if the offline solution is already performed read the fields

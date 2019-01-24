@@ -104,10 +104,6 @@ class reductionProblem
         autoPtr<argList> _args;
         /// parallel handling
         ITHACAparallel* paral;
-
-        /// parallel handling
-        ITHACAparallel<scalar>* paral;
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
         /// Matrix that contains informations about the inlet boundaries
