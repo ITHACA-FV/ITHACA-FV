@@ -2,7 +2,10 @@
 **/ITHACAoutput*
 Working_examples
 *.o
+*.so
+*.exe
 **/linux**
+**/processor*
 **/linux*
 **/Offline
 *.pdf
