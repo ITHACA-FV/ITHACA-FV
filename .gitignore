@@ -17,3 +17,4 @@ tutorials_dev
 **/StreamTest
 **/UtilitiesTest
 *~
+*.foam

@@ -55,6 +55,8 @@ class ITHACAparallel
 
     /// Totoal number of internal field cells
     int N_IF_glob;
+
+    int N_BF;
     
     /// Cell proc addressing
     autoPtr<labelIOList> indices;
@@ -63,7 +65,7 @@ class ITHACAparallel
     autoPtr<labelIOList> indicesF;
 
     /// Boundary Field variables representing the total number of faces for each processor
-    autoPtr< List<labelList> > Gsize_BF;
+    autoPtr<labelList> Gsize_BF;
 
     /// Indexing 
     autoPtr< List<labelList> > IndFaceLocal;
@@ -81,10 +83,6 @@ class ITHACAparallel
     static List<label> newProcIDs_;
 
 };
-
-List<label> ITHACAparallel::oldProcIDs_(0);
-
-List<label> ITHACAparallel::newProcIDs_(0);
 
 #endif
 

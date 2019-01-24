@@ -103,7 +103,7 @@ class reductionProblem
         /// argList
         autoPtr<argList> _args;
         /// parallel handling
-        ITHACAparallel<scalar>* paral;
+        ITHACAparallel* paral;
 
         /// parallel handling
         ITHACAparallel<scalar>* paral;
