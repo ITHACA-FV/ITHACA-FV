@@ -1,2 +1,2 @@
 UtilitiesTest.C
-EXE = ./UtilitiesTest
+EXE = ./UtilitiesTest.exe
