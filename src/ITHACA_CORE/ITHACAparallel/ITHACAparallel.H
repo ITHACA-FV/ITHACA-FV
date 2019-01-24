@@ -33,7 +33,6 @@ SourceFiles
 
 #include "fvCFD.H"
 
-template<class type_of_field>
 class ITHACAparallel
 {
     public:
@@ -45,95 +44,48 @@ class ITHACAparallel
         ///
         /// @param      field  A field can be either a volvectorfield or a volscalarfield.
         ///
-        ITHACAparallel(GeometricField<type_of_field, fvPatchField, volMesh>& field);
+        ITHACAparallel(fvMesh& mesh);
 
-        /// Function to sumpend MPI
-        void suspendMPI();
 
-        /// Function to resume MPI
-        static void resumeMPI();
+    /// Function to sumpend MPI
+    static void suspendMPI();
 
-        /// Totoal number of internal field cells
-        int N_IF_glob;
+    /// Function to resume MPI
+    static void resumeMPI();
 
-        /// Cell proc addressing
-        autoPtr<labelIOList> indices;
+    /// Totoal number of internal field cells
+    int N_IF_glob;
+    
+    /// Cell proc addressing
+    autoPtr<labelIOList> indices;
 
-        // Boundary Field variables representing the total number of faces for each processor
-        autoPtr< List<labelList>> Gsize_BF;
+    /// Face proc addressing
+    autoPtr<labelIOList> indicesF;
 
-        /// It gives for each boundary the starting face number
-        autoPtr<List< labelList >> startFaces;
+    /// Boundary Field variables representing the total number of faces for each processor
+    autoPtr< List<labelList> > Gsize_BF;
 
-        /// ID of the old process
-        static List<label> oldProcIDs_;
+    /// Indexing 
+    autoPtr< List<labelList> > IndFaceLocal;
 
-        /// ID of the new process
-        static List<label> newProcIDs_;
+    /// Local size at the boundary
+    autoPtr<labelList> Lsize_BF;    
+
+    /// StartFace on the gloabl Mesh
+    autoPtr<labelList> Start;
+
+    //-
+    static List<label> oldProcIDs_;
+
+    //-
+    static List<label> newProcIDs_;
+
 };
 
-template<class type_of_field>
-List<label> ITHACAparallel<type_of_field>::oldProcIDs_(0);
+List<label> ITHACAparallel::oldProcIDs_(0);
 
-template<class type_of_field>
-List<label> ITHACAparallel<type_of_field>::newProcIDs_(0);
+List<label> ITHACAparallel::newProcIDs_(0);
 
-template<class type_of_field>
-ITHACAparallel<type_of_field>::ITHACAparallel(
-    GeometricField<type_of_field, fvPatchField, volMesh>& field)
-{
-    // IF construction
-    indices = new labelIOList(
-        IOobject
-        (
-            "cellProcAddressing",
-            field.mesh().facesInstance(),
-            field.mesh().meshSubDir,
-            field.mesh(),
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE
-        )
-    );
-    N_IF_glob = (field.size());
-    reduce(N_IF_glob, sumOp<int>());
-    // BF construction
-    startFaces = new List<labelList> (field.boundaryFieldRef().size(),
-                                      labelList(Pstream::nProcs(), 0));
-    Gsize_BF = new List<labelList> (field.boundaryFieldRef().size(),
-                                    labelList(Pstream::nProcs(), 0));
-
-    for (int i = 0; i < field.boundaryFieldRef().size(); i++)
-    {
-        Gsize_BF()[i][Pstream::myProcNo()] = field.boundaryFieldRef()[i].size();
-        reduce(Gsize_BF()[i], sumOp<labelList>());
-    }
-
-    for (int i = 0; i < field.boundaryFieldRef().size(); i++)
-    {
-        for (label k = 1; k < Pstream::nProcs(); k++)
-        {
-            startFaces()[i][k] = startFaces()[i][k - 1] + Gsize_BF()[i][k - 1];
-        }
-    }
-}
-
-template<class type_of_field>
-void ITHACAparallel<type_of_field>::suspendMPI()
-{
-    Pstream::parRun() = false;
-    label comm        = Pstream::worldComm;
-    oldProcIDs_       = Pstream::procID(comm);
-    newProcIDs_       = List<label> (1, 0);
-    Pstream::procID(comm) = newProcIDs_;
-}
-
-template<class type_of_field>
-void ITHACAparallel<type_of_field>::resumeMPI()
-{
-    label comm  = Pstream::worldComm;
-    Pstream::procID(comm) = oldProcIDs_;
-    Pstream::parRun() = true;
-}
 #endif
 
 
