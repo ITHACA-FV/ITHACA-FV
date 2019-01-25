@@ -45,14 +45,11 @@ steadyNS::steadyNS(int argc, char* argv[])
             (
                 new argList(argc, argv)
             );
-
     if (!_args->checkRootCase())
     {
         Foam::FatalError.exit();
     }
-
     argList& args = _args();
-    //#include "setRootCase.H"
 #include "createTime.H"
 #include "createMesh.H"
     _simple = autoPtr<simpleControl>
@@ -107,10 +104,9 @@ void steadyNS::truthSolve(List<scalar> mu_now)
     simpleControl& simple = _simple();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
-    std::cerr << "debug point 8" << std::endl;
 #include "NLsolve.H"
-    //exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-    //exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+    exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+    exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     Ufield.append(U);
     Pfield.append(p);
     counter++;

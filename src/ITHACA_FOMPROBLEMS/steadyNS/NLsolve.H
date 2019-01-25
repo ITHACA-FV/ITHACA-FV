@@ -28,18 +28,12 @@ scalar uresidual = 1;
 Vector<double> uresidual_v(0, 0, 0);
 
 scalar presidual = 1;
-
 scalar csolve = 0;
-
 
 // Variable that can be changed
 turbulence->read();
 std::ofstream res_os;
-
-if (Pstream::master())
-{
-    res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
-}
+res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
 
 #if OFVER == 6
 
@@ -50,7 +44,6 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
 {
     Info << "Time = " << runTime.timeName() << nl << endl;
     {
-        std::cerr << "debug point 9" << std::endl;
 #include "UEqn.H"
 #include "pEqn.H"
         scalar C = 0;
@@ -75,11 +68,8 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
          << nl << endl;
 }
 
-if (Pstream::master())
-{
-    res_os << residual << std::endl;
-    res_os.close();
-}
+res_os << residual << std::endl;
+res_os.close();
 
 runTime.setTime(runTime.startTime(), 0);
 
