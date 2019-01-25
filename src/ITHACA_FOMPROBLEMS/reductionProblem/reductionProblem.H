@@ -46,6 +46,7 @@ SourceFiles
 #include "freestreamFvPatchField.H"
 #include <sys/stat.h>
 #include "ITHACAutilities.H"
+#include "ITHACAparallel.H"
 #include "ITHACAstream.H"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -99,7 +100,10 @@ class reductionProblem
         bool offline;
         /// dictionary to store input output infos
         IOdictionary* ITHACAdict;
-
+        /// argList
+        autoPtr<argList> _args;
+        /// parallel handling
+        ITHACAparallel* paral;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
         /// Matrix that contains informations about the inlet boundaries

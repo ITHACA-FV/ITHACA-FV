@@ -41,7 +41,15 @@
 steadyNS::steadyNS() {}
 steadyNS::steadyNS(int argc, char* argv[])
 {
-#include "setRootCase.H"
+    _args = autoPtr<argList>
+            (
+                new argList(argc, argv)
+            );
+    if (!_args->checkRootCase())
+    {
+        Foam::FatalError.exit();
+    }
+    argList& args = _args();
 #include "createTime.H"
 #include "createMesh.H"
     _simple = autoPtr<simpleControl>
@@ -54,7 +62,6 @@ steadyNS::steadyNS(int argc, char* argv[])
     simpleControl& simple = _simple();
 #include "createFields.H"
 #include "createFvOptions.H"
-    supex = ITHACAutilities::check_sup();
     turbulence->validate();
     ITHACAdict = new IOdictionary
     (
@@ -70,6 +77,15 @@ steadyNS::steadyNS(int argc, char* argv[])
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
     para = new ITHACAparameters;
+
+    if (Pstream::parRun())
+    {
+        paral = new ITHACAparallel(mesh);
+    }
+
+    offline = ITHACAutilities::check_off();
+    podex = ITHACAutilities::check_pod();
+    supex = ITHACAutilities::check_sup();
 }
 
 
@@ -79,6 +95,7 @@ steadyNS::steadyNS(int argc, char* argv[])
 void steadyNS::truthSolve(List<scalar> mu_now)
 {
     Time& runTime = _runTime();
+    argList& args = _args();
     fvMesh& mesh = _mesh();
     volScalarField& p = _p();
     volVectorField& U = _U();

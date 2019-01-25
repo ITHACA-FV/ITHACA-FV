@@ -27,6 +27,7 @@ EXE_INC = \
     -I../../src/ITHACA_ROMPROBLEMS/reducedLaplacian \
     -I../../src/ITHACA_ROMPROBLEMS/NonLinearSolvers \
     -I../../src/ITHACA_CORE/ITHACAutilities \
+    -I../../src/ITHACA_CORE/ITHACAparallel \
     -I../../src/ITHACA_CORE/ITHACAPOD \
     -I../../src/ITHACA_CORE/ITHACAstream \
     -I../../src/ITHACA_CORE/Foam2Eigen \

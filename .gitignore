@@ -8,9 +8,13 @@ Working_examples
 **/processor*
 **/linux*
 **/Offline
+**/processor*
 *.pdf
 *.dep
 *.orig
 examples
 tutorials_dev
+**/StreamTest
+**/UtilitiesTest
 *~
+*.foam

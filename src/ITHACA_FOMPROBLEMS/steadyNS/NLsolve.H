@@ -28,9 +28,7 @@ scalar uresidual = 1;
 Vector<double> uresidual_v(0, 0, 0);
 
 scalar presidual = 1;
-
 scalar csolve = 0;
-
 
 // Variable that can be changed
 turbulence->read();
@@ -72,6 +70,7 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
 
 res_os << residual << std::endl;
 res_os.close();
+
 runTime.setTime(runTime.startTime(), 0);
 
 

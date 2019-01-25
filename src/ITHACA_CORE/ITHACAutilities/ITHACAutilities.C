@@ -137,63 +137,75 @@ Eigen::MatrixXd ITHACAutilities::rand(int rows, Eigen::MatrixXd minMax)
 // Check if the modes exists
 bool ITHACAutilities::check_pod()
 {
-    bool pod_exist;
+    bool pod_exist = 0;
 
-    if (check_folder("./ITHACAoutput/POD"))
+    if (Pstream::master())
     {
-        pod_exist = true;
-        Info << "POD data already exist, reading existing modes" << endl;
-    }
-    else
-    {
-        pod_exist = false;
-        Info << "POD don't exist, performing a POD decomposition" << endl;
-        mkDir("./ITHACAoutput/POD");
-        createSymLink("./ITHACAoutput/POD");
+        if (check_folder("./ITHACAoutput/POD"))
+        {
+            pod_exist = true;
+            Info << "POD data already exist, reading existing modes" << endl;
+        }
+        else
+        {
+            pod_exist = false;
+            Info << "POD don't exist, performing a POD decomposition" << endl;
+            mkDir("./ITHACAoutput/POD");
+            createSymLink("./ITHACAoutput/POD");
+        }
     }
 
+    reduce(pod_exist, sumOp<int>());
     return pod_exist;
 }
 
 // Check if the offline data exist
 bool ITHACAutilities::check_off()
 {
-    bool off_exist;
+    bool off_exist = 0;
 
-    if (check_folder("./ITHACAoutput/Offline"))
+    if (Pstream::master())
     {
-        off_exist = true;
-        Info << "Offline data already exist, reading existing data" << endl;
-    }
-    else
-    {
-        off_exist = false;
-        Info << "Offline don't exist, performing the Offline Solve" << endl;
-        mkDir("./ITHACAoutput/Offline");
-        createSymLink("./ITHACAoutput/Offline");
+        if (check_folder("./ITHACAoutput/Offline"))
+        {
+            off_exist = true;
+            Info << "Offline data already exist, reading existing data" << endl;
+        }
+        else
+        {
+            off_exist = false;
+            Info << "Offline don't exist, performing the Offline Solve" << endl;
+            mkDir("./ITHACAoutput/Offline");
+            createSymLink("./ITHACAoutput/Offline");
+        }
     }
 
+    reduce(off_exist, sumOp<int>());
     return off_exist;
 }
 
 // Check if the supremizer data exist
 bool ITHACAutilities::check_sup()
 {
-    bool sup_exist;
+    bool sup_exist = 0;
 
-    if (check_folder("./ITHACAoutput/supremizer"))
+    if (Pstream::master())
     {
-        sup_exist = true;
-        Info << "Supremizer data already exist, reading existing data" << endl;
-    }
-    else
-    {
-        sup_exist = false;
-        Info << "Supremizers don't exist, performing a POD decomposition" << endl;
-        mkDir("./ITHACAoutput/supremizer");
-        createSymLink("./ITHACAoutput/supremizer");
+        if (check_folder("./ITHACAoutput/supremizer"))
+        {
+            sup_exist = true;
+            Info << "Supremizer data already exist, reading existing data" << endl;
+        }
+        else
+        {
+            sup_exist = false;
+            Info << "Supremizers don't exist, performing a POD decomposition" << endl;
+            mkDir("./ITHACAoutput/supremizer");
+            createSymLink("./ITHACAoutput/supremizer");
+        }
     }
 
+    reduce(sup_exist, sumOp<int>());
     return sup_exist;
 }
 
