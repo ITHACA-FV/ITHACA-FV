@@ -80,7 +80,7 @@ steadyNS::steadyNS(int argc, char* argv[])
 
     if (Pstream::parRun())
     {
-        paral = new ITHACAparallel(mesh);
+        paral = new ITHACAparallel(mesh, runTime);
     }
 
     offline = ITHACAutilities::check_off();
