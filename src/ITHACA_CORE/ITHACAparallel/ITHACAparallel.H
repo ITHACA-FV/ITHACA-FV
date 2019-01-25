@@ -42,7 +42,7 @@ class ITHACAparallel
         ///
         /// @brief      Constructs the object.
         ///
-        /// @param      field  A field can be either a volvectorfield or a volscalarfield.
+        /// @param      mesh  A mesh of the problem
         ///
         ITHACAparallel(fvMesh& mesh);
 
@@ -56,6 +56,7 @@ class ITHACAparallel
         /// Totoal number of internal field cells
         int N_IF_glob;
 
+        /// Number of Boundary Patches without considering processors
         int N_BF;
 
         /// Cell proc addressing
@@ -76,10 +77,10 @@ class ITHACAparallel
         /// StartFace on the gloabl Mesh
         autoPtr<labelList> Start;
 
-        //-
+        /// ID of the OLD process
         static List<label> oldProcIDs_;
 
-        //-
+        /// ID of the NEW process
         static List<label> newProcIDs_;
 
 };
