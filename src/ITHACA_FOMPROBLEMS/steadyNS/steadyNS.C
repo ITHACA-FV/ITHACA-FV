@@ -105,8 +105,8 @@ void steadyNS::truthSolve(List<scalar> mu_now)
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
 #include "NLsolve.H"
-    exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-    exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     Ufield.append(U);
     Pfield.append(p);
     counter++;
