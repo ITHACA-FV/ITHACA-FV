@@ -434,7 +434,6 @@ void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder)
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder + "/" + s.name();
         OFstream os(fieldname);
         s.writeHeader(os);
-        Pout << s << endl;
         os << s << endl;
     }
 }

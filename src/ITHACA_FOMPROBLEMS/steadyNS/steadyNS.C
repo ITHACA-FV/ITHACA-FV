@@ -202,7 +202,17 @@ void steadyNS::solvesupremizer(word type)
         );
         Vector<double> v(0, 0, 0);
 
+        int NB = 0;
+
         for (label i = 0; i < Usup.boundaryField().size(); i++)
+        {
+            if(Usup.boundaryField()[i].type() != "processor")
+            {
+                NB++;
+            }
+        }
+
+        for (label i = 0; i < NB; i++)
         {
             changeBCtype(Usup, "fixedValue", i);
             assignBC(Usup, i, v);
@@ -222,7 +232,7 @@ void steadyNS::solvesupremizer(word type)
                     u_sup_eqn == fvc::grad(P_sup[i])
                 );
                 supfield.append(Usup);
-                exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
+                ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
             }
 
             ITHACAutilities::createSymLink("./ITHACAoutput/supfield");
