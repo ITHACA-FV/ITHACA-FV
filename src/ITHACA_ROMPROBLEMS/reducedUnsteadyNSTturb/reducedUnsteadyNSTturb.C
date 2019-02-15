@@ -298,11 +298,10 @@ void reducedUnsteadyNSTturb::solveOnline_sup(Eigen::MatrixXd& vel_now,
 
         for (label i = 0; i < Nphi_nut; i++)
         {
-            newton_object_sup.nu_c(i) = problem->rbfsplines[i]->eval(vel_now);
+            newton_object_sup.nu_c(i) = problem->rbfsplines[i]->eval(tv);
         }
 
         volScalarField nut_rec("nut_rec", problem->nuTmodes[0] * 0);
-
         for (label j = 0; j < Nphi_nut; j++)
         {
             nut_rec += problem->nuTmodes[j] * newton_object_sup.nu_c(j);
@@ -386,7 +385,6 @@ void reducedUnsteadyNSTturb::solveOnline_sup(Eigen::MatrixXd& vel_now,
                                "./ITHACAoutput/red_coeff_t");
     ITHACAstream::exportMatrix(online_solutiont, "red_coeff", "matlab",
                                "./ITHACAoutput/red_coeff_t");
-    ITHACAstream::exportFields(nutREC, "nutfield", "./ITHACAoutput/nutfield/");
     count_online_solve += 1;
 }
 
