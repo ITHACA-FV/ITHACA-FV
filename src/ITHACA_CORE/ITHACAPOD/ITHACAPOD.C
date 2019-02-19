@@ -146,21 +146,6 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshotsU);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshotsU);
         int NBC = snapshotsU[0].boundaryField().size();
-        // int NBC = 0;
-        // if (Pstream::parRun())
-        // {
-        //     for (int i = 0; i < snapshotsU[0].boundaryField().size(); i++)
-        //     {
-        //         if (snapshotsU[0].boundaryField()[i].type() == "processor")
-        //         {
-        //             NBC++;
-        //         }
-        //     }
-        // }
-        // else
-        // {
-        //     NBC = snapshotsU[0].boundaryField().size();
-        // }
         Eigen::VectorXd V = Foam2Eigen::field2Eigen(snapshotsU[0].mesh().V());
         Eigen::VectorXd V3d = (V.replicate(3, 1));
         auto VM = V3d.asDiagonal();
@@ -225,14 +210,9 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
             volVectorField tmp(snapshotsU[0].name(), snapshotsU[0] * 0);
             Eigen::VectorXd vec = modesEig.col(i);
             tmp = Foam2Eigen::Eigen2field(tmp, vec);
-
             for (int k = 0; k < NBC; k++)
             {
                 ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i));
-                // if(tmp.boundaryField()[k].type() == "processor")
-                // {
-                //     ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i)*0);
-                // }
             }
 
             modes.set(i, tmp);

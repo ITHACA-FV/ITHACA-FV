@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/red_coeff");
     // Reconstruct and export the solution
     ridotto.reconstruct_sup("./ITHACAoutput/Reconstruction/");
-    exit(0);
+    return 0;
 }
 
 //--------
