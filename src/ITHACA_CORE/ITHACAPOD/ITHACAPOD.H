@@ -50,6 +50,7 @@ SourceFiles
 #include <SymEigsSolver.h>
 #include "Eigen/Eigen"
 #include "unsupported/Eigen/SparseExtra"
+#include "mpi.h"
 #pragma GCC diagnostic pop
 
 /*---------------------------------------------------------------------------*\

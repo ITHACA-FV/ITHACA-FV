@@ -24,7 +24,7 @@
 \*---------------------------------------------------------------------------*/
 
 Info << "Reading field p\n" << endl;
-                 Info << runTime.timeName() << endl;
+Info << runTime.timeName() << endl;
 _p = autoPtr<volScalarField>
      (
          new volScalarField

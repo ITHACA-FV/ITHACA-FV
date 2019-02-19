@@ -35,92 +35,95 @@ SourceFiles
 
 class ITHACAparallel
 {
-public:
+    public:
         /// Delete empty constructor
-    ITHACAparallel() = delete;
+        ITHACAparallel() = delete;
 
         ///
         /// @brief      Constructs the object.
         ///
         /// @param      mesh  A mesh of the problem
         ///
-    ITHACAparallel(fvMesh& mesh, Time& localTime);
+        ITHACAparallel(fvMesh& mesh, Time& localTime);
 
 
         /// Function to sumpend MPI
-    static void suspendMPI();
+        static void suspendMPI();
 
         /// Function to resume MPI
-    static void resumeMPI();
+        static void resumeMPI();
 
         /// Function to get a global field from a parallel one
         template<class Type>
-    List<Field <Type> > combineFields(GeometricField<Type, fvPatchField, volMesh> & field);
+        List<Field <Type>> combineFields(GeometricField<Type, fvPatchField, volMesh>&
+                                         field);
 
         template<class type>
-    GeometricField<type, fvPatchField, volMesh> constructGlobalField(GeometricField<type, fvPatchField, volMesh> field);
+        GeometricField<type, fvPatchField, volMesh> constructGlobalField(
+            GeometricField<type, fvPatchField, volMesh> field);
 
         /// Totoal number of internal field cells
-    int N_IF_glob;
+        int N_IF_glob;
 
         /// Number of Boundary Patches without considering processors
-    int N_BF;
+        int N_BF;
 
         /// Cell proc addressing
-    autoPtr<labelIOList> indices;
+        autoPtr<labelIOList> indices;
 
         /// Face proc addressing
-    autoPtr<labelIOList> indicesF;
+        autoPtr<labelIOList> indicesF;
 
         /// Boundary Field variables representing the total number of faces for each processor
-    autoPtr<labelList> Gsize_BF;
+        autoPtr<labelList> Gsize_BF;
 
         /// Indexing
-    autoPtr< List<labelList>> IndFaceLocal;
+        autoPtr< List<labelList>> IndFaceLocal;
 
         /// Local size at the boundary
-    autoPtr<labelList> Lsize_BF;
+        autoPtr<labelList> Lsize_BF;
 
         /// StartFace on the gloabl Mesh
-    autoPtr<labelList> Start;
+        autoPtr<labelList> Start;
 
         /// ID of the OLD process
-    static List<label> oldProcIDs_;
+        static List<label> oldProcIDs_;
 
         /// ID of the NEW process
-    static List<label> newProcIDs_;
+        static List<label> newProcIDs_;
 
-    Time& runTime;
+        Time& runTime;
 
-    fvMesh& mesh;
+        fvMesh& mesh;
 
 };
 
 template<>
-List<Field<scalar> > ITHACAparallel::combineFields(GeometricField<scalar, fvPatchField, volMesh> & field);
+List<Field<scalar>> ITHACAparallel::combineFields(
+                     GeometricField<scalar, fvPatchField, volMesh>& field);
 
 template<class type>
-GeometricField<type, fvPatchField, volMesh> ITHACAparallel::constructGlobalField(GeometricField<type, fvPatchField, volMesh> field)
+GeometricField<type, fvPatchField, volMesh>
+ITHACAparallel::constructGlobalField(GeometricField<type, fvPatchField, volMesh>
+                                     field)
 {
     autoPtr<Time> globalTimePtr_;
     autoPtr<fvMesh> globalMeshPtr_;
     Time& localTime = runTime;
     fvMesh& localMesh = mesh;
-    const word globalConstant = localTime.rootPath() + "/" + localTime.globalCaseName() + "/constant";
+    const word globalConstant = localTime.rootPath() + "/" +
+                                localTime.globalCaseName() + "/constant";
     const fileName gRootPath = localTime.rootPath();
     const fileName gCaseName = localTime.globalCaseName();
-
     globalTimePtr_.reset
     (
         new Time
         (
             gRootPath,
             gCaseName
-            )
-        );
-
+        )
+    );
     Time& globalTime = globalTimePtr_();
-
     globalMeshPtr_.reset
     (
         new fvMesh
@@ -131,11 +134,10 @@ GeometricField<type, fvPatchField, volMesh> ITHACAparallel::constructGlobalField
                 globalTime.timeName(),
                 globalTime,
                 IOobject::MUST_READ
-                )
             )
-        );
-
-    GeometricField<type, fvPatchField, volMesh> F_glob 
+        )
+    );
+    GeometricField<type, fvPatchField, volMesh> F_glob
     (
         IOobject
         (

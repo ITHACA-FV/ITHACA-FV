@@ -97,7 +97,7 @@ class ITHACAutilities
         ///
         /// @param[in]  folder  The folder where to create the symbolic links
         ///
-        static void createSymLink(word folder, bool par=0);
+        static void createSymLink(word folder, bool par = 0);
 
         //--------------------------------------------------------------------------
         /// @brief      generate random matrix with random values in an interval

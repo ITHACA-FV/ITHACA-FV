@@ -45,10 +45,12 @@ steadyNS::steadyNS(int argc, char* argv[])
             (
                 new argList(argc, argv)
             );
+
     if (!_args->checkRootCase())
     {
         Foam::FatalError.exit();
     }
+
     argList& args = _args();
 #include "createTime.H"
 #include "createMesh.H"
@@ -201,12 +203,11 @@ void steadyNS::solvesupremizer(word type)
             scalar(1)
         );
         Vector<double> v(0, 0, 0);
-
         int NB = 0;
 
         for (label i = 0; i < Usup.boundaryField().size(); i++)
         {
-            if(Usup.boundaryField()[i].type() != "processor")
+            if (Usup.boundaryField()[i].type() != "processor")
             {
                 NB++;
             }
@@ -235,7 +236,15 @@ void steadyNS::solvesupremizer(word type)
                 ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
             }
 
-            ITHACAutilities::createSymLink("./ITHACAoutput/supfield");
+            if (!Pstream::parRun())
+            {
+                ITHACAutilities::createSymLink("./ITHACAoutput/supfield");
+            }
+            else
+            {
+                ITHACAutilities::createSymLink("./ITHACAoutput/supfield");
+                ITHACAutilities::createSymLink("./ITHACAoutput/supfield", 1);
+            }
         }
         else
         {
@@ -250,10 +259,17 @@ void steadyNS::solvesupremizer(word type)
                     u_sup_eqn == fvc::grad(Pmodes[i])
                 );
                 supmodes.append(Usup);
-                exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
+                ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
             }
 
-            ITHACAutilities::createSymLink("./ITHACAoutput/supremizer");
+            if (!Pstream::parRun())
+            {
+                ITHACAutilities::createSymLink("./ITHACAoutput/supremizer");
+            }
+            else
+            {
+                ITHACAutilities::createSymLink("./ITHACAoutput/supremizer", 1);
+            }
         }
     }
 }

@@ -37,58 +37,64 @@ SourceFiles
 
 class tutorial03 : public steadyNS
 {
-public:
+    public:
         /// Constructor
-    explicit tutorial03(int argc, char* argv[])
-    :
-    steadyNS(argc, argv),
-    U(_U()),
-    p(_p()),
-    args(_args())
-    {
-        autoPtr<volVectorField> Uglob;
-        if (Pstream::master() && Pstream::parRun())
+        explicit tutorial03(int argc, char* argv[])
+            :
+            steadyNS(argc, argv),
+            U(_U()),
+            p(_p()),
+            args(_args())
         {
-            paral->suspendMPI();
-            Uglob = autoPtr<volVectorField>(new volVectorField(paral->constructGlobalField(U)));
-            paral->resumeMPI();
-        }
-    }
+            autoPtr<volVectorField> Uglob;
 
-    argList& args;
-
-        /// Velocity field
-    volVectorField& U;
-        /// Pressure field
-    volScalarField& p;
-
-        /// Perform an Offline solve
-    void offlineSolve()
-    {
-        Vector<double> inl(0, 0, 0);
-        List<scalar> mu_now(1);
-
-            // if the offline solution is already performed read the fields
-        if (offline)
-        {
-            ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-            ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-            mu_samples =
-            ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
-        }
-        else
-        {
-            Vector<double> Uinl(0, 0, 0);
-
-            for (label i = 0; i < mu.cols(); i++)
+            if (Pstream::master() && Pstream::parRun())
             {
-                mu_now[0] = mu(0, i);
-                change_viscosity(mu(0, i));
-                assignIF(U, Uinl);
-                truthSolve(mu_now);
+                paral->suspendMPI();
+                Uglob = autoPtr<volVectorField>(new volVectorField(paral->constructGlobalField(
+                                                    U)));
+                paral->resumeMPI();
             }
         }
-    }
+
+        argList& args;
+
+        /// Velocity field
+        volVectorField& U;
+        /// Pressure field
+        volScalarField& p;
+
+        /// Perform an Offline solve
+        void offlineSolve()
+        {
+            Vector<double> inl(0, 0, 0);
+            List<scalar> mu_now(1);
+            volVectorField U0 = U;
+            volScalarField P0 = p;
+
+            // if the offline solution is already performed read the fields
+            if (offline)
+            {
+                ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+                ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+                mu_samples =
+                    ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+            }
+            else
+            {
+                Vector<double> Uinl(0, 0, 0);
+
+                for (label i = 0; i < mu.cols(); i++)
+                {
+                    U = U0;
+                    p = P0;
+                    mu_now[0] = mu(0, i);
+                    change_viscosity(mu(0, i));
+                    //assignIF(U, Uinl);
+                    truthSolve(mu_now);
+                }
+            }
+        }
 };
 
 
@@ -121,11 +127,11 @@ int main(int argc, char* argv[])
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     // Perform POD on velocity pressure and supremizers and store the first 10 modes
     ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0,
-        NmodesUout);
+                        NmodesUout);
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
-        NmodesPout);
+                        NmodesPout);
     ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex,
-        example.supex, 1, NmodesSUPout);
+                        example.supex, 1, NmodesSUPout);
     // Perform the Galerkin Projection
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
     // Create the reduced object
@@ -149,11 +155,11 @@ int main(int argc, char* argv[])
 
     // Save the online solution
     ITHACAstream::exportMatrix(ridotto.online_solution, "red_coeff", "python",
-       "./ITHACAoutput/red_coeff");
+                               "./ITHACAoutput/red_coeff");
     ITHACAstream::exportMatrix(ridotto.online_solution, "red_coeff", "matlab",
-       "./ITHACAoutput/red_coeff");
+                               "./ITHACAoutput/red_coeff");
     ITHACAstream::exportMatrix(ridotto.online_solution, "red_coeff", "eigen",
-       "./ITHACAoutput/red_coeff");
+                               "./ITHACAoutput/red_coeff");
     // Reconstruct and export the solution
     ridotto.reconstruct_sup("./ITHACAoutput/Reconstruction/");
     exit(0);

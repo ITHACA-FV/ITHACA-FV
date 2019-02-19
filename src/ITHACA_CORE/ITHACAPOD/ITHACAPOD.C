@@ -146,10 +146,33 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshotsU);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshotsU);
         int NBC = snapshotsU[0].boundaryField().size();
+        // int NBC = 0;
+        // if (Pstream::parRun())
+        // {
+        //     for (int i = 0; i < snapshotsU[0].boundaryField().size(); i++)
+        //     {
+        //         if (snapshotsU[0].boundaryField()[i].type() == "processor")
+        //         {
+        //             NBC++;
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     NBC = snapshotsU[0].boundaryField().size();
+        // }
         Eigen::VectorXd V = Foam2Eigen::field2Eigen(snapshotsU[0].mesh().V());
         Eigen::VectorXd V3d = (V.replicate(3, 1));
         auto VM = V3d.asDiagonal();
         Eigen::MatrixXd _corMatrix = SnapMatrix.transpose() * VM * SnapMatrix;
+
+        if (Pstream::parRun())
+        {
+            List<double> vec(_corMatrix.data(), _corMatrix.data() + _corMatrix.size());
+            reduce(vec, sumOp<List<double>>());
+            std::memcpy(_corMatrix.data(), &vec[0], sizeof (double)*vec.size());
+        }
+
         Eigen::VectorXd eigenValueseig;
         Eigen::MatrixXd eigenVectoreig;
         modes.resize(nmodes);
@@ -203,21 +226,15 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
             Eigen::VectorXd vec = modesEig.col(i);
             tmp = Foam2Eigen::Eigen2field(tmp, vec);
 
-            for (int k = 0; k < tmp.boundaryField().size(); k++)
+            for (int k = 0; k < NBC; k++)
             {
                 ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i));
+                // if(tmp.boundaryField()[k].type() == "processor")
+                // {
+                //     ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i)*0);
+                // }
             }
 
-            // const fvPatchList & patches = tmp.mesh().boundary();
-            // // Adjusting boundary conditions
-            // forAll(patches, iPatch)
-            // {
-            //     UList<vector> myList(tmp.boundaryField()[iPatch].patchInternalField());
-            //     forAll(tmp.boundaryFieldRef()[iPatch], iCell)
-            //     {
-            //         tmp.boundaryFieldRef()[iPatch][iCell] = myList[iCell];
-            //     }
-            // }
             modes.set(i, tmp);
         }
 
@@ -231,7 +248,18 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
 
         Info << "####### Saving the POD bases for " << snapshotsU[0].name() <<
              " #######" << endl;
-        ITHACAPOD::exportBases(modes, snapshotsU, sup);
+
+        //ITHACAPOD::exportBases(modes, snapshotsU, sup);
+        if (sup)
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
+                                       snapshotsU[0].name());
+        }
+        else
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsU[0].name());
+        }
+
         Eigen::saveMarketVector(eigenValueseig,
                                 "./ITHACAoutput/POD/Eigenvalues_" + snapshotsU[0].name(), para.precision,
                                 para.outytpe);
@@ -285,9 +313,32 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshotsP);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshotsP);
         int NBC = snapshotsP[0].boundaryField().size();
+        // int NBC = 0;
+        // if (Pstream::parRun())
+        // {
+        //     for (int i = 0; i < snapshotsP[0].boundaryField().size(); i++)
+        //     {
+        //         if (snapshotsP[0].boundaryField()[i].type() == "processor")
+        //         {
+        //             NBC++;
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     NBC = snapshotsP[0].boundaryField().size();
+        // }
         Eigen::VectorXd V = Foam2Eigen::field2Eigen(snapshotsP[0].mesh().V());
         auto VM = V.asDiagonal();
         Eigen::MatrixXd _corMatrix = SnapMatrix.transpose() * VM * SnapMatrix;
+
+        if (Pstream::parRun())
+        {
+            List<double> vec(_corMatrix.data(), _corMatrix.data() + _corMatrix.size());
+            reduce(vec, sumOp<List<double>>());
+            std::memcpy(_corMatrix.data(), &vec[0], sizeof (double)*vec.size());
+        }
+
         Eigen::VectorXd eigenValueseig;
         Eigen::MatrixXd eigenVectoreig;
         modes.resize(nmodes);
@@ -369,7 +420,18 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
 
         Info << "####### Saving the POD bases for " << snapshotsP[0].name() <<
              " #######" << endl;
-        ITHACAPOD::exportBases(modes, snapshotsP, sup);
+
+        //ITHACAPOD::exportBases(modes, snapshotsP, sup);
+        if (sup)
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
+                                       snapshotsP[0].name());
+        }
+        else
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsP[0].name());
+        }
+
         Eigen::saveMarketVector(eigenValueseig,
                                 "./ITHACAoutput/POD/Eigenvalues_" + snapshotsP[0].name(), para.precision,
                                 para.outytpe);
@@ -495,7 +557,18 @@ void ITHACAPOD::getWeightedModes(PtrList<volVectorField>& snapshotsU,
 
         Info << "####### Saving the POD bases for " << snapshotsU[0].name() <<
              " #######" << endl;
-        ITHACAPOD::exportBases(modes, snapshotsU, sup);
+
+        //ITHACAPOD::exportBases(modes, snapshotsU, sup);
+        if (sup)
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
+                                       snapshotsU[0].name());
+        }
+        else
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsU[0].name());
+        }
+
         Eigen::saveMarketVector(eigenValueseig,
                                 "./ITHACAoutput/POD/Eigenvalues_" + snapshotsU[0].name(), para.precision,
                                 para.outytpe);
@@ -622,7 +695,18 @@ void ITHACAPOD::getWeightedModes(PtrList<volScalarField>& snapshotsP,
 
         Info << "####### Saving the POD bases for " << snapshotsP[0].name() <<
              " #######" << endl;
-        ITHACAPOD::exportBases(modes, snapshotsP, sup);
+
+        //ITHACAPOD::exportBases(modes, snapshotsP, sup);
+        if (sup)
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
+                                       snapshotsP[0].name());
+        }
+        else
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsP[0].name());
+        }
+
         Eigen::saveMarketVector(eigenValueseig,
                                 "./ITHACAoutput/POD/Eigenvalues_" + snapshotsP[0].name(), para.precision,
                                 para.outytpe);
@@ -691,7 +775,18 @@ void ITHACAPOD::getModesSVD(PtrList<volVectorField>& snapshotsU,
         Info << "####### Saving the POD bases for " << snapshotsU[0].name() <<
              " #######" << endl;
         ITHACAparameters para;
-        ITHACAPOD::exportBases(modes, snapshotsU, sup);
+
+        if (sup)
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
+                                       snapshotsU[0].name());
+        }
+        else
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsU[0].name());
+        }
+
+        //ITHACAPOD::exportBases(modes, snapshotsU, sup);
         Eigen::saveMarketVector(eigenValueseig,
                                 "./ITHACAoutput/POD/Eigenvalues_" + snapshotsU[0].name(), para.precision,
                                 para.outytpe);
@@ -759,7 +854,18 @@ void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshotsP,
         Info << "####### Saving the POD bases for " << snapshotsP[0].name() <<
              " #######" << endl;
         ITHACAparameters para;
-        ITHACAPOD::exportBases(modes, snapshotsP, sup);
+
+        if (sup)
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer",
+                                       snapshotsP[0].name());
+        }
+        else
+        {
+            ITHACAstream::exportFields(modes, "./ITHACAoutput/POD", snapshotsP[0].name());
+        }
+
+        //ITHACAPOD::exportBases(modes, snapshotsP, sup);
         Eigen::saveMarketVector(eigenValueseig,
                                 "./ITHACAoutput/POD/Eigenvalues_" + snapshotsP[0].name(), para.precision,
                                 para.outytpe);
@@ -773,11 +879,11 @@ void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshotsP,
 
         if (sup == 1)
         {
-            ITHACAstream::read_fields(modes, snapshotsP[0], "./ITHACAoutput/supremizer/");
+            ITHACAstream::read_fields(modes, snapshotsP[0], "./ITHACAoutput/supremizer");
         }
         else
         {
-            ITHACAstream::read_fields (modes, snapshotsP[0], "./ITHACAoutput/POD/");
+            ITHACAstream::read_fields (modes, snapshotsP[0], "./ITHACAoutput/POD");
         }
     }
 }
