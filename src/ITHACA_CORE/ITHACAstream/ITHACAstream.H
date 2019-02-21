@@ -50,7 +50,6 @@ SourceFiles
 #include "ITHACAutilities.H"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
-#pragma GCC diagnostic ignored "-Wignored-attributes"
 #include "Eigen/Eigen"
 #include "unsupported/Eigen/CXX11/Tensor"
 #pragma GCC diagnostic pop

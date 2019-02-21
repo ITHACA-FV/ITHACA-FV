@@ -174,15 +174,7 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
 void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
 {
     mkDir(folder);
-    if (!Pstream::parRun())
-    {
-        ITHACAutilities::createSymLink(folder);
-    }
-    else
-    {
-        ITHACAutilities::createSymLink(folder, 1);
-        ITHACAutilities::createSymLink(folder);
-    }
+    ITHACAutilities::createSymLink(folder);
     int counter = 0;
     int nextwrite = 0;
 
@@ -216,15 +208,7 @@ void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
 void reducedSteadyNS::reconstruct_sup(fileName folder, int printevery)
 {
     mkDir(folder);
-    if (!Pstream::parRun())
-    {
-        ITHACAutilities::createSymLink(folder);
-    }
-    else
-    {
-        ITHACAutilities::createSymLink(folder, 1);
-        ITHACAutilities::createSymLink(folder);
-    }
+    ITHACAutilities::createSymLink(folder);
     int counter = 0;
     int nextwrite = 0;
 

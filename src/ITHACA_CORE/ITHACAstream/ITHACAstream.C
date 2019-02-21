@@ -44,16 +44,7 @@ License
 void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder,
                                 word fieldname)
 {
-    if (!Pstream::parRun())
-    {
-        ITHACAutilities::createSymLink(folder);
-    }
-    else
-    {
-        ITHACAutilities::createSymLink(folder);
-        ITHACAutilities::createSymLink(folder, 1);
-    }
-
+    ITHACAutilities::createSymLink(folder);
     for (label j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
@@ -63,16 +54,7 @@ void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder,
 void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder,
                                 word fieldname)
 {
-    if (!Pstream::parRun())
-    {
-        ITHACAutilities::createSymLink(folder);
-    }
-    else
-    {
-        ITHACAutilities::createSymLink(folder);
-        ITHACAutilities::createSymLink(folder, 1);
-    }
-
+    ITHACAutilities::createSymLink(folder);
     for (label j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);

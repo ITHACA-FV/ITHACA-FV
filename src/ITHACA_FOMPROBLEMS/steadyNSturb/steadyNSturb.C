@@ -94,9 +94,7 @@ void steadyNSturb::truthSolve(List<scalar> mu_now)
     exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
     exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     volScalarField _nut(turbulence->nut());
-    //volScalarField nuTilda = mesh.lookupObject<volScalarField>("nuTilda");
     exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
-    //exportSolution(nuTilda, name(counter), "./ITHACAoutput/Offline/");
     Ufield.append(U);
     Pfield.append(p);
     nutFields.append(_nut);

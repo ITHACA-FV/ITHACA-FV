@@ -100,7 +100,8 @@ class tutorial03 : public steadyNS
 
 int main(int argc, char* argv[])
 {
-    // Construct the tutorial object
+	auto start = std::chrono::high_resolution_clock::now();
+	// Construct the tutorial object
     tutorial03 example(argc, argv);
     // Read some parameters from file
     ITHACAparameters para;
@@ -121,7 +122,6 @@ int main(int argc, char* argv[])
     example.offlineSolve();
     // Solve the supremizer problem
     example.solvesupremizer();
-    Pout << "here" << endl;
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // Homogenize the snapshots
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
@@ -162,6 +162,13 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/red_coeff");
     // Reconstruct and export the solution
     ridotto.reconstruct_sup("./ITHACAoutput/Reconstruction/");
+
+    auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = finish - start;
+	if(Pstream::master())
+	{
+		std::cout << "Elapsed time: " << elapsed.count() << std::endl;
+	}
     return 0;
 }
 

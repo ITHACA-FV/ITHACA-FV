@@ -66,7 +66,7 @@ List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index, int layers)
 }
 
 List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index_row,
-                                      int index_col, int layers)
+  int index_col, int layers)
 {
     List<int> out;
     out.resize(2);
@@ -94,15 +94,15 @@ List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index_row,
 }
 
 
-void ITHACAutilities::createSymLink(word folder, bool par)
+void ITHACAutilities::createSymLink(word folder)
 {
-    if (!par)
+    if (!Pstream::parRun())
     {
         mkDir(folder);
         word command1("ln -s  $(readlink -f constant/) " + folder + "/" +
-                      " >/dev/null 2>&1");
+          " >/dev/null 2>&1");
         word command2("ln -s  $(readlink -f system/) " + folder + "/" +
-                      " >/dev/null 2>&1");
+          " >/dev/null 2>&1");
         word command3("ln -s  $(readlink -f 0/) " + folder + "/" + " >/dev/null 2>&1");
         std::cout.setstate(std::ios_base::failbit);
         system(command1);
@@ -112,15 +112,28 @@ void ITHACAutilities::createSymLink(word folder, bool par)
     }
     else
     {
+        // Serial Part
+        mkDir(folder);
+        word command1s("ln -s  $(readlink -f constant/) " + folder + "/" +
+          " >/dev/null 2>&1");
+        word command2s("ln -s  $(readlink -f system/) " + folder + "/" +
+          " >/dev/null 2>&1");
+        word command3s("ln -s  $(readlink -f 0/) " + folder + "/" + " >/dev/null 2>&1");
+        std::cout.setstate(std::ios_base::failbit);
+        system(command1s);
+        system(command2s);
+        system(command3s);
+        std::cout.clear();
+        // Parallel Part
         mkDir(folder + "/processor" + name(Pstream::myProcNo()));
         word command1("ln -s  $(readlink -f processor" + name(Pstream::myProcNo()) +
-                      "/constant/) " + folder + "/processor" +
-                      name(Pstream::myProcNo()) + "/ >/dev/null 2>&1");
+          "/constant/) " + folder + "/processor" +
+          name(Pstream::myProcNo()) + "/ >/dev/null 2>&1");
         word command2("ln -s  $(readlink -f system/) " + folder + "/processor" +
-                      name(Pstream::myProcNo()) + "/ >/dev/null 2>&1");
+          name(Pstream::myProcNo()) + "/ >/dev/null 2>&1");
         word command3("ln -s  $(readlink -f processor" + name(Pstream::myProcNo()) +
-                      "/0/) " + folder + "/processor" +
-                      name(Pstream::myProcNo()) + "/ >/dev/null 2>&1");
+          "/0/) " + folder + "/processor" +
+          name(Pstream::myProcNo()) + "/ >/dev/null 2>&1");
         std::cout.setstate(std::ios_base::failbit);
         system(command1);
         system(command2);
@@ -130,7 +143,7 @@ void ITHACAutilities::createSymLink(word folder, bool par)
 }
 
 Eigen::MatrixXd ITHACAutilities::rand(int rows, int cols, double min,
-                                      double max)
+  double max)
 {
     Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);
     matr = (matr.array() + 1) / 2;
@@ -166,26 +179,18 @@ bool ITHACAutilities::check_pod()
             pod_exist = true;
             Info << "POD data already exist, reading existing modes" << endl;
         }
-        else
+        else if(!Pstream::parRun())
         {
             pod_exist = false;
             Info << "POD don't exist, performing a POD decomposition" << endl;
             mkDir("./ITHACAoutput/POD");
-            createSymLink("./ITHACAoutput/POD");
         }
     }
-
-    if (!Pstream::parRun())
-    {
-        createSymLink("./ITHACAoutput/POD");
-    }
-    else
-    {
-        createSymLink("./ITHACAoutput/POD");
-        createSymLink("./ITHACAoutput/POD", 1);
-    }
-
     reduce(pod_exist, sumOp<int>());
+    if (!pod_exist)
+    {
+        createSymLink("./ITHACAoutput/POD");
+    }
     return pod_exist;
 }
 
@@ -208,18 +213,12 @@ bool ITHACAutilities::check_off()
             mkDir("./ITHACAoutput/Offline");
         }
     }
-
-    if (!Pstream::parRun())
-    {
-        createSymLink("./ITHACAoutput/Offline");
-    }
-    else
-    {
-        createSymLink("./ITHACAoutput/Offline");
-        createSymLink("./ITHACAoutput/Offline", 1);
-    }
-
     reduce(off_exist, sumOp<int>());
+
+    if (!off_exist)
+    {
+        createSymLink("./ITHACAoutput/Offline");
+    }
     return off_exist;
 }
 
@@ -242,18 +241,11 @@ bool ITHACAutilities::check_sup()
             mkDir("./ITHACAoutput/supremizer");
         }
     }
-
-    if (!Pstream::parRun())
-    {
-        createSymLink("./ITHACAoutput/supremizer");
-    }
-    else
-    {
-        createSymLink("./ITHACAoutput/supremizer", 1);
-        createSymLink("./ITHACAoutput/supremizer");
-    }
-
     reduce(sup_exist, sumOp<int>());
+    if (!sup_exist)
+    {
+        createSymLink("./ITHACAoutput/supremizer");
+    }
     return sup_exist;
 }
 
@@ -331,7 +323,7 @@ PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
 }
 
 double ITHACAutilities::error_fields(volVectorField& field1,
-                                     volVectorField& field2)
+   volVectorField& field2)
 {
     double err = L2norm(field1 - field2) / L2norm(field1);
     return err;
@@ -339,14 +331,14 @@ double ITHACAutilities::error_fields(volVectorField& field1,
 
 
 double ITHACAutilities::error_fields_abs(volVectorField& field1,
-        volVectorField& field2)
+    volVectorField& field2)
 {
     double err = L2norm(field1 - field2);
     return err;
 }
 
 Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volVectorField>&
-        fields1, PtrList<volVectorField>& fields2)
+    fields1, PtrList<volVectorField>& fields2)
 {
     Eigen::VectorXd err;
 
@@ -368,7 +360,7 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volVectorField>&
 }
 
 Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volVectorField>&
-        fields1, PtrList<volVectorField>& fields2)
+    fields1, PtrList<volVectorField>& fields2)
 {
     Eigen::VectorXd err;
 
@@ -390,7 +382,7 @@ Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volVectorField>&
 }
 
 double ITHACAutilities::error_fields(volScalarField& field1,
-                                     volScalarField& field2)
+   volScalarField& field2)
 {
     double err = L2norm(field1 - field2) / L2norm(field1);
     return err;
@@ -398,14 +390,14 @@ double ITHACAutilities::error_fields(volScalarField& field1,
 
 
 double ITHACAutilities::error_fields_abs(volScalarField& field1,
-        volScalarField& field2)
+    volScalarField& field2)
 {
     double err = L2norm(field1 - field2);
     return err;
 }
 
 Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volScalarField>&
-        fields1, PtrList<volScalarField>& fields2)
+    fields1, PtrList<volScalarField>& fields2)
 {
     Eigen::VectorXd err;
 
@@ -427,7 +419,7 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volScalarField>&
 }
 
 Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volScalarField>&
-        fields1, PtrList<volScalarField>& fields2)
+    fields1, PtrList<volScalarField>& fields2)
 {
     Eigen::VectorXd err;
 
@@ -449,7 +441,7 @@ Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volScalarField>&
 }
 
 Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes,
-        int Nmodes)
+    int Nmodes)
 {
     label Msize;
 
@@ -463,7 +455,7 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes,
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd M_matrix(Msize, Msize);
 
     // Project everything
@@ -479,7 +471,7 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes,
 }
 
 Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
-        int Nmodes)
+    int Nmodes)
 {
     label Msize;
 
@@ -493,7 +485,7 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd M_matrix(Msize, Msize);
 
     // Project everything
@@ -509,7 +501,7 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
 }
 
 Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,
-        PtrList<volVectorField>& modes, int Nmodes)
+    PtrList<volVectorField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -523,7 +515,7 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd M_matrix = get_mass_matrix(modes, Nmodes);
     Eigen::VectorXd a(Msize);
     Eigen::VectorXd b(Msize);
@@ -539,7 +531,7 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,
 }
 
 Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot,
-        PtrList<volScalarField>& modes, int Nmodes)
+    PtrList<volScalarField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -553,7 +545,7 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot,
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd M_matrix = get_mass_matrix(modes, Msize);
     Eigen::VectorXd a(Msize);
     Eigen::VectorXd b(Msize);
@@ -569,7 +561,7 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot,
 }
 
 Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<volScalarField>  snapshots,
-        PtrList<volScalarField> modes, int Nmodes)
+    PtrList<volScalarField> modes, int Nmodes)
 {
     label Msize;
 
@@ -583,7 +575,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<volScalarField>  snapshots,
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd M_matrix = get_mass_matrix(modes, Msize);
     Eigen::VectorXd a(Msize);
     Eigen::VectorXd b(Msize);
@@ -604,7 +596,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<volScalarField>  snapshots,
 }
 
 Eigen::MatrixXd ITHACAutilities::get_coeffs( PtrList<volVectorField>  snapshots,
-        PtrList<volVectorField> modes, int Nmodes)
+    PtrList<volVectorField> modes, int Nmodes)
 {
     label Msize;
 
@@ -618,7 +610,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs( PtrList<volVectorField>  snapshots,
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd M_matrix = get_mass_matrix(modes, Msize);
     Eigen::VectorXd a(Msize);
     Eigen::VectorXd b(Msize);
@@ -639,7 +631,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs( PtrList<volVectorField>  snapshots,
 
 
 Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volScalarField>
-        snapshots, PtrList<volScalarField>& modes, int Nmodes)
+    snapshots, PtrList<volScalarField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -653,7 +645,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volScalarField>
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd coeff(Msize, snapshots.size());
 
     for (auto i = 0; i < Msize; i++)
@@ -669,7 +661,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volScalarField>
 
 
 Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volVectorField>
-        snapshots, PtrList<volVectorField>& modes, int Nmodes)
+    snapshots, PtrList<volVectorField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -683,7 +675,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volVectorField>
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd coeff(Msize, snapshots.size());
 
     for (auto i = 0; i < Msize; i++)
@@ -698,7 +690,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volVectorField>
 }
 
 Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
-        PtrList<volScalarField>& modes, int Nmodes)
+    PtrList<volScalarField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -712,7 +704,7 @@ Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::VectorXd b(Msize);
 
     // Project everything
@@ -725,7 +717,7 @@ Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
 }
 
 Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volVectorField
-        snapshot, PtrList<volVectorField>& modes, int Nmodes)
+    snapshot, PtrList<volVectorField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -739,7 +731,7 @@ Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volVectorField
     }
 
     M_Assert(modes.size() >= Msize,
-             "The Number of requested modes is larger then the available quantity.");
+       "The Number of requested modes is larger then the available quantity.");
     Eigen::VectorXd b(Msize);
 
     // Project everything
@@ -771,7 +763,7 @@ double ITHACAutilities::H1seminorm(volScalarField field)
 {
     double a;
     a = Foam::sqrt(fvc::domainIntegrate(fvc::grad(field) & fvc::grad(
-                                            field)).value());
+        field)).value());
     return a;
 }
 
@@ -779,12 +771,12 @@ double ITHACAutilities::H1seminorm(volVectorField field)
 {
     double a;
     a = Foam::sqrt(fvc::domainIntegrate(fvc::grad(field)
-                                        && fvc::grad(field)).value());
+        && fvc::grad(field)).value());
     return a;
 }
 
 void ITHACAutilities::setBoxToValue(volScalarField& field, Eigen::MatrixXd Box,
-                                    double value)
+    double value)
 {
     for (label i = 0; i < field.internalField().size(); i++)
     {
@@ -793,7 +785,7 @@ void ITHACAutilities::setBoxToValue(volScalarField& field, Eigen::MatrixXd Box,
         auto cz = field.mesh().C()[i].component(vector::Z);
 
         if (cx >= Box(0, 0) && cy >= Box(0, 1) && cz >= Box(0, 2) && cx <= Box(1, 0)
-                && cy <= Box(1, 1) && cz <= Box(1, 2) )
+            && cy <= Box(1, 1) && cz <= Box(1, 2) )
         {
             field.ref()[i] = value;
         }
@@ -804,14 +796,14 @@ void ITHACAutilities::setBoxToValue(volScalarField& field, Eigen::MatrixXd Box,
         for (label j = 0; j < field.boundaryField()[i].size(); j++)
         {
             if (field.boundaryField()[i].type() == "fixedValue"
-                    || field.boundaryField()[i].type() == "calculated")
+                || field.boundaryField()[i].type() == "calculated")
             {
                 auto cx = field.mesh().C().boundaryField()[i][j][0];
                 auto cy = field.mesh().C().boundaryField()[i][j][1];
                 auto cz = field.mesh().C().boundaryField()[i][j][2];
 
                 if (cx >= Box(0, 0) && cy >= Box(0, 1) && cz >= Box(0, 2) && cx <= Box(1, 0)
-                        && cy <= Box(1, 1) && cz <= Box(1, 2) )
+                    && cy <= Box(1, 1) && cz <= Box(1, 2) )
                 {
                     field.boundaryFieldRef()[i][j] = value;
                 }
@@ -841,7 +833,7 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         fixedGradientFvPatchScalarField& Tpatch =
-            refCast<fixedGradientFvPatchScalarField>(s.boundaryFieldRef()[BC_ind]);
+        refCast<fixedGradientFvPatchScalarField>(s.boundaryFieldRef()[BC_ind]);
         scalarField& gradTpatch = Tpatch.gradient();
         forAll(gradTpatch, faceI)
         {
@@ -863,7 +855,7 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
         }
 
         freestreamFvPatchField<scalar>& Tpatch =
-            refCast<freestreamFvPatchField<scalar>>(s.boundaryFieldRef()[BC_ind]);
+        refCast<freestreamFvPatchField<scalar>>(s.boundaryFieldRef()[BC_ind]);
         scalarField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
@@ -891,10 +883,10 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
 
 // Assign a BC for a scalar field
 void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
-                               Vector<double>& value)
+ Vector<double>& value)
 {
     if (s.boundaryField()[BC_ind].type() == "fixedValue"
-            || s.boundaryField()[BC_ind].type() == "processor")
+        || s.boundaryField()[BC_ind].type() == "processor")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
         {
@@ -914,7 +906,7 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
         }
 
         freestreamFvPatchField<vector>& Tpatch =
-            refCast<freestreamFvPatchField<vector>>(s.boundaryFieldRef()[BC_ind]);
+        refCast<freestreamFvPatchField<vector>>(s.boundaryFieldRef()[BC_ind]);
         vectorField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
@@ -924,12 +916,12 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
 }
 
 void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
-                               Eigen::MatrixXd valueVec)
+ Eigen::MatrixXd valueVec)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
 
     if (typeBC == "fixedValue" || typeBC == "calculated"
-            || typeBC == "fixedFluxPressure" ||  typeBC == "processor")
+        || typeBC == "fixedFluxPressure" ||  typeBC == "processor")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
         {
@@ -940,7 +932,7 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         fixedGradientFvPatchScalarField& Tpatch =
-            refCast<fixedGradientFvPatchScalarField>(s.boundaryFieldRef()[BC_ind]);
+        refCast<fixedGradientFvPatchScalarField>(s.boundaryFieldRef()[BC_ind]);
         scalarField& gradTpatch = Tpatch.gradient();
         forAll(gradTpatch, faceI)
         {
@@ -957,7 +949,7 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
         }
 
         freestreamFvPatchField<scalar>& Tpatch =
-            refCast<freestreamFvPatchField<scalar>>(s.boundaryFieldRef()[BC_ind]);
+        refCast<freestreamFvPatchField<scalar>>(s.boundaryFieldRef()[BC_ind]);
         scalarField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
@@ -972,7 +964,7 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
 
 // Assign a BC for a scalar field
 void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
-                               Eigen::MatrixXd valueVec)
+ Eigen::MatrixXd valueVec)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
     int sizeBC = s.boundaryField()[BC_ind].size();
@@ -982,7 +974,7 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
         for (label i = 0; i < sizeBC; i++)
         {
             Vector<double> value(valueVec(i), valueVec(i + sizeBC),
-                                 valueVec(i + sizeBC * 2));
+               valueVec(i + sizeBC * 2));
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
@@ -996,17 +988,17 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
         {
             Vector<double> value(valueVec(i), valueVec(i + sizeBC),
-                                 valueVec(i + sizeBC * 2));
+               valueVec(i + sizeBC * 2));
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
 
         freestreamFvPatchField<vector>& Tpatch =
-            refCast<freestreamFvPatchField<vector>>(s.boundaryFieldRef()[BC_ind]);
+        refCast<freestreamFvPatchField<vector>>(s.boundaryFieldRef()[BC_ind]);
         vectorField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
             Vector<double> value(valueVec(faceI), valueVec(faceI + sizeBC),
-                                 valueVec(faceI + sizeBC * 2));
+               valueVec(faceI + sizeBC * 2));
             gradTpatch[faceI] = value;
         }
     }
