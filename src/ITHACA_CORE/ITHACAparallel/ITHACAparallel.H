@@ -42,9 +42,9 @@ class ITHACAparallel
         ///
         /// @brief      Constructs the object.
         ///
-        /// @param      field  A field can be either a volvectorfield or a volscalarfield.
+        /// @param      mesh  A mesh of the problem
         ///
-        ITHACAparallel(fvMesh& mesh);
+        ITHACAparallel(fvMesh& mesh, Time& localTime);
 
 
         /// Function to sumpend MPI
@@ -53,9 +53,19 @@ class ITHACAparallel
         /// Function to resume MPI
         static void resumeMPI();
 
+        /// Function to get a global field from a parallel one
+        template<class Type>
+        List<Field <Type>> combineFields(GeometricField<Type, fvPatchField, volMesh>&
+                                         field);
+
+        template<class type>
+        GeometricField<type, fvPatchField, volMesh> constructGlobalField(
+            GeometricField<type, fvPatchField, volMesh> field);
+
         /// Totoal number of internal field cells
         int N_IF_glob;
 
+        /// Number of Boundary Patches without considering processors
         int N_BF;
 
         /// Cell proc addressing
@@ -76,14 +86,71 @@ class ITHACAparallel
         /// StartFace on the gloabl Mesh
         autoPtr<labelList> Start;
 
-        //-
+        /// ID of the OLD process
         static List<label> oldProcIDs_;
 
-        //-
+        /// ID of the NEW process
         static List<label> newProcIDs_;
+
+        Time& runTime;
+
+        fvMesh& mesh;
 
 };
 
+template<>
+List<Field<scalar>> ITHACAparallel::combineFields(
+                     GeometricField<scalar, fvPatchField, volMesh>& field);
+
+template<class type>
+GeometricField<type, fvPatchField, volMesh>
+ITHACAparallel::constructGlobalField(GeometricField<type, fvPatchField, volMesh>
+                                     field)
+{
+    autoPtr<Time> globalTimePtr_;
+    autoPtr<fvMesh> globalMeshPtr_;
+    Time& localTime = runTime;
+    fvMesh& localMesh = mesh;
+    const word globalConstant = localTime.rootPath() + "/" +
+                                localTime.globalCaseName() + "/constant";
+    const fileName gRootPath = localTime.rootPath();
+    const fileName gCaseName = localTime.globalCaseName();
+    globalTimePtr_.reset
+    (
+        new Time
+        (
+            gRootPath,
+            gCaseName
+        )
+    );
+    Time& globalTime = globalTimePtr_();
+    globalMeshPtr_.reset
+    (
+        new fvMesh
+        (
+            IOobject
+            (
+                fvMesh::defaultRegion,
+                globalTime.timeName(),
+                globalTime,
+                IOobject::MUST_READ
+            )
+        )
+    );
+    GeometricField<type, fvPatchField, volMesh> F_glob
+    (
+        IOobject
+        (
+            field.name(),
+            globalTimePtr_().timeName(),
+            globalMeshPtr_(),
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        globalMeshPtr_()
+    );
+    return F_glob;
+}
 #endif
 
 

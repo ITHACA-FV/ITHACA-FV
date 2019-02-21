@@ -50,7 +50,6 @@ SourceFiles
 #include "ITHACAutilities.H"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
-#pragma GCC diagnostic ignored "-Wignored-attributes"
 #include "Eigen/Eigen"
 #include "unsupported/Eigen/CXX11/Tensor"
 #pragma GCC diagnostic pop
@@ -397,22 +396,48 @@ template<typename T>
 void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder,
                                   word fieldName)
 {
-    mkDir(folder + "/" + subfolder);
-    T act(fieldName, s);
-    fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
-    OFstream os(fieldname);
-    act.writeHeader(os);
-    os << act << endl;
+    if (!Pstream::parRun())
+    {
+        mkDir(folder + "/" + subfolder);
+        T act(fieldName, s);
+        fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
+        OFstream os(fieldname);
+        act.writeHeader(os);
+        os << act << endl;
+    }
+    else
+    {
+        mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
+        T act(fieldName, s);
+        fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
+                             subfolder + "/" + fieldName;
+        std::cout << fieldname << std::endl;
+        OFstream os(fieldname);
+        act.writeHeader(os);
+        os << act << endl;
+    }
 }
 
 template<typename T>
 void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder)
 {
-    mkDir(folder + "/" + subfolder);
-    fileName fieldname = folder + "/" + subfolder + "/" + s.name();
-    OFstream os(fieldname);
-    s.writeHeader(os);
-    os << s << endl;
+    if (!Pstream::parRun())
+    {
+        mkDir(folder + "/" + subfolder);
+        fileName fieldname = folder + "/" + subfolder + "/" + s.name();
+        OFstream os(fieldname);
+        s.writeHeader(os);
+        os << s << endl;
+    }
+    else
+    {
+        mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
+        fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
+                             subfolder + "/" + s.name();
+        OFstream os(fieldname);
+        s.writeHeader(os);
+        os << s << endl;
+    }
 }
 
 

@@ -3,7 +3,10 @@
 List<label> ITHACAparallel::oldProcIDs_(0);
 List<label> ITHACAparallel::newProcIDs_(0);
 
-ITHACAparallel::ITHACAparallel(fvMesh& mesh)
+ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
+    :
+    runTime(localTime),
+    mesh(mesh)
 {
     N_BF = 0;
 
@@ -78,8 +81,6 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh)
 
         reduce(Start()[i], minOp<label>());
     }
-
-    Info << Start() << endl;
 }
 
 void ITHACAparallel::suspendMPI()
@@ -96,4 +97,90 @@ void ITHACAparallel::resumeMPI()
     label comm        = Pstream::worldComm;
     Pstream::procID(comm) = oldProcIDs_;
     Pstream::parRun() = true;
+}
+
+template<>
+List<Field <scalar>> ITHACAparallel::combineFields(
+                      GeometricField<scalar, fvPatchField, volMesh>& field)
+{
+    List<Field< scalar>> GlobField(field.boundaryFieldRef().size() + 1);
+    GlobField[0].resize(N_IF_glob);
+    GlobField[0] = GlobField[0] * 0;
+
+    // Assemble internalField
+    for (int i = 0; i < field.size(); i++)
+    {
+        GlobField[0][indices()[i]] = field[i];
+    }
+
+    reduce(GlobField[0], sumOp<Field<scalar>>());
+
+    // Assemble BoundariField
+    for (int i = 0; i < N_BF; i++)
+    {
+        GlobField[i + 1].resize(Gsize_BF()[i]);
+        Field<scalar> zero(Gsize_BF()[i], 0.0);
+        GlobField[i + 1] = zero;
+    }
+
+    for (int i = 0; i < N_BF; i++)
+    {
+        for (int k = 0; k < field.boundaryFieldRef()[i].size(); k++)
+        {
+            if (IndFaceLocal()[i].size() > 0
+                    && field.boundaryFieldRef()[i].type() != "zeroGradient"
+                    && field.boundaryFieldRef()[i].type() != "processor" )
+            {
+                GlobField[i + 1][abs(IndFaceLocal()[i][k]) - Start()[i]] =
+                    field.boundaryFieldRef()[i][k];
+            }
+        }
+
+        reduce(GlobField[i + 1], sumOp<Field<scalar>>());
+    }
+
+    return GlobField;
+}
+
+template<>
+List<Field <vector>> ITHACAparallel::combineFields(
+                      GeometricField<vector, fvPatchField, volMesh>& field)
+{
+    List<Field< vector>> GlobField(field.boundaryFieldRef().size() + 1);
+    GlobField[0].resize(N_IF_glob);
+    GlobField[0] = GlobField[0] * 0;
+
+    // Assemble internalField
+    for (int i = 0; i < field.size(); i++)
+    {
+        GlobField[0][indices()[i]] = field[i];
+    }
+
+    reduce(GlobField[0], sumOp<Field<vector>>());
+
+    // Assemble BoundariField
+    for (int i = 0; i < N_BF; i++)
+    {
+        GlobField[i + 1].resize(Gsize_BF()[i]);
+        Field<vector> zero(Gsize_BF()[i], vector(0.0, 0.0, 0.0));
+        GlobField[i + 1] = zero;
+    }
+
+    for (int i = 0; i < N_BF; i++)
+    {
+        for (int k = 0; k < field.boundaryFieldRef()[i].size(); k++)
+        {
+            if (IndFaceLocal()[i].size() > 0
+                    && field.boundaryFieldRef()[i].type() != "zeroGradient"
+                    && field.boundaryFieldRef()[i].type() != "processor" )
+            {
+                GlobField[i + 1][abs(IndFaceLocal()[i][k]) - Start()[i]] =
+                    field.boundaryFieldRef()[i][k];
+            }
+        }
+
+        reduce(GlobField[i + 1], sumOp<Field<vector>>());
+    }
+
+    return GlobField;
 }

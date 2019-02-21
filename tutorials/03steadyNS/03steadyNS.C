@@ -43,8 +43,21 @@ class tutorial03 : public steadyNS
             :
             steadyNS(argc, argv),
             U(_U()),
-            p(_p())
-        {}
+            p(_p()),
+            args(_args())
+        {
+            autoPtr<volVectorField> Uglob;
+
+            if (Pstream::master() && Pstream::parRun())
+            {
+                paral->suspendMPI();
+                Uglob = autoPtr<volVectorField>(new volVectorField(paral->constructGlobalField(
+                                                    U)));
+                paral->resumeMPI();
+            }
+        }
+
+        argList& args;
 
         /// Velocity field
         volVectorField& U;
@@ -56,6 +69,8 @@ class tutorial03 : public steadyNS
         {
             Vector<double> inl(0, 0, 0);
             List<scalar> mu_now(1);
+            volVectorField U0 = U;
+            volScalarField P0 = p;
 
             // if the offline solution is already performed read the fields
             if (offline)
@@ -71,19 +86,22 @@ class tutorial03 : public steadyNS
 
                 for (label i = 0; i < mu.cols(); i++)
                 {
+                    U = U0;
+                    p = P0;
                     mu_now[0] = mu(0, i);
                     change_viscosity(mu(0, i));
-                    assignIF(U, Uinl);
+                    //assignIF(U, Uinl);
                     truthSolve(mu_now);
                 }
             }
         }
-
 };
+
 
 int main(int argc, char* argv[])
 {
-    // Construct the tutorial object
+	auto start = std::chrono::high_resolution_clock::now();
+	// Construct the tutorial object
     tutorial03 example(argc, argv);
     // Read some parameters from file
     ITHACAparameters para;
@@ -144,7 +162,14 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/red_coeff");
     // Reconstruct and export the solution
     ridotto.reconstruct_sup("./ITHACAoutput/Reconstruction/");
-    exit(0);
+
+    auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = finish - start;
+	if(Pstream::master())
+	{
+		std::cout << "Elapsed time: " << elapsed.count() << std::endl;
+	}
+    return 0;
 }
 
 //--------

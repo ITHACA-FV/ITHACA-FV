@@ -119,7 +119,8 @@ void reductionProblem::truthSolve()
 // Assign a BC for a vector field
 void reductionProblem::assignBC(volScalarField& s, label BC_ind, double& value)
 {
-    if (s.boundaryField()[BC_ind].type() == "fixedValue")
+    if (s.boundaryField()[BC_ind].type() == "fixedValue"
+            || s.boundaryField()[BC_ind].type() == "processor")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
         {

@@ -82,16 +82,11 @@ solvers
 
     Usup
     {
-	    solver           GAMG;
-        tolerance        1e-7;
-        relTol           0.001;
-        smoother         GaussSeidel;
-        nPreSweeps       0;
-        nPostSweeps      2;
-        cacheAgglomeration on;
-        agglomerator     faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        mergeLevels      1;
+        type            coupled;  // optional, defaults to segregated
+        solver          PBiCCCG;
+        preconditioner  DILU;
+        tolerance       (1e-06 1e-06 1e-06);
+        relTol          (0 0 0);
     }
 }
 
@@ -110,7 +105,7 @@ relaxationFactors
 
 potentialFlow
 {
-    nNonOrthogonalCorrectors 3;
+    nNonOrthogonalCorrectors 10;
 }
 
 PISO
