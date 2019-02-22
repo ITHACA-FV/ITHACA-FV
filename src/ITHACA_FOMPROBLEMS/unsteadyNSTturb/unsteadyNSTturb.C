@@ -533,7 +533,8 @@ void unsteadyNSTturb::projectSUP(fileName folder, label NU, label NP,
 
         for (int j = 0; j < Ncoeff.cols(); j++)
         {
-            SAMPLES[i]->addSample(mu.row(j), Ncoeff(i, j));
+
+            SAMPLES[i]->addSample(mu.row(j),Ncoeff(i, j));      
         }
 
         rbfsplines[i] = new SPLINTER::RBFSpline(*SAMPLES[i],
