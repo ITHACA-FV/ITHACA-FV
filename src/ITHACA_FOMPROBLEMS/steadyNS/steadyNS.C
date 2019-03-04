@@ -52,8 +52,21 @@ namespace Foam
         is >> list;
         return is;
     }
+    Ostream& operator<< (Ostream& os, const Eigen::Tensor<double, 3 >& tens)
+    {
+    	 os << tens.dimension(0) << tens.dimension(1) << tens.dimension(2) << UList<double>(const_cast<Eigen::Tensor<double, 3 >&>(tens).data(), tens.size());
+        return os;
+    }
+    Istream& operator>> (Istream& is, Eigen::Tensor<double, 3 >& tens)
+    {
+        label d1, d2, d3;
+        is >> d1 >> d2 >> d3;
+        tens.resize(d1, d2, d3);
+        UList<double> list(tens.data(), d1*d2*d3);
+        is >> list;
+        return is;
+    }
 }
-
 
 // Constructor
 steadyNS::steadyNS() {}
@@ -531,9 +544,6 @@ Eigen::MatrixXd steadyNS::diffusive_term(label NUmodes, label NPmodes,
     if (Pstream::parRun())
     {
         reduce(B_matrix, sumOp<Eigen::MatrixXd>());
-        // List<double> vec(B_matrix.data(), B_matrix.data() + B_matrix.size());
-        // reduce(vec, sumOp<List<double>>());
-        // std::memcpy(B_matrix.data(), &vec[0], sizeof (double)*vec.size());
     }
 
     ITHACAstream::SaveDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/",
@@ -925,6 +935,12 @@ Eigen::Tensor<double, 3 > steadyNS::convective_term_tens(label NUmodes,
             }
         }
     }
+
+    if (Pstream::parRun())
+    {
+        reduce(C_tensor, sumOp<Eigen::Tensor<double, 3> >());
+    }
+
 
     if (Pstream::parRun())
     {

@@ -67,7 +67,6 @@ class tutorial06 : public steadyNSturb
 
         void offlineSolve()
         {
-            Info << "here 11" << endl;
             Vector<double> inl(0, 0, 0);
             List<scalar> mu_now(2);
 

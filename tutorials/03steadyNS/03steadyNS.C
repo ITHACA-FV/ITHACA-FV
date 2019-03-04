@@ -45,17 +45,7 @@ class tutorial03 : public steadyNS
             U(_U()),
             p(_p()),
             args(_args())
-        {
-            autoPtr<volVectorField> Uglob;
-
-            if (Pstream::master() && Pstream::parRun())
-            {
-                paral->suspendMPI();
-                Uglob = autoPtr<volVectorField>(new volVectorField(paral->constructGlobalField(
-                                                    U)));
-                paral->resumeMPI();
-            }
-        }
+        {}
 
         argList& args;
 
@@ -90,7 +80,6 @@ class tutorial03 : public steadyNS
                     p = P0;
                     mu_now[0] = mu(0, i);
                     change_viscosity(mu(0, i));
-                    //assignIF(U, Uinl);
                     truthSolve(mu_now);
                 }
             }
@@ -100,8 +89,7 @@ class tutorial03 : public steadyNS
 
 int main(int argc, char* argv[])
 {
-	auto start = std::chrono::high_resolution_clock::now();
-	// Construct the tutorial object
+    // Construct the tutorial object
     tutorial03 example(argc, argv);
     // Read some parameters from file
     ITHACAparameters para;
@@ -162,13 +150,6 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/red_coeff");
     // Reconstruct and export the solution
     ridotto.reconstruct_sup("./ITHACAoutput/Reconstruction/");
-
-    auto finish = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> elapsed = finish - start;
-	if(Pstream::master())
-	{
-		std::cout << "Elapsed time: " << elapsed.count() << std::endl;
-	}
     return 0;
 }
 
