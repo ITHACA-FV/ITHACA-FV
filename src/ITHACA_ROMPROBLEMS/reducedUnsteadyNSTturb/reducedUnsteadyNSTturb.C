@@ -293,13 +293,12 @@ void reducedUnsteadyNSTturb::solveOnline_sup(Eigen::MatrixXd& vel_now,
     {
         time = time + dt;
         std::vector<double> tv;
-        tv.resize(1+vel_now.size());
+        tv.resize(1 + vel_now.size());
         tv[0] = time;
 
         for (label i = 1; i < tv.size(); i++)
         {
-            
-            tv[i] = vel_now(i-1);
+            tv[i] = vel_now(i - 1);
         }
 
         for (label i = 0; i < Nphi_nut; i++)

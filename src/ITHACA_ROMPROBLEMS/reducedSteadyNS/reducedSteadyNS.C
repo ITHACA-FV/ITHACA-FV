@@ -41,8 +41,8 @@ reducedSteadyNS::reducedSteadyNS()
 }
 
 reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
-:
-problem(&FOMproblem)
+    :
+    problem(&FOMproblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
@@ -67,7 +67,7 @@ problem(&FOMproblem)
 }
 
 int newton_steadyNS::operator()(const Eigen::VectorXd& x,
-    Eigen::VectorXd& fvec) const
+                                Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_tmp(Nphi_u);
     Eigen::VectorXd b_tmp(Nphi_p);
@@ -85,7 +85,7 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
     for (label i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-            i) * a_tmp;
+                i) * a_tmp;
         // cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
         fvec(i) = M1(i) - cc(0, 0) - M2(i);
     }
@@ -118,7 +118,7 @@ int newton_steadyNS::df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const
 void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now)
 {
     Info << "This function is still not implemented for the stationary case" <<
-    endl;
+         endl;
     exit(0);
 }
 
@@ -148,21 +148,22 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
     Eigen::VectorXd res(y);
     newton_object.operator()(y, res);
     Info << "################## Online solve N° " << count_online_solve <<
-    " ##################" << endl;
-    if(Pstream::master())
+         " ##################" << endl;
+
+    if (Pstream::master())
     {
         std::cout << "Solving for the parameter: " << vel_now << std::endl;
     }
 
     if (res.norm() < 1e-5 && Pstream::master())
-    {        
+    {
         std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-        hnls.iter << " iterations " << def << std::endl << std::endl;
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
     }
-    else if(Pstream::master())
+    else if (Pstream::master())
     {
         std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-        hnls.iter << " iterations " << def << std::endl << std::endl;
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
     }
 
     count_online_solve += 1;
@@ -252,7 +253,7 @@ double reducedSteadyNS::inf_sup_constant()
         for (int j = 0; j < Nphi_u; j++)
         {
             sup(j) = fvc::domainIntegrate(fvc::div(Umodes[j]) * Pmodes[i]).value() /
-            ITHACAutilities::H1seminorm(Umodes[j]) / ITHACAutilities::L2norm(Pmodes[i]);
+                     ITHACAutilities::H1seminorm(Umodes[j]) / ITHACAutilities::L2norm(Pmodes[i]);
         }
 
         inf(i) = sup.maxCoeff();
@@ -264,7 +265,7 @@ double reducedSteadyNS::inf_sup_constant()
 
 
 void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS& problem,
-    fileName folder)
+        fileName folder)
 {
     mkDir(folder);
     system("ln -s ../../constant " + folder + "/constant");
@@ -287,12 +288,12 @@ void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS& problem,
             Umodes[0].mesh(),
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-            )
-        );
+        )
+    );
     Eigen::MatrixXd TAU =
-    ITHACAstream::readMatrix("./ITHACAoutput/Matrices/tau_mat.txt");
+        ITHACAstream::readMatrix("./ITHACAoutput/Matrices/tau_mat.txt");
     Eigen::MatrixXd N =
-    ITHACAstream::readMatrix("./ITHACAoutput/Matrices/n_mat.txt");
+        ITHACAstream::readMatrix("./ITHACAoutput/Matrices/n_mat.txt");
     Eigen::VectorXd temp1;
     f_tau.setZero(online_solution.size(), 3);
     f_n.setZero(online_solution.size(), 3);

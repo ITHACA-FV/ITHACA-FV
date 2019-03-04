@@ -210,6 +210,7 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
             volVectorField tmp(snapshotsU[0].name(), snapshotsU[0] * 0);
             Eigen::VectorXd vec = modesEig.col(i);
             tmp = Foam2Eigen::Eigen2field(tmp, vec);
+
             for (int k = 0; k < NBC; k++)
             {
                 ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i));
