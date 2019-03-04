@@ -36,6 +36,24 @@
 #include "viscosityModel.H"
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
+namespace Foam
+{
+    Ostream& operator<< (Ostream& os, const Eigen::MatrixXd& mat)
+    {
+        os << mat.rows() << mat.cols() << UList<double>(const_cast<Eigen::MatrixXd&>(mat).data(), mat.size());
+        return os;
+    }
+    Istream& operator>> (Istream& is, Eigen::MatrixXd& mat)
+    {
+        label nrow, ncol;
+        is >> nrow >> ncol;
+        mat.resize(nrow, ncol);
+        UList<double> list(mat.data(), nrow*ncol);
+        is >> list;
+        return is;
+    }
+}
+
 
 // Constructor
 steadyNS::steadyNS() {}
@@ -512,9 +530,10 @@ Eigen::MatrixXd steadyNS::diffusive_term(label NUmodes, label NPmodes,
 
     if (Pstream::parRun())
     {
-        List<double> vec(B_matrix.data(), B_matrix.data() + B_matrix.size());
-        reduce(vec, sumOp<List<double>>());
-        std::memcpy(B_matrix.data(), &vec[0], sizeof (double)*vec.size());
+        reduce(B_matrix, sumOp<Eigen::MatrixXd>());
+        // List<double> vec(B_matrix.data(), B_matrix.data() + B_matrix.size());
+        // reduce(vec, sumOp<List<double>>());
+        // std::memcpy(B_matrix.data(), &vec[0], sizeof (double)*vec.size());
     }
 
     ITHACAstream::SaveDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/",
