@@ -101,6 +101,9 @@ class steadyNS: public reductionProblem
         /// List of pointers used to form the homogeneous velocity snapshots
         PtrList<volVectorField> Uomfield;
 
+        /// List of pointers containing the total number of lift, supremizer and velocity modes
+        PtrList<volVectorField> L_U_SUPmodes;
+
         /// Tolerance for the residual of the stationary problems, there is the same tolerance for velocity and pressure
         scalar tolerance;
 
