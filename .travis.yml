@@ -1,31 +1,32 @@
 # Travis CI setup ITHACA-FV
-
-sudo: false
-dist: trusty
-language: cpp
+sudo: required
+language: C++
 
 matrix:
   include:
   - name: "OpenFOAM 6"
-    env: OF_VERS=6
+    env: install=./.installOF6.sh
+         compile=./.compileOF6.sh
   - name: "OpenFOAM 5"
-    env: OF_VERS=5
+    env: install=./.installOF5.sh
+         compile=./.compileOF5.sh
+  - name: "OpenFOAM 1812"
+    env: 
+         install="cd ."
+         compile=./.installOF1812.sh
+
+services:
+ - docker
+
 
 before_install:
-    - sudo sh -c "wget -O - http://dl.openfoam.org/gpg.key | apt-key add -"
-    - sudo add-apt-repository http://dl.openfoam.org/ubuntu
-    - sudo apt-get update -qq
-    - sudo apt-get -y install -qq openfoam${OF_VERS}
+    - ${install}
 
 install:
-    - source /opt/openfoam${OF_VERS}/etc/bashrc
-    - ./Allwmake -j
-
-before_script:
-    - source /opt/openfoam${OF_VERS}/etc/bashrc
+    - ${compile}
 
 script:
-    - ./Allwmake -j
+    - ${compile}
 
 branches:    
     only:

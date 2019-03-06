@@ -103,8 +103,8 @@ int main(int argc, char *argv[])
         )
     );
 
-    word pName = FORCESdict.lookup("pName");
-    word UName = FORCESdict.lookup("UName");
+    word pName(FORCESdict.lookup("pName"));
+    word UName(FORCESdict.lookup("UName"));
 
     dictionary forcesDict; 
     forcesDict.add("type", functionObjects::forces::typeName);

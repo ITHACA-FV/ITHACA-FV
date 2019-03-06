@@ -4,9 +4,9 @@ List<label> ITHACAparallel::oldProcIDs_(0);
 List<label> ITHACAparallel::newProcIDs_(0);
 
 ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
-    :
-    runTime(localTime),
-    mesh(mesh)
+:
+runTime(localTime),
+mesh(mesh)
 {
     N_BF = 0;
 
@@ -19,19 +19,26 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
     }
 
     // Load cell addressing
-    indices = new labelIOList(
-        IOobject
+    indices = autoPtr<labelIOList>
+    (
+        new labelIOList
         (
-            "cellProcAddressing",
-            mesh.facesInstance(),
-            mesh.meshSubDir,
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE
+            IOobject
+            (
+                "cellProcAddressing",
+                mesh.facesInstance(),
+                mesh.meshSubDir,
+                mesh,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE
+            )
         )
     );
     // Load face addressing
-    indicesF = new labelIOList(
+    indicesF = autoPtr<labelIOList>
+    (
+     new labelIOList
+     (
         IOobject
         (
             "faceProcAddressing",
@@ -41,13 +48,14 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         )
+        )
     );
     // Calculate total number of cells
     N_IF_glob = (mesh.C().size());
     reduce(N_IF_glob, sumOp<int>());
     // BF construction
-    Gsize_BF = new labelList (N_BF, 0);
-    IndFaceLocal = new List<labelList> (N_BF, labelList(0, 0));
+    Gsize_BF = autoPtr<labelList>(new labelList (N_BF, 0));
+    IndFaceLocal = autoPtr< List<labelList> > (new List<labelList> (N_BF, labelList(0, 0)));
 
     for (int i = 0; i < N_BF; i++)
     {
@@ -61,7 +69,7 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
         }
     }
 
-    Start = new labelList(N_BF, 0);
+    Start = autoPtr<labelList> (new labelList(N_BF, 0));
 
     for (int i = 0; i < N_BF; i++)
     {
@@ -101,7 +109,7 @@ void ITHACAparallel::resumeMPI()
 
 template<>
 List<Field <scalar>> ITHACAparallel::combineFields(
-                      GeometricField<scalar, fvPatchField, volMesh>& field)
+  GeometricField<scalar, fvPatchField, volMesh>& field)
 {
     List<Field< scalar>> GlobField(field.boundaryFieldRef().size() + 1);
     GlobField[0].resize(N_IF_glob);
@@ -128,11 +136,11 @@ List<Field <scalar>> ITHACAparallel::combineFields(
         for (int k = 0; k < field.boundaryFieldRef()[i].size(); k++)
         {
             if (IndFaceLocal()[i].size() > 0
-                    && field.boundaryFieldRef()[i].type() != "zeroGradient"
-                    && field.boundaryFieldRef()[i].type() != "processor" )
+                && field.boundaryFieldRef()[i].type() != "zeroGradient"
+                && field.boundaryFieldRef()[i].type() != "processor" )
             {
                 GlobField[i + 1][abs(IndFaceLocal()[i][k]) - Start()[i]] =
-                    field.boundaryFieldRef()[i][k];
+                field.boundaryFieldRef()[i][k];
             }
         }
 
@@ -144,7 +152,7 @@ List<Field <scalar>> ITHACAparallel::combineFields(
 
 template<>
 List<Field <vector>> ITHACAparallel::combineFields(
-                      GeometricField<vector, fvPatchField, volMesh>& field)
+  GeometricField<vector, fvPatchField, volMesh>& field)
 {
     List<Field< vector>> GlobField(field.boundaryFieldRef().size() + 1);
     GlobField[0].resize(N_IF_glob);
@@ -171,11 +179,11 @@ List<Field <vector>> ITHACAparallel::combineFields(
         for (int k = 0; k < field.boundaryFieldRef()[i].size(); k++)
         {
             if (IndFaceLocal()[i].size() > 0
-                    && field.boundaryFieldRef()[i].type() != "zeroGradient"
-                    && field.boundaryFieldRef()[i].type() != "processor" )
+                && field.boundaryFieldRef()[i].type() != "zeroGradient"
+                && field.boundaryFieldRef()[i].type() != "processor" )
             {
                 GlobField[i + 1][abs(IndFaceLocal()[i][k]) - Start()[i]] =
-                    field.boundaryFieldRef()[i][k];
+                field.boundaryFieldRef()[i][k];
             }
         }
 
