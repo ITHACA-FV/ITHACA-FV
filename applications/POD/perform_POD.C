@@ -170,8 +170,8 @@ int main(int argc, char *argv[])
     {
         dictionary& subDict = ITHACAPODdict.subDict(fieldlist[k]);
         scalar nmodes = readScalar(subDict.lookup("nmodes"));
-        word field_name = subDict.lookup("field_name");
-        word field_type = subDict.lookup("field_type");
+        word field_name(subDict.lookup("field_name"));
+        word field_type(subDict.lookup("field_type"));
 
         for (label i = startTime; i < endTime + 1; i++)
         {

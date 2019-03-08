@@ -240,7 +240,7 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     int cols = 0, rows = 0;
     double buff[MAXBUFSIZE];
     // Read numbers from file into buffer.
-    ifstream infile;
+    std::ifstream infile;
     infile.open(filename.c_str());
 
     while (! infile.eof())

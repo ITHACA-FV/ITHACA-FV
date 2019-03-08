@@ -48,6 +48,7 @@ EXE_INC = \
     -I../ITHACA_CORE/Foam2Eigen \
     -I../ITHACA_CORE/EigenFunctions \
     -Wno-comment \
+    -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11
 
 

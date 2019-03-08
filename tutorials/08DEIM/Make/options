@@ -29,6 +29,7 @@ EXE_INC = \
     -I../../src/thirdparty/spectra-0.6.1/include \
     -I../../src/ITHACA_THIRD_PARTY/splinter/include \
     -Wno-comment \
+    -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11 \
 
 
