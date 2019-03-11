@@ -15,8 +15,11 @@
     </a> <b> <font size="1"> OpenFOAM 5 </font> </b> 
       <a href="https://travis-ci.org/mathLab/ITHACA-FV" target="_blank">
         <img alt="Build Status" src="https://travis-matrix-badges.herokuapp.com/repos/giovastabile/ITHACA-FV/branches/master/2">
+    </a> <b> <font size="1"> OpenFOAM 1812 </font> </b> 
+      <a href="https://travis-ci.org/mathLab/ITHACA-FV" target="_blank">
+        <img alt="Build Status" src="https://travis-matrix-badges.herokuapp.com/repos/giovastabile/ITHACA-FV/branches/master/3">
     </a>
-    <a href="https://www.codacy.com/project/giovastabile/ITHACA-FV/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/ITHACA-FV&amp;utm_campaign=Badge_Grade_Dashboard">
+    <a href="https://www.codacy.com/project/mathlab/ITHACA-FV/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/ITHACA-FV&amp;utm_campaign=Badge_Grade_Dashboard">
         <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/d7ff770dfb954819a0e691ea03de281b">
     </a>
 </p>
