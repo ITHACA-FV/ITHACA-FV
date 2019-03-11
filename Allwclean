@@ -30,4 +30,17 @@ for d in ./*/ ; do
     cd ../
 done
 
+cd ../unitTests
+
+for d in ./*/ ; do   
+    echo $d    
+    cd $d
+    if [ -d "Make" ]; then
+    wclean
+    fi
+    cd ../
+done
+
+
+
 #------------------------------------------------------------------------------

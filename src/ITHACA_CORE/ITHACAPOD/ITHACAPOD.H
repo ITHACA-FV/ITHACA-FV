@@ -46,8 +46,8 @@ SourceFiles
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
-#include "GenEigsSolver.h"
-#include <SymEigsSolver.h>
+#include "Spectra/GenEigsSolver.h"
+#include "Spectra/SymEigsSolver.h"
 #include "Eigen/Eigen"
 #include "unsupported/Eigen/SparseExtra"
 #pragma GCC diagnostic pop

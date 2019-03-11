@@ -37,11 +37,7 @@ Description
 #include "EigenFunctions.H"
 #include <chrono>
 #include <Eigen/SVD>
-#include <GenEigsSolver.h>
 #include <Eigen/SparseLU>
-
-
-
 #include "reducedSteadyNS.H"
 #include "reducedSteadyNSturb.H"
 #include <Eigen/Dense>

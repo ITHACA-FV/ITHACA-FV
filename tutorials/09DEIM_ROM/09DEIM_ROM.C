@@ -41,7 +41,6 @@ SourceFiles
 #include "DEIM.H"
 #include <chrono>
 #include <Eigen/SVD>
-#include <GenEigsSolver.h>
 #include <Eigen/SparseLU>
 #include "laplacianProblem.H"
 
