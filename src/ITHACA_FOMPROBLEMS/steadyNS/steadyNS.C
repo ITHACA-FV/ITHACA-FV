@@ -981,11 +981,11 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
     );
     word pName(FORCESdict.lookup("pName"));
     word UName(FORCESdict.lookup("UName"));
-    #if OFVER == v1812
-    functionObjects::ITHACAforces f("Forces", mesh, FORCESdict,1);
-    #else 
+#if OFVER == v1812
+    functionObjects::ITHACAforces f("Forces", mesh, FORCESdict, 1);
+#else
     functionObjects::ITHACAforces f("Forces", mesh, FORCESdict);
-    #endif
+#endif
 
     for (label i = 0; i < L_U_SUPmodes.size(); i++)
     {

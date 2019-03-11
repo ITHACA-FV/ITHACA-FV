@@ -139,9 +139,7 @@ class tutorial06 : public steadyNSturb
             exportSolution(U, name(counter), folder);
             exportSolution(p, name(counter), folder);
             volScalarField _nut(turbulence->nut());
-            //volScalarField nuTilda = mesh.lookupObject<volScalarField>("nuTilda");
             exportSolution(_nut, name(counter), folder);
-            //exportSolution(nuTilda, name(counter), "./ITHACAoutput/Offline/");
             Ufield.append(U);
             Pfield.append(p);
             nutFields.append(_nut);
@@ -151,7 +149,6 @@ class tutorial06 : public steadyNSturb
 
 int main(int argc, char* argv[])
 {
-    //return 0;
     tutorial06 example(argc, argv);
     word par_offline("./par_offline"); // the offline samples.
     word par_new("./par_online"); // the samples which will be used in the online stage for checking the reduced order model.

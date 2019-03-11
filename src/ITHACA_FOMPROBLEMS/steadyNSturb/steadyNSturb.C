@@ -58,7 +58,6 @@ steadyNSturb::steadyNSturb(int argc, char* argv[])
 #include "initContinuityErrs.H"
 #pragma GCC diagnostic pop
     //
-    supex = ITHACAutilities::check_sup();
     turbulence->validate();
     ITHACAdict = new IOdictionary
     (
@@ -76,6 +75,7 @@ steadyNSturb::steadyNSturb(int argc, char* argv[])
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();
+
 }
 
 
