@@ -13,7 +13,7 @@ matrix:
   - name: "OpenFOAM 1812"
     env: 
          install="cd ."
-         compile=./.installOF1812.sh
+         compile=./.compileOF1812.sh
 
 services:
  - docker
