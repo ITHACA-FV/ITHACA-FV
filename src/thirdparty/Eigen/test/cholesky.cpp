@@ -19,6 +19,7 @@
 
 template<typename MatrixType, int UpLo>
 typename MatrixType::RealScalar matrix_l1_norm(const MatrixType& m) {
+  if(m.cols()==0) return typename MatrixType::RealScalar(0);
   MatrixType symm = m.template selfadjointView<UpLo>();
   return symm.cwiseAbs().colwise().sum().maxCoeff();
 }
@@ -57,7 +58,6 @@ template<typename MatrixType,template <typename,int> class CholType> void test_c
 
 template<typename MatrixType> void cholesky(const MatrixType& m)
 {
-  typedef typename MatrixType::Index Index;
   /* this test covers the following files:
      LLT.h LDLT.h
   */
@@ -97,7 +97,7 @@ template<typename MatrixType> void cholesky(const MatrixType& m)
     RealScalar rcond_est = chollo.rcond();
     // Verify that the estimated condition number is within a factor of 10 of the
     // truth.
-    VERIFY(rcond_est > rcond / 10 && rcond_est < rcond * 10);
+    VERIFY(rcond_est >= rcond / 10 && rcond_est <= rcond * 10);
 
     // test the upper mode
     LLT<SquareMatrixType,Upper> cholup(symmUp);
@@ -113,12 +113,12 @@ template<typename MatrixType> void cholesky(const MatrixType& m)
     rcond = (RealScalar(1) / matrix_l1_norm<MatrixType, Upper>(symmUp)) /
                              matrix_l1_norm<MatrixType, Upper>(symmUp_inverse);
     rcond_est = cholup.rcond();
-    VERIFY(rcond_est > rcond / 10 && rcond_est < rcond * 10);
+    VERIFY(rcond_est >= rcond / 10 && rcond_est <= rcond * 10);
 
 
     MatrixType neg = -symmLo;
     chollo.compute(neg);
-    VERIFY(chollo.info()==NumericalIssue);
+    VERIFY(neg.size()==0 || chollo.info()==NumericalIssue);
 
     VERIFY_IS_APPROX(MatrixType(chollo.matrixL().transpose().conjugate()), MatrixType(chollo.matrixU()));
     VERIFY_IS_APPROX(MatrixType(chollo.matrixU().transpose().conjugate()), MatrixType(chollo.matrixL()));
@@ -167,7 +167,7 @@ template<typename MatrixType> void cholesky(const MatrixType& m)
     RealScalar rcond_est = ldltlo.rcond();
     // Verify that the estimated condition number is within a factor of 10 of the
     // truth.
-    VERIFY(rcond_est > rcond / 10 && rcond_est < rcond * 10);
+    VERIFY(rcond_est >= rcond / 10 && rcond_est <= rcond * 10);
 
 
     LDLT<SquareMatrixType,Upper> ldltup(symmUp);
@@ -184,7 +184,7 @@ template<typename MatrixType> void cholesky(const MatrixType& m)
     rcond = (RealScalar(1) / matrix_l1_norm<MatrixType, Upper>(symmUp)) /
                              matrix_l1_norm<MatrixType, Upper>(symmUp_inverse);
     rcond_est = ldltup.rcond();
-    VERIFY(rcond_est > rcond / 10 && rcond_est < rcond * 10);
+    VERIFY(rcond_est >= rcond / 10 && rcond_est <= rcond * 10);
 
     VERIFY_IS_APPROX(MatrixType(ldltlo.matrixL().transpose().conjugate()), MatrixType(ldltlo.matrixU()));
     VERIFY_IS_APPROX(MatrixType(ldltlo.matrixU().transpose().conjugate()), MatrixType(ldltlo.matrixL()));
@@ -288,8 +288,6 @@ template<typename MatrixType> void cholesky_cplx(const MatrixType& m)
   cholesky(m);
 
   // test mixing real/scalar types
-
-  typedef typename MatrixType::Index Index;
 
   Index rows = m.rows();
   Index cols = m.cols();
@@ -510,6 +508,11 @@ void test_cholesky()
     CALL_SUBTEST_6( cholesky_cplx(MatrixXcd(s,s)) );
     TEST_SET_BUT_UNUSED_VARIABLE(s)
   }
+  // empty matrix, regression test for Bug 785:
+  CALL_SUBTEST_2( cholesky(MatrixXd(0,0)) );
+
+  // This does not work yet:
+  // CALL_SUBTEST_2( cholesky(Matrix<double,0,0>()) );
 
   CALL_SUBTEST_4( cholesky_verify_assert<Matrix3f>() );
   CALL_SUBTEST_7( cholesky_verify_assert<Matrix3d>() );

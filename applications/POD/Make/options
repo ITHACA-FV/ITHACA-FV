@@ -20,7 +20,7 @@ EXE_INC = \
     -I../../src/ITHACA_CORE/ITHACAPOD \
     -I../../src/ITHACA_CORE/ITHACAstream \
     -I../../src/thirdparty/Eigen \
-    -I../../src/thirdparty/spectra-0.6.1/include \
+    -I../../src/thirdparty/spectra/include \
     -Wno-comment \
     -std=c++11
 

@@ -39,7 +39,7 @@ EXE_INC = \
     -I../DEIM \
     -I../ITHACA_THIRD_PARTY/splinter/include \
     -I../thirdparty/Eigen \
-    -I../thirdparty/spectra-0.6.1/include \
+    -I../thirdparty/spectra/include \
     -I../ITHACA_CORE/ITHACAutilities \
     -I../ITHACA_CORE/ITHACAstream \
     -I../ITHACA_CORE/ITHACAPOD \
