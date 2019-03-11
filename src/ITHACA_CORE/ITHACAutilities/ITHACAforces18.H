@@ -47,14 +47,14 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class ITHACAforces
-:
+    :
     public fvMeshFunctionObject,
     public writeFile
 {
 
-protected:
+    protected:
 
-    // Protected data
+        // Protected data
 
         //- Pressure, viscous and porous force per bin
         List<Field<vector>> force_;
@@ -64,96 +64,96 @@ protected:
 
         // File streams
 
-            //- Forces
-            autoPtr<OFstream> forceFilePtr_;
+        //- Forces
+        autoPtr<OFstream> forceFilePtr_;
 
-            //- Moments
-            autoPtr<OFstream> momentFilePtr_;
+        //- Moments
+        autoPtr<OFstream> momentFilePtr_;
 
-            //- Force bins
-            autoPtr<OFstream> forceBinFilePtr_;
+        //- Force bins
+        autoPtr<OFstream> forceBinFilePtr_;
 
-            //- Moment bins
-            autoPtr<OFstream> momentBinFilePtr_;
+        //- Moment bins
+        autoPtr<OFstream> momentBinFilePtr_;
 
-            //- Local force
-            autoPtr<OFstream> localForceFilePtr_;
+        //- Local force
+        autoPtr<OFstream> localForceFilePtr_;
 
-            //- Local moment
-            autoPtr<OFstream> localMomentFilePtr_;
+        //- Local moment
+        autoPtr<OFstream> localMomentFilePtr_;
 
-            //- Local force bins
-            autoPtr<OFstream> localForceBinFilePtr_;
+        //- Local force bins
+        autoPtr<OFstream> localForceBinFilePtr_;
 
-            //- Local moment bins
-            autoPtr<OFstream> localMomentBinFilePtr_;
+        //- Local moment bins
+        autoPtr<OFstream> localMomentBinFilePtr_;
 
 
         // Read from dictionary
 
-            //- Patches to integrate forces over
-            labelHashSet patchSet_;
+        //- Patches to integrate forces over
+        labelHashSet patchSet_;
 
-            //- Name of pressure field
-            word pName_;
+        //- Name of pressure field
+        word pName_;
 
-            //- Name of velocity field
-            word UName_;
+        //- Name of velocity field
+        word UName_;
 
-            //- Name of density field (optional)
-            word rhoName_;
+        //- Name of density field (optional)
+        word rhoName_;
 
-            //- Is the force density being supplied directly?
-            Switch directForceDensity_;
+        //- Is the force density being supplied directly?
+        Switch directForceDensity_;
 
-            //- The name of the force density (fD) field
-            word fDName_;
+        //- The name of the force density (fD) field
+        word fDName_;
 
-            //- Reference density needed for incompressible calculations
-            scalar rhoRef_;
+        //- Reference density needed for incompressible calculations
+        scalar rhoRef_;
 
-            //- Reference pressure
-            scalar pRef_;
+        //- Reference pressure
+        scalar pRef_;
 
-            //- Coordinate system used when evaluting forces/moments
-            coordSystem::cartesian coordSys_;
+        //- Coordinate system used when evaluting forces/moments
+        coordSystem::cartesian coordSys_;
 
-            //- Flag to indicate whether we are using a local coordinates
-            bool localSystem_;
+        //- Flag to indicate whether we are using a local coordinates
+        bool localSystem_;
 
-            //- Flag to include porosity effects
-            bool porosity_;
-
-
-            // Bin information
-
-                //- Number of bins
-                label nBin_;
-
-                //- Direction used to determine bin orientation
-                vector binDir_;
-
-                //- Distance between bin divisions
-                scalar binDx_;
-
-                //- Minimum bin bounds
-                scalar binMin_;
-
-                //- Bin positions along binDir
-                List<point> binPoints_;
-
-                //- Should bin data be cumulative?
-                bool binCumulative_;
+        //- Flag to include porosity effects
+        bool porosity_;
 
 
-            //- Write fields flag
-            bool writeFields_;
+        // Bin information
 
-            //- Initialised flag
-            bool initialised_;
+        //- Number of bins
+        label nBin_;
+
+        //- Direction used to determine bin orientation
+        vector binDir_;
+
+        //- Distance between bin divisions
+        scalar binDx_;
+
+        //- Minimum bin bounds
+        scalar binMin_;
+
+        //- Bin positions along binDir
+        List<point> binPoints_;
+
+        //- Should bin data be cumulative?
+        bool binCumulative_;
 
 
-    // Protected Member Functions
+        //- Write fields flag
+        bool writeFields_;
+
+        //- Initialised flag
+        bool initialised_;
+
+
+        // Protected Member Functions
 
         //- Create a field name
         word fieldName(const word& name) const;
@@ -249,13 +249,13 @@ protected:
         void operator=(const ITHACAforces&) = delete;
 
 
-public:
+    public:
 
-    //- Runtime type information
-    TypeName("ITHACAforces");
+        //- Runtime type information
+        TypeName("ITHACAforces");
 
 
-    // Constructors
+        // Constructors
 
         //- Construct from Time and dictionary
         ITHACAforces
@@ -276,11 +276,11 @@ public:
         );
 
 
-    //- Destructor
-    virtual ~ITHACAforces();
+        //- Destructor
+        virtual ~ITHACAforces();
 
 
-    // Member Functions
+        // Member Functions
 
         //- Read the forces data
         virtual bool read(const dictionary&);
