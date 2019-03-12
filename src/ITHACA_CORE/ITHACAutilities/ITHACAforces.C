@@ -28,7 +28,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#if (OFVER == v1812)
+#if OPENFOAM >= 1812
 
 #include "ITHACAforces18.H"
 #include "fvcGrad.H"

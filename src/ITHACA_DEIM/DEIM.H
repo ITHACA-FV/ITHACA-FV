@@ -397,7 +397,7 @@ void DEIM<T, S>::generateSubmeshes(int layers, fvMesh& mesh, S field,
         }
 
         std::cout.setstate(std::ios_base::failbit);
-#if OPENFOAM == 1812
+#if OPENFOAM >= 1812
         submesh->setCellSubset(indices);
 #else
         submesh->setLargeCellSubset(indices);
@@ -464,7 +464,7 @@ void DEIM<T, S>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
         }
 
         std::cout.setstate(std::ios_base::failbit);
-#if OPENFOAM == 1812
+#if OPENFOAM >= 1812
         submesh->setCellSubset(indices);
 #else
         submesh->setLargeCellSubset(indices);
@@ -528,7 +528,7 @@ void DEIM<T, S>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
             ITHACAutilities::assignONE(Indici, indices);
         }
 
-#if OPENFOAM == 1812
+#if OPENFOAM >= 1812
         submesh->setCellSubset(indices);
 #else
         submesh->setLargeCellSubset(indices);
