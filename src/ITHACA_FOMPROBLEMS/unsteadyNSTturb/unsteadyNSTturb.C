@@ -123,11 +123,11 @@ void unsteadyNSTturb::truthSolve(List<scalar> mu_now)
 
         if (WRITE)
         {
-            exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(alphat, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(alphat, name(counter), "./ITHACAoutput/Offline/");
             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                              runTime.timeName());
             Ufield.append(U);

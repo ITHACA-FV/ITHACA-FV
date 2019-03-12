@@ -38,8 +38,17 @@ License
 steadyNSturb::steadyNSturb() {}
 steadyNSturb::steadyNSturb(int argc, char* argv[])
 {
-    // #include "postProcess.H"
-#include "setRootCase.H"
+    _args = autoPtr<argList>
+            (
+                new argList(argc, argv)
+            );
+
+    if (!_args->checkRootCase())
+    {
+        Foam::FatalError.exit();
+    }
+
+    argList& args = _args();
 #include "createTime.H"
 #include "createMesh.H"
     _simple = autoPtr<simpleControl>
@@ -94,10 +103,10 @@ void steadyNSturb::truthSolve(List<scalar> mu_now)
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
 #include "NLsolve.H"
-    exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-    exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     volScalarField _nut(turbulence->nut());
-    exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
     Ufield.append(U);
     Pfield.append(p);
     nutFields.append(_nut);

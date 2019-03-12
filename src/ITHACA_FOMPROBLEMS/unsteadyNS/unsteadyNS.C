@@ -41,7 +41,17 @@ unsteadyNS::unsteadyNS() {}
 // Construct from zero
 unsteadyNS::unsteadyNS(int argc, char* argv[])
 {
-#include "setRootCase.H"
+    _args = autoPtr<argList>
+            (
+                new argList(argc, argv)
+            );
+
+    if (!_args->checkRootCase())
+    {
+        Foam::FatalError.exit();
+    }
+
+    argList& args = _args();
 #include "createTime.H"
 #include "createMesh.H"
     _pimple = autoPtr<pimpleControl>
@@ -116,8 +126,8 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
         if (checkWrite(runTime))
         {
             nsnapshots += 1;
-            exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                              runTime.timeName());
             Ufield.append(U);

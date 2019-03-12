@@ -96,6 +96,9 @@ class unsteadyBB: public unsteadyNS
         /// List of pointers used to form the homogeneous velocity snapshots
         PtrList<volScalarField> Tomfield;
 
+        /// List of pointers containing the lift for temperature and the temperature field
+        PtrList<volScalarField> L_T_modes;        
+
         // Dummy variables to transform simplefoam into a class
         autoPtr<volScalarField> _UliftBC;
 

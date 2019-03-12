@@ -40,10 +40,23 @@
 laplacianProblem::laplacianProblem() {}
 laplacianProblem::laplacianProblem(int argc, char* argv[])
 {
-#include "setRootCase.H"
+    _args = autoPtr<argList>
+            (
+                new argList(argc, argv)
+            );
+
+    if (!_args->checkRootCase())
+    {
+        Foam::FatalError.exit();
+    }
+
+    argList& args = _args();
 #include "createTime.H"
 #include "createMesh.H"
 #include "createFields.H"
+        offline = ITHACAutilities::check_off();
+    podex = ITHACAutilities::check_pod();
+
 }
 
 
@@ -61,7 +74,7 @@ void laplacianProblem::truthSolve(List<scalar> mu_now)
     }
 
     solve(lhs == -S);
-    exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
     Tfield.append(T);
     counter++;
     writeMu(mu_now);

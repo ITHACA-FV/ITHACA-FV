@@ -113,12 +113,6 @@ steadyNS::steadyNS(int argc, char* argv[])
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
     para = new ITHACAparameters;
-
-    if (Pstream::parRun())
-    {
-        paral = new ITHACAparallel(mesh, runTime);
-    }
-
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();

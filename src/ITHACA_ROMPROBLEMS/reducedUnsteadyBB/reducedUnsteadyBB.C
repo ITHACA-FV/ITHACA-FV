@@ -325,7 +325,7 @@ void reducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
                 U_rec += LUmodes[j] * online_solutiont(j + 1, i);
             }
 
-            problem->exportSolution(U_rec,  name(counter2), folder);
+            ITHACAstream::exportSolution(U_rec,  name(counter2), folder);
 
             if  (Nphi_prgh != 0)
             {
@@ -336,7 +336,7 @@ void reducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
                     P_rec += problem->Prghmodes[j] * online_solutiont(j + Nphi_u + 1, i);
                 }
 
-                problem->exportSolution(P_rec,  name(counter2), folder);
+                ITHACAstream::exportSolution(P_rec,  name(counter2), folder);
                 PREC.append(P_rec);
             }
 
@@ -347,7 +347,7 @@ void reducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
                 T_rec += LTmodes[j] * online_solutiont(j + Nphi_prgh + Nphi_u + 1, i);
             }
 
-            problem->exportSolution(T_rec, name(counter2), folder);
+            ITHACAstream::exportSolution(T_rec, name(counter2), folder);
             nextwrite += printevery;
             double timenow = online_solutiont(0, i);
             std::ofstream of(folder + name(counter2) + "/" + name(timenow));

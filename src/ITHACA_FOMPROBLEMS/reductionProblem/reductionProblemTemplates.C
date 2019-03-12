@@ -30,17 +30,6 @@ License
 /// \file
 /// Template file of the reductionProblem class.
 
-template<typename T>
-void reductionProblem::exportSolution(T& s, fileName subfolder, fileName folder)
-{
-    mkDir(folder + "/" + subfolder);
-    fileName fieldname = folder + "/" + subfolder + "/" + s.name();
-    Info << fieldname << endl;
-    OFstream os(fieldname);
-    s.writeHeader(os);
-    os << s << endl;
-}
-
 template<typename T, typename G>
 void reductionProblem::assignIF(T& s, G& value)
 {

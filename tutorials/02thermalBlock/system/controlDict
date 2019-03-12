@@ -22,27 +22,19 @@ startTime       0;
 
 stopAt          endTime;
 
-/*endTime         3;*/
 endTime         1000;
 
-/*deltaT          0.005;*/
 deltaT          1;
 
 writeControl    timeStep;
 
-/*writeControl    runTime;*/
-
 writeInterval   100;
-
-/*writeInterval   0.1;*/
 
 purgeWrite      0;
 
 writeFormat     ascii;
 
 writePrecision  6;
-
-writeCompression uncompressed;
 
 timeFormat      general;
 
