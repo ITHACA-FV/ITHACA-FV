@@ -45,7 +45,7 @@ SourceFiles
 #include "reductionProblem.H"
 #include "ITHACAstream.H"
 #include "ITHACAparameters.H"
-#if OFVER == v1812
+#if OPENFOAM >= 1812
 #include "ITHACAforces18.H"
 #else
 #include "ITHACAforces.H"
