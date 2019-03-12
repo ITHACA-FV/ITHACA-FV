@@ -41,7 +41,17 @@
 unsteadyBB::unsteadyBB() {}
 unsteadyBB::unsteadyBB(int argc, char* argv[])
 {
-#include "setRootCase.H"
+    _args = autoPtr<argList>
+            (
+                new argList(argc, argv)
+            );
+
+    if (!_args->checkRootCase())
+    {
+        Foam::FatalError.exit();
+    }
+
+    argList& args = _args();
 #include "createTime.H"
 #include "createMesh.H"
     _pimple = autoPtr<pimpleControl>
@@ -53,6 +63,8 @@ unsteadyBB::unsteadyBB(int argc, char* argv[])
               );
 #include "createFields.H"
 #include "createFvOptions.H"
+    offline = ITHACAutilities::check_off();
+    podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();
 }
 
@@ -94,10 +106,10 @@ void unsteadyBB::truthSolve(List<scalar> mu_now)
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
     // save initial condition in folder 0
-    exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-    exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-    exportSolution(p_rgh, name(counter), "./ITHACAoutput/Offline/");
-    exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(p_rgh, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
     std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                      runTime.timeName());
     Ufield.append(U);
@@ -141,10 +153,10 @@ void unsteadyBB::truthSolve(List<scalar> mu_now)
 
         if (checkWrite(runTime))
         {
-            exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(p_rgh, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(p_rgh, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                              runTime.timeName());
             Ufield.append(U);
@@ -193,10 +205,10 @@ void unsteadyBB::truthSolve(fileName folder)
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
     // Save initial condition
-    exportSolution(U, name(counter), folder);
-    exportSolution(p, name(counter), folder);
-    exportSolution(T, name(counter), folder);
-    exportSolution(p_rgh, name(counter), folder);
+    ITHACAstream::exportSolution(U, name(counter), folder);
+    ITHACAstream::exportSolution(p, name(counter), folder);
+    ITHACAstream::exportSolution(T, name(counter), folder);
+    ITHACAstream::exportSolution(p_rgh, name(counter), folder);
     std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
     counter++;
     nextWrite += writeEvery;
@@ -235,10 +247,10 @@ void unsteadyBB::truthSolve(fileName folder)
 
         if (checkWrite(runTime))
         {
-            exportSolution(U, name(counter), folder);
-            exportSolution(p, name(counter), folder);
-            exportSolution(T, name(counter), folder);
-            exportSolution(p_rgh, name(counter), folder);
+            ITHACAstream::exportSolution(U, name(counter), folder);
+            ITHACAstream::exportSolution(p, name(counter), folder);
+            ITHACAstream::exportSolution(T, name(counter), folder);
+            ITHACAstream::exportSolution(p_rgh, name(counter), folder);
             std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
             counter++;
             nextWrite += writeEvery;
@@ -360,7 +372,7 @@ void unsteadyBB::solvesupremizer(word type)
                     u_sup_eqn == fvc::grad(P_sup[i])
                 );
                 supfield.append(Usup);
-                exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
+                ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
             }
 
             int systemRet = system("ln -s ../../constant ./ITHACAoutput/supfield/constant");
@@ -386,7 +398,7 @@ void unsteadyBB::solvesupremizer(word type)
                     u_sup_eqn == fvc::grad(Pmodes[i])
                 );
                 supmodes.append(Usup);
-                exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
+                ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
             }
 
             int systemRet =
@@ -581,6 +593,51 @@ void unsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
     }
     else
     {
+        L_U_SUPmodes.resize(0);
+
+        if (liftfield.size() != 0)
+        {
+            for (label k = 0; k < liftfield.size(); k++)
+            {
+                L_U_SUPmodes.append(liftfield[k]);
+            }
+        }
+
+        if (NUmodes != 0)
+        {
+            for (label k = 0; k < NUmodes; k++)
+            {
+                L_U_SUPmodes.append(Umodes[k]);
+            }
+        }
+
+        if (NSUPmodes != 0)
+        {
+            for (label k = 0; k < NSUPmodes; k++)
+            {
+                L_U_SUPmodes.append(supmodes[k]);
+            }
+        }
+
+        L_T_modes.resize(0);
+
+        if (liftfieldT.size() != 0)
+        {
+            for (label k = 0; k < liftfieldT.size(); k++)
+            {
+                L_T_modes.append(liftfieldT[k]);
+            }
+        }
+
+        if (NTmodes != 0)
+        {
+            for (label k = 0; k < NTmodes; k++)
+            {
+                L_T_modes.append(Tmodes[k]);
+            }
+        }
+
+
         M_matrix = mass_term(NUmodes, NPrghmodes, NSUPmodes);
         B_matrix = diffusive_term(NUmodes, NPrghmodes, NSUPmodes);
         C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
@@ -601,41 +658,14 @@ Eigen::MatrixXd unsteadyBB::pressure_gradient_term(label NUmodes,
     label K1size = NUmodes + NSUPmodes + liftfield.size();
     label K2size = NPrghmodes;
     Eigen::MatrixXd K_matrix(K1size, K2size);
-    // Create PTRLIST with lift, velocities and supremizers
-    PtrList<volVectorField> Together(0);
-    PtrList<volScalarField> TogetherT(0);
     dimensionedVector g = _g();
-
-    if (liftfield.size() != 0)
-    {
-        for (label k = 0; k < liftfield.size(); k++)
-        {
-            Together.append(liftfield[k]);
-        }
-    }
-
-    if (NUmodes != 0)
-    {
-        for (label k = 0; k < NUmodes; k++)
-        {
-            Together.append(Umodes[k]);
-        }
-    }
-
-    if (NSUPmodes != 0)
-    {
-        for (label k = 0; k < NSUPmodes; k++)
-        {
-            Together.append(supmodes[k]);
-        }
-    }
 
     // Project everything
     for (label i = 0; i < K1size; i++)
     {
         for (label j = 0; j < K2size; j++)
         {
-            K_matrix(i, j) = fvc::domainIntegrate(Together[i] &
+            K_matrix(i, j) = fvc::domainIntegrate(L_U_SUPmodes[i] &
                                                   fvc::reconstruct(fvc::snGrad(Prghmodes[j]) *
                                                           Prghmodes[j].mesh().magSf())).value();
         }
@@ -656,32 +686,6 @@ Eigen::MatrixXd unsteadyBB::divergence_term(label NUmodes, label NPrghmodes,
     label P1size = NPrghmodes;
     label P2size = NUmodes + NSUPmodes + liftfield.size();
     Eigen::MatrixXd P_matrix(P1size, P2size);
-    // Create PTRLIST with lift, velocities and supremizers
-    PtrList<volVectorField> Together(0);
-
-    if (liftfield.size() != 0)
-    {
-        for (label k = 0; k < liftfield.size(); k++)
-        {
-            Together.append(liftfield[k]);
-        }
-    }
-
-    if (NUmodes != 0)
-    {
-        for (label k = 0; k < NUmodes; k++)
-        {
-            Together.append(Umodes[k]);
-        }
-    }
-
-    if (NSUPmodes != 0)
-    {
-        for (label k = 0; k < NSUPmodes; k++)
-        {
-            Together.append(supmodes[k]);
-        }
-    }
 
     // Project everything
     for (label i = 0; i < P1size; i++)
@@ -689,7 +693,7 @@ Eigen::MatrixXd unsteadyBB::divergence_term(label NUmodes, label NPrghmodes,
         for (label j = 0; j < P2size; j++)
         {
             P_matrix(i, j) = fvc::domainIntegrate(Prghmodes[i] * fvc::div (
-                    Together[j])).value();
+                    L_U_SUPmodes[j])).value();
         }
     }
 
@@ -706,63 +710,20 @@ Eigen::MatrixXd unsteadyBB::buoyant_term(label NUmodes, label NTmodes,
     label H1size = NUmodes + liftfield.size() + NSUPmodes;
     label H2size = NTmodes + liftfieldT.size() ;
     Eigen::MatrixXd H_matrix(H1size, H2size);
-    // Create PTRLIST with lift, velocities and temperatures
-    PtrList<volVectorField> Together(0);
-    PtrList<volScalarField> TogetherT(0);
     dimensionedScalar beta = _beta();
     dimensionedScalar TRef = _TRef();
     dimensionedVector g = _g();
     volScalarField& gh = _gh();
     surfaceScalarField& ghf = _ghf();
 
-    if (liftfield.size() != 0)
-    {
-        for (label k = 0; k < liftfield.size(); k++)
-        {
-            Together.append(liftfield[k]);
-        }
-    }
-
-    if (NUmodes != 0)
-    {
-        for (label k = 0; k < NUmodes; k++)
-        {
-            Together.append(Umodes[k]);
-        }
-    }
-
-    if (NSUPmodes != 0)
-    {
-        for (label k = 0; k < NSUPmodes; k++)
-        {
-            Together.append(supmodes[k]);
-        }
-    }
-
-    if (liftfieldT.size() != 0)
-    {
-        for (label k = 0; k < liftfieldT.size(); k++)
-        {
-            TogetherT.append(liftfieldT[k]);
-        }
-    }
-
-    if (NTmodes != 0)
-    {
-        for (label k = 0; k < NTmodes; k++)
-        {
-            TogetherT.append(Tmodes[k]);
-        }
-    }
-
     // Project everything
     for (label i = 0; i < H1size; i++)
     {
         for (label j = 0; j < H2size; j++)
         {
-            H_matrix(i, j) = fvc::domainIntegrate(Together[i] & fvc::reconstruct(
-                    ghf * fvc::snGrad(1.0 - (beta * (TogetherT[j] - TRef)))
-                    * TogetherT[j].mesh().magSf())).value();
+            H_matrix(i, j) = fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::reconstruct(
+                    ghf * fvc::snGrad(1.0 - (beta * (L_T_modes[j] - TRef)))
+                    * L_T_modes[j].mesh().magSf())).value();
         }
     }
 
@@ -788,57 +749,14 @@ List< Eigen::MatrixXd > unsteadyBB::convective_term_temperature(label NUmodes,
         Q_matrix[j].resize(Qsize, Qsizet);
     }
 
-    PtrList<volScalarField> TogetherT(0);
-    PtrList<volVectorField> Together(0);
-
-    if (liftfield.size() != 0)
-    {
-        for (label k = 0; k < liftfield.size(); k++)
-        {
-            Together.append(liftfield[k]);
-        }
-    }
-
-    if (NUmodes != 0)
-    {
-        for (label k = 0; k < NUmodes; k++)
-        {
-            Together.append(Umodes[k]);
-        }
-    }
-
-    if (NSUPmodes != 0)
-    {
-        for (label k = 0; k < NSUPmodes; k++)
-        {
-            Together.append(supmodes[k]);
-        }
-    }
-
-    if (liftfieldT.size() != 0)
-    {
-        for (label k = 0; k < liftfieldT.size(); k++)
-        {
-            TogetherT.append(liftfieldT[k]);
-        }
-    }
-
-    if (NTmodes != 0)
-    {
-        for (label k = 0; k < NTmodes; k++)
-        {
-            TogetherT.append(Tmodes[k]);
-        }
-    }
-
     for (label i = 0; i < Qsizet; i++)
     {
         for (label j = 0; j < Qsize; j++)
         {
             for (label k = 0; k < Qsizet; k++)
             {
-                Q_matrix[i](j, k) = fvc::domainIntegrate(TogetherT[i] * fvc::div(
-                                        fvc::interpolate(Together[j]) & Together[j].mesh().Sf(), TogetherT[k])).value();
+                Q_matrix[i](j, k) = fvc::domainIntegrate(L_T_modes[i] * fvc::div(
+                                        fvc::interpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf(), L_T_modes[k])).value();
             }
         }
     }
@@ -856,32 +774,14 @@ Eigen::MatrixXd unsteadyBB::diffusive_term_temperature(label NUmodes,
         label NTmodes, label NSUPmodes)
 {
     label Ysize = NTmodes  + liftfieldT.size();
-    PtrList<volScalarField> TogetherT(0);
     Eigen::MatrixXd Y_matrix(Ysize, Ysize);
-
-    // Project everything
-    if (liftfieldT.size() != 0)
-    {
-        for (label k = 0; k < liftfieldT.size(); k++)
-        {
-            TogetherT.append(liftfieldT[k]);
-        }
-    }
-
-    if (NTmodes != 0)
-    {
-        for (label k = 0; k < NTmodes; k++)
-        {
-            TogetherT.append(Tmodes[k]);
-        }
-    }
 
     for (label i = 0; i < Ysize; i++)
     {
         for (label j = 0; j < Ysize; j++)
         {
-            Y_matrix(i, j) = fvc::domainIntegrate(TogetherT[i] * fvc::laplacian(
-                    dimensionedScalar("1", dimless, 1), TogetherT[j])).value();
+            Y_matrix(i, j) = fvc::domainIntegrate(L_T_modes[i] * fvc::laplacian(
+                    dimensionedScalar("1", dimless, 1), L_T_modes[j])).value();
         }
     }
 
@@ -897,31 +797,12 @@ Eigen::MatrixXd unsteadyBB::mass_term_temperature(label NUmodes, label NTmodes,
 {
     label Wsize = NTmodes  + liftfieldT.size();
     Eigen::MatrixXd W_matrix(Wsize, Wsize);
-    // Create PTRLIST with lift, temperatures and supremizers
-    PtrList<volScalarField> TogetherT(0);
-
-    // Project everything
-    if (liftfieldT.size() != 0)
-    {
-        for (label k = 0; k < liftfieldT.size(); k++)
-        {
-            TogetherT.append(liftfieldT[k]);
-        }
-    }
-
-    if (NTmodes != 0)
-    {
-        for (label k = 0; k < NTmodes; k++)
-        {
-            TogetherT.append(Tmodes[k]);
-        }
-    }
 
     for (label i = 0; i < Wsize; i++)
     {
         for (label j = 0; j < Wsize; j++)
         {
-            W_matrix(i, j) = fvc::domainIntegrate(TogetherT[i] * TogetherT[j]).value();
+            W_matrix(i, j) = fvc::domainIntegrate(L_T_modes[i] * L_T_modes[j]).value();
         }
     }
 

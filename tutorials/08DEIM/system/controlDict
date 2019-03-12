@@ -32,7 +32,7 @@ writeControl    timeStep;
 
 /*writeControl    runTime;*/
 
-writeInterval   1;
+writeInterval   10000000;
 
 /*writeInterval   0.1;*/
 

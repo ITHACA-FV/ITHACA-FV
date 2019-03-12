@@ -161,18 +161,6 @@ class reductionProblem
         Eigen::MatrixXi inletIndexT;
 
         //--------------------------------------------------------------------------
-        /// Export a field (template function)
-        ///
-        /// @param[in]  s          field you want to export.
-        /// @param[in]  subfolder  The subfolder used to save the snapshot.
-        /// @param[in]  folder     The folder used to save the snapshot.
-        ///
-        /// @tparam     T          Type of parameter you want to export (volVectorField or volScalarField).
-        ///
-        template<typename T>
-        void exportSolution(T& s, fileName subfolder, fileName folder = "./Offline");
-
-        //--------------------------------------------------------------------------
         /// Assign Boundary Condition to a volVectorField
         ///
         /// @param[in]  s       field where you want to assign the BC.

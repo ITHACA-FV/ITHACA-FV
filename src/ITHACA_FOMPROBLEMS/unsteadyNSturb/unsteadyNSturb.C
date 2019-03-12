@@ -115,9 +115,9 @@ void unsteadyNSturb::truthSolve(List<scalar> mu_now)
         {
             nsnapshots += 1;
             volScalarField nut = turbulence->nut();
-            exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-            exportSolution(nut, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(nut, name(counter), "./ITHACAoutput/Offline/");
             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                              runTime.timeName());
             Ufield.append(U);

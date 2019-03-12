@@ -399,6 +399,7 @@ void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder,
     if (!Pstream::parRun())
     {
         mkDir(folder + "/" + subfolder);
+        ITHACAutilities::createSymLink(folder);
         T act(fieldName, s);
         fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
         OFstream os(fieldname);
@@ -408,6 +409,7 @@ void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder,
     else
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
+        ITHACAutilities::createSymLink(folder);
         T act(fieldName, s);
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
                              subfolder + "/" + fieldName;
@@ -424,6 +426,7 @@ void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder)
     if (!Pstream::parRun())
     {
         mkDir(folder + "/" + subfolder);
+        ITHACAutilities::createSymLink(folder);
         fileName fieldname = folder + "/" + subfolder + "/" + s.name();
         OFstream os(fieldname);
         s.writeHeader(os);
@@ -432,6 +435,7 @@ void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder)
     else
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
+        ITHACAutilities::createSymLink(folder);
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
                              subfolder + "/" + s.name();
         OFstream os(fieldname);

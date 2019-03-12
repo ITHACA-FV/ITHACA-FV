@@ -418,7 +418,7 @@ void reducedUnsteadyNSTturb::reconstruct_sup(fileName folder, int printevery)
                 U_rec += Umodes[j] * online_solution[i](j + 1, 0);
             }
 
-            problem->exportSolution(U_rec,  name(counter2), folder);
+            ITHACAstream::exportSolution(U_rec,  name(counter2), folder);
             volScalarField P_rec("P_rec", Pmodes[0] * 0);
 
             for (label j = 0; j < Nphi_p; j++)
@@ -426,8 +426,8 @@ void reducedUnsteadyNSTturb::reconstruct_sup(fileName folder, int printevery)
                 P_rec += Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
 
-            problem->exportSolution(P_rec, name(counter2), folder);
-            problem->exportSolution(nutREC[nextwrite], name(counter2), folder);
+            ITHACAstream::exportSolution(P_rec, name(counter2), folder);
+            ITHACAstream::exportSolution(nutREC[nextwrite], name(counter2), folder);
             nextwrite += printevery;
             counter2 ++;
             UREC.append(U_rec);
@@ -459,7 +459,7 @@ void reducedUnsteadyNSTturb::reconstruct_supt(fileName folder, int printevery)
                 T_rec += Tmodes[j] * online_solutiont[i](j + 1, 0);
             }
 
-            problem->exportSolution(T_rec,  name(counter2), folder);
+            ITHACAstream::exportSolution(T_rec,  name(counter2), folder);
             nextwrite += printevery;
             counter2 ++;
             TREC.append(T_rec);
