@@ -46,6 +46,7 @@ SourceFiles
 #pragma GCC diagnostic pop
 #include "fvCFD.H"
 #include "Foam2Eigen.H"
+#include "ITHACAutilities.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -100,6 +101,18 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// system.
         ///
         List<Eigen::MatrixXd> project(fvMatrix<T>& Af);
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to reconstruct the solution starting from the
+        ///             coefficients
+        ///
+        /// @param[in]  Coeff  The coefficients of the POD expansion
+        /// @param[in]  Name   The name of the field you want to return
+        ///
+        /// @return     A volScalarField or volScalarField given by the reconstruction.
+        ///
+        GeometricField<T, fvPatchField, volMesh> reconstruct(Eigen::MatrixXd& Coeff,
+                word Name);
 };
 
 #ifdef NoRepository

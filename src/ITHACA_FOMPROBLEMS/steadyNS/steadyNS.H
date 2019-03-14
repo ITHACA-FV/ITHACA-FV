@@ -92,13 +92,13 @@ class steadyNS: public reductionProblem
         PtrList<volVectorField> supfield;
 
         /// List of pointers used to form the pressure modes
-        PtrList<volScalarField> Pmodes;
+        Modes<scalar> Pmodes;
 
         /// List of pointers used to form the velocity modes
-        PtrList<volVectorField> Umodes;
+        Modes<vector> Umodes;
 
         /// List of pointers used to form the supremizer modes
-        PtrList<volVectorField> supmodes;
+        Modes<vector> supmodes;
 
         /// List of pointers used to form the list of lifting functions
         PtrList<volVectorField> liftfield;
@@ -107,7 +107,7 @@ class steadyNS: public reductionProblem
         PtrList<volVectorField> Uomfield;
 
         /// List of pointers containing the total number of lift, supremizer and velocity modes
-        PtrList<volVectorField> L_U_SUPmodes;
+        Modes<vector> L_U_SUPmodes;
 
         /// Tolerance for the residual of the stationary problems, there is the same tolerance for velocity and pressure
         scalar tolerance;
