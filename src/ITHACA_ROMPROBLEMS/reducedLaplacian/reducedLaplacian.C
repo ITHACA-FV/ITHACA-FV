@@ -64,7 +64,7 @@ void reducedLaplacian::solveOnline(Eigen::MatrixXd mu)
     }
 
     Eigen::MatrixXd x;
-    x = A.colPivHouseholderQr().solve(-problem->source);
+    x = A.fullPivLu().solve(-problem->source);
     online_solution.conservativeResize(count_online_solve, problem->NTmodes + 1);
     online_solution(count_online_solve - 1, 0) = count_online_solve;
     online_solution.row(count_online_solve - 1).tail(problem->NTmodes) =

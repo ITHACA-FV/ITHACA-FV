@@ -44,6 +44,7 @@ SourceFiles
 #include <iostream>
 #include "ITHACAPOD.H"
 #include "ITHACAutilities.H"
+#include "Modes.H"
 
 /// Class to implement a full order laplacian parametrized problem
 class laplacianProblem: public reductionProblem
@@ -64,7 +65,7 @@ class laplacianProblem: public reductionProblem
         PtrList<volScalarField> Tonline;
 
         /// List of POD modes
-        PtrList<volScalarField> Tmodes;
+        Modes<scalar> Tmodes;
 
         /// List of operators
         PtrList<fvScalarMatrix> operator_list;
