@@ -84,7 +84,6 @@ steadyNSturb::steadyNSturb(int argc, char* argv[])
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();
-
 }
 
 

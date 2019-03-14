@@ -1,33 +1,33 @@
 /*---------------------------------------------------------------------------*\
-     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
-     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
-     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
-     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+      ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
+      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
+      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
+      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
+      ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+      ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
 
- * In real Time Highly Advanced Computational Applications for Finite Volumes
- * Copyright (C) 2017 by the ITHACA-FV authors
--------------------------------------------------------------------------------
-License
-    This file is part of ITHACA-FV
-    ITHACA-FV is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-    ITHACA-FV is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Lesser General Public License for more details.
-    You should have received a copy of the GNU Lesser General Public License
-    along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
-Class
-    foam2eigen
-Description
-    Converts foam objects into Eigen and viceversa
-SourceFiles
-    foam2eigen.C
-\*---------------------------------------------------------------------------*/
+  * In real Time Highly Advanced Computational Applications for Finite Volumes
+  * Copyright (C) 2017 by the ITHACA-FV authors
+ -------------------------------------------------------------------------------
+ License
+     This file is part of ITHACA-FV
+     ITHACA-FV is free software: you can redistribute it and/or modify
+     it under the terms of the GNU Lesser General Public License as published by
+     the Free Software Foundation, either version 3 of the License, or
+     (at your option) any later version.
+     ITHACA-FV is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+     GNU Lesser General Public License for more details.
+     You should have received a copy of the GNU Lesser General Public License
+     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
+ Class
+     foam2eigen
+ Description
+     Converts foam objects into Eigen and viceversa
+ SourceFiles
+     foam2eigen.C
+ \*---------------------------------------------------------------------------*/
 
 /// \file
 /// Header file of the Foam2Eigen class.
@@ -61,19 +61,19 @@ class Foam2Eigen
     public:
 
         //--------------------------------------------------------------------------
-        /// @brief      Convert a ldu OpenFOAM matrix into a Eigen Matrix A and a source vector b
+        /// @brief      Convert a FvMatrix OpenFOAM matrix (Linear System) into a Eigen Matrix A and a source vector b
         ///
         /// @param[in]      foam_matrix       The foam matrix can be fvScalarMatrix or fvVectorMatrix
         /// @param[out]     A                 The matrix or the list of matrices, can be dense or sparse
         /// @param[out]     b                 The source term vector or the list of source term vectors, always dense
         ///
-        /// @tparam         type_f            The type of field, can be a volvectorfield or a volscalarfield
-        /// @tparam         type_foam_matrix  The type of foam matrix can be fvScalarMatrix or fvVectorMatrix
+        /// @tparam         type_foam_matrix  The type of foam matrix can be scalar or vector
         /// @tparam         type_A            The type of matrix or the list of matrices, can be dense (Eigen::MatrixXd) or sparse (Eigen::SparseMatrix<double>) or a List of them
         /// @tparam         type_B            The type source term vector or the list can be Eigen::VectorXd or List<Eigen::VectorXd>
         ///
         template <class type_foam_matrix, class type_A, class type_B>
-        static void fvMatrix2Eigen(type_foam_matrix& foam_matrix, type_A& A, type_B& b);
+        static void fvMatrix2Eigen(fvMatrix<type_foam_matrix>& foam_matrix, type_A& A,
+                                   type_B& b);
 
 
         //--------------------------------------------------------------------------
@@ -81,15 +81,20 @@ class Foam2Eigen
         ///
         /// @param[in]  fields The fields can be a PtrList<volScalarField> or PtrList<volVectorField>
         ///
-        /// @tparam     type_f  Type of the fields can be PtrList<volScalarField> or PtrList<volVectorField>
+        /// @tparam     type_f  Type of the Geometric Field fields can be vector or scalar
         ///
         /// @return     An Eigen matrix containing as columns the snapshots
         ///
-        ///
-        ///
         template <class type_f>
-        static Eigen::MatrixXd PtrList2Eigen(type_f& fields, int Nfields = 10000000);
+        static Eigen::MatrixXd PtrList2Eigen(
+            PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields,
+            int Nfields = 10000000);
 
+
+
+        template <class type_f>
+        static Eigen::VectorXd field2Eigen(const
+                                           DimensionedField<type_f, Foam::volMesh>& field);
 
         //--------------------------------------------------------------------------
         /// @brief      Convert an OpenFOAM field to an Eigen Vector
@@ -101,7 +106,10 @@ class Foam2Eigen
         /// @return     return the dense Eigen vector
         ///
         template <class type_f>
-        static Eigen::VectorXd field2Eigen(type_f& field);
+        static Eigen::VectorXd field2Eigen(
+            GeometricField<type_f, fvPatchField, volMesh>& field);
+
+
 
         //--------------------------------------------------------------------------
         /// @brief      Convert an OpenFOAM field to a List of Eigen Vectors, one for each boundary
@@ -113,35 +121,9 @@ class Foam2Eigen
         /// @return     return the dense Eigen vector
         ///
         template <class type_f>
-        static List<Eigen::VectorXd> field2EigenBC(type_f& field);
+        static List<Eigen::VectorXd> field2EigenBC(
+            GeometricField<type_f, fvPatchField, volMesh>& field);
 
-
-        //--------------------------------------------------------------------------
-        /// @brief      Converts an OpenFOAM PtrList to a list of Eigen Matrices, one for each boundary
-        ///
-        /// @param      fields   The fields
-        /// @param[in]  Nfields  The Number of requested modes.
-        ///
-        /// @tparam     type_f   type of the field, can be volVectorField or volScalarField
-        ///
-        /// @return     List of Eigen Matrices
-        ///
-        template <class type_f>
-        static List<Eigen::MatrixXd> PtrList2EigenBC(type_f& fields,
-                int Nfields = 10000000);
-
-        //--------------------------------------------------------------------------
-        /// @brief      Convert an Eigen Vector to an OpenFOAM field (only the internal Field is copied inside the OpenFOAM field)
-        ///
-        /// @param[in,out]  field         The OpenFOAM field where to copy the Eigen Vector
-        /// @param[in]      eigen_vector  The Eigen vector
-        ///
-        /// @tparam     type_f         Type of the field can be volScalarField or volVectorField
-        ///
-        /// @return     The OpenFoam Field
-        ///
-        template <class type_f>
-        static type_f Eigen2field(type_f& field, Eigen::VectorXd& eigen_vector);
 
         //--------------------------------------------------------------------------
         /// @brief      Perform the projection of an OpenFOAM fvMatrix onto a set of modes using the Eigen matrix multiplication
@@ -161,9 +143,10 @@ class Foam2Eigen
         ///
         /// @return     A tuple containing the projected Ar matrix and vector br which are coming from the source term.
         ///
-        template <class type_m, class type_PtrList>
-        static std::tuple<Eigen::MatrixXd, Eigen::VectorXd> projectFvMatrix(
-            type_m& matrix, type_PtrList& modes, int Nmodes);
+        template <class type_f>
+        static List<Eigen::MatrixXd> PtrList2EigenBC(
+            PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields,
+            int Nfields = 10000000);
 
         //--------------------------------------------------------------------------
         /// @brief      Perform the projection of an OpenFOAM field onto a set of modes using the Eigen matrix multiplication
@@ -183,9 +166,10 @@ class Foam2Eigen
         ///
         /// @return     a vector fr with the projection
         ///
-        template <class type_f, class type_PtrList>
-        static Eigen::VectorXd projectField(type_f& field, type_PtrList& modes,
-                                            int Nmodes);
+        template <class type_f>
+        static GeometricField<type_f, fvPatchField, volMesh> Eigen2field(
+            GeometricField<type_f, fvPatchField, volMesh>& field,
+            Eigen::VectorXd& eigen_vector);
 
         //--------------------------------------------------------------------------
         /// @brief      Obtain the Mass Matrix from a list of reduced basis
@@ -197,8 +181,49 @@ class Foam2Eigen
         ///
         /// @return     An Eigen matrix containing the mass matrix
         ///
-        template <class type_PtrList>
-        static Eigen::MatrixXd MassMatrix(type_PtrList& modes, int Nmodes);
+        template <class type_m>
+        static std::tuple<Eigen::MatrixXd, Eigen::VectorXd> projectFvMatrix(
+            fvMatrix<type_m>& matrix,
+            PtrList<GeometricField<type_m, fvPatchField, volMesh>>& modes, int Nmodes);
+
+
+        //--------------------------------------------------------------------------
+        /// @brief      Perform the projection of an OpenFOAM field onto a set of modes using the Eigen matrix multiplication
+        ///
+        /// It is the standard Galerkin projection of a field onto a reduced basis:
+        ///
+        /// \f[  \mathbf{f} \in R^{Nx1} , \mathbf{f_r} \in R^{nx1} , \mathbf{M} \in R^{Nxn} \f]
+        ///
+        /// \f[ \mathbf{f_r} = \mathbf{M^T f}  \f]
+        ///
+        /// @param[in]  field         The f OpenFOAM field
+        /// @param[in]  modes         The M OpenFOAM modes contained in a PtrList
+        /// @param[in]  Nmodes        The n number of modes you want to use (The size of input modes can be bigger than the requested number of modes)
+        ///
+        /// @tparam     type_f        type of field can be either scalar or vectorial
+        /// @tparam     type_PtrList  the type of the PtrList for the modes can be volScalarField or volVectorField
+        ///
+        /// @return     a vector fr with the projection
+        ///
+        template <class type_f>
+        static Eigen::VectorXd projectField(
+            GeometricField<type_f, fvPatchField, volMesh>& field,
+            PtrList<GeometricField<type_f, fvPatchField, volMesh>>& modes,
+            int Nmodes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Obtain the Mass Matrix from a list of reduced basis
+        ///
+        /// @param      modes         The OpenFOAM modes contained in a PtrList
+        /// @param[in]  Nmodes        The number of requested modes
+        ///
+        /// @tparam     type_PtrList  the type of the PtrList for the modes can be volScalarField or volVectorField
+        ///
+        /// @return     An Eigen matrix containing the mass matrix
+        ///
+        template <class type_f>
+        static Eigen::MatrixXd MassMatrix(
+            PtrList<GeometricField<type_f, fvPatchField, volMesh>>& modes, int Nmodes);
 
         //--------------------------------------------------------------------------
         /// @brief      Convert a PtrList of OpenFOAM fvMatrix into a tuple of lists of Eigen Sparse Matrices and source vectors
@@ -211,40 +236,15 @@ class Foam2Eigen
         ///
         template<class type_matrix>
         static std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-                LFvMatrix2LSM(PtrList<type_matrix>& MatrixList);
+                LFvMatrix2LSM(PtrList<fvMatrix<type_matrix>>& MatrixList);
 
 
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-template<>
-Eigen::VectorXd Foam2Eigen::field2Eigen(volVectorField& field);
-
-template<>
-Eigen::VectorXd Foam2Eigen::field2Eigen(volScalarField& field);
-
-template<>
-Eigen::VectorXd Foam2Eigen::field2Eigen(fvMesh const& field);
-
-template<>
-List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volVectorField& field);
-
-template<>
-List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volScalarField& field);
 
 template<class type_f>
-List<Eigen::MatrixXd> PtrList2EigenBC(type_f& fields, int Nfields);
-
-template<>
-List<Eigen::MatrixXd> PtrList2EigenBC(PtrList<volScalarField>& fields,
-                                      int Nfields);
-
-template<>
-List<Eigen::MatrixXd> PtrList2EigenBC(PtrList<volVectorField>& fields,
-                                      int Nfields);
-
-
-template<class type_f>
-Eigen::VectorXd Foam2Eigen::field2Eigen(type_f& field)
+Eigen::VectorXd Foam2Eigen::field2Eigen(const
+                                        DimensionedField<type_f, Foam::volMesh>& field)
 {
     Eigen::VectorXd out;
     out.resize(int(field.size()));
@@ -257,9 +257,38 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(type_f& field)
     return out;
 }
 
+template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(
+    GeometricField<vector, fvPatchField, volMesh>& field);
+
+template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(
+    GeometricField<scalar, fvPatchField, volMesh>& field);
+
+template<>
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    GeometricField<vector, fvPatchField, volMesh>& field);
+
+template<>
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    GeometricField<scalar, fvPatchField, volMesh>& field);
+
+template<class type_f>
+List<Eigen::MatrixXd> PtrList2EigenBC(type_f& fields, int Nfields);
+
+template<>
+List<Eigen::MatrixXd> PtrList2EigenBC(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields,
+    int Nfields);
+
+template<>
+List<Eigen::MatrixXd> PtrList2EigenBC(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields,
+    int Nfields);
+
 template<class type_matrix>
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-        Foam2Eigen::LFvMatrix2LSM(PtrList<type_matrix>& MatrixList)
+        Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<type_matrix>>& MatrixList)
 {
     List<Eigen::SparseMatrix<double>> SM_list;
     List<Eigen::VectorXd> V_list;
@@ -281,9 +310,10 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
     return tupla;
 }
 
-template <class type_m, class type_PtrList>
+template <class type_m>
 std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(
-    type_m& matrix, type_PtrList& modes, int Nmodes)
+    fvMatrix<type_m>& matrix,
+    PtrList<GeometricField<type_m, fvPatchField, volMesh>>& modes, int Nmodes)
 {
     Eigen::SparseMatrix<double> A;
     Eigen::MatrixXd Ar;
@@ -324,7 +354,8 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(
 }
 
 template <class type_PtrList>
-Eigen::MatrixXd Foam2Eigen::MassMatrix(type_PtrList& modes, int Nmodes)
+Eigen::MatrixXd Foam2Eigen::MassMatrix(
+    PtrList<GeometricField<type_PtrList, fvPatchField, volMesh>>& modes, int Nmodes)
 {
     Eigen::MatrixXd Mr;
     Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
@@ -357,9 +388,11 @@ Eigen::MatrixXd Foam2Eigen::MassMatrix(type_PtrList& modes, int Nmodes)
     return Mr;
 }
 
-template <class type_f, class type_PtrList>
-Eigen::VectorXd Foam2Eigen::projectField(type_f& field, type_PtrList& modes,
-        int Nmodes)
+template <class type_f>
+Eigen::VectorXd Foam2Eigen::projectField(
+    GeometricField<type_f, fvPatchField, volMesh>& field,
+    PtrList<GeometricField<type_f, fvPatchField, volMesh>>& modes,
+    int Nmodes)
 {
     Eigen::VectorXd fr;
     Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
@@ -380,5 +413,3 @@ Eigen::VectorXd Foam2Eigen::projectField(type_f& field, type_PtrList& modes,
     return fr;
 }
 #endif
-
-

@@ -248,7 +248,7 @@ class DEIMlaplacian: public laplacianProblem
                 // Export
                 volScalarField Tred("Tred", T);
                 Tred = Foam2Eigen::Eigen2field(Tred, full);
-                ITHACAstream::exportSolution(Tred, name(i + 1) , "./ITHACAoutput/" + Folder);
+                ITHACAstream::exportSolution(Tred, name(i + 1), "./ITHACAoutput/" + Folder);
                 Tonline.append(Tred);
             }
         }

@@ -174,6 +174,7 @@ int main(int argc, char* argv[])
     int NmodesTproj = para.ITHACAdict->lookupOrDefault<int>("NmodesTproj", 10);
     // Set the number of parameters
     example.Pnumber = 9;
+    example.Tnumber = 500;
     // Set the parameters
     example.setParameters();
     // Set the parameter ranges, in all the subdomains the diffusivity varies between

@@ -23,6 +23,7 @@ EXE_INC = \
     -I../EigenFunctions \
     -I../Foam2Eigen \
     -I../ForceCoeff \
+    -I../Containers \
     -Wall \
     -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \

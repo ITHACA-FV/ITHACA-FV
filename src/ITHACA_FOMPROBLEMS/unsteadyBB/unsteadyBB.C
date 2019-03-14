@@ -637,7 +637,6 @@ void unsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
             }
         }
 
-
         M_matrix = mass_term(NUmodes, NPrghmodes, NSUPmodes);
         B_matrix = diffusive_term(NUmodes, NPrghmodes, NSUPmodes);
         C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
@@ -756,7 +755,8 @@ List< Eigen::MatrixXd > unsteadyBB::convective_term_temperature(label NUmodes,
             for (label k = 0; k < Qsizet; k++)
             {
                 Q_matrix[i](j, k) = fvc::domainIntegrate(L_T_modes[i] * fvc::div(
-                                        fvc::interpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf(), L_T_modes[k])).value();
+                                        fvc::interpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf(),
+                                        L_T_modes[k])).value();
             }
         }
     }

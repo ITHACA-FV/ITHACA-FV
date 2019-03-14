@@ -30,11 +30,15 @@ License
 
 #include "Foam2Eigen.H"
 
+/// \file
+/// Source file of the foam2eigen class.
+
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 template<>
-Eigen::VectorXd Foam2Eigen::field2Eigen(volVectorField& field)
+Eigen::VectorXd Foam2Eigen::field2Eigen(
+    GeometricField<vector, fvPatchField, volMesh>& field)
 {
     Eigen::VectorXd out;
     out.resize(int(field.size() * 3));
@@ -50,7 +54,8 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(volVectorField& field)
 }
 
 template<>
-Eigen::VectorXd Foam2Eigen::field2Eigen(volScalarField& field)
+Eigen::VectorXd Foam2Eigen::field2Eigen(
+    GeometricField<scalar, fvPatchField, volMesh>& field)
 {
     Eigen::VectorXd out;
     out.resize(int(field.size()));
@@ -64,21 +69,8 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(volScalarField& field)
 }
 
 template<>
-Eigen::VectorXd Foam2Eigen::field2Eigen(fvMesh const& field)
-{
-    Eigen::VectorXd out;
-    out.resize(int(field.V().size()));
-
-    for (int l = 0; l < field.V().size(); l++)
-    {
-        out(l) = field.V()[l];
-    }
-
-    return out;
-}
-
-template<>
-List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volVectorField& field)
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    GeometricField<vector, fvPatchField, volMesh>& field)
 {
     List<Eigen::VectorXd> Out;
     unsigned int size = field.boundaryField().size();
@@ -101,7 +93,8 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volVectorField& field)
 }
 
 template<>
-List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volScalarField& field)
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    GeometricField<scalar, fvPatchField, volMesh>& field)
 {
     List<Eigen::VectorXd> Out;
     unsigned int size = field.boundaryField().size();
@@ -122,8 +115,9 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(volScalarField& field)
 }
 
 template<>
-List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volScalarField>&
-        fields, int Nfields)
+List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>&
+    fields, int Nfields)
 {
     unsigned int Nf;
 
@@ -161,8 +155,9 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volScalarField>&
 }
 
 template<>
-List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volVectorField>&
-        fields, int Nfields)
+List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>&
+    fields, int Nfields)
 {
     unsigned int Nf;
 
@@ -201,10 +196,11 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(PtrList<volVectorField>&
 
 
 template<>
-volVectorField Foam2Eigen::Eigen2field(volVectorField& field_in,
-                                       Eigen::VectorXd& eigen_vector)
+GeometricField<vector, fvPatchField, volMesh> Foam2Eigen::Eigen2field(
+    GeometricField<vector, fvPatchField, volMesh>& field_in,
+    Eigen::VectorXd& eigen_vector)
 {
-    volVectorField field_out(field_in);
+    GeometricField<vector, fvPatchField, volMesh> field_out(field_in);
 
     for (auto i = 0; i < field_out.size(); i++)
     {
@@ -218,10 +214,11 @@ volVectorField Foam2Eigen::Eigen2field(volVectorField& field_in,
 }
 
 template<>
-volScalarField Foam2Eigen::Eigen2field(volScalarField& field_in,
-                                       Eigen::VectorXd& eigen_vector)
+GeometricField<scalar, fvPatchField, volMesh> Foam2Eigen::Eigen2field(
+    GeometricField<scalar, fvPatchField, volMesh>& field_in,
+    Eigen::VectorXd& eigen_vector)
 {
-    volScalarField field_out(field_in);
+    GeometricField<scalar, fvPatchField, volMesh> field_out(field_in);
 
     for (auto i = 0; i < field_out.size(); i++)
     {
@@ -233,12 +230,10 @@ volScalarField Foam2Eigen::Eigen2field(volScalarField& field_in,
 }
 
 
-
-
-
 template<>
-Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volVectorField>& fields,
-        int Nfields)
+Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields,
+    int Nfields)
 {
     int Nf;
 
@@ -256,15 +251,16 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volVectorField>& fields,
 
     for (int k = 0; k < Nf; k++)
     {
-        out.col(k) = field2Eigen<volVectorField>(fields[k]);
+        out.col(k) = field2Eigen<vector>(fields[k]);
     }
 
     return out;
 }
 
 template<>
-Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volScalarField>& fields,
-        int Nfields)
+Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields,
+    int Nfields)
 {
     int Nf;
 
@@ -282,7 +278,7 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volScalarField>& fields,
 
     for (int k = 0; k < Nf; k++)
     {
-        out.col(k) = field2Eigen<volScalarField>(fields[k]);
+        out.col(k) = field2Eigen<scalar>(fields[k]);
     }
 
     return out;
@@ -290,7 +286,8 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volScalarField>& fields,
 
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::MatrixXd& A,
+void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar>& foam_matrix,
+                                Eigen::MatrixXd& A,
                                 Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
@@ -324,7 +321,8 @@ void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix, Eigen::MatrixXd& A,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix, Eigen::MatrixXd& A,
+void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector>& foam_matrix,
+                                Eigen::MatrixXd& A,
                                 Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
@@ -370,7 +368,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix, Eigen::MatrixXd& A,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar>& foam_matrix,
                                 Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
@@ -411,7 +409,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvScalarMatrix& foam_matrix,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvVectorMatrix& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector>& foam_matrix,
                                 Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();

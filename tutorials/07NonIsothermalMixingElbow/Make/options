@@ -29,6 +29,7 @@ EXE_INC = \
     -I../../src/ITHACA_ROMPROBLEMS/reducedUnsteadyNST \
     -I../../src/ITHACA_ROMPROBLEMS/reducedSteadyNS \
     -I../../src/ITHACA_ROMPROBLEMS/NonLinearSolvers \
+    -I../../src/ITHACA_CORE/Containers \
     -I../../src/thirdparty/Eigen \
     -I../../src/thirdparty/spectra/include \
     -I../../src/ITHACA_THIRD_PARTY/splinter/include \

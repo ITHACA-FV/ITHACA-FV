@@ -97,7 +97,7 @@ class unsteadyBB: public unsteadyNS
         PtrList<volScalarField> Tomfield;
 
         /// List of pointers containing the lift for temperature and the temperature field
-        PtrList<volScalarField> L_T_modes;        
+        PtrList<volScalarField> L_T_modes;
 
         // Dummy variables to transform simplefoam into a class
         autoPtr<volScalarField> _UliftBC;
