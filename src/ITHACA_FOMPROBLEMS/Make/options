@@ -34,6 +34,7 @@ EXE_INC = \
     -I../ITHACA_CORE/ITHACAstream \
     -I../ITHACA_CORE/ITHACAPOD \
     -I../ITHACA_CORE/ITHACAparallel \
+    -I../ITHACA_CORE/Containers \
     -I../ForceCoeff \
     -I../ITHACA_CORE/Foam2Eigen \
     -I../ITHACA_CORE/EigenFunctions \

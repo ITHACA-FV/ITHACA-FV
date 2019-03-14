@@ -420,7 +420,7 @@ void DEIM<T, S>::generateSubmeshes(int layers, fvMesh& mesh, S field,
     {
         localMagicPoints = global2local(magicPoints, submeshList);
         ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + FunctionName
-                                     );
+                                    );
     }
 }
 
@@ -487,7 +487,7 @@ void DEIM<T, S>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
     {
         localMagicPointsA = global2local(magicPointsA, submeshListA);
         ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + MatrixName
-                                     );
+                                    );
     }
 }
 
@@ -551,7 +551,7 @@ void DEIM<T, S>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
     {
         localMagicPointsB = global2local(magicPointsB, submeshListB);
         ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + MatrixName
-                                     );
+                                    );
     }
 }
 

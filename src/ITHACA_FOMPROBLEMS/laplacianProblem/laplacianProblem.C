@@ -54,9 +54,8 @@ laplacianProblem::laplacianProblem(int argc, char* argv[])
 #include "createTime.H"
 #include "createMesh.H"
 #include "createFields.H"
-        offline = ITHACAutilities::check_off();
+    offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
-
 }
 
 

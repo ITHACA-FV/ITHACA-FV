@@ -54,6 +54,7 @@ SourceFiles
 #include <iostream>
 #include "IPstream.H"
 #include "OPstream.H"
+#include "Modes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

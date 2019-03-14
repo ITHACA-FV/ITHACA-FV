@@ -42,9 +42,9 @@ unsteadyNST::unsteadyNST() {}
 unsteadyNST::unsteadyNST(int argc, char* argv[])
 {
     _args = autoPtr<argList>
-    (
-        new argList(argc, argv)
-        );
+            (
+                new argList(argc, argv)
+            );
 
     if (!_args->checkRootCase())
     {
@@ -56,12 +56,12 @@ unsteadyNST::unsteadyNST(int argc, char* argv[])
 #include "createMesh.H"
 #include "fvOptions.H"
     _piso = autoPtr<pisoControl>
-    (
-        new pisoControl
-        (
-            mesh
-            )
-        );
+            (
+                new pisoControl
+                (
+                    mesh
+                )
+            );
 #include "createFields.H"
 #include "createFvOptions.H"
     offline = ITHACAutilities::check_off();
@@ -106,7 +106,7 @@ void unsteadyNST::truthSolve(List<scalar> mu_now)
             fvm::ddt(U)
             + fvm::div(phi, U)
             - fvm::laplacian(nu, U)
-            );
+        );
 
         if (piso.momentumPredictor())
         {
@@ -128,8 +128,8 @@ void unsteadyNST::truthSolve(List<scalar> mu_now)
 
         //runTime.write();
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-        << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-        << nl << endl;
+             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+             << nl << endl;
         //laminarTransport.correct();
         //turbulence->correct();
         WRITE = checkWrite(runTime);
@@ -140,7 +140,7 @@ void unsteadyNST::truthSolve(List<scalar> mu_now)
             ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
             ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
-               runTime.timeName());
+                             runTime.timeName());
             Ufield.append(U);
             Pfield.append(p);
             Tfield.append(T);
@@ -155,7 +155,7 @@ bool unsteadyNST::checkWrite(Time& timeObject)
 {
     scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
     scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
-      timeObject.deltaTValue());
+                          timeObject.deltaTValue());
 
     if ( diffnow < diffnext)
     {
@@ -217,11 +217,11 @@ void unsteadyNST::liftSolveT()
             (
                 fvm::ddt(Tlift)
                 - fvm::laplacian(DT, Tlift)
-                );
+            );
             TEqn.solve();
             Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
+                 << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+                 << nl << endl;
         }
 
         scalar totalTime = mesh.time().value();
@@ -239,7 +239,7 @@ void unsteadyNST::liftSolveT()
 // * * * * * * * * * * * * * * Projection Methods * * * * * * * * * * * * * * //
 
 void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
-   label NSUP)
+                             label NSUP)
 {
     NUmodes = NU;
     NPmodes = NP;
@@ -249,7 +249,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
     if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
     {
         word M_str = "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-           NSUPmodes);
+                         NSUPmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + M_str))
         {
@@ -261,7 +261,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         }
 
         word B_str = "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-           NSUPmodes);
+                         NSUPmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + B_str))
         {
@@ -273,7 +273,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         }
 
         word C_str = "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-           NSUPmodes) + "_t";
+                         NSUPmodes) + "_t";
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + C_str))
         {
@@ -285,7 +285,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         }
 
         word K_str = "K_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-           NSUPmodes) + "_" + name(NPmodes);
+                         NSUPmodes) + "_" + name(NPmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + K_str))
         {
@@ -320,7 +320,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         }
 
         word P_str = "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-           NSUPmodes) + "_" + name(NPmodes);
+                         NSUPmodes) + "_" + name(NPmodes);
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + P_str))
         {
@@ -390,7 +390,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
 
 
 List< Eigen::MatrixXd > unsteadyNST::convective_term_temperature(label NUmodes,
-    label NTmodes, label NSUPmodes)
+        label NTmodes, label NSUPmodes)
 {
     label Qsize = NUmodes + liftfield.size() + NSUPmodes;
     label Qsizet = NTmodes + liftfieldT.size() ;
@@ -410,7 +410,8 @@ List< Eigen::MatrixXd > unsteadyNST::convective_term_temperature(label NUmodes,
                 for (label k = 0; k < Qsizet; k++)
                 {
                     Q_matrix[i](j, k) = fvc::domainIntegrate(L_T_modes[i] * fvc::div(
-                        fvc::interpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf(), L_T_modes[k])).value();
+                                            fvc::interpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf(),
+                                            L_T_modes[k])).value();
                 }
             }
         }
@@ -424,31 +425,29 @@ List< Eigen::MatrixXd > unsteadyNST::convective_term_temperature(label NUmodes,
 }
 
 Eigen::MatrixXd unsteadyNST::diffusive_term_temperature(label NUmodes,
-    label NTmodes, label NSUPmodes)
+        label NTmodes, label NSUPmodes)
 {
     label Ysize = NTmodes  + liftfieldT.size();
     Eigen::MatrixXd Y_matrix(Ysize, Ysize);
     dimensionedScalar DT = _DT();
-
     {
         for (label i = 0; i < Ysize; i++)
         {
             for (label j = 0; j < Ysize; j++)
             {
                 Y_matrix(i, j) = fvc::domainIntegrate(L_T_modes[i] * fvc::laplacian(
-                    dimensionedScalar("1", dimless, 1), L_T_modes[j])).value();
+                        dimensionedScalar("1", dimless, 1), L_T_modes[j])).value();
             }
         }
     }
-
     // Export the matrix
     ITHACAstream::SaveDenseMatrix(Y_matrix, "./ITHACAoutput/Matrices/",
-      "Y_" + name(liftfieldT.size()) + "_" + name(NTmodes));
+                                  "Y_" + name(liftfieldT.size()) + "_" + name(NTmodes));
     return Y_matrix;
 }
 
 Eigen::MatrixXd unsteadyNST::mass_term_temperature(label NUmodes, label NTmodes,
-    label NSUPmodes)
+        label NSUPmodes)
 {
     label Ysize = NTmodes  + liftfieldT.size();
     Eigen::MatrixXd MT_matrix(Ysize, Ysize);
@@ -463,7 +462,7 @@ Eigen::MatrixXd unsteadyNST::mass_term_temperature(label NUmodes, label NTmodes,
 
     // Export the matrix
     ITHACAstream::SaveDenseMatrix(MT_matrix, "./ITHACAoutput/Matrices/",
-      "MT_" + name(liftfieldT.size()) + "_" + name(NTmodes));
+                                  "MT_" + name(liftfieldT.size()) + "_" + name(NTmodes));
     return MT_matrix;
 }
 // Calculate lifting function for velocity
@@ -516,11 +515,11 @@ void unsteadyNST::liftSolve()
                 mesh,
                 IOobject::READ_IF_PRESENT,
                 IOobject::NO_WRITE
-                ),
+            ),
             mesh,
             dimensionedScalar("Phi", dimLength * dimVelocity, 0),
             p.boundaryField().types()
-            );
+        );
         label PhiRefCell = 0;
         scalar PhiRefValue = 0;
         setRefCell
@@ -529,7 +528,7 @@ void unsteadyNST::liftSolve()
             potentialFlow.dict(),
             PhiRefCell,
             PhiRefValue
-            );
+        );
         mesh.setFluxRequired(Phi.name());
         runTime.functionObjects().start();
         MRF.makeRelative(phi);
@@ -543,7 +542,7 @@ void unsteadyNST::liftSolve()
                 //fvm::laplacian(nu, Phi)
                 ==
                 fvc::div(phi)
-                );
+            );
             PhiEqn.setReference(PhiRefCell, PhiRefValue);
             PhiEqn.solve();
 
@@ -555,14 +554,14 @@ void unsteadyNST::liftSolve()
 
         MRF.makeAbsolute(phi);
         Info << "Continuity error = "
-        << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
-        << endl;
+             << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
+             << endl;
         Ulift = fvc::reconstruct(phi);
         Ulift.correctBoundaryConditions();
         Info << "Interpolated velocity error = "
-        << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
-           / sum(mesh.magSf())).value()
-        << endl;
+             << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
+                 / sum(mesh.magSf())).value()
+             << endl;
         Ulift.write();
         liftfield.append(Ulift);
     }

@@ -975,7 +975,6 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
     );
     word pName(FORCESdict.lookup("pName"));
     word UName(FORCESdict.lookup("UName"));
-
     functionObjects::ITHACAforces f("Forces", mesh, FORCESdict);
 
     for (label i = 0; i < L_U_SUPmodes.size(); i++)

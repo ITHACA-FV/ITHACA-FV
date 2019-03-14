@@ -47,6 +47,7 @@ EXE_INC = \
     -I../ForceCoeff \
     -I../ITHACA_CORE/Foam2Eigen \
     -I../ITHACA_CORE/EigenFunctions \
+    -I../ITHACA_CORE/Containers \
     -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11

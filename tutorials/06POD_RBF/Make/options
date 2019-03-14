@@ -29,6 +29,7 @@ EXE_INC = \
     -I../../src/ITHACA_CORE/ITHACAstream \
     -I../../src/ITHACA_CORE/Foam2Eigen \
     -I../../src/ITHACA_CORE/EigenFunctions \
+    -I../../src/ITHACA_CORE/Containers \
     -I../../src/thirdparty/Eigen \
     -I../../src/thirdparty/spectra/include \
     -I../../src/ITHACA_THIRD_PARTY/splinter/include \

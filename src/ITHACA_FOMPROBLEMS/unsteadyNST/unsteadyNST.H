@@ -129,7 +129,7 @@ class unsteadyNST: public unsteadyNS
         PtrList<volScalarField> NUTModesWeighted;
 
         /// List of pointers containing the lift for temperature and the temperature field
-        PtrList<volScalarField> L_T_modes;        
+        PtrList<volScalarField> L_T_modes;
 
         /// pisoControl
         autoPtr<pisoControl> _piso;

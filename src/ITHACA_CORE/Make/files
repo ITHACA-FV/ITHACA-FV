@@ -5,6 +5,7 @@ ITHACAutilities/ITHACAforces.C
 ITHACAPOD/ITHACAPOD.C
 Foam2Eigen/Foam2Eigen.C
 EigenFunctions/EigenFunctions.C
+Containers/Modes.C
 
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_CORE
