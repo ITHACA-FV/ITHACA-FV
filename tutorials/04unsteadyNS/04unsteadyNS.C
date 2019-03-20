@@ -65,7 +65,7 @@ class tutorial04: public unsteadyNS
             {
                 for (label i = 0; i < mu.cols(); i++)
                 {
-                    inl[0] = mu(0, i);
+                    //inl[0] = mu(0, i);
                     mu_now[0] = mu(0, i);
                     //assignBC(U, BCind, inl);
                     assignIF(U, inl);
