@@ -8,7 +8,7 @@
 */
 
 #include "mykroneckerproduct.h"
-#include "unsupported/Eigen/KroneckerProduct"
+#include <unsupported/Eigen/KroneckerProduct>
 
 namespace SPLINTER
 {

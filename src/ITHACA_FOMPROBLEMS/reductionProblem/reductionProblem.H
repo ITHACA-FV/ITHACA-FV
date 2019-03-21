@@ -52,7 +52,6 @@ SourceFiles
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #pragma GCC diagnostic ignored "-Wreturn-type"
-#include "Eigen/Eigen"
 #include <datatable.h>
 #include <bspline.h>
 #include <bsplinebuilder.h>

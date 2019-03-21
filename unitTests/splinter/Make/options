@@ -1,6 +1,6 @@
 EXE_INC = \
-    -I../../src/thirdparty/Eigen \
-    -I../../src/ITHACA_THIRD_PARTY/splinter/include \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -w \
     -std=c++11
 

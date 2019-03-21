@@ -53,9 +53,10 @@ Now you can clone the **ITHACA-FV** repository inside the selected folder
 ```
 git clone https://github.com/mathLab/ITHACA-FV
 ```
-and you can compile **ITHACA-FV** by navigating inside the src folder and compiling using wmake
+and you can compile **ITHACA-FV** by navigating inside the src folder, sourcing the bashrc file of ITHACA-FV and compiling using wmake
 ```
 cd ITHACA-FV
+source etc/bashrc
 ./Allwmake 
 ```
 For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://mathlab.github.io/ITHACA-FV/).

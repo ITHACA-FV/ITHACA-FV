@@ -47,12 +47,12 @@ class tutorial03 : public steadyNS
             args(_args())
         {}
 
-        argList& args;
-
         /// Velocity field
         volVectorField& U;
         /// Pressure field
         volScalarField& p;
+        /// Arg List
+        argList& args;
 
         /// Perform an Offline solve
         void offlineSolve()

@@ -17,27 +17,25 @@ EXE_INC = \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
-    -I../reductionProblem \
-    -I../laplacianProblem \
-    -I../steadyNS \
-    -I../steadyNSturb \
-    -I../unsteadyNS \
-    -I../unsteadyBB \
-    -I../unsteadyNSturb \
-    -I../unsteadyNSTturb \
-    -I../unsteadyNST \
-    -I../NonLinearSolvers \
-    -I../ITHACA_THIRD_PARTY/splinter/include \
-    -I../thirdparty/Eigen \
-    -I../thirdparty/spectra/include \
-    -I../ITHACA_CORE/ITHACAutilities \
-    -I../ITHACA_CORE/ITHACAstream \
-    -I../ITHACA_CORE/ITHACAPOD \
-    -I../ITHACA_CORE/ITHACAparallel \
-    -I../ITHACA_CORE/Containers \
-    -I../ForceCoeff \
-    -I../ITHACA_CORE/Foam2Eigen \
-    -I../ITHACA_CORE/EigenFunctions \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/reductionProblem \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMSlaplacianProblem \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMSsteadyNS \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNSturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNS \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyBB \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNSturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNSTturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNST \
+    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAPOD \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAparallel \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/EigenFunctions \
     -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11

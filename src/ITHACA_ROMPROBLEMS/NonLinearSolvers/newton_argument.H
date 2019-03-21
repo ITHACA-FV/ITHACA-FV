@@ -34,7 +34,7 @@ SourceFiles
 /// general object for the resolution of nonlinear problems with the Eigen library.
 
 
-#include "Eigen/Eigen"
+#include <Eigen/Eigen>
 
 #ifndef newton_argument_H
 #define newton_argument_H

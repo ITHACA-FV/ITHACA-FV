@@ -13,10 +13,9 @@
 #include "definitions.h"
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wignored-attributes"
 #endif
-#include "Eigen/IterativeLinearSolvers"
-#include "Eigen/SparseQR"
+#include <Eigen/IterativeLinearSolvers>
+#include <Eigen/SparseQR>
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic pop
 #endif

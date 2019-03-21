@@ -57,19 +57,17 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
             N_BC_t(problem.inletIndexT.rows()),
             N_BC(problem.inletIndex.rows()),
-            //Nphi_p(problem.NPmodes),
             Nphi_prgh(problem.NPrghmodes)
         {}
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-
+        unsteadyBB* problem;
         int Nphi_u;
-        //int Nphi_p;
         int Nphi_t;
-        int Nphi_prgh;
         int N_BC_t;
         int N_BC;
+        int Nphi_prgh;
         scalar nu;
         scalar Pr;
         scalar dt;
@@ -77,7 +75,7 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
         Eigen::VectorXd y_old;
         Eigen::VectorXd BC_t;
         Eigen::VectorXd BC;
-        unsteadyBB* problem;
+        
 };
 
 

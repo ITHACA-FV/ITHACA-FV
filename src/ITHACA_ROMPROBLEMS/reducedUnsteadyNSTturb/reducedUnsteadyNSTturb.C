@@ -55,46 +55,46 @@ reducedUnsteadyNSTturb::reducedUnsteadyNSTturb(unsteadyNSTturb& FOMproblem)
     Nphi_nut  = problem->CT2_matrix[0].rows();
 
     // Create locally the velocity modes
-    for (label k = 0; k < problem->liftfield.size(); k++)
+    for (int k = 0; k < problem->liftfield.size(); k++)
     {
         Umodes.append(problem->liftfield[k]);
     }
 
-    for (label k = 0; k < problem->NUmodes; k++)
+    for (int k = 0; k < problem->NUmodes; k++)
     {
         Umodes.append(problem->Umodes[k]);
     }
 
-    for (label k = 0; k < problem->NSUPmodes; k++)
+    for (int k = 0; k < problem->NSUPmodes; k++)
     {
         Umodes.append(problem->supmodes[k]);
     }
 
     // Create locally the pressure modes
-    for (label k = 0; k < problem->NPmodes; k++)
+    for (int k = 0; k < problem->NPmodes; k++)
     {
         Pmodes.append(problem->Pmodes[k]);
     }
 
-    for (label k = 0; k < problem->liftfieldT.size(); k++)
+    for (int k = 0; k < problem->liftfieldT.size(); k++)
     {
         Tmodes.append(problem->liftfieldT[k]);
     }
 
     // Create locally the temperature modes
-    for (label k = 0; k < problem->NTmodes; k++)
+    for (int k = 0; k < problem->NTmodes; k++)
     {
         Tmodes.append(problem->Tmodes[k]);
     }
 
     // Store locally the snapshots for projections
-    for (label k = 0; k < problem->Ufield.size(); k++)
+    for (int k = 0; k < problem->Ufield.size(); k++)
     {
         Usnapshots.append(problem->Ufield[k]);
         Psnapshots.append(problem->Pfield[k]);
     }
 
-    for (label k = 0; k < problem->Tfield.size(); k++)
+    for (int k = 0; k < problem->Tfield.size(); k++)
     {
         Tsnapshots.append(problem->Tfield[k]);
     }
@@ -296,7 +296,7 @@ void reducedUnsteadyNSTturb::solveOnline_sup(Eigen::MatrixXd& vel_now,
         tv.resize(1 + vel_now.size());
         tv[0] = time;
 
-        for (label i = 1; i < tv.size(); i++)
+        for (unsigned int i = 1; i < tv.size(); i++)
         {
             tv[i] = vel_now(i - 1);
         }

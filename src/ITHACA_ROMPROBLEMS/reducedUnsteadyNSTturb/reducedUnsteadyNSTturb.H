@@ -70,18 +70,18 @@ struct newton_unsteadyNSTturb_sup: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        unsteadyNSTturb* problem;
         int Nphi_u;
         int Nphi_nut;
         int Nphi_p;
         int N_BC;
+        Eigen::VectorXd nu_c;
         int count_online_solve = 0;
-        unsteadyNSTturb* problem;
         Eigen::VectorXd mu_now;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
         Eigen::VectorXd BC;
-        Eigen::VectorXd nu_c;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
@@ -99,10 +99,12 @@ struct newton_unsteadyNSTturb_sup_t: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        unsteadyNSTturb* problem;
         int Nphi_t;
         int N_BC_t;
         int Nphi_u;
         int Nphi_nut;
+        Eigen::VectorXd nu_c;
         scalar nu;
         scalar DT;
         scalar Prt;
@@ -115,9 +117,7 @@ struct newton_unsteadyNSTturb_sup_t: public newton_argument<double>
         Eigen::VectorXd z;
         Eigen::VectorXd z_old;
         Eigen::VectorXd BC_t;
-        Eigen::VectorXd nu_c;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
-        unsteadyNSTturb* problem;
 };
 
 /*---------------------------------------------------------------------------*\

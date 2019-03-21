@@ -32,13 +32,12 @@ SourceFiles
 #define ITHACAparallel_H
 
 #include "fvCFD.H"
+#include "ITHACAassert.H"
 
+/// Class for parallel handling, it has several functions to deal
+/// with parallel problems, the class is implemented as a singletone
 class ITHACAparallel
 {
-    public:
-        /// Delete empty constructor
-        ITHACAparallel() = delete;
-
         ///
         /// @brief      Constructs the object.
         ///
@@ -46,6 +45,29 @@ class ITHACAparallel
         ///
         ITHACAparallel(fvMesh& mesh, Time& localTime);
 
+        /// Pointer to the ITHACAparallel class
+        static ITHACAparallel* instance;
+
+   public:
+	    ///
+        /// @brief      Gets an instance of ithacaparallel, to be used if the instance is not existing.
+        ///
+        /// @param      mesh       The mesh
+        /// @param      localTime  The runtime object
+        ///
+        /// @return     The instance.
+        ///
+        static ITHACAparallel* getInstance(fvMesh& mesh, Time& localTime);
+
+        ///
+        /// @brief      Gets an instance of ithacaparallel, to be used if the instance is already existing.
+        ///
+        /// @return     The instance.
+        ///
+        static ITHACAparallel* getInstance();
+
+        /// Delete empty constructor
+        ITHACAparallel() = delete;
 
         /// Function to sumpend MPI
         static void suspendMPI();
@@ -92,8 +114,10 @@ class ITHACAparallel
         /// ID of the NEW process
         static List<label> newProcIDs_;
 
+        /// runTime defined locally
         Time& runTime;
 
+        /// Mesh object defined locally
         fvMesh& mesh;
 
 };

@@ -44,8 +44,7 @@ SourceFiles
 #include <unistd.h>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
-#include "Eigen/Eigen"
-#include "Eigen/LU"
+#include <Eigen/Eigen>
 #pragma GCC diagnostic pop
 #include <functional>
 #include "./colormod.H"
