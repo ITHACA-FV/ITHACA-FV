@@ -31,7 +31,7 @@
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
 #endif
-# include <Eigen/Dense>
+# include <Eigen/Eigen>
 # include <unsupported/Eigen/SparseExtra>
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic pop

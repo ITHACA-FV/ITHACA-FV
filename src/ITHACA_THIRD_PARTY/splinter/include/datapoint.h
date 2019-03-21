@@ -10,7 +10,7 @@
 #ifndef SPLINTER_DATAPOINT_H
 #define SPLINTER_DATAPOINT_H
 
-#include "definitions.h"
+#include <definitions.h>
 
 namespace SPLINTER
 {

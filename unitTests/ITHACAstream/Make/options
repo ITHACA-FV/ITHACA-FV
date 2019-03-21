@@ -6,12 +6,12 @@ EXE_INC = \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
-    -I../../src/ITHACA_CORE/ITHACAstream \
-    -I../../src/ITHACA_CORE/ITHACAutilities \
-    -I../../src/ITHACA_CORE/Foam2Eigen \
-    -I../../src/thirdparty/Eigen \
-    -I../../src/thirdparty/spectra-0.6.1/include \
-    -I../../src/thirdparty/splinter/include \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/spectra-0.6.1/include \
+    -I$(LIB_ITHACA_SRC)/thirdparty/splinter/include \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11

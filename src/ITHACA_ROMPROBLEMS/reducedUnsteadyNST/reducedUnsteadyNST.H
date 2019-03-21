@@ -59,6 +59,7 @@ struct newton_unsteadyNST_sup: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        unsteadyNST* problem;
         int Nphi_u;
         int Nphi_p;
         int N_BC;
@@ -66,7 +67,7 @@ struct newton_unsteadyNST_sup: public newton_argument<double>
         scalar dt;
         Eigen::VectorXd y_old;
         Eigen::VectorXd BC;
-        unsteadyNST* problem;
+        
 };
 
 struct newton_unsteadyNST_sup_t: public newton_argument<double>
@@ -82,6 +83,7 @@ struct newton_unsteadyNST_sup_t: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        unsteadyNST* problem;
         int Nphi_t;
         int N_BC_t;
         int Nphi_u;
@@ -91,7 +93,7 @@ struct newton_unsteadyNST_sup_t: public newton_argument<double>
         Eigen::VectorXd a_tmp;
         Eigen::VectorXd z_old;
         Eigen::VectorXd BC_t;
-        unsteadyNST* problem;
+        
 };
 
 /*---------------------------------------------------------------------------*\

@@ -43,8 +43,7 @@
 #include <sys/stat.h>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
-#include "Eigen/Eigen"
-#include "Eigen/LU"
+#include <Eigen/Eigen>
 #pragma GCC diagnostic pop
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

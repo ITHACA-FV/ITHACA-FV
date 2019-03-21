@@ -42,7 +42,7 @@ SourceFiles
 #include "IOmanip.H"
 #include "laplacianProblem.H"
 #include "reducedProblem.H"
-#include <Eigen/Dense>
+#include <Eigen/Eigen>
 
 /*---------------------------------------------------------------------------*\
                         Class reducedLaplacian Declaration

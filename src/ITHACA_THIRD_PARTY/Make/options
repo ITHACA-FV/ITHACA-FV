@@ -1,6 +1,6 @@
 EXE_INC = \
-    -Isplinter/include \
-    -I../thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -std=c++11 \
     -Wno-old-style-cast \
     -Wno-non-virtual-dtor \

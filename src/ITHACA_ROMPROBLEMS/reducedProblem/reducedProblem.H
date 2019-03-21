@@ -42,7 +42,7 @@ SourceFiles
 #include "fvCFD.H"
 #include "IOmanip.H"
 #include "reductionProblem.H"
-#include "Eigen/Eigen"
+#include <Eigen/Eigen>
 #include "newton_argument.H"
 
 

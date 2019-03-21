@@ -11,9 +11,9 @@
 #ifndef MS_RBFSPLINE_H
 #define MS_RBFSPLINE_H
 
-#include "datatable.h"
-#include "spline.h"
-#include "memory"
+#include <datatable.h>
+#include <spline.h>
+#include <memory>
 
 namespace SPLINTER
 {

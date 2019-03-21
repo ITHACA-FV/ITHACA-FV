@@ -17,37 +17,38 @@ EXE_INC = \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
-    -I../ITHACA_FOMPROBLEMS/reductionProblem \
-    -I../ITHACA_FOMPROBLEMS/laplacianProblem \
-    -I../ITHACA_FOMPROBLEMS/steadyNS \
-    -I../ITHACA_FOMPROBLEMS/steadyNSturb \
-    -I../ITHACA_FOMPROBLEMS/unsteadyNS \
-    -I../ITHACA_FOMPROBLEMS/unsteadyBB \
-    -I../ITHACA_FOMPROBLEMS/unsteadyNSturb \
-    -I../ITHACA_FOMPROBLEMS/unsteadyNST \
-    -I../ITHACA_FOMPROBLEMS/unsteadyNSTturb \
-    -IreducedProblem \
-    -IreducedUnsteadyNS \
-    -IreducedUnsteadyBB \
-    -IreducedUnsteadyNSturb \
-    -IreducedUnsteadyNSTturb \
-    -IreducedUnsteadyNST \
-    -IreducedSteadyNS \
-    -IreducedSteadyNSturb \
-    -IreducedLaplacian \
-    -I../NonLinearSolvers \
-    -I../DEIM \
-    -I../ITHACA_THIRD_PARTY/splinter/include \
-    -I../thirdparty/Eigen \
-    -I../thirdparty/spectra/include \
-    -I../ITHACA_CORE/ITHACAutilities \
-    -I../ITHACA_CORE/ITHACAstream \
-    -I../ITHACA_CORE/ITHACAPOD \
-    -I../ITHACA_CORE/ITHACAparallel \
-    -I../ForceCoeff \
-    -I../ITHACA_CORE/Foam2Eigen \
-    -I../ITHACA_CORE/EigenFunctions \
-    -I../ITHACA_CORE/Containers \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/reductionProblem \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/laplacianProblem \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNS \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNSturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNS \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyBB \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNSturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNST \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNSTturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedProblem \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyNS \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyBB \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyNSturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyNSTturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyNST \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedSteadyNS \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedSteadyNSturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedLaplacian \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS//NonLinearSolvers \
+    -I$(LIB_ITHACA_SRC)/ITHACA_DEIM/DEIM \
+    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAPOD \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAparallel \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen/src \
+    -I$(LIB_ITHACA_SRC)/ForceCoeff \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/EigenFunctions \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
     -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11

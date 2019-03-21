@@ -43,7 +43,7 @@ SourceFiles
 #include "steadyNS.H"
 #include "ITHACAutilities.H"
 #include "EigenFunctions.H"
-#include <Eigen/Dense>
+#include <Eigen/Eigen>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
 

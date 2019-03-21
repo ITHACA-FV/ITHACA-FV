@@ -39,10 +39,9 @@ SourceFiles
 #define Modes_H
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
-#include "Eigen/Eigen"
-#include "Eigen/LU"
-#include "unsupported/Eigen/SparseExtra"
-#include "unsupported/Eigen/CXX11/Tensor"
+#include <Eigen/Eigen>
+#include <unsupported/Eigen/SparseExtra>
+#include <unsupported/Eigen/CXX11/Tensor>
 #pragma GCC diagnostic pop
 #include "fvCFD.H"
 #include "Foam2Eigen.H"

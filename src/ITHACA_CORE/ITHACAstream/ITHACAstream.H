@@ -50,8 +50,8 @@ SourceFiles
 #include "ITHACAutilities.H"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
-#include "Eigen/Eigen"
-#include "unsupported/Eigen/CXX11/Tensor"
+#include <Eigen/Eigen>
+#include <unsupported/Eigen/CXX11/Tensor>
 #pragma GCC diagnostic pop
 
 #define MAXBUFSIZE (static_cast<int> (1e6))
