@@ -48,8 +48,8 @@ class ITHACAparallel
         /// Pointer to the ITHACAparallel class
         static ITHACAparallel* instance;
 
-   public:
-	    ///
+    public:
+        ///
         /// @brief      Gets an instance of ithacaparallel, to be used if the instance is not existing.
         ///
         /// @param      mesh       The mesh

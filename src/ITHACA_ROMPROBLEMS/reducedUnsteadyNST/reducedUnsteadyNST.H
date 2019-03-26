@@ -67,7 +67,7 @@ struct newton_unsteadyNST_sup: public newton_argument<double>
         scalar dt;
         Eigen::VectorXd y_old;
         Eigen::VectorXd BC;
-        
+
 };
 
 struct newton_unsteadyNST_sup_t: public newton_argument<double>
@@ -93,7 +93,7 @@ struct newton_unsteadyNST_sup_t: public newton_argument<double>
         Eigen::VectorXd a_tmp;
         Eigen::VectorXd z_old;
         Eigen::VectorXd BC_t;
-        
+
 };
 
 /*---------------------------------------------------------------------------*\
