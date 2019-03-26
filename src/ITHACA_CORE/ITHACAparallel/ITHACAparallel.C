@@ -6,18 +6,20 @@ ITHACAparallel* ITHACAparallel::instance = nullptr;
 
 ITHACAparallel* ITHACAparallel::getInstance(fvMesh& mesh, Time& localTime)
 
-        {
-            M_Assert(instance == nullptr, "ITHACAparallel is already initialized, call ITHACAparallel::getInstance() to return an instance of ITHACAparallel");
-            instance = new ITHACAparallel(mesh, localTime);
-            return instance;
-        }
+{
+    M_Assert(instance == nullptr,
+             "ITHACAparallel is already initialized, call ITHACAparallel::getInstance() to return an instance of ITHACAparallel");
+    instance = new ITHACAparallel(mesh, localTime);
+    return instance;
+}
 
 ITHACAparallel* ITHACAparallel::getInstance()
-        
-        {
-            M_Assert(instance != nullptr, "ITHACAparallel needs to be initialized, call ITHACAparallel::getInstance(mesh, runTime) first");
-            return instance;
-        }
+
+{
+    M_Assert(instance != nullptr,
+             "ITHACAparallel needs to be initialized, call ITHACAparallel::getInstance(mesh, runTime) first");
+    return instance;
+}
 
 
 ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)

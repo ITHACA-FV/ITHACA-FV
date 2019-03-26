@@ -44,6 +44,7 @@ SourceFiles
 #include "reductionProblem.H"
 #include <Eigen/Eigen>
 #include "newton_argument.H"
+#include "Foam2Eigen.H"
 
 
 /*---------------------------------------------------------------------------*\
@@ -64,12 +65,34 @@ class reducedProblem
         ///
         explicit reducedProblem(reductionProblem& problem);
 
+        // Variables
         /// Viscosity
         scalar nu;
 
-        // Function
+        /// Pointer to FOAM problem
+        reductionProblem* problem;
+
+        // Functions
         /// Virtual Method to perform and online Solve
         virtual void solveOnline();
+
+        ///
+        /// @brief      Linear system solver for the online problem. It can be used for any kind of variable.
+        /// Boundary conditions are set to 0 as default so that the system is not constrained if no conditions
+        /// are given (pressure case). The solver has to be choosen between Eigen linear solvers
+        /// (fullPivLu set as default).
+        ///
+        /// @param[in]  LinSys      The linear system as a list of matrices.
+        /// @param[in]  x           Solution of the problem at previous step.
+        /// @param      residual    Residual given to let the function update it.
+        /// @param[in]  bc          Boundary conditions to constrain the system.
+        /// @param[in]  solverType  Solver type.
+        ///
+        /// @return     Updated solution to the system.
+        ///
+        Eigen::MatrixXd solveLinearSys(List<Eigen::MatrixXd> LinSys, Eigen::MatrixXd x,
+                                       Eigen::VectorXd& residual, const Eigen::MatrixXd& bc = Eigen::MatrixXd::Zero(0,
+                                               0), const std::string solverType = "fullPivLu");
 };
 
 

@@ -75,7 +75,7 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
         Eigen::VectorXd y_old;
         Eigen::VectorXd BC_t;
         Eigen::VectorXd BC;
-        
+
 };
 
 

@@ -46,6 +46,8 @@ reducedProblem::reducedProblem()
 }
 
 reducedProblem::reducedProblem(reductionProblem& problem)
+    :
+    problem(&problem)
 {
 }
 
@@ -59,6 +61,71 @@ void reducedProblem::solveOnline()
     exit(0);
 }
 
+Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys,
+        Eigen::MatrixXd x, Eigen::VectorXd& residual, const Eigen::MatrixXd& bc,
+        const std::string solverType)
+
+{
+    M_Assert(solverType == "fullPivLu" || solverType == "partialPivLu"
+             || solverType == "householderQR" || solverType == "colPivHouseholderQR"
+             || solverType == "fullPivHouseholderQR"
+             || solverType == "CompleteOrthogonalDecomposition" || solverType == "llt"
+             || solverType == "ldlt" || solverType == "bdcSvd"
+             || solverType == "jacobiSvd", "solver not defined");
+    Eigen::MatrixXd y;
+
+    for (label i = 0; i < bc.size(); i++)
+    {
+        LinSys[0].row(i) *= 0;
+        LinSys[0](i, i) = 1;
+        LinSys[1](i, 0) = bc(i);
+    }
+
+    residual = LinSys[0] * x - LinSys[1];
+
+    if (solverType == "fullPivLu")
+    {
+        y = LinSys[0].fullPivLu().solve(LinSys[1]);
+    }
+    else if (solverType == "partialPivLu")
+    {
+        y = LinSys[0].partialPivLu().solve(LinSys[1]);
+    }
+    else if (solverType == "householderQr")
+    {
+        y = LinSys[0].householderQr().solve(LinSys[1]);
+    }
+    else if (solverType == "colPivHouseholderQr")
+    {
+        y = LinSys[0].colPivHouseholderQr().solve(LinSys[1]);
+    }
+    else if (solverType == "fullPivHouseholderQr")
+    {
+        y = LinSys[0].fullPivHouseholderQr().solve(LinSys[1]);
+    }
+    else if (solverType == "completeOrthogonalDecomposition")
+    {
+        y = LinSys[0].completeOrthogonalDecomposition().solve(LinSys[1]);
+    }
+    else if (solverType == "llt")
+    {
+        y = LinSys[0].llt().solve(LinSys[1]);
+    }
+    else if (solverType == "ldlt")
+    {
+        y = LinSys[0].ldlt().solve(LinSys[1]);
+    }
+    else if (solverType == "bdcSvd")
+    {
+        y = LinSys[0].bdcSvd().solve(LinSys[1]);
+    }
+    else if (solverType == "jacobiSvd")
+    {
+        y = LinSys[0].jacobiSvd().solve(LinSys[1]);
+    }
+
+    return y;
+}
 
 // ****************** //
 // class onlineInterp //
@@ -67,7 +134,6 @@ void reducedProblem::solveOnline()
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-
 
 onlineInterp::onlineInterp()
 {
@@ -79,7 +145,7 @@ Eigen::MatrixXd onlineInterp::getInterpCoeffRBF(std::vector<SPLINTER::RBFSpline>
         rbfVec, Eigen::MatrixXd mu_interp)
 {
     M_Assert(mu_interp.cols() == Nmu_samples,
-             "Matrix 'mu_interp' must have same number and order of columns (i.e. parametes) as the matrix 'mu_samples'.");
+             "Matrix 'mu_interp' must have same number and order of columns (i.e. parameters) as the matrix 'mu_samples'.");
     label Nmodes = rbfVec.size();
     // Nsamples (snapshots) to evaluate the interpolator at
     label Nsamples = mu_interp.rows();

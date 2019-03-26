@@ -69,7 +69,7 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af)
     }
 
     Eigen::SparseMatrix<double> Ae;
-    Eigen::MatrixXd be;
+    Eigen::VectorXd be;
     Foam2Eigen::fvMatrix2Eigen(Af, Ae, be);
     LinSys[0] = EigenModes[0].transpose() * Ae * EigenModes[0];
     LinSys[1] = EigenModes[0].transpose() * be;
@@ -78,17 +78,21 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af)
 
 
 template<class T>
-GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(Eigen::MatrixXd& Coeff,
-        word Name)
+GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
+    Eigen::MatrixXd& Coeff,
+    word Name)
 {
     if (EigenModes.size() == 0)
     {
         toEigen();
     }
-    GeometricField<T, fvPatchField, volMesh> field(Name, (this->toPtrList())[0]*0);
+
+    GeometricField<T, fvPatchField, volMesh> field(Name,
+            (this->toPtrList())[0] * 0);
     int Nmodes = Coeff.rows();
     Eigen::VectorXd InField = EigenModes[0].leftCols(Nmodes) * Coeff;
     field = Foam2Eigen::Eigen2field(field, InField);
+
     for (int i = 0; i < 1; i++)
     {
         Eigen::VectorXd BF = EigenModes[i + 1].leftCols(Nmodes) * Coeff;
