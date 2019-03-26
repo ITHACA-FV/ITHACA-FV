@@ -42,6 +42,7 @@ EXE_INC = \
 EXE_LIBS = \
     -lturbulenceModels \
     -lincompressibleTransportModels \
+    -limmiscibleIncompressibleTwoPhaseMixture \
     -lincompressibleTurbulenceModels \
     -lfiniteVolume \
     -lmeshTools \

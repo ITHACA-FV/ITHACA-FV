@@ -39,6 +39,7 @@ EXE_LIBS = \
     -lturbulenceModels \
     -lfiniteVolume \
     -ldynamicMesh \
+    -limmiscibleIncompressibleTwoPhaseMixture \
     -lmeshTools \
     -lfvOptions \
     -lsampling \

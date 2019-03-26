@@ -43,7 +43,7 @@ template<typename T>
 void reductionProblem::computeLift(T& Lfield, T& liftfield, T& omfield)
 {
     scalar u_bc;
-    scalar u_lf;
+    scalar u_bc_l;
     scalar area;
 
     for (label k = 0; k < inletIndex.rows(); k++)
@@ -60,7 +60,9 @@ void reductionProblem::computeLift(T& Lfield, T& liftfield, T& omfield)
             {
                 u_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] *
                             Lfield[j].boundaryField()[p]).component(l) / area;
-                volVectorField C("U", Lfield[j] - liftfield[k]*u_bc / u_lf);
+                u_bc_l = gSum(Lfield[j].mesh().magSf().boundaryField()[k] *
+                              Lfield[j].boundaryField()[p]).component(l) / area;
+                volVectorField C("U", Lfield[j] - liftfield[k] / u_bc_l * u_bc);
                 omfield.append(C);
             }
             else
