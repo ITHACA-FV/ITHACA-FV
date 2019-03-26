@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
     PtrList<volVectorField> U_rec_list;
     PtrList<volScalarField> P_rec_list;
     // Reads inlet volocities boundary conditions.
-    word vel_file = para.ITHACAdict->lookup("online_velocities");
+    word vel_file(para.ITHACAdict->lookup("online_velocities"));
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
 
     //Perform the online solutions
