@@ -1,0 +1,195 @@
+/*---------------------------------------------------------------------------*\
+     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
+     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
+     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
+     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
+ * Copyright (C) 2017 by the ITHACA-FV authors
+-------------------------------------------------------------------------------
+
+  License
+  This file is part of ITHACA-FV
+
+  ITHACA-FV is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  ITHACA-FV is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "unsteadyNSmulti.H"
+
+/// \file
+/// Source file of the unsteadyNSmulti class.
+
+// * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
+
+// Construct Null
+unsteadyNSmulti::unsteadyNSmulti() {}
+
+// Construct from zero
+unsteadyNSmulti::unsteadyNSmulti(int argc, char* argv[])
+{
+    _args = autoPtr<argList>
+            (
+                new argList(argc, argv)
+            );
+
+    if (!_args->checkRootCase())
+    {
+        Foam::FatalError.exit();
+    }
+
+    argList& args = _args();
+#include "createTime.H"
+#include "createMesh.H"
+    _pimple = autoPtr<pimpleControl>
+              (
+                  new pimpleControl
+                  (
+                      mesh
+                  )
+              );
+#include "createFields.H"
+#include "createFvOptions.H"
+    para = new ITHACAparameters;
+    offline = ITHACAutilities::check_off();
+    podex = ITHACAutilities::check_pod();
+    supex = ITHACAutilities::check_sup();
+}
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
+{
+
+//(g) includes present in interFoam but not in pimple (LTS?)
+#include "createAlphaFluxes.H"
+#include "initCorrectPhi.H"
+//
+
+#include "initContinuityErrs.H"
+    Time& runTime = _runTime();
+    surfaceScalarField& phi = _phi();
+    fvMesh& mesh = _mesh();
+    fv::options& fvOptions = _fvOptions();
+    pimpleControl& pimple = _pimple();
+    volScalarField p = _p();
+    volVectorField U = _U();
+    IOMRFZoneList& MRF = _MRF();
+    singlePhaseTransportModel& laminarTransport = _laminarTransport();
+    instantList Times = runTime.times();
+    runTime.setEndTime(finalTime);
+    // Perform a TruthSolve
+    runTime.setTime(Times[1], 1);
+    runTime.setDeltaT(timeStep);
+    nextWrite = startTime;
+    // Initialize Nsnapshots
+    int nsnapshots = 0;
+
+    // Start the time loop
+    while (runTime.run())
+    {
+#include "readTimeControls.H"
+#include "CourantNo.H"
+#include "setDeltaT.H"
+        runTime.setEndTime(finalTime + timeStep);
+        Info << "Time = " << runTime.timeName() << nl << endl;
+
+        // --- Pressure-velocity PIMPLE corrector loop
+        while (pimple.loop())
+        {
+
+#include "alphaControls.H"
+#include "alphaEqnSubCycle.H"
+
+mixture.correct();
+
+#include "UEqn.H"
+
+            // --- Pressure corrector loop
+            while (pimple.correct())
+            {
+#include "pEqn.H"
+            }
+
+            if (pimple.turbCorr())
+            {
+                //laminarTransport.correct(); //not present in interFoam (?)
+                turbulence->correct();
+            }
+        }
+
+        Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+             << nl << endl;
+
+        if (checkWrite(runTime))
+        {
+            nsnapshots += 1;
+            ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+            ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+            std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
+                             runTime.timeName());
+            Ufield.append(U);
+            Pfield.append(p);
+            counter++;
+            nextWrite += writeEvery;
+            writeMu(mu_now);
+            // --- Fill in the mu_samples with parameters (time, mu) to be used for the PODI sample points
+            mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
+            mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
+
+            for (int i = 0; i < mu_now.size(); i++)
+            {
+                mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
+            }
+        }
+
+        runTime++;
+    }
+
+    // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
+    if (mu.cols() == 0)
+    {
+        mu.resize(1, 1);
+    }
+
+    if (mu_samples.rows() == nsnapshots * mu.cols())
+    {
+        ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
+                                   "./ITHACAoutput/Offline");
+    }
+}
+
+
+bool unsteadyNS::checkWrite(Time& timeObject)
+{
+    scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
+    scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
+                          timeObject.deltaTValue());
+
+    if ( diffnow < diffnext)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+
+
