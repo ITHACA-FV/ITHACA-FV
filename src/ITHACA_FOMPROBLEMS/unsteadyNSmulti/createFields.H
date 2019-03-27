@@ -22,6 +22,8 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
  \*---------------------------------------------------------------------------*/
+#include "createRDeltaT.H"
+
 Info << "Reading field p_rgh\n" << endl;
 _p_rgh = autoPtr<volScalarField>
      (
@@ -62,7 +64,7 @@ volVectorField& U = _U();
 
 _mixture = autoPtr<immiscibleIncompressibleTwoPhaseMixture>
 	   (
-		new mixture(U, phi);
+		new immiscibleIncompressibleTwoPhaseMixture(U, phi)
 	   );
 immiscibleIncompressibleTwoPhaseMixture& mixture = _mixture();
 
@@ -75,7 +77,9 @@ const dimensionedScalar& rho2 = mixture.rho2();
 
 
 // Need to store rho for ddt(rho, U)
-volScalarField rho
+_rho = autoPtr<volScalarField>
+( 
+new volScalarField
 (
     IOobject
     (
@@ -85,12 +89,17 @@ volScalarField rho
         IOobject::READ_IF_PRESENT
     ),
     alpha1*rho1 + alpha2*rho2
+)
 );
+volScalarField& rho = _rho();
 rho.oldTime();
 
-
 // Mass flux
-surfaceScalarField rhoPhi
+
+_rhoPhi = autoPtr<surfaceScalarField>
+(
+    new
+surfaceScalarField 
 (
     IOobject
     (
@@ -101,7 +110,10 @@ surfaceScalarField rhoPhi
         IOobject::NO_WRITE
     ),
     fvc::interpolate(rho)*phi
+)
 );
+surfaceScalarField& rhoPhi = _rhoPhi();
+
 
 Info<< "Reading transportProperties\n" << endl;
 

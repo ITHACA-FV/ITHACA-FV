@@ -37,22 +37,19 @@ SourceFiles
 #ifndef unsteadyNSmulti_H
 #define unsteadyNSmulti_H
 #include "fvCFD.H"
-#include "immiscibleIncompressibleTwoPhaseMixture.H"
-#include "turbulentTransportModel.H"
+#include "dynamicFvMesh.H"
 #include "CMULES.H"
 #include "EulerDdtScheme.H"
 #include "localEulerDdtScheme.H"
 #include "CrankNicolsonDdtScheme.H"
 #include "subCycle.H"
+#include "immiscibleIncompressibleTwoPhaseMixture.H"
+#include "turbulentTransportModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
-#include "IOporosityModelList.H"
-#include "IOMRFZoneList.H"
-#include "fixedFluxPressureFvPatchScalarField.H"
-#include "steadyNS.H"
+#include "CorrectPhi.H"
 #include "fvcSmooth.H"
-#include <iostream>
-
+#include "unsteadyNS.H"
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*---------------------------------------------------------------------------*\
@@ -73,6 +70,32 @@ class unsteadyNSmulti: public unsteadyNS
         /// Construct with argc and argv
         unsteadyNSmulti(int argc, char* argv[]);
 
+        // AutoPtr member variables
+        autoPtr<volScalarField> _p_rgh;
+
+        autoPtr<immiscibleIncompressibleTwoPhaseMixture> _mixture;
+
+        autoPtr<volScalarField> _rho;
+
+        autoPtr<surfaceScalarField> _rhoPhi;    
+
+        autoPtr<surfaceScalarField> _alphaPhi10;
+
+        autroPtr<tmp<surfaceScalarField>> _talphaPhi1Corr0;
+
+        bool correctPhi;
+
+        bool checkMeshCourantNo;  
+
+        bool moveMeshOuterCorrectors;
+
+        const bool alphaRestart;
+
+        bool LTS;
+
+
+
+
         // Functions
 
         //--------------------------------------------------------------------------
@@ -83,14 +106,6 @@ class unsteadyNSmulti: public unsteadyNS
         ///
         void truthSolve(List<scalar> mu_now);
 
-        //--------------------------------------------------------------------------
-        /// Function to check if the solution must be exported.
-        ///
-        /// @param      timeObject  The time object of OpenFOAM.
-        ///
-        /// @return     1 if we must write 0 elsewhere.
-        ///
-        bool checkWrite(Time& timeObject);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

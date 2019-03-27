@@ -1,0 +1,6 @@
+flatpak run: Can't get document portal: GDBus.Error:org.freedesktop.DBus.Error.Spawn.ChildExited: Process org.freedesktop.portal.Documents exited with status 2
+
+(process:3): Gtk-WARNING **: 11:54:40.414: Locale not supported by C library.
+	Using the fallback 'C' locale.
+Gtk-Message: 11:54:40.492: Failed to load module "canberra-gtk-module"
+Gtk-Message: 11:54:40.492: Failed to load module "canberra-gtk-module"
