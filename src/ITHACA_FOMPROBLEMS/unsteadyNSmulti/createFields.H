@@ -133,7 +133,6 @@ turbulence = autoPtr<incompressible::turbulenceModel>
 #include "readhRef.H"
 #include "gh.H"
 
-//need autoPtr?
 volScalarField p
 (
     IOobject
@@ -176,3 +175,4 @@ _MRF = autoPtr<IOMRFZoneList>
        (
            new IOMRFZoneList(mesh)
        );
+#include "createUfIfPresent.H"

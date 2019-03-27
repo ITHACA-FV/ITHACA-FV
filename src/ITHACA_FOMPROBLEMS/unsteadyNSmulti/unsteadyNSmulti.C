@@ -78,6 +78,7 @@ unsteadyNSmulti::unsteadyNSmulti(int argc, char* argv[])
   );
  #include "createFields.H"
  #include "createFvOptions.H"
+ #include "initCorrectPhi.H"
  para = new ITHACAparameters;
  offline = ITHACAutilities::check_off();
  podex = ITHACAutilities::check_pod();
@@ -102,6 +103,13 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
     immiscibleIncompressibleTwoPhaseMixture& mixture = _mixture();
     volScalarField& alpha1(mixture.alpha1());
     volScalarField& alpha2(mixture.alpha2());
+    const dimensionedScalar& rho1(mixture.rho1());
+    const dimensionedScalar& rho2(mixture.rho2());
+    uniformDimensionedVectorField& g = _g();
+    uniformDimensionedScalarField& hRef = _hRef();
+    volScalarField& gh = _gh();
+    surfaceScalarField& ghf = _ghf();
+    tmp<volScalarField>& rAU = _rAU();
     surfaceScalarField& alphaPhi10 = _alphaPhi10();
     tmp<surfaceScalarField>& talphaPhi1Corr0 = _talphaPhi1Corr0();
     IOMRFZoneList& MRF = _MRF();
@@ -114,6 +122,7 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
     nextWrite = startTime;
     // Initialize Nsnapshots
     int nsnapshots = 0;
+    
         while (runTime.run())
     {
         #include "readDyMControls.H"

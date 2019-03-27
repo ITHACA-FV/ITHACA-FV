@@ -50,6 +50,7 @@ SourceFiles
 #include "CorrectPhi.H"
 #include "fvcSmooth.H"
 #include "unsteadyNS.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*---------------------------------------------------------------------------*\
@@ -81,8 +82,20 @@ class unsteadyNSmulti: public unsteadyNS
 
         autoPtr<surfaceScalarField> _alphaPhi10;
 
-        autroPtr<tmp<surfaceScalarField>> _talphaPhi1Corr0;
+        autoPtr<tmp<surfaceScalarField>> _talphaPhi1Corr0;
 
+        autoPtr<uniformDimensionedVectorField> _g;
+
+        autoPtr<uniformDimensionedScalarField> _hRef;
+
+        autoPtr<volScalarField> _gh;
+
+        autoPtr<surfaceScalarField> _ghf;
+
+        autoPtr<tmp<volScalarField>> _rAU;
+
+        autoPtr<surfaceVectorField> Uf;
+        
         bool correctPhi;
 
         bool checkMeshCourantNo;  
