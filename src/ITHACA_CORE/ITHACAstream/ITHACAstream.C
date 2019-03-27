@@ -243,45 +243,55 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     std::ifstream infile;
     infile.open(filename.c_str());
 
-    while (! infile.eof())
+    if (! infile.good())
     {
-        string line;
-        getline(infile, line);
-        int temp_cols = 0;
-        std::stringstream stream(line);
-
-        while (! stream.eof())
-        {
-            stream >> buff[cols * rows + temp_cols++];
-        }
-
-        if (temp_cols == 0)
-        {
-            continue;
-        }
-
-        if (cols == 0)
-        {
-            cols = temp_cols;
-        }
-
-        rows++;
+        std::cout << "Error in ITHACAstream::readMatrix: the file " << filename <<
+                  " does not exist. Check the existence of the file or the way it is named." <<
+                  std::endl;
+        exit(0);
     }
-
-    infile.close();
-    rows--;
-    // Populate matrix with numbers.
-    Eigen::MatrixXd result(rows, cols);
-
-    for (int i = 0; i < rows; i++)
+    else
     {
-        for (int j = 0; j < cols; j++)
+        while (! infile.eof())
         {
-            result(i, j) = buff[ cols * i + j ];
-        }
-    }
+            string line;
+            getline(infile, line);
+            int temp_cols = 0;
+            std::stringstream stream(line);
 
-    return result;
+            while (! stream.eof())
+            {
+                stream >> buff[cols * rows + temp_cols++];
+            }
+
+            if (temp_cols == 0)
+            {
+                continue;
+            }
+
+            if (cols == 0)
+            {
+                cols = temp_cols;
+            }
+
+            rows++;
+        }
+
+        infile.close();
+        rows--;
+        // Populate matrix with numbers.
+        Eigen::MatrixXd result(rows, cols);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                result(i, j) = buff[ cols * i + j ];
+            }
+        }
+
+        return result;
+    }
 }
 
 void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name,
