@@ -109,7 +109,7 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
     uniformDimensionedScalarField& hRef = _hRef();
     volScalarField& gh = _gh();
     surfaceScalarField& ghf = _ghf();
-    tmp<volScalarField>& rAU = _rAU();
+    autoPtr<volScalarField>& rAU = _rAU;
     surfaceScalarField& alphaPhi10 = _alphaPhi10();
     tmp<surfaceScalarField>& talphaPhi1Corr0 = _talphaPhi1Corr0();
     IOMRFZoneList& MRF = _MRF();

@@ -1,11 +1,11 @@
 {
     if (correctPhi)
     {
-        rAU.ref() = 1.0/UEqn.A();
+        rAU().ref() = 1.0/UEqn.A();
     }
     else
     {
-        rAU = 1.0/UEqn.A();
+        rAU() = 1.0/UEqn.A();
     }
 
     surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU()));
@@ -80,10 +80,5 @@
             pRefValue - getRefCellValue(p, pRefCell)
         );
         p_rgh = p - rho*gh;
-    }
-
-    if (!correctPhi)
-    {
-        rAU.clear();
     }
 }
