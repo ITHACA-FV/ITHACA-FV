@@ -242,56 +242,48 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     // Read numbers from file into buffer.
     std::ifstream infile;
     infile.open(filename.c_str());
+    M_Assert(infile.good() != 0,
+             "The matrix file does not exist. Check the existence of the file or the way it is named.");
 
-    if (! infile.good())
+    while (! infile.eof())
     {
-        std::cout << "Error in ITHACAstream::readMatrix: the file " << filename <<
-                  " does not exist. Check the existence of the file or the way it is named." <<
-                  std::endl;
-        exit(0);
-    }
-    else
-    {
-        while (! infile.eof())
+        string line;
+        getline(infile, line);
+        int temp_cols = 0;
+        std::stringstream stream(line);
+
+        while (! stream.eof())
         {
-            string line;
-            getline(infile, line);
-            int temp_cols = 0;
-            std::stringstream stream(line);
-
-            while (! stream.eof())
-            {
-                stream >> buff[cols * rows + temp_cols++];
-            }
-
-            if (temp_cols == 0)
-            {
-                continue;
-            }
-
-            if (cols == 0)
-            {
-                cols = temp_cols;
-            }
-
-            rows++;
+            stream >> buff[cols * rows + temp_cols++];
         }
 
-        infile.close();
-        rows--;
-        // Populate matrix with numbers.
-        Eigen::MatrixXd result(rows, cols);
-
-        for (int i = 0; i < rows; i++)
+        if (temp_cols == 0)
         {
-            for (int j = 0; j < cols; j++)
-            {
-                result(i, j) = buff[ cols * i + j ];
-            }
+            continue;
         }
 
-        return result;
+        if (cols == 0)
+        {
+            cols = temp_cols;
+        }
+
+        rows++;
     }
+
+    infile.close();
+    rows--;
+    // Populate matrix with numbers.
+    Eigen::MatrixXd result(rows, cols);
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            result(i, j) = buff[ cols * i + j ];
+        }
+    }
+
+    return result;
 }
 
 void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name,
