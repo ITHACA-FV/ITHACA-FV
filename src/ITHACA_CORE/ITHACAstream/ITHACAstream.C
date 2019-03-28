@@ -242,6 +242,8 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     // Read numbers from file into buffer.
     std::ifstream infile;
     infile.open(filename.c_str());
+    M_Assert(infile.good() != 0,
+             "The matrix file does not exist. Check the existence of the file or the way it is named.");
 
     while (! infile.eof())
     {
