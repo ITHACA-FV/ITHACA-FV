@@ -1,0 +1,36 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+Build  : 6-f934eabb0d52
+Exec   : snappyHexMesh -overwrite
+Date   : Feb 14 2019
+Time   : 15:37:26
+Host   : "PC-Zanca"
+PID    : 17947
+I/O    : uncollated
+Case   : /home/zancanaro/ITHACA-FV/tutorials/10compSteadyNS
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+Read mesh in = 0.17 s
+
+
+--> FOAM FATAL ERROR: 
+cannot find file "/home/zancanaro/ITHACA-FV/tutorials/10compSteadyNS/system/snappyHexMeshDict"
+
+    From function virtual Foam::autoPtr<Foam::ISstream> Foam::fileOperations::uncollatedFileOperation::readStream(Foam::regIOobject&, const Foam::fileName&, const Foam::word&, bool) const
+    in file global/fileOperations/uncollatedFileOperation/uncollatedFileOperation.C at line 519.
+
+FOAM exiting
+

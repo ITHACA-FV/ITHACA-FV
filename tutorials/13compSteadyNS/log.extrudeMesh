@@ -1,0 +1,52 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+Build  : 6-f934eabb0d52
+Exec   : extrudeMesh
+Date   : Feb 14 2019
+Time   : 15:37:26
+Host   : "PC-Zanca"
+PID    : 17948
+I/O    : uncollated
+Case   : /home/zancanaro/ITHACA-FV/tutorials/10compSteadyNS
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+Selecting extrudeModel plane
+Extruding from patch using model plane
+Collapsing edges < 0.0001 of bounding box
+
+Extruding patches 1(back) on mesh "/home/zancanaro/ITHACA-FV/tutorials/10compSteadyNS"
+
+Create mesh for time = 0
+
+Adding overall 0 processor patches.
+Testing:"/home/zancanaro/ITHACA-FV/tutorials/10compSteadyNS/system/fvSchemes"
+Mesh bounding box : (-1.7 -0.2 -2) (4 -0.1 2)
+        with span : (5.7 0.1 4)
+Merge distance    : 1e-05
+
+Collapsing edges < 1e-05 ...
+
+            Uncollapsed edges = 0 / 80720
+    Number of points : 32480
+    Not visited      : 0
+    Not collapsed    : 32480
+    Collapsed        : 0
+
+Collapsing 0 cells
+Writing mesh to "/home/zancanaro/ITHACA-FV/tutorials/10compSteadyNS/constant/region0"
+
+End
+
