@@ -92,7 +92,7 @@ class unsteadyNSmulti: public unsteadyNS
 
         autoPtr<surfaceScalarField> _ghf;
 
-        autoPtr<volScalarField> _rAU;
+        tmp<volScalarField> rAU;
 
         autoPtr<surfaceVectorField> Uf;
         
@@ -102,11 +102,9 @@ class unsteadyNSmulti: public unsteadyNS
 
         bool moveMeshOuterCorrectors;
 
-        const bool alphaRestart = 1;
+        bool alphaRestart;
 
         bool LTS;
-
-
 
 
         // Functions

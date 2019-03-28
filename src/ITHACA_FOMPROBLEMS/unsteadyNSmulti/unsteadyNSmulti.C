@@ -62,21 +62,11 @@ unsteadyNSmulti::unsteadyNSmulti(int argc, char* argv[])
    );
  pimpleControl& pimple = _pimple();
  #include "createTimeControls.H"               
- bool correctPhi
- (
-  pimple.dict().lookupOrDefault("correctPhi", mesh.dynamic())
-  );
-
- bool checkMeshCourantNo
- (
-  pimple.dict().lookupOrDefault("checkMeshCourantNo", false)
-  );
-
- bool moveMeshOuterCorrectors
- (
-  pimple.dict().lookupOrDefault("moveMeshOuterCorrectors", false)
-  );
+ correctPhi = pimple.dict().lookupOrDefault("correctPhi", mesh.dynamic());
+ checkMeshCourantNo = pimple.dict().lookupOrDefault("checkMeshCourantNo", false);
+ moveMeshOuterCorrectors  = pimple.dict().lookupOrDefault("moveMeshOuterCorrectors", false);
  #include "createFields.H"
+ #include "createAlphaFluxes.H"
  #include "createFvOptions.H"
  #include "initCorrectPhi.H"
  para = new ITHACAparameters;
@@ -95,10 +85,10 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
     fvMesh& mesh = _mesh();
     fv::options& fvOptions = _fvOptions();
     pimpleControl& pimple = _pimple();
-    volScalarField p = _p();
-    volScalarField p_rgh = _p_rgh();
-    volScalarField rho = _rho();
-    volVectorField U = _U();
+    volScalarField& p = _p();
+    volScalarField& p_rgh = _p_rgh();
+    volScalarField& rho = _rho();
+    volVectorField& U = _U();
     surfaceScalarField& rhoPhi = _rhoPhi();
     immiscibleIncompressibleTwoPhaseMixture& mixture = _mixture();
     volScalarField& alpha1(mixture.alpha1());
@@ -109,11 +99,10 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
     uniformDimensionedScalarField& hRef = _hRef();
     volScalarField& gh = _gh();
     surfaceScalarField& ghf = _ghf();
-    autoPtr<volScalarField>& rAU = _rAU;
     surfaceScalarField& alphaPhi10 = _alphaPhi10();
     tmp<surfaceScalarField>& talphaPhi1Corr0 = _talphaPhi1Corr0();
     IOMRFZoneList& MRF = _MRF();
-    singlePhaseTransportModel& laminarTransport = _laminarTransport();
+
     instantList Times = runTime.times();
     runTime.setEndTime(finalTime);
     // Perform a TruthSolve
@@ -122,6 +111,7 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
     nextWrite = startTime;
     // Initialize Nsnapshots
     int nsnapshots = 0;
+
     
         while (runTime.run())
     {
@@ -129,7 +119,7 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
         #include "CourantNo.H"
         #include "alphaCourantNo.H"
         #include "setDeltaT.H"
-        runTime.setEndTime(finalTime + timeStep);
+              runTime++;
         Info << "Time = " << runTime.timeName() << nl << endl;
 
         while (pimple.loop())
@@ -149,6 +139,8 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
                 turbulence->correct();
             }
         }
+
+                runTime.write();
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"

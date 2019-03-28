@@ -1,8 +1,6 @@
 if (correctPhi)
 {
-    _rAU = autoPtr<volScalarField>
-    (
-        new volScalarField
+    rAU = new volScalarField
         (
         IOobject
         (
@@ -14,8 +12,7 @@ if (correctPhi)
         ),
         mesh,
         dimensionedScalar("rAU", dimTime/dimDensity, 1)
-        )
-    );
+        );
     #include "correctPhi.H"
 }
 else

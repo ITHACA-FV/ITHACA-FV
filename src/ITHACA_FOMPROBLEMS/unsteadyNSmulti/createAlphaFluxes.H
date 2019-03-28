@@ -27,7 +27,7 @@ new surfaceScalarField
 surfaceScalarField& alphaPhi10 = _alphaPhi10();
 
 // MULES Correction
-_talphaPhi1Corr0 = autroPtr<tmp<surfaceScalarField>>
+_talphaPhi1Corr0 = autoPtr<tmp<surfaceScalarField>>
 (
 	new tmp<surfaceScalarField> 
 	);

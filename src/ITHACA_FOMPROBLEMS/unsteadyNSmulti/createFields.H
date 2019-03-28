@@ -115,15 +115,6 @@ surfaceScalarField
 surfaceScalarField& rhoPhi = _rhoPhi();
 
 
-Info<< "Reading transportProperties\n" << endl;
-
-
-_laminarTransport = autoPtr<singlePhaseTransportModel>
-                    (
-                        new singlePhaseTransportModel( U, phi )
-                    );
-singlePhaseTransportModel& laminarTransport = _laminarTransport();
-
 turbulence = autoPtr<incompressible::turbulenceModel>
              (
                  incompressible::turbulenceModel::New(U, phi, mixture)
@@ -133,7 +124,9 @@ turbulence = autoPtr<incompressible::turbulenceModel>
 #include "readhRef.H"
 #include "gh.H"
 
-volScalarField p
+_p = autoPtr<volScalarField>
+(
+    new volScalarField 
 (
     IOobject
     (
@@ -144,7 +137,9 @@ volScalarField p
         IOobject::AUTO_WRITE
     ),
     p_rgh + rho*gh
-);
+)
+    );
+volScalarField& p = _p();
 
 label pRefCell = 0;
 scalar pRefValue = 0.0;
@@ -152,7 +147,7 @@ setRefCell
 (
     p,
     p_rgh,
-    mesh.solutionDict().subDict("SIMPLE"),
+    pimple.dict(),
     pRefCell,
     pRefValue
 );
