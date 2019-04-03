@@ -1,3 +1,0 @@
-10compSteadyNS.C
-
-EXE = $(FOAM_USER_APPBIN)/10compSteadyNS

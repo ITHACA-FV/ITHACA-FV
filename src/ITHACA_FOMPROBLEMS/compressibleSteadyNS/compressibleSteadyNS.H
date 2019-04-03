@@ -37,7 +37,6 @@ SourceFiles
 #ifndef compressibleSteadyNS_H
 #define compressibleSteadyNS_H
 #include "fvCFD.H"
-#include "fvCFD.H"
 #include "fluidThermo.H"
 #include "turbulentFluidThermoModel.H"
 #include "simpleControl.H"

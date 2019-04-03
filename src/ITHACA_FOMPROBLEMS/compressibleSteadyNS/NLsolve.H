@@ -78,8 +78,8 @@ while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
     // runTime.write();
     csolve = csolve + 1;
     Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-    << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-    << nl << endl;
+         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+         << nl << endl;
   }
 
   res_os << residual << std::endl;

@@ -68,7 +68,7 @@ compressibleSteadyNS::compressibleSteadyNS(int argc, char* argv[])
         )
     );
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
-    maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
+    maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 2000);
     para = new ITHACAparameters;
 }
 

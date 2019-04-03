@@ -22,5 +22,5 @@
 
     fvOptions.correct(he);
 
-    thermo.correct();
+    thermo.correct(); // Here are calculated both temperature and density based on P,U and he.
 }

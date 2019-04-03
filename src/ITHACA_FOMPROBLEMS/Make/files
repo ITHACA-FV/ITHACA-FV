@@ -8,6 +8,7 @@ unsteadyNST/unsteadyNST.C
 unsteadyNSTturb/unsteadyNSTturb.C
 steadyNS_simple/steadyNS_simple.C
 laplacianProblem/laplacianProblem.C
+compressibleSteadyNS/compressibleSteadyNS.C
 
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_FOMPROBLEMS
