@@ -1,8 +1,10 @@
-//volScalarField rAU(1.0/UEqn.A()); // Inverse of the diagonal part of the U equation matrix
-volScalarField rAU(1.0/Ueqn_global->A()); // For the new "getUmatrix" formulation
-surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
-//volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p)); // H is the extra diagonal part summed to the r.h.s. of the U equation
-volVectorField HbyA(constrainHbyA(rAU*Ueqn_global->H(), U, p)); // For the new "getUmatrix" formulation
+volScalarField rAU(1.0 /
+                   Ueqn.A()); // Inverse of the diagonal part of the U equation matrix
+//volScalarField rAU(1.0/Ueqn_global->A()); // For the new "getUmatrix" formulation
+surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho* rAU));
+volVectorField HbyA(constrainHbyA(rAU* Ueqn.H(), U,
+                                  p)); // H is the extra diagonal part summed to the r.h.s. of the U equation
+//volVectorField HbyA(constrainHbyA(rAU*Ueqn_global->H(), U, p)); // For the new "getUmatrix" formulation
 //tUEqn.clear();
 
 bool closedVolume = false;
@@ -18,31 +20,27 @@ if (simple.transonic())
     surfaceScalarField phid
     (
         "phid",
-        (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
+        (fvc::interpolate(psi) / fvc::interpolate(rho))*phiHbyA
     );
-
-    phiHbyA -= fvc::interpolate(psi*p)*phiHbyA/fvc::interpolate(rho);
+    phiHbyA -= fvc::interpolate(psi * p) * phiHbyA / fvc::interpolate(rho);
 
     while (simple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
             fvc::div(phiHbyA)
-          + fvm::div(phid, p)
-          - fvm::laplacian(rhorAUf, p)
-          ==
+            + fvm::div(phid, p)
+            - fvm::laplacian(rhorAUf, p)
+            ==
             fvOptions(psi, p, rho.name())
         );
-
         // Relax the pressure equation to ensure diagonal-dominance
         pEqn.relax();
-
         pEqn.setReference
         (
             pressureControl.refCell(),
             pressureControl.refValue()
         );
-
         presidual = pEqn.solve().initialResidual();
 
         if (simple.finalNonOrthogonalIter())
@@ -52,7 +50,8 @@ if (simple.transonic())
     }
 }
 else
-{   //Passa sempre da qui!!
+{
+    //Passa sempre da qui!!
     closedVolume = adjustPhi(phiHbyA, U, p);
     //p.storePrevIter();
 
@@ -61,17 +60,15 @@ else
         fvScalarMatrix pEqn
         (
             fvc::div(phiHbyA)
-          - fvm::laplacian(rhorAUf, p)
-          ==
+            - fvm::laplacian(rhorAUf, p)
+            ==
             fvOptions(psi, p, rho.name())
         );
-
         pEqn.setReference
         (
             pressureControl.refCell(),
             pressureControl.refValue()
         );
-
         presidual = pEqn.solve().initialResidual();
 
         if (simple.finalNonOrthogonalIter())
@@ -86,7 +83,7 @@ else
 // Explicitly relax pressure for momentum corrector
 p.relax();
 
-U = HbyA - rAU*fvc::grad(p);
+U = HbyA - rAU * fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);
 
@@ -96,8 +93,8 @@ bool pLimited = pressureControl.limit(p);
 // to obey overall mass continuity
 if (closedVolume)
 {
-    p += (initialMass - fvc::domainIntegrate(psi*p))
-        /fvc::domainIntegrate(psi);
+    p += (initialMass - fvc::domainIntegrate(psi * p))
+         / fvc::domainIntegrate(psi);
 }
 
 if (pLimited || closedVolume)

@@ -23,105 +23,105 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
 
-Info<< "Reading thermophysical properties\n" << endl;
+Info << "Reading thermophysical properties\n" << endl;
 
-pThermo = autoPtr<fluidThermo> 
-(
-  fluidThermo::New(mesh)
-  );
+pThermo = autoPtr<fluidThermo>
+          (
+              fluidThermo::New(mesh)
+          );
 
 fluidThermo& thermo = pThermo();
 
 thermo.validate(args.executable(), "h", "e");
 
 _p = autoPtr<volScalarField>
-(
-  new volScalarField(thermo.p())
-);
+     (
+         new volScalarField(thermo.p())
+     );
 
 volScalarField& p = _p();
 
 Info << p << endl;
 
-_rho = autoPtr<volScalarField> 
-(
-  new volScalarField
-  (
-    IOobject
-    (
-      "rho",
-      runTime.timeName(),
-      mesh,
-      IOobject::READ_IF_PRESENT,
-      IOobject::AUTO_WRITE
-      ),
-    thermo.rho()
-    )
-  );
+_rho = autoPtr<volScalarField>
+       (
+           new volScalarField
+           (
+               IOobject
+               (
+                   "rho",
+                   runTime.timeName(),
+                   mesh,
+                   IOobject::READ_IF_PRESENT,
+                   IOobject::AUTO_WRITE
+               ),
+               thermo.rho()
+           )
+       );
 
 volScalarField& rho = _rho();
 
 _E = autoPtr<volScalarField>
-(
-  new volScalarField(thermo.he())
-);
+     (
+         new volScalarField(thermo.he())
+     );
 
 Info << "Reading field U\n" << endl;
 _U = autoPtr<volVectorField>
-(
- new volVectorField
- (
-   IOobject
-   (
-     "U",
-     runTime.timeName(),
-     mesh,
-     IOobject::MUST_READ,
-     IOobject::AUTO_WRITE
-     ),
-   mesh
-   )
- );
+     (
+         new volVectorField
+         (
+             IOobject
+             (
+                 "U",
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::MUST_READ,
+                 IOobject::AUTO_WRITE
+             ),
+             mesh
+         )
+     );
 volVectorField& U = _U();
 
 #include "compressibleCreatePhi.H"
 
 _pressureControl = autoPtr<pressureControl>
-(
-  new pressureControl(p, rho, simple.dict())
-  );
+                   (
+                       new pressureControl(p, rho, simple.dict())
+                   );
 
-pressureControl& pressureControl=_pressureControl();
+pressureControl& pressureControl = _pressureControl();
 
 mesh.setFluxRequired(p.name());
 
-Info<< "Creating turbulence model\n" << endl;
+Info << "Creating turbulence model\n" << endl;
 
 turbulence = autoPtr<compressible::turbulenceModel>
-(
-  compressible::turbulenceModel::New
-  (
-    rho,
-    U,
-    phi,
-    thermo
-    )
-  );
+             (
+                 compressible::turbulenceModel::New
+                 (
+                     rho,
+                     U,
+                     phi,
+                     thermo
+                 )
+             );
 
 _initialMass = autoPtr<dimensionedScalar>
-(
-  new dimensionedScalar(fvc::domainIntegrate(rho))
-  );
+               (
+                   new dimensionedScalar(fvc::domainIntegrate(rho))
+               );
 
 _MRF = autoPtr<IOMRFZoneList>
-(
- new IOMRFZoneList(mesh)
- );
+       (
+           new IOMRFZoneList(mesh)
+       );
 
 _psi = autoPtr<volScalarField>
-(
-  new volScalarField(thermo.psi())
-);
+       (
+           new volScalarField(thermo.psi())
+       );
 
 _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
 

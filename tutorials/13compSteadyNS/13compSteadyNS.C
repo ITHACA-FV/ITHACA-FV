@@ -34,7 +34,7 @@ SourceFiles
 #include "IOmanip.H"
 
 
-class tutorial13 : public compressibleSteadyNS 
+class tutorial13 : public compressibleSteadyNS
 {
     public:
         /// Constructor
@@ -58,7 +58,7 @@ class tutorial13 : public compressibleSteadyNS
 
             // if the offline solution is already performed read the fields
             if (offline)
-            {   
+            {
                 ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
                 mu_samples =
@@ -70,7 +70,7 @@ class tutorial13 : public compressibleSteadyNS
 
                 for (label i = 0; i < mu.cols(); i++)
                 {
-                    std::cout <<"Current mu = " << mu(0, i) << std::endl;
+                    std::cout << "Current mu = " << mu(0, i) << std::endl;
                     mu_now[0] = mu(0, i);
                     change_viscosity(mu_now[0]);
                     assignIF(U, Uinl);
@@ -81,7 +81,7 @@ class tutorial13 : public compressibleSteadyNS
 
 };
 
-int main(int argc, char* argv[]) 
+int main(int argc, char* argv[])
 {
     // Construct the tutorial object
     tutorial13 example(argc, argv);

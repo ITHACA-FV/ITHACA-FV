@@ -1,11 +1,11 @@
 rho = thermo.rho();
 
-//volScalarField rAU(1.0/UEqn.A());
-//volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
-//volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
-volScalarField rAU(1.0/Ueqn_global->A()); // For the new "getUmatrix" formulation
-volScalarField rAtU(1.0/(1.0/rAU - Ueqn_global->H1())); // For the new "getUmatrix" formulation
-volVectorField HbyA(constrainHbyA(rAU*Ueqn_global->H(), U, p)); // For the new "getUmatrix" formulation
+volScalarField rAU(1.0 / Ueqn.A());
+volScalarField rAtU(1.0 / (1.0 / rAU - Ueqn.H1()));
+volVectorField HbyA(constrainHbyA(rAU* Ueqn.H(), U, p));
+//volScalarField rAU(1.0/Ueqn_global->A()); // For the new "getUmatrix" formulation
+//volScalarField rAtU(1.0/(1.0/rAU - Ueqn_global->H1())); // For the new "getUmatrix" formulation
+//volVectorField HbyA(constrainHbyA(rAU*Ueqn_global->H(), U, p)); // For the new "getUmatrix" formulation
 //tUEqn.clear();
 
 bool closedVolume = false;
@@ -13,7 +13,7 @@ bool closedVolume = false;
 surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(rho)*fvc::flux(HbyA));
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
-volScalarField rhorAtU("rhorAtU", rho*rAtU);
+volScalarField rhorAtU("rhorAtU", rho* rAtU);
 
 // Update the pressure BCs to ensure flux consistency
 constrainPressure(p, rho, U, phiHbyA, rhorAtU, MRF);
@@ -23,35 +23,30 @@ if (simple.transonic())
     surfaceScalarField phid
     (
         "phid",
-        (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
+        (fvc::interpolate(psi) / fvc::interpolate(rho))*phiHbyA
     );
-
     phiHbyA +=
-        fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf()
-      - fvc::interpolate(psi*p)*phiHbyA/fvc::interpolate(rho);
-
-    HbyA -= (rAU - rAtU)*fvc::grad(p);
+        fvc::interpolate(rho * (rAtU - rAU)) * fvc::snGrad(p) * mesh.magSf()
+        - fvc::interpolate(psi * p) * phiHbyA / fvc::interpolate(rho);
+    HbyA -= (rAU - rAtU) * fvc::grad(p);
 
     while (simple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
             fvc::div(phiHbyA)
-          + fvm::div(phid, p)
-          - fvm::laplacian(rhorAtU, p)
-         ==
+            + fvm::div(phid, p)
+            - fvm::laplacian(rhorAtU, p)
+            ==
             fvOptions(psi, p, rho.name())
         );
-
         // Relax the pressure equation to maintain diagonal dominance
         pEqn.relax();
-
         pEqn.setReference
         (
             pressureControl.refCell(),
             pressureControl.refValue()
         );
-
         presidual = pEqn.solve().initialResidual();
 
         if (simple.finalNonOrthogonalIter())
@@ -63,26 +58,23 @@ if (simple.transonic())
 else
 {
     closedVolume = adjustPhi(phiHbyA, U, p);
-
-    phiHbyA += fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf();
-    HbyA -= (rAU - rAtU)*fvc::grad(p);
+    phiHbyA += fvc::interpolate(rho * (rAtU - rAU)) * fvc::snGrad(p) * mesh.magSf();
+    HbyA -= (rAU - rAtU) * fvc::grad(p);
 
     while (simple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
             fvc::div(phiHbyA)
-          - fvm::laplacian(rhorAtU, p)
-          ==
+            - fvm::laplacian(rhorAtU, p)
+            ==
             fvOptions(psi, p, rho.name())
         );
-
         pEqn.setReference
         (
             pressureControl.refCell(),
             pressureControl.refValue()
         );
-
         presidual = pEqn.solve().initialResidual();
 
         if (simple.finalNonOrthogonalIter())
@@ -99,7 +91,7 @@ else
 // Explicitly relax pressure for momentum corrector
 p.relax();
 
-U = HbyA - rAtU*fvc::grad(p);
+U = HbyA - rAtU * fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);
 
@@ -109,8 +101,8 @@ bool pLimited = pressureControl.limit(p);
 // to obey overall mass continuity
 if (closedVolume)
 {
-    p += (initialMass - fvc::domainIntegrate(psi*p))
-        /fvc::domainIntegrate(psi);
+    p += (initialMass - fvc::domainIntegrate(psi * p))
+         / fvc::domainIntegrate(psi);
 }
 
 if (pLimited || closedVolume)

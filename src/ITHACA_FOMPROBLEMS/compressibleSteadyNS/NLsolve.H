@@ -41,31 +41,33 @@ tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
 maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 2000);
 
 #if OFVER == 6
+
 while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
 #else
 while (simple.loop() && residual > tolerance && csolve < maxIter )
 #endif
-  {
+{
     Info << "Time = " << runTime.timeName() << nl << endl;
-    
-//#include "UEqn.H"
-    get_Umatrix(U, p, uresidual_v);
-    
-#include "EEqn.H"
+    //#include "UEqn.H"
+    fvVectorMatrix Ueqn(get_Umatrix(U, p, uresidual_v));
+    //#include "EEqn.H"
+    get_Ematrix(U, p, eresidual);
 
     if (simple.consistent())
     {
-    #include "pcEqn.H"
+#include "pcEqn.H"
     }
     else
     {
-    #include "pEqn.H"
+        //#include "pEqn.H"
+        get_Pmatrix(U, p, presidual, Ueqn);
+        std::cerr << "debug point 2" << std::endl;
     }
-    
-    auto uresidual = max(max(uresidual_v[0],uresidual_v[1]), uresidual_v[2]);
+
+    std::cerr << "debug point 3" << std::endl;
+    auto uresidual = max(max(uresidual_v[0], uresidual_v[1]), uresidual_v[2]);
     residual = max(max(presidual, uresidual), eresidual);
     Info << "\nResidual: " << residual << endl << endl;
-    
     //laminarTransport.correct();
     turbulence->correct();
     // runTime.write();
@@ -73,11 +75,11 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
     Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
          << "  ClockTime = " << runTime.elapsedClockTime() << " s"
          << nl << endl;
-  }
+}
 
-  res_os << residual << std::endl;
-  res_os.close();
-  runTime.setTime(runTime.startTime(), 0);
+res_os << residual << std::endl;
+res_os.close();
+runTime.setTime(runTime.startTime(), 0);
 
 
 

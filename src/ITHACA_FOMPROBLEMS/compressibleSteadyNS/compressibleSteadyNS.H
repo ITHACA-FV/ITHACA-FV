@@ -83,11 +83,14 @@ class compressibleSteadyNS: public steadyNSturb
         ///
         void truthSolve(List<scalar> mu_now);
 
-        fvVectorMatrix get_Umatrix(volVectorField& U, volScalarField& p, Vector<double>& uresidual_v);
+        fvVectorMatrix get_Umatrix(volVectorField& U, volScalarField& p,
+                                   Vector<double>& uresidual_v);
 
-        fvScalarMatrix get_Ematrix(volVectorField& U, volScalarField& he);
+        fvScalarMatrix get_Ematrix(volVectorField& U, volScalarField& p,
+                                   scalar& eresidual);
 
-        fvScalarMatrix get_Pmatrix(volVectorField& U, volScalarField& p);
+        fvScalarMatrix get_Pmatrix(volVectorField& U, volScalarField& p,
+                                   scalar& presidual, fvVectorMatrix& Ueqn);
 
         fvScalarMatrix get_Pcmatrix(volVectorField& U, volScalarField& p);
 
@@ -99,7 +102,9 @@ class compressibleSteadyNS: public steadyNSturb
         void change_viscosity(double mu_new);
 
         /// Initialization for the full velocity linear system.
-        fvVectorMatrix* Ueqn_global;
+        //fvVectorMatrix* Ueqn_global;
+
+        //fvVectorMatrix Ueqn();
 
         autoPtr<fluidThermo> pThermo;
 
@@ -123,7 +128,7 @@ class compressibleSteadyNS: public steadyNSturb
         /// Number of maximum iterations to be done for the computation of the truth solution
         scalar maxIter;
 
-        
+
 
 };
 
