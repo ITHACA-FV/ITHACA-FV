@@ -102,6 +102,5 @@ int main(int argc, char* argv[])
     example.inletIndex(0, 1) = 0;
     // Perform the offline solve
     example.offlineSolve();
-    // Solve the supremizer problem
     exit(0);
 }

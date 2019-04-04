@@ -1,9 +1,12 @@
 rho = thermo.rho();
 
-volScalarField rAU(1.0/UEqn.A());
-volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
-volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
-tUEqn.clear();
+//volScalarField rAU(1.0/UEqn.A());
+//volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
+//volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+volScalarField rAU(1.0/Ueqn_global->A()); // For the new "getUmatrix" formulation
+volScalarField rAtU(1.0/(1.0/rAU - Ueqn_global->H1())); // For the new "getUmatrix" formulation
+volVectorField HbyA(constrainHbyA(rAU*Ueqn_global->H(), U, p)); // For the new "getUmatrix" formulation
+//tUEqn.clear();
 
 bool closedVolume = false;
 

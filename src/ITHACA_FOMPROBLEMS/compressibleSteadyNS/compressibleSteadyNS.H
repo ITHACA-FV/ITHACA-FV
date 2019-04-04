@@ -83,6 +83,23 @@ class compressibleSteadyNS: public steadyNSturb
         ///
         void truthSolve(List<scalar> mu_now);
 
+        fvVectorMatrix get_Umatrix(volVectorField& U, volScalarField& p, Vector<double>& uresidual_v);
+
+        fvScalarMatrix get_Ematrix(volVectorField& U, volScalarField& he);
+
+        fvScalarMatrix get_Pmatrix(volVectorField& U, volScalarField& p);
+
+        fvScalarMatrix get_Pcmatrix(volVectorField& U, volScalarField& p);
+
+        //--------------------------------------------------------------------------
+        /// Function to change the viscosity
+        ///
+        /// @param[in]  mu    viscosity (scalar)
+        ///
+        void change_viscosity(double mu_new);
+
+        /// Initialization for the full velocity linear system.
+        fvVectorMatrix* Ueqn_global;
 
         autoPtr<fluidThermo> pThermo;
 
@@ -100,12 +117,13 @@ class compressibleSteadyNS: public steadyNSturb
 
         PtrList<volScalarField> Efield;
 
-        //--------------------------------------------------------------------------
-        /// Function to change the viscosity
-        ///
-        /// @param[in]  mu    viscosity (scalar)
-        ///
-        void change_viscosity(double mu_new);
+        /// Tolerance for the residual of the stationary problems, there is the same tolerance for velocity and pressure
+        scalar tolerance;
+
+        /// Number of maximum iterations to be done for the computation of the truth solution
+        scalar maxIter;
+
+        
 
 };
 

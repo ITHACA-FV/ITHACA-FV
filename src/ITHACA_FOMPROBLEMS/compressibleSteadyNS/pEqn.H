@@ -1,7 +1,9 @@
-volScalarField rAU(1.0/UEqn.A()); // Inverse of the diagonal part of the U equation matrix
+//volScalarField rAU(1.0/UEqn.A()); // Inverse of the diagonal part of the U equation matrix
+volScalarField rAU(1.0/Ueqn_global->A()); // For the new "getUmatrix" formulation
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
-volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p)); // H is the extra diagonal part summed to the r.h.s. of the U equation
-tUEqn.clear();
+//volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p)); // H is the extra diagonal part summed to the r.h.s. of the U equation
+volVectorField HbyA(constrainHbyA(rAU*Ueqn_global->H(), U, p)); // For the new "getUmatrix" formulation
+//tUEqn.clear();
 
 bool closedVolume = false;
 

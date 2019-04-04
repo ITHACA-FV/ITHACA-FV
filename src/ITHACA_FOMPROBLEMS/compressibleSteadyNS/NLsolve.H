@@ -37,16 +37,20 @@ scalar csolve = 0;
 std::ofstream res_os;
 res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
 
-#if OFVER == 6
+tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
+maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 2000);
 
+#if OFVER == 6
 while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
 #else
-  while (simple.loop() && residual > tolerance && csolve < maxIter )
+while (simple.loop() && residual > tolerance && csolve < maxIter )
 #endif
   {
     Info << "Time = " << runTime.timeName() << nl << endl;
     
-#include "UEqn.H"
+//#include "UEqn.H"
+    get_Umatrix(U, p, uresidual_v);
+    
 #include "EEqn.H"
 
     if (simple.consistent())
@@ -58,17 +62,6 @@ while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
     #include "pEqn.H"
     }
     
-        // scalar C = 0;
-
-        // for (label i = 0; i < 3; i++)
-        // {
-        //     if (C < uresidual_v[i])
-        //     {
-        //         C = uresidual_v[i];
-        //     }
-        // }
-
-        // uresidual = C; // quindi C è il resuduo massimo tra le componenti di velocità. Perchè lo cerco con un ciclo??
     auto uresidual = max(max(uresidual_v[0],uresidual_v[1]), uresidual_v[2]);
     residual = max(max(presidual, uresidual), eresidual);
     Info << "\nResidual: " << residual << endl << endl;

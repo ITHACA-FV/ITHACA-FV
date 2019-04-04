@@ -54,7 +54,7 @@ compressibleSteadyNS::compressibleSteadyNS(int argc, char* argv[])
     simpleControl& simple = _simple();
 #include "createFields.H"
 //#include "createFvOptions.H"
-    supex = ITHACAutilities::check_sup();
+    //supex = ITHACAutilities::check_sup();
     turbulence->validate();
     ITHACAdict = new IOdictionary
     (
@@ -67,8 +67,7 @@ compressibleSteadyNS::compressibleSteadyNS(int argc, char* argv[])
             IOobject::NO_WRITE
         )
     );
-    tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
-    maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 2000);
+    
     para = new ITHACAparameters;
 }
 
@@ -92,20 +91,20 @@ void compressibleSteadyNS::truthSolve(List<scalar> mu_now)
     IOMRFZoneList& MRF = _MRF();
     fluidThermo& thermo = pThermo();
     volScalarField& p = pThermo().p();
-    Info << thermo.mu() << endl;
-    Info << thermo.nu() << endl;
+    volScalarField _nut(turbulence->nut());
+    //Info << thermo.mu() << endl;
+    //Info << thermo.nu() << endl;
 #include "NLsolve.H"
     ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
     ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     ITHACAstream::exportSolution(E, name(counter), "./ITHACAoutput/Offline/");  
-    volScalarField _nut(turbulence->nut());
     ITHACAstream::exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
     Ufield.append(U);
     Pfield.append(p);
     Efield.append(E);
     nutFields.append(_nut);
     counter++;
-    writeMu(mu_now);
+    writeMu(mu_now); 
     mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
 }
 
@@ -120,3 +119,41 @@ void compressibleSteadyNS::change_viscosity(double mu_new)
         this->assignBC(mu_field, i, mu_new);
     }
 }
+
+fvVectorMatrix compressibleSteadyNS::get_Umatrix(volVectorField& U, volScalarField& p, Vector<double>& uresidual_v)
+  {
+    IOMRFZoneList& MRF = _MRF();
+    surfaceScalarField& phi = _phi();
+    volScalarField & rho = _rho();
+    fv::options& fvOptions = _fvOptions();
+    simpleControl& simple = _simple();
+
+    MRF.correctBoundaryVelocity(U);
+
+    fvVectorMatrix UEqn
+    (
+        fvm::div(phi, U)
+      + MRF.DDt(rho, U)
+      + turbulence->divDevRhoReff(U)
+     ==
+        fvOptions(rho, U)
+    );
+
+    UEqn.relax();
+    fvOptions.constrain(UEqn);
+
+    if (simple.momentumPredictor())
+    {
+        uresidual_v = solve(UEqn == -fvc::grad(p)).initialResidual();
+        fvOptions.correct(U);
+    }
+    Ueqn_global = &UEqn;
+
+    return UEqn;
+  }
+
+fvScalarMatrix compressibleSteadyNS::get_Ematrix(volVectorField& U, volScalarField& he){}
+
+fvScalarMatrix compressibleSteadyNS::get_Pmatrix(volVectorField& U, volScalarField& p){}
+
+fvScalarMatrix compressibleSteadyNS::get_Pcmatrix(volVectorField& U, volScalarField& p){}
