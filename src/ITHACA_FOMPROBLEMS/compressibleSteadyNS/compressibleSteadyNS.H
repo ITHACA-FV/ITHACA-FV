@@ -92,8 +92,6 @@ class compressibleSteadyNS: public steadyNSturb
         fvScalarMatrix get_Pmatrix(volVectorField& U, volScalarField& p,
                                    scalar& presidual, fvVectorMatrix& Ueqn);
 
-        fvScalarMatrix get_Pcmatrix(volVectorField& U, volScalarField& p);
-
         //--------------------------------------------------------------------------
         /// Function to change the viscosity
         ///
@@ -121,6 +119,10 @@ class compressibleSteadyNS: public steadyNSturb
         autoPtr<volScalarField> _E;
 
         PtrList<volScalarField> Efield;
+
+        autoPtr<fvVectorMatrix> Ueqn_global;
+
+        autoPtr<fvScalarMatrix> Peqn_global;
 
         /// Tolerance for the residual of the stationary problems, there is the same tolerance for velocity and pressure
         scalar tolerance;

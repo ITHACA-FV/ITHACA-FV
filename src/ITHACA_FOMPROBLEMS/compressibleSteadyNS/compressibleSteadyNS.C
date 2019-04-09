@@ -128,25 +128,31 @@ fvVectorMatrix compressibleSteadyNS::get_Umatrix(volVectorField& U,
     fv::options& fvOptions = _fvOptions();
     simpleControl& simple = _simple();
     MRF.correctBoundaryVelocity(U);
-    fvVectorMatrix UEqn
-    (
-        fvm::div(phi, U)
-        + MRF.DDt(rho, U)
-        + turbulence->divDevRhoReff(U)
-        ==
-        fvOptions(rho, U)
-    );
-    UEqn.relax();
-    fvOptions.constrain(UEqn);
+    Ueqn_global.reset(new fvVectorMatrix(        fvm::div(phi, U)
+                      + MRF.DDt(rho, U)
+                      + turbulence->divDevRhoReff(U)
+                      ==
+                      fvOptions(rho, U)
+                                        ));
+    // fvVectorMatrix UEqn
+    // (
+    //     fvm::div(phi, U)
+    //     + MRF.DDt(rho, U)
+    //     + turbulence->divDevRhoReff(U)
+    //     ==
+    //     fvOptions(rho, U)
+    // );
+    Ueqn_global().relax();
+    fvOptions.constrain(Ueqn_global());
 
     if (simple.momentumPredictor())
     {
-        uresidual_v = solve(UEqn == -fvc::grad(p)).initialResidual();
+        uresidual_v = solve(Ueqn_global() == -fvc::grad(p)).initialResidual();
         fvOptions.correct(U);
     }
 
     //Ueqn_global = &UEqn;
-    return UEqn;
+    return Ueqn_global();
 }
 
 fvScalarMatrix compressibleSteadyNS::get_Ematrix(volVectorField& U,
@@ -193,85 +199,148 @@ fvScalarMatrix compressibleSteadyNS::get_Pmatrix(volVectorField& U,
     dimensionedScalar& initialMass = _initialMass();
     volScalarField rAU(1.0 /
                        Ueqn.A()); // Inverse of the diagonal part of the U equation matrix
-    surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho * rAU));
     volVectorField HbyA(constrainHbyA(rAU * Ueqn.H(), U,
                                       p)); // H is the extra diagonal part summed to the r.h.s. of the U equation
     bool closedVolume = false;
     surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(rho)*fvc::flux(HbyA));
     MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
-    // Update the pressure BCs to ensure flux consistency
-    constrainPressure(p, rho, U, phiHbyA, rhorAUf, MRF);
-    fvScalarMatrix pEqn_out
-    (
-        fvm::laplacian(rhorAUf, p)
-        ==
-        fvOptions(psi, p, rho.name())
-    ); // Da sistemare assolutamente: è solo un modo per poterla inizializzare poichè le fvScalarMatrix non si possono inizializzare vuote.
 
-    if (simple.transonic())
+    if (simple.consistent())
     {
-        surfaceScalarField phid
-        (
-            "phid",
-            (fvc::interpolate(psi) / fvc::interpolate(rho))*phiHbyA
-        );
-        phiHbyA -= fvc::interpolate(psi * p) * phiHbyA / fvc::interpolate(rho);
+        volScalarField rAtU(1.0 / (1.0 / rAU - Ueqn.H1()));
+        volScalarField rhorAtU("rhorAtU", rho * rAtU);
+        // Update the pressure BCs to ensure flux consistency
+        constrainPressure(p, rho, U, phiHbyA, rhorAtU, MRF);
 
-        while (simple.correctNonOrthogonal())
+        if (simple.transonic())
         {
-            fvScalarMatrix pEqn
+            surfaceScalarField phid
             (
-                fvc::div(phiHbyA)
-                + fvm::div(phid, p)
-                - fvm::laplacian(rhorAUf, p)
-                ==
-                fvOptions(psi, p, rho.name())
+                "phid",
+                (fvc::interpolate(psi) / fvc::interpolate(rho))*phiHbyA
             );
-            // Relax the pressure equation to ensure diagonal-dominance
-            pEqn.relax();
-            pEqn.setReference
-            (
-                pressureControl.refCell(),
-                pressureControl.refValue()
-            );
-            presidual = pEqn.solve().initialResidual();
+            phiHbyA +=
+                fvc::interpolate(rho * (rAtU - rAU)) * fvc::snGrad(p) * mesh.magSf()
+                - fvc::interpolate(psi * p) * phiHbyA / fvc::interpolate(rho);
+            HbyA -= (rAU - rAtU) * fvc::grad(p);
 
-            if (simple.finalNonOrthogonalIter())
+            while (simple.correctNonOrthogonal())
             {
-                phi = phiHbyA + pEqn.flux();
-            }
+                Peqn_global.reset(new fvScalarMatrix(
+                                      fvc::div(phiHbyA)
+                                      + fvm::div(phid, p)
+                                      - fvm::laplacian(rhorAtU, p)
+                                      ==
+                                      fvOptions(psi, p, rho.name())
+                                  ));
+                // Relax the pressure equation to maintain diagonal dominance
+                Peqn_global().relax();
+                Peqn_global().setReference
+                (
+                    pressureControl.refCell(),
+                    pressureControl.refValue()
+                );
+                presidual = Peqn_global().solve().initialResidual();
 
-            pEqn_out = pEqn;
+                if (simple.finalNonOrthogonalIter())
+                {
+                    phi = phiHbyA + Peqn_global().flux();
+                }
+            }
+        }
+        else
+        {
+            closedVolume = adjustPhi(phiHbyA, U, p);
+            phiHbyA += fvc::interpolate(rho * (rAtU - rAU)) * fvc::snGrad(p) * mesh.magSf();
+            HbyA -= (rAU - rAtU) * fvc::grad(p);
+
+            while (simple.correctNonOrthogonal())
+            {
+                Peqn_global.reset(new fvScalarMatrix(
+                                      fvc::div(phiHbyA)
+                                      - fvm::laplacian(rhorAtU, p)
+                                      ==
+                                      fvOptions(psi, p, rho.name())
+                                  ));
+                Peqn_global().setReference
+                (
+                    pressureControl.refCell(),
+                    pressureControl.refValue()
+                );
+                presidual = Peqn_global().solve().initialResidual();
+
+                if (simple.finalNonOrthogonalIter())
+                {
+                    phi = phiHbyA + Peqn_global().flux();
+                }
+            }
         }
     }
     else
     {
-        //Passa sempre da qui!!
-        closedVolume = adjustPhi(phiHbyA, U, p);
-        //p.storePrevIter();
+        surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho * rAU));
+        // Update the pressure BCs to ensure flux consistency
+        constrainPressure(p, rho, U, phiHbyA, rhorAUf, MRF);
 
-        while (simple.correctNonOrthogonal())
+        if (simple.transonic())
         {
-            fvScalarMatrix pEqn
+            surfaceScalarField phid
             (
-                fvc::div(phiHbyA)
-                - fvm::laplacian(rhorAUf, p)
-                ==
-                fvOptions(psi, p, rho.name())
+                "phid",
+                (fvc::interpolate(psi) / fvc::interpolate(rho))*phiHbyA
             );
-            pEqn.setReference
-            (
-                pressureControl.refCell(),
-                pressureControl.refValue()
-            );
-            presidual = pEqn.solve().initialResidual();
+            phiHbyA -= fvc::interpolate(psi * p) * phiHbyA / fvc::interpolate(rho);
 
-            if (simple.finalNonOrthogonalIter())
+            while (simple.correctNonOrthogonal())
             {
-                phi = phiHbyA + pEqn.flux();
-            }
+                Peqn_global.reset(new fvScalarMatrix(
+                                      fvc::div(phiHbyA)
+                                      + fvm::div(phid, p)
+                                      - fvm::laplacian(rhorAUf, p)
+                                      ==
+                                      fvOptions(psi, p, rho.name())
+                                  ));
+                // Relax the pressure equation to ensure diagonal-dominance
+                Peqn_global().relax();
+                Peqn_global().setReference
+                (
+                    pressureControl.refCell(),
+                    pressureControl.refValue()
+                );
+                presidual = Peqn_global().solve().initialResidual();
 
-            pEqn_out = pEqn;
+                if (simple.finalNonOrthogonalIter())
+                {
+                    phi = phiHbyA + Peqn_global().flux();
+                }
+            }
+        }
+        else
+        {
+            //Passa sempre da qui!!
+            closedVolume = adjustPhi(phiHbyA, U, p);
+            //p.storePrevIter();
+
+            while (simple.correctNonOrthogonal())
+            {
+                Peqn_global.reset(new fvScalarMatrix(
+                                      fvc::div(phiHbyA)
+                                      - fvm::laplacian(rhorAUf, p)
+                                      ==
+                                      fvOptions(psi, p, rho.name())
+                                  ));
+                Peqn_global().setReference
+                (
+                    pressureControl.refCell(),
+                    pressureControl.refValue()
+                );
+                presidual = Peqn_global().solve().initialResidual();
+
+                if (simple.finalNonOrthogonalIter())
+                {
+                    phi = phiHbyA + Peqn_global().flux();
+                }
+            }
         }
     }
 
@@ -303,8 +372,5 @@ fvScalarMatrix compressibleSteadyNS::get_Pmatrix(volVectorField& U,
         rho.relax();
     }
 
-    return pEqn_out;
+    return Peqn_global();
 }
-
-fvScalarMatrix compressibleSteadyNS::get_Pcmatrix(volVectorField& U,
-        volScalarField& p) {}

@@ -49,21 +49,19 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
 {
     Info << "Time = " << runTime.timeName() << nl << endl;
     //#include "UEqn.H"
-    fvVectorMatrix Ueqn(get_Umatrix(U, p, uresidual_v));
+    get_Umatrix(U, p, uresidual_v);
     //#include "EEqn.H"
     get_Ematrix(U, p, eresidual);
-
-    if (simple.consistent())
-    {
-#include "pcEqn.H"
-    }
-    else
-    {
-        //#include "pEqn.H"
-        get_Pmatrix(U, p, presidual, Ueqn);
-        std::cerr << "debug point 2" << std::endl;
-    }
-
+    //if (simple.consistent())
+    //{
+    //#include "pcEqn.H"
+    //    }
+    //    else
+    //    {
+    //#include "pEqn.H"
+    get_Pmatrix(U, p, presidual, Ueqn_global());
+    std::cerr << "debug point 2" << std::endl;
+    //    }
     std::cerr << "debug point 3" << std::endl;
     auto uresidual = max(max(uresidual_v[0], uresidual_v[1]), uresidual_v[2]);
     residual = max(max(presidual, uresidual), eresidual);
