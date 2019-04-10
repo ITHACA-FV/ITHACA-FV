@@ -44,8 +44,11 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS(steadyNS_simple& FOMproblem)
     :
     problem(&FOMproblem)
 {
-    // Create a new Umodes set where the first one is the lift function
-    ULmodes.append(problem->liftfield[0]);
+    // Create a new Umodes set where the first ones are the lift functions
+    for (int i = 0; i < problem->inletIndex.rows(); i++)
+    {
+        ULmodes.append(problem->liftfield[i]);
+    }
 
     for (int i = 0; i < problem->Umodes.size(); i++)
     {
