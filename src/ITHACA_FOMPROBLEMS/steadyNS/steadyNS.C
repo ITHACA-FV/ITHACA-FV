@@ -233,7 +233,7 @@ void steadyNS::solvesupremizer(word type)
         {
             if (Usup.boundaryField()[i].type() != "processor")
             {
-                changeBCtype(Usup, "fixedValue", i);
+                ITHACAutilities::changeBCtype(Usup, "fixedValue", i);
                 assignBC(Usup, i, v);
                 assignIF(Usup, v);
             }

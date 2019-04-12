@@ -93,21 +93,6 @@ void reductionProblem::genEquiPar()
     }
 }
 
-// Change type of BC
-void reductionProblem::changeBCtype(volVectorField& field, word BCtype,
-                                    label BC_ind)
-{
-    field.boundaryFieldRef().set(BC_ind, fvPatchField<vector>::New(BCtype,
-                                 field.mesh().boundary()[BC_ind], field));
-}
-
-void reductionProblem::changeBCtype(volScalarField& field, word BCtype,
-                                    label BC_ind)
-{
-    field.boundaryFieldRef().set(BC_ind, fvPatchField<scalar>::New(BCtype,
-                                 field.mesh().boundary()[BC_ind], field));
-}
-
 // Perform a TruthSolve (To be overridden)
 void reductionProblem::truthSolve()
 {

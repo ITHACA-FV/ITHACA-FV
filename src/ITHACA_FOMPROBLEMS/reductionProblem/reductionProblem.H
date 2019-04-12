@@ -178,23 +178,6 @@ class reductionProblem
         void assignBC(volScalarField& s, label BC_ind, double& value);
 
         //--------------------------------------------------------------------------
-        /// Change the boundary condition type for a volVectorField
-        ///
-        /// @param[in]  field   The field
-        /// @param[in]  BCtype  The BC type you want to set
-        /// @param[in]  BC_ind  The BC index
-        ///
-        void changeBCtype(volVectorField& field, word BCtype, label BC_ind);
-
-        //--------------------------------------------------------------------------
-        /// Change the boundary condition type for a volScalarField
-        ///
-        /// @param[in]  field   The field
-        /// @param[in]  BCtype  The BC type you want to set
-        /// @param[in]  BC_ind  The BC index
-        void changeBCtype(volScalarField& field, word BCtype, label BC_ind);
-
-        //--------------------------------------------------------------------------
         /// Exact reconstruction using a certain number of modes for vector list of
         /// fields and the projection coefficients (volVectorField)
         ///
