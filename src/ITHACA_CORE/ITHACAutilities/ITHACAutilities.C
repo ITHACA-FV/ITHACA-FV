@@ -1011,3 +1011,20 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
         }
     }
 }
+
+
+template<>
+void ITHACAutilities::changeBCtype(GeometricField<vector, fvPatchField, volMesh>& field, word BCtype,
+                                    label BC_ind)
+{
+    field.boundaryFieldRef().set(BC_ind, fvPatchField<vector>::New(BCtype,
+                                 field.mesh().boundary()[BC_ind], field));
+}
+
+template<>
+void ITHACAutilities::changeBCtype(GeometricField<scalar, fvPatchField, volMesh>& field, word BCtype,
+                                    label BC_ind)
+{
+    field.boundaryFieldRef().set(BC_ind, fvPatchField<scalar>::New(BCtype,
+                                 field.mesh().boundary()[BC_ind], field));
+}

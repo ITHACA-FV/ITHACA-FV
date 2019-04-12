@@ -513,6 +513,19 @@ class ITHACAutilities
         ///
         template<typename T>
         static Eigen::MatrixXd get_mass_matrix_Eigen(PtrList<T>& fields);
+
+        ///
+        /// @brief      Change the boundary condition type for a GeometricField
+        ///
+        /// @param      field   The field
+        /// @param[in]  BCtype  The The BC type you want to set
+        /// @param[in]  BC_ind  The BC index
+        ///
+        /// @tparam     type_f  The type of field it can be scalar or vector
+        ///
+        template<typename type_f>
+        static void changeBCtype(GeometricField<type_f, fvPatchField, volMesh>& field, word BCtype, label BC_ind);
+
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
@@ -543,6 +556,13 @@ PtrList<volVectorField> ITHACAutilities::reconstruct_from_coeff(
 template<>
 PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
     PtrList<volScalarField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
+
+template<>
+void ITHACAutilities::changeBCtype(GeometricField<scalar, fvPatchField, volMesh>& field, word BCtype, label BC_ind);
+
+template<>
+void ITHACAutilities::changeBCtype(GeometricField<vector, fvPatchField, volMesh>& field, word BCtype, label BC_ind);
+
 
 #endif
 

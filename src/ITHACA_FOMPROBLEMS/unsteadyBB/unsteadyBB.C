@@ -354,7 +354,7 @@ void unsteadyBB::solvesupremizer(word type)
 
         for (label i = 0; i < Usup.boundaryField().size(); i++)
         {
-            changeBCtype(Usup, "fixedValue", i);
+            ITHACAutilities::changeBCtype(Usup, "fixedValue", i);
             assignBC(Usup, i, v);
             assignIF(Usup, v);
         }
