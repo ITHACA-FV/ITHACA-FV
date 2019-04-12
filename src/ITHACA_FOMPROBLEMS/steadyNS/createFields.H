@@ -42,6 +42,13 @@ _p = autoPtr<volScalarField>
      );
 volScalarField& p = _p();
 
+volScalarField p0(p);
+
+_p0 = autoPtr<volScalarField>
+(
+  new volScalarField(p0)
+);
+
 Info << "Reading field U\n" << endl;
 _U = autoPtr<volVectorField>
      (
@@ -59,6 +66,13 @@ _U = autoPtr<volVectorField>
          )
      );
 volVectorField& U = _U();
+
+volVectorField U0(U);
+
+_U0 = autoPtr<volVectorField>
+(
+  new volVectorField(U0)
+);
 
 #include "createPhi.H"
 
