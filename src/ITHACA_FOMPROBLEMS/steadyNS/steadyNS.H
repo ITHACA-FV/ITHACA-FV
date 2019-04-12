@@ -183,6 +183,13 @@ class steadyNS: public reductionProblem
         /// Velocity field
         autoPtr<volVectorField> _U;
 
+        /// Pressure field
+        autoPtr<volScalarField> _p0;
+
+        /// Velocity field
+        autoPtr<volVectorField> _U0;
+
+
         /// Mesh
         mutable autoPtr<fvMesh> _mesh;
 
@@ -396,6 +403,9 @@ class steadyNS: public reductionProblem
         Eigen::Tensor<double, 3 > convective_term_tens(label NUmodes,
                 label NPmodes,
                 label NSUPmodes);
+
+        /// set U and P back to the values into the 0 folder
+        void restart();
 
 
 };
