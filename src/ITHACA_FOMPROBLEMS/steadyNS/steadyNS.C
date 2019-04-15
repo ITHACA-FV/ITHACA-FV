@@ -1039,6 +1039,6 @@ void steadyNS::restart()
     U = U0;
     phi = phi0;
     turbulence.reset(
-                 incompressible::turbulenceModel::New(U, phi, _laminarTransport())
-             );
+        (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
+    );
 }

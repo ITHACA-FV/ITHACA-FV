@@ -81,6 +81,7 @@ class tutorial03 : public steadyNS
                     mu_now[0] = mu(0, i);
                     change_viscosity(mu(0, i));
                     truthSolve(mu_now);
+                    restart();
                 }
             }
         }
