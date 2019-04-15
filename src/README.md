@@ -74,7 +74,7 @@ git commit -m "meaningfull commit message"
 
 9. Push the `new_branch_name` branch commit to your remote fork:
 ```
-git push origin new_branch_name
+git push -f origin new_branch_name
 ```
 
 10. Open a new pull request (in [this guide](https://help.github.com/articles/creating-a-pull-request/)
