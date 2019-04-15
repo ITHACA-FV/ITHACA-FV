@@ -94,6 +94,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3598e82741ab9eb3e543e9a78c0102a7"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
 <tr class="memitem:a3598e82741ab9eb3e543e9a78c0102a7"><td class="memTemplItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a3598e82741ab9eb3e543e9a78c0102a7">reconstruct_from_coeff</a> (PtrList&lt; volScalarField &gt; &amp;modes, Eigen::MatrixXd &amp;coeff_matrix, label Nmodes)</td></tr>
 <tr class="separator:a3598e82741ab9eb3e543e9a78c0102a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5046230d664f202605a1451fb0812d2a"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a5046230d664f202605a1451fb0812d2a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a5046230d664f202605a1451fb0812d2a">changeBCtype</a> (GeometricField&lt; vector, fvPatchField, volMesh &gt; &amp;field, word BCtype, label BC_ind)</td></tr>
+<tr class="separator:a5046230d664f202605a1451fb0812d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f5dc9aa756c449f78eb8a4ab1fc4ce6"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a3f5dc9aa756c449f78eb8a4ab1fc4ce6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a3f5dc9aa756c449f78eb8a4ab1fc4ce6">changeBCtype</a> (GeometricField&lt; scalar, fvPatchField, volMesh &gt; &amp;field, word BCtype, label BC_ind)</td></tr>
+<tr class="separator:a3f5dc9aa756c449f78eb8a4ab1fc4ce6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2de6b1ab752f4102c6255d4a8f326067"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:a2de6b1ab752f4102c6255d4a8f326067"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#a2de6b1ab752f4102c6255d4a8f326067">setIndices2Value</a> (labelList &amp;ind2set, List&lt; vector &gt; &amp;value2set, labelList &amp;movingIDS, List&lt; vector &gt; &amp;originalList)</td></tr>
+<tr class="separator:a2de6b1ab752f4102c6255d4a8f326067"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -229,6 +238,23 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:add91b7a090f64fdd39ae80352172d542"><td class="memTemplItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#add91b7a090f64fdd39ae80352172d542">get_mass_matrix_Eigen</a> (PtrList&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;fields)</td></tr>
 <tr class="memdesc:add91b7a090f64fdd39ae80352172d542"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the mass matrix using the eigen routine.  <a href="#add91b7a090f64fdd39ae80352172d542">More...</a><br /></td></tr>
 <tr class="separator:add91b7a090f64fdd39ae80352172d542"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf151d4be89759a2bae523ca115905f0"><td class="memTemplParams" colspan="2">template&lt;typename type_f &gt; </td></tr>
+<tr class="memitem:acf151d4be89759a2bae523ca115905f0"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#acf151d4be89759a2bae523ca115905f0">changeBCtype</a> (GeometricField&lt; type_f, fvPatchField, volMesh &gt; &amp;field, word BCtype, label BC_ind)</td></tr>
+<tr class="memdesc:acf151d4be89759a2bae523ca115905f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the boundary condition type for a GeometricField.  <a href="#acf151d4be89759a2bae523ca115905f0">More...</a><br /></td></tr>
+<tr class="separator:acf151d4be89759a2bae523ca115905f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd0e8f035245e1db9809160b89c29612"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#acd0e8f035245e1db9809160b89c29612">getPointsFromPatch</a> (fvMesh &amp;<a class="el" href="unsteadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d">mesh</a>, label ind, List&lt; vector &gt; &amp;points, labelList &amp;indices)</td></tr>
+<tr class="memdesc:acd0e8f035245e1db9809160b89c29612"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the point coordinates and indices from patch.  <a href="#acd0e8f035245e1db9809160b89c29612">More...</a><br /></td></tr>
+<tr class="separator:acd0e8f035245e1db9809160b89c29612"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa90f79109ffaa04720f74e17d8928eb7"><td class="memItemLeft" align="right" valign="top">static List&lt; vector &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#aa90f79109ffaa04720f74e17d8928eb7">displacedSegment</a> (List&lt; vector &gt; x0, double mux1, double mux2, double muy1, double muy2)</td></tr>
+<tr class="memdesc:aa90f79109ffaa04720f74e17d8928eb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get position of displaced segment of points given the displacements of the end points.  <a href="#aa90f79109ffaa04720f74e17d8928eb7">More...</a><br /></td></tr>
+<tr class="separator:aa90f79109ffaa04720f74e17d8928eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc1b32f119d7d58a3de844067244480c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:adc1b32f119d7d58a3de844067244480c"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#adc1b32f119d7d58a3de844067244480c">setIndices2Value</a> (labelList &amp;ind2set, List&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;value2set, labelList &amp;movingIDS, List&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;originalList)</td></tr>
+<tr class="memdesc:adc1b32f119d7d58a3de844067244480c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets some given Indices of a list of objects to given values.  <a href="#adc1b32f119d7d58a3de844067244480c">More...</a><br /></td></tr>
+<tr class="separator:adc1b32f119d7d58a3de844067244480c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abded37b1a9cd26725737e7789333bddc"><td class="memItemLeft" align="right" valign="top">static volScalarField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html#abded37b1a9cd26725737e7789333bddc">meshNonOrtho</a> (fvMesh &amp;<a class="el" href="unsteadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d">mesh</a>, volScalarField &amp;NonOrtho)</td></tr>
+<tr class="memdesc:abded37b1a9cd26725737e7789333bddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a scalarField that containes the non-orthogonality value of a given mesh.  <a href="#abded37b1a9cd26725737e7789333bddc">More...</a><br /></td></tr>
+<tr class="separator:abded37b1a9cd26725737e7789333bddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Class to implement some useful functions inside ITHACA-FV. </p>
@@ -285,7 +311,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00826">826</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00893">893</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -339,7 +365,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00772">772</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00832">832</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -393,7 +419,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00906">906</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00974">974</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -447,7 +473,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00858">858</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00926">926</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -503,7 +529,7 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00522">522</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00589">589</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
 
 </div>
 </div>
@@ -550,7 +576,139 @@ template&lt;typename T , typename G &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00763">763</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00823">823</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="acf151d4be89759a2bae523ca115905f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf151d4be89759a2bae523ca115905f0">&#9670;&nbsp;</a></span>changeBCtype() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename type_f &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ITHACAutilities::changeBCtype </td>
+          <td>(</td>
+          <td class="paramtype">GeometricField&lt; type_f, fvPatchField, volMesh &gt; &amp;&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>BCtype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>BC_ind</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Change the boundary condition type for a GeometricField. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">field</td><td>The field </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">BCtype</td><td>The The BC type you want to set </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">BC_ind</td><td>The BC index</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">type_f</td><td>The type of field it can be scalar or vector </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5046230d664f202605a1451fb0812d2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5046230d664f202605a1451fb0812d2a">&#9670;&nbsp;</a></span>changeBCtype() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAutilities::changeBCtype </td>
+          <td>(</td>
+          <td class="paramtype">GeometricField&lt; vector, fvPatchField, volMesh &gt; &amp;&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>BCtype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>BC_ind</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l01017">1017</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="a3f5dc9aa756c449f78eb8a4ab1fc4ce6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f5dc9aa756c449f78eb8a4ab1fc4ce6">&#9670;&nbsp;</a></span>changeBCtype() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAutilities::changeBCtype </td>
+          <td>(</td>
+          <td class="paramtype">GeometricField&lt; scalar, fvPatchField, volMesh &gt; &amp;&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>BCtype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>BC_ind</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l01026">1026</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -587,7 +745,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>1 if the file exists 0 elsewhere. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00217">217</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00277">277</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -625,7 +783,7 @@ template&lt;typename T , typename G &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>1 if the folder exists 0 elsewhere. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="10unsteadyBB_enclosed_8C-example.html#a23">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a25">11unsteadyBB_open.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00200">200</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00260">260</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -655,7 +813,7 @@ template&lt;typename T , typename G &gt; </div>
 <p>Check if the offline data folder exists. </p>
 <dl class="section return"><dt>Returns</dt><dd>1 if the folder exists 0 elsewhere. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00159">159</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00201">201</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -685,7 +843,7 @@ template&lt;typename T , typename G &gt; </div>
 <p>Check if the POD data folder exists. </p>
 <dl class="section return"><dt>Returns</dt><dd>1 if the folder exists 0 elsewhere. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00138">138</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00171">171</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -715,7 +873,7 @@ template&lt;typename T , typename G &gt; </div>
 <p>Check if the supremizer folder exists. </p>
 <dl class="section return"><dt>Returns</dt><dd>1 if the folder exists 0 elsewhere. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00180">180</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00231">231</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -753,6 +911,75 @@ template&lt;typename T , typename G &gt; </div>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="10unsteadyBB_enclosed_8C-example.html#a24">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a26">11unsteadyBB_open.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00097">97</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="aa90f79109ffaa04720f74e17d8928eb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa90f79109ffaa04720f74e17d8928eb7">&#9670;&nbsp;</a></span>displacedSegment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt; vector &gt; ITHACAutilities::displacedSegment </td>
+          <td>(</td>
+          <td class="paramtype">List&lt; vector &gt;&#160;</td>
+          <td class="paramname"><em>x0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>mux1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>mux2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>muy1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>muy2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get position of displaced segment of points given the displacements of the end points. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">x0</td><td>The points of the segment before displacement </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mux1</td><td>The x displacement of the 1st end of the segment </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mux2</td><td>The x displacement of the 2nd end of the segment </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">muy1</td><td>The y displacement of the 1st end of the segment </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">muy2</td><td>The y displacement of the 2nd end of the segment</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The points coordinates of the displaced segment </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l01034">1034</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -801,7 +1028,7 @@ template&lt;typename T , typename G &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the relative error. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="08DEIM_8C-example.html#a14">08DEIM.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00273">273</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00333">333</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -849,7 +1076,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the absolute error. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00332">332</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00392">392</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -897,7 +1124,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the absolute error. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00281">281</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00341">341</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -945,7 +1172,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the absolute error. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00340">340</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00400">400</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -994,7 +1221,7 @@ template&lt;typename T , typename G &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the error between the two fields in Eigen::MatrixXd form. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="09DEIM_ROM_8C-example.html#a62">09DEIM_ROM.C</a>, <a class="el" href="10unsteadyBB_enclosed_8C-example.html#a52">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a63">11unsteadyBB_open.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00288">288</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00348">348</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1042,7 +1269,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the error between the two fields in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00347">347</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00407">407</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1090,7 +1317,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the error between the two fields in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00310">310</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00370">370</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1138,7 +1365,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the error between the two fields in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00369">369</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00429">429</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1263,7 +1490,7 @@ template&lt;typename T , typename G &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="10unsteadyBB_enclosed_8C-example.html#a50">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a61">11unsteadyBB_open.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00511">511</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00571">571</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1317,7 +1544,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00546">546</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00606">606</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1371,7 +1598,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00451">451</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00511">511</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1425,7 +1652,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00481">481</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00541">541</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1479,7 +1706,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coeffs ortho. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00581">581</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00641">641</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1533,7 +1760,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coeffs ortho. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00611">611</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00671">671</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1587,7 +1814,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00640">640</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00700">700</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1641,7 +1868,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The coefficients of the projection. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00667">667</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00727">727</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1688,7 +1915,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The mass matrix in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00391">391</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00451">451</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1735,7 +1962,7 @@ template&lt;typename T , typename G &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The mass matrix in Eigen::MatrixXd form. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00421">421</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00481">481</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1780,7 +2007,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The mass matrix eigen. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00531">531</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8H_source.html#l00598">598</a> of file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
 
 </div>
 </div>
@@ -1900,6 +2127,67 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="acd0e8f035245e1db9809160b89c29612"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd0e8f035245e1db9809160b89c29612">&#9670;&nbsp;</a></span>getPointsFromPatch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAutilities::getPointsFromPatch </td>
+          <td>(</td>
+          <td class="paramtype">fvMesh &amp;&#160;</td>
+          <td class="paramname"><em>mesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">label&#160;</td>
+          <td class="paramname"><em>ind</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List&lt; vector &gt; &amp;&#160;</td>
+          <td class="paramname"><em>points</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">labelList &amp;&#160;</td>
+          <td class="paramname"><em>indices</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the point coordinates and indices from patch. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">mesh</td><td>The mesh </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ind</td><td>The index of the patch from which you want to extract the points </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">points</td><td>The coordinates of the points on the patch </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">indices</td><td>The indices of the points on the patch </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l01125">1125</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
 <a id="ac777379fd866137dad1a1cd00dfdeab0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac777379fd866137dad1a1cd00dfdeab0">&#9670;&nbsp;</a></span>H1seminorm() <span class="overload">[1/2]</span></h2>
 
@@ -1933,7 +2221,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>H1 seminorm of the volScalarField. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00710">710</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00770">770</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -1970,7 +2258,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>H1 seminorm of the volVectorField. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00718">718</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00778">778</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -2007,7 +2295,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the volScalarField. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00696">696</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00756">756</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -2044,7 +2332,55 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>L2 norm of the volVectorField. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00703">703</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00763">763</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="abded37b1a9cd26725737e7789333bddc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abded37b1a9cd26725737e7789333bddc">&#9670;&nbsp;</a></span>meshNonOrtho()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">volScalarField ITHACAutilities::meshNonOrtho </td>
+          <td>(</td>
+          <td class="paramtype">fvMesh &amp;&#160;</td>
+          <td class="paramname"><em>mesh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">volScalarField &amp;&#160;</td>
+          <td class="paramname"><em>NonOrtho</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a scalarField that containes the non-orthogonality value of a given mesh. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mesh</td><td>The mesh for which you want to compute the non-orthogonality value </td></tr>
+    <tr><td class="paramname">NonOrtho</td><td>The scalarField containing the non-orthogonality</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>NonOrtho The scalarField containing the non-orthogonality </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l01089">1089</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -2107,7 +2443,7 @@ template&lt;typename T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>the matrix </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="08DEIM_8C-example.html#a9">08DEIM.C</a>, and <a class="el" href="09DEIM_ROM_8C-example.html#a60">09DEIM_ROM.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00112">112</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00145">145</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -2155,7 +2491,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the matrix </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00122">122</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00155">155</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -2247,7 +2583,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00224">224</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00284">284</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -2283,7 +2619,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00249">249</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00309">309</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
@@ -2341,7 +2677,116 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a27">02thermalBlock.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00726">726</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l00786">786</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
+
+</div>
+</div>
+<a id="adc1b32f119d7d58a3de844067244480c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc1b32f119d7d58a3de844067244480c">&#9670;&nbsp;</a></span>setIndices2Value() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ITHACAutilities::setIndices2Value </td>
+          <td>(</td>
+          <td class="paramtype">labelList &amp;&#160;</td>
+          <td class="paramname"><em>ind2set</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value2set</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">labelList &amp;&#160;</td>
+          <td class="paramname"><em>movingIDS</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>originalList</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets some given Indices of a list of objects to given values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ind2set</td><td>The indices of the list that you want to assign </td></tr>
+    <tr><td class="paramname">value2set</td><td>The values you want to set </td></tr>
+    <tr><td class="paramname">movingIDS</td><td>The index of the list in the original list that you want to assign </td></tr>
+    <tr><td class="paramname">originalList</td><td>The original list</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of list </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2de6b1ab752f4102c6255d4a8f326067"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2de6b1ab752f4102c6255d4a8f326067">&#9670;&nbsp;</a></span>setIndices2Value() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAutilities::setIndices2Value </td>
+          <td>(</td>
+          <td class="paramtype">labelList &amp;&#160;</td>
+          <td class="paramname"><em>ind2set</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List&lt; vector &gt; &amp;&#160;</td>
+          <td class="paramname"><em>value2set</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">labelList &amp;&#160;</td>
+          <td class="paramname"><em>movingIDS</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List&lt; vector &gt; &amp;&#160;</td>
+          <td class="paramname"><em>originalList</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ITHACAutilities_8C_source.html#l01062">1062</a> of file <a class="el" href="ITHACAutilities_8C_source.html">ITHACAutilities.C</a>.</p>
 
 </div>
 </div>
