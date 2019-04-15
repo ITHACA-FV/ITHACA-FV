@@ -607,3 +607,15 @@ int ITHACAstream::numberOfFiles(word folder, word MatrixName)
     in.close();
     return number_of_files;
 }
+
+void ITHACAstream::writePoints(pointField points, fileName folder,
+                               fileName subfolder)
+{
+    mkDir(folder + "/" + subfolder);
+    ITHACAutilities::createSymLink(folder);
+    fileName fieldname = folder + "/" + subfolder + "/" + "points";
+    OFstream os(fieldname);
+    os << "FoamFile \n { \n version     2.0; \n format      ascii; \n class       vectorField; \n location    ""1 / polyMesh""; \n object      points; \n }"
+       << endl;
+    os << points << endl;
+}

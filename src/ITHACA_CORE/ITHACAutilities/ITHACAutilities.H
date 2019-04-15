@@ -48,6 +48,7 @@ SourceFiles
 #pragma GCC diagnostic pop
 #include <functional>
 #include "./colormod.H"
+#include "polyMeshTools.H"
 
 using namespace std::placeholders;
 
@@ -514,7 +515,7 @@ class ITHACAutilities
         template<typename T>
         static Eigen::MatrixXd get_mass_matrix_Eigen(PtrList<T>& fields);
 
-        ///
+        //--------------------------------------------------------------------------
         /// @brief      Change the boundary condition type for a GeometricField
         ///
         /// @param      field   The field
@@ -524,7 +525,61 @@ class ITHACAutilities
         /// @tparam     type_f  The type of field it can be scalar or vector
         ///
         template<typename type_f>
-        static void changeBCtype(GeometricField<type_f, fvPatchField, volMesh>& field, word BCtype, label BC_ind);
+        static void changeBCtype(GeometricField<type_f, fvPatchField, volMesh>& field,
+                                 word BCtype, label BC_ind);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Get the point coordinates and indices from patch.
+        ///
+        /// @param[in]  mesh     The mesh
+        /// @param[in]  ind      The index of the patch from which you want to extract the points
+        /// @param[out] points   The coordinates of the points on the patch
+        /// @param[out] indices  The indices of the points on the patch
+        ///
+        static void getPointsFromPatch(fvMesh& mesh, label ind, List<vector>& points,
+                                       labelList& indices);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Get position of displaced segment of points given the displacements of the end points
+        ///
+        /// @param[in]  x0    The points of the segment before displacement
+        /// @param[in]  mux1  The x displacement of the 1st end of the segment
+        /// @param[in]  mux2  The x displacement of the 2nd end of the segment
+        /// @param[in]  muy1  The y displacement of the 1st end of the segment
+        /// @param[in]  muy2  The y displacement of the 2nd end of the segment
+        ///
+        /// @return     The points coordinates of the displaced segment
+        ///
+        static List<vector> displacedSegment(List<vector> x0, double mux1, double mux2,
+                                             double muy1, double muy2);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Sets some given Indices of a list of objects to given values
+        ///
+        /// @param      ind2set       The indices of the list that you want to assign
+        /// @param      value2set     The values you want to set
+        /// @param      movingIDS     The index of the list in the original list that you want to assign
+        /// @param      originalList  The original list
+        ///
+        /// @tparam     T             Type of list
+        ///
+        template<typename T>
+        static void setIndices2Value(labelList& ind2set, List<T>& value2set,
+                                     labelList& movingIDS, List<T>& originalList);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Returns a scalarField that containes the non-orthogonality value of a given mesh
+        ///
+        /// @param      mesh      The mesh for which you want to compute the non-orthogonality value
+        /// @param      NonOrtho  The scalarField containing the non-orthogonality
+        ///
+        /// @return     NonOrtho  The scalarField containing the non-orthogonality
+        ///
+        static volScalarField meshNonOrtho(fvMesh& mesh, volScalarField& NonOrtho);
+
+
+
+
 
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -558,10 +613,19 @@ PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
     PtrList<volScalarField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
 template<>
-void ITHACAutilities::changeBCtype(GeometricField<scalar, fvPatchField, volMesh>& field, word BCtype, label BC_ind);
+void ITHACAutilities::changeBCtype(
+    GeometricField<scalar, fvPatchField, volMesh>& field, word BCtype,
+    label BC_ind);
 
 template<>
-void ITHACAutilities::changeBCtype(GeometricField<vector, fvPatchField, volMesh>& field, word BCtype, label BC_ind);
+void ITHACAutilities::changeBCtype(
+    GeometricField<vector, fvPatchField, volMesh>& field, word BCtype,
+    label BC_ind);
+
+template<>
+void ITHACAutilities::setIndices2Value(labelList& ind2set,
+                                       List<vector>& value2set, labelList& movingIDS, List<vector>& originalList);
+
 
 
 #endif

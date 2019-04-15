@@ -74,6 +74,30 @@ class Foam2Eigen
         static void fvMatrix2Eigen(fvMatrix<type_foam_matrix>& foam_matrix, type_A& A,
                                    type_B& b);
 
+        //--------------------------------------------------------------------------
+        /// @brief      Convert a ldu OpenFOAM matrix into a Eigen Matrix A
+        ///
+        /// @param[in]      foam_matrix       The foam matrix can be fvScalarMatrix or fvVectorMatrix
+        /// @param[out]     A                 The matrix or the list of matrices, can be dense or sparse
+        ///
+        /// @tparam         type_foam_matrix  The type of foam matrix can be fvScalarMatrix or fvVectorMatrix
+        /// @tparam         type_A            The type of matrix or the list of matrices, can be dense (Eigen::MatrixXd) or sparse (Eigen::SparseMatrix<double>) or a List of them
+        ///
+        template <class type_foam_matrix, class type_A>
+        static void fvMatrix2EigenM(fvMatrix<type_foam_matrix>& foam_matrix, type_A& A);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Convert a ldu OpenFOAM matrix into a source vector b
+        ///
+        /// @param[in]      foam_matrix       The foam matrix can be fvScalarMatrix or fvVectorMatrix
+        /// @param[out]     b                 The source term vector or the list of source term vectors, always dense
+        ///
+        /// @tparam         type_foam_matrix  The type of foam matrix can be fvScalarMatrix or fvVectorMatrix
+        /// @tparam         type_B            The type source term vector or the list can be Eigen::VectorXd or List<Eigen::VectorXd>
+        ///
+        template <class type_foam_matrix, class type_B>
+        static void fvMatrix2EigenV(fvMatrix<type_foam_matrix>& foam_matrix, type_B& b);
+
 
         //--------------------------------------------------------------------------
         /// @brief      Convert a PtrList of snapshots to Eigen matrix (only internal field)

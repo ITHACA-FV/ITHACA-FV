@@ -1014,17 +1014,126 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
 
 
 template<>
-void ITHACAutilities::changeBCtype(GeometricField<vector, fvPatchField, volMesh>& field, word BCtype,
-                                    label BC_ind)
+void ITHACAutilities::changeBCtype(
+    GeometricField<vector, fvPatchField, volMesh>& field, word BCtype,
+    label BC_ind)
 {
     field.boundaryFieldRef().set(BC_ind, fvPatchField<vector>::New(BCtype,
                                  field.mesh().boundary()[BC_ind], field));
 }
 
 template<>
-void ITHACAutilities::changeBCtype(GeometricField<scalar, fvPatchField, volMesh>& field, word BCtype,
-                                    label BC_ind)
+void ITHACAutilities::changeBCtype(
+    GeometricField<scalar, fvPatchField, volMesh>& field, word BCtype,
+    label BC_ind)
 {
     field.boundaryFieldRef().set(BC_ind, fvPatchField<scalar>::New(BCtype,
                                  field.mesh().boundary()[BC_ind], field));
+}
+
+List<vector> ITHACAutilities::displacedSegment(List<vector> x0, double mux1,
+        double mux2, double muy1, double muy2)
+{
+    vector minimum = min(x0);
+    vector maximum = max(x0);
+    double l = Foam::sqrt(pow(minimum[0] - maximum[0],
+                              2) + pow(minimum[1] - maximum[1], 2));
+    double limin;
+    double limax;
+    List<vector> xdef(x0);
+    List<vector> displ(x0);
+
+    for (int i = 0; i < x0.size(); i++)
+    {
+        limin = Foam::sqrt(pow(x0[i][0] - minimum[0], 2) + pow(x0[i][1] - minimum[1],
+                           2));
+        limax = Foam::sqrt(pow(x0[i][0] - maximum[0], 2) + pow(x0[i][1] - maximum[1],
+                           2));
+        xdef[i][0] = x0[i][0] + mux1 * (1 - limin / l) + mux2 * (1 - limax / l);
+        xdef[i][1] = x0[i][1] + muy1 * (1 - limin / l) + muy2 * (1 - limax / l);
+        xdef[i][2] = x0[i][2];
+    }
+
+    displ = xdef - x0;
+    return displ;
+}
+
+template<>
+void ITHACAutilities::setIndices2Value(labelList& ind2set,
+                                       List<vector>& value2set, labelList& movingIDS, List<vector>& originalList)
+{
+    M_Assert(ind2set.size() == value2set.size(),
+             "The size of the indices must be equal to the size of the values list");
+    M_Assert(originalList.size() >= value2set.size(),
+             "The size of the original list of values must be bigger than the size of the list of values you want to set");
+    labelList ind_ok(ind2set);
+
+    for (int i = 0; i < ind2set.size(); i++)
+    {
+        for (int k = 0; k < movingIDS.size(); k++)
+        {
+            if (ind2set[i] == movingIDS[k])
+            {
+                ind_ok[i] = k;
+                break;
+            }
+        }
+    }
+
+    for (int i = 0; i < ind2set.size(); i++)
+    {
+        originalList[ind_ok[i]] = value2set[i];
+    }
+}
+
+volScalarField ITHACAutilities::meshNonOrtho(fvMesh& mesh,
+        volScalarField& NonOrtho)
+{
+    scalarField sno = (polyMeshTools::faceOrthogonality(mesh, mesh.Sf(), mesh.C()));
+
+    for (int i = 0; i < sno.size(); i++)
+    {
+        sno[i] = Foam::acos(min(1, sno[i])) * 180 / constant::mathematical::pi;
+    }
+
+    surfaceScalarField pippo = mesh.magSf();
+    const fvPatchList& patches = mesh.boundary();
+
+    for (int i = 0; i < pippo.internalField().size(); i++)
+    {
+        pippo.ref()[i] = sno[i];
+    }
+
+    for (int i = 0; i < patches.size(); i++)
+    {
+        if ( patches[i].type() != "empty" )
+        {
+            label start = patches[i].patch().start();
+            label n = patches[i].patch().size();
+
+            for (int k = 0; k < n; k++)
+            {
+                pippo.boundaryFieldRef()[i][k] = sno[start + k];
+            }
+        }
+    }
+
+    NonOrtho = fvc::average(pippo);
+    return NonOrtho;
+}
+
+void ITHACAutilities::getPointsFromPatch(fvMesh& mesh, label ind,
+        List<vector>& points, labelList& indices)
+{
+    pointField meshPoints(mesh.points());
+    const polyPatch& patchFound = mesh.boundaryMesh()[ind];
+    labelList labelPatchFound(patchFound.meshPoints());
+    points.resize(labelPatchFound.size());
+
+    for (int i = 0; i < labelPatchFound.size(); i++)
+    {
+        points[i] = meshPoints[labelPatchFound[i]];
+    }
+
+    indices = labelPatchFound;
 }

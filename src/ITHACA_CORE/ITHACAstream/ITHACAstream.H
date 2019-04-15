@@ -379,6 +379,17 @@ class ITHACAstream
         /// @return     the number of files matching the request
         ///
         static int numberOfFiles(word folder, word MatrixName);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Writes points of a mesh to a file
+        ///
+        /// @param[in]  points     The points you want to write
+        /// @param[in]  folder     The folder where you want to save the file
+        /// @param[in]  subfolder  The subfolder where you want to save the file
+        ///
+        static void writePoints(pointField points, fileName folder, fileName subfolder);
+
+
 };
 
 template<typename T>

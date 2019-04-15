@@ -319,6 +319,25 @@ class ITHACAPOD
                 DEIMmodes(List<Eigen::SparseMatrix<double>>& A, List<Eigen::VectorXd>& b,
                           int nmodesA, int nmodesB, word MatrixName = "Matrix");
 
+
+        //--------------------------------------------------------------------------
+        /// @brief      Gets the modes.
+        ///
+        /// @param      snapshots   The snapshots
+        /// @param      modes       The modes
+        /// @param      Volumes     The volumes
+        /// @param[in]  podex       The podex
+        /// @param[in]  supex       The supex
+        /// @param[in]  sup         The sup
+        /// @param[in]  nmodes      The nmodes
+        ///
+        /// @tparam     Field_type  Type of field
+        ///
+        template<class Field_type>
+        static void getModes(PtrList<Field_type>& snapshots, PtrList<Field_type>& modes,
+                             PtrList<volScalarField>& Volumes, bool podex, bool supex = 0, bool sup = 0,
+                             int nmodes = 0);
+
 };
 
 template<typename type_matrix>
