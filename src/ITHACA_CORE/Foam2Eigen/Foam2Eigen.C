@@ -467,3 +467,216 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector>& foam_matrix,
     }
     A.setFromTriplets(tripletList.begin(), tripletList.end());
 }
+
+template<>
+void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar>& foam_matrix,
+                                 Eigen::MatrixXd& A)
+{
+    int sizeA = foam_matrix.diag().size();
+    A.setZero(sizeA, sizeA);
+
+    for (auto i = 0; i < sizeA; i++)
+    {
+        A(i, i) = foam_matrix.diag()[i];
+    }
+
+    const lduAddressing& addr = foam_matrix.lduAddr();
+    const labelList& lowerAddr = addr.lowerAddr();
+    const labelList& upperAddr = addr.upperAddr();
+    forAll(lowerAddr, i)
+    {
+        A(lowerAddr[i], upperAddr[i]) = foam_matrix.upper()[i];
+        A(upperAddr[i], lowerAddr[i]) = foam_matrix.lower()[i];
+    }
+    forAll(foam_matrix.psi().boundaryField(), I)
+    {
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
+        forAll(ptch, J)
+        {
+            int w = ptch.faceCells()[J];
+            A(w, w) += foam_matrix.internalCoeffs()[I][J];
+        }
+    }
+}
+
+template<>
+void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar>& foam_matrix,
+                                 Eigen::SparseMatrix<double>& A)
+{
+    int sizeA = foam_matrix.diag().size();
+    int nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
+              foam_matrix.lower().size();
+    A.resize(sizeA, sizeA);
+    A.reserve(nel);
+    typedef Eigen::Triplet<double> Trip;
+    std::vector<Trip> tripletList;
+    tripletList.reserve(nel);
+
+    for (auto i = 0; i < sizeA; i++)
+    {
+        tripletList.push_back(Trip(i, i, foam_matrix.diag()[i]));
+    }
+
+    const lduAddressing& addr = foam_matrix.lduAddr();
+    const labelList& lowerAddr = addr.lowerAddr();
+    const labelList& upperAddr = addr.upperAddr();
+    forAll(lowerAddr, i)
+    {
+        tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
+        tripletList.push_back(Trip(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]));
+    }
+    forAll(foam_matrix.psi().boundaryField(), I)
+    {
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
+        forAll(ptch, J)
+        {
+            int w = ptch.faceCells()[J];
+            tripletList.push_back(Trip(w, w, foam_matrix.internalCoeffs()[I][J]));
+        }
+    }
+    A.setFromTriplets(tripletList.begin(), tripletList.end());
+}
+
+template<>
+void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
+                                 Eigen::MatrixXd& A)
+{
+    int sizeA = foam_matrix.diag().size();
+    A.resize(sizeA * 3, sizeA * 3);
+
+    for (auto i = 0; i < sizeA; i++)
+    {
+        A(i, i) = foam_matrix.diag()[i];
+        A(sizeA + i, sizeA + i) = foam_matrix.diag()[i];
+        A(2 * sizeA + i, 2 * sizeA + i) = foam_matrix.diag()[i];
+    }
+
+    const lduAddressing& addr = foam_matrix.lduAddr();
+    const labelList& lowerAddr = addr.lowerAddr();
+    const labelList& upperAddr = addr.upperAddr();
+    forAll(lowerAddr, i)
+    {
+        A(lowerAddr[i], upperAddr[i]) = foam_matrix.upper()[i];
+        A(lowerAddr[i] + sizeA, upperAddr[i] + sizeA) = foam_matrix.upper()[i];
+        A(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2) = foam_matrix.upper()[i];
+        A(upperAddr[i], lowerAddr[i]) = foam_matrix.lower()[i];
+        A(upperAddr[i] + sizeA, lowerAddr[i] + sizeA) = foam_matrix.lower()[i];
+        A(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2) = foam_matrix.lower()[i];
+    }
+    forAll(foam_matrix.psi().boundaryField(), I)
+    {
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
+        forAll(ptch, J)
+        {
+            int w = ptch.faceCells()[J];
+            A(w, w) += foam_matrix.internalCoeffs()[I][J][0];
+            A(w + sizeA, w + sizeA) += foam_matrix.internalCoeffs()[I][J][1];
+            A(w + sizeA * 2, w + sizeA * 2) += foam_matrix.internalCoeffs()[I][J][2];
+        }
+    }
+}
+
+
+template<>
+void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
+                                 Eigen::SparseMatrix<double>& A)
+{
+    int sizeA = foam_matrix.diag().size();
+    int nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
+              foam_matrix.lower().size();
+    A.resize(sizeA * 3, sizeA * 3);
+    A.reserve(nel * 3);
+    typedef Eigen::Triplet<double> Trip;
+    std::vector<Trip> tripletList;
+    tripletList.reserve(nel * 3);
+
+    for (auto i = 0; i < sizeA; i++)
+    {
+        tripletList.push_back(Trip(i, i, foam_matrix.diag()[i]));
+        tripletList.push_back(Trip(sizeA + i, sizeA + i, foam_matrix.diag()[i]));
+        tripletList.push_back(Trip(2 * sizeA + i, 2 * sizeA + i,
+                                   foam_matrix.diag()[i]));
+    }
+
+    const lduAddressing& addr = foam_matrix.lduAddr();
+    const labelList& lowerAddr = addr.lowerAddr();
+    const labelList& upperAddr = addr.upperAddr();
+    forAll(lowerAddr, i)
+    {
+        tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
+        tripletList.push_back(Trip(lowerAddr[i] + sizeA, upperAddr[i] + sizeA,
+                                   foam_matrix.upper()[i]));
+        tripletList.push_back(Trip(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2,
+                                   foam_matrix.upper()[i]));
+        tripletList.push_back(Trip(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]));
+        tripletList.push_back(Trip(upperAddr[i] + sizeA, lowerAddr[i] + sizeA,
+                                   foam_matrix.lower()[i]));
+        tripletList.push_back(Trip(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2,
+                                   foam_matrix.lower()[i]));
+    }
+    forAll(foam_matrix.psi().boundaryField(), I)
+    {
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
+        forAll(ptch, J)
+        {
+            int w = ptch.faceCells()[J];
+            tripletList.push_back(Trip(w, w, foam_matrix.internalCoeffs()[I][J][0]));
+            tripletList.push_back(Trip(w + sizeA, w + sizeA,
+                                       foam_matrix.internalCoeffs()[I][J][1]));
+            tripletList.push_back(Trip(w + sizeA * 2, w + sizeA * 2,
+                                       foam_matrix.internalCoeffs()[I][J][2]));
+        }
+    }
+    A.setFromTriplets(tripletList.begin(), tripletList.end());
+}
+
+template<>
+void Foam2Eigen::fvMatrix2EigenV(fvMatrix<scalar>& foam_matrix,
+                                 Eigen::VectorXd& b)
+{
+    int sizeA = foam_matrix.diag().size();
+    b.setZero(sizeA);
+
+    for (auto i = 0; i < sizeA; i++)
+    {
+        b(i, 0) = foam_matrix.source()[i];
+    }
+
+    forAll(foam_matrix.psi().boundaryField(), I)
+    {
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
+        forAll(ptch, J)
+        {
+            int w = ptch.faceCells()[J];
+            b(w, 0)   += foam_matrix.boundaryCoeffs()[I][J];
+        }
+    }
+}
+
+template<>
+void Foam2Eigen::fvMatrix2EigenV(fvMatrix<vector>& foam_matrix,
+                                 Eigen::VectorXd& b)
+{
+    int sizeA = foam_matrix.diag().size();
+    b.resize(sizeA * 3);
+
+    for (auto i = 0; i < sizeA; i++)
+    {
+        b(i) = foam_matrix.source()[i][0];
+        b(sizeA + i) = foam_matrix.source()[i][1];
+        b(2 * sizeA + i) = foam_matrix.source()[i][2];
+    }
+
+    forAll(foam_matrix.psi().boundaryField(), I)
+    {
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
+        forAll(ptch, J)
+        {
+            int w = ptch.faceCells()[J];
+            b(w)   += foam_matrix.boundaryCoeffs()[I][J][0];
+            b(w + sizeA)   += foam_matrix.boundaryCoeffs()[I][J][1];
+            b(w + sizeA * 2)   += foam_matrix.boundaryCoeffs()[I][J][2];
+        }
+    }
+}
+

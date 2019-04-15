@@ -1,0 +1,11 @@
+RBFInterpolation.C
+RBFMotionSolver.C
+RBFFunctions/RBFFunction/RBFFunction.C
+RBFFunctions/RBFFunction/newRBFFunction.C
+RBFFunctions/W2/W2.C
+RBFFunctions/Gauss/Gauss.C
+RBFFunctions/TPS/TPS.C
+RBFFunctions/IMQB/IMQB.C
+
+
+LIB = $(FOAM_USER_LIBBIN)/libRBFMotionSolver
