@@ -44,5 +44,11 @@ _phi = autoPtr<surfaceScalarField>
            )
        );
 surfaceScalarField& phi = _phi();
+surfaceScalarField phi0(phi);
+
+_phi0 = autoPtr<surfaceScalarField>
+(
+  new surfaceScalarField(phi0)
+  );
 
 #endif
