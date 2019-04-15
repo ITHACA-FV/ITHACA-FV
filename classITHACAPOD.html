@@ -73,6 +73,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classITHACAPOD-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -85,6 +86,12 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="ITHACAPOD_8H_source.html">ITHACAPOD.H</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:af7cb319bc9e269d589111b0885b80f94"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
+<tr class="memitem:af7cb319bc9e269d589111b0885b80f94"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#af7cb319bc9e269d589111b0885b80f94">getModes</a> (PtrList&lt; volScalarField &gt; &amp;snapshots, PtrList&lt; volScalarField &gt; &amp;modes, PtrList&lt; volScalarField &gt; &amp;Volumes, bool podex, bool supex, bool sup, int nmodes)</td></tr>
+<tr class="separator:af7cb319bc9e269d589111b0885b80f94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ac830f7886bcdeb77b25b7043e8b191f2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#ac830f7886bcdeb77b25b7043e8b191f2">getModes</a> (PtrList&lt; volVectorField &gt; &amp;snapshotsU, PtrList&lt; volVectorField &gt; &amp;modes, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
@@ -158,6 +165,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:abf69b9e6587aa1fa08c896c1f5948bbf"><td class="memItemLeft" align="right" valign="top">static std::tuple&lt; List&lt; Eigen::SparseMatrix&lt; double &gt; &gt;, List&lt; Eigen::VectorXd &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#abf69b9e6587aa1fa08c896c1f5948bbf">DEIMmodes</a> (List&lt; Eigen::SparseMatrix&lt; double &gt;&gt; &amp;A, List&lt; Eigen::VectorXd &gt; &amp;b, int nmodesA, int nmodesB, word MatrixName=&quot;Matrix&quot;)</td></tr>
 <tr class="memdesc:abf69b9e6587aa1fa08c896c1f5948bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classDEIM.html">DEIM</a> modes for a generic non a parametrized matrix coming from a differential operator function.  <a href="#abf69b9e6587aa1fa08c896c1f5948bbf">More...</a><br /></td></tr>
 <tr class="separator:abf69b9e6587aa1fa08c896c1f5948bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a600f6a458934a11eeca2d9cb126c182b"><td class="memTemplParams" colspan="2">template&lt;class Field_type &gt; </td></tr>
+<tr class="memitem:a600f6a458934a11eeca2d9cb126c182b"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a600f6a458934a11eeca2d9cb126c182b">getModes</a> (PtrList&lt; Field_type &gt; &amp;snapshots, PtrList&lt; Field_type &gt; &amp;modes, PtrList&lt; volScalarField &gt; &amp;Volumes, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
+<tr class="memdesc:a600f6a458934a11eeca2d9cb126c182b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the modes.  <a href="#a600f6a458934a11eeca2d9cb126c182b">More...</a><br /></td></tr>
+<tr class="separator:a600f6a458934a11eeca2d9cb126c182b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Class of the computation of the POD, it exploits the method of snapshots. </p>
@@ -198,7 +209,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the Eigen::MatrixXd correlation matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00871">871</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00958">958</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -236,7 +247,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the Eigen::MatrixXd correlation matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00841">841</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00928">928</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -274,7 +285,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the Eigen::MatrixXd correlation matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00900">900</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00987">987</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -312,7 +323,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the Eigen::MatrixXd correlation matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00936">936</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01023">1023</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -373,7 +384,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>T the POD modes </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8H_source.html#l00477">477</a> of file <a class="el" href="ITHACAPOD_8H_source.html">ITHACAPOD.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8H_source.html#l00496">496</a> of file <a class="el" href="ITHACAPOD_8H_source.html">ITHACAPOD.H</a>.</p>
 
 </div>
 </div>
@@ -442,7 +453,7 @@ template&lt;typename type_matrix &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>it returns a tuple containing the list of modes for the matrix and the list of modes for the source term </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8H_source.html#l00326">326</a> of file <a class="el" href="ITHACAPOD_8H_source.html">ITHACAPOD.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8H_source.html#l00345">345</a> of file <a class="el" href="ITHACAPOD_8H_source.html">ITHACAPOD.H</a>.</p>
 
 </div>
 </div>
@@ -515,7 +526,7 @@ template&lt;typename type_matrix &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>it returns a tuple containing the list of modes for the matrix and the list of modes for the source term </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01093">1093</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01180">1180</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -570,7 +581,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00967">967</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01054">1054</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -625,7 +636,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01001">1001</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01088">1088</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -679,7 +690,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01062">1062</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01149">1149</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -733,12 +744,12 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01033">1033</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01120">1120</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
 <a id="ac830f7886bcdeb77b25b7043e8b191f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac830f7886bcdeb77b25b7043e8b191f2">&#9670;&nbsp;</a></span>getModes() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac830f7886bcdeb77b25b7043e8b191f2">&#9670;&nbsp;</a></span>getModes() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -807,14 +818,14 @@ template&lt;typename type_matrix &gt; </div>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a28">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a20">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a23">04unsteadyNS.C</a>, <a class="el" href="09DEIM_ROM_8C-example.html#a61">09DEIM_ROM.C</a>, <a class="el" href="10unsteadyBB_enclosed_8C-example.html#a48">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a59">11unsteadyBB_open.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a28">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a23">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a23">04unsteadyNS.C</a>, <a class="el" href="09DEIM_ROM_8C-example.html#a61">09DEIM_ROM.C</a>, <a class="el" href="10unsteadyBB_enclosed_8C-example.html#a48">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a59">11unsteadyBB_open.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00118">118</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
 <a id="a7e857345ca99e44e93c362b5f1f92466"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e857345ca99e44e93c362b5f1f92466">&#9670;&nbsp;</a></span>getModes() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e857345ca99e44e93c362b5f1f92466">&#9670;&nbsp;</a></span>getModes() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -884,7 +895,157 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00257">257</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00266">266</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+
+</div>
+</div>
+<a id="a600f6a458934a11eeca2d9cb126c182b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a600f6a458934a11eeca2d9cb126c182b">&#9670;&nbsp;</a></span>getModes() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Field_type &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ITHACAPOD::getModes </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; Field_type &gt; &amp;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; Field_type &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Volumes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>podex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>supex</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sup</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nmodes</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the modes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">snapshots</td><td>The snapshots </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">modes</td><td>The modes </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">Volumes</td><td>The volumes </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">podex</td><td>The podex </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">supex</td><td>The supex </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sup</td><td>The sup </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">nmodes</td><td>The nmodes</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Field_type</td><td>Type of field </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af7cb319bc9e269d589111b0885b80f94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7cb319bc9e269d589111b0885b80f94">&#9670;&nbsp;</a></span>getModes() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void ITHACAPOD::getModes </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>modes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Volumes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>podex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>supex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sup</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nmodes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01398">1398</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -959,7 +1120,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00717">717</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00793">793</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -1034,7 +1195,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00648">648</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00713">713</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -1233,7 +1394,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00395">395</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00438">438</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -1307,7 +1468,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00523">523</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00577">577</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -1343,7 +1504,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01289">1289</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l01376">1376</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -1379,7 +1540,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00803">803</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00890">890</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -1416,7 +1577,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00786">786</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00873">873</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>
@@ -1464,7 +1625,7 @@ template&lt;typename type_matrix &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00821">821</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAPOD_8C_source.html#l00908">908</a> of file <a class="el" href="ITHACAPOD_8C_source.html">ITHACAPOD.C</a>.</p>
 
 </div>
 </div>

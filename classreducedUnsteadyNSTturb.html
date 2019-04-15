@@ -189,12 +189,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae576badd6fdb3f709ade763c14ab91bc inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79b1c72b00b2f29e48f1bf2dec4d35cd inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a79b1c72b00b2f29e48f1bf2dec4d35cd">~reducedProblem</a> ()</td></tr>
 <tr class="separator:a79b1c72b00b2f29e48f1bf2dec4d35cd inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ae33639221dfc9914d8955f88f9aacd inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a2ae33639221dfc9914d8955f88f9aacd">reducedProblem</a> (<a class="el" href="classreductionProblem.html">reductionProblem</a> &amp;problem)</td></tr>
+<tr class="memitem:a2ae33639221dfc9914d8955f88f9aacd inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a2ae33639221dfc9914d8955f88f9aacd">reducedProblem</a> (<a class="el" href="classreductionProblem.html">reductionProblem</a> &amp;<a class="el" href="classreducedProblem.html#a60044a44e54d69bd457204917a78d917">problem</a>)</td></tr>
 <tr class="memdesc:a2ae33639221dfc9914d8955f88f9aacd inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct with reduced Problem.  <a href="classreducedProblem.html#a2ae33639221dfc9914d8955f88f9aacd">More...</a><br /></td></tr>
 <tr class="separator:a2ae33639221dfc9914d8955f88f9aacd inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a2bf35778f70fe3541990026bc6403a56">solveOnline</a> ()</td></tr>
 <tr class="memdesc:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual Method to perform and online Solve.  <a href="classreducedProblem.html#a2bf35778f70fe3541990026bc6403a56">More...</a><br /></td></tr>
 <tr class="separator:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">solveLinearSys</a> (List&lt; Eigen::MatrixXd &gt; LinSys, Eigen::MatrixXd x, Eigen::VectorXd &amp;<a class="el" href="steadyNSturb_2NLsolve_8H.html#af4cd48a0192c75c3d6f1bbe7557cc02c">residual</a>, const Eigen::MatrixXd &amp;bc=Eigen::MatrixXd::Zero(0, 0), const std::string solverType=&quot;fullPivLu&quot;)</td></tr>
+<tr class="memdesc:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linear system solver for the online problem.  <a href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">More...</a><br /></td></tr>
+<tr class="separator:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -406,6 +409,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a65ad23828d68db181985589b65d3c436">nu</a></td></tr>
 <tr class="memdesc:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Viscosity.  <a href="classreducedProblem.html#a65ad23828d68db181985589b65d3c436">More...</a><br /></td></tr>
 <tr class="separator:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60044a44e54d69bd457204917a78d917 inherit pub_attribs_classreducedProblem"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreductionProblem.html">reductionProblem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a60044a44e54d69bd457204917a78d917">problem</a></td></tr>
+<tr class="memdesc:a60044a44e54d69bd457204917a78d917 inherit pub_attribs_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to FOAM problem.  <a href="classreducedProblem.html#a60044a44e54d69bd457204917a78d917">More...</a><br /></td></tr>
+<tr class="separator:a60044a44e54d69bd457204917a78d917 inherit pub_attribs_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes weakly coupled with the energy equation </b> problem. </p>
@@ -535,7 +541,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNSTturb_8C_source.html#l00395">395</a> of file <a class="el" href="reducedUnsteadyNSTturb_8C_source.html">reducedUnsteadyNSTturb.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNSTturb_8C_source.html#l00400">400</a> of file <a class="el" href="reducedUnsteadyNSTturb_8C_source.html">reducedUnsteadyNSTturb.C</a>.</p>
 
 </div>
 </div>
@@ -575,7 +581,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNSTturb_8C_source.html#l00436">436</a> of file <a class="el" href="reducedUnsteadyNSTturb_8C_source.html">reducedUnsteadyNSTturb.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNSTturb_8C_source.html#l00441">441</a> of file <a class="el" href="reducedUnsteadyNSTturb_8C_source.html">reducedUnsteadyNSTturb.C</a>.</p>
 
 </div>
 </div>

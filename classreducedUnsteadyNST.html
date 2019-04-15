@@ -171,12 +171,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae576badd6fdb3f709ade763c14ab91bc inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79b1c72b00b2f29e48f1bf2dec4d35cd inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a79b1c72b00b2f29e48f1bf2dec4d35cd">~reducedProblem</a> ()</td></tr>
 <tr class="separator:a79b1c72b00b2f29e48f1bf2dec4d35cd inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ae33639221dfc9914d8955f88f9aacd inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a2ae33639221dfc9914d8955f88f9aacd">reducedProblem</a> (<a class="el" href="classreductionProblem.html">reductionProblem</a> &amp;problem)</td></tr>
+<tr class="memitem:a2ae33639221dfc9914d8955f88f9aacd inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a2ae33639221dfc9914d8955f88f9aacd">reducedProblem</a> (<a class="el" href="classreductionProblem.html">reductionProblem</a> &amp;<a class="el" href="classreducedProblem.html#a60044a44e54d69bd457204917a78d917">problem</a>)</td></tr>
 <tr class="memdesc:a2ae33639221dfc9914d8955f88f9aacd inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct with reduced Problem.  <a href="classreducedProblem.html#a2ae33639221dfc9914d8955f88f9aacd">More...</a><br /></td></tr>
 <tr class="separator:a2ae33639221dfc9914d8955f88f9aacd inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a2bf35778f70fe3541990026bc6403a56">solveOnline</a> ()</td></tr>
 <tr class="memdesc:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual Method to perform and online Solve.  <a href="classreducedProblem.html#a2bf35778f70fe3541990026bc6403a56">More...</a><br /></td></tr>
 <tr class="separator:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">solveLinearSys</a> (List&lt; Eigen::MatrixXd &gt; LinSys, Eigen::MatrixXd x, Eigen::VectorXd &amp;<a class="el" href="steadyNSturb_2NLsolve_8H.html#af4cd48a0192c75c3d6f1bbe7557cc02c">residual</a>, const Eigen::MatrixXd &amp;bc=Eigen::MatrixXd::Zero(0, 0), const std::string solverType=&quot;fullPivLu&quot;)</td></tr>
+<tr class="memdesc:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linear system solver for the online problem.  <a href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">More...</a><br /></td></tr>
+<tr class="separator:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -348,12 +351,15 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a65ad23828d68db181985589b65d3c436">nu</a></td></tr>
 <tr class="memdesc:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Viscosity.  <a href="classreducedProblem.html#a65ad23828d68db181985589b65d3c436">More...</a><br /></td></tr>
 <tr class="separator:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60044a44e54d69bd457204917a78d917 inherit pub_attribs_classreducedProblem"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classreductionProblem.html">reductionProblem</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a60044a44e54d69bd457204917a78d917">problem</a></td></tr>
+<tr class="memdesc:a60044a44e54d69bd457204917a78d917 inherit pub_attribs_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to FOAM problem.  <a href="classreducedProblem.html#a60044a44e54d69bd457204917a78d917">More...</a><br /></td></tr>
+<tr class="separator:a60044a44e54d69bd457204917a78d917 inherit pub_attribs_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes weakly coupled with the energy equation </b> problem. </p>
 <p class="">In this class are implemented the methods to solve a reduced version of the non-stationary Navier-stokes and energy equations. This class must be used together with the <a class="el" href="classunsteadyNST.html" title="Implementation of a parametrized full order  unsteady NS problem weakly coupled with the energy equat...">unsteadyNST</a> class </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00104">104</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00106">106</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a505c3ea93ea0ed2a0bb6e3a87993a4d2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a505c3ea93ea0ed2a0bb6e3a87993a4d2">&#9670;&nbsp;</a></span>reducedUnsteadyNST() <span class="overload">[1/2]</span></h2>
@@ -436,7 +442,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00119">119</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00121">121</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -582,7 +588,7 @@ Public Attributes</h2></td></tr>
 
 <p>Diffusion Term. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00119">119</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00121">121</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -600,7 +606,7 @@ Public Attributes</h2></td></tr>
 
 <p>Convective Term. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00140">140</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00142">142</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -618,7 +624,7 @@ Public Attributes</h2></td></tr>
 
 <p>Laplacian of pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00149">149</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00151">151</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -636,7 +642,7 @@ Public Attributes</h2></td></tr>
 
 <p>Scalar to store the time increment. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00185">185</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00187">187</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -654,7 +660,7 @@ Public Attributes</h2></td></tr>
 
 <p>DT. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00194">194</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00196">196</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -672,7 +678,7 @@ Public Attributes</h2></td></tr>
 
 <p>Scalar to store the final time if the online simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00197">197</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00199">199</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -690,7 +696,7 @@ Public Attributes</h2></td></tr>
 
 <p>Divergence of momentum. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00152">152</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00154">154</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -708,7 +714,7 @@ Public Attributes</h2></td></tr>
 
 <p>Gradient of pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00134">134</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00136">136</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -726,7 +732,7 @@ Public Attributes</h2></td></tr>
 
 <p>Mass Matrix Term. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00131">131</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00133">133</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -744,7 +750,7 @@ Public Attributes</h2></td></tr>
 
 <p>Mass Matrix Term for temperature. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00128">128</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00130">130</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -762,7 +768,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of parametrized boundary conditions related to temperature field. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00179">179</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00181">181</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -780,7 +786,7 @@ Public Attributes</h2></td></tr>
 
 <p>Functor object to call the non linear solver sup. approach for velocity case. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00164">164</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00166">166</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -798,7 +804,7 @@ Public Attributes</h2></td></tr>
 
 <p>Functor object to call the non linear solver sup. approach for temperature case. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00167">167</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00169">169</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -816,7 +822,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of temperature modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00173">173</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00175">175</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -834,7 +840,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of <a class="el" href="namespaceEigen.html">Eigen</a> matrices to store the online solution for temperature equation. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00155">155</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00157">157</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -852,7 +858,7 @@ Public Attributes</h2></td></tr>
 
 <p>Divergence of velocity. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00146">146</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00148">148</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -870,7 +876,7 @@ Public Attributes</h2></td></tr>
 
 <p>pointer to the FOM problem </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00203">203</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00205">205</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -888,7 +894,7 @@ Public Attributes</h2></td></tr>
 
 <p>Convective Term for temperature transport equation. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00143">143</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00145">145</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -906,7 +912,7 @@ Public Attributes</h2></td></tr>
 
 <p>Turbulent thermal term. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00137">137</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00139">139</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -924,7 +930,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reconstructed temperature field. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00170">170</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00172">172</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -942,7 +948,7 @@ Public Attributes</h2></td></tr>
 
 <p>Scalar to store the current time. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00182">182</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00184">184</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -960,7 +966,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the modes for temperature. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00158">158</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00160">160</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -978,7 +984,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reconstructed temperature field. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00176">176</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00178">178</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -996,7 +1002,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the snapshots for temperature. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00161">161</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00163">163</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1014,7 +1020,7 @@ Public Attributes</h2></td></tr>
 
 <p>Scalar to store the final time if the online simulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00200">200</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00202">202</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1032,7 +1038,7 @@ Public Attributes</h2></td></tr>
 
 <p>Laplacian Term for temperature trasnport equation. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00125">125</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00127">127</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1050,7 +1056,7 @@ Public Attributes</h2></td></tr>
 
 <p>Vector to store the temperature solution during the Newton procedure. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00191">191</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00193">193</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>
@@ -1068,7 +1074,7 @@ Public Attributes</h2></td></tr>
 
 <p>Vector to store the previous temperature solution during the Newton procedure. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00188">188</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNST_8H_source.html#l00190">190</a> of file <a class="el" href="reducedUnsteadyNST_8H_source.html">reducedUnsteadyNST.H</a>.</p>
 
 </div>
 </div>

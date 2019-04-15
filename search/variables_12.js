@@ -7,12 +7,12 @@ var searchData=
   ['snapshotsmatrix',['SnapShotsMatrix',['../classDEIM.html#a773f34cbd0ae0f776ed166a93d504f9b',1,'DEIM']]],
   ['source',['source',['../classDEIM.html#aaa49d9b41f47151d5daa740ab4ee63b9',1,'DEIM::source()'],['../classlaplacianProblem.html#abe844ac55089584af4cb7aed7792f019',1,'laplacianProblem::source()']]],
   ['splines',['SPLINES',['../structnewton__steadyNSturb.html#ac05b93ea7515f80dc285ad390aa810ab',1,'newton_steadyNSturb::SPLINES()'],['../structnewton__unsteadyNSTturb__sup.html#ac7a05ceb3638b1ca81df340a1d87e85b',1,'newton_unsteadyNSTturb_sup::SPLINES()'],['../structnewton__unsteadyNSTturb__sup__t.html#a62f15a160e79b8ad5d0fa287deb8f11b',1,'newton_unsteadyNSTturb_sup_t::SPLINES()'],['../structnewton__unsteadyNSturb__sup.html#a354b9730386cf240a2f1f352f9c2f96f',1,'newton_unsteadyNSturb_sup::SPLINES()'],['../structnewton__unsteadyNSturb__PPE.html#a661a2b815c9a42829e73595dffc65848',1,'newton_unsteadyNSturb_PPE::SPLINES()']]],
-  ['startfaces',['startFaces',['../classITHACAparallel.html#ada3014bd15bec982bc83dd971703d004',1,'ITHACAparallel']]],
+  ['start',['Start',['../classITHACAparallel.html#a019a8143f74fe3ca75ca05d8ded82de5',1,'ITHACAparallel']]],
   ['starttime',['startTime',['../classunsteadyNS.html#a963e77fca351cbb998d95845532c84fd',1,'unsteadyNS::startTime()'],['../classunsteadyNST.html#ab5bc0a743c8e87b29c11d36e55bb8e6f',1,'unsteadyNST::startTime()']]],
   ['submeshlist',['submeshList',['../classDEIM.html#a97e6c443cadc79621915a1cb35bb8a13',1,'DEIM']]],
   ['submeshlista',['submeshListA',['../classDEIM.html#a0afb8050d1112895c12145df33b297cd',1,'DEIM']]],
   ['submeshlistb',['submeshListB',['../classDEIM.html#a84098aaadfa42aa8df93d3aeed96be86',1,'DEIM']]],
   ['supex',['supex',['../classsteadyNS.html#a1bf99fedc2b7bffafb5dcdc1d9566596',1,'steadyNS']]],
   ['supfield',['supfield',['../classsteadyNS.html#abf270832efeb641ba8d663a8c7c21941',1,'steadyNS']]],
-  ['supmodes',['supmodes',['../classsteadyNS.html#a0ba463d3ccb68f74c564c60986751f25',1,'steadyNS']]]
+  ['supmodes',['supmodes',['../classsteadyNS.html#afb0a9b5560ddac76b7eb9dab4a78b861',1,'steadyNS']]]
 ];

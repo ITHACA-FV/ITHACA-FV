@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['modifier',['Modifier',['../classColor_1_1Modifier.html',1,'Color']]]
+  ['laplacianproblem',['laplacianProblem',['../classlaplacianProblem.html',1,'']]]
 ];

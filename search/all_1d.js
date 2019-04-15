@@ -1,10 +1,16 @@
 var searchData=
 [
-  ['_7eithacaforces',['~ITHACAforces',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a61b9f6a60429af707c7bd3df19b508bb',1,'Foam::functionObjects::ITHACAforces']]],
+  ['_7egauss',['~Gauss',['../classFoam_1_1Gauss.html#af50d97b1db78135c80051ad2ab4209a9',1,'Foam::Gauss']]],
+  ['_7eimqb',['~IMQB',['../classFoam_1_1IMQB.html#a4c0bb1fe0e3e83e8104c5b2f627783ab',1,'Foam::IMQB']]],
+  ['_7eithacaforces',['~ITHACAforces',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a61b9f6a60429af707c7bd3df19b508bb',1,'Foam::functionObjects::ITHACAforces::~ITHACAforces()'],['../classFoam_1_1functionObjects_1_1ITHACAforces.html#aadc3c0f0cfeaba8cfc2181495eb52075',1,'Foam::functionObjects::ITHACAforces::~ITHACAforces()']]],
   ['_7elaplacianproblem',['~laplacianProblem',['../classlaplacianProblem.html#af1bbd12a09614c6b6d93b6d323aedfcf',1,'laplacianProblem']]],
   ['_7eonlineinterp',['~onlineInterp',['../classonlineInterp.html#af14db7384931b43cebf3db221881eff6',1,'onlineInterp']]],
+  ['_7erbffunction',['~RBFFunction',['../classFoam_1_1RBFFunction.html#a71104361f233e864a2248356baa11025',1,'Foam::RBFFunction']]],
+  ['_7erbfinterpolation',['~RBFInterpolation',['../classFoam_1_1RBFInterpolation.html#ab13740fd0d0eb43022786c3e5f877ad2',1,'Foam::RBFInterpolation']]],
+  ['_7erbfmotionsolver',['~RBFMotionSolver',['../classFoam_1_1RBFMotionSolver.html#a451ae80bfe5fab44e3db6b74f1a14a45',1,'Foam::RBFMotionSolver']]],
   ['_7ereducedlaplacian',['~reducedLaplacian',['../classreducedLaplacian.html#af596ece7e7e9084cecb9ade1713fe850',1,'reducedLaplacian']]],
   ['_7ereducedproblem',['~reducedProblem',['../classreducedProblem.html#a79b1c72b00b2f29e48f1bf2dec4d35cd',1,'reducedProblem']]],
+  ['_7ereducedsimplesteadyns',['~reducedSimpleSteadyNS',['../classreducedSimpleSteadyNS.html#aff461b9165a522e60fd8f209186b90de',1,'reducedSimpleSteadyNS']]],
   ['_7ereducedsteadyns',['~reducedSteadyNS',['../classreducedSteadyNS.html#af1ce98fbe4b40644427676bb2ce6342a',1,'reducedSteadyNS']]],
   ['_7ereducedsteadynsturb',['~reducedSteadyNSturb',['../classreducedSteadyNSturb.html#a15686707445c988bc44881a784d026b9',1,'reducedSteadyNSturb']]],
   ['_7ereducedunsteadybb',['~reducedUnsteadyBB',['../classreducedUnsteadyBB.html#aebf781e102f63456120809fd447eca6a',1,'reducedUnsteadyBB']]],
@@ -14,7 +20,10 @@ var searchData=
   ['_7ereducedunsteadynsturb',['~reducedUnsteadyNSturb',['../classreducedUnsteadyNSturb.html#aa44ea7eaed41f607467e09ce191293bd',1,'reducedUnsteadyNSturb']]],
   ['_7ereductionproblem',['~reductionProblem',['../classreductionProblem.html#aa77fd72def423bc06a6c973e02398a1b',1,'reductionProblem']]],
   ['_7esteadyns',['~steadyNS',['../classsteadyNS.html#a47b6767ff18b45c1573483b7f28dec51',1,'steadyNS']]],
+  ['_7esteadyns_5fsimple',['~steadyNS_simple',['../classsteadyNS__simple.html#a64d5ac3211eb8053e24bedf30ce9ca02',1,'steadyNS_simple']]],
+  ['_7etps',['~TPS',['../classFoam_1_1TPS.html#a495ea19d04eebf86e8b104900efe606e',1,'Foam::TPS']]],
   ['_7eunsteadybb',['~unsteadyBB',['../classunsteadyBB.html#acbb3ef6e7e6fadfad66e7923b9b106a3',1,'unsteadyBB']]],
   ['_7eunsteadynst',['~unsteadyNST',['../classunsteadyNST.html#a6adaaec15747879c74eb7febce768199',1,'unsteadyNST']]],
-  ['_7eunsteadynstturb',['~unsteadyNSTturb',['../classunsteadyNSTturb.html#aedf9cff2fba61f017f33208296cfba75',1,'unsteadyNSTturb']]]
+  ['_7eunsteadynstturb',['~unsteadyNSTturb',['../classunsteadyNSTturb.html#aedf9cff2fba61f017f33208296cfba75',1,'unsteadyNSTturb']]],
+  ['_7ew2',['~W2',['../classFoam_1_1W2.html#a0c684a38b2eda1172b0e994660d06cf4',1,'Foam::W2']]]
 ];

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['new',['New',['../classFoam_1_1RBFFunction.html#a652e52dd18281777e2559d73552615e7',1,'Foam::RBFFunction']]],
   ['newton_5fargument',['newton_argument',['../classnewton__argument.html#a616520ba2ba2af46a866c3ab43baedf1',1,'newton_argument::newton_argument()'],['../classnewton__argument.html#a5be721811badc629f08c1467b1216c6a',1,'newton_argument::newton_argument(int inputs, int values)']]],
   ['newton_5fsteadyns',['newton_steadyNS',['../structnewton__steadyNS.html#abff450aca8d8825219e5be19069ecc1c',1,'newton_steadyNS::newton_steadyNS()'],['../structnewton__steadyNS.html#ad952b9e877ae4baf243785acb8e897be',1,'newton_steadyNS::newton_steadyNS(int Nx, int Ny, steadyNS &amp;problem)']]],
   ['newton_5fsteadynsturb',['newton_steadyNSturb',['../structnewton__steadyNSturb.html#a460439999e4651e6a3d72aa71cbd6aab',1,'newton_steadyNSturb::newton_steadyNSturb()'],['../structnewton__steadyNSturb.html#a6ca7494591b2f142fa889c844b2ec1c6',1,'newton_steadyNSturb::newton_steadyNSturb(int Nx, int Ny, steadyNSturb &amp;problem)']]],
