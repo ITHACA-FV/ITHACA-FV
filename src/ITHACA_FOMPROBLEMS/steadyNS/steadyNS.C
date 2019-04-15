@@ -1033,6 +1033,12 @@ void steadyNS::restart()
     volScalarField& p0 = _p0();
     volVectorField& U = _U();
     volVectorField& U0 = _U0();
+    surfaceScalarField& phi = _phi();
+    surfaceScalarField& phi0 = _phi0();
     p = p0;
     U = U0;
+    phi = phi0;
+    turbulence.reset(
+                 incompressible::turbulenceModel::New(U, phi, _laminarTransport())
+             );
 }

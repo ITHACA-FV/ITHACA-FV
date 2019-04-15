@@ -183,10 +183,10 @@ class steadyNS: public reductionProblem
         /// Velocity field
         autoPtr<volVectorField> _U;
 
-        /// Pressure field
+        /// Initial Pressure field (for restart purposes)
         autoPtr<volScalarField> _p0;
 
-        /// Velocity field
+        /// Initial Velocity field (for restart purposes)
         autoPtr<volVectorField> _U0;
 
 
@@ -204,6 +204,9 @@ class steadyNS: public reductionProblem
 
         /// Flux
         autoPtr<surfaceScalarField> _phi;
+
+        /// Initial Flux (for restart purposes)
+        autoPtr<surfaceScalarField> _phi0;
 
         /// Turbulence model
         autoPtr<incompressible::turbulenceModel> turbulence;
