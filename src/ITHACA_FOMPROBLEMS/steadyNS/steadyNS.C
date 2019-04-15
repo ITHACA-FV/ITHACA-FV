@@ -704,10 +704,12 @@ Eigen::MatrixXd steadyNS::mass_term(label NUmodes, label NPmodes,
     {
         reduce(M_matrix, sumOp<Eigen::MatrixXd>());
     }
+ 
+   Eigen::MatrixXd M_matrix2 = (0.5*(M_matrix+M_matrix.transpose()));
 
     ITHACAstream::SaveDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/",
                                   "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
-    return M_matrix;
+    return M_matrix2;
 }
 
 // * * * * * * * * * * * * * * Continuity Eq. Methods * * * * * * * * * * * * * //

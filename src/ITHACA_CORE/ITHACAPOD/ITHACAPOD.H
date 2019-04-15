@@ -77,6 +77,20 @@ class ITHACAPOD
         static void getModes(PtrList<volVectorField>& snapshotsU,
                              PtrList<volVectorField>& modes, bool podex, bool supex = 0, bool sup = 0,
                              int nmodes = 0);
+      //--------------------------------------------------------------------------
+        /// Compute the bases or read them for a scalar field
+        ///
+        /// @param[in]  snapshotsP  a PtrList of volScalarField snapshots.
+        /// @param[out] modesP      a PtrList of volScalarField where the modes are stored (it must be passed empty).
+        /// @param[in]  podex       boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
+        /// @param[in]  supex       boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
+        /// @param[in]  sup         boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
+        /// @param[in]  nmodes      int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
+        ///
+        static void getModes_sym(PtrList<volScalarField>& snapshotsP,
+                             PtrList<volScalarField>& modes, PtrList<volScalarField>& modesSym,
+				PtrList<volScalarField>& modesAntiSym, bool podex, bool supex = 0, bool sup = 0,
+                             int nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// Compute the bases or read them for a scalar field
