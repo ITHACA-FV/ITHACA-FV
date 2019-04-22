@@ -6,7 +6,7 @@ cd src
 for d in ./*/ ; do   
     echo $d    
     cd $d
-    if [ -d "Make" ]; then
+    if [ -f "Make/files" ]; then
     wmake -j
      if [ $? -ne 0 ]
      then
@@ -29,12 +29,14 @@ cd ..
 for d in applications/*/ ; do   
     echo $d    
     cd $d
+    if [ -f "Make/files" ]; then
     wmake -j
     if [ $? -ne 0 ]
     then
      echo $d "did not compile"
      exit 1
     fi
+	fi
     cd ../..
 done
 
@@ -43,7 +45,7 @@ cd tutorials
 for d in ./*/ ; do   
     echo $d    
     cd $d
-    if [ -d "Make" -a -f *.C ]; then
+    if [ -f "Make/files" ]; then
     wmake -j
      if [ $? -ne 0 ]
      then
@@ -59,7 +61,7 @@ cd ../unitTests
 for d in ./*/ ; do   
     echo $d    
     cd $d
-    if [ -d "Make" ]; then
+    if [ -f "Make/files" ]; then
     wmake -j
     if [ $? -ne 0 ]
     then
