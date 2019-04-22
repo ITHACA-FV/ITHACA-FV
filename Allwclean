@@ -5,7 +5,7 @@ cd src
 for d in ./*/ ; do   
     echo $d    
     cd $d
-    if [ -d "Make" ]; then
+    if [ -f "Make/files" ]; then
     wclean
     fi
     cd ../
@@ -15,7 +15,9 @@ cd ..
 for d in applications/* ; do   
     echo $d    
     cd $d
+    if [ -f "Make/files" ]; then
     wclean
+    fi
     cd ../../
 done
 
@@ -24,7 +26,7 @@ cd tutorials
 for d in ./*/ ; do   
     echo $d    
     cd $d
-    if [ -d "Make" -a -f *.C ]; then
+    if [ -f "Make/files" ]; then
     wclean
     fi
     cd ../
@@ -35,7 +37,7 @@ cd ../unitTests
 for d in ./*/ ; do   
     echo $d    
     cd $d
-    if [ -d "Make" ]; then
+    if [ -f "Make/files" ]; then
     wclean
     fi
     cd ../
