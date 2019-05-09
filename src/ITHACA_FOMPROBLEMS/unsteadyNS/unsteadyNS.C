@@ -79,8 +79,8 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
     fvMesh& mesh = _mesh();
     fv::options& fvOptions = _fvOptions();
     pimpleControl& pimple = _pimple();
-    volScalarField p = _p();
-    volVectorField U = _U();
+    volScalarField& p = _p();
+    volVectorField& U = _U();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
     instantList Times = runTime.times();
