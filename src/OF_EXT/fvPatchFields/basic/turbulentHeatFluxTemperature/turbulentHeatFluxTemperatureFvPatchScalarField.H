@@ -70,12 +70,12 @@ namespace incompressible
 \*---------------------------------------------------------------------------*/
 
 class turbulentHeatFluxTemperatureFvPatchScalarField
-:
+    :
     public fixedGradientFvPatchScalarField
 {
-public:
+    public:
 
-    // Data types
+        // Data types
 
         //- Enumeration listing the possible hest source input modes
         enum heatSourceType
@@ -85,9 +85,9 @@ public:
         };
 
 
-private:
+    private:
 
-    // Private data
+        // Private data
 
         //- Heat source type names
         static const NamedEnum<heatSourceType, 2> heatSourceTypeNames_;
@@ -102,13 +102,13 @@ private:
         word alphaEffName_;
 
 
-public:
+    public:
 
-    //- Runtime type information
-    TypeName("turbulentHeatFluxTemperature");
+        //- Runtime type information
+        TypeName("turbulentHeatFluxTemperature");
 
 
-    // Constructors
+        // Constructors
 
         //- Construct from patch and internal field
         turbulentHeatFluxTemperatureFvPatchScalarField
@@ -146,9 +146,9 @@ public:
         virtual tmp<fvPatchScalarField> clone() const
         {
             return tmp<fvPatchScalarField>
-            (
-                new turbulentHeatFluxTemperatureFvPatchScalarField(*this)
-            );
+                   (
+                       new turbulentHeatFluxTemperatureFvPatchScalarField(*this)
+                   );
         }
 
         //- Construct as copy setting internal field reference
@@ -165,41 +165,41 @@ public:
         ) const
         {
             return tmp<fvPatchScalarField>
-            (
-                new turbulentHeatFluxTemperatureFvPatchScalarField
-                (
-                    *this,
-                    iF
-                )
-            );
+                   (
+                       new turbulentHeatFluxTemperatureFvPatchScalarField
+                       (
+                           *this,
+                           iF
+                       )
+                   );
         }
 
 
-    // Member functions
+        // Member functions
 
         // Mapping functions
 
-            //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap(const fvPatchFieldMapper&);
+        //- Map (and resize as needed) from self given a mapping object
+        virtual void autoMap(const fvPatchFieldMapper&);
 
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchScalarField&,
-                const labelList&
-            );
+        //- Reverse map the given fvPatchField onto this fvPatchField
+        virtual void rmap
+        (
+            const fvPatchScalarField&,
+            const labelList&
+        );
 
 
         // Evaluation functions
 
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
+        //- Update the coefficients associated with the patch field
+        virtual void updateCoeffs();
 
 
         // I-O
 
-            //- Write
-            virtual void write(Ostream&) const;
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

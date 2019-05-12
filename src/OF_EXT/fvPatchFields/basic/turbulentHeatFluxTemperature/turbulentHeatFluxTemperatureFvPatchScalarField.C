@@ -31,18 +31,18 @@ License
 
 namespace Foam
 {
-    // declare specialization within 'Foam' namespace
-    template<>
-    const char* NamedEnum
-    <
-        Foam::incompressible::
-        turbulentHeatFluxTemperatureFvPatchScalarField::heatSourceType,
-        2
-    >::names[] =
-    {
-        "power",
-        "flux"
-    };
+// declare specialization within 'Foam' namespace
+template<>
+const char* NamedEnum
+<
+Foam::incompressible::
+turbulentHeatFluxTemperatureFvPatchScalarField::heatSourceType,
+                                               2
+                                               >::names[] =
+{
+    "power",
+    "flux"
+};
 }
 
 
@@ -59,9 +59,9 @@ namespace incompressible
 
 const NamedEnum
 <
-    turbulentHeatFluxTemperatureFvPatchScalarField::heatSourceType,
-    2
-> turbulentHeatFluxTemperatureFvPatchScalarField::heatSourceTypeNames_;
+turbulentHeatFluxTemperatureFvPatchScalarField::heatSourceType,
+                                               2
+                                               > turbulentHeatFluxTemperatureFvPatchScalarField::heatSourceTypeNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -72,7 +72,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
 )
-:
+    :
     fixedGradientFvPatchScalarField(p, iF),
     heatSource_(hsPower),
     q_(p.size(), 0.0),
@@ -88,7 +88,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
-:
+    :
     fixedGradientFvPatchScalarField(ptf, p, iF, mapper),
     heatSource_(ptf.heatSource_),
     q_(ptf.q_, mapper),
@@ -103,7 +103,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )
-:
+    :
     fixedGradientFvPatchScalarField(p, iF),
     heatSource_(heatSourceTypeNames_.read(dict.lookup("heatSource"))),
     q_("q", dict, p.size()),
@@ -127,7 +127,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField
 (
     const turbulentHeatFluxTemperatureFvPatchScalarField& thftpsf
 )
-:
+    :
     fixedGradientFvPatchScalarField(thftpsf),
     heatSource_(thftpsf.heatSource_),
     q_(thftpsf.q_),
@@ -141,7 +141,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     const turbulentHeatFluxTemperatureFvPatchScalarField& thftpsf,
     const DimensionedField<scalar, volMesh>& iF
 )
-:
+    :
     fixedGradientFvPatchScalarField(thftpsf, iF),
     heatSource_(thftpsf.heatSource_),
     q_(thftpsf.q_),
@@ -168,13 +168,11 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::rmap
 )
 {
     fixedGradientFvPatchScalarField::rmap(ptf, addr);
-
     const turbulentHeatFluxTemperatureFvPatchScalarField& thftptf =
         refCast<const turbulentHeatFluxTemperatureFvPatchScalarField>
         (
             ptf
         );
-
     q_.rmap(thftptf.q_, addr);
 }
 
@@ -188,7 +186,6 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 
     const scalarField& alphaEffp =
         patch().lookupPatchField<volScalarField, scalar>(alphaEffName_);
-
     // retrieve (constant) specific heat capacity from transport dictionary
     const IOdictionary& transportProperties =
         db().lookupObject<IOdictionary>("transportProperties");
@@ -199,23 +196,25 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         case hsPower:
         {
             const scalar Ap = gSum(patch().magSf());
-            gradient() = q_/(Ap*rhoCp0*alphaEffp);
+            gradient() = q_ / (Ap * rhoCp0 * alphaEffp);
             break;
         }
+
         case hsFlux:
         {
-            gradient() = q_/(rhoCp0*alphaEffp);
+            gradient() = q_ / (rhoCp0 * alphaEffp);
             break;
         }
+
         default:
         {
             FatalErrorIn
             (
                 "turbulentHeatFluxTemperatureFvPatchScalarField"
                 "("
-                    "const fvPatch&, "
-                    "const DimensionedField<scalar, volMesh>&, "
-                    "const dictionary&"
+                "const fvPatch&, "
+                "const DimensionedField<scalar, volMesh>&, "
+                "const dictionary&"
                 ")"
             )   << "Unknown heat source type. Valid types are: "
                 << heatSourceTypeNames_ << nl << exit(FatalError);
@@ -230,7 +229,7 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::write(Ostream& os) const
 {
     fixedGradientFvPatchScalarField::write(os);
     os.writeKeyword("heatSource") << heatSourceTypeNames_[heatSource_]
-        << token::END_STATEMENT << nl;
+                                  << token::END_STATEMENT << nl;
     q_.writeEntry("q", os);
     os.writeKeyword("alphaEff") << alphaEffName_ << token::END_STATEMENT << nl;
     writeEntry("value", os);
