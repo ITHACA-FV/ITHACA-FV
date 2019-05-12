@@ -80,9 +80,9 @@ void unsteadyNST::truthSolve(List<scalar> mu_now)
     surfaceScalarField& phi = _phi();
     fvMesh& mesh = _mesh();
     pisoControl& piso = _piso();
-    volScalarField p = _p();
-    volVectorField U = _U();
-    volScalarField T = _T();
+    volScalarField& p = _p();
+    volVectorField& U = _U();
+    volScalarField& T = _T();
     dimensionedScalar DT = _DT();
     dimensionedScalar nu = _nu();
     instantList Times = runTime.times();

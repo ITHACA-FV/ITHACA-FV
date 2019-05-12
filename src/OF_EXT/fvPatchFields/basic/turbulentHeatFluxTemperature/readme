@@ -1,0 +1,30 @@
+Modified version of compressible:turbulentHeatFlux boundary condition, for incompressible flows which is compatible with OF5 and OF6.
+
+To use this boundary condition you need to modify the constant/transport file by adding the following:
+
+
+
+Pr	Pr[0 0 0 0 0 0 0] yourvaluehere;
+
+Prt	Prt[0 0 0 0 0 0 0] yourvaluehere;
+
+rhoCp0 yourvaluehere;
+
+where, rhoCp0 is the value of density*specific heat capacity [kg/m^3][J/Kg/K]
+
+
+example:
+
+Pr	Pr[0 0 0 0 0 0 0] 7;
+
+Prt	Prt[0 0 0 0 0 0 0] 0.71;
+
+rhoCp0 4210000;
+
+
+
+To tell OF that there is a new boundary condition, you need to add in system/controldict the following line:
+
+libs ("turbulentHeatFluxTemperature.so");
+
+
