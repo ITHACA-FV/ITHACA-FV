@@ -66,6 +66,11 @@ void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder,
 void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
                                 word folder)
 {
+    std::string message = "The extension \"" +  tipo +
+                          "\" was not implemented. Check the list of possible extensions.";
+    M_Assert(tipo == "python" || tipo == "matlab"
+             || tipo == "eigen", message.c_str()
+            );
     mkDir(folder);
     word est;
 
@@ -133,6 +138,11 @@ void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
 void ITHACAstream::exportMatrix(List < Eigen::MatrixXd >& matrice, word Name,
                                 word tipo, word folder)
 {
+    std::string message = "The extension \"" +  tipo +
+                          "\" was not implemented. Check the list of possible extensions.";
+    M_Assert(tipo == "python" || tipo == "matlab"
+             || tipo == "eigen", message.c_str()
+            );
     mkDir(folder);
     word est;
 
