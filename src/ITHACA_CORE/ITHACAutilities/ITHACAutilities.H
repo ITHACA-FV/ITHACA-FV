@@ -49,6 +49,7 @@ SourceFiles
 #include <functional>
 #include "./colormod.H"
 #include "polyMeshTools.H"
+#include <chrono>
 
 using namespace std::placeholders;
 
@@ -260,7 +261,7 @@ class ITHACAutilities
         //--------------------------------------------------------------------------
         /// Function to compute a Mass Matrix from a list of Basis Functions (vectorial) for L2 projection
         ///
-        /// @param[in]  modes  The modes in PtrList form
+        /// @param[in]  modes  The modes in PtrList form.
         ///
         /// @return     The mass matrix in Eigen::MatrixXd form.
         ///
@@ -270,12 +271,23 @@ class ITHACAutilities
         //--------------------------------------------------------------------------
         /// Function to compute a Mass Matrix from a list of Basis Functions (scalar) for L2 projection
         ///
-        /// @param[in]  modes  The modes in PtrList form
+        /// @param[in]  modes  The modes in PtrList form.
         ///
         /// @return     The mass matrix in Eigen::MatrixXd form.
         ///
         static Eigen::MatrixXd get_mass_matrix(PtrList<volScalarField> modes,
                                                int Nmodes = 0);
+
+        //--------------------------------------------------------------------------
+        /// Function to compute the FV Mass Matrix from a vector or scalar field: diagonal matrix where non zero elements are the volumes of the cells.
+        ///
+        /// @param[in]  snapshot  A snapshot in volScalarField or volVectorField form.
+        ///
+        /// @return     The FV mass matrix in Eigen::MatrixXd form.
+        ///
+        template<class type_f>
+        static Eigen::MatrixXd get_mass_matrix_FV(
+            GeometricField<type_f, fvPatchField, volMesh>& snapshot);
 
         //--------------------------------------------------------------------------
         /// Project a snapshot scalar field on a non-orthogonal basis function and get the coefficients of the projection
@@ -503,17 +515,19 @@ class ITHACAutilities
                                   double value);
 #pragma GCC diagnostic pop
 
-        //--------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------
         /// @brief      Gets the mass matrix using the eigen routine
         ///
-        /// @param      fields  The openFoam fields
+        /// @param[in]  fields            The openFoam fields
+        /// @param[in]  consider_volumes  True if you want to consider the volumes
         ///
-        /// @tparam     T       type of field
+        /// @tparam     T                 type of field
         ///
         /// @return     The mass matrix eigen.
         ///
         template<typename T>
-        static Eigen::MatrixXd get_mass_matrix_Eigen(PtrList<T>& fields);
+        static Eigen::MatrixXd get_mass_matrix_Eigen(PtrList<T>& fields,
+                bool consider_volumes = true);
 
         //--------------------------------------------------------------------------
         /// @brief      Change the boundary condition type for a GeometricField
@@ -614,14 +628,30 @@ void ITHACAutilities::assignIF(T& s, G& value)
 }
 
 template<typename T>
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix_Eigen(PtrList<T>& fields)
+Eigen::MatrixXd ITHACAutilities::get_mass_matrix_Eigen(PtrList<T>& fields,
+        bool consider_volumes)
 {
     Eigen::MatrixXd F = Foam2Eigen::PtrList2Eigen(fields);
     Eigen::VectorXd V = Foam2Eigen::field2Eigen(fields[0].mesh().V());
     Eigen::MatrixXd VM = V.asDiagonal();
-    Eigen::MatrixXd M = F.transpose() * VM * F;
+    Eigen::MatrixXd M;
+
+    if (consider_volumes)
+    {
+        M = F.transpose() * VM * F;
+    }
+    else
+    {
+        M = F.transpose() * F;
+    }
+
     return M;
 }
+
+template<>
+Eigen::MatrixXd ITHACAutilities::get_mass_matrix_FV(
+    GeometricField<scalar, fvPatchField, volMesh>& snapshot);
+
 
 template<>
 PtrList<volVectorField> ITHACAutilities::reconstruct_from_coeff(
