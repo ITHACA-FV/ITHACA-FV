@@ -145,6 +145,8 @@ void ITHACAutilities::createSymLink(word folder)
 Eigen::MatrixXd ITHACAutilities::rand(int rows, int cols, double min,
                                       double max)
 {
+    std::srand(static_cast<long unsigned int>
+               (std::chrono::high_resolution_clock::now().time_since_epoch().count()));
     Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);
     matr = (matr.array() + 1) / 2;
     matr = matr.array() * (max - min);
@@ -154,6 +156,8 @@ Eigen::MatrixXd ITHACAutilities::rand(int rows, int cols, double min,
 
 Eigen::MatrixXd ITHACAutilities::rand(int rows, Eigen::MatrixXd minMax)
 {
+    std::srand(static_cast<long unsigned int>
+               (std::chrono::high_resolution_clock::now().time_since_epoch().count()));
     int cols = minMax.rows();
     Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);
     matr = (matr.array() + 1) / 2;
@@ -506,6 +510,24 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
     }
 
     return M_matrix;
+}
+
+template<>
+Eigen::MatrixXd ITHACAutilities::get_mass_matrix_FV(
+    GeometricField<vector, fvPatchField, volMesh>& snapshot)
+{
+    Eigen::VectorXd volumes = Foam2Eigen::field2Eigen(snapshot.mesh().V());
+    Eigen::MatrixXd M = (volumes.replicate(3, 1)).asDiagonal();
+    return M;
+}
+
+template<>
+Eigen::MatrixXd ITHACAutilities::get_mass_matrix_FV(
+    GeometricField<scalar, fvPatchField, volMesh>& snapshot)
+{
+    Eigen::VectorXd volumes = Foam2Eigen::field2Eigen(snapshot.mesh().V());
+    Eigen::MatrixXd M = volumes.asDiagonal();
+    return M;
 }
 
 Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,
