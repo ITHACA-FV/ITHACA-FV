@@ -610,10 +610,20 @@ class ITHACAutilities
         ///
         static volScalarField meshNonOrtho(fvMesh& mesh, volScalarField& NonOrtho);
 
+        ///
+        /// @brief      Rotate a list of points in clockwise direction given an axis of rotation and an angle in degrees.
+        ///
+        /// @param[in]  originalPoints    The original points
+        /// @param[in]  CentreOfRotation  The Axis Of Rotation
+        /// @param[in]  AngleOfRotation   The angle of rotation in degrees
+        ///
+        /// @return     The Rotated Points
+        ///
+        static List<vector> rotatePoints(const List<vector>& originalPoints,
+                                         vector AxisOfRotation, double AngleOfRotation);
 
-
-
-
+        static Eigen::MatrixXd rotationMatrix(vector AxisOfRotation,
+                                              double AngleOfRotation);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
