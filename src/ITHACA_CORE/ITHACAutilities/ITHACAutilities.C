@@ -110,7 +110,6 @@ void ITHACAutilities::createSymLink(word folder)
         system(command3);
         std::cout.clear();
     }
-
     else
     {
         // Serial Part
@@ -184,7 +183,6 @@ bool ITHACAutilities::check_pod()
             pod_exist = true;
             Info << "POD data already exist, reading existing modes" << endl;
         }
-
         else if (!Pstream::parRun())
         {
             pod_exist = false;
@@ -215,7 +213,6 @@ bool ITHACAutilities::check_off()
             off_exist = true;
             Info << "Offline data already exist, reading existing data" << endl;
         }
-
         else
         {
             off_exist = false;
@@ -246,7 +243,6 @@ bool ITHACAutilities::check_sup()
             sup_exist = true;
             Info << "Supremizer data already exist, reading existing data" << endl;
         }
-
         else
         {
             sup_exist = false;
@@ -274,7 +270,6 @@ bool ITHACAutilities::check_folder(word folder)
     {
         exist = true;
     }
-
     else
     {
         exist = false;
@@ -304,7 +299,6 @@ PtrList<volVectorField> ITHACAutilities::reconstruct_from_coeff(
             {
                 rec_field.append(modes[i]*coeff_matrix(i, k));
             }
-
             else
             {
                 rec_field[k] +=  modes[i] * coeff_matrix(i, k);
@@ -330,7 +324,6 @@ PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
             {
                 rec_field.append(modes[i]*coeff_matrix(i, k));
             }
-
             else
             {
                 rec_field[k] +=  modes[i] * coeff_matrix(i, k);
@@ -468,7 +461,6 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes,
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -499,7 +491,6 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -548,7 +539,6 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -579,7 +569,6 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot,
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -610,7 +599,6 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<volScalarField>  snapshots,
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -646,7 +634,6 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs( PtrList<volVectorField>  snapshots,
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -682,7 +669,6 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volScalarField>
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -713,7 +699,6 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<volVectorField>
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -743,7 +728,6 @@ Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -771,7 +755,6 @@ Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volVectorField
     {
         Msize =  modes.size();
     }
-
     else
     {
         Msize = Nmodes;
@@ -877,7 +860,6 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         fixedGradientFvPatchScalarField& Tpatch =
@@ -888,7 +870,6 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
             gradTpatch[faceI] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "fixedFluxPressure")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -896,7 +877,6 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "freestream")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -912,7 +892,6 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
             gradTpatch[faceI] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "calculated")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -920,7 +899,6 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "processor")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -928,7 +906,6 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "empty")
     {
     }
@@ -946,13 +923,11 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         Info << "This Feature is not implemented for this boundary condition" << endl;
         exit(0);
     }
-
     else if (s.boundaryField()[BC_ind].type() == "freestream")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -984,7 +959,6 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         fixedGradientFvPatchScalarField& Tpatch =
@@ -996,7 +970,6 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
             gradTpatch[faceI] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "freestream")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -1014,7 +987,6 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
             gradTpatch[faceI] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "empty")
     {
     }
@@ -1036,13 +1008,11 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         Info << "This Feature is not implemented for this boundary condition" << endl;
         exit(0);
     }
-
     else if (s.boundaryField()[BC_ind].type() == "freestream")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -1206,7 +1176,6 @@ vector ITHACAutilities::displacePoint(vector x0, vector x_low, vector x_up,
     {
         t0 = (x0[0] - x_low[0]) / direction[0];
     }
-
     else
     {
         t0 = 0;
@@ -1221,7 +1190,6 @@ vector ITHACAutilities::displacePoint(vector x0, vector x_low, vector x_up,
             t0 = t1;
         }
     }
-
     else
     {
         t1 = t0;
@@ -1241,7 +1209,6 @@ vector ITHACAutilities::displacePoint(vector x0, vector x_low, vector x_up,
             t0 = t2;
         }
     }
-
     else
     {
         t2 = t1;
