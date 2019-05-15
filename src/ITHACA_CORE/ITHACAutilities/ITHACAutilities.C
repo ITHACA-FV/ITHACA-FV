@@ -1224,3 +1224,40 @@ vector ITHACAutilities::displacePoint(vector x0, vector x_low, vector x_up,
     Info << def_point << endl;
     return def_point;
 }
+
+List<vector> ITHACAutilities::rotatePoints(const List<vector>& originalPoints,
+        vector AxisOfRotation, double AngleOfRotation)
+{
+    double theta = AngleOfRotation / 180 *  constant::mathematical::pi;
+    quaternion q(AxisOfRotation, theta);
+    List<vector> rotatedPoints(originalPoints);
+
+    for (int i = 0; i < rotatedPoints.size(); i++)
+    {
+        rotatedPoints[i] = q.transform(rotatedPoints[i]);
+    }
+
+    return rotatedPoints;
+}
+
+
+Eigen::MatrixXd ITHACAutilities::rotationMatrix(vector AxisOfRotation,
+        double AngleOfRotation)
+{
+    Eigen::MatrixXd R(3, 3);
+    double theta = AngleOfRotation / 180 *  constant::mathematical::pi;
+    scalar di = mag(AxisOfRotation);
+    scalar ux = AxisOfRotation[0] / di;
+    scalar uy = AxisOfRotation[1] / di;
+    scalar uz = AxisOfRotation[2] / di;
+    R(0, 0) = Foam::cos(theta) + ux * ux * (1 - Foam::cos(theta));
+    R(1, 0) = uy * ux * (1 - Foam::cos(theta)) + uz * Foam::sin(theta);
+    R(2, 0) = uz * ux * (1 - Foam::cos(theta)) - uy * Foam::sin(theta);
+    R(0, 1) = ux * uz * (1 - Foam::cos(theta)) - uz * Foam::sin(theta);
+    R(1, 1) = Foam::cos(theta) + uy * uy * (1 - Foam::cos(theta));
+    R(2, 1) = ux * uy * (1 - Foam::cos(theta)) + ux * Foam::sin(theta);
+    R(0, 2) = ux * uz * (1 - Foam::cos(theta)) + uy * Foam::sin(theta);
+    R(1, 2) = uy * uz * (1 - Foam::cos(theta)) - ux * Foam::sin(theta);
+    R(2, 2) = Foam::cos(theta) + uz * uz * (1 - Foam::cos(theta));
+    return R;
+}
