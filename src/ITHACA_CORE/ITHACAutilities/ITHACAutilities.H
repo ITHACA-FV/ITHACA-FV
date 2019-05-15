@@ -66,6 +66,7 @@ using namespace std::placeholders;
 /// Class to implement some useful functions inside ITHACA-FV
 class ITHACAutilities
 {
+
     private:
 
     public:
@@ -237,6 +238,17 @@ class ITHACAutilities
                                                 PtrList<volScalarField>& fields2);
 
         //--------------------------------------------------------------------------
+        /// Function to compute the absolute error in L2 norm between two lists of volScalarFields
+        ///
+        /// @param[in]  fields1  The fields 1
+        /// @param[in]  fields2  The fields 2
+        ///
+        /// @return     A vector containing the error between the two fields in Eigen::MatrixXd form.
+        ///
+        static Eigen::MatrixXd error_listfields_abs(PtrList<volScalarField>& fields1,
+                PtrList<volScalarField>& fields2);
+
+        //--------------------------------------------------------------------------
         /// Function to compute the absolute error in L2 norm between two lists of volVectorFields
         ///
         /// @param[in]  fields1  The fields 1
@@ -247,16 +259,6 @@ class ITHACAutilities
         static Eigen::MatrixXd error_listfields_abs(PtrList<volVectorField>& fields1,
                 PtrList<volVectorField>& fields2);
 
-        //--------------------------------------------------------------------------
-        /// Function to compute the absolute error in L2 norm between two lists of volScalarFields
-        ///
-        /// @param[in]  fields1  The fields 1
-        /// @param[in]  fields2  The fields 2
-        ///
-        /// @return     A vector containing the error between the two fields in Eigen::MatrixXd form.
-        ///
-        static Eigen::MatrixXd error_listfields_abs(PtrList<volScalarField>& fields1,
-                PtrList<volScalarField>& fields2);
 
         //--------------------------------------------------------------------------
         /// Function to compute a Mass Matrix from a list of Basis Functions (vectorial) for L2 projection
@@ -566,7 +568,6 @@ class ITHACAutilities
         ///
         static List<vector> displacedSegment(List<vector> x0, double mux1, double mux2,
                                              double muy1, double muy2);
-
         //----------------------------------------------------------------------
         /// @brief      Displace a Point belonging to a given segment
         ///
