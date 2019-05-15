@@ -39,6 +39,7 @@
 
 #include "fvCFD.H"
 #include "IOmanip.H"
+#include "ITHACAassert.H"
 #include <tuple>
 #include <sys/stat.h>
 #pragma GCC diagnostic push
@@ -194,6 +195,9 @@ class Foam2Eigen
             GeometricField<type_f, fvPatchField, volMesh>& field,
             Eigen::VectorXd& eigen_vector);
 
+        template <class type_f>
+        static Field<type_f> Eigen2field(Field<type_f>& field, Eigen::MatrixXd& matrix);
+
         //--------------------------------------------------------------------------
         /// @brief      Obtain the Mass Matrix from a list of reduced basis
         ///
@@ -279,6 +283,14 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const
 
     return out;
 }
+
+template <>
+Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
+                                      Eigen::MatrixXd& matrix);
+
+template <>
+Field<vector> Foam2Eigen::Eigen2field(Field<vector>& field,
+                                      Eigen::MatrixXd& matrix);
 
 template<>
 Eigen::VectorXd Foam2Eigen::field2Eigen(

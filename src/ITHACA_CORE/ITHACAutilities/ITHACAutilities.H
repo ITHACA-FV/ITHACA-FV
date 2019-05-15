@@ -50,7 +50,7 @@ SourceFiles
 #include "./colormod.H"
 #include "polyMeshTools.H"
 #include <chrono>
-
+#include "mixedFvPatchFields.H"
 using namespace std::placeholders;
 
 #include "Foam2Eigen.H"
@@ -611,7 +611,7 @@ class ITHACAutilities
         ///
         static volScalarField meshNonOrtho(fvMesh& mesh, volScalarField& NonOrtho);
 
-        ///
+        //--------------------------------------------------------------------------
         /// @brief      Rotate a list of points in clockwise direction given an axis of rotation and an angle in degrees.
         ///
         /// @param[in]  originalPoints    The original points
@@ -623,11 +623,47 @@ class ITHACAutilities
         static List<vector> rotatePoints(const List<vector>& originalPoints,
                                          vector AxisOfRotation, double AngleOfRotation);
 
+        //--------------------------------------------------------------------------
+        /// @brief      Functions that return a Rotation Matrix given an axis of rotation and an angle in degrees
+        ///
+        /// @param[in]  AxisOfRotation   The axis of rotation
+        /// @param[in]  AngleOfRotation  The angle of rotation in degrees
+        ///
+        /// @return     The rotation matrix in Eigen format
+        ///
         static Eigen::MatrixXd rotationMatrix(vector AxisOfRotation,
                                               double AngleOfRotation);
+
+        ///
+        /// @brief      Assign value of 
+        ///
+        /// @param[in,out]   field      The field
+        /// @param[in]       BC_ind     The bc ind
+        /// @param[in]       value      The value
+        /// @param[in]       grad       The graduated
+        /// @param[in]       valueFrac  The value frac
+        ///
+        /// @tparam          type_f     Type of the field it can be scalar or vector.
+        ///
+        template<typename type_f>
+        static void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
+                                  label BC_ind, Eigen::MatrixXd& value,
+                                  Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
+
+template<>
+void ITHACAutilities::assignMixedBC(
+    GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
+    Eigen::MatrixXd& value,
+    Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac);
+
+template<>
+void ITHACAutilities::assignMixedBC(
+    GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
+    Eigen::MatrixXd& value,
+    Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac);
 
 template<typename T, typename G>
 void ITHACAutilities::assignIF(T& s, G& value)

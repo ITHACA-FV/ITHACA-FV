@@ -1261,3 +1261,47 @@ Eigen::MatrixXd ITHACAutilities::rotationMatrix(vector AxisOfRotation,
     R(2, 2) = Foam::cos(theta) + uz * uz * (1 - Foam::cos(theta));
     return R;
 }
+
+template<>
+void ITHACAutilities::assignMixedBC(
+    GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
+    Eigen::MatrixXd& value, Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac)
+{
+    std::string message = "Patch is NOT mixed. It is of type: " +
+                          field.boundaryField()[BC_ind].type();
+    M_Assert(field.boundaryField()[BC_ind].type() == "mixed", message.c_str());
+
+    if (field.boundaryField()[BC_ind].type() == "mixed")
+    {
+        mixedFvPatchScalarField& Tpatch =
+            refCast<mixedFvPatchScalarField>(field.boundaryFieldRef()[BC_ind]);
+        scalarField& valueTpatch = Tpatch.refValue();
+        scalarField& gradTpatch = Tpatch.refGrad();
+        scalarField& valueFracTpatch = Tpatch.valueFraction();
+        Foam2Eigen::Eigen2field(valueTpatch, value);
+        Foam2Eigen::Eigen2field(gradTpatch, grad);
+        Foam2Eigen::Eigen2field(valueFracTpatch, valueFrac);
+    }
+}
+
+template<>
+void ITHACAutilities::assignMixedBC(
+    GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
+    Eigen::MatrixXd& value, Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac)
+{
+    std::string message = "Patch is NOT mixed. It is of type: " +
+                          field.boundaryField()[BC_ind].type();
+    M_Assert(field.boundaryField()[BC_ind].type() == "mixed", message.c_str());
+
+    if (field.boundaryField()[BC_ind].type() == "mixed")
+    {
+        mixedFvPatchVectorField& Tpatch =
+            refCast<mixedFvPatchVectorField>(field.boundaryFieldRef()[BC_ind]);
+        vectorField& valueTpatch = Tpatch.refValue();
+        vectorField& gradTpatch = Tpatch.refGrad();
+        scalarField& valueFracTpatch = Tpatch.valueFraction();
+        Foam2Eigen::Eigen2field(valueTpatch, value);
+        Foam2Eigen::Eigen2field(gradTpatch, grad);
+        Foam2Eigen::Eigen2field(valueFracTpatch, valueFrac);
+    }
+}
