@@ -633,17 +633,28 @@ class ITHACAutilities
         ///
         static Eigen::MatrixXd rotationMatrix(vector AxisOfRotation,
                                               double AngleOfRotation);
+        
+	//--------------------------------------------------------------------------
+        /// @brief      Compute the distance between the boundary face center and the boundary cell center
+        ///
+        /// @param[in]  BC_ind   Index of the boundary patch
+        /// @param[in]  mesh     Mesh
+        ///
+	/// @return     Vector of the face to cell center distance in Eigen format
+        ///
+        static Eigen::VectorXd boudaryFaceToCellDistance(fvMesh& mesh, label BC_ind);
 
+
+        //--------------------------------------------------------------------------
+        /// @brief      Assign value of a boundary condition of type "mixed"
         ///
-        /// @brief      Assign value of 
+        /// @param[in,out]   field      Field
+        /// @param[in]       BC_ind     Index of the boundary patch
+        /// @param[in]       value      Reference fixed value
+        /// @param[in]       grad       Reference patch normal gradient
+        /// @param[in]       valueFrac  Weight field
         ///
-        /// @param[in,out]   field      The field
-        /// @param[in]       BC_ind     The bc ind
-        /// @param[in]       value      The value
-        /// @param[in]       grad       The graduated
-        /// @param[in]       valueFrac  The value frac
-        ///
-        /// @tparam          type_f     Type of the field it can be scalar or vector.
+        /// @tparam          type_f     Type of the field, it can be scalar or vector.
         ///
         template<typename type_f>
         static void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
