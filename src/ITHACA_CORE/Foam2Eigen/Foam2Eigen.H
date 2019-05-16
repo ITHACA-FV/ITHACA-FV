@@ -173,14 +173,14 @@ class Foam2Eigen
             int Nfields = 10000000);
 
         //--------------------------------------------------------------------------
-        /// @brief      Converts a vector in Eigen format into an OpenFOAM GeometricField 
+        /// @brief      Converts a vector in Eigen format into an OpenFOAM GeometricField
         ///
         /// @param[in/out]  field         OpenFOAM GeometricField
         /// @param[in]  eigen_vector  Vector in Eigen format
         ///
         /// @tparam     type_f        The GeometricField can be either a scalar or a vector field
         ///
-        /// @return     OpenFOAM GeometricField 
+        /// @return     OpenFOAM GeometricField
         ///
         template <class type_f>
         static GeometricField<type_f, fvPatchField, volMesh> Eigen2field(
@@ -188,7 +188,7 @@ class Foam2Eigen
             Eigen::VectorXd& eigen_vector);
 
         //--------------------------------------------------------------------------
-        /// @brief      Converts a matrix in Eigen format into an OpenFOAM Field  
+        /// @brief      Converts a matrix in Eigen format into an OpenFOAM Field
         ///
         /// @param[in/out]  field         OpenFOAM Field
         /// @param[in]  matrix        Matrix in Eigen format

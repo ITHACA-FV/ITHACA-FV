@@ -633,14 +633,14 @@ class ITHACAutilities
         ///
         static Eigen::MatrixXd rotationMatrix(vector AxisOfRotation,
                                               double AngleOfRotation);
-        
-	//--------------------------------------------------------------------------
+
+        //--------------------------------------------------------------------------
         /// @brief      Compute the distance between the boundary face center and the boundary cell center
         ///
         /// @param[in]  BC_ind   Index of the boundary patch
         /// @param[in]  mesh     Mesh
         ///
-	/// @return     Vector of the face to cell center distance in Eigen format
+        /// @return     Vector of the face to cell center distance in Eigen format
         ///
         static Eigen::VectorXd boudaryFaceToCellDistance(fvMesh& mesh, label BC_ind);
 

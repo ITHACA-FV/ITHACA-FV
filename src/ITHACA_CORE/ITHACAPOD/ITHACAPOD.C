@@ -134,7 +134,6 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
             M_Assert(nmodes <= snapshotsU.size() - 2,
                      "The number of requested modes cannot be bigger than the number of Snapshots - 2");
         }
-
         else
         {
             if (nmodes == 0)
@@ -182,7 +181,6 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-
         else if (para.eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -240,7 +238,6 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
                                        snapshotsU[0].name());
         }
-
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsU[0].name());
@@ -253,7 +250,6 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsU[0].name(), para.precision,
                                 para.outytpe);
     }
-
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -262,7 +258,6 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
         {
             ITHACAstream::read_fields(modes, snapshotsU[0], "./ITHACAoutput/supremizer/");
         }
-
         else
         {
             ITHACAstream::read_fields (modes, snapshotsU[0], "./ITHACAoutput/POD/");
@@ -288,7 +283,6 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
             M_Assert(nmodes <= snapshotsP.size() - 2,
                      "The number of requested modes cannot be bigger than the number of Snapshots - 2");
         }
-
         else
         {
             if (nmodes == 0)
@@ -350,7 +344,6 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-
         else if (para.eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -418,7 +411,6 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
                                        snapshotsP[0].name());
         }
-
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsP[0].name());
@@ -431,7 +423,6 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsP[0].name(), para.precision,
                                 para.outytpe);
     }
-
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -440,7 +431,6 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
         {
             ITHACAstream::read_fields(modes, "Usup", "./ITHACAoutput/supremizer/");
         }
-
         else
         {
             ITHACAstream::read_fields (modes, snapshotsP[0], "./ITHACAoutput/POD/");
@@ -491,7 +481,6 @@ void ITHACAPOD::getWeightedModes(PtrList<volVectorField>& snapshotsU,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-
         else if (para.eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -560,7 +549,6 @@ void ITHACAPOD::getWeightedModes(PtrList<volVectorField>& snapshotsU,
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
                                        snapshotsU[0].name());
         }
-
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsU[0].name());
@@ -573,7 +561,6 @@ void ITHACAPOD::getWeightedModes(PtrList<volVectorField>& snapshotsU,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsU[0].name(), para.precision,
                                 para.outytpe);
     }
-
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -582,7 +569,6 @@ void ITHACAPOD::getWeightedModes(PtrList<volVectorField>& snapshotsU,
         {
             ITHACAstream::read_fields(modes, snapshotsU[0], "./ITHACAoutput/supremizer/");
         }
-
         else
         {
             ITHACAstream::read_fields (modes, snapshotsU[0], "./ITHACAoutput/POD/");
@@ -633,7 +619,6 @@ void ITHACAPOD::getWeightedModes(PtrList<volScalarField>& snapshotsP,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-
         else if (para.eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -702,7 +687,6 @@ void ITHACAPOD::getWeightedModes(PtrList<volScalarField>& snapshotsP,
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
                                        snapshotsP[0].name());
         }
-
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsP[0].name());
@@ -715,7 +699,6 @@ void ITHACAPOD::getWeightedModes(PtrList<volScalarField>& snapshotsP,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsP[0].name(), para.precision,
                                 para.outytpe);
     }
-
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -724,7 +707,6 @@ void ITHACAPOD::getWeightedModes(PtrList<volScalarField>& snapshotsP,
         {
             ITHACAstream::read_fields(modes, "Usup", "./ITHACAoutput/supremizer/");
         }
-
         else
         {
             ITHACAstream::read_fields (modes, snapshotsP[0], "./ITHACAoutput/POD/");
@@ -785,7 +767,6 @@ void ITHACAPOD::getModesSVD(PtrList<volVectorField>& snapshotsU,
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
                                        snapshotsU[0].name());
         }
-
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshotsU[0].name());
@@ -799,7 +780,6 @@ void ITHACAPOD::getModesSVD(PtrList<volVectorField>& snapshotsU,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsU[0].name(), para.precision,
                                 para.outytpe);
     }
-
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -808,7 +788,6 @@ void ITHACAPOD::getModesSVD(PtrList<volVectorField>& snapshotsU,
         {
             ITHACAstream::read_fields(modes, snapshotsU[0], "./ITHACAoutput/supremizer/");
         }
-
         else
         {
             ITHACAstream::read_fields (modes, snapshotsU[0], "./ITHACAoutput/POD/");
@@ -868,7 +847,6 @@ void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshotsP,
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer",
                                        snapshotsP[0].name());
         }
-
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD", snapshotsP[0].name());
@@ -882,7 +860,6 @@ void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshotsP,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshotsP[0].name(), para.precision,
                                 para.outytpe);
     }
-
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -891,7 +868,6 @@ void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshotsP,
         {
             ITHACAstream::read_fields(modes, snapshotsP[0], "./ITHACAoutput/supremizer");
         }
-
         else
         {
             ITHACAstream::read_fields (modes, snapshotsP[0], "./ITHACAoutput/POD");
@@ -1095,7 +1071,6 @@ void ITHACAPOD::exportBases(PtrList<volVectorField>& s,
             os << s[i] << endl;
         }
     }
-
     else
     {
         fileName fieldname;
@@ -1131,7 +1106,6 @@ void ITHACAPOD::exportBases(PtrList<volScalarField>& s,
             os << s[i] << endl;
         }
     }
-
     else
     {
         fileName fieldname;
@@ -1162,7 +1136,6 @@ void ITHACAPOD::exportEigenvalues(scalarField Eigenvalues, fileName name,
             os << Eigenvalues[i] << endl;
         }
     }
-
     else
     {
         fileName fieldname;
@@ -1192,7 +1165,6 @@ void ITHACAPOD::exportcumEigenvalues(scalarField cumEigenvalues, fileName name,
             os << cumEigenvalues[i] << endl;
         }
     }
-
     else
     {
         fileName fieldname;
@@ -1276,7 +1248,6 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 eigenValueseigB = esB.eigenvalues().real();
                 eigenVectorseigB = esB.eigenvectors().real();
             }
-
             else if (nmodesB == 1)
             {
                 eigenValueseigB.resize(1);
@@ -1285,7 +1256,6 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 eigenVectorseigB = eigenVectorseigB * 0;
                 eigenVectorseigB(0, 0) = 1;
             }
-
             else
             {
                 Info << "The Eigenvalue solver in ITHACAPOD.H did not converge, exiting the code"
@@ -1293,7 +1263,6 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 exit(0);
             }
         }
-
         else
         {
             Info << "The Eigenvalue solver in ITHACAPOD.H did not converge, exiting the code"
@@ -1388,7 +1357,6 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                                           "./ITHACAoutput/DEIM/" + MatrixName + "/", "B_" + MatrixName + name(i));
         }
     }
-
     else
     {
         for (label i = 0; i < nmodesA; i++)
@@ -1473,6 +1441,7 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
                                    SnapMatrix.col(j);
             }
         }
+
         std::cout << std::endl;
 
         for (label i = 1; i < snapshots.size(); i++)
@@ -1504,7 +1473,6 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-
         else if (para.eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -1564,7 +1532,6 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para.precision,
                                 para.outytpe);
     }
-
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -1573,7 +1540,6 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
         {
             ITHACAstream::read_fields(modes, "Usup", "./ITHACAoutput/supremizer/");
         }
-
         else
         {
             ITHACAstream::read_fields (modes, snapshots[0], "./ITHACAoutput/POD/");
@@ -1655,7 +1621,6 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-
         else if (para.eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -1715,7 +1680,6 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para.precision,
                                 para.outytpe);
     }
-
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -1724,7 +1688,6 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
         {
             ITHACAstream::read_fields(modes, "Usup", "./ITHACAoutput/supremizer/");
         }
-
         else
         {
             ITHACAstream::read_fields (modes, snapshots[0], "./ITHACAoutput/POD/");

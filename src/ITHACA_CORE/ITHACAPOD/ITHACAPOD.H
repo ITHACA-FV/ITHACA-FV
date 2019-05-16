@@ -180,7 +180,8 @@ class ITHACAPOD
         /// @tparam     Field_type  It can be vector or scalar
         ///
         template<class Field_type>
-        static void normalizeBases(PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& bases);
+        static void normalizeBases(
+            PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& bases);
 
         //--------------------------------------------------------------------------
         /// Normalize a volScalarField field using a volVectorField
@@ -395,7 +396,6 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
             eigenValueseigB = esB.eigenvalues().real();
             eigenVectorseigB = esB.eigenvectors().real();
         }
-
         else
         {
             eigenValueseigB.resize(1);
@@ -473,7 +473,6 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                                 "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesB", para.precision,
                                 para.outytpe);
     }
-
     else
     {
         for (label i = 0; i < nmodesA; i++)
