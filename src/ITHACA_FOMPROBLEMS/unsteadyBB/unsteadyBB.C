@@ -61,7 +61,10 @@ unsteadyBB::unsteadyBB(int argc, char* argv[])
                       mesh
                   )
               );
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
 #include "createFields.H"
+#pragma GCC diagnostic pop
 #include "createFvOptions.H"
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -82,10 +85,8 @@ void unsteadyBB::truthSolve(List<scalar> mu_now)
     volVectorField& U = _U();
     volScalarField& p_rgh = _p_rgh();
     volScalarField& T = _T();
-    volScalarField& nut = _nut();
     volScalarField& alphat = _alphat();
     volScalarField& rhok = _rhok();
-    dimensionedVector& g = _g();
     volScalarField& gh = _gh();
     surfaceScalarField& ghf = _ghf();
     surfaceScalarField& phi = _phi();
@@ -93,10 +94,7 @@ void unsteadyBB::truthSolve(List<scalar> mu_now)
     pimpleControl& pimple = _pimple();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
-    dimensionedScalar& nu = _nu();
     dimensionedScalar& beta = _beta();
-    dimensionedScalar& hRef = _hRef();
-    dimensionedScalar& ghRef = _ghRef();
     dimensionedScalar& TRef = _TRef();
     dimensionedScalar& Pr = _Pr();
     dimensionedScalar& Prt = _Prt();
@@ -181,10 +179,10 @@ void unsteadyBB::truthSolve(fileName folder)
     volVectorField& U = _U();
     volScalarField& p_rgh = _p_rgh();
     volScalarField& T = _T();
-    volScalarField& nut = _nut();
+    // volScalarField& nut = _nut();
     volScalarField& alphat = _alphat();
     volScalarField& rhok = _rhok();
-    dimensionedVector& g = _g();
+    // dimensionedVector& g = _g();
     volScalarField& gh = _gh();
     surfaceScalarField& ghf = _ghf();
     surfaceScalarField& phi = _phi();
@@ -192,10 +190,10 @@ void unsteadyBB::truthSolve(fileName folder)
     pimpleControl& pimple = _pimple();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
-    dimensionedScalar& nu = _nu();
+    // dimensionedScalar& nu = _nu();
     dimensionedScalar& beta = _beta();
-    dimensionedScalar& hRef = _hRef();
-    dimensionedScalar& ghRef = _ghRef();
+    // dimensionedScalar& hRef = _hRef();
+    // dimensionedScalar& ghRef = _ghRef();
     dimensionedScalar& TRef = _TRef();
     dimensionedScalar& Pr = _Pr();
     dimensionedScalar& Prt = _Prt();
@@ -431,11 +429,11 @@ void unsteadyBB::liftSolveT()
         surfaceScalarField& phi = _phi();
         phi = linearInterpolate(U) & mesh.Sf();
         simpleControl simple(mesh);
-        IOMRFZoneList& MRF = _MRF();
-        singlePhaseTransportModel& laminarTransport = _laminarTransport();
-        volScalarField& nut = _nut();
+        // IOMRFZoneList& MRF = _MRF();
+        // singlePhaseTransportModel& laminarTransport = _laminarTransport();
+        // volScalarField& nut = _nut();
         volScalarField& alphat = _alphat();
-        dimensionedScalar& nu = _nu();
+        // dimensionedScalar& nu = _nu();
         dimensionedScalar& Pr = _Pr();
         dimensionedScalar& Prt = _Prt();
         label BCind = inletIndexT(k, 0);
@@ -712,7 +710,7 @@ Eigen::MatrixXd unsteadyBB::buoyant_term(label NUmodes, label NTmodes,
     dimensionedScalar beta = _beta();
     dimensionedScalar TRef = _TRef();
     dimensionedVector g = _g();
-    volScalarField& gh = _gh();
+    // volScalarField& gh = _gh();
     surfaceScalarField& ghf = _ghf();
 
     // Project everything
@@ -735,12 +733,12 @@ Eigen::MatrixXd unsteadyBB::buoyant_term(label NUmodes, label NTmodes,
 }
 
 // * * * * * * * * * * * * * * Energy Eq. Methods * * * * * * * * * * * * * //
-List< Eigen::MatrixXd > unsteadyBB::convective_term_temperature(label NUmodes,
+List<Eigen::MatrixXd> unsteadyBB::convective_term_temperature(label NUmodes,
         label NTmodes, label NSUPmodes)
 {
     label Qsize = NUmodes + liftfield.size() + NSUPmodes;
     label Qsizet = NTmodes + liftfieldT.size() ;
-    List < Eigen::MatrixXd > Q_matrix;
+    List <Eigen::MatrixXd> Q_matrix;
     Q_matrix.setSize(Qsizet);
 
     for (label j = 0; j < Qsizet; j++)
@@ -821,12 +819,12 @@ void unsteadyBB::liftSolve()
         Time& runTime = _runTime();
         surfaceScalarField& phi = _phi();
         fvMesh& mesh = _mesh();
-        volScalarField& p = _p();
+        // volScalarField& p = _p();
         volVectorField& U = _U();
-        volScalarField& p_rgh = _p_rgh();
+        // volScalarField& p_rgh = _p_rgh();
         volScalarField& UliftBC = _UliftBC();
-        volScalarField& T = _T();
-        dimensionedScalar& nu = _nu();
+        // volScalarField& T = _T();
+        // dimensionedScalar& nu = _nu();
         IOMRFZoneList& MRF = _MRF();
         label BCind = inletIndex(k, 0);
         volVectorField Ulift("Ulift" + name(k), U);

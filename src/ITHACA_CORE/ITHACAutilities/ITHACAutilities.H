@@ -55,6 +55,9 @@ using namespace std::placeholders;
 
 #include "Foam2Eigen.H"
 
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -660,6 +663,13 @@ class ITHACAutilities
         static void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
                                   label BC_ind, Eigen::MatrixXd& value,
                                   Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac);
+
+        ///
+        /// @brief      Print progress bar given the percentage
+        ///
+        /// @param[in]  percentage  The percentage
+        ///
+        static void printProgress(double percentage);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //

@@ -125,11 +125,11 @@ class tutorial11: public unsteadyBB
                 surfaceScalarField& phi = _phi();
                 phi = linearInterpolate(U) & mesh.Sf();
                 simpleControl simple(mesh);
-                IOMRFZoneList& MRF = _MRF();
-                singlePhaseTransportModel& laminarTransport = _laminarTransport();
-                volScalarField& nut = _nut();
+                // IOMRFZoneList& MRF = _MRF();
+                // singlePhaseTransportModel& laminarTransport = _laminarTransport();
+                // volScalarField& nut = _nut();
                 volScalarField& alphat = _alphat();
-                dimensionedScalar& nu = _nu();
+                // dimensionedScalar& nu = _nu();
                 dimensionedScalar& Pr = _Pr();
                 dimensionedScalar& Prt = _Prt();
                 label BCind = inletIndexT(k, 0);

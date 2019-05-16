@@ -54,8 +54,11 @@ unsteadyNSTturb::unsteadyNSTturb(int argc, char* argv[])
                     mesh
                 )
             );
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
 #include "createFields.H"
 #include "createFvOptions.H"
+#pragma GCC diagnostic pop
     supex = ITHACAutilities::check_sup();
 }
 
@@ -228,11 +231,11 @@ void unsteadyNSTturb::liftSolveT()
     }
 }
 
-List < Eigen::MatrixXd > unsteadyNSTturb::turbulence_term1(label NUmodes,
+List <Eigen::MatrixXd> unsteadyNSTturb::turbulence_term1(label NUmodes,
         label NSUPmodes, label Nnutmodes)
 {
     label Csize = NUmodes + NSUPmodes + liftfield.size();
-    List < Eigen::MatrixXd > CT1_matrix;
+    List <Eigen::MatrixXd> CT1_matrix;
     CT1_matrix.setSize(Csize);
 
     for (label j = 0; j < Csize; j++)
@@ -293,11 +296,11 @@ List < Eigen::MatrixXd > unsteadyNSTturb::turbulence_term1(label NUmodes,
     return CT1_matrix;
 }
 
-List < Eigen::MatrixXd > unsteadyNSTturb::turbulence_term2(label NUmodes,
+List <Eigen::MatrixXd> unsteadyNSTturb::turbulence_term2(label NUmodes,
         label NSUPmodes, label Nnutmodes)
 {
     label Csize = NUmodes + NSUPmodes + liftfield.size();
-    List < Eigen::MatrixXd > CT2_matrix;
+    List <Eigen::MatrixXd> CT2_matrix;
     CT2_matrix.setSize(Csize);
 
     for (label j = 0; j < Csize; j++)
@@ -410,11 +413,11 @@ Eigen::MatrixXd unsteadyNSTturb::BT_turbulence(label NUmodes, label NSUPmodes)
     return BT_matrix;
 }
 
-List < Eigen::MatrixXd > unsteadyNSTturb::temperature_turbulence_term(
+List <Eigen::MatrixXd> unsteadyNSTturb::temperature_turbulence_term(
     label NTmodes, label Nnutmodes)
 {
     label Stsize = NTmodes + liftfieldT.size();
-    List < Eigen::MatrixXd > S_matrix;
+    List <Eigen::MatrixXd> S_matrix;
     S_matrix.setSize(Stsize);
 
     for (label j = 0; j < Stsize; j++)
