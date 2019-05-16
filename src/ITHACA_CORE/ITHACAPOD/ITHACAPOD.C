@@ -35,12 +35,12 @@
 #include "EigenFunctions.H"
 
 
-
+template<>
 void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volVectorField>& snapshotsU,
                                         PtrList<volVectorField>& UModesGlobal, int Npar, int NnestedOut)
 {
     ITHACAparameters para;
-    List<PtrList< volVectorField>> SnapMatrixNested;
+    List<PtrList<volVectorField>> SnapMatrixNested;
     int Nt = snapshotsU.size() / Npar;
     SnapMatrixNested.setSize(Nt);
 
@@ -54,8 +54,8 @@ void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volVectorField>& snapshotsU,
         }
     }
 
-    List<PtrList< volVectorField>> UModesNested;
-    PtrList< volVectorField>  y;
+    List<PtrList<volVectorField>> UModesNested;
+    PtrList<volVectorField>  y;
     UModesNested.setSize(Nt);
 
     for (int i = 0; i < Npar; i++)
@@ -76,12 +76,12 @@ void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volVectorField>& snapshotsU,
 }
 
 
-
+template<>
 void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volScalarField>& snapshotsP,
                                         PtrList<volScalarField>& PModesGlobal, int Npar, int NnestedOut)
 {
     ITHACAparameters para;
-    List<PtrList< volScalarField>> SnapMatrixNested;
+    List<PtrList<volScalarField>> SnapMatrixNested;
     int Nt = snapshotsP.size() / Npar;
     SnapMatrixNested.setSize(Nt);
 
@@ -95,8 +95,8 @@ void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volScalarField>& snapshotsP,
         }
     }
 
-    List<PtrList< volScalarField>> PModesNested;
-    PtrList< volScalarField>  y;
+    List<PtrList<volScalarField>> PModesNested;
+    PtrList<volScalarField>  y;
     PModesNested.setSize(Nt);
 
     for (int i = 0; i < Npar; i++)
@@ -115,6 +115,8 @@ void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volScalarField>& snapshotsP,
         }
     }
 }
+
+template<>
 void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
                          PtrList<volVectorField>& modes, bool podex, bool supex, bool sup, int nmodes)
 {
@@ -169,7 +171,7 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
 
         if (para.eigensolver == "spectra")
         {
-            Spectra::SymEigsSolver< double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
+            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                     es(&op, nmodes, ncv);
             std::cout << "Using Spectra EigenSolver " << std::endl;
             es.init();
@@ -263,6 +265,7 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshotsU,
     }
 }
 
+template<>
 void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
                          PtrList<volScalarField>& modes, bool podex, bool supex, bool sup, int nmodes)
 {
@@ -332,7 +335,7 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
         if (para.eigensolver == "spectra")
         {
             std::cout << "Using Spectra EigenSolver " << std::endl;
-            Spectra::SymEigsSolver< double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
+            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                     es(&op, nmodes, ncv);
             es.init();
             es.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
@@ -435,6 +438,7 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshotsP,
     }
 }
 
+template<>
 void ITHACAPOD::getWeightedModes(PtrList<volVectorField>& snapshotsU,
                                  PtrList<volVectorField>& modes, bool podex, bool supex, bool sup, int nmodes)
 {
@@ -464,7 +468,7 @@ void ITHACAPOD::getWeightedModes(PtrList<volVectorField>& snapshotsU,
         int ncv = snapshotsU.size();
         Spectra::DenseSymMatProd<double> op(_corMatrix);
         Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> esEg;
-        Spectra::SymEigsSolver< double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
+        Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                 es(&op, nmodes, ncv);
 
         if (para.eigensolver == "spectra")
@@ -573,7 +577,7 @@ void ITHACAPOD::getWeightedModes(PtrList<volVectorField>& snapshotsU,
 }
 
 
-
+template<>
 void ITHACAPOD::getWeightedModes(PtrList<volScalarField>& snapshotsP,
                                  PtrList<volScalarField>& modes, bool podex, bool supex, bool sup, int nmodes)
 {
@@ -602,7 +606,7 @@ void ITHACAPOD::getWeightedModes(PtrList<volScalarField>& snapshotsP,
         int ncv = snapshotsP.size();
         Spectra::DenseSymMatProd<double> op(_corMatrix);
         Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> esEg;
-        Spectra::SymEigsSolver< double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
+        Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                 es(&op, nmodes, ncv);
 
         if (para.eigensolver == "spectra")
@@ -710,6 +714,7 @@ void ITHACAPOD::getWeightedModes(PtrList<volScalarField>& snapshotsP,
     }
 }
 
+template<>
 void ITHACAPOD::getModesSVD(PtrList<volVectorField>& snapshotsU,
                             PtrList<volVectorField>& modes, bool podex, bool supex, bool sup, int nmodes)
 {
@@ -790,6 +795,7 @@ void ITHACAPOD::getModesSVD(PtrList<volVectorField>& snapshotsU,
     }
 }
 
+template<>
 void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshotsP,
                             PtrList<volScalarField>& modes, bool podex, bool supex, bool sup, int nmodes)
 {
@@ -870,6 +876,7 @@ void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshotsP,
 }
 
 /// Normalize the bases
+template<>
 void ITHACAPOD::normalizeBases(PtrList<volScalarField>& Bases)
 {
     scalar magSumSquare;
@@ -887,6 +894,7 @@ void ITHACAPOD::normalizeBases(PtrList<volScalarField>& Bases)
     }
 }
 
+template<>
 void ITHACAPOD::normalizeBases(PtrList<volVectorField>& Bases)
 {
     scalar magSumSquare;
@@ -925,6 +933,7 @@ void ITHACAPOD::normalizeBases(PtrList<volVectorField>& BasesU,
 
 
 /// Construct the Correlation Matrix for Scalar Field
+template<>
 Eigen::MatrixXd ITHACAPOD::corMatrix(PtrList<volScalarField>& snapshots)
 {
     Info << "########## Filling the correlation matrix for " << snapshots[0].name()
@@ -933,9 +942,6 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(PtrList<volScalarField>& snapshots)
 
     for (label i = 0; i < snapshots.size(); i++)
     {
-        Info << "Filling row " << i << " of the " << snapshots[0].name() <<
-             " correlation matrix" << endl;
-
         for (label j = 0; j <= i; j++)
         {
             matrix(i, j) = fvc::domainIntegrate(snapshots[i] * snapshots[j]).value();
@@ -955,6 +961,7 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(PtrList<volScalarField>& snapshots)
 
 
 /// Construct the Correlation Matrix for Vector Field
+template<>
 Eigen::MatrixXd ITHACAPOD::corMatrix(PtrList<volVectorField>& snapshots)
 {
     Info << "########## Filling the correlation matrix for " << snapshots[0].name()
@@ -963,9 +970,6 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(PtrList<volVectorField>& snapshots)
 
     for (label i = 0; i < snapshots.size(); i++)
     {
-        Info << "Filling row " << i << " of the " << snapshots[0].name() <<
-             " correlation matrix" << endl;
-
         for (label j = 0; j <= i; j++)
         {
             matrix(i, j) = fvc::domainIntegrate(snapshots[i] & snapshots[j]).value();
@@ -984,6 +988,7 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(PtrList<volVectorField>& snapshots)
 }
 
 /// Construct the Correlation Matrix for Vector Field
+template<>
 Eigen::MatrixXd ITHACAPOD::corMatrix(List<Eigen::SparseMatrix<double>>&
                                      snapshots)
 {
@@ -993,8 +998,6 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(List<Eigen::SparseMatrix<double>>&
 
     for (label i = 0; i < snapshots.size(); i++)
     {
-        Info << "Filling row " << i << " of the correlation matrix" << endl;
-
         for (label j = 0; j <= i; j++)
         {
             double res = 0;
@@ -1020,6 +1023,7 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(List<Eigen::SparseMatrix<double>>&
 }
 
 /// Construct the Correlation Matrix for Vector Field
+template<>
 Eigen::MatrixXd ITHACAPOD::corMatrix(List<Eigen::VectorXd>& snapshots)
 {
     Info << "########## Filling the correlation matrix for the matrix list ##########"
@@ -1028,8 +1032,6 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(List<Eigen::VectorXd>& snapshots)
 
     for (label i = 0; i < snapshots.size(); i++)
     {
-        Info << "Filling row " << i << " of the correlation matrix" << endl;
-
         for (label j = 0; j <= i; j++)
         {
             matrix(i, j) = (snapshots[i].transpose() * snapshots[j]).trace();
@@ -1051,6 +1053,7 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(List<Eigen::VectorXd>& snapshots)
 
 
 /// Export the Bases
+template<>
 void ITHACAPOD::exportBases(PtrList<volVectorField>& s,
                             PtrList<volVectorField>& bases, bool sup)
 {
@@ -1085,6 +1088,7 @@ void ITHACAPOD::exportBases(PtrList<volVectorField>& s,
 
 
 /// Export the Bases
+template<>
 void ITHACAPOD::exportBases(PtrList<volScalarField>& s,
                             PtrList<volScalarField>& bases, bool sup)
 {
@@ -1215,9 +1219,9 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
         Info << "####### Performing the POD for the Matrix List #######" << endl;
         Spectra::DenseSymMatProd<double> opA(corMatrixA);
         Spectra::DenseSymMatProd<double> opB(corMatrixB);
-        Spectra::SymEigsSolver< double, Spectra::LARGEST_ALGE, Spectra:: DenseSymMatProd<double>>
+        Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra:: DenseSymMatProd<double>>
                 esA(&opA, nmodesA, nmodesA + 10);
-        Spectra::SymEigsSolver< double, Spectra::LARGEST_ALGE, Spectra:: DenseSymMatProd<double>>
+        Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra:: DenseSymMatProd<double>>
                 esB(&opB, nmodesB, nmodesB + 10);
         esA.init();
         esB.init();
@@ -1424,12 +1428,11 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
         int NBC = snapshots[0].boundaryField().size();
         Eigen::MatrixXd V = Foam2Eigen::PtrList2Eigen(Volumes);
         Eigen::MatrixXd _corMatrix(snapshots.size(), snapshots.size());
+        Info << "Filling the correlation matrix for field " << snapshots[0].name() <<
+             endl;
 
         for (label i = 0; i < snapshots.size(); i++)
         {
-            Info << "Filling row " << i << " of the " << snapshots[0].name() <<
-                 " correlation matrix" << endl;
-
             for (label j = 0; j <= i; j++)
             {
                 Eigen::VectorXd Mij = (V.col(i).array() * V.col(j).array());
@@ -1438,6 +1441,8 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
                                    SnapMatrix.col(j);
             }
         }
+
+        std::cout << std::endl;
 
         for (label i = 1; i < snapshots.size(); i++)
         {
@@ -1458,7 +1463,7 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
 
         if (para.eigensolver == "spectra")
         {
-            Spectra::SymEigsSolver< double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
+            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                     es(&op, nmodes, ncv);
             std::cout << "Using Spectra EigenSolver " << std::endl;
             es.init();
@@ -1497,6 +1502,154 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
         for (label i = 0; i < modes.size(); i++)
         {
             volScalarField tmp(snapshots[0].name(), snapshots[0] * 0);
+            Eigen::VectorXd vec = modesEig.col(i);
+            tmp = Foam2Eigen::Eigen2field(tmp, vec);
+
+            // Adjusting boundary conditions
+            for (int k = 0; k < tmp.boundaryField().size(); k++)
+            {
+                ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i));
+            }
+
+            modes.set(i, tmp);
+        }
+
+        eigenValueseig = eigenValueseig / eigenValueseig.sum();
+        Eigen::VectorXd cumEigenValues(eigenValueseig);
+
+        for (int j = 1; j < cumEigenValues.size(); ++j)
+        {
+            cumEigenValues(j) += cumEigenValues(j - 1);
+        }
+
+        Info << "####### Saving the POD bases for " << snapshots[0].name() << " #######"
+             << endl;
+        ITHACAPOD::exportBases(modes, snapshots, sup);
+        Eigen::saveMarketVector(eigenValueseig,
+                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para.precision,
+                                para.outytpe);
+        Eigen::saveMarketVector(cumEigenValues,
+                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para.precision,
+                                para.outytpe);
+    }
+    else
+    {
+        Info << "Reading the existing modes" << endl;
+
+        if (sup == 1)
+        {
+            ITHACAstream::read_fields(modes, "Usup", "./ITHACAoutput/supremizer/");
+        }
+        else
+        {
+            ITHACAstream::read_fields (modes, snapshots[0], "./ITHACAoutput/POD/");
+        }
+    }
+}
+
+template<>
+void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
+                         PtrList<volVectorField>& modes, PtrList<volScalarField>& Volumes, bool podex,
+                         bool supex, bool sup, int nmodes)
+{
+    ITHACAparameters para;
+
+    if (nmodes == 0 && para.eigensolver == "spectra")
+    {
+        nmodes = snapshots.size() - 2;
+    }
+
+    if (nmodes == 0 && para.eigensolver == "eigen")
+    {
+        nmodes = snapshots.size();
+    }
+
+    if (para.eigensolver == "spectra")
+    {
+        M_Assert(nmodes <= snapshots.size() - 2,
+                 "The number of requested modes cannot be bigger than the number of Snapshots - 2");
+    }
+
+    if (podex == 0)
+    {
+        Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshots);
+        List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshots);
+        int NBC = snapshots[0].boundaryField().size();
+        Eigen::MatrixXd V = Foam2Eigen::PtrList2Eigen(Volumes);
+        Eigen::MatrixXd V3d = (V.replicate(3, 1));
+        Eigen::MatrixXd _corMatrix(snapshots.size(), snapshots.size());
+        Info << "Filling the correlation matrix for field " << snapshots[0].name() <<
+             endl;
+
+        for (label i = 0; i < snapshots.size(); i++)
+        {
+            for (label j = 0; j <= i; j++)
+            {
+                Eigen::VectorXd Mij = (V3d.col(i).array() * V3d.col(j).array());
+                Mij = Mij.array().abs().sqrt();
+                _corMatrix(i, j) = SnapMatrix.col(i).transpose() * Mij.asDiagonal() *
+                                   SnapMatrix.col(j);
+            }
+        }
+
+        for (label i = 1; i < snapshots.size(); i++)
+        {
+            for (label j = 0; j < i; j++)
+            {
+                _corMatrix(j, i) = _corMatrix(i, j);
+            }
+        }
+
+        Eigen::VectorXd eigenValueseig;
+        Eigen::MatrixXd eigenVectoreig;
+        modes.resize(nmodes);
+        Info << "####### Performing the POD using EigenDecomposition for " <<
+             snapshots[0].name() << " #######" << endl;
+        int ncv = snapshots.size();
+        Spectra::DenseSymMatProd<double> op(_corMatrix);
+        Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> esEg;
+
+        if (para.eigensolver == "spectra")
+        {
+            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
+                    es(&op, nmodes, ncv);
+            std::cout << "Using Spectra EigenSolver " << std::endl;
+            es.init();
+            es.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
+            M_Assert(es.info() == Spectra::SUCCESSFUL,
+                     "The Eigenvalue Decomposition did not succeed");
+            eigenVectoreig = es.eigenvectors().real();
+            eigenValueseig = es.eigenvalues().real();
+        }
+        else if (para.eigensolver == "eigen")
+        {
+            std::cout << "Using Eigen EigenSolver " << std::endl;
+            esEg.compute(_corMatrix);
+            M_Assert(esEg.info() == Eigen::Success,
+                     "The Eigenvalue Decomposition did not succeed");
+            eigenVectoreig = esEg.eigenvectors().real().rowwise().reverse().leftCols(
+                                 nmodes);
+            eigenValueseig = esEg.eigenvalues().real().reverse().head(nmodes);
+        }
+
+        Info << "####### End of the POD for " << snapshots[0].name() << " #######" <<
+             endl;
+        Eigen::VectorXd eigenValueseigLam =
+            eigenValueseig.real().array().cwiseInverse().sqrt() ;
+        Eigen::MatrixXd modesEig = (SnapMatrix * eigenVectoreig) *
+                                   eigenValueseigLam.asDiagonal();
+        List<Eigen::MatrixXd> modesEigBC;
+        modesEigBC.resize(NBC);
+
+        for (int i = 0; i < NBC; i++)
+        {
+            modesEigBC[i] = (SnapMatrixBC[i] * eigenVectoreig) *
+                            eigenValueseigLam.asDiagonal();
+        }
+
+        for (label i = 0; i < modes.size(); i++)
+        {
+            volVectorField tmp(snapshots[0].name(), snapshots[0] * 0);
             Eigen::VectorXd vec = modesEig.col(i);
             tmp = Foam2Eigen::Eigen2field(tmp, vec);
 

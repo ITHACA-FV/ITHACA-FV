@@ -696,9 +696,9 @@ Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
     }
 
     std::string message = "The input Eigen::MatrixXd has size " + name(
-                               matrix.rows()) +
-                           ". It should have the same size of the Field, i.e. " + 
-			   name(sizeBC);
+                              matrix.rows()) +
+                          ". It should have the same size of the Field, i.e. " +
+                          name(sizeBC);
     M_Assert(matrix.rows() == sizeBC, message.c_str());
 
     for (auto i = 0; i < sizeBC; i++)
