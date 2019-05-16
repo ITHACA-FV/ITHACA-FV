@@ -695,10 +695,11 @@ Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
         matrix = new_matrix;
     }
 
-    // std::string message = "The size of the input Matrices " + name(
-    //                           valueFrac.rows()) +
-    //                       " must be equal to the dimension of the boundary condition you want to set.";
-    M_Assert(matrix.rows() == sizeBC, "message.c_str()");
+    std::string message = "The input Eigen::MatrixXd has size " + name(
+                               matrix.rows()) +
+                           ". It should have the same size of the Field, i.e. " + 
+			   name(sizeBC);
+    M_Assert(matrix.rows() == sizeBC, message.c_str());
 
     for (auto i = 0; i < sizeBC; i++)
     {

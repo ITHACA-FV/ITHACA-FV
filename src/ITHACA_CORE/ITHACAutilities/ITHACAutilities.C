@@ -1262,6 +1262,28 @@ Eigen::MatrixXd ITHACAutilities::rotationMatrix(vector AxisOfRotation,
     return R;
 }
 
+Eigen::VectorXd ITHACAutilities::boudaryFaceToCellDistance(
+    fvMesh& mesh, label BC_ind)
+{
+    Eigen::VectorXd cellFaceDistance;
+    const polyPatch& cPatch = mesh.boundaryMesh()[BC_ind];
+    //Starting index of the face in a patch
+    label faceId_start = cPatch.start() ;
+    //List of cells close to a boundary
+    const labelUList& faceCells = cPatch.faceCells();
+    cellFaceDistance.conservativeResize(cPatch.size());
+    forAll(cPatch, faceI)
+    {
+        // index of each face
+        label faceID = faceId_start + faceI;
+        //id of the owner cell having the face
+        label faceOwner = faceCells[faceI] ;
+        cellFaceDistance(faceI) = mag(mesh.C()[faceOwner] - mesh.Cf()[faceID]);
+    }
+    return (cellFaceDistance);
+}
+
+
 template<>
 void ITHACAutilities::assignMixedBC(
     GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
