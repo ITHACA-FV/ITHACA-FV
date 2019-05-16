@@ -66,6 +66,8 @@ SourceFiles
 #pragma GCC diagnostic pop
 
 #define MAXBUFSIZE (static_cast<int> (1e6))
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -402,6 +404,13 @@ class ITHACAstream
         /// @param[in]  subfolder  The subfolder where you want to save the file
         ///
         static void writePoints(pointField points, fileName folder, fileName subfolder);
+
+        ///
+        /// @brief      Print progress bar given the percentage
+        ///
+        /// @param[in]  percentage  The percentage
+        ///
+        static void printProgress(double percentage);
 
 };
 

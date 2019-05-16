@@ -1327,11 +1327,4 @@ void ITHACAutilities::assignMixedBC(
         Foam2Eigen::Eigen2field(valueFracTpatch, valueFrac);
     }
 }
-void ITHACAutilities::printProgress(double percentage)
-{
-    int val = static_cast<int>(percentage * 100);
-    int lpad = static_cast<int> (percentage * PBWIDTH);
-    int rpad = PBWIDTH - lpad;
-    printf ("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
-    fflush (stdout);
-}
+
