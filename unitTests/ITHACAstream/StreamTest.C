@@ -28,19 +28,37 @@ bool ReadAndWriteTensor()
         std::cout << "> Read And Write Test for tensors succeeded!" << std::endl;
     }
 
+    system("rm output");
     return esit;
 }
 
 bool ReadAndWriteNPYMatrix()
 {
-    Eigen::MatrixXi pippo = Eigen::MatrixXi::Random(5, 5);
-    std::cout << "pippo" << std::endl;
-    std::cout << pippo << std::endl;
-    cnpy::save(pippo, "arr10.npy");
-    Eigen::MatrixXi ciccio;
-    cnpy::load(ciccio, "arr10.npy");
-    std::cout << "ciccio" << std::endl;
-    std::cout << ciccio << std::endl;
+    bool esit = false;
+    Eigen::MatrixXi MI_out = Eigen::MatrixXi::Random(5, 5);
+    cnpy::save(MI_out, "arr_int.npy");
+    Eigen::MatrixXi MI_inp;
+    cnpy::load(MI_inp, "arr_int.npy");
+    int difference_I = (MI_out - MI_inp).sum();
+    Eigen::MatrixXd MD_out = Eigen::MatrixXd::Random(5, 5);
+    cnpy::save(MD_out, "arr_dou.npy");
+    Eigen::MatrixXd MD_inp;
+    cnpy::load(MD_inp, "arr_dou.npy");
+    double difference_D = (MD_out - MD_inp).sum();
+    Eigen::MatrixXf MF_out = Eigen::MatrixXf::Random(5, 5);
+    cnpy::save(MF_out, "arr_flo.npy");
+    Eigen::MatrixXf MF_inp;
+    cnpy::load(MI_inp, "arr_flo.npy");
+    float difference_F = (MD_out - MD_inp).sum();
+
+    if (difference_I == 0 && difference_D == 0 && difference_F == 0)
+    {
+        esit = true;
+        std::cout << "> Read And Write NPY matrix succeeded!" << std::endl;
+    }
+
+    system("rm *.npy");
+    return esit;
 }
 
 int cnpyTEST()
@@ -94,6 +112,11 @@ int cnpyTEST()
     delete[] loaded_data;
     arr2.destruct();
     my_npz.destruct();
+    Eigen::MatrixXf pc1 = Eigen::MatrixXf::Random(5, 5);
+    cnpy::save(pc1, "arr.npy");
+    Eigen::MatrixXf pc0 = cnpy::load(pc0, "arr.npy");
+    std::cout << pc0 << std::endl;
+    cnpy::save(pc0, "test.npy");
     return 0;
 }
 
@@ -101,6 +124,5 @@ int main(int argc, char **argv)
 {
     ReadAndWriteTensor();
     ReadAndWriteNPYMatrix();
-    cnpyTEST();
     return 0;
 }

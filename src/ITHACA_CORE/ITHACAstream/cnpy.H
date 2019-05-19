@@ -91,7 +91,7 @@ template<typename T> void npy_save(std::string fname, const T* data,
         fp = fopen(fname.c_str(), "r+b");
     }
 
-    if (fp)
+    if (fp )
     {
         //file exists. we need to append to it. read the header, modify the array size
         unsigned int word_size, tmp_dims;
@@ -167,7 +167,7 @@ template<typename T> void npz_save(std::string zipname, std::string fname,
         fp = fopen(zipname.c_str(), "r+b");
     }
 
-    if (fp)
+    if (fp != NULL)
     {
         //zip file exists. we need to add a new npy file to it.
         //first read the footer. this gives us the offset and size of the global header
