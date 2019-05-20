@@ -1327,3 +1327,4 @@ void ITHACAutilities::assignMixedBC(
         Foam2Eigen::Eigen2field(valueFracTpatch, valueFrac);
     }
 }
+

@@ -36,41 +36,6 @@
 #include "viscosityModel.H"
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
-namespace Foam
-{
-Ostream& operator<< (Ostream& os, const Eigen::MatrixXd& mat)
-{
-    os << mat.rows() << mat.cols() << UList<double>(const_cast<Eigen::MatrixXd&>
-            (mat).data(), mat.size());
-    return os;
-}
-Istream& operator>> (Istream& is, Eigen::MatrixXd& mat)
-{
-    label nrow, ncol;
-    is >> nrow >> ncol;
-    mat.resize(nrow, ncol);
-    UList<double> list(mat.data(), nrow * ncol);
-    is >> list;
-    return is;
-}
-Ostream& operator<< (Ostream& os, const Eigen::Tensor<double, 3 >& tens)
-{
-    os << tens.dimension(0) << tens.dimension(1) << tens.dimension(
-           2) << UList<double>(const_cast<Eigen::Tensor<double, 3 >&>(tens).data(),
-                               tens.size());
-    return os;
-}
-Istream& operator>> (Istream& is, Eigen::Tensor<double, 3 >& tens)
-{
-    label d1, d2, d3;
-    is >> d1 >> d2 >> d3;
-    tens.resize(d1, d2, d3);
-    UList<double> list(tens.data(), d1 * d2 * d3);
-    is >> list;
-    return is;
-}
-}
-
 // Constructor
 steadyNS::steadyNS() {}
 steadyNS::steadyNS(int argc, char* argv[])
@@ -125,7 +90,6 @@ steadyNS::steadyNS(int argc, char* argv[])
 void steadyNS::truthSolve(List<scalar> mu_now)
 {
     Time& runTime = _runTime();
-    argList& args = _args();
     fvMesh& mesh = _mesh();
     volScalarField& p = _p();
     volVectorField& U = _U();
@@ -609,11 +573,11 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term(label NUmodes, label NPmodes,
     return K_matrix;
 }
 
-List < Eigen::MatrixXd > steadyNS::convective_term(label NUmodes, label NPmodes,
+List <Eigen::MatrixXd> steadyNS::convective_term(label NUmodes, label NPmodes,
         label NSUPmodes)
 {
     label Csize = NUmodes + NSUPmodes + liftfield.size();
-    List < Eigen::MatrixXd > C_matrix;
+    List <Eigen::MatrixXd> C_matrix;
     C_matrix.setSize(Csize);
 
     for (label j = 0; j < Csize; j++)
@@ -651,7 +615,7 @@ List < Eigen::MatrixXd > steadyNS::convective_term(label NUmodes, label NPmodes,
     return C_matrix;
 }
 
-Eigen::Tensor<double, 3 > steadyNS::convective_term_tens(label NUmodes,
+Eigen::Tensor<double, 3> steadyNS::convective_term_tens(label NUmodes,
         label NPmodes,
         label NSUPmodes)
 {
@@ -741,11 +705,11 @@ Eigen::MatrixXd steadyNS::divergence_term(label NUmodes, label NPmodes,
 }
 
 
-List < Eigen::MatrixXd > steadyNS::div_momentum(label NUmodes, label NPmodes)
+List <Eigen::MatrixXd> steadyNS::div_momentum(label NUmodes, label NPmodes)
 {
     label G1size = NPmodes;
     label G2size = NUmodes + NSUPmodes + liftfield.size();
-    List < Eigen::MatrixXd > G_matrix;
+    List <Eigen::MatrixXd> G_matrix;
     G_matrix.setSize(G1size);
 
     for (label j = 0; j < G1size; j++)
@@ -843,11 +807,11 @@ Eigen::MatrixXd steadyNS::pressure_BC1(label NUmodes, label NPmodes)
 }
 
 
-List < Eigen::MatrixXd > steadyNS::pressure_BC2(label NUmodes, label NPmodes)
+List <Eigen::MatrixXd> steadyNS::pressure_BC2(label NUmodes, label NPmodes)
 {
     label P2_BC1size = NPmodes;
     label P2_BC2size = NUmodes + NSUPmodes + liftfield.size();
-    List < Eigen::MatrixXd > BC2_matrix;
+    List <Eigen::MatrixXd> BC2_matrix;
     fvMesh& mesh = _mesh();
     BC2_matrix.setSize(P2_BC1size);
 

@@ -660,6 +660,7 @@ class ITHACAutilities
         static void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
                                   label BC_ind, Eigen::MatrixXd& value,
                                   Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac);
+
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
