@@ -912,6 +912,30 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
 }
 
 // Assign a BC for a scalar field
+void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, List<double> value)
+{
+    if (s.boundaryField()[BC_ind].type() == "fixedValue")
+    {
+        s.boundaryFieldRef()[BC_ind] = value;
+    }
+    else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        fixedGradientFvPatchScalarField& Tpatch =
+            refCast<fixedGradientFvPatchScalarField>(s.boundaryFieldRef()[BC_ind]);
+        scalarField& gradTpatch = Tpatch.gradient();
+        gradTpatch = value;
+    }
+    else if (s.boundaryField()[BC_ind].type() == "empty")
+    {
+    }
+    else
+    {
+        Info << "This type of boundary condition is not yet implemented, code will abort" << endl;
+        exit(0);
+    }
+}
+
+// Assign a BC for a scalar field
 void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
                                Vector<double>& value)
 {
@@ -1328,3 +1352,46 @@ void ITHACAutilities::assignMixedBC(
     }
 }
 
+template<>
+void ITHACAutilities::assignMixedBC(
+    GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
+    List<scalar>& value, List<scalar>& grad, List<scalar>& valueFrac)
+{
+    std::string message = "Patch is NOT mixed. It is of type: " +
+                          field.boundaryField()[BC_ind].type();
+    M_Assert(field.boundaryField()[BC_ind].type() == "mixed", message.c_str());
+
+    if (field.boundaryField()[BC_ind].type() == "mixed")
+    {
+        mixedFvPatchScalarField& Tpatch =
+            refCast<mixedFvPatchScalarField>(field.boundaryFieldRef()[BC_ind]);
+        scalarField& valueTpatch = Tpatch.refValue();
+        scalarField& gradTpatch = Tpatch.refGrad();
+        scalarField& valueFracTpatch = Tpatch.valueFraction();
+        valueTpatch = value;
+        gradTpatch = grad;
+        valueFracTpatch = valueFrac;
+    }
+}
+
+template<>
+void ITHACAutilities::assignMixedBC(
+    GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
+    List<vector>& value, List<vector>& grad, List<scalar>& valueFrac)
+{
+    std::string message = "Patch is NOT mixed. It is of type: " +
+                          field.boundaryField()[BC_ind].type();
+    M_Assert(field.boundaryField()[BC_ind].type() == "mixed", message.c_str());
+
+    if (field.boundaryField()[BC_ind].type() == "mixed")
+    {
+        mixedFvPatchVectorField& Tpatch =
+            refCast<mixedFvPatchVectorField>(field.boundaryFieldRef()[BC_ind]);
+        vectorField& valueTpatch = Tpatch.refValue();
+        vectorField& gradTpatch = Tpatch.refGrad();
+        scalarField& valueFracTpatch = Tpatch.valueFraction();
+        valueTpatch = value;
+        gradTpatch = grad;
+        valueFracTpatch = valueFrac;
+    }
+}
