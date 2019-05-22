@@ -289,24 +289,6 @@ template<typename T> std::vector<char> create_npy_header(const T* data,
     return header;
 }
 
-template<>
-Eigen::MatrixXd load(Eigen::MatrixXd& mat, const std::string fname);
-
-template<>
-void save(const Eigen::MatrixXd& mat, const std::string fname);
-
-template<>
-Eigen::MatrixXf load(Eigen::MatrixXf& mat, const std::string fname);
-
-template<>
-void save(const Eigen::MatrixXf& mat, const std::string fname);
-
-template<>
-Eigen::MatrixXi load(Eigen::MatrixXi& mat, const std::string fname);
-
-template<>
-void save(const Eigen::MatrixXi& mat, const std::string fname);
-
 }
 
 #endif

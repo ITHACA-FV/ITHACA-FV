@@ -107,14 +107,12 @@ int main(int argc, char* argv[])
     example.writeEvery = 0.1;
     // Read the snapshots from Offline folder or compute new snapshots
     example.offlineSolve();
-
     // Create The DMD class for the velocity field
     word exportFieldNameU = example.Ufield[0].name() + "_" + name(numberOfModesDMD);
     ITHACADMD<vector> DMDv(example.Ufield, example.writeEvery);
     DMDv.getModes(numberOfModesDMD, exactDMD, exportDMDModes);
     DMDv.getDynamics(startTimeDMD, finalTimeDMD, dtDMD);
     DMDv.reconstruct(exportFolder, exportFieldNameU);
-
     // Create The DMD class for the pressure field
     word exportFieldNameP = example.Pfield[0].name() + "_" + name(numberOfModesDMD);
     ITHACADMD<scalar> DMDp(example.Pfield, example.writeEvery);

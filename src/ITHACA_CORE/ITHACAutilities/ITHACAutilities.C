@@ -557,42 +557,21 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
     return M_matrix;
 }
 
-const Eigen::DiagonalWrapper<const Eigen::VectorXd>
-ITHACAutilities::get_mass_matrix_FV(
-    Eigen::VectorXd& Volumes, word dimension)
-{
-    M_Assert(dimension == "scalar" || dimension == "vector",
-             "The dimension has to be scalar or vector. No other choices implemented.");
-    Eigen::VectorXd V = Volumes;
-
-    if (dimension == "vector")
-    {
-        V = (V.replicate(3, 1));
-    }
-
-    return V.asDiagonal();
-}
-
 template<>
-const Eigen::DiagonalWrapper<const Eigen::VectorXd>
-ITHACAutilities::get_mass_matrix_FV(
+Eigen::VectorXd ITHACAutilities::get_mass_matrix_FV(
     GeometricField<vector, fvPatchField, volMesh>& snapshot)
 {
     Eigen::VectorXd volumes = Foam2Eigen::field2Eigen(snapshot.mesh().V());
-    const Eigen::DiagonalWrapper<const Eigen::VectorXd> M =
-        ITHACAutilities::get_mass_matrix_FV(volumes, "vector");
-    return M;
+    Eigen::VectorXd vol3 = volumes.replicate(3, 1);
+    return vol3;
 }
 
 template<>
-const Eigen::DiagonalWrapper<const Eigen::VectorXd>
-ITHACAutilities::get_mass_matrix_FV(
+Eigen::VectorXd ITHACAutilities::get_mass_matrix_FV(
     GeometricField<scalar, fvPatchField, volMesh>& snapshot)
 {
     Eigen::VectorXd volumes = Foam2Eigen::field2Eigen(snapshot.mesh().V());
-    const Eigen::DiagonalWrapper<const Eigen::VectorXd> M =
-        ITHACAutilities::get_mass_matrix_FV(volumes, "scalar");
-    return M;
+    return volumes;
 }
 
 Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,

@@ -147,6 +147,3 @@ class ITHACADMD : public ITHACAPOD
         void reconstruct(word exportFolder, word fieldName);
 };
 #endif
-
-
-
