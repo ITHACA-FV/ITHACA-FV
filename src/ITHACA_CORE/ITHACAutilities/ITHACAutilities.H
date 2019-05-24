@@ -55,6 +55,9 @@ using namespace std::placeholders;
 
 #include "Foam2Eigen.H"
 
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -216,6 +219,19 @@ class ITHACAutilities
         static double error_fields_abs(volScalarField& field1, volScalarField& field2);
 
         //--------------------------------------------------------------------------
+        /// Function to compute the relative error between two volVectorFields in L2 norm, given the mesh volumes field
+        ///
+        /// @param[in]  field1  The field 1
+        /// @param[in]  field2  The field 2
+        /// @param[in]  Volumes  The field containing the volumes of the mesh cells
+        ///
+        /// @return     L2 norm of the relative error.
+        ///
+        template<typename T>
+        static double error_fields(GeometricField<T, fvPatchField, volMesh>& field1,
+                                   GeometricField<T, fvPatchField, volMesh>& field2, volScalarField& Volumes);
+
+        //--------------------------------------------------------------------------
         /// Function to compute the relative error in L2 norm between two lists of volVectorFields
         ///
         /// @param[in]  fields1  The fields 1
@@ -236,6 +252,21 @@ class ITHACAutilities
         ///
         static Eigen::MatrixXd error_listfields(PtrList<volScalarField>& fields1,
                                                 PtrList<volScalarField>& fields2);
+
+        //--------------------------------------------------------------------------
+        /// Function to compute the relative error in L2 norm between two lists of volScalarFields, given the list of mesh volumes fields
+        ///
+        /// @param[in]  fields1  The fields 1
+        /// @param[in]  fields2  The fields 2
+        /// @param[in]  Volumes  The list of the mesh volumes fields
+        ///
+        /// @return     A vector containing the error between the two fields in Eigen::MatrixXd form.
+        ///
+        template<typename T>
+        static Eigen::MatrixXd error_listfields(
+            PtrList<GeometricField<T, fvPatchField, volMesh>>& fields1,
+            PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2,
+            PtrList<volScalarField>& Volumes);
 
         //--------------------------------------------------------------------------
         /// Function to compute the absolute error in L2 norm between two lists of volScalarFields
@@ -281,14 +312,26 @@ class ITHACAutilities
                                                int Nmodes = 0);
 
         //--------------------------------------------------------------------------
+        /// Function to compute the FV Mass Matrix from a matrix containig the volumes of the mesh: diagonal matrix where non zero elements are the volumes of the cells.
+        ///
+        /// @param[in]  cells volumes in matrixXd form.
+        ///
+        /// @return     The FV mass matrix in Eigen::MatrixXd form.
+        ///
+        static const Eigen::DiagonalWrapper<const Eigen::VectorXd> get_mass_matrix_FV(
+            Eigen::VectorXd& Volumes, word dimension = "scalar");
+
+        //--------------------------------------------------------------------------
         /// Function to compute the FV Mass Matrix from a vector or scalar field: diagonal matrix where non zero elements are the volumes of the cells.
         ///
         /// @param[in]  snapshot  A snapshot in volScalarField or volVectorField form.
         ///
+        /// @param[in]  dimension  A word to be chosen between "scalar" and "vector". "scalar" is default.
+        ///
         /// @return     The FV mass matrix in Eigen::MatrixXd form.
         ///
         template<class type_f>
-        static Eigen::MatrixXd get_mass_matrix_FV(
+        static const Eigen::DiagonalWrapper<const Eigen::VectorXd> get_mass_matrix_FV(
             GeometricField<type_f, fvPatchField, volMesh>& snapshot);
 
         //--------------------------------------------------------------------------
@@ -429,8 +472,8 @@ class ITHACAutilities
         /// @param[in]  value   The value you want to assign (it must be a List<double>).
         ///
         static void assignBC(volScalarField& s, label BC_ind, List<double> value);
-        
-	//--------------------------------------------------------------------------
+
+        //--------------------------------------------------------------------------
         /// Assign Boundary Condition to a volVectorField
         ///
         /// @param[in]  s       field where you want to assign the BC.
@@ -642,14 +685,14 @@ class ITHACAutilities
         ///
         static Eigen::MatrixXd rotationMatrix(vector AxisOfRotation,
                                               double AngleOfRotation);
-        
-	//--------------------------------------------------------------------------
+
+        //--------------------------------------------------------------------------
         /// @brief      Compute the distance between the boundary face center and the boundary cell center
         ///
         /// @param[in]  BC_ind   Index of the boundary patch
         /// @param[in]  mesh     Mesh
         ///
-	/// @return     Vector of the face to cell center distance in Eigen format
+        /// @return     Vector of the face to cell center distance in Eigen format
         ///
         static Eigen::VectorXd boudaryFaceToCellDistance(fvMesh& mesh, label BC_ind);
 
@@ -686,6 +729,13 @@ class ITHACAutilities
         static void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
                                   label BC_ind, List<type_f>& value,
                                   List<type_f>& grad, List<scalar>& valueFrac);
+
+        ///
+        /// @brief      Print progress bar given the percentage
+        ///
+        /// @param[in]  percentage  The percentage
+        ///
+        static void printProgress(double percentage);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
@@ -745,7 +795,8 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix_Eigen(PtrList<T>& fields,
 }
 
 template<>
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix_FV(
+const Eigen::DiagonalWrapper<const Eigen::VectorXd>
+ITHACAutilities::get_mass_matrix_FV(
     GeometricField<scalar, fvPatchField, volMesh>& snapshot);
 
 
@@ -771,7 +822,15 @@ template<>
 void ITHACAutilities::setIndices2Value(labelList& ind2set,
                                        List<vector>& value2set, labelList& movingIDS, List<vector>& originalList);
 
+template<>
+double ITHACAutilities::error_fields(
+    GeometricField<scalar, fvPatchField, volMesh>& field1,
+    GeometricField<scalar, fvPatchField, volMesh>& field2, volScalarField& Volumes);
 
+template<>
+double ITHACAutilities::error_fields(
+    GeometricField<vector, fvPatchField, volMesh>& field1,
+    GeometricField<vector, fvPatchField, volMesh>& field2, volScalarField& Volumes);
 
 #endif
 

@@ -341,6 +341,17 @@ double ITHACAutilities::error_fields(volVectorField& field1,
     return err;
 }
 
+template<>
+double ITHACAutilities::error_fields(
+    GeometricField<vector, fvPatchField, volMesh>& field1,
+    GeometricField<vector, fvPatchField, volMesh>& field2, volScalarField& Volumes)
+
+{
+    volScalarField diffFields2 = ((field1 - field2) & (field1 - field2)) * Volumes;
+    double err = Foam::sqrt(gSum(diffFields2));
+    return err;
+}
+
 
 double ITHACAutilities::error_fields_abs(volVectorField& field1,
         volVectorField& field2)
@@ -356,7 +367,7 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volVectorField>&
 
     if (fields1.size() != fields2.size())
     {
-        Info << "The two fields does not have the same size, code will abort" << endl;
+        Info << "The two fields do not have the same size, code will abort" << endl;
         exit(0);
     }
 
@@ -371,6 +382,29 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<volVectorField>&
     return err;
 }
 
+template<class TypeField>
+Eigen::MatrixXd ITHACAutilities::error_listfields(
+    PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& fields1,
+    PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& fields2,
+    PtrList<volScalarField>& Volumes)
+{
+    M_Assert(fields1.size() == fields2.size(),
+             "The two fields do not have the same size, code will abort");
+    M_Assert(fields1.size() == Volumes.size(),
+             "The volumes field and the two solution fields do not have the same size, code will abort");
+    Eigen::VectorXd err;
+    err.resize(fields1.size(), 1);
+
+    for (label k = 0; k < fields1.size(); k++)
+    {
+        err(k, 0) = error_fields(fields1[k], fields2[k], Volumes[k]);
+        Info << " Error is " << err[k] << endl;
+    }
+
+    return err;
+}
+
+
 Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volVectorField>&
         fields1, PtrList<volVectorField>& fields2)
 {
@@ -378,7 +412,7 @@ Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<volVectorField>&
 
     if (fields1.size() != fields2.size())
     {
-        Info << "The two fields does not have the same size, code will abort" << endl;
+        Info << "The two fields do not have the same size, code will abort" << endl;
         exit(0);
     }
 
@@ -397,6 +431,17 @@ double ITHACAutilities::error_fields(volScalarField& field1,
                                      volScalarField& field2)
 {
     double err = L2norm(field1 - field2) / L2norm(field1);
+    return err;
+}
+
+template<>
+double ITHACAutilities::error_fields(
+    GeometricField<scalar, fvPatchField, volMesh>& field1,
+    GeometricField<scalar, fvPatchField, volMesh>& field2, volScalarField& Volumes)
+
+{
+    volScalarField diffFields2 = ((field1 - field2) * (field1 - field2)) * Volumes;
+    double err = Foam::sqrt(gSum(diffFields2));
     return err;
 }
 
@@ -512,21 +557,41 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
     return M_matrix;
 }
 
+const Eigen::DiagonalWrapper<const Eigen::VectorXd>
+ITHACAutilities::get_mass_matrix_FV(
+    Eigen::VectorXd& Volumes, word dimension)
+{
+    M_Assert(dimension == "scalar" || dimension == "vector",
+             "The dimension has to be scalar or vector. No other choices implemented.");
+    Eigen::VectorXd V = Volumes;
+
+    if (dimension == "vector")
+    {
+        V = (V.replicate(3, 1));
+    }
+
+    return V.asDiagonal();
+}
+
 template<>
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix_FV(
+const Eigen::DiagonalWrapper<const Eigen::VectorXd>
+ITHACAutilities::get_mass_matrix_FV(
     GeometricField<vector, fvPatchField, volMesh>& snapshot)
 {
     Eigen::VectorXd volumes = Foam2Eigen::field2Eigen(snapshot.mesh().V());
-    Eigen::MatrixXd M = (volumes.replicate(3, 1)).asDiagonal();
+    const Eigen::DiagonalWrapper<const Eigen::VectorXd> M =
+        ITHACAutilities::get_mass_matrix_FV(volumes, "vector");
     return M;
 }
 
 template<>
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix_FV(
+const Eigen::DiagonalWrapper<const Eigen::VectorXd>
+ITHACAutilities::get_mass_matrix_FV(
     GeometricField<scalar, fvPatchField, volMesh>& snapshot)
 {
     Eigen::VectorXd volumes = Foam2Eigen::field2Eigen(snapshot.mesh().V());
-    Eigen::MatrixXd M = volumes.asDiagonal();
+    const Eigen::DiagonalWrapper<const Eigen::VectorXd> M =
+        ITHACAutilities::get_mass_matrix_FV(volumes, "scalar");
     return M;
 }
 
@@ -912,7 +977,8 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
 }
 
 // Assign a BC for a scalar field
-void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, List<double> value)
+void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
+                               List<double> value)
 {
     if (s.boundaryField()[BC_ind].type() == "fixedValue")
     {
@@ -930,7 +996,8 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, List<double> val
     }
     else
     {
-        Info << "This type of boundary condition is not yet implemented, code will abort" << endl;
+        Info << "This type of boundary condition is not yet implemented, code will abort"
+             << endl;
         exit(0);
     }
 }
@@ -1374,6 +1441,7 @@ void ITHACAutilities::assignMixedBC(
     }
 }
 
+
 template<>
 void ITHACAutilities::assignMixedBC(
     GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
@@ -1395,3 +1463,20 @@ void ITHACAutilities::assignMixedBC(
         valueFracTpatch = valueFrac;
     }
 }
+
+void ITHACAutilities::printProgress(double percentage)
+{
+    int val = static_cast<int>(percentage * 100);
+    int lpad = static_cast<int> (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf ("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    fflush (stdout);
+}
+template Eigen::MatrixXd ITHACAutilities::error_listfields(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields1,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields2,
+    PtrList<volScalarField>& Volumes);
+template Eigen::MatrixXd ITHACAutilities::error_listfields(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields1,
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields2,
+    PtrList<volScalarField>& Volumes);
