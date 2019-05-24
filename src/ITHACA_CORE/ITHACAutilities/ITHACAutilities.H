@@ -422,6 +422,15 @@ class ITHACAutilities
         static void assignBC(volScalarField& s, label BC_ind, double& value);
 
         //--------------------------------------------------------------------------
+        /// Assign Boundary Condition to a volScalarField
+        ///
+        /// @param[in]  s       field where you want to assign the BC.
+        /// @param[in]  BC_ind  The BC index.
+        /// @param[in]  value   The value you want to assign (it must be a List<double>).
+        ///
+        static void assignBC(volScalarField& s, label BC_ind, List<double> value);
+        
+	//--------------------------------------------------------------------------
         /// Assign Boundary Condition to a volVectorField
         ///
         /// @param[in]  s       field where you want to assign the BC.
@@ -633,14 +642,14 @@ class ITHACAutilities
         ///
         static Eigen::MatrixXd rotationMatrix(vector AxisOfRotation,
                                               double AngleOfRotation);
-
-        //--------------------------------------------------------------------------
+        
+	//--------------------------------------------------------------------------
         /// @brief      Compute the distance between the boundary face center and the boundary cell center
         ///
         /// @param[in]  BC_ind   Index of the boundary patch
         /// @param[in]  mesh     Mesh
         ///
-        /// @return     Vector of the face to cell center distance in Eigen format
+	/// @return     Vector of the face to cell center distance in Eigen format
         ///
         static Eigen::VectorXd boudaryFaceToCellDistance(fvMesh& mesh, label BC_ind);
 
@@ -661,6 +670,22 @@ class ITHACAutilities
                                   label BC_ind, Eigen::MatrixXd& value,
                                   Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac);
 
+
+        //--------------------------------------------------------------------------
+        /// @brief      Assign value of a boundary condition of type "mixed"
+        ///
+        /// @param[in,out]   field      Field
+        /// @param[in]       BC_ind     Index of the boundary patch
+        /// @param[in]       value      Reference fixed value
+        /// @param[in]       grad       Reference patch normal gradient
+        /// @param[in]       valueFrac  Weight field
+        ///
+        /// @tparam          type_f     Type of the field, it can be scalar or vector.
+        ///
+        template<typename type_f>
+        static void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
+                                  label BC_ind, List<type_f>& value,
+                                  List<type_f>& grad, List<scalar>& valueFrac);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
@@ -676,6 +701,18 @@ void ITHACAutilities::assignMixedBC(
     GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
     Eigen::MatrixXd& value,
     Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac);
+
+template<>
+void ITHACAutilities::assignMixedBC(
+    GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
+    List<vector>& value,
+    List<vector>& grad, List<scalar>& valueFrac);
+
+template<>
+void ITHACAutilities::assignMixedBC(
+    GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
+    List<scalar>& value,
+    List<scalar>& grad, List<scalar>& valueFrac);
 
 template<typename T, typename G>
 void ITHACAutilities::assignIF(T& s, G& value)
