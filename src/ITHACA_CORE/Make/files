@@ -4,9 +4,11 @@ ITHACAutilities/ITHACAutilities.C
 ITHACAparallel/ITHACAparallel.C
 ITHACAutilities/ITHACAforces.C
 ITHACAPOD/ITHACAPOD.C
+ITHACADMD/ITHACADMD.C
 Foam2Eigen/Foam2Eigen.C
 EigenFunctions/EigenFunctions.C
 Containers/Modes.C
+
 
 
 
