@@ -257,7 +257,7 @@ int main(int argc, char* argv[])
 /// \skip iostream
 /// \until >
 ///
-/// The OpenFOAM heder files:
+/// The OpenFOAM header files:
 ///
 /// \skipline fvCFD
 /// \until Time.H

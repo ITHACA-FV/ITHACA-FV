@@ -1,11 +1,11 @@
 reducedProblem/reducedProblem.C
 reducedUnsteadyNS/reducedUnsteadyNS.C
 reducedUnsteadyBB/reducedUnsteadyBB.C
-reducedUnsteadyNSturb/reducedUnsteadyNSturb.C
+ReducedUnsteadyNSTurb/ReducedUnsteadyNSTurb.C
 reducedUnsteadyNST/reducedUnsteadyNST.C
 reducedUnsteadyNSTturb/reducedUnsteadyNSTturb.C
 reducedSteadyNS/reducedSteadyNS.C
-reducedSteadyNSturb/reducedSteadyNSturb.C
+ReducedSteadyNSTurb/ReducedSteadyNSTurb.C
 reducedLaplacian/reducedLaplacian.C
 reducedSimpleSteadyNS/reducedSimpleSteadyNS.C
 

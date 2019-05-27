@@ -68,6 +68,7 @@ struct newton_steadyNS: public newton_argument<double>
         int Nphi_p;
         int N_BC;
         scalar nu;
+        Eigen::MatrixXd tauU;
         Eigen::VectorXd BC;
 };
 
@@ -153,6 +154,9 @@ class reducedSteadyNS: public reducedProblem
 
         /// Counter to count the online solutions
         int count_online_solve = 1;
+
+        /// Penalty Factor
+        Eigen::MatrixXd tauU;
 
         // Functions
 
