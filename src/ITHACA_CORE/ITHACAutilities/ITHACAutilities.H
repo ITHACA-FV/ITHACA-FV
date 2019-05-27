@@ -312,16 +312,6 @@ class ITHACAutilities
                                                int Nmodes = 0);
 
         //--------------------------------------------------------------------------
-        /// Function to compute the FV Mass Matrix from a matrix containig the volumes of the mesh: diagonal matrix where non zero elements are the volumes of the cells.
-        ///
-        /// @param[in]  cells volumes in matrixXd form.
-        ///
-        /// @return     The FV mass matrix in Eigen::MatrixXd form.
-        ///
-        static const Eigen::DiagonalWrapper<const Eigen::VectorXd> get_mass_matrix_FV(
-            Eigen::VectorXd& Volumes, word dimension = "scalar");
-
-        //--------------------------------------------------------------------------
         /// Function to compute the FV Mass Matrix from a vector or scalar field: diagonal matrix where non zero elements are the volumes of the cells.
         ///
         /// @param[in]  snapshot  A snapshot in volScalarField or volVectorField form.
@@ -331,7 +321,7 @@ class ITHACAutilities
         /// @return     The FV mass matrix in Eigen::MatrixXd form.
         ///
         template<class type_f>
-        static const Eigen::DiagonalWrapper<const Eigen::VectorXd> get_mass_matrix_FV(
+        static Eigen::VectorXd get_mass_matrix_FV(
             GeometricField<type_f, fvPatchField, volMesh>& snapshot);
 
         //--------------------------------------------------------------------------
@@ -793,12 +783,6 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix_Eigen(PtrList<T>& fields,
 
     return M;
 }
-
-template<>
-const Eigen::DiagonalWrapper<const Eigen::VectorXd>
-ITHACAutilities::get_mass_matrix_FV(
-    GeometricField<scalar, fvPatchField, volMesh>& snapshot);
-
 
 template<>
 PtrList<volVectorField> ITHACAutilities::reconstruct_from_coeff(

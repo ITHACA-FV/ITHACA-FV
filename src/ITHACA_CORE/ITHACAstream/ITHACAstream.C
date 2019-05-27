@@ -45,22 +45,32 @@ void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder,
                                 word fieldname)
 {
     ITHACAutilities::createSymLink(folder);
+    Info << "######### Exporting the Data for " << fieldname << " #########" <<
+         endl;
 
     for (label j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
+        printProgress(double(j + 1) / field.size());
     }
+
+    std::cout << std::endl;
 }
 
 void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder,
                                 word fieldname)
 {
     ITHACAutilities::createSymLink(folder);
+    Info << "######### Exporting the Data for " << fieldname << " #########" <<
+         endl;
 
     for (label j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
+        printProgress(double(j + 1) / field.size());
     }
+
+    std::cout << std::endl;
 }
 
 void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
@@ -348,7 +358,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name,
                 mesh
             );
             Lfield.append(tmp_field);
-            printProgress(double(i) / last_s);
+            printProgress(double(i + 1) / last_s);
         }
 
         std::cout << std::endl;
@@ -409,7 +419,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name,
                 mesh
             );
             Lfield.append(tmp_field);
-            printProgress(double(i) / last_s);
+            printProgress(double(i + 1) / last_s);
         }
 
         std::cout << std::endl;
@@ -461,7 +471,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
-            printProgress(double(i) / last_s);
+            printProgress(double(i + 1) / last_s);
         }
 
         std::cout << std::endl;
@@ -506,7 +516,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
-            printProgress(double(i) / last_s);
+            printProgress(double(i + 1) / last_s);
         }
 
         Info << endl;
@@ -554,7 +564,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
-            printProgress(double(i) / last_s);
+            printProgress(double(i + 1) / last_s);
         }
 
         std::cout << std::endl;
@@ -599,7 +609,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
-            printProgress(double(i) / last_s);
+            printProgress(double(i + 1) / last_s);
         }
 
         Info << endl;

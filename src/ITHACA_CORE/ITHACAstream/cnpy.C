@@ -380,31 +380,11 @@ cnpy::NpyArray cnpy::npy_load(std::string fname)
     return arr;
 }
 
-template<>
-Eigen::MatrixXd cnpy::load(Eigen::MatrixXd& mat,
-                           const std::string fname)
+template<class typeNumber>
+void cnpy::save(const Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic>&
+                mat, const std::string fname)
 {
-    NpyArray arr = npy_load(fname);
-    assert(arr.shape.size() == 2);
-    mat.resize(arr.shape[0], arr.shape[1]);
-    double* data = reinterpret_cast<double*>(arr.data);
-
-    for (size_t i = 0; i < arr.shape[0]; ++i)
-    {
-        for (size_t j = 0; j < arr.shape[1]; ++j)
-        {
-            mat(i, j) = (double) data[arr.shape[1] * i + j];
-        }
-    }
-
-    delete[] arr.data;
-    return mat;
-}
-
-template<>
-void cnpy::save(const Eigen::MatrixXd& mat, const std::string fname)
-{
-    std::vector<double> matvec(mat.rows() * mat.cols());
+    std::vector<typeNumber> matvec(mat.rows() * mat.cols());
     unsigned int shape[] = {(unsigned int) mat.rows(), (unsigned int)mat.cols()};
 
     for (int i = 0; i < mat.rows(); ++i)
@@ -418,20 +398,21 @@ void cnpy::save(const Eigen::MatrixXd& mat, const std::string fname)
     npy_save(fname, matvec.data(), shape, 2);
 }
 
-template<>
-Eigen::MatrixXf cnpy::load(Eigen::MatrixXf& mat,
-                           const std::string fname)
+template<class typeNumber>
+Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic> cnpy::load(
+    Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic>& mat,
+    const std::string fname)
 {
     NpyArray arr = npy_load(fname);
     assert(arr.shape.size() == 2);
     mat.resize(arr.shape[0], arr.shape[1]);
-    float* data = reinterpret_cast<float*>(arr.data);
+    typeNumber* data = reinterpret_cast<typeNumber*>(arr.data);
 
     for (size_t i = 0; i < arr.shape[0]; ++i)
     {
         for (size_t j = 0; j < arr.shape[1]; ++j)
         {
-            mat(i, j) = (float) data[arr.shape[1] * i + j];
+            mat(i, j) = (typeNumber) data[arr.shape[1] * i + j];
         }
     }
 
@@ -439,59 +420,21 @@ Eigen::MatrixXf cnpy::load(Eigen::MatrixXf& mat,
     return mat;
 }
 
-template<>
-void cnpy::save(const Eigen::MatrixXf& mat, const std::string fname)
-{
-    std::vector<float> matvec(mat.rows() * mat.cols());
-    unsigned int shape[] = {(unsigned int) mat.rows(), (unsigned int)mat.cols()};
+template void cnpy::save(const Eigen::MatrixXi& mat, const std::string fname);
+template Eigen::MatrixXi cnpy::load(Eigen::MatrixXi& mat,
+                                    const std::string fname);
 
-    for (int i = 0; i < mat.rows(); ++i)
-    {
-        for (int j = 0; j < mat.cols(); ++j)
-        {
-            matvec[i * mat.cols() + j] = mat(i, j);
-        }
-    }
+template void cnpy::save(const Eigen::MatrixXd& mat, const std::string fname);
+template Eigen::MatrixXd cnpy::load(Eigen::MatrixXd& mat,
+                                    const std::string fname);
 
-    npy_save(fname, matvec.data(), shape, 2);
-}
+template void cnpy::save(const Eigen::MatrixXf& mat, const std::string fname);
+template Eigen::MatrixXf cnpy::load(Eigen::MatrixXf& mat,
+                                    const std::string fname);
 
-template<>
-Eigen::MatrixXi cnpy::load(Eigen::MatrixXi& mat,
-                           const std::string fname)
-{
-    NpyArray arr = npy_load(fname);
-    assert(arr.shape.size() == 2);
-    mat.resize(arr.shape[0], arr.shape[1]);
-    int* data = reinterpret_cast<int*>(arr.data);
+template void cnpy::save(const Eigen::MatrixXcd& mat, const std::string fname);
+template Eigen::MatrixXcd cnpy::load(Eigen::MatrixXcd& mat,
+                                     const std::string fname);
 
-    for (size_t i = 0; i < arr.shape[0]; ++i)
-    {
-        for (size_t j = 0; j < arr.shape[1]; ++j)
-        {
-            mat(i, j) = (int) data[arr.shape[1] * i + j];
-        }
-    }
-
-    delete[] arr.data;
-    return mat;
-}
-
-template<>
-void cnpy::save(const Eigen::MatrixXi& mat, const std::string fname)
-{
-    std::vector<int> matvec(mat.rows() * mat.cols());
-    unsigned int shape[] = {(unsigned int) mat.rows(), (unsigned int)mat.cols()};
-
-    for (int i = 0; i < mat.rows(); ++i)
-    {
-        for (int j = 0; j < mat.cols(); ++j)
-        {
-            matvec[i * mat.cols() + j] = mat(i, j);
-        }
-    }
-
-    npy_save(fname, matvec.data(), shape, 2);
-}
 
 #pragma GCC diagnostic pop

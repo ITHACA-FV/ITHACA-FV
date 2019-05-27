@@ -46,7 +46,6 @@ ITHACADMD<FieldType>::ITHACADMD(
 }
 
 
-
 template<class FieldType>
 void ITHACADMD<FieldType>::getModes(int SVD_rank, bool exact,
                                     bool exportDMDmodes)
@@ -89,7 +88,6 @@ void ITHACADMD<FieldType>::getModes(int SVD_rank, bool exact,
         V = svd.matrixV();
         S = svd.singularValues().array().cwiseInverse();
     }
-
     else
     {
         Info << "SVD using Divide and Conquer method" << endl;
@@ -129,7 +127,6 @@ void ITHACADMD<FieldType>::getModes(int SVD_rank, bool exact,
             DMDEigenModesBC[i] = YmBC[i] * V * S.asDiagonal() * esEg.eigenvectors();
         }
     }
-
     else
     {
         Eigen::VectorXd eigenValueseigLam =
@@ -195,7 +192,7 @@ void ITHACADMD<FieldType>::reconstruct(word exportFolder, word fieldName)
 
         for (int k = 0; k < tmp.boundaryField().size(); k++)
         {
-            Eigen::VectorXd vecBC = (DMDEigenModesBC[k]*dynamics.col(i)).real();
+            Eigen::VectorXd vecBC = (DMDEigenModesBC[k] * dynamics.col(i)).real();
             ITHACAutilities::assignBC(tmp, k, vecBC);
         }
 
