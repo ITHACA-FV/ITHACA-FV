@@ -166,7 +166,7 @@ template<class FieldType>
 void ITHACADMD<FieldType>::getDynamics(double tStart, double tFinal, double dt)
 {
     Eigen::VectorXcd omega = eigenValues.array().log() / originalDT;
-    int ncols = (int) ((tFinal - tStart) / dt ) + 1;
+    int ncols = static_cast<int>((tFinal - tStart) / dt ) + 1;
     dynamics.resize(SVD_rank_public, ncols);
     int i = 0;
 
