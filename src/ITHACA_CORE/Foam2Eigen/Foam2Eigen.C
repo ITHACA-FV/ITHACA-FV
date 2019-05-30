@@ -220,6 +220,8 @@ GeometricField<scalar, fvPatchField, volMesh> Foam2Eigen::Eigen2field(
 {
     GeometricField<scalar, fvPatchField, volMesh> field_out(field_in);
 
+    // std::memcpy (&field_out.ref()[0], eigen_vector.data(), field_out.ref().size()*sizeof(double));
+
     for (auto i = 0; i < field_out.size(); i++)
     {
         field_out.ref()[i] = eigen_vector(i);
