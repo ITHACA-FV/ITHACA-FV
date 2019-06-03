@@ -183,6 +183,7 @@ template<class FieldType>
 void ITHACADMD<FieldType>::exportEigs(word exportFolder)
 {
     Eigen::MatrixXcd eigs = eigenValues;
+    mkDir(exportFolder);
     std::string path = exportFolder + "/eigs.npy";
     cnpy::save(eigs, path);
     return;
