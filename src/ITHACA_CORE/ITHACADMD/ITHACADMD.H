@@ -134,6 +134,12 @@ class ITHACADMD : public ITHACAPOD
         /// Function to convert the EigenModes in Matrix form into OpenFOAM GeometricFields
         void convert2Foam();
 
+        /// Function to export the eigenvalues in npy file format.
+        ///
+        /// @param[in]  exportFolder  export folder path
+        ///
+        void exportEigs(word exportFolder);
+
         ///
         /// @brief      Function to export the dynamics of DMD given an initial time step, a final one and a time step.
         ///

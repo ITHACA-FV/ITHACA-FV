@@ -177,6 +177,18 @@ void ITHACADMD<FieldType>::getDynamics(double tStart, double tFinal, double dt)
         i++;
     }
 }
+
+
+template<class FieldType>
+void ITHACADMD<FieldType>::exportEigs(word exportFolder)
+{
+    Eigen::MatrixXcd eigs = eigenValues;
+    std::string path = exportFolder + "/eigs.npy";
+    cnpy::save(eigs, path);
+    return;
+}
+
+
 template<class FieldType>
 void ITHACADMD<FieldType>::reconstruct(word exportFolder, word fieldName)
 {
