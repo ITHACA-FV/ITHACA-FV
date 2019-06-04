@@ -479,7 +479,8 @@ template<class TypeField>
 Eigen::VectorXd ITHACAutilities::get_mass_matrix_FV(
     GeometricField<TypeField, fvPatchField, volMesh>& snapshot)
 {
-    int dim = std::nearbyint(snapshot.size() / (snapshot.mesh().V()).size());
+    Eigen::MatrixXd snapEigen = Foam2Eigen::field2Eigen(snapshot);
+    int dim = std::nearbyint(snapEigen.rows() / (snapshot.mesh().V()).size());
     Eigen::VectorXd volumes = Foam2Eigen::field2Eigen(snapshot.mesh().V());
     Eigen::VectorXd vol3 = volumes.replicate(dim, 1);
     return vol3;
