@@ -60,7 +60,7 @@ List<Eigen::MatrixXd> Modes<T>::toEigen()
 }
 
 template<class T>
-List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af)
+List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes)
 {
     List<Eigen::MatrixXd> LinSys;
     LinSys.resize(2);
@@ -73,8 +73,21 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af)
     Eigen::SparseMatrix<double> Ae;
     Eigen::VectorXd be;
     Foam2Eigen::fvMatrix2Eigen(Af, Ae, be);
-    LinSys[0] = EigenModes[0].transpose() * Ae * EigenModes[0];
-    LinSys[1] = EigenModes[0].transpose() * be;
+
+    if (numberOfModes == 0)
+    {
+        LinSys[0] = EigenModes[0].transpose() * Ae * EigenModes[0];
+        LinSys[1] = EigenModes[0].transpose() * be;
+    }
+    else
+    {
+        M_Assert(numberOfModes <= EigenModes[0].cols(),
+                 "Number of required modes for projection is higher then the number of available ones");
+        LinSys[0] = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * Ae *
+                    (EigenModes[0]).leftCols(numberOfModes);
+        LinSys[1] = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * be;
+    }
+
     return LinSys;
 }
 

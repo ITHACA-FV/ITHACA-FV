@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
     vel_now(1, 0) = 0;
 
     // Perform an online solve for the new values of inlet velocities
-    for (label k = 0; k < 20; k++)
+    for (label k = 0; k < example.mu.size(); k++)
     {
         // Set the reduced viscosity
         ridotto.nu = example.mu(0, k);

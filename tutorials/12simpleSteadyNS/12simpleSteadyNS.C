@@ -104,7 +104,6 @@ int main(int argc, char* argv[])
     example.inletIndex(0, 1) = 0;
     // Perform the offline solve
     example.offlineSolve();
-    // example.offlineSolve();
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // Homogenize the snapshots
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
@@ -122,12 +121,12 @@ int main(int argc, char* argv[])
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
 
     //Perform the online solutions
-    for (label k = 0; k < 20; k++)
+    for (label k = 0; k < (example.mu).size(); k++)
     {
         scalar mu_now = example.mu(0, k);
         example.change_viscosity(mu_now);
         reduced.setOnlineVelocity(vel);
-        reduced.solveOnline_Simple(mu_now);
+        reduced.solveOnline_Simple(mu_now, NmodesUproj, NmodesPproj);
     }
 
     exit(0);

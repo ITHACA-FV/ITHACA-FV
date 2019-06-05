@@ -82,7 +82,11 @@ class reducedSimpleSteadyNS: public reducedProblem
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
         ///
-        void solveOnline_Simple(scalar mu_now);
+        /// @param[in]  NmodesUproj The number of modes required for velocity projection
+        ///
+        /// @param[in]  NmodesPproj The number of modes required for pressure projection
+        ///
+        void solveOnline_Simple(scalar mu_now, scalar NmodesUproj, scalar NmodesPproj);
 
         ///
         /// @brief      Gets the Umatrix for the online solver: it just assembles the pure matrix.

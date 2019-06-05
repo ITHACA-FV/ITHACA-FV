@@ -58,52 +58,74 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS(steadyNS_simple& FOMproblem)
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now)
+void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
+        scalar NmodesUproj, scalar NmodesPproj)
 {
     counter++;
-    Eigen::VectorXd uresidualOld;
-    Eigen::VectorXd presidualOld;
-    uresidualOld.resize(ULmodes.size());
-    presidualOld.resize(problem->Pmodes.size());
+    scalar UprojN;
+    scalar PprojN;
+
+    if (NmodesUproj == 0)
+    {
+        UprojN = ULmodes.size();
+    }
+    else
+    {
+        UprojN = NmodesUproj;
+    }
+
+    if (NmodesPproj == 0)
+    {
+        PprojN = problem->Pmodes.size();
+    }
+    else
+    {
+        PprojN = NmodesPproj;
+    }
+
+    Eigen::VectorXd uresidualOld = Eigen::VectorXd::Zero(UprojN);
+    Eigen::VectorXd presidualOld = Eigen::VectorXd::Zero(UprojN);
     Eigen::VectorXd uresidual;
     Eigen::VectorXd presidual;
-    scalar residual_jump(1);
     scalar U_norm_res(1);
     scalar P_norm_res(1);
-    Eigen::MatrixXd a = Eigen::VectorXd::Zero(ULmodes.size());
-    Eigen::MatrixXd b = Eigen::VectorXd::Zero(problem->Pmodes.size());
+    Eigen::MatrixXd a = Eigen::VectorXd::Zero(UprojN);
+    Eigen::MatrixXd b = Eigen::VectorXd::Zero(PprojN);
     ITHACAparameters para;
     float residualJumpLim =
         para.ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
     float normalizedResidualLim =
         para.ITHACAdict->lookupOrDefault<float>("normalizedResidualLim", 1e-5);
+    scalar residual_jump(1 + residualJumpLim);
     volVectorField Uaux("Uaux", problem->_U());
     volScalarField Paux("Paux", problem->_p());
+    int iter = 0;
 
     while (residual_jump > residualJumpLim
             || std::max(U_norm_res, P_norm_res) > normalizedResidualLim)
     {
+        iter++;
         Uaux = ULmodes.reconstruct(a, "Uaux");
         Paux = problem->Pmodes.reconstruct(b, "Paux");
         simpleControl& simple = problem->_simple();
         setRefCell(Paux, simple.dict(), problem->pRefCell, problem->pRefValue);
         problem->_phi() = linearInterpolate(Uaux) & problem->_U().mesh().Sf();
         fvVectorMatrix Au(get_Umatrix_Online(Uaux, Paux));
-        List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(Au);
+        List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(Au, UprojN);
         a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
-        Info << "res for a" << endl;
-        Info << uresidual.norm() << endl;
+        //Info << uresidual.norm() << endl;
         Uaux = ULmodes.reconstruct(a, "Uaux");
         problem->_phi() = linearInterpolate(Uaux) & problem->_U().mesh().Sf();
         fvScalarMatrix Ap(get_Pmatrix_Online(Uaux, Paux));
-        List<Eigen::MatrixXd> RedLinSysP = problem->Pmodes.project(Ap);
+        List<Eigen::MatrixXd> RedLinSysP = problem->Pmodes.project(Ap, PprojN);
         b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
-        Info << "res for b" << endl;
-        Info << presidual.norm() << endl;
+        //Info << presidual.norm() << endl;
         uresidualOld = uresidualOld - uresidual;
         presidualOld = presidualOld - presidual;
         uresidualOld = uresidualOld.cwiseAbs();
         presidualOld = presidualOld.cwiseAbs();
+        //std::cout << uresidualOld.sum() << std::endl;
+        //std::cout << presidualOld.sum() << std::endl;
         residual_jump = std::max(uresidualOld.sum(), presidualOld.sum());
         uresidualOld = uresidual;
         presidualOld = presidual;
@@ -115,6 +137,12 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now)
         // std::cout << "Normalized residual = " << std::max(U_norm_res,P_norm_res) << std::endl;
     }
 
+    std::cout << "Solution " << counter << " converged in " << iter <<
+              " iterations." << std::endl;
+    std::cout << "Final normalized residual for velocity: " << U_norm_res <<
+              std::endl;
+    std::cout << "Final normalized residual for pressure: " << P_norm_res <<
+              std::endl;
     Uaux = ULmodes.reconstruct(a, "Uaux");
     Paux = problem->Pmodes.reconstruct(b, "Paux");
     ITHACAstream::exportSolution(Uaux, name(counter),
