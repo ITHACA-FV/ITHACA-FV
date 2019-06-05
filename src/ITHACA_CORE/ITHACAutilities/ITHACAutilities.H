@@ -53,12 +53,7 @@ SourceFiles
 #include "mixedFvPatchFields.H"
 #include "fvMeshSubset.H"
 using namespace std::placeholders;
-
 #include "Foam2Eigen.H"
-
-#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-#define PBWIDTH 60
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -663,13 +658,6 @@ class ITHACAutilities
         static void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
                                   label BC_ind, List<type_f>& value,
                                   List<type_f>& grad, List<scalar>& valueFrac);
-
-        ///
-        /// @brief      Print progress bar given the percentage
-        ///
-        /// @param[in]  percentage  The percentage
-        ///
-        static void printProgress(double percentage);
 
         ///
         /// @brief      Gets the indices from coordinates of a given box.

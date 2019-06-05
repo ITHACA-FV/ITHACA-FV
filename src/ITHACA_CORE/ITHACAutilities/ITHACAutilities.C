@@ -1265,32 +1265,26 @@ void ITHACAutilities::assignMixedBC(
     }
 }
 
-void ITHACAutilities::printProgress(double percentage)
-{
-    int val = static_cast<int>(percentage * 100);
-    int lpad = static_cast<int> (percentage * PBWIDTH);
-    int rpad = PBWIDTH - lpad;
-    printf ("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
-    fflush (stdout);
-}
-
 template<typename type_f>
 List<int> ITHACAutilities::getIndicesFromBox(GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
 {
     M_Assert(Box.rows() == 2 && Box.cols() == 3, "The box must be a 2*3 matrix shaped in this way: \nBox = \t|x0, y0, z0|\n\t|x1, yi, z1|\n");
-    List<int> indices;
+    List<int> indices(field.internalField().size());
+    int k = 0;
+
     for (label i = 0; i < field.internalField().size(); i++)
     {
-        auto cx = field.mesh().C()[i].component(vector::X);
-        auto cy = field.mesh().C()[i].component(vector::Y);
-        auto cz = field.mesh().C()[i].component(vector::Z);
-
+        auto cx = field.mesh().C()[i][0];
+        auto cy = field.mesh().C()[i][1];
+        auto cz = field.mesh().C()[i][2];
         if (cx >= Box(0, 0) && cy >= Box(0, 1) && cz >= Box(0, 2) && cx <= Box(1, 0)
                 && cy <= Box(1, 1) && cz <= Box(1, 2) )
         {
-            indices.append(i);
+            indices[k] = i;
+            k++;
         }
     }
+    indices.resize(k);
     return indices;
 }
 
