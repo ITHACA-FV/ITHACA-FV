@@ -683,6 +683,7 @@ double ITHACAutilities::H1seminorm(volVectorField field)
 void ITHACAutilities::setBoxToValue(volScalarField& field, Eigen::MatrixXd Box,
                                     double value)
 {
+    M_Assert(Box.rows() == 2 && Box.cols() == 3, "The box must be a 2*3 matrix shaped in this way: \nBox = \t|x0, y0, z0|\n\t|x1, yi, z1|\n");
     for (label i = 0; i < field.internalField().size(); i++)
     {
         auto cx = field.mesh().C()[i].component(vector::X);
@@ -1272,6 +1273,47 @@ void ITHACAutilities::printProgress(double percentage)
     printf ("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
     fflush (stdout);
 }
+
+template<typename type_f>
+List<int> ITHACAutilities::getIndicesFromBox(GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
+{
+    M_Assert(Box.rows() == 2 && Box.cols() == 3, "The box must be a 2*3 matrix shaped in this way: \nBox = \t|x0, y0, z0|\n\t|x1, yi, z1|\n");
+    List<int> indices;
+    for (label i = 0; i < field.internalField().size(); i++)
+    {
+        auto cx = field.mesh().C()[i].component(vector::X);
+        auto cy = field.mesh().C()[i].component(vector::Y);
+        auto cz = field.mesh().C()[i].component(vector::Z);
+
+        if (cx >= Box(0, 0) && cy >= Box(0, 1) && cz >= Box(0, 2) && cx <= Box(1, 0)
+                && cy <= Box(1, 1) && cz <= Box(1, 2) )
+        {
+            indices.append(i);
+        }
+    }
+    return indices;
+}
+
+template<typename type_f>
+fvMeshSubset* ITHACAutilities::getSubMeshFromBox(GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
+{
+    List<int> indices = getIndicesFromBox(field, Box);
+    fvMeshSubset* sub;
+    sub = new fvMeshSubset(field.mesh());
+    (field.mesh());    
+#if OPENFOAM >= 1812
+    sub->setCellSubset(indices);
+#else
+    sub->setLargeCellSubset(indices);
+#endif
+    return sub;
+}
+
+template fvMeshSubset* ITHACAutilities::getSubMeshFromBox(GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+template fvMeshSubset* ITHACAutilities::getSubMeshFromBox(GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+
+template List<int> ITHACAutilities::getIndicesFromBox(GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+template List<int> ITHACAutilities::getIndicesFromBox(GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 
 template PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
     PtrList<volScalarField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);

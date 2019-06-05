@@ -51,6 +51,7 @@ SourceFiles
 #include "polyMeshTools.H"
 #include <chrono>
 #include "mixedFvPatchFields.H"
+#include "fvMeshSubset.H"
 using namespace std::placeholders;
 
 #include "Foam2Eigen.H"
@@ -669,6 +670,32 @@ class ITHACAutilities
         /// @param[in]  percentage  The percentage
         ///
         static void printProgress(double percentage);
+
+        ///
+        /// @brief      Gets the indices from coordinates of a given box.
+        ///
+        /// @param      field   A geometric Field from OpenFoam field
+        /// @param[in]  Box     The box
+        ///
+        /// @tparam     type_f  type of the Field can be Scalar or Vector
+        ///
+        /// @return     The indices from box.
+        ///
+        template<typename type_f>        
+        static List<int> getIndicesFromBox(GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+
+        ///
+        /// @brief      Gets a subMesh from a box of coordinates and a given field (used only for the mesh).
+        ///
+        /// @param      field   The field passed
+        /// @param[in]  Box     The box of coordinates 3*2 matrix
+        ///
+        /// @tparam     type_f  type of the Field can be Scalar or Vector
+        ///
+        /// @return     The subMesh from the box. It can later used to interpolate any Field
+        ///
+        template<typename type_f>        
+        static fvMeshSubset* getSubMeshFromBox(GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
