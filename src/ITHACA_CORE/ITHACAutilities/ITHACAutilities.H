@@ -669,8 +669,9 @@ class ITHACAutilities
         ///
         /// @return     The indices from box.
         ///
-        template<typename type_f>        
-        static List<int> getIndicesFromBox(GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+        template<typename type_f>
+        static List<int> getIndicesFromBox(
+            GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 
         ///
         /// @brief      Gets a subMesh from a box of coordinates and a given field (used only for the mesh).
@@ -682,8 +683,9 @@ class ITHACAutilities
         ///
         /// @return     The subMesh from the box. It can later used to interpolate any Field
         ///
-        template<typename type_f>        
-        static fvMeshSubset* getSubMeshFromBox(GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+        template<typename type_f>
+        static fvMeshSubset* getSubMeshFromBox(
+            GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
