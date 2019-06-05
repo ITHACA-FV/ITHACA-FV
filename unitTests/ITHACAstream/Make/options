@@ -5,6 +5,7 @@ EXE_INC = \
     -I$(LIB_SRC)/fvOptions/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
