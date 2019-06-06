@@ -81,13 +81,28 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
     // Pressure Term
     Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
+    // Penalty term
+    Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+
+    // Term for penalty method
+    if (problem->bcMethod == "penalty")
+    {
+        for (label l = 0; l < N_BC; l++)
+        {
+            penaltyU.col(l) = BC(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
+                              a_tmp;
+        }
+    }
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * a_tmp;
-        // cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
+        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
         fvec(i) = M1(i) - cc(0, 0) - M2(i);
+
+        if (problem->bcMethod == "penalty")
+        {
+            fvec(i) += (penaltyU.row(i) * tauU)(0, 0);
+        }
     }
 
     for (label j = 0; j < Nphi_p; j++)
@@ -96,9 +111,12 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
         fvec(k) = M3(j);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    if (problem->bcMethod == "lift")
     {
-        fvec(j) = x(j) - BC(j);
+        for (label j = 0; j < N_BC; j++)
+        {
+            fvec(j) = x(j) - BC(j);
+        }
     }
 
     return 0;
@@ -137,6 +155,7 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
     Color::Modifier def(Color::FG_DEFAULT);
     Eigen::HybridNonLinearSolver<newton_steadyNS> hnls(newton_object);
     newton_object.BC.resize(N_BC);
+    newton_object.tauU = tauU;
 
     for (label j = 0; j < N_BC; j++)
     {

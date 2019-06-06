@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
 /// \section code08 A detailed look into the code
 ///
 /// \dontinclude 08DEIM.C
-/// The OpenFOAM heder files:
+/// The OpenFOAM header files:
 /// \skip #include "fvCFD.H"
 /// \until fvMeshSubset
 ///

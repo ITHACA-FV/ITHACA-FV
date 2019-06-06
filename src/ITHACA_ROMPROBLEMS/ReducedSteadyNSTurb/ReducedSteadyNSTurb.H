@@ -22,57 +22,58 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Class
-    reducedSteadyNSturb
+    ReducedSteadyNSTurb
 Description
     A reduced problem for the stationary turbulent NS equations
 SourceFiles
-    reducedSteadyNSturb.C
+    ReducedSteadyNSTurb.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the reducedSteadyNSturb class.
+/// Header file of the ReducedSteadyNSTurb class.
 /// \dir
-/// Directory containing the header and source files for the reducedSteadyNSturb class
+/// Directory containing the header and source files for the ReducedSteadyNSTurb class
 
-#ifndef reducedSteadyNSturb_H
-#define reducedSteadyNSturb_H
+#ifndef ReducedSteadyNSTurb_H
+#define ReducedSteadyNSTurb_H
 
 #include "fvCFD.H"
 #include "IOmanip.H"
 #include "reducedProblem.H"
 #include "reducedSteadyNS.H"
-#include "steadyNSturb.H"
+#include "SteadyNSTurb.H"
 #include "ITHACAutilities.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
 
 /// Structure to implement a newton object for a stationary NS problem
-struct newton_steadyNSturb: public newton_argument<double>
+struct newtonSteadyNSTurb: public newton_argument<double>
 {
     public:
-        newton_steadyNSturb() {}
-        newton_steadyNSturb(int Nx, int Ny,
-                            steadyNSturb& problem): newton_argument<double>(Nx, Ny),
+        newtonSteadyNSTurb() {}
+        newtonSteadyNSTurb(int Nx, int Ny,
+                           SteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-            Nphi_nut(problem.Nnutmodes),
+            nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows()),
-            nu_c(problem.Nnutmodes)
+            gNut(problem.nNutModes)
         {}
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
-        steadyNSturb* problem;
+        SteadyNSTurb* problem;
         int Nphi_u;
-        int Nphi_nut;
+        int nphiNut;
         int Nphi_p;
         int N_BC;
-        Eigen::VectorXd nu_c;
+        Eigen::VectorXd gNut;
         scalar nu;
-        Eigen::VectorXd BC;
+        Eigen::MatrixXd tauU;
+        Eigen::VectorXd bc;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
@@ -85,60 +86,63 @@ struct newton_steadyNSturb: public newton_argument<double>
 /// Class where it is implemented a reduced problem for the <b> steady turbulent Navier-stokes </b> problem.
 /** In this class are implemented the methods to solve a reduced version of the stationary turbulent Navier-stokes
 equations. This class must be used together with the steadyNS class */
-class reducedSteadyNSturb: public reducedSteadyNS
+class ReducedSteadyNSTurb: public reducedSteadyNS
 {
     private:
 
     public:
         // Constructors
         /// Construct Null
-        reducedSteadyNSturb();
+        ReducedSteadyNSTurb();
         /// Construct Null
         ///
-        /// @param      problem  a full order steadyNSturb problem
+        /// @param      problem  a full order SteadyNSTurb problem
         ///
-        reducedSteadyNSturb(steadyNSturb& problem);
+        ReducedSteadyNSTurb(SteadyNSTurb& problem);
 
-        ~reducedSteadyNSturb() {};
+        ~ReducedSteadyNSTurb() {};
 
 
         /// List of snapshots for the solution for eddy viscosity
         PtrList<volScalarField> nutFields;
 
         /// List of POD modes for eddy viscosity
-        PtrList<volScalarField> nuTmodes;
+        PtrList<volScalarField> nutModes;
 
         /// Reconstructed eddy viscosity field
-        PtrList<volScalarField> nutREC;
+        PtrList<volScalarField> nutRec;
+
+        /// Vector of eddy viscosity RBF interoplated coefficients
+        Eigen::VectorXd rbfCoeff;
 
         /// Number of viscosity modes
-        int Nphi_nut;
+        int nphiNut;
 
         /// Newton Object to solve the nonlinear problem
-        newton_steadyNSturb newton_object;
+        newtonSteadyNSTurb newtonObject;
 
         /// Pointer to the FOM problem
-        steadyNSturb* problem;
+        SteadyNSTurb* problem;
 
         ///
         /// Method to perform an online solve using a supremizer stabilisation method
         ///
-        /// @param[in]  vel_now   The vector of online velocity. It is defined in
+        /// @param[in]  velNow   The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnline_sup(Eigen::MatrixXd vel_now);
+        void solveOnlineSUP(Eigen::MatrixXd velNow);
 
         /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
         ///
         /// @param[in]  folder      The folder where to output the solutions
-        /// @param[in]  printevery  The printevery
+        /// @param[in]  printEvery  The printEvery
         ///
-        void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec",
-                             int printevery = 1);
+        void reconstructSUP(fileName folder = "./ITHACAOutput/online_rec",
+                            int printEvery = 1);
 
 
 };

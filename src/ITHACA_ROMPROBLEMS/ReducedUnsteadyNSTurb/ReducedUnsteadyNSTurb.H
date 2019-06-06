@@ -22,90 +22,90 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Class
-    reducedUnsteadyNSturb
+    ReducedUnsteadyNSTurb
 Description
     A reduced problem for the unsteady turbulent NS equations
 SourceFiles
-    reducedUnsteadyNSturb.C
+    ReducedUnsteadyNSTurb.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the reducedUnsteadyNSturb class.
+/// Header file of the ReducedUnsteadyNSTurb class.
 /// \dir
-/// Directory containing the header and source files for the reducedUnsteadyNSturb class
+/// Directory containing the header and source files for the ReducedUnsteadyNSTurb class
 
-#ifndef reducedUnsteadyNSturb_H
-#define reducedUnsteadyNSturb_H
+#ifndef ReducedUnsteadyNSTurb_H
+#define ReducedUnsteadyNSTurb_H
 
 #include "fvCFD.H"
 #include "IOmanip.H"
 #include "reducedSteadyNS.H"
 #include "reducedUnsteadyNS.H"
-#include "unsteadyNSturb.H"
+#include "UnsteadyNSTurb.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
 
 
-struct newton_unsteadyNSturb_sup: public newton_argument<double>
+struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
 {
     public:
-        newton_unsteadyNSturb_sup() {}
-        newton_unsteadyNSturb_sup(int Nx, int Ny,
-                                  unsteadyNSturb& problem): newton_argument<double>(Nx, Ny),
+        newtonUnsteadyNSTurbSUP() {}
+        newtonUnsteadyNSTurbSUP(int Nx, int Ny,
+                                UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-            Nphi_nut(problem.Nnutmodes),
+            nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows()),
-            nu_c(problem.Nnutmodes)
+            gNut(problem.nNutModes)
         {}
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
-        unsteadyNSturb* problem;
+        UnsteadyNSTurb* problem;
         int Nphi_u;
-        int Nphi_nut;
+        int nphiNut;
         int Nphi_p;
         int N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
-        Eigen::VectorXd BC;
-        Eigen::VectorXd nu_c;
+        Eigen::VectorXd bc;
+        Eigen::VectorXd gNut;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
 
 
-struct newton_unsteadyNSturb_PPE: public newton_argument<double>
+struct newton_UnsteadyNSTurb_PPE: public newton_argument<double>
 {
     public:
-        newton_unsteadyNSturb_PPE() {}
-        newton_unsteadyNSturb_PPE(int Nx, int Ny,
-                                  unsteadyNSturb& problem): newton_argument<double>(Nx, Ny),
+        newton_UnsteadyNSTurb_PPE() {}
+        newton_UnsteadyNSTurb_PPE(int Nx, int Ny,
+                                  UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
-            Nphi_nut(problem.Nnutmodes),
+            nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows()),
-            nu_c(problem.Nnutmodes)
+            gNut(problem.nNutModes)
         {}
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
-        unsteadyNSturb* problem;
+        UnsteadyNSTurb* problem;
         int Nphi_u;
-        int Nphi_nut;
+        int nphiNut;
         int Nphi_p;
         int N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
-        Eigen::VectorXd BC;
-        Eigen::VectorXd nu_c;
+        Eigen::VectorXd bc;
+        Eigen::VectorXd gNut;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
@@ -118,36 +118,36 @@ struct newton_unsteadyNSturb_PPE: public newton_argument<double>
 /// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem.
 /** In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes
 equations. This class must be used together with the steadyNS class */
-class reducedUnsteadyNSturb: public reducedUnsteadyNS
+class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
 {
     private:
 
     public:
         // Constructors
         /// Construct Null
-        reducedUnsteadyNSturb();
+        ReducedUnsteadyNSTurb();
         /// Construct Null
         ///
-        /// @param      problem  a full order unsteadyNSturb problem
+        /// @param      problem  a full order UnsteadyNSTurb problem
         ///
-        explicit reducedUnsteadyNSturb(unsteadyNSturb& problem);
+        explicit ReducedUnsteadyNSTurb(UnsteadyNSTurb& problem);
 
-        ~reducedUnsteadyNSturb() {};
+        ~ReducedUnsteadyNSTurb() {};
 
         /// Pointer to the FOM problem
-        unsteadyNSturb* problem;
+        UnsteadyNSTurb* problem;
 
         /// Reconstructed eddy viscosity field
-        PtrList<volScalarField> nutREC;
+        PtrList<volScalarField> nutRec;
 
         /// Number of viscosity modes
-        int Nphi_nut;
+        int nphiNut;
 
         /// Function object to call the non linear solver sup approach
-        newton_unsteadyNSturb_sup newton_object_sup;
+        newtonUnsteadyNSTurbSUP newtonObjectSUP;
 
         /// Function object to call the non linear solver PPE approach
-        newton_unsteadyNSturb_PPE newton_object_PPE;
+        newton_UnsteadyNSTurb_PPE newtonObjectPPE;
 
         /// Scalar to store the current time
         double time;
@@ -168,39 +168,39 @@ class reducedUnsteadyNSturb: public reducedUnsteadyNS
 
         /// Method to perform an online solve using a PPE stabilisation method
         ///
-        /// @param[in]  vel_now   The vector of online velocity. It is defined in
+        /// @param[in]  velNow   The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnline_PPE(Eigen::MatrixXd& vel_now, label startSnap = 0);
+        void solveOnlinePPE(Eigen::MatrixXd& velNow, label startSnap = 0);
 
         /// Method to perform an online solve using a supremizer stabilisation method
         ///
-        /// @param[in]  vel_now   The vector of online velocity. It is defined in
+        /// @param[in]  velNow   The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnline_sup(Eigen::MatrixXd& vel_now, label startSnap = 0);
+        void solveOnlineSUP(Eigen::MatrixXd& velNow, label startSnap = 0);
 
         /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
         /// stabilisation method
         ///
         /// @param[in]  folder      The folder where to output the solutions
-        /// @param[in]  printevery  The printevery
+        /// @param[in]  printEvery  The printEvery
         ///
-        void reconstruct_PPE(fileName folder = "./online_rec", int printevery = 1);
+        void reconstructPPE(fileName folder = "./online_rec", int printEvery = 1);
 
         /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
         ///
         /// @param[in]  folder      The folder where to output the solutions
-        /// @param[in]  printevery  The printevery
+        /// @param[in]  printEvery  The printEvery
         ///
-        void reconstruct_sup(fileName folder = "./online_rec", int printevery = 1);
+        void reconstructSUP(fileName folder = "./online_rec", int printEvery = 1);
 
 };
 

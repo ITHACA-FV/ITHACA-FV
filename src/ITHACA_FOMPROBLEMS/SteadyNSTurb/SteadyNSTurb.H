@@ -22,20 +22,20 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Class
-    steadyNSturb
+    SteadyNSTurb
 Description
     Reduction class for a Stationary turbulent Navier-Stokes problem.
 SourceFiles
-    steadyNSturb.C
+    SteadyNSTurb.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the steadyNSturb class.
+/// Header file of the SteadyNSTurb class.
 /// \dir
-/// Directory containing the header and source files for the steadyNSturb class.
+/// Directory containing the header and source files for the SteadyNSTurb class.
 
-#ifndef steadyNSturb_H
-#define steadyNSturb_H
+#ifndef SteadyNSTurb_H
+#define SteadyNSTurb_H
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
@@ -60,27 +60,27 @@ SourceFiles
 /// Implementation of a parametrized full order <b> steady turbulent Navier Stokes problem </b> and preparation of the the reduced matrices for the online solve.
 /** In this class are implemented the methods for the offline solve of a turbulent steady NS problem and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the reduction problem class */
-class steadyNSturb: public steadyNS
+class SteadyNSTurb: public steadyNS
 {
 
 
     public:
         // Constructors
-        steadyNSturb();
+        SteadyNSTurb();
         /// Construct with argc and argv
-        steadyNSturb(int argc, char* argv[]);
+        SteadyNSTurb(int argc, char* argv[]);
 
         // Member Functions
         /// List of snapshots for the solution for eddy viscosity
         PtrList<volScalarField> nutFields;
 
         /// List of POD modes for eddy viscosity
-        PtrList<volScalarField> nuTmodes;
+        PtrList<volScalarField> nutModes;
 
-        // Create a SAMPLES for interpolation
-        std::vector<SPLINTER::DataTable*> SAMPLES;
+        // Create a samples for interpolation
+        std::vector<SPLINTER::DataTable*> samples;
         // Create a RBF splines for interpolation
-        std::vector<SPLINTER::RBFSpline*> rbfsplines;
+        std::vector<SPLINTER::RBFSpline*> rbfSplines;
 
 
 
@@ -90,23 +90,32 @@ class steadyNSturb: public steadyNS
         ///@{
         //
         /// Turbulent viscosity matrix
-        Eigen::MatrixXd BT_matrix;
+        Eigen::MatrixXd btMatrix;
 
         /// Turbulent viscosity tensor
-        List <Eigen::MatrixXd> CT2_matrix;
+        List <Eigen::MatrixXd> ct2Matrix;
 
         /// Turbulent viscosity tensor
-        List <Eigen::MatrixXd> CT1_matrix;
+        List <Eigen::MatrixXd> ct1Matrix;
 
         /// Total C Matrix
-        List <Eigen::MatrixXd> C_total_matrix;
+        List <Eigen::MatrixXd> cTotalMatrix;
 
         /// Total B Matrix
-        Eigen::MatrixXd B_total_matrix;
+        Eigen::MatrixXd bTotalMatrix;
         ///@}
+        /// The matrix of L2 projection coefficients for the eddy viscosity
+        Eigen::MatrixXd coeffL2;
+
+        /// The vector of L2 projection coefficients for the eddy viscosity snapshot
+        Eigen::VectorXd nutCoeff;
+
+        /// The way to compute the eddy viscosity snapshots
+        word viscCoeff;
+
 
         /// Number of viscoisty modes used for the projection
-        label Nnutmodes;
+        label nNutModes;
 
         /// Eddy viscosity field
         autoPtr<volScalarField> _nut;
@@ -127,46 +136,46 @@ class steadyNSturb: public steadyNS
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NPmodes    The number of pressure modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
         ///
         void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes,
-                        label Nnutmodes);
+                        label nNutModes);
 
 
         ///
-        /// @brief      BT added matrix for the turbulence treatement
+        /// @brief      bt added matrix for the turbulence treatement
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
         ///
-        /// @return     BT matrix for turbulence treatment
+        /// @return     bt matrix for turbulence treatment
         ///
-        Eigen::MatrixXd BT_turbulence(label NUmodes, label NSUPmodes);
+        Eigen::MatrixXd btTurbulence(label NUmodes, label NSUPmodes);
 
 
         ///
-        /// @brief      CT1 added matrix for the turbulence treatement
+        /// @brief      ct1 added matrix for the turbulence treatement
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
         ///
-        /// @return     CT1 matrix for turbulence treatment
+        /// @return     ct1 matrix for turbulence treatment
         ///
-        List < Eigen::MatrixXd > turbulence_term1(label NUmodes, label NSUPmodes,
-                label Nnutmodes);
+        List < Eigen::MatrixXd > turbulenceTerm1(label NUmodes, label NSUPmodes,
+                label nNutModes);
 
         ///
-        /// @brief      CT2 added matrix for the turbulence treatement
+        /// @brief      ct2 added matrix for the turbulence treatement
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  Nnutmodes  The number of eddy viscosity modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
         ///
-        /// @return     CT2 matrix for turbulence treatment
+        /// @return     ct2 matrix for turbulence treatment
         ///
-        List < Eigen::MatrixXd > turbulence_term2(label NUmodes, label NSUPmodes,
-                label Nnutmodes);
+        List < Eigen::MatrixXd > turbulenceTerm2(label NUmodes, label NSUPmodes,
+                label nNutModes);
 
 };
 

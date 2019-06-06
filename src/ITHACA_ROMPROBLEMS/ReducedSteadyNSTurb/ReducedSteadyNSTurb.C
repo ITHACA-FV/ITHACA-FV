@@ -28,23 +28,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "reducedSteadyNSturb.H"
+#include "ReducedSteadyNSTurb.H"
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-reducedSteadyNSturb::reducedSteadyNSturb()
+ReducedSteadyNSTurb::ReducedSteadyNSTurb()
 {
 }
 
-reducedSteadyNSturb::reducedSteadyNSturb(steadyNSturb& FOMproblem)
+ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
     :
-    problem(&FOMproblem)
+    problem(&fomProblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
-    Nphi_nut = problem->CT2_matrix[0].rows();
+    nphiNut = problem->ct2Matrix[0].rows();
 
     for (label k = 0; k < problem->liftfield.size(); k++)
     {
@@ -61,51 +61,71 @@ reducedSteadyNSturb::reducedSteadyNSturb(steadyNSturb& FOMproblem)
         Umodes.append(problem->supmodes[k]);
     }
 
-    newton_object = newton_steadyNSturb(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
-                                        FOMproblem);
+    newtonObject = newtonSteadyNSTurb(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
+                                      fomProblem);
 }
 
-int newton_steadyNSturb::operator()(const Eigen::VectorXd& x,
-                                    Eigen::VectorXd& fvec) const
+int newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
+                                   Eigen::VectorXd& fvec) const
 {
-    Eigen::VectorXd a_tmp(Nphi_u);
-    Eigen::VectorXd b_tmp(Nphi_p);
-    a_tmp = x.head(Nphi_u);
-    b_tmp = x.tail(Nphi_p);
+    Eigen::VectorXd aTmp(Nphi_u);
+    Eigen::VectorXd bTmp(Nphi_p);
+    aTmp = x.head(Nphi_u);
+    bTmp = x.tail(Nphi_p);
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = problem->B_total_matrix * a_tmp * nu;
+    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
     // Gradient of pressure
-    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
+    Eigen::VectorXd m2 = problem->K_matrix * bTmp;
     // Pressure Term
-    Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
+    Eigen::VectorXd m3 = problem->P_matrix * aTmp;
+    // Penalty term
+    Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+
+    // Term for penalty method
+    if (problem->bcMethod == "penalty")
+    {
+        for (label l = 0; l < N_BC; l++)
+        {
+            penaltyU.col(l) = bc(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
+                              aTmp;
+        }
+    }
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp - nu_c.transpose() *
-             problem->C_total_matrix[i] * a_tmp;
-        fvec(i) = M1(i) - cc(0, 0) - M2(i);
+        cc = aTmp.transpose() * problem->C_matrix[i] * aTmp - gNut.transpose() *
+             problem->cTotalMatrix[i] * aTmp;
+        fvec(i) = m1(i) - cc(0, 0) - m2(i);
+
+        if (problem->bcMethod == "penalty")
+        {
+            fvec(i) += ((penaltyU * tauU)(i, 0));
+        }
     }
 
     for (label j = 0; j < Nphi_p; j++)
     {
         label k = j + Nphi_u;
-        fvec(k) = M3(j);
+        fvec(k) = m3(j);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    if (problem->bcMethod == "lift")
     {
-        fvec(j) = x(j) - BC(j);
+        for (label j = 0; j < N_BC; j++)
+        {
+            fvec(j) = x(j) - bc(j);
+        }
     }
 
     return 0;
 }
 
-int newton_steadyNSturb::df(const Eigen::VectorXd& x,
-                            Eigen::MatrixXd& fjac) const
+int newtonSteadyNSTurb::df(const Eigen::VectorXd& x,
+                           Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_steadyNSturb> numDiff(*this);
+    Eigen::NumericalDiff<newtonSteadyNSTurb> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -114,47 +134,65 @@ int newton_steadyNSturb::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
 
-void reducedSteadyNSturb::solveOnline_sup(Eigen::MatrixXd vel_now)
+void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd velNow)
 {
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
 
     for (label j = 0; j < N_BC; j++)
     {
-        y(j) = vel_now(j, 0);
+        y(j) = velNow(j, 0);
     }
 
     Color::Modifier red(Color::FG_RED);
     Color::Modifier green(Color::FG_GREEN);
     Color::Modifier def(Color::FG_DEFAULT);
-    Eigen::HybridNonLinearSolver<newton_steadyNSturb> hnls(newton_object);
-    newton_object.BC.resize(N_BC);
+    Eigen::HybridNonLinearSolver<newtonSteadyNSTurb> hnls(newtonObject);
+    newtonObject.bc.resize(N_BC);
+    newtonObject.tauU = tauU;
 
     for (label j = 0; j < N_BC; j++)
     {
-        newton_object.BC(j) = vel_now(j, 0);
+        newtonObject.bc(j) = velNow(j, 0);
     }
 
-    for (label i = 0; i < Nphi_nut; i++)
+    if (problem->viscCoeff == "L2")
     {
-        newton_object.nu_c(i) = problem->rbfsplines[i]->eval(vel_now);
+        for (label i = 0; i < nphiNut; i++)
+        {
+            newtonObject.gNut = problem->nutCoeff;
+        }
     }
-
-    volScalarField nut_rec("nut_rec", problem->nuTmodes[0] * 0);
-
-    for (label j = 0; j < Nphi_nut; j++)
+    else if (problem->viscCoeff == "RBF")
     {
-        nut_rec += problem->nuTmodes[j] * newton_object.nu_c(j);
+        for (label i = 0; i < nphiNut; i++)
+        {
+            newtonObject.gNut(i) = problem->rbfSplines[i]->eval(velNow);
+            rbfCoeff = newtonObject.gNut;
+        }
+    }
+    else
+    {
+        Info << "The way to compute the eddy viscosity coefficients has to be either L2 or RBF"
+             << endl;
+        exit(0);
     }
 
-    nutREC.append(nut_rec);
-    newton_object.nu = nu;
+    volScalarField nutTmp("nutRec", problem->nutModes[0] * 0);
+
+    for (label j = 0; j < nphiNut; j++)
+    {
+        nutTmp += problem->nutModes[j] * newtonObject.gNut(j);
+    }
+
+    nutRec.append(nutTmp);
+    newtonObject.nu = nu;
     hnls.solve(y);
     Eigen::VectorXd res(y);
-    newton_object.operator()(y, res);
+    newtonObject.operator()(y, res);
     std::cout << "################## Online solve N° " << count_online_solve <<
               " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << vel_now << std::endl;
+    std::cout << "Solving for the parameter: " << velNow << std::endl;
 
     if (res.norm() < 1e-5)
     {
@@ -171,36 +209,36 @@ void reducedSteadyNSturb::solveOnline_sup(Eigen::MatrixXd vel_now)
 }
 
 
-void reducedSteadyNSturb::reconstruct_sup(fileName folder, int printevery)
+void ReducedSteadyNSTurb::reconstructSUP(fileName folder, int printEvery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
     int counter = 0;
-    int nextwrite = 0;
+    int nextWrite = 0;
 
     for (label i = 0; i < online_solution.size(); i++)
     {
-        if (counter == nextwrite)
+        if (counter == nextWrite)
         {
-            volVectorField U_rec("U_rec", Umodes[0] * 0);
+            volVectorField uRec("uRec", Umodes[0] * 0);
 
             for (label j = 0; j < Nphi_u; j++)
             {
-                U_rec += Umodes[j] * online_solution[i](j + 1, 0);
+                uRec += Umodes[j] * online_solution[i](j + 1, 0);
             }
 
-            ITHACAstream::exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
-            volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
+            ITHACAstream::exportSolution(uRec, name(online_solution[i](0, 0)), folder);
+            volScalarField pRec("pRec", problem->Pmodes[0] * 0);
 
             for (label j = 0; j < Nphi_p; j++)
             {
-                P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
+                pRec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
 
-            ITHACAstream::exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
-            nextwrite += printevery;
-            UREC.append(U_rec);
-            PREC.append(P_rec);
+            ITHACAstream::exportSolution(pRec, name(online_solution[i](0, 0)), folder);
+            nextWrite += printEvery;
+            UREC.append(uRec);
+            PREC.append(pRec);
         }
 
         counter++;
