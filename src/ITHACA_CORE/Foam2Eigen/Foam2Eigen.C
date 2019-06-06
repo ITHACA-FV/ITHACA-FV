@@ -69,6 +69,37 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(
 }
 
 template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<scalar>& field)
+{
+    Eigen::VectorXd out;
+    out.resize(int(field.size()));
+
+    for (int l = 0; l < field.size(); l++)
+    {
+        out(l) = field[l];
+    }
+
+    return out;
+}
+
+template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<vector>& field)
+{
+    Eigen::VectorXd out;
+    out.resize(int(field.size() * 3));
+
+    for (int l = 0; l < field.size(); l++)
+    {
+        out(l) = field[l][0];
+        out(field.size() +  l ) = field[l][1];
+        out(2 * field.size() + l ) = field[l][2];
+    }
+
+    return out;
+}
+
+
+template<>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     GeometricField<vector, fvPatchField, volMesh>& field)
 {
@@ -120,8 +151,10 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     fields, int Nfields)
 {
     unsigned int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
 
-    if (Nfields > fields.size())
+    if (Nfields == -1)
     {
         Nf = fields.size();
     }
@@ -160,8 +193,10 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     fields, int Nfields)
 {
     unsigned int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
 
-    if (Nfields > fields.size())
+    if (Nfields == -1)
     {
         Nf = fields.size();
     }
@@ -238,8 +273,10 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
     int Nfields)
 {
     int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
 
-    if (Nfields > fields.size())
+    if (Nfields == -1)
     {
         Nf = fields.size();
     }
@@ -259,14 +296,50 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
     return out;
 }
 
+template <class type_f>
+Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<type_f>>& fields,
+        int Nfields)
+{
+    int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
+
+    if (Nfields == -1)
+    {
+        Nf = fields.size();
+    }
+    else
+    {
+        Nf = Nfields;
+    }
+
+    Eigen::MatrixXd out;
+    int nrows = (field2Eigen(fields[0])).rows();
+    out.resize(nrows, Nf);
+
+    for (int k = 0; k < Nf; k++)
+    {
+        out.col(k) = field2Eigen(fields[k]);
+    }
+
+    return out;
+}
+
+template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<scalar>>&
+        fields, int Nfields);
+template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<vector>>&
+        fields, int Nfields);
+
 template<>
 Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
     PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields,
     int Nfields)
 {
     int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
 
-    if (Nfields > fields.size())
+    if (Nfields == -1)
     {
         Nf = fields.size();
     }
