@@ -7,11 +7,11 @@ var searchData=
   ['reducedproblem',['reducedProblem',['../classreducedProblem.html',1,'']]],
   ['reducedsimplesteadyns',['reducedSimpleSteadyNS',['../classreducedSimpleSteadyNS.html',1,'']]],
   ['reducedsteadyns',['reducedSteadyNS',['../classreducedSteadyNS.html',1,'']]],
-  ['reducedsteadynsturb',['reducedSteadyNSturb',['../classreducedSteadyNSturb.html',1,'']]],
+  ['reducedsteadynsturb',['ReducedSteadyNSTurb',['../classReducedSteadyNSTurb.html',1,'']]],
   ['reducedunsteadybb',['reducedUnsteadyBB',['../classreducedUnsteadyBB.html',1,'']]],
   ['reducedunsteadyns',['reducedUnsteadyNS',['../classreducedUnsteadyNS.html',1,'']]],
   ['reducedunsteadynst',['reducedUnsteadyNST',['../classreducedUnsteadyNST.html',1,'']]],
   ['reducedunsteadynstturb',['reducedUnsteadyNSTturb',['../classreducedUnsteadyNSTturb.html',1,'']]],
-  ['reducedunsteadynsturb',['reducedUnsteadyNSturb',['../classreducedUnsteadyNSturb.html',1,'']]],
+  ['reducedunsteadynsturb',['ReducedUnsteadyNSTurb',['../classReducedUnsteadyNSTurb.html',1,'']]],
   ['reductionproblem',['reductionProblem',['../classreductionProblem.html',1,'']]]
 ];

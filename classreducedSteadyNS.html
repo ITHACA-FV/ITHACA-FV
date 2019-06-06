@@ -92,11 +92,11 @@ Inheritance diagram for reducedSteadyNS:</div>
   <img src="classreducedSteadyNS.png" usemap="#reducedSteadyNS_map" alt=""/>
   <map id="reducedSteadyNS_map" name="reducedSteadyNS_map">
 <area href="classreducedProblem.html" title="Base class for the implementation of a reduced problem." alt="reducedProblem" shape="rect" coords="83,0,240,24"/>
-<area href="classreducedSteadyNSturb.html" title="Class where it is implemented a reduced problem for the  steady turbulent Navier-stokes  problem." alt="reducedSteadyNSturb" shape="rect" coords="0,112,157,136"/>
+<area href="classReducedSteadyNSTurb.html" title="Class where it is implemented a reduced problem for the  steady turbulent Navier-stokes  problem." alt="ReducedSteadyNSTurb" shape="rect" coords="0,112,157,136"/>
 <area href="classreducedUnsteadyNS.html" title="Class where it is implemented a reduced problem for the  unsteady Navier-stokes  problem." alt="reducedUnsteadyNS" shape="rect" coords="167,112,324,136"/>
 <area href="classreducedUnsteadyBB.html" title="Class where it is implemented a reduced problem for the  unsteady Navier-stokes  problem." alt="reducedUnsteadyBB" shape="rect" coords="0,168,157,192"/>
 <area href="classreducedUnsteadyNST.html" title="Class where it is implemented a reduced problem for the  unsteady Navier-stokes weakly coupled with t..." alt="reducedUnsteadyNST" shape="rect" coords="167,168,324,192"/>
-<area href="classreducedUnsteadyNSturb.html" title="Class where it is implemented a reduced problem for the  unsteady Navier-stokes  problem." alt="reducedUnsteadyNSturb" shape="rect" coords="334,168,491,192"/>
+<area href="classReducedUnsteadyNSTurb.html" title="Class where it is implemented a reduced problem for the  unsteady Navier-stokes  problem." alt="ReducedUnsteadyNSTurb" shape="rect" coords="334,168,491,192"/>
 <area href="classreducedUnsteadyNSTturb.html" title="Class where it is implemented a reduced problem for the  unsteady Navier-stokes weakly coupled with t..." alt="reducedUnsteadyNSTturb" shape="rect" coords="167,224,324,248"/>
 </map>
  </div></div>
@@ -141,7 +141,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a2bf35778f70fe3541990026bc6403a56">solveOnline</a> ()</td></tr>
 <tr class="memdesc:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual Method to perform and online Solve.  <a href="classreducedProblem.html#a2bf35778f70fe3541990026bc6403a56">More...</a><br /></td></tr>
 <tr class="separator:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">solveLinearSys</a> (List&lt; Eigen::MatrixXd &gt; LinSys, Eigen::MatrixXd x, Eigen::VectorXd &amp;<a class="el" href="steadyNSturb_2NLsolve_8H.html#af4cd48a0192c75c3d6f1bbe7557cc02c">residual</a>, const Eigen::MatrixXd &amp;bc=Eigen::MatrixXd::Zero(0, 0), const std::string solverType=&quot;fullPivLu&quot;)</td></tr>
+<tr class="memitem:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">solveLinearSys</a> (List&lt; Eigen::MatrixXd &gt; LinSys, Eigen::MatrixXd x, Eigen::VectorXd &amp;<a class="el" href="SteadyNSTurb_2NLsolve_8H.html#af4cd48a0192c75c3d6f1bbe7557cc02c">residual</a>, const Eigen::MatrixXd &amp;bc=Eigen::MatrixXd::Zero(0, 0), const std::string solverType=&quot;fullPivLu&quot;)</td></tr>
 <tr class="memdesc:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linear system solver for the online problem.  <a href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">More...</a><br /></td></tr>
 <tr class="separator:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -204,6 +204,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8c3ed2317079057b5ecbb62078cd389e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a8c3ed2317079057b5ecbb62078cd389e">count_online_solve</a> = 1</td></tr>
 <tr class="memdesc:a8c3ed2317079057b5ecbb62078cd389e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counter to count the online solutions.  <a href="#a8c3ed2317079057b5ecbb62078cd389e">More...</a><br /></td></tr>
 <tr class="separator:a8c3ed2317079057b5ecbb62078cd389e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c2def5307b5582d5a8f2fda8b5e65ac"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a4c2def5307b5582d5a8f2fda8b5e65ac">tauU</a></td></tr>
+<tr class="memdesc:a4c2def5307b5582d5a8f2fda8b5e65ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Penalty Factor.  <a href="#a4c2def5307b5582d5a8f2fda8b5e65ac">More...</a><br /></td></tr>
+<tr class="separator:a4c2def5307b5582d5a8f2fda8b5e65ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classreducedProblem"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classreducedProblem')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classreducedProblem.html">reducedProblem</a></td></tr>
 <tr class="memitem:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a65ad23828d68db181985589b65d3c436">nu</a></td></tr>
 <tr class="memdesc:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Viscosity.  <a href="classreducedProblem.html#a65ad23828d68db181985589b65d3c436">More...</a><br /></td></tr>
@@ -215,9 +218,9 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Class where it is implemented a reduced problem for the <b> steady Navier-stokes </b> problem. </p>
 <p class="">In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes equations. This class must be used together with the <a class="el" href="classsteadyNS.html" title="Implementation of a parametrized full order  steady NS problem  and preparation of the the reduced ma...">steadyNS</a> class </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#_a24">03steadyNS.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#_a24">03steadyNS.C</a>, and <a class="el" href="06POD_RBF_8C-example.html#_a41">06POD_RBF.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00082">82</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00083">83</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9d1552e4e26f805478e1076c6a23eef3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9d1552e4e26f805478e1076c6a23eef3">&#9670;&nbsp;</a></span>reducedSteadyNS() <span class="overload">[1/2]</span></h2>
@@ -300,7 +303,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00098">98</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00099">99</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -323,7 +326,7 @@ Public Attributes</h2></td></tr>
 <p>Method to evaluate the online inf-sup constant. </p>
 <dl class="section return"><dt>Returns</dt><dd>return the reduced version of the inf-sup constant. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00245">245</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00264">264</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -362,7 +365,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00267">267</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00286">286</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -402,7 +405,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00175">175</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00194">194</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -442,7 +445,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00209">209</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00228">228</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -470,7 +473,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00118">118</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00136">136</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -498,7 +501,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00125">125</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8C_source.html#l00143">143</a> of file <a class="el" href="reducedSteadyNS_8C_source.html">reducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -517,7 +520,7 @@ Public Attributes</h2></td></tr>
 
 <p>Counter to count the online solutions. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00155">155</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00156">156</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -535,7 +538,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reduced matrix for normal forces. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00104">104</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00105">105</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -553,7 +556,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reduced matrix for tangent forces. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00098">98</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00099">99</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -571,7 +574,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of parametrized boundary conditions. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00152">152</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00153">153</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -589,7 +592,7 @@ Public Attributes</h2></td></tr>
 
 <p>Newton object used to solve the non linear problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00137">137</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00138">138</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -607,7 +610,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of pressure modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00146">146</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00147">147</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -625,7 +628,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of supremizer modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00149">149</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00150">150</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -643,7 +646,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of velocity modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00143">143</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00144">144</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -661,7 +664,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reduced viscosity in case of parametrized viscosity. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00113">113</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00114">114</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -679,7 +682,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of <a class="el" href="namespaceEigen.html">Eigen</a> matrices to store the online solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00116">116</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00117">117</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -697,7 +700,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the modes for pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00122">122</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00123">123</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -715,7 +718,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reconstructed pressure field. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00131">131</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00132">132</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -733,7 +736,7 @@ Public Attributes</h2></td></tr>
 
 <p>Pointer to the FOM problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00140">140</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00141">141</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -751,7 +754,25 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the snapshots for pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00128">128</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00129">129</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+
+</div>
+</div>
+<a id="a4c2def5307b5582d5a8f2fda8b5e65ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c2def5307b5582d5a8f2fda8b5e65ac">&#9670;&nbsp;</a></span>tauU</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXd reducedSteadyNS::tauU</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Penalty Factor. </p>
+
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00159">159</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -769,7 +790,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the modes for velocity. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00119">119</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00120">120</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -787,7 +808,7 @@ Public Attributes</h2></td></tr>
 
 <p>Recontructed velocity field. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00134">134</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00135">135</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -805,7 +826,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the snapshots for velocity. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00125">125</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00126">126</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -823,7 +844,7 @@ Public Attributes</h2></td></tr>
 
 <p>Vector to store the solution during the Newton procedure. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00110">110</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00111">111</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -841,7 +862,7 @@ Public Attributes</h2></td></tr>
 
 <p>Vector to store the previous solution during the Newton procedure. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00107">107</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reducedSteadyNS_8H_source.html#l00108">108</a> of file <a class="el" href="reducedSteadyNS_8H_source.html">reducedSteadyNS.H</a>.</p>
 
 </div>
 </div>

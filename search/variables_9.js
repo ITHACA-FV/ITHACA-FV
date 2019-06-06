@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['i',['i',['../steadyNS_2pEqn_8H.html#acb559820d9ca11295b4500f179ef6392',1,'i():&#160;pEqn.H'],['../steadyNS__simple_2pEqn_8H.html#acb559820d9ca11295b4500f179ef6392',1,'i():&#160;pEqn.H'],['../steadyNSturb_2pEqn_8H.html#acb559820d9ca11295b4500f179ef6392',1,'i():&#160;pEqn.H']]],
+  ['i',['i',['../steadyNS_2pEqn_8H.html#acb559820d9ca11295b4500f179ef6392',1,'i():&#160;pEqn.H'],['../steadyNS__simple_2pEqn_8H.html#acb559820d9ca11295b4500f179ef6392',1,'i():&#160;pEqn.H'],['../SteadyNSTurb_2pEqn_8H.html#acb559820d9ca11295b4500f179ef6392',1,'i():&#160;pEqn.H']]],
   ['indfacelocal',['IndFaceLocal',['../classITHACAparallel.html#a0f5b9a88aae0cdb1e0ee13e86ef0da9d',1,'ITHACAparallel']]],
   ['indices',['indices',['../classITHACAparallel.html#a0ca962418e0f6ac5a3fe36f5fc28a449',1,'ITHACAparallel']]],
   ['indicesf',['indicesF',['../classITHACAparallel.html#ab52b1bb8a4464a3f3b2131ddf7810d87',1,'ITHACAparallel']]],
