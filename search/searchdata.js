@@ -7,10 +7,10 @@ var indexSectionsWithContent =
   4: "_abcdefghiklmnoprstuvw~",
   5: "_abcdefghiklmnopqrstuvwxyz",
   6: "ijsv",
-  7: "cf",
-  8: "bfimv",
+  7: "cfh",
+  8: "bfhimv",
   9: "o",
-  10: "_cm",
+  10: "_cmp",
   11: "i"
 };
 

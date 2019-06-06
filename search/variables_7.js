@@ -5,5 +5,6 @@ var searchData=
   ['gh',['gh',['../src_2ITHACA__FOMPROBLEMS_2unsteadyBB_2createFields_8H.html#a02ae31b4be2bce133e714b6d2f3a9e17',1,'createFields.H']]],
   ['ghf',['ghf',['../src_2ITHACA__FOMPROBLEMS_2unsteadyBB_2createFields_8H.html#ad04819e58004fbc6688f4da3f906d34c',1,'createFields.H']]],
   ['ghref',['ghRef',['../src_2ITHACA__FOMPROBLEMS_2unsteadyBB_2createFields_8H.html#a88486a48fa3919c0765db48bdaef3b5a',1,'createFields.H']]],
+  ['gnut',['gNut',['../structnewtonSteadyNSTurb.html#a7bfb61a88db29c097b3cd2725267d42f',1,'newtonSteadyNSTurb::gNut()'],['../structnewtonUnsteadyNSTurbSUP.html#a7a99ce7660ba9d9c552f8b84913683a6',1,'newtonUnsteadyNSTurbSUP::gNut()'],['../structnewton__UnsteadyNSTurb__PPE.html#a770ea730155ee2e7236442acb855474b',1,'newton_UnsteadyNSTurb_PPE::gNut()']]],
   ['gsize_5fbf',['Gsize_BF',['../classITHACAparallel.html#addbb3ffb9a3c27582fc82fbbd4e8e47a',1,'ITHACAparallel']]]
 ];

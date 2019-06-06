@@ -102,12 +102,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3e61caf522f37282779c200ba2d2a0f1"><td class="memItemLeft" align="right" valign="top">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModes.html#a3e61caf522f37282779c200ba2d2a0f1">toPtrList</a> ()</td></tr>
 <tr class="memdesc:a3e61caf522f37282779c200ba2d2a0f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that returns the <a class="el" href="classModes.html" title="Implementation of a container class derived from PtrList.">Modes</a> object as a standard PtrList.  <a href="#a3e61caf522f37282779c200ba2d2a0f1">More...</a><br /></td></tr>
 <tr class="separator:a3e61caf522f37282779c200ba2d2a0f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54fb3127c51598e3ed6b55d17310407e"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModes.html#a54fb3127c51598e3ed6b55d17310407e">project</a> (fvMatrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;Af)</td></tr>
-<tr class="memdesc:a54fb3127c51598e3ed6b55d17310407e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function that project an FvMatrix (OpenFoam linear System) on the modes.  <a href="#a54fb3127c51598e3ed6b55d17310407e">More...</a><br /></td></tr>
-<tr class="separator:a54fb3127c51598e3ed6b55d17310407e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a637609eee6b63e4495520984e0edcc78"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModes.html#a637609eee6b63e4495520984e0edcc78">project</a> (fvMatrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;Af, int numberOfModes=0)</td></tr>
+<tr class="memdesc:a637609eee6b63e4495520984e0edcc78"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function that project an FvMatrix (OpenFoam linear System) on the modes.  <a href="#a637609eee6b63e4495520984e0edcc78">More...</a><br /></td></tr>
+<tr class="separator:a637609eee6b63e4495520984e0edcc78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25c7971fb61531ba052f8cf9b90014d2"><td class="memItemLeft" align="right" valign="top">GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModes.html#a25c7971fb61531ba052f8cf9b90014d2">reconstruct</a> (Eigen::MatrixXd &amp;Coeff, word Name)</td></tr>
 <tr class="memdesc:a25c7971fb61531ba052f8cf9b90014d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to reconstruct the solution starting from the coefficients.  <a href="#a25c7971fb61531ba052f8cf9b90014d2">More...</a><br /></td></tr>
 <tr class="separator:a25c7971fb61531ba052f8cf9b90014d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa80157c071877676f8fc64c0a1af5072"><td class="memItemLeft" align="right" valign="top">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModes.html#aa80157c071877676f8fc64c0a1af5072">projectSnapshots</a> (PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&gt; snapshots, int numberOfModes=0, word innerProduct=&quot;L2&quot;)</td></tr>
+<tr class="separator:aa80157c071877676f8fc64c0a1af5072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a922819413db19022dc49de06c939dda8"><td class="memItemLeft" align="right" valign="top">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModes.html#a922819413db19022dc49de06c939dda8">projectSnapshots</a> (PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&gt; snapshots, word innerProduct=&quot;L2&quot;)</td></tr>
+<tr class="separator:a922819413db19022dc49de06c939dda8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef1709b1146122b8ac49d27853e4be3b"><td class="memItemLeft" align="right" valign="top">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModes.html#aef1709b1146122b8ac49d27853e4be3b">projectSnapshots</a> (PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&gt; snapshots, PtrList&lt; volScalarField &gt; Volumes, int numberOfModes=0, word innerProduct=&quot;L2&quot;)</td></tr>
+<tr class="separator:aef1709b1146122b8ac49d27853e4be3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75fc946dfb198d20b7e6d8b2053144bc"><td class="memItemLeft" align="right" valign="top">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModes.html#a75fc946dfb198d20b7e6d8b2053144bc">projectSnapshots</a> (PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&gt; snapshots, PtrList&lt; volScalarField &gt; Volumes, word innerProduct)</td></tr>
+<tr class="separator:a75fc946dfb198d20b7e6d8b2053144bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -132,10 +140,10 @@ class Modes&lt; T &gt;</h3>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Modes_8H_source.html#l00066">66</a> of file <a class="el" href="Modes_8H_source.html">Modes.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Modes_8H_source.html#l00068">68</a> of file <a class="el" href="Modes_8H_source.html">Modes.H</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a54fb3127c51598e3ed6b55d17310407e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54fb3127c51598e3ed6b55d17310407e">&#9670;&nbsp;</a></span>project()</h2>
+<a id="a637609eee6b63e4495520984e0edcc78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a637609eee6b63e4495520984e0edcc78">&#9670;&nbsp;</a></span>project()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -146,8 +154,18 @@ template&lt;class T&gt; </div>
           <td class="memname">List&lt; Eigen::MatrixXd &gt; <a class="el" href="classModes.html">Modes</a>&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt;::project </td>
           <td>(</td>
           <td class="paramtype">fvMatrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>Af</em></td><td>)</td>
+          <td class="paramname"><em>Af</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numberOfModes</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -156,13 +174,166 @@ template&lt;class T&gt; </div>
 <p class="">Used to project and FvMatrix that is a standard linear system of OpenFoam onto the modes defined inside the <a class="el" href="classModes.html" title="Implementation of a container class derived from PtrList.">Modes</a> container. The output is a list of matrices that contains in the first element the reduced matrix and in the second element the source term.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Af</td><td>The OpenFOAM fvMatrix linear system, it can be vector or scalar matrix</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Af</td><td>The OpenFOAM fvMatrix linear system, it can be vector or scalar matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">numberOfModes</td><td>The number of modes used to project. If not given it will use all the available ones.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A list of <a class="el" href="namespaceEigen.html">Eigen</a> Matrices of dimension 2. The first element of the list is the reduced matrix of the linear system, the second element is the reduced source term of the linear system. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ModesTemplates_8C_source.html#l00061">61</a> of file <a class="el" href="ModesTemplates_8C_source.html">ModesTemplates.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Modes_8C_source.html#l00063">63</a> of file <a class="el" href="Modes_8C_source.html">Modes.C</a>.</p>
+
+</div>
+</div>
+<a id="aa80157c071877676f8fc64c0a1af5072"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa80157c071877676f8fc64c0a1af5072">&#9670;&nbsp;</a></span>projectSnapshots() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt; <a class="el" href="classModes.html">Modes</a>&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt;::projectSnapshots </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&gt;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numberOfModes</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>innerProduct</em> = <code>&quot;L2&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Modes_8C_source.html#l00201">201</a> of file <a class="el" href="Modes_8C_source.html">Modes.C</a>.</p>
+
+</div>
+</div>
+<a id="a922819413db19022dc49de06c939dda8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a922819413db19022dc49de06c939dda8">&#9670;&nbsp;</a></span>projectSnapshots() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt; <a class="el" href="classModes.html">Modes</a>&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt;::projectSnapshots </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&gt;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>innerProduct</em> = <code>&quot;L2&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Modes_8C_source.html#l00261">261</a> of file <a class="el" href="Modes_8C_source.html">Modes.C</a>.</p>
+
+</div>
+</div>
+<a id="aef1709b1146122b8ac49d27853e4be3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef1709b1146122b8ac49d27853e4be3b">&#9670;&nbsp;</a></span>projectSnapshots() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt; <a class="el" href="classModes.html">Modes</a>&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt;::projectSnapshots </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&gt;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt;&#160;</td>
+          <td class="paramname"><em>Volumes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numberOfModes</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>innerProduct</em> = <code>&quot;L2&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Modes_8C_source.html#l00122">122</a> of file <a class="el" href="Modes_8C_source.html">Modes.C</a>.</p>
+
+</div>
+</div>
+<a id="a75fc946dfb198d20b7e6d8b2053144bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75fc946dfb198d20b7e6d8b2053144bc">&#9670;&nbsp;</a></span>projectSnapshots() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt; <a class="el" href="classModes.html">Modes</a>&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt;::projectSnapshots </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&gt;&#160;</td>
+          <td class="paramname"><em>snapshots</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt;&#160;</td>
+          <td class="paramname"><em>Volumes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>innerProduct</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Modes_8C_source.html#l00189">189</a> of file <a class="el" href="Modes_8C_source.html">Modes.C</a>.</p>
 
 </div>
 </div>
@@ -204,7 +375,7 @@ template&lt;class T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A volScalarField or volScalarField given by the reconstruction. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ModesTemplates_8C_source.html#l00081">81</a> of file <a class="el" href="ModesTemplates_8C_source.html">ModesTemplates.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Modes_8C_source.html#l00096">96</a> of file <a class="el" href="Modes_8C_source.html">Modes.C</a>.</p>
 
 </div>
 </div>
@@ -227,7 +398,7 @@ template&lt;class T &gt; </div>
 
 <p>Method that convert a PtrList of modes into <a class="el" href="namespaceEigen.html">Eigen</a> matrices filling the EigenModes object. </p>
 
-<p class="definition">Definition at line <a class="el" href="ModesTemplates_8C_source.html#l00036">36</a> of file <a class="el" href="ModesTemplates_8C_source.html">ModesTemplates.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Modes_8C_source.html#l00038">38</a> of file <a class="el" href="Modes_8C_source.html">Modes.C</a>.</p>
 
 </div>
 </div>
@@ -259,7 +430,7 @@ template&lt;class T&gt; </div>
 <p>Function that returns the <a class="el" href="classModes.html" title="Implementation of a container class derived from PtrList.">Modes</a> object as a standard PtrList. </p>
 <dl class="section return"><dt>Returns</dt><dd>The PtrList containing the modes </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Modes_8H_source.html#l00084">84</a> of file <a class="el" href="Modes_8H_source.html">Modes.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Modes_8H_source.html#l00086">86</a> of file <a class="el" href="Modes_8H_source.html">Modes.H</a>.</p>
 
 </div>
 </div>
@@ -280,7 +451,7 @@ template&lt;class T&gt; </div>
 
 <p>List of Matrices that contains the internalField and the additional matrices for the boundary patches. </p>
 
-<p class="definition">Definition at line <a class="el" href="Modes_8H_source.html#l00071">71</a> of file <a class="el" href="Modes_8H_source.html">Modes.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Modes_8H_source.html#l00073">73</a> of file <a class="el" href="Modes_8H_source.html">Modes.H</a>.</p>
 
 </div>
 </div>
@@ -300,13 +471,13 @@ template&lt;class T&gt; </div>
 
 <p>Number of patches. </p>
 
-<p class="definition">Definition at line <a class="el" href="Modes_8H_source.html#l00074">74</a> of file <a class="el" href="Modes_8H_source.html">Modes.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Modes_8H_source.html#l00076">76</a> of file <a class="el" href="Modes_8H_source.html">Modes.H</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_CORE/Containers/<a class="el" href="Modes_8H_source.html">Modes.H</a></li>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_CORE/Containers/<a class="el" href="ModesTemplates_8C_source.html">ModesTemplates.C</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_CORE/Containers/<a class="el" href="Modes_8C_source.html">Modes.C</a></li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.14-->

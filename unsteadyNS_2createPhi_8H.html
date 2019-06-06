@@ -94,13 +94,17 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5bf45aaa9101d80816c6383ac6016445"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNS_2createPhi_8H.html#a5bf45aaa9101d80816c6383ac6016445">Info&lt;&lt; &quot;Reading/calculating face flux field phi\n&quot;&lt;&lt; endl;_phi=autoPtr&lt; surfaceScalarField &gt;</a> (new surfaceScalarField(IOobject(&quot;phi&quot;, runTime.timeName(), <a class="el" href="unsteadyNSturb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d">mesh</a>, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE), linearInterpolate(<a class="el" href="unsteadyNSturb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>) &amp;mesh.Sf()))</td></tr>
+<tr class="memitem:a5bf45aaa9101d80816c6383ac6016445"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNS_2createPhi_8H.html#a5bf45aaa9101d80816c6383ac6016445">Info&lt;&lt; &quot;Reading/calculating face flux field phi\n&quot;&lt;&lt; endl;_phi=autoPtr&lt; surfaceScalarField &gt;</a> (new surfaceScalarField(IOobject(&quot;phi&quot;, runTime.timeName(), <a class="el" href="UnsteadyNSTurb_2createMesh_8H.html#ad3874bb3b9ab8a24930b4793e928108d">mesh</a>, IOobject::READ_IF_PRESENT, IOobject::AUTO_WRITE), linearInterpolate(<a class="el" href="UnsteadyNSTurb_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>) &amp;mesh.Sf()))</td></tr>
 <tr class="separator:a5bf45aaa9101d80816c6383ac6016445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6522e972693d511f4ae57c850d3cf8cd"><td class="memItemLeft" align="right" valign="top">surfaceScalarField&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNS_2createPhi_8H.html#a6522e972693d511f4ae57c850d3cf8cd">phi0</a> (<a class="el" href="UnsteadyNSTurb_2createPhi_8H.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>)</td></tr>
+<tr class="separator:a6522e972693d511f4ae57c850d3cf8cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a1a97abcf6c141f539994c8a21c8daca7"><td class="memItemLeft" align="right" valign="top">surfaceScalarField &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNS_2createPhi_8H.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a> = _phi()</td></tr>
 <tr class="separator:a1a97abcf6c141f539994c8a21c8daca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed2d7b42a2e2024abed642912f05e0d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unsteadyNS_2createPhi_8H.html#aed2d7b42a2e2024abed642912f05e0d6">_phi0</a></td></tr>
+<tr class="separator:aed2d7b42a2e2024abed642912f05e0d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="af171a3223d35c90413b6a44682b66177"></a>
@@ -136,7 +140,42 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a6522e972693d511f4ae57c850d3cf8cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6522e972693d511f4ae57c850d3cf8cd">&#9670;&nbsp;</a></span>phi0()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">surfaceScalarField phi0 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="UnsteadyNSTurb_2createPhi_8H.html#a1a97abcf6c141f539994c8a21c8daca7">phi</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="aed2d7b42a2e2024abed642912f05e0d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed2d7b42a2e2024abed642912f05e0d6">&#9670;&nbsp;</a></span>_phi0</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">_phi0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= autoPtr&lt;surfaceScalarField&gt;</div><div class="line">        (</div><div class="line">            <span class="keyword">new</span> surfaceScalarField(<a class="code" href="steadyNS_2createPhi_8H.html#a6522e972693d511f4ae57c850d3cf8cd">phi0</a>)</div><div class="line">        )</div><div class="ttc" id="steadyNS_2createPhi_8H_html_a6522e972693d511f4ae57c850d3cf8cd"><div class="ttname"><a href="steadyNS_2createPhi_8H.html#a6522e972693d511f4ae57c850d3cf8cd">phi0</a></div><div class="ttdeci">surfaceScalarField phi0(phi)</div></div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="unsteadyNS_2createPhi_8H_source.html#l00049">49</a> of file <a class="el" href="unsteadyNS_2createPhi_8H_source.html">createPhi.H</a>.</p>
+
+</div>
+</div>
 <a id="a1a97abcf6c141f539994c8a21c8daca7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1a97abcf6c141f539994c8a21c8daca7">&#9670;&nbsp;</a></span>phi</h2>
 
@@ -149,7 +188,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unsteadyNS_2createPhi_8H_source.html#l00048">48</a> of file <a class="el" href="unsteadyNS_2createPhi_8H_source.html">createPhi.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unsteadyNS_2createPhi_8H_source.html#l00046">46</a> of file <a class="el" href="unsteadyNS_2createPhi_8H_source.html">createPhi.H</a>.</p>
 
 </div>
 </div>
