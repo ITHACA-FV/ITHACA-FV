@@ -112,10 +112,43 @@ class Foam2Eigen
         template <class type_f>
         static Eigen::MatrixXd PtrList2Eigen(
             PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields,
-            int Nfields = 10000000);
+            int Nfields = -1);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Convert a PtrList of Fields to Eigen matrix
+        ///
+        /// @param[in]  fields The fields can be a PtrList<scalarField> or PtrList<vectorField>
+        ///
+        /// @tparam     type_f  Type of the Field can be vector or scalar
+        ///
+        /// @return     An Eigen matrix containing as columns the snapshots
+        ///
+        template <class type_f>
+        static Eigen::MatrixXd PtrList2Eigen(PtrList<Field<type_f>>& fields,
+                                             int Nfields = -1);
 
 
+        //--------------------------------------------------------------------------
+        /// @brief      Convert an OpenFOAM field to an Eigen Vector
+        ///
+        /// @param[in]  field   The field
+        ///
+        /// @tparam     type_f  Type of the field can be volScalarField or volVectorField
+        ///
+        /// @return     return the dense Eigen vector
+        ///
+        template <class type_f>
+        static Eigen::VectorXd field2Eigen(const Field<type_f>& field);
 
+        //--------------------------------------------------------------------------
+        /// @brief      Convert an OpenFOAM field to an Eigen Vector
+        ///
+        /// @param[in]  field   The field
+        ///
+        /// @tparam     type_f  Type of the field can be volScalarField or volVectorField
+        ///
+        /// @return     return the dense Eigen vector
+        ///
         template <class type_f>
         static Eigen::VectorXd field2Eigen(const
                                            DimensionedField<type_f, Foam::volMesh>& field);
@@ -170,7 +203,7 @@ class Foam2Eigen
         template <class type_f>
         static List<Eigen::MatrixXd> PtrList2EigenBC(
             PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields,
-            int Nfields = 10000000);
+            int Nfields = -1);
 
         //--------------------------------------------------------------------------
         /// @brief      Converts a vector in Eigen format into an OpenFOAM GeometricField
