@@ -7,7 +7,7 @@ for d in ./*/ ; do
     echo $d    
     cd $d
     if [ -f "Make/files" ]; then
-    wmake -j
+    wmake
      if [ $? -ne 0 ]
      then
       echo $d "did not compile"
@@ -30,7 +30,7 @@ for d in applications/*/ ; do
     echo $d    
     cd $d
     if [ -f "Make/files" ]; then
-    wmake -j
+    wmake
     if [ $? -ne 0 ]
     then
      echo $d "did not compile"
@@ -46,7 +46,7 @@ for d in ./*/ ; do
     echo $d    
     cd $d
     if [ -f "Make/files" ]; then
-    wmake -j
+    wmake
      if [ $? -ne 0 ]
      then
       echo $d "did not compile"
@@ -62,7 +62,7 @@ for d in ./*/ ; do
     echo $d    
     cd $d
     if [ -f "Make/files" ]; then
-    wmake -j
+    wmake 
     if [ $? -ne 0 ]
     then
      echo $d "did not compile"

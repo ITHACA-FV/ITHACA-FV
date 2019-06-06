@@ -65,9 +65,11 @@ For a brief description of the classes and methods, you can check the official I
 ### 3. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
 Several tutorials are provided the [**tutorials** subfolder](./tutorials).
 * [**Tutorial 1**](https://mathlab.github.io/ITHACA-FV/01POD_8C-example.html): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case. 
-* [**Tutorial 2**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C-example.html): In this tutorial is implemented the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**. 
-* [**Tutorial 3**](https://mathlab.github.io/ITHACA-FV/03steadyNS_8C-example.html) In this tutorial is implemented the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **simpleFoam**.
-* [**Tutorial 4**](https://mathlab.github.io/ITHACA-FV/04unsteadyNS_8C-example.html) In this tutorial is implemented the development of a parametrized POD-Galerkin method for an unsteady Navier-Stokes problem. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **pimpleFoam**.
+* [**Tutorial 2**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C-example.html): In this tutorial the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem is implemented. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**. 
+* [**Tutorial 3**](https://mathlab.github.io/ITHACA-FV/03steadyNS_8C-example.html) In this tutorial, the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the viscosity is implemented. The OpenFOAM full order problem is based on **simpleFoam**.
+* [**Tutorial 4**](https://mathlab.github.io/ITHACA-FV/04unsteadyNS_8C-example.html) In this tutorial, the development of a parametrized POD-Galerkin method for an unsteady Navier-Stokes problem is implemented. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **pimpleFoam**.
+
+* [**Tutorial 6**](https://mathlab.github.io/ITHACA-FV/06POD_RBF_8C-example.html) This tutorial presents the application of data driven POD-Galerkin model to RANS equation in steady state setting. The components of the velocity at the inlet are paramertized. The OpenFOAM full order problem is based on **simpleFoam**.
 
 * [**Tutorial 8**](https://mathlab.github.io/ITHACA-FV/08DEIM_8C-example.html) In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for the reconstruction of a non-linear function. In this case we do not perform model reduction but we test just the motodology a non-linear function.
 
