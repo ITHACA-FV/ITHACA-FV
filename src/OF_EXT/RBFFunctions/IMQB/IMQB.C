@@ -60,7 +60,7 @@ Foam::IMQB::~IMQB()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::IMQB::weights
+Foam::scalarField Foam::IMQB::weights
 (
     const vectorField& controlPoints,
     const vector& dataPoint
