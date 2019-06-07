@@ -59,7 +59,7 @@ Foam::Gauss::~Gauss()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::Gauss::weights
+Foam::scalarField Foam::Gauss::weights
 (
     const vectorField& controlPoints,
     const vector& dataPoint

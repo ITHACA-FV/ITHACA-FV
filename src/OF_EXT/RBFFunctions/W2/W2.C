@@ -59,7 +59,7 @@ Foam::W2::~W2()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::W2::weights
+Foam::scalarField Foam::W2::weights
 (
     const vectorField& controlPoints,
     const vector& dataPoint

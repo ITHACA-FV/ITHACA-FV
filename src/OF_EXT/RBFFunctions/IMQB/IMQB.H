@@ -96,7 +96,7 @@ class IMQB
         // Member Functions
 
         //- Return weights given points
-        virtual tmp<scalarField> weights
+        virtual scalarField weights
         (
             const vectorField& controlPoints,
             const vector& dataPoint
