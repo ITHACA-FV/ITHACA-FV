@@ -88,7 +88,7 @@ void ITHACAPOD::getModes(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, bool podex,
     bool supex, bool sup, int nmodes)
 {
-    if (podex == 0)
+    if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
         ITHACAparameters para;
 
@@ -252,7 +252,7 @@ void ITHACAPOD::getWeightedModes(
     M_Assert(nmodes <= snapshots.size() - 2,
              "The number of requested modes cannot be bigger than the number of Snapshots - 2");
 
-    if (podex == 0)
+    if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
         ITHACAparameters para;
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshots);
@@ -390,7 +390,7 @@ void ITHACAPOD::getModesSVD(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, bool podex,
     bool supex, bool sup, int nmodes)
 {
-    if (podex == 0)
+    if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
         PtrList<volVectorField> Bases;
         modes.resize(nmodes);
@@ -1019,7 +1019,7 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
                  "The number of requested modes cannot be bigger than the number of Snapshots - 2");
     }
 
-    if (podex == 0)
+    if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshots);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshots);
@@ -1168,7 +1168,7 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
                  "The number of requested modes cannot be bigger than the number of Snapshots - 2");
     }
 
-    if (podex == 0)
+    if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshots);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshots);
