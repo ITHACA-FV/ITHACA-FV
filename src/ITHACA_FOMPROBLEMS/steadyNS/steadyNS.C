@@ -77,6 +77,7 @@ steadyNS::steadyNS(int argc, char* argv[])
     );
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
+    bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
     para = new ITHACAparameters;
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -391,6 +392,31 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     NUmodes = NU;
     NPmodes = NP;
     NSUPmodes = NSUP;
+    L_U_SUPmodes.resize(0);
+
+    if (liftfield.size() != 0)
+    {
+        for (label k = 0; k < liftfield.size(); k++)
+        {
+            L_U_SUPmodes.append(liftfield[k]);
+        }
+    }
+
+    if (NUmodes != 0)
+    {
+        for (label k = 0; k < NUmodes; k++)
+        {
+            L_U_SUPmodes.append(Umodes[k]);
+        }
+    }
+
+    if (NSUPmodes != 0)
+    {
+        for (label k = 0; k < NSUPmodes; k++)
+        {
+            L_U_SUPmodes.append(supmodes[k]);
+        }
+    }
 
     if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
     {
@@ -462,34 +488,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     }
     else
     {
-        L_U_SUPmodes.resize(0);
-
-        if (liftfield.size() != 0)
-        {
-            for (label k = 0; k < liftfield.size(); k++)
-            {
-                L_U_SUPmodes.append(liftfield[k]);
-            }
-        }
-
-        if (NUmodes != 0)
-        {
-            for (label k = 0; k < NUmodes; k++)
-            {
-                L_U_SUPmodes.append(Umodes[k]);
-            }
-        }
-
-        if (NSUPmodes != 0)
-        {
-            for (label k = 0; k < NSUPmodes; k++)
-            {
-                L_U_SUPmodes.append(supmodes[k]);
-            }
-        }
-
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-        C_matrix = convective_term(NUmodes, NPmodes, NSUPmodes);
         C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
