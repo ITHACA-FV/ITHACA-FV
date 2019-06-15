@@ -642,7 +642,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<TypeField>
 
     Eigen::MatrixXd coeff(Msize, snapshots.size());
 
-    for (auto i = 0; i < Msize; i++)
+    for (auto i = 0; i < snapshots.size(); i++)
     {
         coeff.col(i) = get_coeffs_ortho(snapshots[i], modes, Nmodes);
     }

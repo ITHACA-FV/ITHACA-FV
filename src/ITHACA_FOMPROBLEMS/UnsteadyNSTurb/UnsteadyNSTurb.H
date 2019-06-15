@@ -96,14 +96,18 @@ class UnsteadyNSTurb: public unsteadyNS
         /// Turbulent viscosity term
         Eigen::MatrixXd btMatrix;
 
-        /// Turbulent viscosity term
+        /// Turbulent viscosity tensor
         List <Eigen::MatrixXd> ct2Matrix;
+        Eigen::Tensor<double, 3 > ct2Tensor;
 
-        /// Turbulent viscosity term
+        /// Turbulent viscosity tensor
         List <Eigen::MatrixXd> ct1Matrix;
+        Eigen::Tensor<double, 3 > ct1Tensor;
 
-        /// Total C Matrix
+
+        /// Total Turbulent tensor
         List <Eigen::MatrixXd> cTotalMatrix;
+        Eigen::Tensor<double, 3 > cTotalTensor;
 
         /// Total B Matrix
         Eigen::MatrixXd bTotalMatrix;
@@ -149,6 +153,17 @@ class UnsteadyNSTurb: public unsteadyNS
         ///
         List < Eigen::MatrixXd > turbulenceTerm1(label NUmodes, label NSUPmodes,
                 label nNutModes);
+        ///
+        /// @brief      { function_description }
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct1 tensor for the turbulence treatement
+        ///
+        Eigen::Tensor<double, 3 > turbulenceTensor1(label NUmodes,
+                label NSUPmodes, label nNutModes);
 
         ///
         /// @brief      ct2 added matrix for the turbulence treatement
@@ -161,6 +176,16 @@ class UnsteadyNSTurb: public unsteadyNS
         ///
         List < Eigen::MatrixXd > turbulenceTerm2(label NUmodes, label NSUPmodes,
                 label nNutModes);
+        /// @brief      { function_description }
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct2 tensor for the turbulence treatement
+        ///
+        Eigen::Tensor<double, 3 > turbulenceTensor2(label NUmodes,
+                label NSUPmodes, label nNutModes);
 
         //--------------------------------------------------------------------------
         /// @brief      Perform a truthsolve

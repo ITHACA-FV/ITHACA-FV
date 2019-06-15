@@ -62,6 +62,8 @@ SourceFiles
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wignored-attributes"
 #include <Eigen/Eigen>
+#include "EigenFunctions.H"
+
 #include <unsupported/Eigen/CXX11/Tensor>
 #pragma GCC diagnostic pop
 
@@ -108,7 +110,8 @@ class ITHACAstream
         /// @param[in] tipo string to identify format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
         /// @param[in] folder string to identify the folder where you want to save the file.
         ///
-        static void exportMatrix(Eigen::MatrixXd& matrice, word Name,
+        template<typename T>
+        static void exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix, word Name,
                                  word tipo = "python", word folder = "./Matrices");
 
         //--------------------------------------------------------------------------
@@ -122,8 +125,25 @@ class ITHACAstream
         /// @param[in] tipo format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
         /// @param[in] folder string to identify the folder where you want to save the file.
         ///
-        static void exportMatrix(List <Eigen::MatrixXd>& matrice, word Name,
+        static void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                                  word tipo = "python", word folder = "./Matrices");
+
+
+        ///
+        /// @brief      { Export the reduced tensors in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format }
+        ///
+        /// @param[in]  tensor  The tensor that you want to export.
+        /// @param[in]  Name    The Name string to identify the name you want to use to save the file.
+        /// @param[in]  tipo    The tipo format to export the matrix if numpy (tipo="python"),
+        /// if matlab (tipo="matlab") if txt (tipo="eigen").
+        /// @param[in]  folder  folder string to identify the folder where you want to save the file.
+        ///
+        /// @tparam     T       { description }
+        ///
+        template<typename T>
+        static void exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
+                                 word tipo = "python", word folder = "./Matrices");
+
 
         //--------------------------------------------------------------------------
         /// Funtion to read a list of volVectorField from name of the field and casename

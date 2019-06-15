@@ -78,6 +78,8 @@ steadyNS::steadyNS(int argc, char* argv[])
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
+    M_Assert(bcMethod == "lift" || bcMethod == "penalty",
+             "The BC method must be set to lift or penalty in ITHACAdict");
     para = new ITHACAparameters;
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -508,6 +510,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         ITHACAstream::exportMatrix(K_matrix, "K", "python", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(P_matrix, "P", "python", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(M_matrix, "M", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(C_tensor, "C", "python", "./ITHACAoutput/Matrices/");
     }
 
     if (para->exportMatlab)
@@ -516,6 +519,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         ITHACAstream::exportMatrix(K_matrix, "K", "matlab", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(P_matrix, "P", "matlab", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(M_matrix, "M", "matlab", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(C_tensor, "C", "python", "./ITHACAoutput/Matrices/");
     }
 
     if (para->exportTxt)
@@ -524,6 +528,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         ITHACAstream::exportMatrix(K_matrix, "K", "eigen", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(P_matrix, "P", "eigen", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(M_matrix, "M", "eigen", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(C_tensor, "C", "python", "./ITHACAoutput/Matrices/C");
     }
 }
 
@@ -1010,12 +1015,12 @@ void steadyNS::change_viscosity(double mu)
 }
 
 
-void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
+void steadyNS::forcesMatrices(label NUmodes, label NPmodes, label NSUPmodes)
 {
-    tau_matrix.resize(L_U_SUPmodes.size(), 3);
-    n_matrix.resize(NPmodes, 3);
-    tau_matrix = tau_matrix * 0;
-    n_matrix = n_matrix * 0;
+    tauMatrix.resize(L_U_SUPmodes.size(), 3);
+    nMatrix.resize(NPmodes, 3);
+    tauMatrix = tauMatrix * 0;
+    nMatrix = nMatrix * 0;
     Time& runTime = _runTime();
     instantList Times = runTime.times();
     fvMesh& mesh = _mesh();
@@ -1058,7 +1063,7 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
 
         for (label j = 0; j < 3; j++)
         {
-            tau_matrix(i, j) = f.force_tau()[j];
+            tauMatrix(i, j) = f.force_tau()[j];
         }
     }
 
@@ -1072,29 +1077,40 @@ void steadyNS::Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes)
 
         for (label j = 0; j < 3; j++)
         {
-            n_matrix(i, j) = f.force_pressure()[j];
+            nMatrix(i, j) = f.force_pressure()[j];
         }
     }
 
     if (Pstream::parRun())
     {
-        reduce(tau_matrix, sumOp<Eigen::MatrixXd>());
+        reduce(tauMatrix, sumOp<Eigen::MatrixXd>());
     }
 
     if (Pstream::parRun())
     {
-        reduce(n_matrix, sumOp<Eigen::MatrixXd>());
+        reduce(nMatrix, sumOp<Eigen::MatrixXd>());
     }
 
-    ITHACAstream::exportMatrix(tau_matrix, "tau", "python",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(tau_matrix, "tau", "matlab",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(tau_matrix, "tau", "eigen",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(n_matrix, "n", "python", "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(n_matrix, "n", "matlab", "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(n_matrix, "n", "eigen", "./ITHACAoutput/Matrices/");
+    if (para->exportPython)
+    {
+        ITHACAstream::exportMatrix(tauMatrix, "tau", "python",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(nMatrix, "n", "python", "./ITHACAoutput/Matrices/");
+    }
+
+    if (para->exportMatlab)
+    {
+        ITHACAstream::exportMatrix(tauMatrix, "tau", "matlab",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(nMatrix, "n", "matlab", "./ITHACAoutput/Matrices/");
+    }
+
+    if (para->exportTxt)
+    {
+        ITHACAstream::exportMatrix(tauMatrix, "tau", "eigen",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(nMatrix, "n", "eigen", "./ITHACAoutput/Matrices/");
+    }
 }
 
 
