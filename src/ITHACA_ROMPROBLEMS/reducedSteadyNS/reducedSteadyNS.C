@@ -38,6 +38,7 @@ License
 // Constructor
 reducedSteadyNS::reducedSteadyNS()
 {
+    para = new ITHACAparameters;
 }
 
 reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
@@ -284,7 +285,7 @@ double reducedSteadyNS::inf_sup_constant()
 }
 
 
-void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS& problem,
+void reducedSteadyNS::reconstructLiftAndDrag(steadyNS& problem,
         fileName folder)
 {
     mkDir(folder);
@@ -310,32 +311,39 @@ void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS& problem,
             IOobject::NO_WRITE
         )
     );
-    Eigen::MatrixXd TAU =
-        ITHACAstream::readMatrix("./ITHACAoutput/Matrices/tau_mat.txt");
-    Eigen::MatrixXd N =
-        ITHACAstream::readMatrix("./ITHACAoutput/Matrices/n_mat.txt");
-    Eigen::VectorXd temp1;
-    f_tau.setZero(online_solution.size(), 3);
-    f_n.setZero(online_solution.size(), 3);
+    fTau.setZero(online_solution.size(), 3);
+    fN.setZero(online_solution.size(), 3);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
         for (label j = 0; j < totalSize; j++)
         {
-            f_tau.row(i) += TAU.row(j) * online_solution[i](j + 1, 0);
+            fTau.row(i) += problem.tauMatrix.row(j) * online_solution[i](j + 1, 0);
         }
 
         for (label j = 0; j < NPmodes; j++)
         {
-            f_n.row(i) += N.row(j) * online_solution[i](j + Nphi_u + 1, 0);
+            fN.row(i) += problem.nMatrix.row(j) * online_solution[i](j + Nphi_u + 1, 0);
         }
     }
 
-    ITHACAstream::exportMatrix(f_tau, "f_tau", "python", folder);
-    ITHACAstream::exportMatrix(f_tau, "f_tau", "matlab", folder);
-    ITHACAstream::exportMatrix(f_tau, "f_tau", "eigen", folder);
-    ITHACAstream::exportMatrix(f_n, "f_n", "python", folder);
-    ITHACAstream::exportMatrix(f_n, "f_n", "matlab", folder);
-    ITHACAstream::exportMatrix(f_n, "f_n", "eigen", folder);
+    // Export the matrices
+    if (para->exportPython)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "python", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "python", folder);
+    }
+
+    if (para->exportMatlab)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "matlab", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "matlab", folder);
+    }
+
+    if (para->exportTxt)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "eigen", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "eigen", folder);
+    }
 }
 

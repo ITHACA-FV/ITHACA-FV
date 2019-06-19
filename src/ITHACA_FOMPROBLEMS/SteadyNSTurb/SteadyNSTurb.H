@@ -50,7 +50,9 @@ SourceFiles
 #include <bsplinebuilder.h>
 #include <rbfspline.h>
 #include <spline.h>
-
+#include <Eigen/Dense>
+#include <unsupported/Eigen/NonLinearOptimization>
+#include <unsupported/Eigen/NumericalDiff>
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*---------------------------------------------------------------------------*\
@@ -94,12 +96,16 @@ class SteadyNSTurb: public steadyNS
 
         /// Turbulent viscosity tensor
         List <Eigen::MatrixXd> ct2Matrix;
+        Eigen::Tensor<double, 3 > ct2Tensor;
 
         /// Turbulent viscosity tensor
         List <Eigen::MatrixXd> ct1Matrix;
+        Eigen::Tensor<double, 3 > ct1Tensor;
 
-        /// Total C Matrix
+
+        /// Total Turbulent tensor
         List <Eigen::MatrixXd> cTotalMatrix;
+        Eigen::Tensor<double, 3 > cTotalTensor;
 
         /// Total B Matrix
         Eigen::MatrixXd bTotalMatrix;
@@ -166,6 +172,18 @@ class SteadyNSTurb: public steadyNS
                 label nNutModes);
 
         ///
+        /// @brief      { function_description }
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct1 tensor for the turbulence treatement
+        ///
+        Eigen::Tensor<double, 3 > turbulenceTensor1(label NUmodes,
+                label NSUPmodes, label nNutModes);
+
+        ///
         /// @brief      ct2 added matrix for the turbulence treatement
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
@@ -176,6 +194,18 @@ class SteadyNSTurb: public steadyNS
         ///
         List < Eigen::MatrixXd > turbulenceTerm2(label NUmodes, label NSUPmodes,
                 label nNutModes);
+
+        ///
+        /// @brief      { function_description }
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct2 tensor for the turbulence treatement
+        ///
+        Eigen::Tensor<double, 3 > turbulenceTensor2(label NUmodes,
+                label NSUPmodes, label nNutModes);
 
 };
 

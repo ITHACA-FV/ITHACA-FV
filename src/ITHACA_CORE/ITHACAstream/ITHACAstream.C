@@ -72,8 +72,9 @@ void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder,
 
     std::cout << std::endl;
 }
-
-void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
+template <typename T>
+void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
+                                word Name, word tipo,
                                 word folder)
 {
     std::string message = "The extension \"" +  tipo +
@@ -90,21 +91,21 @@ void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
         OFstream str(folder + "/" + Name + "_mat" + est);
         str << Name << "=np.array([";
 
-        for (label i = 0; i < matrice.rows(); i++)
+        for (label i = 0; i < matrix.rows(); i++)
         {
-            for (label j = 0; j < matrice.cols(); j++)
+            for (label j = 0; j < matrix.cols(); j++)
             {
                 if (j == 0)
                 {
-                    str << "[" << setprecision(10) << matrice(i, j);
+                    str << "[" << setprecision(10) << matrix(i, j);
                 }
                 else
                 {
-                    str << "," << setprecision(10) << matrice(i, j);
+                    str << "," << setprecision(10) << matrix(i, j);
                 }
             }
 
-            if (i != (matrice.rows() - 1))
+            if (i != (matrix.rows() - 1))
             {
                 str << "]," << endl;
             }
@@ -119,14 +120,14 @@ void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
         OFstream str(folder + "/" + Name + "_mat" + est);
         str << Name << "=[";
 
-        for (label i = 0; i < matrice.rows(); i++)
+        for (label i = 0; i < matrix.rows(); i++)
         {
-            for (label j = 0; j < matrice.cols(); j++)
+            for (label j = 0; j < matrix.cols(); j++)
             {
-                str << " " << setprecision(10) << matrice(i, j);
+                str << " " << setprecision(10) << matrix(i, j);
             }
 
-            if (i != (matrice.rows() - 1))
+            if (i != (matrix.rows() - 1))
             {
                 str << ";" << endl;
             }
@@ -140,12 +141,24 @@ void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
         std::ofstream ofs;
         ofs.open (folder + "/" + Name + "_mat.txt");
         ofs.precision(20);
-        ofs << matrice << std::endl;
+        ofs << matrix << std::endl;
         ofs.close();
     }
 }
 
-void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrice, word Name,
+template void ITHACAstream::exportMatrix(Eigen::Matrix < double, -1,
+        -1 > & matrix, word Name, word tipo,
+        word folder);
+
+template void ITHACAstream::exportMatrix(Eigen::Matrix < int, -1,
+        -1 > & matrix, word Name, word tipo,
+        word folder);
+
+template void ITHACAstream::exportMatrix(Eigen::Matrix < float, -1,
+        -1 > & matrix, word Name, word tipo,
+        word folder);
+
+void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                                 word tipo, word folder)
 {
     std::string message = "The extension \"" +  tipo +
@@ -161,28 +174,28 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrice, word Name,
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
-        str << Name <<  "=np.zeros([" << matrice.size() << "," << matrice[0].rows() <<
-            "," << matrice[0].cols() << "])\n";
+        str << Name <<  "=np.zeros([" << matrix.size() << "," << matrix[0].rows() <<
+            "," << matrix[0].cols() << "])\n";
 
-        for (label i = 0; i < matrice.size(); i++)
+        for (label i = 0; i < matrix.size(); i++)
         {
             str << Name << "[" << i << ",:,:]=np.array([";
 
-            for (label j = 0; j < matrice[0].rows(); j++)
+            for (label j = 0; j < matrix[0].rows(); j++)
             {
-                for (label k = 0; k < matrice[0].cols(); k++)
+                for (label k = 0; k < matrix[0].cols(); k++)
                 {
                     if ( k == 0)
                     {
-                        str << "[" << setprecision(10) << matrice[i](j, k);
+                        str << "[" << setprecision(10) << matrix[i](j, k);
                     }
                     else
                     {
-                        str << "," << setprecision(10) << matrice[i](j, k);
+                        str << "," << setprecision(10) << matrix[i](j, k);
                     }
                 }
 
-                if (j != (matrice[0].rows() - 1))
+                if (j != (matrix[0].rows() - 1))
                 {
                     str << "]," << endl;
                 }
@@ -197,18 +210,18 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrice, word Name,
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
 
-        for (label i = 0; i < matrice.size(); i++)
+        for (label i = 0; i < matrix.size(); i++)
         {
             str << Name << "(" << i + 1 << ",:,:)=[";
 
-            for (label j = 0; j < matrice[0].rows(); j++)
+            for (label j = 0; j < matrix[0].rows(); j++)
             {
-                for (label k = 0; k < matrice[0].cols(); k++)
+                for (label k = 0; k < matrix[0].cols(); k++)
                 {
-                    str << " " << setprecision(10) << matrice[i](j, k);
+                    str << " " << setprecision(10) << matrix[i](j, k);
                 }
 
-                if (j != (matrice[0].rows() - 1))
+                if (j != (matrix[0].rows() - 1))
                 {
                     str << ";" << endl;
                 }
@@ -219,13 +232,121 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrice, word Name,
     }
     else if (tipo == "eigen")
     {
-        for (label i = 0; i < matrice.size(); i++)
+        for (label i = 0; i < matrix.size(); i++)
         {
             word Namei = Name + name(i);
-            ITHACAstream::exportMatrix(matrice[i], Namei, "eigen", folder);
+            ITHACAstream::exportMatrix(matrix[i], Namei, "eigen", folder);
         }
     }
 }
+
+template<typename T>
+void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
+                                word tipo, word folder)
+{
+    std::string message = "The extension \"" +  tipo +
+                          "\" was not implemented. Check the list of possible extensions.";
+    M_Assert(tipo == "python" || tipo == "matlab"
+             || tipo == "eigen", message.c_str()
+            );
+    mkDir(folder);
+    word est;
+    Info << "here inside exportTensor 1" << endl;
+
+    // Python Case
+    if (tipo == "python")
+    {
+        est = ".py";
+        OFstream str(folder + "/" + Name + "_mat" + est);
+        str << Name <<  "=np.zeros([" << tensor.dimension(0) << "," <<
+            Eigen::SliceFromTensor(
+                tensor, 0,
+                0).rows() <<
+            "," << Eigen::SliceFromTensor(tensor, 0,
+                                          0).cols() << "])\n";
+
+        for (label i = 0; i < tensor.dimension(0); i++)
+        {
+            str << Name << "[" << i << ",:,:]=np.array([";
+
+            for (label j = 0; j < Eigen::SliceFromTensor(tensor, 0, 0).rows(); j++)
+            {
+                for (label k = 0; k < Eigen::SliceFromTensor(tensor, 0, 0).cols(); k++)
+                {
+                    if ( k == 0)
+                    {
+                        str << "[" << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
+                                i)(j, k);
+                    }
+                    else
+                    {
+                        str << "," << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
+                                i)(j, k);
+                    }
+                }
+
+                if (j != (Eigen::SliceFromTensor(tensor, 0,
+                                                 0).rows() - 1))
+                {
+                    str << "]," << endl;
+                }
+            }
+
+            str << "]])\n" << endl;
+        }
+    }
+    // Matlab case
+    else if (tipo == "matlab")
+    {
+        est = ".m";
+        OFstream str(folder + "/" + Name + "_mat" + est);
+
+        for (label i = 0; i < tensor.dimension(0); i++)
+        {
+            str << Name << "(" << i + 1 << ",:,:)=[";
+
+            for (label j = 0; j < Eigen::SliceFromTensor(tensor, 0,
+                    0).rows(); j++)
+            {
+                for (label k = 0; k < Eigen::SliceFromTensor(tensor, 0,
+                        0).cols(); k++)
+                {
+                    str << " " << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
+                            i)(j, k);
+                }
+
+                if (j != (Eigen::SliceFromTensor(tensor, 0,
+                                                 0).rows() - 1))
+                {
+                    str << ";" << endl;
+                }
+            }
+
+            str << "];" << endl;
+        }
+    }
+    else if (tipo == "eigen")
+    {
+        for (label i = 0; i < tensor.dimension(0); i++)
+        {
+            Eigen::Matrix < T, -1, -1 > matrixAux = Eigen::SliceFromTensor(tensor, 0, i);
+            word Namei = Name + name(i);
+            exportMatrix(matrixAux, Namei, "eigen", folder);
+        }
+    }
+}
+
+template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3 > tensor,
+        word Name,
+        word tipo, word folder);
+
+template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3 > tensor,
+        word Name,
+        word tipo, word folder);
+
+template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3 > tensor,
+        word Name,
+        word tipo, word folder);
 
 List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
 {

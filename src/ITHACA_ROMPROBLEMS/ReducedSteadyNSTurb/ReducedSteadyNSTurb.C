@@ -95,8 +95,9 @@ int newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = aTmp.transpose() * problem->C_matrix[i] * aTmp - gNut.transpose() *
-             problem->cTotalMatrix[i] * aTmp;
+        cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
+                i) * aTmp - gNut.transpose() *
+             Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
         fvec(i) = m1(i) - cc(0, 0) - m2(i);
 
         if (problem->bcMethod == "penalty")

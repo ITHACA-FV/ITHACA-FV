@@ -163,10 +163,10 @@ class steadyNS: public reductionProblem
         //
 
         /// Viscous forces
-        Eigen::MatrixXd tau_matrix;
+        Eigen::MatrixXd tauMatrix;
 
         /// Pressure forces
-        Eigen::MatrixXd n_matrix;
+        Eigen::MatrixXd nMatrix;
 
         /// Boundary term for penalty method - vector
         List <Eigen::MatrixXd> bcVelVec;
@@ -421,7 +421,7 @@ class steadyNS: public reductionProblem
         /// @param[in]  NPmodes    The N of pressure modes
         /// @param[in]  NSUPmodes  The N of supremizer modes
         ///
-        void Forces_matrices(label NUmodes, label NPmodes, label NSUPmodes);
+        void forcesMatrices(label NUmodes, label NPmodes, label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// @brief      Export convective term as a tensor

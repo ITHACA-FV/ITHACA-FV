@@ -93,26 +93,27 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
                                         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
-    Eigen::VectorXd a_tmp(Nphi_u);
+    Eigen::VectorXd aTmp(Nphi_u);
     Eigen::VectorXd bTmp(Nphi_p);
-    a_tmp = x.head(Nphi_u);
+    aTmp = x.head(Nphi_u);
     bTmp = x.tail(Nphi_p);
     a_dot = (x.head(Nphi_u) - y_old.head(Nphi_u)) / dt;
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix * a_tmp * nu;
+    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
     // Gradient of pressure
     Eigen::VectorXd m2 = problem->K_matrix * bTmp;
     // Mass Term
     Eigen::VectorXd m5 = problem->M_matrix * a_dot;
     // Pressure Term
-    Eigen::VectorXd m3 = problem->P_matrix * a_tmp;
+    Eigen::VectorXd m3 = problem->P_matrix * aTmp;
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp - gNut.transpose() *
-             problem->cTotalMatrix[i] * a_tmp;
+        cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
+                i) * aTmp - gNut.transpose() *
+             Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
         fvec(i) = - m5(i) + m1(i) - cc(0, 0) - m2(i);
     }
 
@@ -146,9 +147,9 @@ int newton_UnsteadyNSTurb_PPE::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
-    Eigen::VectorXd a_tmp(Nphi_u);
+    Eigen::VectorXd aTmp(Nphi_u);
     Eigen::VectorXd bTmp(Nphi_p);
-    a_tmp = x.head(Nphi_u);
+    aTmp = x.head(Nphi_u);
     bTmp = x.tail(Nphi_p);
     a_dot = (x.head(Nphi_u) - y_old.head(Nphi_u)) / dt;
     // Convective terms
@@ -156,7 +157,7 @@ int newton_UnsteadyNSTurb_PPE::operator()(const Eigen::VectorXd& x,
     Eigen::MatrixXd gg(1, 1);
     Eigen::MatrixXd bb(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->B_matrix * a_tmp * nu;
+    Eigen::VectorXd m1 = problem->B_matrix * aTmp * nu;
     // Gradient of pressure
     Eigen::VectorXd m2 = problem->K_matrix * bTmp;
     // Mass Term
@@ -164,22 +165,22 @@ int newton_UnsteadyNSTurb_PPE::operator()(const Eigen::VectorXd& x,
     // Pressure Term
     Eigen::VectorXd m3 = problem->D_matrix * bTmp;
     // BC PPE
-    Eigen::VectorXd m6 = problem->BC1_matrix * a_tmp * nu;
+    Eigen::VectorXd m6 = problem->BC1_matrix * aTmp * nu;
     // BC PPE
-    Eigen::VectorXd m7 = problem->BC3_matrix * a_tmp * nu;
+    Eigen::VectorXd m7 = problem->BC3_matrix * aTmp * nu;
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp - gNut.transpose() *
-             problem->cTotalMatrix[i] * a_tmp;
+        cc = aTmp.transpose() * problem->C_matrix[i] * aTmp - gNut.transpose() *
+             problem->cTotalMatrix[i] * aTmp;
         fvec(i) = - m5(i) + m1(i) - cc(0, 0) - m2(i);
     }
 
     for (label j = 0; j < Nphi_p; j++)
     {
         label k = j + Nphi_u;
-        gg = a_tmp.transpose() * problem->G_matrix[j] * a_tmp;
-        bb = a_tmp.transpose() * problem->BC2_matrix[j] * a_tmp;
+        gg = aTmp.transpose() * problem->G_matrix[j] * aTmp;
+        bb = aTmp.transpose() * problem->BC2_matrix[j] * aTmp;
         //fvec(k) = m3(j, 0) - gg(0, 0) - m6(j, 0) + bb(0, 0);
         fvec(k) = m3(j, 0) + gg(0, 0) - m7(j, 0);
     }
