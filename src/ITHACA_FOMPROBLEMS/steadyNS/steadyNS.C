@@ -528,7 +528,8 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         ITHACAstream::exportMatrix(K_matrix, "K", "eigen", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(P_matrix, "P", "eigen", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(M_matrix, "M", "eigen", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(C_tensor, "C", "python", "./ITHACAoutput/Matrices/C");
+        ITHACAstream::exportTensor(C_tensor, "C", "python",
+                                   "./ITHACAoutput/Matrices/C");
     }
 }
 

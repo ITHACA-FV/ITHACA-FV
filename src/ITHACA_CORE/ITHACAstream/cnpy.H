@@ -49,7 +49,7 @@ NpyArray npy_load(std::string fname);
 
 template<typename T>
 Eigen::Matrix < T, -1, -1 > load(Eigen::Matrix < T, -1, -1 > & mat,
-                                 const std::string fname);
+                                 const std::string fname, std::string order = "rowMajor");
 
 template<typename T>
 void save(const Eigen::Matrix < T, -1, -1 > & mat, const std::string fname);
