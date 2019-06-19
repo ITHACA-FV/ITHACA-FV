@@ -401,18 +401,33 @@ void cnpy::save(const Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic>&
 template<class typeNumber>
 Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic> cnpy::load(
     Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic>& mat,
-    const std::string fname)
+    const std::string fname, std::string order)
 {
+    M_Assert(order == "rowMajor" ||
+             order == "colMajor", "Order can be only rowMajor or colMajor");
     NpyArray arr = npy_load(fname);
     assert(arr.shape.size() == 2);
     mat.resize(arr.shape[0], arr.shape[1]);
     typeNumber* data = reinterpret_cast<typeNumber*>(arr.data);
 
-    for (size_t i = 0; i < arr.shape[0]; ++i)
+    if (order == "rowMajor")
     {
-        for (size_t j = 0; j < arr.shape[1]; ++j)
+        for (size_t i = 0; i < arr.shape[0]; ++i)
         {
-            mat(i, j) = (typeNumber) data[arr.shape[1] * i + j];
+            for (size_t j = 0; j < arr.shape[1]; ++j)
+            {
+                mat(i, j) = (typeNumber) data[arr.shape[1] * i + j];
+            }
+        }
+    }
+    else if (order == "colMajor")
+    {
+        for (size_t i = 0; i < arr.shape[0]; ++i)
+        {
+            for (size_t j = 0; j < arr.shape[1]; ++j)
+            {
+                mat(i, j) = (typeNumber) data[arr.shape[0] * j + i];
+            }
         }
     }
 
@@ -422,19 +437,19 @@ Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic> cnpy::load(
 
 template void cnpy::save(const Eigen::MatrixXi& mat, const std::string fname);
 template Eigen::MatrixXi cnpy::load(Eigen::MatrixXi& mat,
-                                    const std::string fname);
+                                    const std::string fname, std::string order);
 
 template void cnpy::save(const Eigen::MatrixXd& mat, const std::string fname);
 template Eigen::MatrixXd cnpy::load(Eigen::MatrixXd& mat,
-                                    const std::string fname);
+                                    const std::string fname, std::string order);
 
 template void cnpy::save(const Eigen::MatrixXf& mat, const std::string fname);
 template Eigen::MatrixXf cnpy::load(Eigen::MatrixXf& mat,
-                                    const std::string fname);
+                                    const std::string fname, std::string order);
 
 template void cnpy::save(const Eigen::MatrixXcd& mat, const std::string fname);
 template Eigen::MatrixXcd cnpy::load(Eigen::MatrixXcd& mat,
-                                     const std::string fname);
+                                     const std::string fname, std::string order);
 
 
 #pragma GCC diagnostic pop
