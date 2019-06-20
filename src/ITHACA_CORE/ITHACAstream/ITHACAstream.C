@@ -251,7 +251,6 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
             );
     mkDir(folder);
     word est;
-    Info << "here inside exportTensor 1" << endl;
 
     // Python Case
     if (tipo == "python")
