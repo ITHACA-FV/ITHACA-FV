@@ -44,7 +44,7 @@ ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
-    nphiNut = problem->ct2Matrix[0].rows();
+    nphiNut = problem->cTotalTensor.dimension(1);
 
     for (label k = 0; k < problem->liftfield.size(); k++)
     {
