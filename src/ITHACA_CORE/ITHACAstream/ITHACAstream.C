@@ -45,27 +45,43 @@ void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder,
                                 word fieldname)
 {
     ITHACAutilities::createSymLink(folder);
+    Info << "######### Exporting the Data for " << fieldname << " #########" <<
+         endl;
 
     for (label j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
+        printProgress(double(j + 1) / field.size());
     }
+
+    std::cout << std::endl;
 }
 
 void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder,
                                 word fieldname)
 {
     ITHACAutilities::createSymLink(folder);
+    Info << "######### Exporting the Data for " << fieldname << " #########" <<
+         endl;
 
     for (label j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
+        printProgress(double(j + 1) / field.size());
     }
-}
 
-void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
+    std::cout << std::endl;
+}
+template <typename T>
+void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
+                                word Name, word tipo,
                                 word folder)
 {
+    std::string message = "The extension \"" +  tipo +
+                          "\" was not implemented. Check the list of possible extensions.";
+    M_Assert(tipo == "python" || tipo == "matlab"
+             || tipo == "eigen", message.c_str()
+            );
     mkDir(folder);
     word est;
 
@@ -75,21 +91,21 @@ void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
         OFstream str(folder + "/" + Name + "_mat" + est);
         str << Name << "=np.array([";
 
-        for (label i = 0; i < matrice.rows(); i++)
+        for (label i = 0; i < matrix.rows(); i++)
         {
-            for (label j = 0; j < matrice.cols(); j++)
+            for (label j = 0; j < matrix.cols(); j++)
             {
                 if (j == 0)
                 {
-                    str << "[" << setprecision(10) << matrice(i, j);
+                    str << "[" << setprecision(10) << matrix(i, j);
                 }
                 else
                 {
-                    str << "," << setprecision(10) << matrice(i, j);
+                    str << "," << setprecision(10) << matrix(i, j);
                 }
             }
 
-            if (i != (matrice.rows() - 1))
+            if (i != (matrix.rows() - 1))
             {
                 str << "]," << endl;
             }
@@ -104,14 +120,14 @@ void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
         OFstream str(folder + "/" + Name + "_mat" + est);
         str << Name << "=[";
 
-        for (label i = 0; i < matrice.rows(); i++)
+        for (label i = 0; i < matrix.rows(); i++)
         {
-            for (label j = 0; j < matrice.cols(); j++)
+            for (label j = 0; j < matrix.cols(); j++)
             {
-                str << " " << setprecision(10) << matrice(i, j);
+                str << " " << setprecision(10) << matrix(i, j);
             }
 
-            if (i != (matrice.rows() - 1))
+            if (i != (matrix.rows() - 1))
             {
                 str << ";" << endl;
             }
@@ -125,14 +141,31 @@ void ITHACAstream::exportMatrix(Eigen::MatrixXd& matrice, word Name, word tipo,
         std::ofstream ofs;
         ofs.open (folder + "/" + Name + "_mat.txt");
         ofs.precision(20);
-        ofs << matrice << std::endl;
+        ofs << matrix << std::endl;
         ofs.close();
     }
 }
 
-void ITHACAstream::exportMatrix(List < Eigen::MatrixXd >& matrice, word Name,
+template void ITHACAstream::exportMatrix(Eigen::Matrix < double, -1,
+        -1 > & matrix, word Name, word tipo,
+        word folder);
+
+template void ITHACAstream::exportMatrix(Eigen::Matrix < int, -1,
+        -1 > & matrix, word Name, word tipo,
+        word folder);
+
+template void ITHACAstream::exportMatrix(Eigen::Matrix < float, -1,
+        -1 > & matrix, word Name, word tipo,
+        word folder);
+
+void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                                 word tipo, word folder)
 {
+    std::string message = "The extension \"" +  tipo +
+                          "\" was not implemented. Check the list of possible extensions.";
+    M_Assert(tipo == "python" || tipo == "matlab"
+             || tipo == "eigen", message.c_str()
+            );
     mkDir(folder);
     word est;
 
@@ -141,28 +174,28 @@ void ITHACAstream::exportMatrix(List < Eigen::MatrixXd >& matrice, word Name,
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
-        str << Name <<  "=np.zeros([" << matrice.size() << "," << matrice[0].rows() <<
-            "," << matrice[0].cols() << "])\n";
+        str << Name <<  "=np.zeros([" << matrix.size() << "," << matrix[0].rows() <<
+            "," << matrix[0].cols() << "])\n";
 
-        for (label i = 0; i < matrice.size(); i++)
+        for (label i = 0; i < matrix.size(); i++)
         {
             str << Name << "[" << i << ",:,:]=np.array([";
 
-            for (label j = 0; j < matrice[0].rows(); j++)
+            for (label j = 0; j < matrix[0].rows(); j++)
             {
-                for (label k = 0; k < matrice[0].cols(); k++)
+                for (label k = 0; k < matrix[0].cols(); k++)
                 {
                     if ( k == 0)
                     {
-                        str << "[" << setprecision(10) << matrice[i](j, k);
+                        str << "[" << setprecision(10) << matrix[i](j, k);
                     }
                     else
                     {
-                        str << "," << setprecision(10) << matrice[i](j, k);
+                        str << "," << setprecision(10) << matrix[i](j, k);
                     }
                 }
 
-                if (j != (matrice[0].rows() - 1))
+                if (j != (matrix[0].rows() - 1))
                 {
                     str << "]," << endl;
                 }
@@ -177,18 +210,18 @@ void ITHACAstream::exportMatrix(List < Eigen::MatrixXd >& matrice, word Name,
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
 
-        for (label i = 0; i < matrice.size(); i++)
+        for (label i = 0; i < matrix.size(); i++)
         {
             str << Name << "(" << i + 1 << ",:,:)=[";
 
-            for (label j = 0; j < matrice[0].rows(); j++)
+            for (label j = 0; j < matrix[0].rows(); j++)
             {
-                for (label k = 0; k < matrice[0].cols(); k++)
+                for (label k = 0; k < matrix[0].cols(); k++)
                 {
-                    str << " " << setprecision(10) << matrice[i](j, k);
+                    str << " " << setprecision(10) << matrix[i](j, k);
                 }
 
-                if (j != (matrice[0].rows() - 1))
+                if (j != (matrix[0].rows() - 1))
                 {
                     str << ";" << endl;
                 }
@@ -199,21 +232,128 @@ void ITHACAstream::exportMatrix(List < Eigen::MatrixXd >& matrice, word Name,
     }
     else if (tipo == "eigen")
     {
-        for (label i = 0; i < matrice.size(); i++)
+        for (label i = 0; i < matrix.size(); i++)
         {
             word Namei = Name + name(i);
-            ITHACAstream::exportMatrix(matrice[i], Namei, "eigen", folder);
+            ITHACAstream::exportMatrix(matrix[i], Namei, "eigen", folder);
         }
     }
 }
 
-List< Eigen::MatrixXd > ITHACAstream::readMatrix(word folder, word mat_name)
+template<typename T>
+void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
+                                word tipo, word folder)
+{
+    std::string message = "The extension \"" +  tipo +
+                          "\" was not implemented. Check the list of possible extensions.";
+    M_Assert(tipo == "python" || tipo == "matlab"
+             || tipo == "eigen", message.c_str()
+            );
+    mkDir(folder);
+    word est;
+
+    // Python Case
+    if (tipo == "python")
+    {
+        est = ".py";
+        OFstream str(folder + "/" + Name + "_mat" + est);
+        str << Name <<  "=np.zeros([" << tensor.dimension(0) << "," <<
+            Eigen::SliceFromTensor(
+                tensor, 0,
+                0).rows() <<
+            "," << Eigen::SliceFromTensor(tensor, 0,
+                                          0).cols() << "])\n";
+
+        for (label i = 0; i < tensor.dimension(0); i++)
+        {
+            str << Name << "[" << i << ",:,:]=np.array([";
+
+            for (label j = 0; j < Eigen::SliceFromTensor(tensor, 0, 0).rows(); j++)
+            {
+                for (label k = 0; k < Eigen::SliceFromTensor(tensor, 0, 0).cols(); k++)
+                {
+                    if ( k == 0)
+                    {
+                        str << "[" << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
+                                i)(j, k);
+                    }
+                    else
+                    {
+                        str << "," << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
+                                i)(j, k);
+                    }
+                }
+
+                if (j != (Eigen::SliceFromTensor(tensor, 0,
+                                                 0).rows() - 1))
+                {
+                    str << "]," << endl;
+                }
+            }
+
+            str << "]])\n" << endl;
+        }
+    }
+    // Matlab case
+    else if (tipo == "matlab")
+    {
+        est = ".m";
+        OFstream str(folder + "/" + Name + "_mat" + est);
+
+        for (label i = 0; i < tensor.dimension(0); i++)
+        {
+            str << Name << "(" << i + 1 << ",:,:)=[";
+
+            for (label j = 0; j < Eigen::SliceFromTensor(tensor, 0,
+                    0).rows(); j++)
+            {
+                for (label k = 0; k < Eigen::SliceFromTensor(tensor, 0,
+                        0).cols(); k++)
+                {
+                    str << " " << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
+                            i)(j, k);
+                }
+
+                if (j != (Eigen::SliceFromTensor(tensor, 0,
+                                                 0).rows() - 1))
+                {
+                    str << ";" << endl;
+                }
+            }
+
+            str << "];" << endl;
+        }
+    }
+    else if (tipo == "eigen")
+    {
+        for (label i = 0; i < tensor.dimension(0); i++)
+        {
+            Eigen::Matrix < T, -1, -1 > matrixAux = Eigen::SliceFromTensor(tensor, 0, i);
+            word Namei = Name + name(i);
+            exportMatrix(matrixAux, Namei, "eigen", folder);
+        }
+    }
+}
+
+template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3 > tensor,
+        word Name,
+        word tipo, word folder);
+
+template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3 > tensor,
+        word Name,
+        word tipo, word folder);
+
+template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3 > tensor,
+        word Name,
+        word tipo, word folder);
+
+List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
 {
     int file_count = 0;
     DIR* dirp;
     struct dirent* entry;
     dirp = opendir(folder.c_str());
-    List <Eigen::MatrixXd > result;
+    List <Eigen::MatrixXd> result;
 
     while ((entry = readdir(dirp)) != NULL)
     {
@@ -326,7 +466,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name,
 
         for (label i = 2 + first_snap; i < last_s; i++)
         {
-            Info << "Reading " << Name << " number " << i - 1 << endl;
+            //Info << "Reading " << Name << " number " << i - 1 << endl;
             volVectorField tmp_field(
                 IOobject
                 (
@@ -338,6 +478,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name,
                 mesh
             );
             Lfield.append(tmp_field);
+            printProgress(double(i + 1) / last_s);
         }
 
         std::cout << std::endl;
@@ -386,7 +527,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name,
 
         for (label i = 2 + first_snap; i < last_s; i++)
         {
-            Info << "Reading " << Name << " number " << i - 1 << endl;
+            //Info << "Reading " << Name << " number " << i - 1 << endl;
             volScalarField tmp_field(
                 IOobject
                 (
@@ -398,6 +539,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name,
                 mesh
             );
             Lfield.append(tmp_field);
+            printProgress(double(i + 1) / last_s);
         }
 
         std::cout << std::endl;
@@ -437,7 +579,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
 
         for (label i = 2 + first_snap; i < last_s; i++)
         {
-            Info << "Reading " << field.name() << " number " << i - 1 << endl;
+            //Info << "Reading " << field.name() << " number " << i - 1 << endl;
             volScalarField tmp_field(
                 IOobject
                 (
@@ -449,6 +591,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
+            printProgress(double(i + 1) / last_s);
         }
 
         std::cout << std::endl;
@@ -481,7 +624,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
 
         for (label i = first_snap + 1; i < last_s; i++)
         {
-            Info << "Reading " << field.name() << " number " << i << endl;
+            //Info << "Reading " << field.name() << " number " << i << endl;
             volScalarField tmp_field(
                 IOobject
                 (
@@ -493,6 +636,7 @@ void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
+            printProgress(double(i + 1) / last_s);
         }
 
         Info << endl;
@@ -528,7 +672,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
 
         for (label i = 2 + first_snap; i < last_s; i++)
         {
-            Info << "Reading " << field.name() << " number " << i - 1 << endl;
+            //Info << "Reading " << field.name() << " number " << i - 1 << endl;
             volVectorField tmp_field(
                 IOobject
                 (
@@ -540,6 +684,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
+            printProgress(double(i + 1) / last_s);
         }
 
         std::cout << std::endl;
@@ -572,7 +717,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
 
         for (label i = first_snap + 1; i < last_s; i++)
         {
-            Info << "Reading " << field.name() << " number " << i << endl;
+            //Info << "Reading " << field.name() << " number " << i << endl;
             volVectorField tmp_field(
                 IOobject
                 (
@@ -584,6 +729,7 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
+            printProgress(double(i + 1) / last_s);
         }
 
         Info << endl;
@@ -618,4 +764,17 @@ void ITHACAstream::writePoints(pointField points, fileName folder,
     os << "FoamFile \n { \n version     2.0; \n format      ascii; \n class       vectorField; \n location    ""1 / polyMesh""; \n object      points; \n }"
        << endl;
     os << points << endl;
+}
+
+void ITHACAstream::printProgress(double percentage)
+{
+    int val = static_cast<int>(percentage * 100);
+    int lpad = static_cast<int> (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+
+    if (Pstream::master())
+    {
+        printf ("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+        fflush (stdout);
+    }
 }

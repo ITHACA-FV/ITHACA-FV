@@ -23,13 +23,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         10000;
+endTime         6000;
 
 deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   10000000; // Big interval to avoid that OF writes out the data
+writeInterval   100;
 
 purgeWrite      0;
 

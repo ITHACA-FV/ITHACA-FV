@@ -68,6 +68,7 @@ struct newton_steadyNS: public newton_argument<double>
         int Nphi_p;
         int N_BC;
         scalar nu;
+        Eigen::MatrixXd tauU;
         Eigen::VectorXd BC;
 };
 
@@ -97,11 +98,14 @@ class reducedSteadyNS: public reducedProblem
 
         ~reducedSteadyNS() {};
 
+        /// parameters to be read from the ITHACAdict file
+        ITHACAparameters* para;
+
         /// Reduced matrix for tangent forces
-        Eigen::MatrixXd f_tau;
+        Eigen::MatrixXd fTau;
 
         /// Reduced matrix for normal forces
-        Eigen::MatrixXd f_n;
+        Eigen::MatrixXd fN;
 
         /// Vector to store the previous solution during the Newton procedure
         Eigen::VectorXd y_old;
@@ -154,6 +158,9 @@ class reducedSteadyNS: public reducedProblem
         /// Counter to count the online solutions
         int count_online_solve = 1;
 
+        /// Penalty Factor
+        Eigen::MatrixXd tauU;
+
         // Functions
 
         /// Method to perform an online solve using a PPE stabilisation method
@@ -196,7 +203,7 @@ class reducedSteadyNS: public reducedProblem
         /// @param      problem  a steadyNS full order problem.
         /// @param[in]  folder   The folder where to output the forces matrices
         ///
-        void reconstruct_LiftandDrag(steadyNS& problem, fileName folder);
+        void reconstructLiftAndDrag(steadyNS& problem, fileName folder);
 
         /// Method to evaluate the online inf-sup constant
         ///

@@ -101,6 +101,9 @@ class unsteadyNST: public unsteadyNS
         /// Temperature field
         autoPtr<volScalarField> _T;
 
+        /// Initial Temperature field (for restart purposes)
+        autoPtr<volScalarField> _T0;
+
         /// List of pointers used to form the temperature modes
         PtrList<volScalarField> Tmodes;
 

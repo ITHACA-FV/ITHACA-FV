@@ -9,6 +9,7 @@ EXE_INC = \
     -I$(LIB_SRC)/fvOptions/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
@@ -22,7 +23,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedProblem \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyNS \
-    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedSteadyNS \   
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedSteadyNS \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedSimpleSteadyNS \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \

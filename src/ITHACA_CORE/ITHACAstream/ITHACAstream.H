@@ -46,15 +46,30 @@ SourceFiles
 #include <dirent.h>
 #include <algorithm>
 #include <fstream>
+#include <string>
+#include <stdexcept>
+#include <sstream>
+#include <vector>
+#include <cstdio>
+#include <typeinfo>
+#include <iostream>
+#include <cassert>
+#include <zlib.h>
+#include <map>
 #include "ITHACAassert.H"
 #include "ITHACAutilities.H"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wignored-attributes"
 #include <Eigen/Eigen>
+#include "EigenFunctions.H"
+
 #include <unsupported/Eigen/CXX11/Tensor>
 #pragma GCC diagnostic pop
 
 #define MAXBUFSIZE (static_cast<int> (1e6))
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -63,11 +78,14 @@ SourceFiles
 /*---------------------------------------------------------------------------*\
                         Class reductionProblem Declaration
 \*---------------------------------------------------------------------------*/
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#include "cnpy.H"
+#pragma GCC diagnostic pop
 
 /// Class for input-output manipulation
 class ITHACAstream
 {
-    private:
 
     public:
 
@@ -92,7 +110,8 @@ class ITHACAstream
         /// @param[in] tipo string to identify format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
         /// @param[in] folder string to identify the folder where you want to save the file.
         ///
-        static void exportMatrix(Eigen::MatrixXd& matrice, word Name,
+        template<typename T>
+        static void exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix, word Name,
                                  word tipo = "python", word folder = "./Matrices");
 
         //--------------------------------------------------------------------------
@@ -106,8 +125,25 @@ class ITHACAstream
         /// @param[in] tipo format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
         /// @param[in] folder string to identify the folder where you want to save the file.
         ///
-        static void exportMatrix(List < Eigen::MatrixXd >& matrice, word Name,
+        static void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                                  word tipo = "python", word folder = "./Matrices");
+
+
+        ///
+        /// @brief      { Export the reduced tensors in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format }
+        ///
+        /// @param[in]  tensor  The tensor that you want to export.
+        /// @param[in]  Name    The Name string to identify the name you want to use to save the file.
+        /// @param[in]  tipo    The tipo format to export the matrix if numpy (tipo="python"),
+        /// if matlab (tipo="matlab") if txt (tipo="eigen").
+        /// @param[in]  folder  folder string to identify the folder where you want to save the file.
+        ///
+        /// @tparam     T       { description }
+        ///
+        template<typename T>
+        static void exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
+                                 word tipo = "python", word folder = "./Matrices");
+
 
         //--------------------------------------------------------------------------
         /// Funtion to read a list of volVectorField from name of the field and casename
@@ -389,8 +425,76 @@ class ITHACAstream
         ///
         static void writePoints(pointField points, fileName folder, fileName subfolder);
 
+        ///
+        /// @brief      Print progress bar given the percentage
+        ///
+        /// @param[in]  percentage  The percentage
+        ///
+        static void printProgress(double percentage);
 
 };
+
+namespace Foam
+{
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Matrix < T, -1, -1 > & mat)
+{
+    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::MatrixXd&>
+            (mat).data(), mat.size());
+    return os;
+}
+
+template<typename T>
+Istream& operator>> (Istream& is, Eigen::Matrix < T, -1, -1 > & mat)
+{
+    label nrow, ncol;
+    is >> nrow >> ncol;
+    mat.resize(nrow, ncol);
+    UList<T> list(mat.data(), nrow * ncol);
+    is >> list;
+    return is;
+}
+
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Matrix < T, -1, 1 > & mat)
+{
+    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::MatrixXd&>
+            (mat).data(), mat.size());
+    return os;
+}
+
+template<typename T>
+Istream& operator>> (Istream& is, Eigen::Matrix < T, -1, 1 > & mat)
+{
+    label nrow, ncol;
+    is >> nrow >> ncol;
+    mat.resize(nrow, ncol);
+    UList<T> list(mat.data(), nrow * ncol);
+    is >> list;
+    return is;
+}
+
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Tensor<T, 3>& tens)
+{
+    os << tens.dimension(0) << tens.dimension(1) << tens.dimension(
+           2) << UList<T>(const_cast<Eigen::Tensor<T, 3>&>(tens).data(),
+                          tens.size());
+    return os;
+}
+
+template<typename T>
+Istream& operator>> (Istream& is, Eigen::Tensor<T, 3>& tens)
+{
+    label d1, d2, d3;
+    is >> d1 >> d2 >> d3;
+    tens.resize(d1, d2, d3);
+    UList<T> list(tens.data(), d1 * d2 * d3);
+    is >> list;
+    return is;
+}
+
+}
 
 template<typename T>
 void ITHACAstream::exportFvMatrix(fvMatrix<T>& Matrix, word folder,

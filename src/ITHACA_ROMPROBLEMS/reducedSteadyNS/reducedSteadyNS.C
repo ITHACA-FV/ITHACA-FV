@@ -38,6 +38,7 @@ License
 // Constructor
 reducedSteadyNS::reducedSteadyNS()
 {
+    para = new ITHACAparameters;
 }
 
 reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
@@ -81,13 +82,29 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
     // Pressure Term
     Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
+    // Penalty term
+    Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+
+    // Term for penalty method
+    if (problem->bcMethod == "penalty")
+    {
+        for (label l = 0; l < N_BC; l++)
+        {
+            penaltyU.col(l) = BC(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
+                              a_tmp;
+        }
+    }
 
     for (label i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
                 i) * a_tmp;
-        // cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
         fvec(i) = M1(i) - cc(0, 0) - M2(i);
+
+        if (problem->bcMethod == "penalty")
+        {
+            fvec(i) += (penaltyU.row(i) * tauU)(0, 0);
+        }
     }
 
     for (label j = 0; j < Nphi_p; j++)
@@ -96,9 +113,12 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
         fvec(k) = M3(j);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    if (problem->bcMethod == "lift")
     {
-        fvec(j) = x(j) - BC(j);
+        for (label j = 0; j < N_BC; j++)
+        {
+            fvec(j) = x(j) - BC(j);
+        }
     }
 
     return 0;
@@ -137,6 +157,7 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
     Color::Modifier def(Color::FG_DEFAULT);
     Eigen::HybridNonLinearSolver<newton_steadyNS> hnls(newton_object);
     newton_object.BC.resize(N_BC);
+    newton_object.tauU = tauU;
 
     for (label j = 0; j < N_BC; j++)
     {
@@ -264,7 +285,7 @@ double reducedSteadyNS::inf_sup_constant()
 }
 
 
-void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS& problem,
+void reducedSteadyNS::reconstructLiftAndDrag(steadyNS& problem,
         fileName folder)
 {
     mkDir(folder);
@@ -290,32 +311,39 @@ void reducedSteadyNS::reconstruct_LiftandDrag(steadyNS& problem,
             IOobject::NO_WRITE
         )
     );
-    Eigen::MatrixXd TAU =
-        ITHACAstream::readMatrix("./ITHACAoutput/Matrices/tau_mat.txt");
-    Eigen::MatrixXd N =
-        ITHACAstream::readMatrix("./ITHACAoutput/Matrices/n_mat.txt");
-    Eigen::VectorXd temp1;
-    f_tau.setZero(online_solution.size(), 3);
-    f_n.setZero(online_solution.size(), 3);
+    fTau.setZero(online_solution.size(), 3);
+    fN.setZero(online_solution.size(), 3);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
         for (label j = 0; j < totalSize; j++)
         {
-            f_tau.row(i) += TAU.row(j) * online_solution[i](j + 1, 0);
+            fTau.row(i) += problem.tauMatrix.row(j) * online_solution[i](j + 1, 0);
         }
 
         for (label j = 0; j < NPmodes; j++)
         {
-            f_n.row(i) += N.row(j) * online_solution[i](j + Nphi_u + 1, 0);
+            fN.row(i) += problem.nMatrix.row(j) * online_solution[i](j + Nphi_u + 1, 0);
         }
     }
 
-    ITHACAstream::exportMatrix(f_tau, "f_tau", "python", folder);
-    ITHACAstream::exportMatrix(f_tau, "f_tau", "matlab", folder);
-    ITHACAstream::exportMatrix(f_tau, "f_tau", "eigen", folder);
-    ITHACAstream::exportMatrix(f_n, "f_n", "python", folder);
-    ITHACAstream::exportMatrix(f_n, "f_n", "matlab", folder);
-    ITHACAstream::exportMatrix(f_n, "f_n", "eigen", folder);
+    // Export the matrices
+    if (para->exportPython)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "python", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "python", folder);
+    }
+
+    if (para->exportMatlab)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "matlab", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "matlab", folder);
+    }
+
+    if (para->exportTxt)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "eigen", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "eigen", folder);
+    }
 }
 

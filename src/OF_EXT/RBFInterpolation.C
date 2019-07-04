@@ -80,8 +80,8 @@ void Foam::RBFInterpolation::calcB() const
         polySize = 0;
     }
 
-    // Fill Nb x Nb matrix
-    simpleMatrix<scalar> A(controlPoints_.size() + polySize);
+    Eigen::MatrixXd Aeig = Eigen::MatrixXd::Zero(controlPoints_.size() + polySize,
+                           controlPoints_.size() + polySize);
     const label nControlPoints = controlPoints_.size();
 
     for (label i = 0; i < nControlPoints; i++)
@@ -90,7 +90,7 @@ void Foam::RBFInterpolation::calcB() const
 
         for (label col = 0; col < nControlPoints; col++)
         {
-            A[i][col] = weights[col];
+            Aeig(i, col) = weights[col];
         }
     }
 
@@ -105,8 +105,8 @@ void Foam::RBFInterpolation::calcB() const
         {
             for (label col = 0; col < nControlPoints; col++)
             {
-                A[col][row] = 1.0;
-                A[row][col] = 1.0;
+                Aeig(col, row) = 1.0;
+                Aeig(row, col) = 1.0;
             }
         }
 
@@ -120,8 +120,8 @@ void Foam::RBFInterpolation::calcB() const
         {
             for (label col = 0; col < nControlPoints; col++)
             {
-                A[col][row] = controlPoints_[col].x();
-                A[row][col] = controlPoints_[col].x();
+                Aeig(col, row) = controlPoints_[col].x();
+                Aeig(row, col) = controlPoints_[col].x();
             }
         }
 
@@ -135,8 +135,8 @@ void Foam::RBFInterpolation::calcB() const
         {
             for (label col = 0; col < nControlPoints; col++)
             {
-                A[col][row] = controlPoints_[col].y();
-                A[row][col] = controlPoints_[col].y();
+                Aeig(col, row) = controlPoints_[col].y();
+                Aeig(row, col) = controlPoints_[col].y();
             }
         }
 
@@ -150,8 +150,8 @@ void Foam::RBFInterpolation::calcB() const
         {
             for (label col = 0; col < nControlPoints; col++)
             {
-                A[col][row] = controlPoints_[col].z();
-                A[row][col] = controlPoints_[col].z();
+                Aeig(col, row) = controlPoints_[col].z();
+                Aeig(row, col) = controlPoints_[col].z();
             }
         }
 
@@ -170,16 +170,27 @@ void Foam::RBFInterpolation::calcB() const
                 col++
             )
             {
-                A[row][col] = 0.0;
+                Aeig(row, col) = 0.0;
             }
+        }
+    }
+
+    Info << "Inverting RBF motion matrix" << endl;
+    Eigen::MatrixXd InvAeig = Aeig.fullPivLu().inverse();
+    simpleMatrix<scalar> InvA(controlPoints_.size() + polySize);
+
+    for (int i = 0; i < InvAeig.rows(); i++)
+    {
+        for (int k = 0; k < InvAeig.cols(); k++)
+        {
+            InvA[i][k] = InvAeig(i, k);
         }
     }
 
     // HJ and FB (05 Jan 2009)
     // Collect ALL control points from ALL CPUs
     // Create an identical inverse for all CPUs
-    Info << "Inverting RBF motion matrix" << endl;
-    BPtr_ = new scalarSquareMatrix(EigenInvert(A));
+    BPtr_ = new scalarSquareMatrix(InvA);
 }
 
 

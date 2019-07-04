@@ -58,6 +58,28 @@ _U = autoPtr<volVectorField>
      );
 volVectorField& U = _U();
 
+
+volVectorField U0(U);
+
+_U0 = autoPtr<volVectorField>
+      (
+          new volVectorField(U0)
+      );
+
+volScalarField p0(p);
+
+_p0 = autoPtr<volScalarField>
+      (
+          new volScalarField(p0)
+      );
+
+volScalarField T0(p);
+
+_T0 = autoPtr<volScalarField>
+      (
+          new volScalarField(T0)
+      );
+
 Info << "Reading field T\n" << endl;
 _T = autoPtr<volScalarField>
      (
@@ -74,6 +96,7 @@ _T = autoPtr<volScalarField>
              mesh
          )
      );
+
 IOdictionary transportProperties
 (
     IOobject
@@ -85,6 +108,7 @@ IOdictionary transportProperties
         IOobject::NO_WRITE
     )
 );
+
 _nu = autoPtr<dimensionedScalar>
       (
           new dimensionedScalar
@@ -95,7 +119,6 @@ _nu = autoPtr<dimensionedScalar>
           )
       );
 #include "createPhi.H"
-
 
 label pRefCell = 0;
 scalar pRefValue = 0.0;
@@ -123,8 +146,3 @@ _DT = autoPtr<dimensionedScalar>
               transportProperties.lookup("DT")
           )
       );
-
-
-
-
-

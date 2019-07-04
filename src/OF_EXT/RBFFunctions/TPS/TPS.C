@@ -59,7 +59,7 @@ Foam::TPS::~TPS()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::TPS::weights
+Foam::scalarField Foam::TPS::weights
 (
     const vectorField& controlPoints,
     const vector& dataPoint

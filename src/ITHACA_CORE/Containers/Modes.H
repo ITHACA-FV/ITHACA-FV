@@ -46,6 +46,8 @@ SourceFiles
 #include "fvCFD.H"
 #include "Foam2Eigen.H"
 #include "ITHACAutilities.H"
+#include "ITHACAstream.H"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -93,14 +95,14 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// onto the modes defined inside the Modes container. The output is a list of matrices that
         /// contains in the first element the reduced matrix and in the second element the source term.
         ///
-        /// @param      Af   The OpenFOAM fvMatrix linear system, it can be vector or scalar matrix
+        /// @param[in]      Af   The OpenFOAM fvMatrix linear system, it can be vector or scalar matrix
+        /// @param[in]      numberOfModes   The number of modes used to project. If not given it will use all the available ones.
         ///
         /// @return     A list of Eigen Matrices of dimension 2. The first element of the list is the
         /// reduced matrix of the linear system, the second element is the reduced source term of the linear
         /// system.
         ///
-        List<Eigen::MatrixXd> project(fvMatrix<T>& Af);
-
+        List<Eigen::MatrixXd> project(fvMatrix<T>& Af, int numberOfModes = 0);
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
         ///             coefficients
@@ -112,11 +114,26 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         ///
         GeometricField<T, fvPatchField, volMesh> reconstruct(Eigen::MatrixXd& Coeff,
                 word Name);
+
+        PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
+                    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
+                    int numberOfModes = 0, word innerProduct = "L2");
+
+        PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
+                    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
+                    word innerProduct = "L2");
+
+        PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
+                    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
+                    PtrList<volScalarField> Volumes,
+                    int numberOfModes = 0, word innerProduct = "L2");
+
+        PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
+                    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
+                    PtrList<volScalarField> Volumes,
+                    word innerProduct);
 };
 
-#ifdef NoRepository
-#   include "ModesTemplates.C"
-#endif
 #endif
 
 

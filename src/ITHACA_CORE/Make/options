@@ -7,6 +7,7 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
@@ -17,9 +18,11 @@ EXE_INC = \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/redsvd \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAPOD \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACADMD \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/EigenFunctions \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ForceCoeff \

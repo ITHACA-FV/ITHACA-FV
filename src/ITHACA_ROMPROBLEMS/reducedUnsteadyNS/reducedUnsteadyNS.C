@@ -109,7 +109,8 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
+        cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
+                i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M2(i);
     }
 
@@ -167,7 +168,8 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
+        cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
+                i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M2(i);
     }
 

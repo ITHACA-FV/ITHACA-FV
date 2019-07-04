@@ -1,0 +1,33 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      ITHACAdict;
+}
+
+// EigenValue solver, can be eigen or spectra
+EigenSolver eigen;
+redSVD true;
+
+// Parameters for DMD
+dtDMD 0.1;
+startTimeDMD 0;
+finalTimeDMD 25;
+numberOfModesDMD 60;
+exactDMD true;
+exportDMDModes true;
+
+exportFolder "./ITHACAoutput/DMD/";
+
+// Output format to save market vectors.
+OutPrecision 20;
+OutType fixed;

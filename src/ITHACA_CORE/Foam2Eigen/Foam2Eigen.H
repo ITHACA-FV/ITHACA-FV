@@ -39,6 +39,7 @@
 
 #include "fvCFD.H"
 #include "IOmanip.H"
+#include "ITHACAassert.H"
 #include <tuple>
 #include <sys/stat.h>
 #pragma GCC diagnostic push
@@ -111,10 +112,43 @@ class Foam2Eigen
         template <class type_f>
         static Eigen::MatrixXd PtrList2Eigen(
             PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields,
-            int Nfields = 10000000);
+            int Nfields = -1);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Convert a PtrList of Fields to Eigen matrix
+        ///
+        /// @param[in]  fields The fields can be a PtrList<scalarField> or PtrList<vectorField>
+        ///
+        /// @tparam     type_f  Type of the Field can be vector or scalar
+        ///
+        /// @return     An Eigen matrix containing as columns the snapshots
+        ///
+        template <class type_f>
+        static Eigen::MatrixXd PtrList2Eigen(PtrList<Field<type_f>>& fields,
+                                             int Nfields = -1);
 
 
+        //--------------------------------------------------------------------------
+        /// @brief      Convert an OpenFOAM field to an Eigen Vector
+        ///
+        /// @param[in]  field   The field
+        ///
+        /// @tparam     type_f  Type of the field can be volScalarField or volVectorField
+        ///
+        /// @return     return the dense Eigen vector
+        ///
+        template <class type_f>
+        static Eigen::VectorXd field2Eigen(const Field<type_f>& field);
 
+        //--------------------------------------------------------------------------
+        /// @brief      Convert an OpenFOAM field to an Eigen Vector
+        ///
+        /// @param[in]  field   The field
+        ///
+        /// @tparam     type_f  Type of the field can be volScalarField or volVectorField
+        ///
+        /// @return     return the dense Eigen vector
+        ///
         template <class type_f>
         static Eigen::VectorXd field2Eigen(const
                                            DimensionedField<type_f, Foam::volMesh>& field);
@@ -169,30 +203,35 @@ class Foam2Eigen
         template <class type_f>
         static List<Eigen::MatrixXd> PtrList2EigenBC(
             PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields,
-            int Nfields = 10000000);
+            int Nfields = -1);
 
         //--------------------------------------------------------------------------
-        /// @brief      Perform the projection of an OpenFOAM field onto a set of modes using the Eigen matrix multiplication
+        /// @brief      Converts a vector in Eigen format into an OpenFOAM GeometricField
         ///
-        /// It is the standard Galerkin projection of a field onto a reduced basis:
+        /// @param[in/out]  field         OpenFOAM GeometricField
+        /// @param[in]  eigen_vector  Vector in Eigen format
         ///
-        /// \f[  \mathbf{f} \in R^{Nx1} , \mathbf{f_r} \in R^{nx1} , \mathbf{M} \in R^{Nxn} \f]
+        /// @tparam     type_f        The GeometricField can be either a scalar or a vector field
         ///
-        /// \f[ \mathbf{f_r} = \mathbf{M^T f}  \f]
-        ///
-        /// @param[in]  field         The f OpenFOAM field
-        /// @param[in]  modes         The M OpenFOAM modes contained in a PtrList
-        /// @param[in]  Nmodes        The n number of modes you want to use (The size of input modes can be bigger than the requested number of modes)
-        ///
-        /// @tparam     type_f        type of field can be either scalar or vectorial
-        /// @tparam     type_PtrList  the type of the PtrList for the modes can be volScalarField or volVectorField
-        ///
-        /// @return     a vector fr with the projection
+        /// @return     OpenFOAM GeometricField
         ///
         template <class type_f>
         static GeometricField<type_f, fvPatchField, volMesh> Eigen2field(
             GeometricField<type_f, fvPatchField, volMesh>& field,
             Eigen::VectorXd& eigen_vector);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Converts a matrix in Eigen format into an OpenFOAM Field
+        ///
+        /// @param[in/out]  field         OpenFOAM Field
+        /// @param[in]  matrix        Matrix in Eigen format
+        ///
+        /// @tparam     type_f        The Field can be either a scalar or a vector field
+        ///
+        /// @return     OpenFOAM Field
+        ///
+        template <class type_f>
+        static Field<type_f> Eigen2field(Field<type_f>& field, Eigen::MatrixXd& matrix);
 
         //--------------------------------------------------------------------------
         /// @brief      Obtain the Mass Matrix from a list of reduced basis
@@ -279,6 +318,14 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const
 
     return out;
 }
+
+template <>
+Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
+                                      Eigen::MatrixXd& matrix);
+
+template <>
+Field<vector> Foam2Eigen::Eigen2field(Field<vector>& field,
+                                      Eigen::MatrixXd& matrix);
 
 template<>
 Eigen::VectorXd Foam2Eigen::field2Eigen(

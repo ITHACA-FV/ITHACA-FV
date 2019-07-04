@@ -452,7 +452,7 @@ Matrix<VectorType, Dynamic, Dynamic> SliceFromTensor(
             VectorType,           /* scalar element type */
             Eigen::Dynamic,  /* num_rows is a run-time value */
             Eigen::Dynamic,  /* num_cols is a run-time value */
-            Eigen::RowMajor  /* tensorflow::Tensor is always row-major */>>(
+            Eigen::ColMajor  /* tensorflow::Tensor is always row-major */>>(
                 t2.data(),  /* ptr to data */
                 t2.dimensions()[0],           /* num_rows */
                 t2.dimensions()[1]            /* num_cols */);

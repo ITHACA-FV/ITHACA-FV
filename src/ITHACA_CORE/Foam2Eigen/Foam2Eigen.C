@@ -69,6 +69,37 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(
 }
 
 template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<scalar>& field)
+{
+    Eigen::VectorXd out;
+    out.resize(int(field.size()));
+
+    for (int l = 0; l < field.size(); l++)
+    {
+        out(l) = field[l];
+    }
+
+    return out;
+}
+
+template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<vector>& field)
+{
+    Eigen::VectorXd out;
+    out.resize(int(field.size() * 3));
+
+    for (int l = 0; l < field.size(); l++)
+    {
+        out(l) = field[l][0];
+        out(field.size() +  l ) = field[l][1];
+        out(2 * field.size() + l ) = field[l][2];
+    }
+
+    return out;
+}
+
+
+template<>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     GeometricField<vector, fvPatchField, volMesh>& field)
 {
@@ -120,8 +151,10 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     fields, int Nfields)
 {
     unsigned int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
 
-    if (Nfields > fields.size())
+    if (Nfields == -1)
     {
         Nf = fields.size();
     }
@@ -160,8 +193,10 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     fields, int Nfields)
 {
     unsigned int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
 
-    if (Nfields > fields.size())
+    if (Nfields == -1)
     {
         Nf = fields.size();
     }
@@ -220,6 +255,8 @@ GeometricField<scalar, fvPatchField, volMesh> Foam2Eigen::Eigen2field(
 {
     GeometricField<scalar, fvPatchField, volMesh> field_out(field_in);
 
+    // std::memcpy (&field_out.ref()[0], eigen_vector.data(), field_out.ref().size()*sizeof(double));
+
     for (auto i = 0; i < field_out.size(); i++)
     {
         field_out.ref()[i] = eigen_vector(i);
@@ -236,8 +273,10 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
     int Nfields)
 {
     int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
 
-    if (Nfields > fields.size())
+    if (Nfields == -1)
     {
         Nf = fields.size();
     }
@@ -257,14 +296,50 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
     return out;
 }
 
+template <class type_f>
+Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<type_f>>& fields,
+        int Nfields)
+{
+    int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
+
+    if (Nfields == -1)
+    {
+        Nf = fields.size();
+    }
+    else
+    {
+        Nf = Nfields;
+    }
+
+    Eigen::MatrixXd out;
+    int nrows = (field2Eigen(fields[0])).rows();
+    out.resize(nrows, Nf);
+
+    for (int k = 0; k < Nf; k++)
+    {
+        out.col(k) = field2Eigen(fields[k]);
+    }
+
+    return out;
+}
+
+template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<scalar>>&
+        fields, int Nfields);
+template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<vector>>&
+        fields, int Nfields);
+
 template<>
 Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
     PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields,
     int Nfields)
 {
     int Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
 
-    if (Nfields > fields.size())
+    if (Nfields == -1)
     {
         Nf = fields.size();
     }
@@ -680,3 +755,61 @@ void Foam2Eigen::fvMatrix2EigenV(fvMatrix<vector>& foam_matrix,
     }
 }
 
+template <>
+Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
+                                      Eigen::MatrixXd& matrix)
+{
+    int sizeBC = field.size();
+    M_Assert(matrix.cols() == 1,
+             "The number of columns of the Input members is not correct, it should be 1");
+
+    if (matrix.rows() == 1)
+    {
+        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC, 1);
+        matrix.conservativeResize(sizeBC, 1);
+        matrix = new_matrix;
+    }
+
+    std::string message = "The input Eigen::MatrixXd has size " + name(
+                              matrix.rows()) +
+                          ". It should have the same size of the Field, i.e. " +
+                          name(sizeBC);
+    M_Assert(matrix.rows() == sizeBC, message.c_str());
+
+    for (auto i = 0; i < sizeBC; i++)
+    {
+        field[i] = matrix(i, 0);
+    }
+
+    return field;
+}
+
+template <>
+Field<vector> Foam2Eigen::Eigen2field(Field<vector>& field,
+                                      Eigen::MatrixXd& matrix)
+{
+    int sizeBC = field.size();
+    M_Assert(matrix.cols() == 3,
+             "The number of columns of the Input members is not correct, it should be 1");
+
+    if (matrix.rows() == 1)
+    {
+        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC, 1);
+        matrix.conservativeResize(sizeBC, 3);
+        matrix = new_matrix;
+    }
+
+    // std::string message = "The size of the input Matrices " + name(
+    //                           valueFrac.rows()) +
+    //                       " must be equal to the dimension of the boundary condition you want to set.";
+    M_Assert(matrix.rows() == sizeBC, "message.c_str()");
+
+    for (auto i = 0; i < sizeBC; i++)
+    {
+        field[i][0] = matrix(i, 0);
+        field[i][1] = matrix(i, 1);
+        field[i][2] = matrix(i, 2);
+    }
+
+    return field;
+}

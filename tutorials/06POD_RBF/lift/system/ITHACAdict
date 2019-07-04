@@ -27,6 +27,17 @@ NmodesMatrixRec 7;
 tolerance  1e-6;
 maxIter    1500;
 
+// Boundary method
+BCMethod lift;
+
+// eddy viscosity coefficients computation method
+viscCoeff RBF;
+
+// Export Reduced Matrices
+exportPython 1;
+exportMatlab 1;
+exportTxt 1;
+
 // Output format to save market vectors.
 OutPrecision 20;
 OutType fixed;

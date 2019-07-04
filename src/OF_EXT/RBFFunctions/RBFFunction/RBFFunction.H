@@ -114,7 +114,7 @@ class RBFFunction
         // Member Functions
 
         //- Return RBF weights
-        virtual tmp<scalarField> weights
+        virtual scalarField weights
         (
             const vectorField& controlPoints,
             const vector& dataPoint
