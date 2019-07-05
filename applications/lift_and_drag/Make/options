@@ -3,6 +3,7 @@ EXE_INC = \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
+    -w \
 
 EXE_LIBS = \
     -lfiniteVolume \
