@@ -19,24 +19,24 @@ you want to add, remember to pull the last changes (see [here](https://help.gith
    [github.com/YOUR-USERNAME/ITHACA-FV](https://github.com/YOUR-USERNAME/ITHACA-FV)
    and clone it using the favourite protocol (HTTPS is the easiest) using the
    command `git clone <url>`. In this example by digiting on the terminal:
-```
-git clone "https://github.com/YOUR-USERNAME/ITHACA-FV"
-```
-a new folder called ITHACA-FV is created.
+   ```
+   git clone "https://github.com/YOUR-USERNAME/ITHACA-FV"
+   ```
+   a new folder called ITHACA-FV is created.
 
 3. Go the cloned folder and add the remote URL of the original ITHACA-FV
    repository (**not** the fork) using the following commands:
-```
-cd ITHACA-FV
-git remote add mathlab "https://github.com/mathlab/ITHACA-FV"
-```
+   ```
+   cd ITHACA-FV
+   git remote add mathlab "https://github.com/mathlab/ITHACA-FV"
+   ```
 
 4. <div id="4">Create a branch into your local repository. The new branch name
    should describe the new feature you have planned to insert in the
    repository. The command is:
-```
-git checkout -b new_branch_name
-```
+   ```
+   git checkout -b new_branch_name
+   ```
 
 5. Start implementing changes or adding new functionalities. Please ensure to
    write well-documented and properly formatted code. You can use the
@@ -45,17 +45,17 @@ git checkout -b new_branch_name
    according to the ITHACA style.
 
 6. Add changed files or new files for the next commit by digiting:
-```
-git add NEWFILE1.H
-git add NEWFILE2.C
-```
+   ```
+   git add NEWFILE1.H
+   git add NEWFILE2.C
+   ```
 
 7. Create the new commit. The commit message has to synthetically describe the
    new changes (see [here](https://chris.beams.io/posts/git-commit/) for an
    exhaustive discussion about commit messages).
-```
-git commit -m "meaningfull commit message"
-```
+   ```
+   git commit -m "meaningfull commit message"
+   ```
 
 8. Before pushing your local changes in the Github fork, don't forget to sync
    your fork with the original repository. With this further step, you can
@@ -73,9 +73,9 @@ git commit -m "meaningfull commit message"
    [this](https://help.github.com/articles/syncing-a-fork/).
 
 9. Push the `new_branch_name` branch commit to your remote fork:
-```
-git push -f origin new_branch_name
-```
+   ```
+   git push -f origin new_branch_name
+   ```
 
 10. Open a new pull request (in [this guide](https://help.github.com/articles/creating-a-pull-request/)
     the basic steps to open a pull request are introduced). Please use a
@@ -97,14 +97,14 @@ git push -f origin new_branch_name
     and not your fork, contains within the `master` branch the feature you
     implemented).
     As before digit (*NOTE*: the following commands delete the `new_branch_name`):
-```
-git checkout master
-git fetch mathlab
-git pull mathlab master
-git branch -D new_branch_name
-git push origin --delete new_branch_name
-git push origin master
-```
+    ```
+    git checkout master
+    git fetch mathlab
+    git pull mathlab master
+    git branch -D new_branch_name
+    git push origin --delete new_branch_name
+    git push origin master
+    ```
 
 **HAVE FUN CODING!!!**
 
