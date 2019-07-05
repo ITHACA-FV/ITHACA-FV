@@ -4,6 +4,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/redsvd \
     -std=c++11 \
+    -w \
     -Wno-old-style-cast \
     -Wno-non-virtual-dtor \
     -Wno-return-type \

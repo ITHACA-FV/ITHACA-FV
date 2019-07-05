@@ -23,6 +23,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
     -Wno-comment \
+    -w \
     -std=c++11
 
 EXE_LIBS = \

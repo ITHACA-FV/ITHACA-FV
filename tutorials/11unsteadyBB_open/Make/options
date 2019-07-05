@@ -39,6 +39,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -Wno-comment \
+    -w \
     -std=c++11
 
 EXE_LIBS = \
