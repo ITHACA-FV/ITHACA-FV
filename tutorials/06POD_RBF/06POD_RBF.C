@@ -268,11 +268,11 @@ int main(int argc, char* argv[])
     pod_normal.reconstruct_sup("./ITHACAoutput/Lam_Rec/");
 
     // Solve the full order problem for the online velocity values for the purpose of comparison
-    if (ITHACAutilities::check_folder("./ITHACAoutput/Offline_check") == false)
-    {
-        example.offlineSolve(par_online, "./ITHACAoutput/Offline_check/");
-        ITHACAutilities::createSymLink("./ITHACAoutput/Offline_check");
-    }
+    // if (ITHACAutilities::check_folder("./ITHACAoutput/Offline_check") == false)
+    // {
+    //     example.offlineSolve(par_online, "./ITHACAoutput/Offline_check/");
+    //     ITHACAutilities::createSymLink("./ITHACAoutput/Offline_check");
+    // }
 
     exit(0);
 }
