@@ -10,8 +10,11 @@ var searchData=
   ['csolve',['csolve',['../steadyNS_2NLsolve_8H.html#aaccbf2b79a096c17632c64d5d52937a8',1,'csolve():&#160;NLsolve.H'],['../steadyNS__simple_2NLsolve_8H.html#aaccbf2b79a096c17632c64d5d52937a8',1,'csolve():&#160;NLsolve.H'],['../SteadyNSTurb_2NLsolve_8H.html#aaccbf2b79a096c17632c64d5d52937a8',1,'csolve():&#160;NLsolve.H']]],
   ['ct1_5fmatrix',['CT1_matrix',['../classunsteadyNSTturb.html#a42f807dcc007775d14460d82d1f162a5',1,'unsteadyNSTturb']]],
   ['ct1matrix',['ct1Matrix',['../classSteadyNSTurb.html#a9f65e24db68379968e42da085e26b22c',1,'SteadyNSTurb::ct1Matrix()'],['../classUnsteadyNSTurb.html#a3592a87f73a65d7cdfb9ef3ce1d348a6',1,'UnsteadyNSTurb::ct1Matrix()']]],
+  ['ct1tensor',['ct1Tensor',['../classSteadyNSTurb.html#a9b8ddbc0cd3ed219830c45451db26ce3',1,'SteadyNSTurb::ct1Tensor()'],['../classUnsteadyNSTurb.html#abfe9837df203d1657b3aa261c5b70bde',1,'UnsteadyNSTurb::ct1Tensor()']]],
   ['ct2_5fmatrix',['CT2_matrix',['../classunsteadyNSTturb.html#acc669af8be8c6b9bab530efb9105569a',1,'unsteadyNSTturb']]],
   ['ct2matrix',['ct2Matrix',['../classSteadyNSTurb.html#a4f705e117ee91f14612e96dfac155862',1,'SteadyNSTurb::ct2Matrix()'],['../classUnsteadyNSTurb.html#a42ccf3d84d37bff350cf1a5c590c0658',1,'UnsteadyNSTurb::ct2Matrix()']]],
+  ['ct2tensor',['ct2Tensor',['../classSteadyNSTurb.html#acc181de403a64f6a3090cbb67ac12dbe',1,'SteadyNSTurb::ct2Tensor()'],['../classUnsteadyNSTurb.html#aab3871184a218e6f41b0908b51358f50',1,'UnsteadyNSTurb::ct2Tensor()']]],
   ['ctotalmatrix',['cTotalMatrix',['../classSteadyNSTurb.html#a6cc55b72913505fe70abcd3759c33e60',1,'SteadyNSTurb::cTotalMatrix()'],['../classUnsteadyNSTurb.html#a59961d8fe17376767bdbc4e1de03da98',1,'UnsteadyNSTurb::cTotalMatrix()']]],
+  ['ctotaltensor',['cTotalTensor',['../classSteadyNSTurb.html#ab3a9ccfd128626b30372319b22a1eaeb',1,'SteadyNSTurb::cTotalTensor()'],['../classUnsteadyNSTurb.html#a37e39b474c5126030d152bc6183e4793',1,'UnsteadyNSTurb::cTotalTensor()']]],
   ['cumulativeconterr',['cumulativeContErr',['../classsteadyNS.html#af957442b957adafa1f6603fc4c5578e3',1,'steadyNS']]]
 ];

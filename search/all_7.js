@@ -23,9 +23,10 @@ var searchData=
   ['exportfvmatrix',['exportFvMatrix',['../classITHACAstream.html#a28c64da4204461d3bdc0623b9a869bb8',1,'ITHACAstream']]],
   ['exportlist',['exportList',['../classITHACAstream.html#a5d09ae79be293199609de1101e828fc3',1,'ITHACAstream']]],
   ['exportmatlab',['exportMatlab',['../classITHACAparameters.html#aa45f40f02a0d8350992eec38275c84d5',1,'ITHACAparameters']]],
-  ['exportmatrix',['exportMatrix',['../classITHACAstream.html#a73f00f0004355cfc911ff3ed4a82aa3d',1,'ITHACAstream::exportMatrix(Eigen::MatrixXd &amp;matrice, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)'],['../classITHACAstream.html#a1654136d14bb51177d0ed84688982be7',1,'ITHACAstream::exportMatrix(List&lt; Eigen::MatrixXd &gt; &amp;matrice, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)']]],
+  ['exportmatrix',['exportMatrix',['../classITHACAstream.html#a4ce193c3ebbec121dc5e2d6b4e039732',1,'ITHACAstream::exportMatrix(Eigen::Matrix&lt; T, -1, -1 &gt; &amp;matrix, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)'],['../classITHACAstream.html#a2bb6dfc6894a8831762ae6340ef9f21c',1,'ITHACAstream::exportMatrix(List&lt; Eigen::MatrixXd &gt; &amp;matrix, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)']]],
   ['exportpython',['exportPython',['../classITHACAparameters.html#a0cf90b6b4437d6c8c266d8f487d27269',1,'ITHACAparameters']]],
   ['exportsolution',['exportSolution',['../classITHACAstream.html#a77447bb623ea2510f255437b827e7700',1,'ITHACAstream::exportSolution(T &amp;s, fileName subfolder, fileName folder, word fieldName)'],['../classITHACAstream.html#aa28d629f1c5acc480a8a098677869afc',1,'ITHACAstream::exportSolution(T &amp;s, fileName subfolder, fileName folder)']]],
+  ['exporttensor',['exportTensor',['../classITHACAstream.html#aaad42e6bbec71b055121738d43f7ad81',1,'ITHACAstream']]],
   ['exporttxt',['exportTxt',['../classITHACAparameters.html#aec46bcb0b18186233ce635ee335643cb',1,'ITHACAparameters']]],
   ['extract_5ftime_5fevolution_2ec',['extract_time_evolution.C',['../extract__time__evolution_8C.html',1,'']]]
 ];

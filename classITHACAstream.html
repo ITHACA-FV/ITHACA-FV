@@ -91,12 +91,17 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a28c64da4204461d3bdc0623b9a869bb8"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a28c64da4204461d3bdc0623b9a869bb8">exportFvMatrix</a> (fvMatrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;Matrix, word folder, word MatrixName)</td></tr>
 <tr class="memdesc:a28c64da4204461d3bdc0623b9a869bb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export an Fv Matrix to folder together with its source term.  <a href="#a28c64da4204461d3bdc0623b9a869bb8">More...</a><br /></td></tr>
 <tr class="separator:a28c64da4204461d3bdc0623b9a869bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73f00f0004355cfc911ff3ed4a82aa3d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a73f00f0004355cfc911ff3ed4a82aa3d">exportMatrix</a> (Eigen::MatrixXd &amp;matrice, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
-<tr class="memdesc:a73f00f0004355cfc911ff3ed4a82aa3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format.  <a href="#a73f00f0004355cfc911ff3ed4a82aa3d">More...</a><br /></td></tr>
-<tr class="separator:a73f00f0004355cfc911ff3ed4a82aa3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1654136d14bb51177d0ed84688982be7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a1654136d14bb51177d0ed84688982be7">exportMatrix</a> (List&lt; Eigen::MatrixXd &gt; &amp;matrice, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
-<tr class="memdesc:a1654136d14bb51177d0ed84688982be7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format.  <a href="#a1654136d14bb51177d0ed84688982be7">More...</a><br /></td></tr>
-<tr class="separator:a1654136d14bb51177d0ed84688982be7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ce193c3ebbec121dc5e2d6b4e039732"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a4ce193c3ebbec121dc5e2d6b4e039732"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a4ce193c3ebbec121dc5e2d6b4e039732">exportMatrix</a> (Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;matrix, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
+<tr class="memdesc:a4ce193c3ebbec121dc5e2d6b4e039732"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format.  <a href="#a4ce193c3ebbec121dc5e2d6b4e039732">More...</a><br /></td></tr>
+<tr class="separator:a4ce193c3ebbec121dc5e2d6b4e039732"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bb6dfc6894a8831762ae6340ef9f21c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a2bb6dfc6894a8831762ae6340ef9f21c">exportMatrix</a> (List&lt; Eigen::MatrixXd &gt; &amp;matrix, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
+<tr class="memdesc:a2bb6dfc6894a8831762ae6340ef9f21c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format.  <a href="#a2bb6dfc6894a8831762ae6340ef9f21c">More...</a><br /></td></tr>
+<tr class="separator:a2bb6dfc6894a8831762ae6340ef9f21c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaad42e6bbec71b055121738d43f7ad81"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aaad42e6bbec71b055121738d43f7ad81"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#aaad42e6bbec71b055121738d43f7ad81">exportTensor</a> (Eigen::Tensor&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, 3 &gt; tensor, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
+<tr class="memdesc:aaad42e6bbec71b055121738d43f7ad81"><td class="mdescLeft">&#160;</td><td class="mdescRight">{ Export the reduced tensors in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format }  <a href="#aaad42e6bbec71b055121738d43f7ad81">More...</a><br /></td></tr>
+<tr class="separator:aaad42e6bbec71b055121738d43f7ad81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbe538c82e760d503e3232a52fdd57bb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#afbe538c82e760d503e3232a52fdd57bb">read_fields</a> (PtrList&lt; volVectorField &gt; &amp;Lfield, word Name, fileName casename, label first_snap=0, label n_snap=0)</td></tr>
 <tr class="memdesc:afbe538c82e760d503e3232a52fdd57bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funtion to read a list of volVectorField from name of the field and casename.  <a href="#afbe538c82e760d503e3232a52fdd57bb">More...</a><br /></td></tr>
 <tr class="separator:afbe538c82e760d503e3232a52fdd57bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,7 +191,7 @@ Static Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Class for input-output manipulation. </p>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00085">85</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00087">87</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="afa48661ca1387b8fc43262c05fedee5f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afa48661ca1387b8fc43262c05fedee5f">&#9670;&nbsp;</a></span>exportFields() <span class="overload">[1/2]</span></h2>
@@ -355,7 +360,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00480">480</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00500">500</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -417,15 +422,17 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00544">544</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00564">564</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
-<a id="a73f00f0004355cfc911ff3ed4a82aa3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73f00f0004355cfc911ff3ed4a82aa3d">&#9670;&nbsp;</a></span>exportMatrix() <span class="overload">[1/2]</span></h2>
+<a id="a4ce193c3ebbec121dc5e2d6b4e039732"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ce193c3ebbec121dc5e2d6b4e039732">&#9670;&nbsp;</a></span>exportMatrix() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -433,8 +440,8 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">void ITHACAstream::exportMatrix </td>
           <td>(</td>
-          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
-          <td class="paramname"><em>matrice</em>, </td>
+          <td class="paramtype">Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>matrix</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -483,8 +490,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a1654136d14bb51177d0ed84688982be7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1654136d14bb51177d0ed84688982be7">&#9670;&nbsp;</a></span>exportMatrix() <span class="overload">[2/2]</span></h2>
+<a id="a2bb6dfc6894a8831762ae6340ef9f21c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bb6dfc6894a8831762ae6340ef9f21c">&#9670;&nbsp;</a></span>exportMatrix() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -496,7 +503,7 @@ template&lt;typename T &gt; </div>
           <td class="memname">void ITHACAstream::exportMatrix </td>
           <td>(</td>
           <td class="paramtype">List&lt; Eigen::MatrixXd &gt; &amp;&#160;</td>
-          <td class="paramname"><em>matrice</em>, </td>
+          <td class="paramname"><em>matrix</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -540,7 +547,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00148">148</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00161">161</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -604,7 +611,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a32">06POD_RBF.C</a>, <a class="el" href="08DEIM_8C-example.html#a11">08DEIM.C</a>, and <a class="el" href="09DEIM_ROM_8C-example.html#a46">09DEIM_ROM.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00491">491</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00511">511</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -660,7 +667,76 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00519">519</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00539">539</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+
+</div>
+</div>
+<a id="aaad42e6bbec71b055121738d43f7ad81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaad42e6bbec71b055121738d43f7ad81">&#9670;&nbsp;</a></span>exportTensor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">template void ITHACAstream::exportTensor </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::Tensor&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, 3 &gt;&#160;</td>
+          <td class="paramname"><em>tensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>Name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>tipo</em> = <code>&quot;python&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">word&#160;</td>
+          <td class="paramname"><em>folder</em> = <code>&quot;./Matrices&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>{ Export the reduced tensors in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format } </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">tensor</td><td>The tensor that you want to export. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Name</td><td>The Name string to identify the name you want to use to save the file. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">tipo</td><td>The tipo format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen"). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>folder string to identify the folder where you want to save the file.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>{ description } </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00244">244</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -708,7 +784,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the number of files matching the request </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00619">619</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00739">739</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -744,7 +820,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00649">649</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00769">769</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -813,7 +889,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a12">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a12">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a10">04unsteadyNS.C</a>, <a class="el" href="06POD_RBF_8C-example.html#a12">06POD_RBF.C</a>, <a class="el" href="09DEIM_ROM_8C-example.html#a44">09DEIM_ROM.C</a>, <a class="el" href="10unsteadyBB_enclosed_8C-example.html#a14">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a14">11unsteadyBB_open.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00311">311</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00431">431</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -881,7 +957,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00372">372</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00492">492</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -949,7 +1025,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00526">526</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00646">646</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -1017,7 +1093,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00433">433</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00553">553</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -1079,7 +1155,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00638">638</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00658">658</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1141,7 +1217,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00748">748</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00768">768</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1203,7 +1279,7 @@ template&lt;typename TensorType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00685">685</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00705">705</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1241,7 +1317,7 @@ template&lt;typename TensorType &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>The Eigen::MatrixXd that contains the imported matrix. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a15">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a16">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a14">04unsteadyNS.C</a>, <a class="el" href="06POD_RBF_8C-example.html#a34">06POD_RBF.C</a>, <a class="el" href="10unsteadyBB_enclosed_8C-example.html#a44">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a48">11unsteadyBB_open.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00258">258</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00378">378</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -1289,7 +1365,7 @@ template&lt;typename TensorType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>List &lt;Eigen::MatrixXd&gt; that contains the imported matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00230">230</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00350">350</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -1353,7 +1429,7 @@ template&lt;typename T , int whatever, typename IND &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00591">591</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00611">611</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1415,7 +1491,7 @@ template&lt;typename T , int whatever, typename IND &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00730">730</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00750">750</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1477,7 +1553,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00623">623</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00643">643</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1539,7 +1615,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00720">720</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00740">740</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1601,7 +1677,7 @@ template&lt;typename TensorType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00664">664</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00684">684</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1665,7 +1741,7 @@ template&lt;typename T , int whatever, typename IND &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00557">557</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00577">577</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1727,7 +1803,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00710">710</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00730">730</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1781,7 +1857,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00637">637</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00757">757</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>

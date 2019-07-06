@@ -175,9 +175,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0bef04380f3d0e8e1a8e6fc18ddc056c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a0bef04380f3d0e8e1a8e6fc18ddc056c">change_viscosity</a> (double <a class="el" href="classreductionProblem.html#acca797c9e7595c83d45d40c286b9a6ee">mu</a>)</td></tr>
 <tr class="memdesc:a0bef04380f3d0e8e1a8e6fc18ddc056c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to change the viscosity.  <a href="#a0bef04380f3d0e8e1a8e6fc18ddc056c">More...</a><br /></td></tr>
 <tr class="separator:a0bef04380f3d0e8e1a8e6fc18ddc056c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f0593cf687a06a926c0a1d22623e586"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a1f0593cf687a06a926c0a1d22623e586">Forces_matrices</a> (label <a class="el" href="classsteadyNS.html#a6afdfb31a8d0fdf0e4c604e5c13b331d">NUmodes</a>, label <a class="el" href="classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19">NPmodes</a>, label <a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">NSUPmodes</a>)</td></tr>
-<tr class="memdesc:a1f0593cf687a06a926c0a1d22623e586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute lift and drag matrices.  <a href="#a1f0593cf687a06a926c0a1d22623e586">More...</a><br /></td></tr>
-<tr class="separator:a1f0593cf687a06a926c0a1d22623e586"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e87bba1934f40ec7f5125e429abbefd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a2e87bba1934f40ec7f5125e429abbefd">forcesMatrices</a> (label <a class="el" href="classsteadyNS.html#a6afdfb31a8d0fdf0e4c604e5c13b331d">NUmodes</a>, label <a class="el" href="classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19">NPmodes</a>, label <a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">NSUPmodes</a>)</td></tr>
+<tr class="memdesc:a2e87bba1934f40ec7f5125e429abbefd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute lift and drag matrices.  <a href="#a2e87bba1934f40ec7f5125e429abbefd">More...</a><br /></td></tr>
+<tr class="separator:a2e87bba1934f40ec7f5125e429abbefd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac904d94cbb69c6e48e7358b705f5071"><td class="memItemLeft" align="right" valign="top">Eigen::Tensor&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#aac904d94cbb69c6e48e7358b705f5071">convective_term_tens</a> (label <a class="el" href="classsteadyNS.html#a6afdfb31a8d0fdf0e4c604e5c13b331d">NUmodes</a>, label <a class="el" href="classsteadyNS.html#a17c4f26fb4e0aab3960acc71e716bf19">NPmodes</a>, label <a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">NSUPmodes</a>)</td></tr>
 <tr class="memdesc:aac904d94cbb69c6e48e7358b705f5071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export convective term as a tensor.  <a href="#aac904d94cbb69c6e48e7358b705f5071">More...</a><br /></td></tr>
 <tr class="separator:aac904d94cbb69c6e48e7358b705f5071"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -299,12 +299,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aa02d2b186c43f9d31eacbbcb15b87f6f"><td class="memItemLeft" align="right" valign="top">label&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#aa02d2b186c43f9d31eacbbcb15b87f6f">NSUPmodes</a></td></tr>
 <tr class="memdesc:aa02d2b186c43f9d31eacbbcb15b87f6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of supremizer modes used for the projection.  <a href="#aa02d2b186c43f9d31eacbbcb15b87f6f">More...</a><br /></td></tr>
 <tr class="separator:aa02d2b186c43f9d31eacbbcb15b87f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a320421bde0f7a9346cdd86546e4a1e34"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a320421bde0f7a9346cdd86546e4a1e34">tau_matrix</a></td></tr>
-<tr class="memdesc:a320421bde0f7a9346cdd86546e4a1e34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Viscous forces.  <a href="#a320421bde0f7a9346cdd86546e4a1e34">More...</a><br /></td></tr>
-<tr class="separator:a320421bde0f7a9346cdd86546e4a1e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9dc955e8c807124a45a3eec0b35552b4"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a9dc955e8c807124a45a3eec0b35552b4">n_matrix</a></td></tr>
-<tr class="memdesc:a9dc955e8c807124a45a3eec0b35552b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pressure forces.  <a href="#a9dc955e8c807124a45a3eec0b35552b4">More...</a><br /></td></tr>
-<tr class="separator:a9dc955e8c807124a45a3eec0b35552b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29e378612d4680bd23eccf4787c3c9a4"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a29e378612d4680bd23eccf4787c3c9a4">tauMatrix</a></td></tr>
+<tr class="memdesc:a29e378612d4680bd23eccf4787c3c9a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Viscous forces.  <a href="#a29e378612d4680bd23eccf4787c3c9a4">More...</a><br /></td></tr>
+<tr class="separator:a29e378612d4680bd23eccf4787c3c9a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a216c4ff90ebfce09e9afa30b19d194c1"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a216c4ff90ebfce09e9afa30b19d194c1">nMatrix</a></td></tr>
+<tr class="memdesc:a216c4ff90ebfce09e9afa30b19d194c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pressure forces.  <a href="#a216c4ff90ebfce09e9afa30b19d194c1">More...</a><br /></td></tr>
+<tr class="separator:a216c4ff90ebfce09e9afa30b19d194c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0cbc11d64b81bb73f223fa71f918f25f"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsteadyNS.html#a0cbc11d64b81bb73f223fa71f918f25f">bcVelVec</a></td></tr>
 <tr class="memdesc:a0cbc11d64b81bb73f223fa71f918f25f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boundary term for penalty method - vector.  <a href="#a0cbc11d64b81bb73f223fa71f918f25f">More...</a><br /></td></tr>
 <tr class="separator:a0cbc11d64b81bb73f223fa71f918f25f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -566,7 +566,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced third order tensor in List &lt;Eigen::MatrixXd&gt; format for the penalty method. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00951">951</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00956">956</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -606,7 +606,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced third order tensor in List &lt;Eigen::MatrixXd&gt; format for the penalty method. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00904">904</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00909">909</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -635,7 +635,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#a20">03steadyNS.C</a>, and <a class="el" href="04unsteadyNS_8C-example.html#a18">04unsteadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01001">1001</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01006">1006</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -682,7 +682,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced third order tensor in List &lt;Eigen::MatrixXd&gt; format for the convective term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00588">588</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00593">593</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -729,7 +729,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>tensor_C </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00630">630</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00635">635</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -776,7 +776,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the diffusion term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00533">533</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00538">538</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -816,7 +816,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced third order tensor in List &lt;Eigen::MatrixXd&gt; format for the divergence of conv. term (used only with a PPE approach). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00720">720</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00725">725</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -863,18 +863,18 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the divergence term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00691">691</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00696">696</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
-<a id="a1f0593cf687a06a926c0a1d22623e586"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f0593cf687a06a926c0a1d22623e586">&#9670;&nbsp;</a></span>Forces_matrices()</h2>
+<a id="a2e87bba1934f40ec7f5125e429abbefd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e87bba1934f40ec7f5125e429abbefd">&#9670;&nbsp;</a></span>forcesMatrices()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void steadyNS::Forces_matrices </td>
+          <td class="memname">void steadyNS::forcesMatrices </td>
           <td>(</td>
           <td class="paramtype">label&#160;</td>
           <td class="paramname"><em>NUmodes</em>, </td>
@@ -909,7 +909,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01014">1014</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01019">1019</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -938,7 +938,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the laplacian of pressure. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00762">762</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00767">767</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -959,7 +959,7 @@ Public Attributes</h2></td></tr>
 
 <p>Perform a lift solve. </p>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00246">246</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00249">249</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1006,7 +1006,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the mass matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00663">663</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00668">668</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1046,7 +1046,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the BC1 using a PPE approach. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00789">789</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00794">794</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1086,7 +1086,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the BC2 using a PPE approach. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00822">822</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00827">827</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1126,7 +1126,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced third order tensor in List &lt;Eigen::MatrixXd&gt; format for the BC3 using a PPE approach. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00870">870</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00875">875</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1173,7 +1173,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>reduced matrix in Eigen::MatrixXd format for the Gradient of pressure term. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00560">560</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00565">565</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1226,7 +1226,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00347">347</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00350">350</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1279,7 +1279,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00389">389</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00392">392</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1301,7 +1301,7 @@ Public Attributes</h2></td></tr>
 <p>set U and P back to the values into the 0 folder </p>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#a22">03steadyNS.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01102">1102</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l01118">1118</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1329,7 +1329,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00130">130</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00133">133</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1357,7 +1357,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00090">90</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="steadyNS_8C_source.html#l00093">93</a> of file <a class="el" href="steadyNS_8C_source.html">steadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -1375,7 +1375,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>fvOptions </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a47">06POD_RBF.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a46">06POD_RBF.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00206">206</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
@@ -1394,7 +1394,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Laminar transport (used by turbulence model) </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a49">06POD_RBF.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a48">06POD_RBF.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00221">221</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
@@ -1440,7 +1440,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>MRF variable. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a48">06POD_RBF.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a47">06POD_RBF.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00224">224</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
@@ -1918,14 +1918,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9dc955e8c807124a45a3eec0b35552b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9dc955e8c807124a45a3eec0b35552b4">&#9670;&nbsp;</a></span>n_matrix</h2>
+<a id="a216c4ff90ebfce09e9afa30b19d194c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a216c4ff90ebfce09e9afa30b19d194c1">&#9670;&nbsp;</a></span>nMatrix</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::MatrixXd steadyNS::n_matrix</td>
+          <td class="memname">Eigen::MatrixXd steadyNS::nMatrix</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2152,14 +2152,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a320421bde0f7a9346cdd86546e4a1e34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a320421bde0f7a9346cdd86546e4a1e34">&#9670;&nbsp;</a></span>tau_matrix</h2>
+<a id="a29e378612d4680bd23eccf4787c3c9a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29e378612d4680bd23eccf4787c3c9a4">&#9670;&nbsp;</a></span>tauMatrix</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::MatrixXd steadyNS::tau_matrix</td>
+          <td class="memname">Eigen::MatrixXd steadyNS::tauMatrix</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2201,7 +2201,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Turbulence model. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a50">06POD_RBF.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a49">06POD_RBF.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="steadyNS_8H_source.html#l00218">218</a> of file <a class="el" href="steadyNS_8H_source.html">steadyNS.H</a>.</p>
 
