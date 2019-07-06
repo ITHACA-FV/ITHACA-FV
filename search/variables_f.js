@@ -4,7 +4,7 @@ var searchData=
   ['p_5fmatrix',['P_matrix',['../classsteadyNS.html#ac8998c39e2c5a2b1937e8ce5937b9cef',1,'steadyNS::P_matrix()'],['../classreducedUnsteadyNST.html#a255250b8383ebe6076716adeff223727',1,'reducedUnsteadyNST::P_matrix()']]],
   ['p_5frgh',['p_rgh',['../classtutorial10.html#a8e8c8b4550feb0d558a449ede2fcdedc',1,'tutorial10::p_rgh()'],['../classtutorial11.html#a2d5805d241e6eaaa0efa29d6bd9ee087',1,'tutorial11::p_rgh()'],['../src_2ITHACA__FOMPROBLEMS_2unsteadyBB_2createFields_8H.html#a078488f2d744d7aa2b747a322270c1e5',1,'p_rgh():&#160;createFields.H']]],
   ['pa',['PA',['../classDEIM.html#aba8c2b71d199183e8854490c4ade60ad',1,'DEIM']]],
-  ['para',['para',['../classsteadyNS.html#a8a08f32ba7817588d13e5266ebdb1373',1,'steadyNS']]],
+  ['para',['para',['../classsteadyNS.html#a8a08f32ba7817588d13e5266ebdb1373',1,'steadyNS::para()'],['../classreducedSteadyNS.html#a1ef2bf9d83564fbc315d66c577f5a1e4',1,'reducedSteadyNS::para()']]],
   ['paral',['paral',['../classreductionProblem.html#a7dd65f94257804066b4dd273ca095e36',1,'reductionProblem']]],
   ['patchset_5f',['patchSet_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#ac269b0e9ac0f742b31440d49e364ce90',1,'Foam::functionObjects::ITHACAforces']]],
   ['pb',['PB',['../classDEIM.html#a0d065247a2ccfe21270f45430bcc7a1e',1,'DEIM']]],

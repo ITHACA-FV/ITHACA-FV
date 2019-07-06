@@ -2,7 +2,7 @@ var searchData=
 [
   ['s',['S',['../classtutorial02.html#a025667b519d7447221cea6056b13e78f',1,'tutorial02::S()'],['../classDEIMlaplacian.html#aff4fffaf6ee3818e3158b85e84c098d4',1,'DEIMlaplacian::S()']]],
   ['s_5fmatrix',['S_matrix',['../classunsteadyNSTturb.html#af44ce2faa21b7146909446d074f8f7a9',1,'unsteadyNSTturb::S_matrix()'],['../classreducedUnsteadyNST.html#a64133b0b51b379b4844da4afbdb9c56b',1,'reducedUnsteadyNST::S_matrix()']]],
-  ['samples',['SAMPLES',['../classunsteadyNSTturb.html#a2481a7598b62cbd622b97b7b6a29f7c0',1,'unsteadyNSTturb::SAMPLES()'],['../classSteadyNSTurb.html#a459085b5a46719c8005b3318b19f390c',1,'SteadyNSTurb::samples()'],['../classUnsteadyNSTurb.html#aee8e5d69cb6a2a66deb07699ec99991f',1,'UnsteadyNSTurb::samples()']]],
+  ['samples',['samples',['../classSteadyNSTurb.html#a459085b5a46719c8005b3318b19f390c',1,'SteadyNSTurb::samples()'],['../classUnsteadyNSTurb.html#aee8e5d69cb6a2a66deb07699ec99991f',1,'UnsteadyNSTurb::samples()'],['../classunsteadyNSTturb.html#a2481a7598b62cbd622b97b7b6a29f7c0',1,'unsteadyNSTturb::SAMPLES()']]],
   ['shape',['shape',['../structcnpy_1_1NpyArray.html#ac3cd310552cf405b62de674ebe1d0d87',1,'cnpy::NpyArray']]],
   ['sizem',['sizeM',['../classDEIM.html#a6ed7c28e3558393275ab7d1dd86bc100',1,'DEIM']]],
   ['snapshotsdmd',['snapshotsDMD',['../classITHACADMD.html#a2fb05e53b51a3c355a86e826f1322fda',1,'ITHACADMD']]],

@@ -2,7 +2,7 @@ var searchData=
 [
   ['t',['T',['../classtutorial02.html#a87a7f080f040be6a9ba99ff0c7ea50e7',1,'tutorial02::T()'],['../classtutorial07.html#ad1c11aa3c9c5a6a07255ffeaeed80fc6',1,'tutorial07::T()'],['../classDEIMlaplacian.html#a204c627fab7dd36c7ab838f0ca60364f',1,'DEIMlaplacian::T()'],['../classtutorial10.html#a674416c0e00e0b27f5fe822a06b05694',1,'tutorial10::T()'],['../classtutorial11.html#a055eafcf599f2419582bf0c09ae8d79c',1,'tutorial11::T()'],['../src_2ITHACA__FOMPROBLEMS_2laplacianProblem_2createFields_8H.html#ab35c96e5601691f7270cfadc745a12d3',1,'T():&#160;createFields.H'],['../src_2ITHACA__FOMPROBLEMS_2unsteadyBB_2createFields_8H.html#ab35c96e5601691f7270cfadc745a12d3',1,'T():&#160;createFields.H']]],
   ['t_5frec',['T_rec',['../classreducedUnsteadyNST.html#a4d5991bd661cf3950c5a28e6aa3b260e',1,'reducedUnsteadyNST']]],
-  ['tau_5fmatrix',['tau_matrix',['../classsteadyNS.html#a320421bde0f7a9346cdd86546e4a1e34',1,'steadyNS']]],
+  ['taumatrix',['tauMatrix',['../classsteadyNS.html#a29e378612d4680bd23eccf4787c3c9a4',1,'steadyNS']]],
   ['tauu',['tauU',['../structnewton__steadyNS.html#a46d53d294233947251b5e8fbfdcf93ce',1,'newton_steadyNS::tauU()'],['../classreducedSteadyNS.html#a4c2def5307b5582d5a8f2fda8b5e65ac',1,'reducedSteadyNS::tauU()'],['../structnewtonSteadyNSTurb.html#a345b2a0023d11025692d899e71e68197',1,'newtonSteadyNSTurb::tauU()']]],
   ['tfield',['Tfield',['../classlaplacianProblem.html#ad79501e2e6be69c1846b01d62dd8328a',1,'laplacianProblem::Tfield()'],['../classunsteadyBB.html#a1806a026547d8bdd80449d4f6d0b3391',1,'unsteadyBB::Tfield()'],['../classunsteadyNST.html#a2816aa022d3a6a7d50d15993b2b6a99e',1,'unsteadyNST::Tfield()']]],
   ['tfield_5fon',['Tfield_on',['../classunsteadyBB.html#a6e79983a4b154e45f70f29baeda8e0cc',1,'unsteadyBB']]],
