@@ -51,7 +51,7 @@ class tutorial04: public unsteadyNS
 
         void offlineSolve()
         {
-            Vector<double> inl(0, 0, 0);
+            Vector<double> inl(1, 0, 0);
             List<scalar> mu_now(1);
 
             if (offline)
@@ -94,12 +94,12 @@ int main(int argc, char* argv[])
     /// Set the number of parameters
     example.Pnumber = 1;
     /// Set samples
-    example.Tnumber = 10;
+    example.Tnumber = 1;
     /// Set the parameters infos
     example.setParameters();
     // Set the parameter ranges
-    example.mu_range(0, 0) = 0.1;
-    example.mu_range(0, 1) = 0.01;
+    example.mu_range(0, 0) = 0.005;
+    example.mu_range(0, 1) = 0.005;
     // Generate equispaced samples inside the parameter range
     example.genEquiPar();
     // Set the inlet boundaries where we have non homogeneous boundary conditions
@@ -107,10 +107,10 @@ int main(int argc, char* argv[])
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
     // Time parameters
-    example.startTime = 0;
-    example.finalTime = 20;
+    example.startTime = 30;
+    example.finalTime = 50;
     example.timeStep = 0.01;
-    example.writeEvery = 1.0;
+    example.writeEvery = 0.1;
     // Perform The Offline Solve;
     example.offlineSolve();
     // Solve the supremizer problem
@@ -129,17 +129,16 @@ int main(int argc, char* argv[])
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
     reducedUnsteadyNS reduced(example);
     // Set values of the reduced stuff
-    reduced.nu = 0.055;
-    reduced.tstart = 0;
-    reduced.finalTime = 15;
+    reduced.nu = 0.005;
+    reduced.tstart = 30;
+    reduced.finalTime = 50;
     reduced.dt = 0.01;
     // Set the online velocity
     Eigen::MatrixXd vel_now(1, 1);
-    vel_now(0, 0) = 2;
+    vel_now(0, 0) = 1;
     reduced.solveOnline_sup(vel_now);
     // Reconstruct the solution and export it
-    reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 5);
-    //reduced.reconstruct_PPE("./ITHACAoutput/Reconstruction/",4);
+    reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 10);
     exit(0);
 }
 
