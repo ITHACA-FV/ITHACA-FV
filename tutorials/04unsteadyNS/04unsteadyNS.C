@@ -133,12 +133,14 @@ int main(int argc, char* argv[])
     reduced.tstart = 30;
     reduced.finalTime = 50;
     reduced.dt = 0.01;
+    reduced.storeEvery = 0.01;
+    reduced.exportEvery = 0.1;
     // Set the online velocity
     Eigen::MatrixXd vel_now(1, 1);
-    vel_now(0, 0) = 1;
+    vel_now(0, 0) = 1.3;
     reduced.solveOnline_sup(vel_now);
     // Reconstruct the solution and export it
-    reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 10);
+    reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/");
     exit(0);
 }
 

@@ -43,8 +43,9 @@ reducedUnsteadyNS::reducedUnsteadyNS()
 }
 
 reducedUnsteadyNS::reducedUnsteadyNS(unsteadyNS& FOMproblem)
+    :
+    problem(&FOMproblem)
 {
-    problem = &FOMproblem;
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
@@ -202,9 +203,21 @@ int newton_unsteadyNS_PPE::df(const Eigen::VectorXd& x,
 
 // * * * * * * * * * * * * * Solve Functions supremizer * * * * * * * * * * * //
 
-void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd& vel_now,
+void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
                                         label startSnap)
 {
+    M_Assert(exportEvery >= dt,
+             "The time step dt must be smaller than exportEvery.");
+    M_Assert(storeEvery >= dt,
+             "The time step dt must be smaller than storeEvery.");
+    M_Assert(ITHACAutilities::isInteger(storeEvery / dt) == true,
+             "The variable storeEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / dt) == true,
+             "The variable exportEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
+             "The variable exportEvery must be an integer multiple of the variable storeEvery.");
+    int numberOfStores = round(storeEvery / dt);
+    vel_now = setOnlineVelocity(vel);
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
@@ -212,6 +225,8 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd& vel_now,
     // y.tail(Nphi_p) = ITHACAutilities::get_coeffs(problem->Pfield[startSnap], Pmodes);
     y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
     y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
+    int nextStore = 0;
+    int counter2 = 0;
 
     // Change initial condition for the lifting function
     for (label j = 0; j < N_BC; j++)
@@ -232,7 +247,8 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd& vel_now,
 
     // Set number of online solutions
     int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    online_solution.resize(Ntsteps);
+    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    online_solution.resize(onlineSize);
     // Set the initial time
     time = tstart;
     // Counting variable
@@ -246,6 +262,8 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd& vel_now,
     {
         online_solution[counter] = tmp_sol;
         counter ++;
+        counter2++;
+        nextStore += numberOfStores;
     }
 
     // Create nonlinear solver object
@@ -289,13 +307,19 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd& vel_now,
         tmp_sol(0) = time;
         tmp_sol.col(0).tail(y.rows()) = y;
 
-        if (counter >= online_solution.size())
+        if (counter == nextStore)
         {
-            online_solution.append(tmp_sol);
-        }
-        else
-        {
-            online_solution[counter] = tmp_sol;
+            if (counter2 >= online_solution.size())
+            {
+                online_solution.append(tmp_sol);
+            }
+            else
+            {
+                online_solution[counter2] = tmp_sol;
+            }
+
+            nextStore += numberOfStores;
+            counter2 ++;
         }
 
         counter ++;
@@ -311,9 +335,21 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd& vel_now,
 
 // * * * * * * * * * * * * * * * Solve Functions PPE * * * * * * * * * * * * * //
 
-void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd& vel_now,
+void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
                                         label startSnap)
 {
+    M_Assert(exportEvery >= dt,
+             "The time step dt must be smaller than exportEvery.");
+    M_Assert(storeEvery >= dt,
+             "The time step dt must be smaller than storeEvery.");
+    M_Assert(ITHACAutilities::isInteger(storeEvery / dt) == true,
+             "The variable storeEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / dt) == true,
+             "The variable exportEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
+             "The variable exportEvery must be an integer multiple of the variable storeEvery.");
+    int numberOfStores = round(storeEvery / dt);
+    vel_now = setOnlineVelocity(vel);
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
@@ -322,6 +358,8 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd& vel_now,
     // y.tail(Nphi_p) = ITHACAutilities::get_coeffs(problem->Pfield[startSnap], Pmodes);
     y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
     y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
+    int nextStore = 0;
+    int counter2 = 0;
 
     // Change initial condition for the lifting function
     for (label j = 0; j < N_BC; j++)
@@ -342,7 +380,8 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd& vel_now,
 
     // Set number of online solutions
     int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    online_solution.resize(Ntsteps);
+    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    online_solution.resize(onlineSize);
     // Set the initial time
     time = tstart;
     // Counting variable
@@ -356,6 +395,8 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd& vel_now,
     {
         online_solution[counter] = tmp_sol;
         counter ++;
+        counter2++;
+        nextStore += numberOfStores;
     }
 
     // Create nonlinear solver object
@@ -400,13 +441,19 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd& vel_now,
         tmp_sol(0) = time;
         tmp_sol.col(0).tail(y.rows()) = y;
 
-        if (counter >= online_solution.size())
+        if (counter == nextStore)
         {
-            online_solution.append(tmp_sol);
-        }
-        else
-        {
-            online_solution[counter] = tmp_sol;
+            if (counter2 >= online_solution.size())
+            {
+                online_solution.append(tmp_sol);
+            }
+            else
+            {
+                online_solution[counter2] = tmp_sol;
+            }
+
+            nextStore += numberOfStores;
+            counter2 ++;
         }
 
         counter ++;
@@ -420,13 +467,14 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd& vel_now,
     count_online_solve += 1;
 }
 
-void reducedUnsteadyNS::reconstruct_PPE(fileName folder, int printevery)
+void reducedUnsteadyNS::reconstruct_PPE(fileName folder)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
     int counter = 0;
     int nextwrite = 0;
     int counter2 = 1;
+    int exportEveryIndex = round(exportEvery / storeEvery);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -448,7 +496,7 @@ void reducedUnsteadyNS::reconstruct_PPE(fileName folder, int printevery)
             }
 
             ITHACAstream::exportSolution(P_rec, name(counter2), folder);
-            nextwrite += printevery;
+            nextwrite += exportEveryIndex;
             double timenow = online_solution[i](0, 0);
             std::ofstream of(folder + name(counter2) + "/" + name(timenow));
             counter2 ++;
@@ -460,13 +508,14 @@ void reducedUnsteadyNS::reconstruct_PPE(fileName folder, int printevery)
     }
 }
 
-void reducedUnsteadyNS::reconstruct_sup(fileName folder, int printevery)
+void reducedUnsteadyNS::reconstruct_sup(fileName folder)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
     int counter = 0;
     int nextwrite = 0;
     int counter2 = 1;
+    int exportEveryIndex = round(exportEvery / storeEvery);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -488,7 +537,7 @@ void reducedUnsteadyNS::reconstruct_sup(fileName folder, int printevery)
             }
 
             ITHACAstream::exportSolution(P_rec, name(counter2), folder);
-            nextwrite += printevery;
+            nextwrite += exportEveryIndex;
             double timenow = online_solution[i](0, 0);
             std::ofstream of(folder + name(counter2) + "/" + name(timenow));
             counter2 ++;
@@ -499,4 +548,24 @@ void reducedUnsteadyNS::reconstruct_sup(fileName folder, int printevery)
         counter++;
     }
 }
-// ************************************************************************* //
+
+Eigen::MatrixXd reducedUnsteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
+{
+    assert(problem->inletIndex.rows() == vel.rows()
+           && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+    Eigen::MatrixXd vel_scal;
+    vel_scal.resize(vel.rows(), vel.cols());
+
+    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    {
+        label p = problem->inletIndex(k, 0);
+        label l = problem->inletIndex(k, 1);
+        scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
+        scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
+                           problem->liftfield[k].boundaryField()[p]).component(l) / area;
+        vel_scal(k, 0) = vel(k, 0) / u_lf;
+    }
+
+    return vel_scal;
+}
+//************************************************************************* //

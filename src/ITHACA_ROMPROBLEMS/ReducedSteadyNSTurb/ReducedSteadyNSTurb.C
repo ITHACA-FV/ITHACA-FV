@@ -135,14 +135,15 @@ int newtonSteadyNSTurb::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
 
-void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd velNow)
+void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
 {
+    vel_now = setOnlineVelocity(vel);
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
 
     for (label j = 0; j < N_BC; j++)
     {
-        y(j) = velNow(j, 0);
+        y(j) = vel_now(j, 0);
     }
 
     Color::Modifier red(Color::FG_RED);
@@ -154,7 +155,7 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd velNow)
 
     for (label j = 0; j < N_BC; j++)
     {
-        newtonObject.bc(j) = velNow(j, 0);
+        newtonObject.bc(j) = vel_now(j, 0);
     }
 
     if (problem->viscCoeff == "L2")
@@ -168,7 +169,7 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd velNow)
     {
         for (label i = 0; i < nphiNut; i++)
         {
-            newtonObject.gNut(i) = problem->rbfSplines[i]->eval(velNow);
+            newtonObject.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
             rbfCoeff = newtonObject.gNut;
         }
     }
@@ -193,7 +194,7 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd velNow)
     newtonObject.operator()(y, res);
     std::cout << "################## Online solve N° " << count_online_solve <<
               " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << velNow << std::endl;
+    std::cout << "Solving for the parameter: " << vel_now << std::endl;
 
     if (res.norm() < 1e-5)
     {
@@ -244,6 +245,26 @@ void ReducedSteadyNSTurb::reconstructSUP(fileName folder, int printEvery)
 
         counter++;
     }
+}
+
+Eigen::MatrixXd ReducedSteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
+{
+    assert(problem->inletIndex.rows() == vel.rows()
+           && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+    Eigen::MatrixXd vel_scal;
+    vel_scal.resize(vel.rows(), vel.cols());
+
+    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    {
+        label p = problem->inletIndex(k, 0);
+        label l = problem->inletIndex(k, 1);
+        scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
+        scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
+                           problem->liftfield[k].boundaryField()[p]).component(l) / area;
+        vel_scal(k, 0) = vel(k, 0) / u_lf;
+    }
+
+    return vel_scal;
 }
 // ************************************************************************* //
 

@@ -122,6 +122,16 @@ class ITHACAutilities
         ///
         static Eigen::MatrixXd rand(int rows, Eigen::MatrixXd minMax);
 
+
+        ///
+        /// This function checks if ratio is an integer
+        ///
+        /// @param[in]  ratio  The ratio
+        ///
+        /// @return     1 if ratio is an integer
+        ///
+        static bool isInteger(double ratio);
+
         //--------------------------------------------------------------------------
         /// Check if a folder exists
         ///
