@@ -103,6 +103,7 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// system.
         ///
         List<Eigen::MatrixXd> project(fvMatrix<T>& Af, int numberOfModes = 0);
+        
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
         ///             coefficients
@@ -114,6 +115,22 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         ///
         GeometricField<T, fvPatchField, volMesh> reconstruct(Eigen::MatrixXd& Coeff,
                 word Name);
+
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to reconstruct the solution starting from the
+        ///             coefficients, in this case the field is passed as
+        ///             input/output
+        ///
+        /// @param[in/out]  inputField  The input/output field
+        /// @param[in]  Coeff       The coefficients of the POD expansion
+        /// @param[in]  Name        The name of the field you want to return
+        ///
+        /// @return     A volScalarField or volScalarField given by the
+        ///             reconstruction.
+        ///
+        GeometricField<T, fvPatchField, volMesh> reconstruct(GeometricField<T, fvPatchField, volMesh>& inputField, Eigen::MatrixXd Coeff,
+        word Name);
 
         PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
                     PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
