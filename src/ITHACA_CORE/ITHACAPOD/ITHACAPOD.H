@@ -173,26 +173,6 @@ class ITHACAPOD
             bool sup = 0);
 
         //--------------------------------------------------------------------------
-        /// Normalize the Bases for a GeometricField of OpenFOAM
-        ///
-        /// @param[in] s    a PtrList of GeometricFields where the bases are stored.
-        ///
-        /// @tparam     Field_type  It can be vector or scalar
-        ///
-        template<class Field_type>
-        static void normalizeBases(
-            PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& bases);
-
-        //--------------------------------------------------------------------------
-        /// Normalize a volScalarField field using a volVectorField
-        ///
-        /// @param[in] Bases   a PtrList of volVectorField where the bases used for normalization are stored.
-        /// @param[in] p       a PtrList of volScalarField  where the bases are stored.
-        ///
-        static void normalizeBases(PtrList<volVectorField>& Bases,
-                                   PtrList<volScalarField>& p);
-
-        //--------------------------------------------------------------------------
         /// Export the eigenvalues as a txt file
         ///
         /// @param[in] Eigenvalues  a scalarField of eigenvalues.
@@ -298,18 +278,6 @@ void ITHACAPOD::exportBases(PtrList<volVectorField>& snapshots,
 template<>
 void ITHACAPOD::exportBases(PtrList<volScalarField>& snapshots,
                             PtrList<volScalarField>& bases, bool sup);
-
-template<>
-void ITHACAPOD::normalizeBases(PtrList<volVectorField>& Bases);
-
-template<>
-void ITHACAPOD::normalizeBases(PtrList<volScalarField>& Bases);
-
-
-
-
-
-
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

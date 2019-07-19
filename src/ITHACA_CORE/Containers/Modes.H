@@ -103,7 +103,7 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// system.
         ///
         List<Eigen::MatrixXd> project(fvMatrix<T>& Af, int numberOfModes = 0);
-        
+
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
         ///             coefficients
@@ -129,8 +129,9 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @return     A volScalarField or volScalarField given by the
         ///             reconstruction.
         ///
-        GeometricField<T, fvPatchField, volMesh> reconstruct(GeometricField<T, fvPatchField, volMesh>& inputField, Eigen::MatrixXd Coeff,
-        word Name);
+        GeometricField<T, fvPatchField, volMesh> reconstruct(
+            GeometricField<T, fvPatchField, volMesh>& inputField, Eigen::MatrixXd Coeff,
+            word Name);
 
         PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
                     PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,

@@ -686,6 +686,17 @@ class ITHACAutilities
         template<typename type_f>
         static fvMeshSubset* getSubMeshFromBox(
             GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+
+        ///
+        /// @brief      Normalize list of Geometric fields
+        ///
+        /// @param      fields  The fields to be normalized
+        ///
+        /// @tparam     type_f  type of the Field can be Scalar or Vector
+        ///
+        template<typename type_f>
+        static void normalizeFields(
+            PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //
