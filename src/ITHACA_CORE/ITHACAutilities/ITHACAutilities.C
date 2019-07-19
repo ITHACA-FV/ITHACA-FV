@@ -171,6 +171,22 @@ Eigen::MatrixXd ITHACAutilities::rand(int rows, Eigen::MatrixXd minMax)
     return matr;
 }
 
+
+bool ITHACAutilities::isInteger(double ratio)
+{
+    bool checkResult = 0;
+
+    if (abs(round(ratio) - ratio) < std::sqrt(SMALL))
+    {
+        checkResult = true;
+    }
+    else
+    {
+        checkResult = false;
+    }
+
+    return checkResult;
+}
 // Check if the modes exists
 bool ITHACAutilities::check_pod()
 {

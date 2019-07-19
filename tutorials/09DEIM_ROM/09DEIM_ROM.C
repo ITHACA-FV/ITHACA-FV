@@ -294,34 +294,34 @@ int main(int argc, char* argv[])
 
 /// \example 09DEIM_ROM.C
 /// \section intro_09DEIM_ROM Introduction to tutorial 9
-/// In this tutorial we implement a test where we use the Discrete Empirical Interpolation 
-/// Method for a case where we have a non-linear dependency with respect to the 
+/// In this tutorial we implement a test where we use the Discrete Empirical Interpolation
+/// Method for a case where we have a non-linear dependency with respect to the
 /// input parameters.
 ///
 /// The following image illustrates the computational domain which is the same as the previous example
 /// \image html domain_deim.png
-/// 
+///
 /// The physical problem is given by a heat transfer problem which is described by the Poisson equation:
-/// 
+///
 /// \f[ \nabla \cdot (\nu \nabla T) = S \f]
-/// 
+///
 /// The parametric diffusivity is described by a parametric Gaussian function:
 /// \f[
 /// \nu(\mathbf{x},\mathbf{\mu}) = e^{-2(x-\mu_x-1)^2 - 2(y-\mu_y-0.5)^2},
 ///  \f]
-///  
+///
 /// The problem is then discretized as:
-/// 
+///
 /// \f[ A(\mu)T = b \f]
-/// 
-/// In this case, even if the problem is linear, due to non-linearity with respect to the 
+///
+/// In this case, even if the problem is linear, due to non-linearity with respect to the
 /// input parameter of the conductivity constant it is not possible to have an affine decomposition
 /// of the discretized differential operator.
-/// 
+///
 /// We seek therefore an approximate affine expansion of the differential operator of this type:
-/// 
+///
 /// \f[ A(\mu) = \sum_{i = 1}^{N_D} \theta_i(\mu) A_i  \f]
-/// 
+///
 /// using the Discrete Empirical Interpolation Method
 ///
 /// \section plaincode The plain program

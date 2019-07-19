@@ -132,13 +132,19 @@ class reducedUnsteadyNS: public reducedSteadyNS
         scalar time;
 
         /// Scalar to store the time increment
-        scalar dt;
+        double dt;
 
         /// Scalar to store the final time if the online simulation
         scalar finalTime;
 
         /// Scalar to store the initial time if the online simulation
         scalar tstart;
+
+        /// A variable for storing the reduced coefficients
+        double storeEvery;
+
+        /// A variable for exporting the fields
+        double exportEvery;
 
         /// Pointer to the FOM problem
         unsteadyNS* problem;
@@ -154,7 +160,7 @@ class reducedUnsteadyNS: public reducedSteadyNS
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnline_PPE(Eigen::MatrixXd& vel_now, label startSnap = 0);
+        void solveOnline_PPE(Eigen::MatrixXd vel_now, label startSnap = 0);
 
         /// Method to perform an online solve using a supremizer stabilisation method
         ///
@@ -164,23 +170,30 @@ class reducedUnsteadyNS: public reducedSteadyNS
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnline_sup(Eigen::MatrixXd& vel_now, label startSnap = 0);
+        void solveOnline_sup(Eigen::MatrixXd vel_now, label startSnap = 0);
 
         /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
         /// stabilisation method
         ///
         /// @param[in]  folder      The folder where to output the solutions
-        /// @param[in]  printevery  The printevery
         ///
-        void reconstruct_PPE(fileName folder = "./online_rec", int printevery = 1);
+        void reconstruct_PPE(fileName folder = "./online_rec");
 
         /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
         ///
         /// @param[in]  folder      The folder where to output the solutions
-        /// @param[in]  printevery  The printevery
         ///
-        void reconstruct_sup(fileName folder = "./online_rec", int printevery = 1);
+        void reconstruct_sup(fileName folder = "./online_rec");
+
+        ///
+        /// @brief      Sets the online velocity.
+        ///
+        /// @param[in]  vel   The velocity
+        ///
+        /// @return     The rescaled velocity vector
+        ///
+        Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
 
 };
 

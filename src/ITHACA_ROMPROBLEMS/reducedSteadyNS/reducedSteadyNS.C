@@ -142,8 +142,9 @@ void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now)
     exit(0);
 }
 
-void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel_now)
+void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
 {
+    vel_now = setOnlineVelocity(vel);
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
 
@@ -347,3 +348,22 @@ void reducedSteadyNS::reconstructLiftAndDrag(steadyNS& problem,
     }
 }
 
+Eigen::MatrixXd reducedSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
+{
+    assert(problem->inletIndex.rows() == vel.rows()
+           && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+    Eigen::MatrixXd vel_scal;
+    vel_scal.resize(vel.rows(), vel.cols());
+
+    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    {
+        label p = problem->inletIndex(k, 0);
+        label l = problem->inletIndex(k, 1);
+        scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
+        scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
+                           problem->liftfield[k].boundaryField()[p]).component(l) / area;
+        vel_scal(k, 0) = vel(k, 0) / u_lf;
+    }
+
+    return vel_scal;
+}

@@ -72,6 +72,12 @@ ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
         Pmodes.append(problem->Pmodes[k]);
     }
 
+    // Create locally the eddy viscosity modes
+    for (label k = 0; k < problem->nNutModes; k++)
+    {
+        nutModes.append(problem->nutModes[k]);
+    }
+
     // Store locally the snapshots for projections
     for (label k = 0; k < problem->Ufield.size(); k++)
     {
@@ -205,20 +211,34 @@ int newton_UnsteadyNSTurb_PPE::df(const Eigen::VectorXd& x,
 
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd& velNow,
+void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
         label startSnap)
 {
+    M_Assert(exportEvery >= dt,
+             "The time step dt must be smaller than exportEvery.");
+    M_Assert(storeEvery >= dt,
+             "The time step dt must be smaller than storeEvery.");
+    M_Assert(ITHACAutilities::isInteger(storeEvery / dt) == true,
+             "The variable storeEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / dt) == true,
+             "The variable exportEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
+             "The variable exportEvery must be an integer multiple of the variable storeEvery.");
+    int numberOfStores = round(storeEvery / dt);
+    vel_now = setOnlineVelocity(vel);
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
     y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
     y.tail(Nphi_p) = ITHACAutilities::get_coeffs_ortho(Psnapshots[startSnap],
                      Pmodes);
+    int nextStore = 0;
+    int counter2 = 0;
 
     // Change initial condition for the lifting function
     for (label j = 0; j < N_BC; j++)
     {
-        y(j) = velNow(j, 0);
+        y(j) = vel_now(j, 0);
     }
 
     // Set some properties of the newton object
@@ -229,12 +249,14 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd& velNow,
 
     for (label j = 0; j < N_BC; j++)
     {
-        newtonObjectSUP.bc(j) = velNow(j, 0);
+        newtonObjectSUP.bc(j) = vel_now(j, 0);
     }
 
     // Set number of online solutions
     int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    online_solution.resize(Ntsteps);
+    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    online_solution.resize(onlineSize);
+    rbfCoeffMat.resize(nphiNut + 1, onlineSize + 1);
     // Set the initial time
     time = tstart;
     // Counting variable
@@ -260,7 +282,6 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd& velNow,
     // This part up to the while loop is just to compute the eddy viscosity field at time = startTime if time is not equal to zero
     if (time != 0)
     {
-        volScalarField nutTmp("nutRec", problem->nutModes[0] * 0);
         Eigen::VectorXd gNut0;
         gNut0.resize(nphiNut);
         std::vector<double> tv0;
@@ -272,12 +293,10 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd& velNow,
             gNut0(i) = problem->rbfSplines[i]->eval(tv0);
         }
 
-        for (label j = 0; j < nphiNut; j++)
-        {
-            nutTmp += problem->nutModes[j] * gNut0(j);
-        }
-
-        nutRec.append(nutTmp);
+        rbfCoeffMat(0, counter2) = time;
+        rbfCoeffMat.block(1, counter2, nphiNut, 1) = gNut0;
+        counter2++;
+        nextStore += numberOfStores;
     }
 
     // Start the time loop
@@ -293,21 +312,13 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd& velNow,
             newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(tv);
         }
 
-        volScalarField nutTmp("nutRec", problem->nutModes[0] * 0);
-
-        for (label j = 0; j < nphiNut; j++)
-        {
-            nutTmp += problem->nutModes[j] * newtonObjectSUP.gNut(j);
-        }
-
-        nutRec.append(nutTmp);
         Eigen::VectorXd res(y);
         res.setZero();
         hnls.solve(y);
 
         for (label j = 0; j < N_BC; j++)
         {
-            y(j) = velNow(j, 0);
+            y(j) = vel_now(j, 0);
         }
 
         newtonObjectSUP.operator()(y, res);
@@ -315,7 +326,7 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd& velNow,
         std::cout << "################## Online solve N° " << count_online_solve <<
                   " ##################" << std::endl;
         Info << "Time = " << time << endl;
-        std::cout << "Solving for the parameter: " << velNow << std::endl;
+        std::cout << "Solving for the parameter: " << vel_now << std::endl;
 
         if (res.norm() < 1e-5)
         {
@@ -332,13 +343,21 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd& velNow,
         tmp_sol(0) = time;
         tmp_sol.col(0).tail(y.rows()) = y;
 
-        if (counter >= online_solution.size())
+        if (counter == nextStore)
         {
-            online_solution.append(tmp_sol);
-        }
-        else
-        {
-            online_solution[counter] = tmp_sol;
+            if (counter2 >= online_solution.size())
+            {
+                online_solution.append(tmp_sol);
+            }
+            else
+            {
+                online_solution[counter2] = tmp_sol;
+            }
+
+            rbfCoeffMat(0, counter2) = time;
+            rbfCoeffMat.block(1, counter2, nphiNut, 1) = newtonObjectSUP.gNut;
+            nextStore += numberOfStores;
+            counter2 ++;
         }
 
         counter ++;
@@ -353,20 +372,34 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd& velNow,
 }
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd& velNow,
+void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
         label startSnap)
 {
+    M_Assert(exportEvery >= dt,
+             "The time step dt must be smaller than exportEvery.");
+    M_Assert(storeEvery >= dt,
+             "The time step dt must be smaller than storeEvery.");
+    M_Assert(ITHACAutilities::isInteger(storeEvery / dt) == true,
+             "The variable storeEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / dt) == true,
+             "The variable exportEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
+             "The variable exportEvery must be an integer multiple of the variable storeEvery.");
+    int numberOfStores = round(storeEvery / dt);
+    vel_now = setOnlineVelocity(vel);
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
     // Set Initial Conditions
     y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
     y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
+    int nextStore = 0;
+    int counter2 = 0;
 
     // Change initial condition for the lifting function
     for (label j = 0; j < N_BC; j++)
     {
-        y(j) = velNow(j, 0);
+        y(j) = vel_now(j, 0);
     }
 
     // Set some properties of the newton object
@@ -377,12 +410,14 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd& velNow,
 
     for (label j = 0; j < N_BC; j++)
     {
-        newtonObjectPPE.bc(j) = velNow(j, 0);
+        newtonObjectPPE.bc(j) = vel_now(j, 0);
     }
 
     // Set number of online solutions
     int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    online_solution.resize(Ntsteps);
+    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    online_solution.resize(onlineSize);
+    rbfCoeffMat.resize(nphiNut + 1, onlineSize + 1);
     // Set the initial time
     time = tstart;
     // Counting variable
@@ -408,7 +443,6 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd& velNow,
     // This part up to the while loop is just to compute the eddy viscosity field at time = startTime if time is not equal to zero
     if (time != 0)
     {
-        volScalarField nutTmp("nutRec", problem->nutModes[0] * 0);
         Eigen::VectorXd gNut0;
         gNut0.resize(nphiNut);
         std::vector<double> tv0;
@@ -420,12 +454,10 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd& velNow,
             gNut0(i) = problem->rbfSplines[i]->eval(tv0);
         }
 
-        for (label j = 0; j < nphiNut; j++)
-        {
-            nutTmp += problem->nutModes[j] * gNut0(j);
-        }
-
-        nutRec.append(nutTmp);
+        rbfCoeffMat(0, counter2) = time;
+        rbfCoeffMat.block(1, counter2, nphiNut, 1) = gNut0;
+        counter2++;
+        nextStore += numberOfStores;
     }
 
     // Start the time loop
@@ -441,30 +473,21 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd& velNow,
             newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(tv);
         }
 
-        volScalarField nutTmp("nutRec", problem->nutModes[0] * 0);
-
-        for (label j = 0; j < nphiNut; j++)
-        {
-            nutTmp += problem->nutModes[j] * newtonObjectPPE.gNut(j);
-        }
-
-        nutRec.append(nutTmp);
         Eigen::VectorXd res(y);
         res.setZero();
         hnls.solve(y);
 
         for (label j = 0; j < N_BC; j++)
         {
-            y(j) = velNow(j, 0);
+            y(j) = vel_now(j, 0);
         }
 
-        Info << "before the operator" << endl;
         newtonObjectPPE.operator()(y, res);
         newtonObjectPPE.y_old = y;
         std::cout << "################## Online solve N° " << count_online_solve <<
                   " ##################" << std::endl;
         Info << "Time = " << time << endl;
-        std::cout << "Solving for the parameter: " << velNow << std::endl;
+        std::cout << "Solving for the parameter: " << vel_now << std::endl;
 
         if (res.norm() < 1e-5)
         {
@@ -481,13 +504,21 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd& velNow,
         tmp_sol(0) = time;
         tmp_sol.col(0).tail(y.rows()) = y;
 
-        if (counter >= online_solution.size())
+        if (counter == nextStore)
         {
-            online_solution.append(tmp_sol);
-        }
-        else
-        {
-            online_solution[counter] = tmp_sol;
+            if (counter2 >= online_solution.size())
+            {
+                online_solution.append(tmp_sol);
+            }
+            else
+            {
+                online_solution[counter2] = tmp_sol;
+            }
+
+            rbfCoeffMat(0, counter2) = time;
+            rbfCoeffMat.block(1, counter2, nphiNut, 1) = newtonObjectSUP.gNut;
+            nextStore += numberOfStores;
+            counter2 ++;
         }
 
         counter ++;
@@ -501,13 +532,14 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd& velNow,
     count_online_solve += 1;
 }
 
-void ReducedUnsteadyNSTurb::reconstructPPE(fileName folder, int printEvery)
+void ReducedUnsteadyNSTurb::reconstructPPE(fileName folder)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
     int counter = 0;
     int nextWrite = 0;
     int counter2 = 1;
+    int exportEveryIndex = round(exportEvery / storeEvery);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -528,9 +560,16 @@ void ReducedUnsteadyNSTurb::reconstructPPE(fileName folder, int printEvery)
                 pRec += Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
 
+            volScalarField nutRec("nutRec", nutModes[0] * 0);
+
+            for (label j = 0; j < nphiNut; j++)
+            {
+                nutRec += nutModes[j] * rbfCoeffMat(j + 1, i);
+            }
+
             ITHACAstream::exportSolution(pRec, name(counter2), folder);
-            ITHACAstream::exportSolution(nutRec[nextWrite], name(counter2), folder);
-            nextWrite += printEvery;
+            ITHACAstream::exportSolution(nutRec, name(counter2), folder);
+            nextWrite += exportEveryIndex;
             double timeNow = online_solution[i](0, 0);
             std::ofstream of(folder + name(counter2) + "/" + name(timeNow));
             counter2 ++;
@@ -540,13 +579,14 @@ void ReducedUnsteadyNSTurb::reconstructPPE(fileName folder, int printEvery)
     }
 }
 
-void ReducedUnsteadyNSTurb::reconstructSUP(fileName folder, int printEvery)
+void ReducedUnsteadyNSTurb::reconstructSUP(fileName folder)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
     int counter = 0;
     int nextWrite = 0;
     int counter2 = 1;
+    int exportEveryIndex = round(exportEvery / storeEvery);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -567,9 +607,16 @@ void ReducedUnsteadyNSTurb::reconstructSUP(fileName folder, int printEvery)
                 pRec += Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
 
+            volScalarField nutRec("nutRec", nutModes[0] * 0);
+
+            for (label j = 0; j < nphiNut; j++)
+            {
+                nutRec += nutModes[j] * rbfCoeffMat(j + 1, i);
+            }
+
             ITHACAstream::exportSolution(pRec, name(counter2), folder);
-            ITHACAstream::exportSolution(nutRec[nextWrite], name(counter2), folder);
-            nextWrite += printEvery;
+            ITHACAstream::exportSolution(nutRec, name(counter2), folder);
+            nextWrite += exportEveryIndex;
             double timeNow = online_solution[i](0, 0);
             std::ofstream of(folder + name(counter2) + "/" + name(timeNow));
             counter2 ++;
@@ -577,6 +624,26 @@ void ReducedUnsteadyNSTurb::reconstructSUP(fileName folder, int printEvery)
 
         counter++;
     }
+}
+
+Eigen::MatrixXd ReducedUnsteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
+{
+    assert(problem->inletIndex.rows() == vel.rows()
+           && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+    Eigen::MatrixXd vel_scal;
+    vel_scal.resize(vel.rows(), vel.cols());
+
+    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    {
+        label p = problem->inletIndex(k, 0);
+        label l = problem->inletIndex(k, 1);
+        scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
+        scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
+                           problem->liftfield[k].boundaryField()[p]).component(l) / area;
+        vel_scal(k, 0) = vel(k, 0) / u_lf;
+    }
+
+    return vel_scal;
 }
 // ************************************************************************* //
 

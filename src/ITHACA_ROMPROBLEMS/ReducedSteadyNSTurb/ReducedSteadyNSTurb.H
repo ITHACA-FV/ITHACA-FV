@@ -144,6 +144,15 @@ class ReducedSteadyNSTurb: public reducedSteadyNS
         void reconstructSUP(fileName folder = "./ITHACAOutput/online_rec",
                             int printEvery = 1);
 
+        ///
+        /// @brief      Sets the online velocity.
+        ///
+        /// @param[in]  vel   The velocity
+        ///
+        /// @return     The rescaled velocity vector
+        ///
+        Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
+
 
 };
 
