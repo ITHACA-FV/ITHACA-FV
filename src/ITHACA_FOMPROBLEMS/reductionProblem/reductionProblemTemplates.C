@@ -63,7 +63,6 @@ void reductionProblem::computeLift(T& Lfield, T& liftfield, T& omfield)
                 volVectorField C("U", Lfield[j] - liftfield[k]*u_bc / u_lf);
                 omfield.append(C);
             }
-
             else
             {
                 u_bc = gSum(omfield[j].mesh().magSf().boundaryField()[p] *
@@ -98,7 +97,6 @@ void reductionProblem::computeLiftT(T& Lfield, T& liftfield, T& omfield)
                 volScalarField C(Lfield[0].name(), Lfield[j] - liftfield[k]*t_bc / t_lf);
                 omfield.append(C);
             }
-
             else
             {
                 t_bc = gSum(omfield[j].mesh().magSf().boundaryField()[p] *

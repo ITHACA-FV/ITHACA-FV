@@ -118,7 +118,8 @@ GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
 }
 
 template<class T>
-GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(GeometricField<T, fvPatchField, volMesh>& inputField,
+GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
+    GeometricField<T, fvPatchField, volMesh>& inputField,
     Eigen::MatrixXd Coeff,
     word Name)
 {
