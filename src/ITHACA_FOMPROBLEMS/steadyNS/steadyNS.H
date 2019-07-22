@@ -151,11 +151,17 @@ class steadyNS: public reductionProblem
         /// Divergence of momentum PPE
         List <Eigen::MatrixXd> G_matrix;
 
+        /// Divergence of momentum PPE
+        Eigen::Tensor<double, 3 > gTensor;
+
         /// PPE BC1
         Eigen::MatrixXd BC1_matrix;
 
         /// PPE BC2
         List <Eigen::MatrixXd> BC2_matrix;
+
+        /// PPE BC2
+        Eigen::Tensor<double, 3 > bc2Tensor;
 
         /// PPE BC3
         Eigen::MatrixXd BC3_matrix;
@@ -348,6 +354,16 @@ class steadyNS: public reductionProblem
         ///
         List < Eigen::MatrixXd > div_momentum(label NUmodes, label NPmodes);
 
+        ///
+        /// @brief      Divergence of convective term (PPE approach)
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        ///
+        /// @return     reduced third order tensor for the conv. term which is used for the PPE approach
+        ///
+        Eigen::Tensor<double, 3 > divMomentum(label NUmodes, label NPmodes);
+
         //--------------------------------------------------------------------------
         /// Laplacian of pressure term (PPE approach)
         ///
@@ -376,6 +392,16 @@ class steadyNS: public reductionProblem
         /// @return     reduced matrix in Eigen::MatrixXd format for the BC2 using a PPE approach.
         ///
         List < Eigen::MatrixXd > pressure_BC2(label NPmodes, label NUmodes);
+
+        ///
+        /// @brief      Term N° 2 given by the additional boundary condition using a PPE approach
+        ///
+        /// @param[in]  NPmodes  The n pmodes
+        /// @param[in]  NUmodes  The n umodes
+        ///
+        /// @return     reduced tensor in Eigen::MatrixXd format for the BC2 using a PPE approach.
+        ///
+        Eigen::Tensor<double, 3 > pressureBC2(label NPmodes, label NUmodes);
 
         //--------------------------------------------------------------------------
         /// @brief      Term N° 3 given by the additional boundary condition using a PPE approach

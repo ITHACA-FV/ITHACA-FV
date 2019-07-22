@@ -475,32 +475,6 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     }
     else
     {
-        L_U_SUPmodes.resize(0);
-
-        if (liftfield.size() != 0)
-        {
-            for (label k = 0; k < liftfield.size(); k++)
-            {
-                L_U_SUPmodes.append(liftfield[k]);
-            }
-        }
-
-        if (NUmodes != 0)
-        {
-            for (label k = 0; k < NUmodes; k++)
-            {
-                L_U_SUPmodes.append(Umodes[k]);
-            }
-        }
-
-        if (NSUPmodes != 0)
-        {
-            for (label k = 0; k < NSUPmodes; k++)
-            {
-                L_U_SUPmodes.append(supmodes[k]);
-            }
-        }
-
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
         C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
@@ -598,61 +572,282 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                                 label Nnut)
 {
-    if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
-    {
-        B_matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/B_mat.txt");
-        C_matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/C", "C");
-        K_matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/K_mat.txt");
-        M_matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/M_mat.txt");
-        D_matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/D_mat.txt");
-        G_matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/G", "G");
-        BC1_matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/BC1_mat.txt");
-        BC2_matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/BC2/", "BC2");
-        BC3_matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/BC3_mat.txt");
-        btMatrix =
-            ITHACAstream::readMatrix("./ITHACAoutput/Matrices/btMatrix_mat.txt");
-        ct1Matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/ct1",
-                                             "ct1Matrix");
-        ct2Matrix = ITHACAstream::readMatrix("./ITHACAoutput/Matrices/ct2",
-                                             "ct2Matrix");
-    }
-    else
-    {
-        NUmodes = NU;
-        NPmodes = NP;
-        NSUPmodes = 0;
-        nNutModes = Nnut;
-        B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-        C_matrix = convective_term(NUmodes, NPmodes, NSUPmodes);
-        M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
-        K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
-        D_matrix = laplacian_pressure(NPmodes);
-        G_matrix = div_momentum(NUmodes, NPmodes);
-        BC1_matrix = pressure_BC1(NUmodes, NPmodes);
-        BC2_matrix = pressure_BC2(NUmodes, NPmodes);
-        BC3_matrix = pressure_BC3(NUmodes, NPmodes);
-        btMatrix = btTurbulence(NUmodes, NSUPmodes);
-        ct1Matrix = turbulenceTerm1(NUmodes, NSUPmodes, nNutModes);
-        ct2Matrix = turbulenceTerm2(NUmodes, NSUPmodes, nNutModes);
-    }
-
-    bTotalMatrix = B_matrix + btMatrix;
-    cTotalMatrix.setSize(C_matrix.size());
-
-    for (label i = 0; i < C_matrix.size(); i++)
-    {
-        cTotalMatrix[i] =  ct2Matrix[i] + ct1Matrix[i];
-    }
-
-    // Get the coeffs for interpolation (the orthonormal one is used because basis are orthogonal)
-    coeffL2 = ITHACAutilities::get_coeffs_ortho(nutFields,
-              nutModes);
-    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
-                               "./ITHACAoutput/Matrices/");
     NUmodes = NU;
     NPmodes = NP;
     NSUPmodes = 0;
     nNutModes = Nnut;
+    L_U_SUPmodes.resize(0);
+
+    if (liftfield.size() != 0)
+    {
+        for (label k = 0; k < liftfield.size(); k++)
+        {
+            L_U_SUPmodes.append(liftfield[k]);
+        }
+    }
+
+    if (NUmodes != 0)
+    {
+        for (label k = 0; k < NUmodes; k++)
+        {
+            L_U_SUPmodes.append(Umodes[k]);
+        }
+    }
+
+    if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
+    {
+        word B_str = "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + B_str))
+        {
+            ITHACAstream::ReadDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/", B_str);
+        }
+        else
+        {
+            B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word btStr = "bt_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + btStr))
+        {
+            ITHACAstream::ReadDenseMatrix(btMatrix, "./ITHACAoutput/Matrices/", btStr);
+        }
+        else
+        {
+            btMatrix = btTurbulence(NUmodes, NSUPmodes);
+        }
+
+        word K_str = "K_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_" + name(NPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + K_str))
+        {
+            ITHACAstream::ReadDenseMatrix(K_matrix, "./ITHACAoutput/Matrices/", K_str);
+        }
+        else
+        {
+            K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word M_str = "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + M_str))
+        {
+            ITHACAstream::ReadDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/", M_str);
+        }
+        else
+        {
+            M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word D_str = "D_" + name(NPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + D_str))
+        {
+            ITHACAstream::ReadDenseMatrix(D_matrix, "./ITHACAoutput/Matrices/", D_str);
+        }
+        else
+        {
+            D_matrix = laplacian_pressure(NPmodes);
+        }
+
+        word bc1_str = "BC1_" + name(liftfield.size()) + "_" + name(
+                           NUmodes) + "_" + name(NPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + bc1_str))
+        {
+            ITHACAstream::ReadDenseMatrix(BC1_matrix, "./ITHACAoutput/Matrices/", bc1_str);
+        }
+        else
+        {
+            BC1_matrix = pressure_BC1(NUmodes, NPmodes);
+        }
+
+        word bc2_str = "BC2_" + name(liftfield.size()) + "_" + name(
+                           NUmodes) + "_" + name(
+                           NSUPmodes) + "_" + name(NPmodes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + bc2_str))
+        {
+            ITHACAstream::ReadDenseTensor(bc2Tensor, "./ITHACAoutput/Matrices/", bc2_str);
+        }
+        else
+        {
+            bc2Tensor = pressureBC2(NUmodes, NPmodes);
+        }
+
+        word bc3_str = "BC3_" + name(liftfield.size()) + "_" + name(
+                           NUmodes) + "_" + name(NPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + bc3_str))
+        {
+            ITHACAstream::ReadDenseMatrix(BC3_matrix, "./ITHACAoutput/Matrices/", bc3_str);
+        }
+        else
+        {
+            BC3_matrix = pressure_BC3(NUmodes, NPmodes);
+        }
+
+        word C_str = "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + C_str))
+        {
+            ITHACAstream::ReadDenseTensor(C_tensor, "./ITHACAoutput/Matrices/", C_str);
+        }
+        else
+        {
+            C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word ct1Str = "ct1_" + name(liftfield.size()) + "_" + name(
+                          NUmodes) + "_" + name(
+                          NSUPmodes) + "_" + name(nNutModes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct1Str))
+        {
+            ITHACAstream::ReadDenseTensor(ct1Tensor, "./ITHACAoutput/Matrices/", ct1Str);
+        }
+        else
+        {
+            ct1Tensor = turbulenceTensor1(NUmodes, NSUPmodes, nNutModes);
+        }
+
+        word ct2Str = "ct2_" + name(liftfield.size()) + "_" + name(
+                          NUmodes) + "_" + name(
+                          NSUPmodes) + "_" + name(nNutModes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct2Str))
+        {
+            ITHACAstream::ReadDenseTensor(ct2Tensor, "./ITHACAoutput/Matrices/", ct2Str);
+        }
+        else
+        {
+            ct2Tensor = turbulenceTensor2(NUmodes, NSUPmodes, nNutModes);
+        }
+
+        word G_str = "G_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_" + name(NPmodes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + G_str))
+        {
+            ITHACAstream::ReadDenseTensor(gTensor, "./ITHACAoutput/Matrices/", G_str);
+        }
+        else
+        {
+            gTensor = divMomentum(NUmodes, NPmodes);
+        }
+
+        if (bcMethod == "penalty")
+        {
+            bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
+            bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
+        }
+    }
+    else
+    {
+        B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
+        C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+        M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
+        K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
+        D_matrix = laplacian_pressure(NPmodes);
+        gTensor = divMomentum(NUmodes, NPmodes);
+        BC1_matrix = pressure_BC1(NUmodes, NPmodes);
+        bc2Tensor = pressureBC2(NUmodes, NPmodes);
+        BC3_matrix = pressure_BC3(NUmodes, NPmodes);
+        btMatrix = btTurbulence(NUmodes, NSUPmodes);
+        ct1Tensor = turbulenceTensor1(NUmodes, NSUPmodes, nNutModes);
+        ct2Tensor = turbulenceTensor2(NUmodes, NSUPmodes, nNutModes);
+
+        if (bcMethod == "penalty")
+        {
+            bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
+            bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
+        }
+    }
+
+    // Export the matrices
+    if (para->exportPython)
+    {
+        ITHACAstream::exportMatrix(B_matrix, "B", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(K_matrix, "K", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(D_matrix, "D", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(M_matrix, "M", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(BC1_matrix, "BC1", "python",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(BC3_matrix, "BC3", "python",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(C_tensor, "C", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(gTensor, "G", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(bc2Tensor, "BC2", "python",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct1Tensor, "ct1", "python",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct2Tensor, "ct2", "python",
+                                   "./ITHACAoutput/Matrices/");
+    }
+
+    if (para->exportMatlab)
+    {
+        ITHACAstream::exportMatrix(B_matrix, "B", "matlab", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(K_matrix, "K", "matlab", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(D_matrix, "D", "matlab", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(M_matrix, "M", "matlab", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(BC1_matrix, "BC1", "matlab",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(BC3_matrix, "BC3", "matlab",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(C_tensor, "C", "matlab", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(gTensor, "G", "matlab", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(bc2Tensor, "BC2", "matlab",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct1Tensor, "ct1", "matlab",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct2Tensor, "ct2", "matlab",
+                                   "./ITHACAoutput/Matrices/");
+    }
+
+    if (para->exportTxt)
+    {
+        ITHACAstream::exportMatrix(B_matrix, "B", "eigen", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(K_matrix, "K", "eigen", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(D_matrix, "D", "eigen", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(M_matrix, "M", "eigen", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(BC1_matrix, "BC1", "eigen",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(BC3_matrix, "BC3", "eigen",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(C_tensor, "C", "eigen",
+                                   "./ITHACAoutput/Matrices/C");
+        ITHACAstream::exportTensor(gTensor, "G", "eigen",
+                                   "./ITHACAoutput/Matrices/G");
+        ITHACAstream::exportTensor(bc2Tensor, "BC2_", "eigen",
+                                   "./ITHACAoutput/Matrices/BC2");
+        ITHACAstream::exportMatrix(btMatrix, "bt", "eigen", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct1Tensor, "ct1_", "eigen",
+                                   "./ITHACAoutput/Matrices/ct1");
+        ITHACAstream::exportTensor(ct2Tensor, "ct2_", "eigen",
+                                   "./ITHACAoutput/Matrices/ct2");
+    }
+
+    bTotalMatrix = B_matrix + btMatrix;
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    cTotalTensor.resize(cSize, nNutModes, cSize);
+    cTotalTensor = ct1Tensor + ct2Tensor;
+    // Get the coeffs for interpolation (the orthonormal one is used because basis are orthogonal)
+    coeffL2 = ITHACAutilities::get_coeffs_ortho(nutFields,
+              nutModes, nNutModes);
+    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
+                               "./ITHACAoutput/Matrices/");
+    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
+                               "./ITHACAoutput/Matrices/");
+    // Export the matrix
+    ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
+                                  "coeffL2_nut_" + name(nNutModes));
     samples.resize(nNutModes);
     rbfSplines.resize(nNutModes);
 
@@ -668,13 +863,5 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
                                                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
         std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
-    }
-
-    for (int i = 0; i < nNutModes; i++)
-    {
-        for (int j = 0; j < coeffL2.cols(); j++)
-        {
-            Info << rbfSplines[i]->eval(mu.row(j)) - coeffL2(i, j) << endl;
-        }
     }
 }
