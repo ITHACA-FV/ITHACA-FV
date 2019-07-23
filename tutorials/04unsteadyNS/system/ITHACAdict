@@ -19,13 +19,13 @@ EigenSolver eigen;
 
 // Number of modes to output and to use for projection
 NmodesUout 50;
-NmodesUproj 15;
+NmodesUproj 10;
 
 NmodesPout 50;
-NmodesPproj 10;
+NmodesPproj 8;
 
 NmodesSUPout 50;
-NmodesSUPproj 12;
+NmodesSUPproj 10;
 
 // Output format to save market vectors.
 OutPrecision 20;

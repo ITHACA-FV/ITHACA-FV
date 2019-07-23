@@ -107,8 +107,8 @@ int main(int argc, char* argv[])
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
     // Time parameters
-    example.startTime = 30;
-    example.finalTime = 50;
+    example.startTime = 50;
+    example.finalTime = 70;
     example.timeStep = 0.01;
     example.writeEvery = 0.1;
     // Perform The Offline Solve;
@@ -117,6 +117,8 @@ int main(int argc, char* argv[])
     example.solvesupremizer();
     // Search the lift function
     example.liftSolve();
+    // Normalize the lifting function
+    ITHACAutilities::normalizeFields(example.liftfield);
     // Create homogeneous basis functions for velocity
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     // Perform a POD decomposition for velocity and pressure
@@ -130,14 +132,14 @@ int main(int argc, char* argv[])
     reducedUnsteadyNS reduced(example);
     // Set values of the reduced stuff
     reduced.nu = 0.005;
-    reduced.tstart = 30;
-    reduced.finalTime = 50;
-    reduced.dt = 0.01;
-    reduced.storeEvery = 0.01;
+    reduced.tstart = 50;
+    reduced.finalTime = 70;
+    reduced.dt = 0.005;
+    reduced.storeEvery = 0.005;
     reduced.exportEvery = 0.1;
     // Set the online velocity
     Eigen::MatrixXd vel_now(1, 1);
-    vel_now(0, 0) = 1.3;
+    vel_now(0, 0) = 1;
     reduced.solveOnline_sup(vel_now);
     // Reconstruct the solution and export it
     reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/");
