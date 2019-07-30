@@ -44,7 +44,7 @@ SourceFiles
 #include <Eigen/SparseLU>
 #include "laplacianProblem.H"
 
-class DEIM_function : public DEIM<PtrList<fvScalarMatrix>, volScalarField >
+class DEIM_function : public DEIM<fvScalarMatrix>
 {
     public:
         using DEIM::DEIM;
@@ -110,6 +110,9 @@ class DEIM_function : public DEIM<PtrList<fvScalarMatrix>, volScalarField >
 
             return theta;
         }
+
+        PtrList<volScalarField> fieldsA;
+        PtrList<volScalarField> fieldsB;
 };
 
 class DEIMlaplacian: public laplacianProblem
@@ -207,9 +210,9 @@ class DEIMlaplacian: public laplacianProblem
             DEIMmatrice = new DEIM_function(Mlist, NmodesDEIMA, NmodesDEIMB, "T_matrix");
             fvMesh& mesh  =  const_cast<fvMesh&>(T.mesh());
             // Differential Operator
-            DEIMmatrice->generateSubmeshesMatrix(2, mesh, T);
+            DEIMmatrice->fieldsA = DEIMmatrice->generateSubmeshesMatrix(2, mesh, T);
             // Source Terms
-            DEIMmatrice->generateSubmeshesVector(2, mesh, T);
+            DEIMmatrice->fieldsB = DEIMmatrice->generateSubmeshesVector(2, mesh, T);
             ModesTEig = Foam2Eigen::PtrList2Eigen(Tmodes);
             ModesTEig.conservativeResize(ModesTEig.rows(), NmodesT);
             ReducedMatricesA.resize(NmodesDEIMA);
