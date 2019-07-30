@@ -59,7 +59,8 @@ class DEIM
         /// @param[in]  MaxModesB        The maximum number of modes for the source term b
         /// @param[in]  MatrixName       The matrix name
         ///
-        DEIM (PtrList<T>& SnapShotsMatrix, int MaxModesA, int MaxModesB, word MatrixName);
+        DEIM (PtrList<T>& SnapShotsMatrix, int MaxModesA, int MaxModesB,
+              word MatrixName);
 
         /// The snapshots matrix containing the nonlinear function or operator
         PtrList<T> SnapShotsMatrix;
@@ -142,7 +143,8 @@ class DEIM
         /// @param      mesh    The mesh of the problem
         ///
         template <class S>
-        PtrList<S> generateSubmeshes(int layers, fvMesh& mesh, S field, int secondTime = 0);
+        PtrList<S> generateSubmeshes(int layers, fvMesh& mesh, S field,
+                                     int secondTime = 0);
 
         ///
         /// @brief      { function_description }
@@ -153,7 +155,7 @@ class DEIM
         ///
         template <class S>
         PtrList<S> generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
-                                     int secondTime = 0);
+                                           int secondTime = 0);
 
         ///
         /// @brief      { function_description }
@@ -164,7 +166,7 @@ class DEIM
         ///
         template <class S>
         PtrList<S> generateSubmeshesVector(int layers, fvMesh& mesh, S field,
-                                     int secondTime = 0);
+                                           int secondTime = 0);
 
         ///
         /// @brief      Function to get the onlineCoeffs of the DEIM approx. It is problem dependent so it must be overridden.
