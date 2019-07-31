@@ -78,7 +78,6 @@ unsteadyBB::unsteadyBB(int argc, char* argv[])
 // Method to performa a truthSolve
 void unsteadyBB::truthSolve(List<scalar> mu_now)
 {
-
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
 #include "initContinuityErrs.H"
