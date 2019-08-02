@@ -24,11 +24,11 @@
 \*---------------------------------------------------------------------------*/
 
 
-v=1/(rhoRef*(1-betaTE*(T-Tref))); //scrivilo in termini di v
-logT=log(max(0.5,(T/TrefXS)));
+v = 1 / (rhoRef * (1 - betaTE * (T - Tref))); //scrivilo in termini di v
+logT = log(max(0.5, (T / TrefXS)));
 
-NSF =(1/Keff)*(NSF1_0+alfa_NSF1*logT)*(1-betaTE*(T-Tref));
-A = (A1_0+alfa_A1*logT)*(1-betaTE*(T-Tref));
-D = (D1_0+alfa_D1*logT)/(1-betaTE*(T-Tref));
-SP =(1/Keff)*(SP1_0+alfa_SP1*logT)*(1-betaTE*(T-Tref));
-TXS=v*SP;
+NSF = (1 / Keff) * (NSF1_0 + alfa_NSF1* logT) * (1 - betaTE * (T - Tref));
+A = (A1_0 + alfa_A1* logT) * (1 - betaTE * (T - Tref));
+D = (D1_0 + alfa_D1* logT) / (1 - betaTE * (T - Tref));
+SP = (1 / Keff) * (SP1_0 + alfa_SP1* logT) * (1 - betaTE * (T - Tref));
+TXS = v * SP;

@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -33,29 +33,29 @@
 #include <iostream>
 #include <math.h>
 #include <sys/stat.h>
-#include <Eigen/Eigen> 
+#include <Eigen/Eigen>
 #include "fvCFD.H"
 #include "ITHACAstream.H"
 #include "FofM.H"
 
 class Ptot_time : public FofM
 {
-   public:
-	//constructors
-	Ptot_time();
-	Ptot_time(int argc, char *argv[], int Nsampled);
-	~Ptot_time() {};
+    public:
+        //constructors
+        Ptot_time();
+        Ptot_time(int argc, char* argv[], int Nsampled);
+        ~Ptot_time() {};
 
         //Members
-	/// List of pointers to power density field
-	autoPtr<volScalarField> _powerDens;
-	
+        /// List of pointers to power density field
+        autoPtr<volScalarField> _powerDens;
 
-	//Methods
-	/// Method that computes the total power for the snapshot number t (starting from 0),
-	/// output are sought in dir/0, dir/1, dir/2, etc... i.e solution correspondent to
-	/// 0th,1st,2nd etc... parameters set passed to FOM/ROM
-	void buildMO(std::string dir, int t);
+
+        //Methods
+        /// Method that computes the total power for the snapshot number t (starting from 0),
+        /// output are sought in dir/0, dir/1, dir/2, etc... i.e solution correspondent to
+        /// 0th,1st,2nd etc... parameters set passed to FOM/ROM
+        void buildMO(std::string dir, int t);
 
 };
 

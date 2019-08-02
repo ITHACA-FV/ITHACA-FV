@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -32,25 +32,25 @@
 #include "readConstants_TH.H"
 
 
-_betaTot=autoPtr<dimensionedScalar>
- (
-  new dimensionedScalar
-   (
-     beta1+beta2+beta3+beta4+beta5+beta6+beta7+beta8
-   )
-  );
-dimensionedScalar& betaTot=_betaTot();
+_betaTot = autoPtr<dimensionedScalar>
+           (
+               new dimensionedScalar
+               (
+                   beta1 + beta2 + beta3 + beta4 + beta5 + beta6 + beta7 + beta8
+               )
+           );
+dimensionedScalar& betaTot = _betaTot();
 
-_decbetaTot=autoPtr<dimensionedScalar>
- (
-  new dimensionedScalar
-   (
-	decBeta1+decBeta2+decBeta3
-   )
- );
-dimensionedScalar& decbetaTot=_decbetaTot();
+_decbetaTot = autoPtr<dimensionedScalar>
+              (
+                  new dimensionedScalar
+                  (
+                      decBeta1 + decBeta2 + decBeta3
+                  )
+              );
+dimensionedScalar& decbetaTot = _decbetaTot();
 
-_v= autoPtr<volScalarField>
+_v = autoPtr<volScalarField>
      (
          new volScalarField
          (
@@ -63,10 +63,10 @@ _v= autoPtr<volScalarField>
                  IOobject::AUTO_WRITE
              ),
              mesh,
-	     dimensionedScalar("v",dimensionSet(-1,3,0,0,0,0,0),1/rhoRef.value())
+             dimensionedScalar("v", dimensionSet(-1, 3, 0, 0, 0, 0, 0), 1 / rhoRef.value())
          )
      );
-volScalarField& v= _v();
+volScalarField& v = _v();
 
 volScalarField v0(v);
 
@@ -75,7 +75,7 @@ _v0 = autoPtr<volScalarField>
           new volScalarField(v0)
       );
 
-_D= autoPtr<volScalarField>
+_D = autoPtr<volScalarField>
      (
          new volScalarField
          (
@@ -88,10 +88,10 @@ _D= autoPtr<volScalarField>
                  IOobject::AUTO_WRITE
              ),
              mesh,
-	     dimensionedScalar("D",dimensionSet(0,1,0,0,0,0,0),D1_0.value())
+             dimensionedScalar("D", dimensionSet(0, 1, 0, 0, 0, 0, 0), D1_0.value())
          )
      );
-volScalarField& D= _D();
+volScalarField& D = _D();
 
 volScalarField D0(D);
 
@@ -100,32 +100,32 @@ _D0 = autoPtr<volScalarField>
           new volScalarField(D0)
       );
 
-_NSF= autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "NSF",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::NO_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh,
-	     dimensionedScalar("NSF",dimensionSet(0,-1,0,0,0,0,0),NSF1_0.value())
-         )
-     );
-volScalarField& NSF= _NSF(); 
+_NSF = autoPtr<volScalarField>
+       (
+           new volScalarField
+           (
+               IOobject
+               (
+                   "NSF",
+                   runTime.timeName(),
+                   mesh,
+                   IOobject::NO_READ,
+                   IOobject::AUTO_WRITE
+               ),
+               mesh,
+               dimensionedScalar("NSF", dimensionSet(0, -1, 0, 0, 0, 0, 0), NSF1_0.value())
+           )
+       );
+volScalarField& NSF = _NSF();
 
 volScalarField NSF0(NSF);
 
 _NSF0 = autoPtr<volScalarField>
-      (
-          new volScalarField(NSF0)
-      );
+        (
+            new volScalarField(NSF0)
+        );
 
-_A= autoPtr<volScalarField>
+_A = autoPtr<volScalarField>
      (
          new volScalarField
          (
@@ -138,10 +138,10 @@ _A= autoPtr<volScalarField>
                  IOobject::AUTO_WRITE
              ),
              mesh,
-	     dimensionedScalar("A",dimensionSet(0,-1,0,0,0,0,0),A1_0.value())
+             dimensionedScalar("A", dimensionSet(0, -1, 0, 0, 0, 0, 0), A1_0.value())
          )
      );
-volScalarField& A= _A();
+volScalarField& A = _A();
 
 volScalarField A0(A);
 
@@ -151,102 +151,102 @@ _A0 = autoPtr<volScalarField>
       );
 
 
-_SP= autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "SP",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::NO_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh,
-	     dimensionedScalar("SP",dimensionSet(1,1,-2,0,0,0,0),SP1_0.value())
-         )
-     );
-volScalarField& SP= _SP(); 
+_SP = autoPtr<volScalarField>
+      (
+          new volScalarField
+          (
+              IOobject
+              (
+                  "SP",
+                  runTime.timeName(),
+                  mesh,
+                  IOobject::NO_READ,
+                  IOobject::AUTO_WRITE
+              ),
+              mesh,
+              dimensionedScalar("SP", dimensionSet(1, 1, -2, 0, 0, 0, 0), SP1_0.value())
+          )
+      );
+volScalarField& SP = _SP();
 
 volScalarField SP0(SP);
 
 _SP0 = autoPtr<volScalarField>
-      (
-          new volScalarField(SP0)
-      );
+       (
+           new volScalarField(SP0)
+       );
 
-_TXS= autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "TXS",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::NO_READ,
-                 IOobject::AUTO_WRITE
-             ),
-	     v*SP
-         )
-     );
-volScalarField& TXS= _TXS();
+_TXS = autoPtr<volScalarField>
+       (
+           new volScalarField
+           (
+               IOobject
+               (
+                   "TXS",
+                   runTime.timeName(),
+                   mesh,
+                   IOobject::NO_READ,
+                   IOobject::AUTO_WRITE
+               ),
+               v* SP
+           )
+       );
+volScalarField& TXS = _TXS();
 
 volScalarField TXS0(TXS);
 
 _TXS0 = autoPtr<volScalarField>
-      (
-          new volScalarField(TXS0)
-      );
+        (
+            new volScalarField(TXS0)
+        );
 
-_logT= autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "logT",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::NO_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             log(max(0.5,log(T/TrefXS)))
-         )
-     );
-volScalarField& logT= _logT();  
+_logT = autoPtr<volScalarField>
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "logT",
+                    runTime.timeName(),
+                    mesh,
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                log(max(0.5, log(T / TrefXS)))
+            )
+        );
+volScalarField& logT = _logT();
 
-_alphat= autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "alphat",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::NO_READ,
-                 IOobject::AUTO_WRITE
-             ),
-	     turbulence->nut()/Prt
-         )
-     );
-volScalarField& alphat= _alphat(); 
+_alphat = autoPtr<volScalarField>
+          (
+              new volScalarField
+              (
+                  IOobject
+                  (
+                      "alphat",
+                      runTime.timeName(),
+                      mesh,
+                      IOobject::NO_READ,
+                      IOobject::AUTO_WRITE
+                  ),
+                  turbulence->nut() / Prt
+              )
+          );
+volScalarField& alphat = _alphat();
 
-_difft= autoPtr<volScalarField>
-     (
-         new volScalarField
+_difft = autoPtr<volScalarField>
          (
-             IOobject
+             new volScalarField
              (
-                 "difft",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::NO_READ,
-                 IOobject::AUTO_WRITE
-             ),
-	     turbulence->nut()/Sct
-         )
-     );
-volScalarField& difft= _difft(); 
+                 IOobject
+                 (
+                     "difft",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::NO_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 turbulence->nut() / Sct
+             )
+         );
+volScalarField& difft = _difft();

@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -29,10 +29,10 @@
 \*---------------------------------------------------------------------------*/
 #ifndef LRSensitivity_H
 #define LRSensitivity_H
-#include <iostream> 
+#include <iostream>
 #include <vector>
 #include <string>
-#include <Eigen/Eigen> 
+#include <Eigen/Eigen>
 #include "FofM.H"
 #include "ITHACAstream.H"
 #include "ITHACAutilities.H"
@@ -41,89 +41,89 @@
 
 class LRSensitivity
 {
-	public:
-		//Constructors
-		LRSensitivity();
-		explicit LRSensitivity(int Npara,int Np);
-		~LRSensitivity() {};
+    public:
+        //Constructors
+        LRSensitivity();
+        explicit LRSensitivity(int Npara, int Np);
+        ~LRSensitivity() {};
 
-		//Members
-		/// Matrix to store the range used in training/offline stage
-		Eigen::MatrixXd trainingRange;
-		/// Matrices storing the independent variables' values
-		Eigen::MatrixXd MatX;
-		/// Matrices storing the independent variables' normalized values
-		Eigen::MatrixXd MatXn;
-		/// Figure of merit object
-		FofM M;
-		/// Number of parameters used for the analysis
-		int No_parameters;
-		/// Number of points used for Monte Carlo sampling
-		int Npoints;
-		/// Vectors to store the output of the model
-		Eigen::VectorXd y;
-		///Vector to store the normalized output of the model
-		Eigen::VectorXd yn;
-		///Vector to store the result of linear approximation
-		Eigen::VectorXd ylin;
-		/// Mean value of the output
-		double Ey;
-		/// Variance of the output
-		double Vy;
-		/// Vector to store the meanvalues of the parameters
-		Eigen::VectorXd EX;
-		/// Vector to store the variances of the parameters
-		Eigen::VectorXd VX;
-		/// Vector to store the standardized regression coefficient (SRC)
-		Eigen::VectorXd betas;
-		/// double to quantify the goodness of linear regression from 0 (no linearity) to 1 (perfect linearity)
-		/// also known as R^2
-		double QI;
-		/// boolean variable to check if EX and VX are computed
-		bool Xdone=false;
-		/// boolean variable to check if Ey and Vy are computed
-		bool Ydone=false;
-		/// boolean variable to check if  SRCs are computed
-		bool bdone=false;
+        //Members
+        /// Matrix to store the range used in training/offline stage
+        Eigen::MatrixXd trainingRange;
+        /// Matrices storing the independent variables' values
+        Eigen::MatrixXd MatX;
+        /// Matrices storing the independent variables' normalized values
+        Eigen::MatrixXd MatXn;
+        /// Figure of merit object
+        FofM M;
+        /// Number of parameters used for the analysis
+        int No_parameters;
+        /// Number of points used for Monte Carlo sampling
+        int Npoints;
+        /// Vectors to store the output of the model
+        Eigen::VectorXd y;
+        ///Vector to store the normalized output of the model
+        Eigen::VectorXd yn;
+        ///Vector to store the result of linear approximation
+        Eigen::VectorXd ylin;
+        /// Mean value of the output
+        double Ey;
+        /// Variance of the output
+        double Vy;
+        /// Vector to store the meanvalues of the parameters
+        Eigen::VectorXd EX;
+        /// Vector to store the variances of the parameters
+        Eigen::VectorXd VX;
+        /// Vector to store the standardized regression coefficient (SRC)
+        Eigen::VectorXd betas;
+        /// double to quantify the goodness of linear regression from 0 (no linearity) to 1 (perfect linearity)
+        /// also known as R^2
+        double QI;
+        /// boolean variable to check if EX and VX are computed
+        bool Xdone = false;
+        /// boolean variable to check if Ey and Vy are computed
+        bool Ydone = false;
+        /// boolean variable to check if  SRCs are computed
+        bool bdone = false;
 
-//--------------------------------------------------------------------------------------------------------------------//
-		//Methods
+        //--------------------------------------------------------------------------------------------------------------------//
+        //Methods
 
-		/// Method to build MatX, it internally calls ITHACAsampling::samplingMC
-		/// pdflist is the list with the names of the distributions of the parameters
-		/// plist contains the parameters of the distributions, therefore its size must be (No_parameters,2)
-		void buildSamplingSet(std::vector<std::string>& pdflist, Eigen::MatrixXd plist);
-		///----------------------------------------------------------------------------------------
+        /// Method to build MatX, it internally calls ITHACAsampling::samplingMC
+        /// pdflist is the list with the names of the distributions of the parameters
+        /// plist contains the parameters of the distributions, therefore its size must be (No_parameters,2)
+        void buildSamplingSet(std::vector<std::string>& pdflist, Eigen::MatrixXd plist);
+        ///----------------------------------------------------------------------------------------
 
-		/// Method to load the output of FOM/ROM inside member LRsensitivity member y
-		void load_output();
-		///----------------------------------------------------------------------------------------
+        /// Method to load the output of FOM/ROM inside member LRsensitivity member y
+        void load_output();
+        ///----------------------------------------------------------------------------------------
 
-		/// Method to compute EX and VX, it sets Xdone=true
-		void getXstats();
-		///----------------------------------------------------------------------------------------
+        /// Method to compute EX and VX, it sets Xdone=true
+        void getXstats();
+        ///----------------------------------------------------------------------------------------
 
-		/// Method to compute Ey and Vy, it sets Ydone=true
-		void getYstat();
-		///----------------------------------------------------------------------------------------
+        /// Method to compute Ey and Vy, it sets Ydone=true
+        void getYstat();
+        ///----------------------------------------------------------------------------------------
 
-		/// Method to compute SRCs, it sets bdone=true
-		void getBetas();
-		///----------------------------------------------------------------------------------------
+        /// Method to compute SRCs, it sets bdone=true
+        void getBetas();
+        ///----------------------------------------------------------------------------------------
 
-		/// Method to compute the quality of linear regression approximation
-		void assessQuality();
-		///-----------------------------------------------------------------------------------------
-
-
+        /// Method to compute the quality of linear regression approximation
+        void assessQuality();
+        ///-----------------------------------------------------------------------------------------
 
 
 
-	private:
 
-		/// method used in the LRsensitivity object's constructor to set the size of all matrices and vectors of the class
-		void setAll();
-		
+
+    private:
+
+        /// method used in the LRsensitivity object's constructor to set the size of all matrices and vectors of the class
+        void setAll();
+
 };
 
 #endif
