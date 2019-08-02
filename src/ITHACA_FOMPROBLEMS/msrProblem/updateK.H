@@ -22,5 +22,6 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
-Keff=(fvc::domainIntegrate(flux).value()) / (fvc::domainIntegrate(flux_old).value());
+Keff = (fvc::domainIntegrate(flux).value()) / (fvc::domainIntegrate(
+            flux_old).value());
 

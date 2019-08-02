@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -28,26 +28,26 @@
 
 \*---------------------------------------------------------------------------*/
 
-    fvScalarMatrix NEqn
-    (
-        
-       fvm::ddt(IV1,flux)
-      ==
-       fvm::laplacian(D,flux)
-      +fvm::Sp(NSF*(1-betaTot)-A,flux)
-      +lam1*prec1
-      +lam2*prec2
-      +lam3*prec3
-      +lam4*prec4
-      +lam5*prec5
-      +lam6*prec6
-      +lam7*prec7
-      +lam8*prec8
+fvScalarMatrix NEqn
+(
+
+    fvm::ddt(IV1, flux)
+    ==
+    fvm::laplacian(D, flux)
+    +fvm::Sp(NSF * (1 - betaTot) - A, flux)
+    + lam1* prec1
+    + lam2* prec2
+    + lam3* prec3
+    + lam4* prec4
+    + lam5* prec5
+    + lam6* prec6
+    + lam7* prec7
+    + lam8* prec8
 
     );
 
-    NEqn.relax();
-    NEqn.solve();
+NEqn.relax();
+NEqn.solve();
 
 
 

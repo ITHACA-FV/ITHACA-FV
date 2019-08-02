@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -26,52 +26,52 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
-\*---------------------------------------------------------------------------*/ 
-   difft.correctBoundaryConditions();
+\*---------------------------------------------------------------------------*/
+difft.correctBoundaryConditions();
 
-    fvScalarMatrix decEq1
-    (
-        fvm::ddt(dec1)
-        ==
-	- fvm::div(phi, dec1)
-      	+ fvm::laplacian(turbulence->nu()/Sc+difft, dec1)
-      	- fvm::Sp(decLam1, dec1)
-      	+ decBeta1*SP*flux
+fvScalarMatrix decEq1
+(
+    fvm::ddt(dec1)
+    ==
+    - fvm::div(phi, dec1)
+    + fvm::laplacian(turbulence->nu() / Sc + difft, dec1)
+    - fvm::Sp(decLam1, dec1)
+    + decBeta1* SP* flux
     );
 
-    decEq1.relax();
-    decEq1.solve();
-    
-    
-    
+decEq1.relax();
+decEq1.solve();
 
-    fvScalarMatrix decEq2
-    (
-        fvm::ddt(dec2)
-     	==
-      -	fvm::div(phi, dec2)
-      + fvm::laplacian(turbulence->nu()/Sc+difft, dec2)
-      - fvm::Sp(decLam2, dec2)
-      + decBeta2*SP*flux
+
+
+
+fvScalarMatrix decEq2
+(
+    fvm::ddt(dec2)
+    ==
+    - fvm::div(phi, dec2)
+    + fvm::laplacian(turbulence->nu() / Sc + difft, dec2)
+    - fvm::Sp(decLam2, dec2)
+    + decBeta2* SP* flux
     );
 
-    decEq2.relax();
-    decEq2.solve();
-    
-    
-    
+decEq2.relax();
+decEq2.solve();
 
-    fvScalarMatrix decEq3
-    (
-        fvm::ddt(dec3)
-     ==
-      - fvm::div(phi, dec3)
-      + fvm::laplacian(turbulence->nu()/Sc+difft, dec3)
-      - fvm::Sp(decLam3, dec3)
-      + decBeta3*SP*flux
+
+
+
+fvScalarMatrix decEq3
+(
+    fvm::ddt(dec3)
+    ==
+    - fvm::div(phi, dec3)
+    + fvm::laplacian(turbulence->nu() / Sc + difft, dec3)
+    - fvm::Sp(decLam3, dec3)
+    + decBeta3* SP* flux
     );
 
-    decEq3.relax();
-    decEq3.solve();
+decEq3.relax();
+decEq3.solve();
 
 

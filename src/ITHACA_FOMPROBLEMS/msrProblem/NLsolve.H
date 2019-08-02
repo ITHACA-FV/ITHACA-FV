@@ -27,19 +27,19 @@ scalar residual = 1;
 scalar uresidual = 1;
 Vector<double> uresidual_v(0, 0, 0);
 scalar presidual = 1;
-scalar fluxresidual=1;
-scalar prec1residual=1;
-scalar prec2residual=1;
-scalar prec3residual=1;
-scalar prec4residual=1;
-scalar prec5residual=1;
-scalar prec6residual=1;
-scalar prec7residual=1;
-scalar prec8residual=1;
-scalar Tresidual=1;
-scalar dec1residual=1;
-scalar dec2residual=1;
-scalar dec3residual=1;
+scalar fluxresidual = 1;
+scalar prec1residual = 1;
+scalar prec2residual = 1;
+scalar prec3residual = 1;
+scalar prec4residual = 1;
+scalar prec5residual = 1;
+scalar prec6residual = 1;
+scalar prec7residual = 1;
+scalar prec8residual = 1;
+scalar Tresidual = 1;
+scalar dec1residual = 1;
+scalar dec2residual = 1;
+scalar dec3residual = 1;
 scalar csolve = 0;
 
 
@@ -60,19 +60,17 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
     {
 #include "UEqn.H"
 #include "TEqn.H"
-TEqn.relax();
-Tresidual=TEqn.solve().initialResidual();
+        TEqn.relax();
+        Tresidual = TEqn.solve().initialResidual();
 #include "pEqn.H"
 #include "updateConsts.H"
 #include "DiffEqn.H"
 #include "precEqns.H"
 #include "decEqns.H"
 #include "updateK.H"
-flux_old=flux;
-TEqn.relax();
-Tresidual=TEqn.solve().initialResidual();
-
-
+        flux_old = flux;
+        TEqn.relax();
+        Tresidual = TEqn.solve().initialResidual();
         scalar C = 0;
 
         for (label i = 0; i < 3; i++)
@@ -84,77 +82,78 @@ Tresidual=TEqn.solve().initialResidual();
         }
 
         uresidual = C;
-        residual=max(presidual, uresidual);
-	residual=max(residual,fluxresidual);
-	residual=max(residual,prec1residual);
-	residual=max(residual,prec2residual);
-	residual=max(residual,prec3residual);
-	residual=max(residual,prec4residual);
-	residual=max(residual,prec5residual);
-	residual=max(residual,prec6residual);
-	residual=max(residual,prec7residual);
-	residual=max(residual,prec8residual);
-	residual=max(residual,Tresidual);
-	residual=max(residual,dec1residual);
-	residual=max(residual,dec2residual);
-	residual=max(residual,dec3residual);
+        residual = max(presidual, uresidual);
+        residual = max(residual, fluxresidual);
+        residual = max(residual, prec1residual);
+        residual = max(residual, prec2residual);
+        residual = max(residual, prec3residual);
+        residual = max(residual, prec4residual);
+        residual = max(residual, prec5residual);
+        residual = max(residual, prec6residual);
+        residual = max(residual, prec7residual);
+        residual = max(residual, prec8residual);
+        residual = max(residual, Tresidual);
+        residual = max(residual, dec1residual);
+        residual = max(residual, dec2residual);
+        residual = max(residual, dec3residual);
         Info << "\nResidual: " << residual << endl << endl;
-	
     }
     laminarTransport.correct();
     turbulence->correct();
-    powerDens=(1-decbetaTot)*flux*SP1_0+(decLam1*dec1+decLam2*dec2+decLam3*dec3);
+    powerDens = (1 - decbetaTot) * flux * SP1_0 + (decLam1 * dec1 + decLam2 * dec2 +
+                decLam3 * dec3);
     csolve = csolve + 1;
     Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
          << "  ClockTime = " << runTime.elapsedClockTime() << " s"
          << nl << endl;
-	Info<< "\nIteration number: "<<csolve<<endl<<endl;
+    Info << "\nIteration number: " << csolve << endl << endl;
 }
 
 res_os << residual << std::endl;
 res_os.close();
 runTime.setTime(runTime.startTime(), 0);
-	ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(flux,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(prec1,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(prec2,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(prec3,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(prec4,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(prec5,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(prec6,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(prec7,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(prec8,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(T,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(dec1,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(dec2,name(counter), "./ITHACAoutput/Offline/");
-    	ITHACAstream::exportSolution(dec3,name(counter), "./ITHACAoutput/Offline/");
-	ITHACAstream::exportSolution(powerDens,name(counter), "./ITHACAoutput/Offline/");
-	ITHACAstream::exportSolution(v,name(counter), "./ITHACAoutput/Offline/");
-	ITHACAstream::exportSolution(D,name(counter), "./ITHACAoutput/Offline/");
-	ITHACAstream::exportSolution(NSF,name(counter), "./ITHACAoutput/Offline/");
-	ITHACAstream::exportSolution(A,name(counter), "./ITHACAoutput/Offline/");
-	ITHACAstream::exportSolution(SP,name(counter), "./ITHACAoutput/Offline/");
-    	Ufield.append(U);
-      	Pfield.append(p);
-    	Fluxfield.append(flux);
-    	Prec1field.append(prec1);
-    	Prec2field.append(prec2);
-    	Prec3field.append(prec3);
-    	Prec4field.append(prec4);
-    	Prec5field.append(prec5);
-    	Prec6field.append(prec6);
-    	Prec7field.append(prec7);
-    	Prec8field.append(prec8);
-    	Tfield.append(T);
-    	Dec1field.append(dec1);
-    	Dec2field.append(dec2);
-    	Dec3field.append(dec3);
-	vFields.append(v);
-	DFields.append(D);
-	NSFFields.append(NSF);
-	AFields.append(A);
-	SPFields.append(SP);
+ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(flux, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(prec1, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(prec2, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(prec3, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(prec4, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(prec5, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(prec6, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(prec7, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(prec8, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(dec1, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(dec2, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(dec3, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(powerDens, name(counter),
+                             "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(v, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(D, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(NSF, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(A, name(counter), "./ITHACAoutput/Offline/");
+ITHACAstream::exportSolution(SP, name(counter), "./ITHACAoutput/Offline/");
+Ufield.append(U);
+Pfield.append(p);
+Fluxfield.append(flux);
+Prec1field.append(prec1);
+Prec2field.append(prec2);
+Prec3field.append(prec3);
+Prec4field.append(prec4);
+Prec5field.append(prec5);
+Prec6field.append(prec6);
+Prec7field.append(prec7);
+Prec8field.append(prec8);
+Tfield.append(T);
+Dec1field.append(dec1);
+Dec2field.append(dec2);
+Dec3field.append(dec3);
+vFields.append(v);
+DFields.append(D);
+NSFFields.append(NSF);
+AFields.append(A);
+SPFields.append(SP);
 
 
 

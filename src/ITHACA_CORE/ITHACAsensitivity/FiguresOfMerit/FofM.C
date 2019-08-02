@@ -2,12 +2,12 @@
 
 FofM::FofM() {}
 
-FofM::FofM(int argc, char *argv[], int Nsampled)
-{	
-	Npoints=Nsampled;	
-	modelOutput.resize(Npoints);
-	modelOutput.setZero();
-	name={"Base class"};
+FofM::FofM(int argc, char* argv[], int Nsampled)
+{
+    Npoints = Nsampled;
+    modelOutput.resize(Npoints);
+    modelOutput.setZero();
+    name = {"Base class"};
 }
 
 void FofM::buildMO(std::string dir)

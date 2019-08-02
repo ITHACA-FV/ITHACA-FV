@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -27,236 +27,236 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-_flux= autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "flux",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-volScalarField& flux = _flux(); 
+_flux = autoPtr<volScalarField>
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "flux",
+                    runTime.timeName(),
+                    mesh,
+                    IOobject::MUST_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                mesh
+            )
+        );
+volScalarField& flux = _flux();
 
 volScalarField flux0(flux);
 
 _flux0 = autoPtr<volScalarField>
-      (
-          new volScalarField(flux0)
-      );
-
-
-
-_prec1= autoPtr<volScalarField>
-     (
-         new volScalarField
          (
-             IOobject
+             new volScalarField(flux0)
+         );
+
+
+
+_prec1 = autoPtr<volScalarField>
+         (
+             new volScalarField
              (
-                 "prec1",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-volScalarField& prec1 = _prec1(); 
+                 IOobject
+                 (
+                     "prec1",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+volScalarField& prec1 = _prec1();
 
 volScalarField prec10(prec1);
 
 _prec10 = autoPtr<volScalarField>
-      (
-          new volScalarField(prec10)
-      );
+          (
+              new volScalarField(prec10)
+          );
 
 
-_prec2= autoPtr<volScalarField>
-     (
-         new volScalarField
+_prec2 = autoPtr<volScalarField>
          (
-             IOobject
+             new volScalarField
              (
-                 "prec2",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
+                 IOobject
+                 (
+                     "prec2",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
 volScalarField& prec2 = _prec2();
 
 volScalarField prec20(prec2);
 
 _prec20 = autoPtr<volScalarField>
-      (
-          new volScalarField(prec20)
-      );
+          (
+              new volScalarField(prec20)
+          );
 
- 
-_prec3= autoPtr<volScalarField>
-     (
-         new volScalarField
+
+_prec3 = autoPtr<volScalarField>
          (
-             IOobject
+             new volScalarField
              (
-                 "prec3",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-volScalarField& prec3 = _prec3(); 
+                 IOobject
+                 (
+                     "prec3",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+volScalarField& prec3 = _prec3();
 
 volScalarField prec30(prec3);
 
 _prec30 = autoPtr<volScalarField>
-      (
-          new volScalarField(prec30)
-      );
+          (
+              new volScalarField(prec30)
+          );
 
- 
 
-_prec4= autoPtr<volScalarField>
-     (
-         new volScalarField
+
+_prec4 = autoPtr<volScalarField>
          (
-             IOobject
+             new volScalarField
              (
-                 "prec4",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-volScalarField& prec4 = _prec4(); 
+                 IOobject
+                 (
+                     "prec4",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+volScalarField& prec4 = _prec4();
 
 volScalarField prec40(prec4);
 
 _prec40 = autoPtr<volScalarField>
-      (
-          new volScalarField(prec40)
-      );
+          (
+              new volScalarField(prec40)
+          );
 
- 
 
-_prec5= autoPtr<volScalarField>
-     (
-         new volScalarField
+
+_prec5 = autoPtr<volScalarField>
          (
-             IOobject
+             new volScalarField
              (
-                 "prec5",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-volScalarField& prec5 = _prec5(); 
+                 IOobject
+                 (
+                     "prec5",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+volScalarField& prec5 = _prec5();
 
 volScalarField prec50(prec5);
 
 _prec50 = autoPtr<volScalarField>
-      (
-          new volScalarField(prec50)
-      );
+          (
+              new volScalarField(prec50)
+          );
 
- 
 
-_prec6= autoPtr<volScalarField>
-     (
-         new volScalarField
+
+_prec6 = autoPtr<volScalarField>
          (
-             IOobject
+             new volScalarField
              (
-                 "prec6",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-volScalarField& prec6 = _prec6(); 
+                 IOobject
+                 (
+                     "prec6",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+volScalarField& prec6 = _prec6();
 
 volScalarField prec60(prec6);
 
 _prec60 = autoPtr<volScalarField>
-      (
-          new volScalarField(prec60)
-      );
+          (
+              new volScalarField(prec60)
+          );
 
- 
 
-_prec7= autoPtr<volScalarField>
-     (
-         new volScalarField
+
+_prec7 = autoPtr<volScalarField>
          (
-             IOobject
+             new volScalarField
              (
-                 "prec7",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-volScalarField& prec7 = _prec7(); 
+                 IOobject
+                 (
+                     "prec7",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+volScalarField& prec7 = _prec7();
 
 volScalarField prec70(prec7);
 
 _prec70 = autoPtr<volScalarField>
-      (
-          new volScalarField(prec70)
-      );
+          (
+              new volScalarField(prec70)
+          );
 
- 
 
-_prec8= autoPtr<volScalarField>
-     (
-         new volScalarField
+
+_prec8 = autoPtr<volScalarField>
          (
-             IOobject
+             new volScalarField
              (
-                 "prec8",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-volScalarField& prec8 = _prec8(); 
+                 IOobject
+                 (
+                     "prec8",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+volScalarField& prec8 = _prec8();
 
 volScalarField prec80(prec8);
 
 _prec80 = autoPtr<volScalarField>
-      (
-          new volScalarField(prec80)
-      );
+          (
+              new volScalarField(prec80)
+          );
 
- 
+
 
 

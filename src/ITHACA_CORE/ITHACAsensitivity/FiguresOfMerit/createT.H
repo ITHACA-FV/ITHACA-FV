@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-_T= autoPtr<volScalarField>
+_T = autoPtr<volScalarField>
      (
          new volScalarField
          (
@@ -40,8 +40,8 @@ _T= autoPtr<volScalarField>
                  IOobject::AUTO_WRITE
              ),
              mesh,
-	     dimensionedScalar("T",dimensionSet(0,0,0,1,0,0,0),0)
+             dimensionedScalar("T", dimensionSet(0, 0, 0, 1, 0, 0, 0), 0)
          )
      );
-volScalarField& T= _T(); 
+volScalarField& T = _T();
 

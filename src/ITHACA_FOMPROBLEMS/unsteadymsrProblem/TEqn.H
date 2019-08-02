@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -27,22 +27,22 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-    alphat.correctBoundaryConditions();
+alphat.correctBoundaryConditions();
 
-    fvScalarMatrix TEqn
-    (
-        
-         fvm::ddt(T)
-      ==
-       - fvm::div(phi, T)
-       + fvm::laplacian(turbulence->nu()/Pr+alphat, T)
-       + (v/CpRef)*(decLam1*dec1+decLam2*dec2+decLam3*dec3)
-       + (1-decbetaTot)*(TXS)/(CpRef)*flux
+fvScalarMatrix TEqn
+(
+
+    fvm::ddt(T)
+    ==
+    - fvm::div(phi, T)
+    + fvm::laplacian(turbulence->nu() / Pr + alphat, T)
+    + (v / CpRef) * (decLam1 * dec1 + decLam2 * dec2 + decLam3* dec3)
+    + (1 - decbetaTot) * (TXS) / (CpRef)*flux
 
     );
 
-    TEqn.relax();
-    TEqn.solve();
+TEqn.relax();
+TEqn.solve();
 
 
 

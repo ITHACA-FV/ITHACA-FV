@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -27,21 +27,21 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
-_powerDens= autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
+_powerDens = autoPtr<volScalarField>
              (
-                 "powerDens",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::NO_READ,
-                 IOobject::AUTO_WRITE
-             ),
-	     mesh,
-	    dimensionedScalar("powerDens",dimensionSet(1,-1,-3,0,0,0,0),0)
-         )
-     );
-volScalarField& powerDens = _powerDens();  
+                 new volScalarField
+                 (
+                     IOobject
+                     (
+                         "powerDens",
+                         runTime.timeName(),
+                         mesh,
+                         IOobject::NO_READ,
+                         IOobject::AUTO_WRITE
+                     ),
+                     mesh,
+                     dimensionedScalar("powerDens", dimensionSet(1, -1, -3, 0, 0, 0, 0), 0)
+                 )
+             );
+volScalarField& powerDens = _powerDens();
 

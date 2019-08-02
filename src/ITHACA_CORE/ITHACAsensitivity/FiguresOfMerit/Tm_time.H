@@ -3,10 +3,10 @@
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
-     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝ 
-     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝  
- 
- * In real Time Highly Advanced Computational Applications for Finite Volumes 
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@
 #include <string>
 #include <iostream>
 #include <math.h>
-#include <Eigen/Eigen> 
+#include <Eigen/Eigen>
 #include <sys/stat.h>
 #include "fvCFD.H"
 #include "ITHACAstream.H"
@@ -40,21 +40,21 @@
 
 class Tm_time : public FofM
 {
-   public:
-	//constructors
-	Tm_time();
-	Tm_time(int argc, char *argv[], int Nsampled);
-	~Tm_time() {};
+    public:
+        //constructors
+        Tm_time();
+        Tm_time(int argc, char* argv[], int Nsampled);
+        ~Tm_time() {};
         //Members
-	/// List of pointers to temperature field
-	autoPtr<volScalarField> _T;
-	
+        /// List of pointers to temperature field
+        autoPtr<volScalarField> _T;
 
-	//Methods
-	/// Method that computes the average temperature (integral average) for the snapshot number t (starting from 0),
-	/// output are sought in dir/0, dir/1, dir/2, etc... i.e solution correspondent to
-	/// 0th,1st,2nd etc... parameters set passed to FOM/ROM	
-	void buildMO(std::string dir, int t);
+
+        //Methods
+        /// Method that computes the average temperature (integral average) for the snapshot number t (starting from 0),
+        /// output are sought in dir/0, dir/1, dir/2, etc... i.e solution correspondent to
+        /// 0th,1st,2nd etc... parameters set passed to FOM/ROM
+        void buildMO(std::string dir, int t);
 };
 
 #endif
