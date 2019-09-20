@@ -87,7 +87,7 @@ ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
 
     newtonObjectSUP = newtonUnsteadyNSTurbSUP(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
                       fomProblem);
-    newtonObjectPPE = newton_UnsteadyNSTurb_PPE(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
+    newtonObjectPPE = newtonUnsteadyNSTurbPPE(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
                       fomProblem);
 }
 
@@ -149,8 +149,8 @@ int newtonUnsteadyNSTurbSUP::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Operators PPE * * * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-int newton_UnsteadyNSTurb_PPE::operator()(const Eigen::VectorXd& x,
-        Eigen::VectorXd& fvec) const
+int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
+                                        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd aTmp(Nphi_u);
@@ -177,16 +177,19 @@ int newton_UnsteadyNSTurb_PPE::operator()(const Eigen::VectorXd& x,
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = aTmp.transpose() * problem->C_matrix[i] * aTmp - gNut.transpose() *
-             problem->cTotalMatrix[i] * aTmp;
+        cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
+                i) * aTmp - gNut.transpose() *
+             Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
         fvec(i) = - m5(i) + m1(i) - cc(0, 0) - m2(i);
     }
 
     for (label j = 0; j < Nphi_p; j++)
     {
         label k = j + Nphi_u;
-        gg = aTmp.transpose() * problem->G_matrix[j] * aTmp;
-        bb = aTmp.transpose() * problem->BC2_matrix[j] * aTmp;
+        gg = aTmp.transpose() * Eigen::SliceFromTensor(problem->gTensor, 0,
+                j) * aTmp;
+        bb = aTmp.transpose() * Eigen::SliceFromTensor(problem->bc2Tensor, 0,
+                j) * aTmp;
         //fvec(k) = m3(j, 0) - gg(0, 0) - m6(j, 0) + bb(0, 0);
         fvec(k) = m3(j, 0) + gg(0, 0) - m7(j, 0);
     }
@@ -200,10 +203,10 @@ int newton_UnsteadyNSTurb_PPE::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newton_UnsteadyNSTurb_PPE::df(const Eigen::VectorXd& x,
-                                  Eigen::MatrixXd& fjac) const
+int newtonUnsteadyNSTurbPPE::df(const Eigen::VectorXd& x,
+                                Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_UnsteadyNSTurb_PPE> numDiff(*this);
+    Eigen::NumericalDiff<newtonUnsteadyNSTurbPPE> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -256,7 +259,7 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
     int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
     int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
-    rbfCoeffMat.resize(nphiNut + 1, onlineSize + 1);
+    rbfCoeffMat.resize(nphiNut + 1, onlineSize + 2);
     // Set the initial time
     time = tstart;
     // Counting variable
@@ -417,7 +420,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
     int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
     int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
-    rbfCoeffMat.resize(nphiNut + 1, onlineSize + 1);
+    rbfCoeffMat.resize(nphiNut + 1, onlineSize + 2);
     // Set the initial time
     time = tstart;
     // Counting variable
@@ -434,7 +437,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
     }
 
     // Create nonlinear solver object
-    Eigen::HybridNonLinearSolver<newton_UnsteadyNSTurb_PPE> hnls(newtonObjectPPE);
+    Eigen::HybridNonLinearSolver<newtonUnsteadyNSTurbPPE> hnls(newtonObjectPPE);
     // Set output colors for fancy output
     Color::Modifier red(Color::FG_RED);
     Color::Modifier green(Color::FG_GREEN);
@@ -461,7 +464,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
     }
 
     // Start the time loop
-    while (time < finalTime + dt)
+    while (time < finalTime)
     {
         time = time + dt;
         std::vector<double> tv;
@@ -516,7 +519,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
             }
 
             rbfCoeffMat(0, counter2) = time;
-            rbfCoeffMat.block(1, counter2, nphiNut, 1) = newtonObjectSUP.gNut;
+            rbfCoeffMat.block(1, counter2, nphiNut, 1) = newtonObjectPPE.gNut;
             nextStore += numberOfStores;
             counter2 ++;
         }

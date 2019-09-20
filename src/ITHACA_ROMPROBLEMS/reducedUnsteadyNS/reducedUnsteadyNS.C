@@ -177,8 +177,10 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
     for (label j = 0; j < Nphi_p; j++)
     {
         label k = j + Nphi_u;
-        gg = a_tmp.transpose() * problem->G_matrix[j] * a_tmp;
-        bb = a_tmp.transpose() * problem->BC2_matrix[j] * a_tmp;
+        gg = a_tmp.transpose() * Eigen::SliceFromTensor(problem->gTensor, 0,
+                j) * a_tmp;
+        bb = a_tmp.transpose() * Eigen::SliceFromTensor(problem->bc2Tensor, 0,
+                j) * a_tmp;
         //fvec(k) = M3(j, 0) - gg(0, 0) - M6(j, 0) + bb(0, 0);
         fvec(k) = M3(j, 0) + gg(0, 0) - M7(j, 0);
     }

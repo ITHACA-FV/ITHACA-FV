@@ -79,12 +79,12 @@ struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
 
 
 
-struct newton_UnsteadyNSTurb_PPE: public newton_argument<double>
+struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
 {
     public:
-        newton_UnsteadyNSTurb_PPE() {}
-        newton_UnsteadyNSTurb_PPE(int Nx, int Ny,
-                                  UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
+        newtonUnsteadyNSTurbPPE() {}
+        newtonUnsteadyNSTurbPPE(int Nx, int Ny,
+                                UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             nphiNut(problem.nNutModes),
@@ -150,7 +150,7 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         newtonUnsteadyNSTurbSUP newtonObjectSUP;
 
         /// Function object to call the non linear solver PPE approach
-        newton_UnsteadyNSTurb_PPE newtonObjectPPE;
+        newtonUnsteadyNSTurbPPE newtonObjectPPE;
 
         // Functions
 
