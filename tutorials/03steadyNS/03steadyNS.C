@@ -126,9 +126,8 @@ int main(int argc, char* argv[])
     // Create the reduced object
     reducedSteadyNS ridotto(example);
     // Set the inlet velocity
-    Eigen::MatrixXd vel_now(2, 1);
+    Eigen::MatrixXd vel_now(1, 1);
     vel_now(0, 0) = 1;
-    vel_now(1, 0) = 0;
 
     // Perform an online solve for the new values of inlet velocities
     for (label k = 0; k < example.mu.size(); k++)
