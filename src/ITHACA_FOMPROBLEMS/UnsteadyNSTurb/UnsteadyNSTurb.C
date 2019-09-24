@@ -36,12 +36,22 @@
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Construct Null
-UnsteadyNSTurb::UnsteadyNSTurb() {};
+UnsteadyNSTurb::UnsteadyNSTurb() {}
 
 // Construct from zero
 UnsteadyNSTurb::UnsteadyNSTurb(int argc, char* argv[])
 {
-#include "setRootCase.H"
+    _args = autoPtr<argList>
+            (
+                new argList(argc, argv)
+            );
+
+    if (!_args->checkRootCase())
+    {
+        Foam::FatalError.exit();
+    }
+
+    argList& args = _args();
 #include "createTime.H"
 #include "createMesh.H"
     _pimple = autoPtr<pimpleControl>

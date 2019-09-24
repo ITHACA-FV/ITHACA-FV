@@ -62,10 +62,10 @@ usmsrProblem::usmsrProblem(int argc, char* argv[])
 
 void usmsrProblem::truthSolve(List<scalar> mu_now)
 {
-#include "initContinuityErrs.H"
     int cc_p = 0;
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
+#include "initContinuityErrs.H"
     volScalarField& p = _p();
     volVectorField& U = _U();
     surfaceScalarField& phi = _phi();
