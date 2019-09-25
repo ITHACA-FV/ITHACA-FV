@@ -474,61 +474,6 @@ template void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshots,
 template void ITHACAPOD::getModesSVD(PtrList<volVectorField>& snapshots,
                                      PtrList<volVectorField>& modes, bool podex, bool supex, bool sup, int nmodes);
 
-/// Normalize the bases
-template<>
-void ITHACAPOD::normalizeBases(PtrList<volScalarField>& Bases)
-{
-    scalar magSumSquare;
-
-    for (label j = 0; j < Bases.size(); j++)
-    {
-        magSumSquare = Foam::sqrt(fvc::domainIntegrate(Bases[j] * Bases[j]).value());
-
-        if (magSumSquare > SMALL)
-        {
-            Bases[j] /= magSumSquare;
-        }
-
-        Bases[j].correctBoundaryConditions();
-    }
-}
-
-template<>
-void ITHACAPOD::normalizeBases(PtrList<volVectorField>& Bases)
-{
-    scalar magSumSquare;
-
-    for (label j = 0; j < Bases.size(); j++)
-    {
-        magSumSquare = Foam::sqrt(fvc::domainIntegrate(Bases[j] & Bases[j]).value());
-
-        if (magSumSquare > SMALL)
-        {
-            Bases[j] /= magSumSquare;
-        }
-
-        Bases[j].correctBoundaryConditions();
-    }
-}
-
-/// Normalize the bases
-void ITHACAPOD::normalizeBases(PtrList<volVectorField>& BasesU,
-                               PtrList<volScalarField>& BasesP)
-{
-    scalar magSumSquare;
-
-    for (label j = 0; j < BasesU.size(); j++)
-    {
-        magSumSquare = Foam::sqrt(fvc::domainIntegrate(BasesU[j] & BasesU[j]).value());
-
-        if (magSumSquare > SMALL)
-        {
-            BasesP[j] /= magSumSquare;
-        }
-
-        BasesP[j].correctBoundaryConditions();
-    }
-}
 
 
 /// Construct the Correlation Matrix for Scalar Field
@@ -1545,7 +1490,7 @@ PtrList<GeometricField<T, fvPatchField, volMesh>> ITHACAPOD::DEIMmodes(
              endl;
     }
 
-    ITHACAPOD::normalizeBases(Bases);
+    ITHACAutilities::normalizeFields(Bases);
 
     for (label i = 0; i < Bases.size(); i++)
     {

@@ -34,7 +34,7 @@ laplacianSchemes
 {
     default         Gauss linear orthogonal;
     laplacian(DT,T)  Gauss linear orthogonal;
-    laplacian(DT,subsetT) Gauss linear;
+    laplacian(DT,subsetT) Gauss linear orthogonal;
 }
 
 interpolationSchemes

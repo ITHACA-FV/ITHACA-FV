@@ -101,6 +101,9 @@ class reducedSteadyNS: public reducedProblem
         /// parameters to be read from the ITHACAdict file
         ITHACAparameters* para;
 
+        /// Online inlet velocity vector
+        Eigen::MatrixXd vel_now;
+
         /// Reduced matrix for tangent forces
         Eigen::MatrixXd fTau;
 
@@ -209,6 +212,16 @@ class reducedSteadyNS: public reducedProblem
         ///
         /// @return     return the reduced version of the inf-sup constant.
         double inf_sup_constant();
+
+        ///
+        /// @brief      Sets the online velocity.
+        ///
+        /// @param[in]  vel   The velocity
+        ///
+        /// @return     The rescaled velocity vector
+        ///
+        Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
+
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

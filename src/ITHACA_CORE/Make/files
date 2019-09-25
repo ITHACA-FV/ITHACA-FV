@@ -8,7 +8,13 @@ ITHACADMD/ITHACADMD.C
 Foam2Eigen/Foam2Eigen.C
 EigenFunctions/EigenFunctions.C
 Containers/Modes.C
-
+ITHACAsensitivity/LRSensitivity.C
+ITHACAsensitivity/ITHACAsampling.C
+ITHACAsensitivity/FiguresOfMerit/FofM.C
+ITHACAsensitivity/FiguresOfMerit/Tm.C
+ITHACAsensitivity/FiguresOfMerit/Ptot.C
+ITHACAsensitivity/FiguresOfMerit/Ptot_time.C
+ITHACAsensitivity/FiguresOfMerit/Tm_time.C
 
 
 

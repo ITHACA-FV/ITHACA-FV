@@ -66,10 +66,10 @@ unsteadyNSTturb::unsteadyNSTturb(int argc, char* argv[])
 
 void unsteadyNSTturb::truthSolve(List<scalar> mu_now)
 {
-#include "initContinuityErrs.H"
     Time& runTime = _runTime();
     surfaceScalarField& phi = _phi();
     fvMesh& mesh = _mesh();
+#include "initContinuityErrs.H"
     fv::options& fvOptions = _fvOptions();
     pisoControl& piso = _piso();
     volScalarField p = _p();

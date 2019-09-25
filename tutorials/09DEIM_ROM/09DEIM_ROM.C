@@ -44,7 +44,7 @@ SourceFiles
 #include <Eigen/SparseLU>
 #include "laplacianProblem.H"
 
-class DEIM_function : public DEIM<PtrList<fvScalarMatrix>, volScalarField >
+class DEIM_function : public DEIM<fvScalarMatrix>
 {
     public:
         using DEIM::DEIM;
@@ -110,6 +110,9 @@ class DEIM_function : public DEIM<PtrList<fvScalarMatrix>, volScalarField >
 
             return theta;
         }
+
+        PtrList<volScalarField> fieldsA;
+        PtrList<volScalarField> fieldsB;
 };
 
 class DEIMlaplacian: public laplacianProblem
@@ -206,8 +209,10 @@ class DEIMlaplacian: public laplacianProblem
         {
             DEIMmatrice = new DEIM_function(Mlist, NmodesDEIMA, NmodesDEIMB, "T_matrix");
             fvMesh& mesh  =  const_cast<fvMesh&>(T.mesh());
-            DEIMmatrice->generateSubmeshesMatrix(2, mesh, T);
-            DEIMmatrice->generateSubmeshesVector(2, mesh, T);
+            // Differential Operator
+            DEIMmatrice->fieldsA = DEIMmatrice->generateSubmeshesMatrix(2, mesh, T);
+            // Source Terms
+            DEIMmatrice->fieldsB = DEIMmatrice->generateSubmeshesVector(2, mesh, T);
             ModesTEig = Foam2Eigen::PtrList2Eigen(Tmodes);
             ModesTEig.conservativeResize(ModesTEig.rows(), NmodesT);
             ReducedMatricesA.resize(NmodesDEIMA);
@@ -288,26 +293,39 @@ int main(int argc, char* argv[])
 
 /// \dir 09DEIM_ROM Folder of the turorial 9
 /// \file
-/// \brief Implementation of tutorial 9 for an unsteady Navier-Stokes problem
+/// \brief Implementation of tutorial 9 which presents DEIM for a Heat Conduction Problem
 
 /// \example 09DEIM_ROM.C
 /// \section intro_09DEIM_ROM Introduction to tutorial 9
-/// In this tutorial we implement test
+/// In this tutorial we implement a test where we use the Discrete Empirical Interpolation
+/// Method for a case where we have a non-linear dependency with respect to the
+/// input parameters.
 ///
-/// The following image illustrates blabla
-/// \image html cylinder.png
+/// The following image illustrates the computational domain which is the same as the previous example
+/// \image html domain_deim.png
 ///
-/// \section code09 A detailed look into the code
+/// The physical problem is given by a heat transfer problem which is described by the Poisson equation:
 ///
-/// In this section we explain the main steps necessary to construct the tutorial N°9
+/// \f[ \nabla \cdot (\nu \nabla T) = S \f]
 ///
-/// \subsection header ITHACA-FV header files
+/// The parametric diffusivity is described by a parametric Gaussian function:
+/// \f[
+/// \nu(\mathbf{x},\mathbf{\mu}) = e^{-2(x-\mu_x-1)^2 - 2(y-\mu_y-0.5)^2},
+///  \f]
 ///
-/// First of all let's have a look at the header files that need to be included and what they are responsible for.
+/// The problem is then discretized as:
 ///
-/// The header files of ITHACA-FV necessary for this tutorial are: <unsteadyNS.H> for the full order unsteady NS problem,
-/// <ITHACAPOD.H> for the POD decomposition, <reducedUnsteadyNS.H> for the construction of the reduced order problem,
-/// and finally <ITHACAstream.H> for some ITHACA input-output operations.
+/// \f[ A(\mu)T = b \f]
+///
+/// In this case, even if the problem is linear, due to non-linearity with respect to the
+/// input parameter of the conductivity constant it is not possible to have an affine decomposition
+/// of the discretized differential operator.
+///
+/// We seek therefore an approximate affine expansion of the differential operator of this type:
+///
+/// \f[ A(\mu) = \sum_{i = 1}^{N_D} \theta_i(\mu) A_i  \f]
+///
+/// using the Discrete Empirical Interpolation Method
 ///
 /// \section plaincode The plain program
 /// Here there's the plain code

@@ -79,12 +79,12 @@ struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
 
 
 
-struct newton_UnsteadyNSTurb_PPE: public newton_argument<double>
+struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
 {
     public:
-        newton_UnsteadyNSTurb_PPE() {}
-        newton_UnsteadyNSTurb_PPE(int Nx, int Ny,
-                                  UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
+        newtonUnsteadyNSTurbPPE() {}
+        newtonUnsteadyNSTurbPPE(int Nx, int Ny,
+                                UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             nphiNut(problem.nNutModes),
@@ -137,31 +137,20 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         /// Pointer to the FOM problem
         UnsteadyNSTurb* problem;
 
-        /// Reconstructed eddy viscosity field
-        PtrList<volScalarField> nutRec;
-
         /// Number of viscosity modes
         int nphiNut;
+
+        /// List of pointers to store the modes for the eddy viscosity
+        PtrList<volScalarField> nutModes;
+
+        /// The matrix of the eddy viscosity RBF interoplated coefficients
+        Eigen::MatrixXd rbfCoeffMat;
 
         /// Function object to call the non linear solver sup approach
         newtonUnsteadyNSTurbSUP newtonObjectSUP;
 
         /// Function object to call the non linear solver PPE approach
-        newton_UnsteadyNSTurb_PPE newtonObjectPPE;
-
-        /// Scalar to store the current time
-        double time;
-
-        /// Scalar to store the time increment
-        double dt;
-
-        /// Scalar to store the final time if the online simulation
-        double finalTime;
-
-        /// Scalar to store the final time if the online simulation
-        double tstart;
-
-
+        newtonUnsteadyNSTurbPPE newtonObjectPPE;
 
         // Functions
 
@@ -174,7 +163,7 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnlinePPE(Eigen::MatrixXd& velNow, label startSnap = 0);
+        void solveOnlinePPE(Eigen::MatrixXd velNow, label startSnap = 0);
 
         /// Method to perform an online solve using a supremizer stabilisation method
         ///
@@ -184,23 +173,30 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnlineSUP(Eigen::MatrixXd& velNow, label startSnap = 0);
+        void solveOnlineSUP(Eigen::MatrixXd velNow, label startSnap = 0);
 
         /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
         /// stabilisation method
         ///
         /// @param[in]  folder      The folder where to output the solutions
-        /// @param[in]  printEvery  The printEvery
         ///
-        void reconstructPPE(fileName folder = "./online_rec", int printEvery = 1);
+        void reconstructPPE(fileName folder = "./online_rec");
 
         /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
         ///
         /// @param[in]  folder      The folder where to output the solutions
-        /// @param[in]  printEvery  The printEvery
         ///
-        void reconstructSUP(fileName folder = "./online_rec", int printEvery = 1);
+        void reconstructSUP(fileName folder = "./online_rec");
+
+        ///
+        /// @brief      Sets the online velocity.
+        ///
+        /// @param[in]  vel   The velocity
+        ///
+        /// @return     The rescaled velocity vector
+        ///
+        Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
 
 };
 

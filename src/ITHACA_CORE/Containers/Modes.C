@@ -118,6 +118,31 @@ GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
 }
 
 template<class T>
+GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
+    GeometricField<T, fvPatchField, volMesh>& inputField,
+    Eigen::MatrixXd Coeff,
+    word Name)
+{
+    if (EigenModes.size() == 0)
+    {
+        toEigen();
+    }
+
+    int Nmodes = Coeff.rows();
+    Eigen::VectorXd InField = EigenModes[0].leftCols(Nmodes) * Coeff;
+    inputField = Foam2Eigen::Eigen2field(inputField, InField);
+    inputField.rename(Name);
+
+    for (int i = 0; i < NBC; i++)
+    {
+        Eigen::VectorXd BF = EigenModes[i + 1].leftCols(Nmodes) * Coeff;
+        ITHACAutilities::assignBC(inputField, i, BF);
+    }
+
+    return inputField;
+}
+
+template<class T>
 PtrList<GeometricField<T, fvPatchField, volMesh>>
         Modes<T>::projectSnapshots(
             PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
