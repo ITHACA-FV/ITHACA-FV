@@ -165,6 +165,9 @@ class steadyNS: public reductionProblem
 
         /// PPE BC3
         Eigen::MatrixXd BC3_matrix;
+
+	/// PPE BC4
+        Eigen::MatrixXd BC4_matrix;
         ///@}
         //
 
@@ -185,7 +188,7 @@ class steadyNS: public reductionProblem
         /// Boolean variable to check the existence of the supremizer modes
         bool supex;
 
-        /// Cunter used for the output of the full order solutions
+        /// Counter used for the output of the full order solutions
         label counter = 1;
 
         // Dummy variables to transform simplefoam into a class
@@ -409,9 +412,20 @@ class steadyNS: public reductionProblem
         /// @param[in]  NPmodes  The number of pressure modes.
         /// @param[in]  NUmodes  The number of velocity modes.
         ///
-        /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the BC3 using a PPE approach.
+        /// @return      reduced tensor in Eigen::MatrixXd format for the BC3 using a PPE approach.
         ///
         Eigen::MatrixXd pressure_BC3(label NPmodes, label NUmodes);
+
+	//--------------------------------------------------------------------------
+        /// @brief      Term N° 4 given by the additional boundary condition using a PPE approach 
+	///		in case of time-dependent BCs
+        ///
+        /// @param[in]  NPmodes  The number of pressure modes.
+        /// @param[in]  NUmodes  The number of velocity modes.
+        ///
+        /// @return      reduced tensor in Eigen::MatrixXd format for the BC3 using a PPE approach.
+        ///
+        Eigen::MatrixXd pressure_BC4(label NPmodes, label NUmodes);
 
         //--------------------------------------------------------------------------
         /// @brief      Boundary integral modes on boundary used by the penaly method

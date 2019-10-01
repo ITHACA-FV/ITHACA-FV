@@ -61,9 +61,26 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
                       mesh
                   )
               );
+    ITHACAdict = new IOdictionary
+    (
+        IOobject
+        (
+            "ITHACAdict",
+            runTime.system(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
 #include "createFields.H"
 #include "createFvOptions.H"
     para = new ITHACAparameters;
+    bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
+    M_Assert(bcMethod == "lift" || bcMethod == "penalty",
+             "The BC method must be set to lift or penalty in ITHACAdict");
+    timedepbcMethod = ITHACAdict->lookupOrDefault<word>("timedepbcMethod", "no");
+    M_Assert(timedepbcMethod == "yes" || timedepbcMethod == "no",
+    	     "The BC method can be set to yes or no");
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();
@@ -71,7 +88,7 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void unsteadyNS::truthSolve(List<scalar> mu_now)
+void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
 {
     Time& runTime = _runTime();
     surfaceScalarField& phi = _phi();
@@ -89,8 +106,30 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
-    // Initialize Nsnapshots
-    int nsnapshots = 0;
+             
+    // Set time-dependent velocity BCs
+    if (timedepbcMethod == "yes")
+    {
+	for (label i = 0; i < inletPatch.rows(); i++)
+	{
+	    Vector<double> inl(0, 0, 0);
+	     for (label j = 0; j < inl.size(); j++)
+	     {            
+                inl[j] = timeBCoff(i*inl.size()+j, 0);
+	     }
+	     assignBC(U, inletPatch(i, 0), inl);
+	}
+    }
+
+    // Export and store the initial conditions for velocity and pressure
+    ITHACAstream::exportSolution(U, name(counter), folder);
+    ITHACAstream::exportSolution(p, name(counter), folder);
+    std::ofstream of(folder + name(counter) + "/" +
+                     runTime.timeName());
+    Ufield.append(U);
+    Pfield.append(p);
+    counter++;
+    nextWrite += writeEvery;
 
     // Start the time loop
     while (runTime.run())
@@ -98,8 +137,23 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
 #include "readTimeControls.H"
 #include "CourantNo.H"
 #include "setDeltaT.H"
-        runTime.setEndTime(finalTime + timeStep);
+        runTime.setEndTime(finalTime);
+	runTime++;
         Info << "Time = " << runTime.timeName() << nl << endl;
+
+    	if (timedepbcMethod == "yes")
+    	{
+	    for (label i = 0; i < inletPatch.rows(); i++)
+	    {
+	    	Vector<double> inl(0, 0, 0);
+	     	for (label j = 0; j < inl.size(); j++)
+	     	{            
+                    inl[j] = timeBCoff(i*inl.size()+j, counter2);
+	     	}
+	     	assignBC(U, inletPatch(i, 0), inl);
+	    }
+	    counter2 ++;
+    	}
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
@@ -125,10 +179,9 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
 
         if (checkWrite(runTime))
         {
-            nsnapshots += 1;
-            ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-            ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-            std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
+            ITHACAstream::exportSolution(U, name(counter), folder);
+            ITHACAstream::exportSolution(p, name(counter), folder);
+            std::ofstream of(folder + name(counter) + "/" +
                              runTime.timeName());
             Ufield.append(U);
             Pfield.append(p);
@@ -144,8 +197,6 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
                 mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
             }
         }
-
-        runTime++;
     }
 
     // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
@@ -154,10 +205,10 @@ void unsteadyNS::truthSolve(List<scalar> mu_now)
         mu.resize(1, 1);
     }
 
-    if (mu_samples.rows() == nsnapshots * mu.cols())
+    if (mu_samples.rows() == counter * mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-                                   "./ITHACAoutput/Offline");
+                                   folder);
     }
 }
 
