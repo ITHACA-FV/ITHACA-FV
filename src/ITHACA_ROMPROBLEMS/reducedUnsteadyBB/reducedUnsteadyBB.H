@@ -78,6 +78,42 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
 
 };
 
+struct newton_unsteadyBB_PPE: public newton_argument<double>
+{
+    public:
+        newton_unsteadyBB_PPE() {}
+        newton_unsteadyBB_PPE(int Nx, int Ny,
+                              unsteadyBB& problem): newton_argument<double>(Nx, Ny),
+            problem(&problem),
+            Nphi_u(problem.NUmodes + problem.liftfield.size()),
+            Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
+            N_BC_t(problem.inletIndexT.rows()),
+            N_BC(problem.inletIndex.rows()),
+            Nphi_p(problem.NPmodes),
+            Nphi_prgh(problem.NPrghmodes)
+        {}
+
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+
+        unsteadyBB* problem;
+        int Nphi_u;
+        int Nphi_p;
+        int Nphi_t;
+        int Nphi_prgh;
+        int N_BC_t;
+        int N_BC;
+        scalar nu;
+        scalar Pr;
+        scalar dt;
+        int writeEvery;
+        word BCmethod;
+
+        Eigen::VectorXd y_old;
+        Eigen::VectorXd BC_t;
+        Eigen::VectorXd BC;
+};
+
 
 
 /*---------------------------------------------------------------------------*\
@@ -113,6 +149,9 @@ class reducedUnsteadyBB: public reducedUnsteadyNS
 
         /// Function object to call the non linear solver sup approach
         newton_unsteadyBB_sup newton_object_sup;
+
+        /// Function object to call the non linear solver PPE approach
+        newton_unsteadyBB_PPE newton_object_PPE;
 
         /// Reconstructed temperature field
         PtrList<volScalarField> TREC;
@@ -151,6 +190,22 @@ class reducedUnsteadyBB: public reducedUnsteadyNS
         Eigen::MatrixXd solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
                                         Eigen::MatrixXd& vel_now_BC, label NParaSet = 0, label startSnap = 0);
 
+
+        /// Method to perform an online solve using a PPE stabilisation method
+        ///
+        /// @param[in]  temp_now_BC   The scalar of online temperature. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized boundary conditions.
+        /// @param[in] vel_now_BC   The scalar of online velocity. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized boundary conditions.
+        /// @param[in]  NParaSet The parameter sets number for which the online solution is solved.
+        /// @param[in]  startSnap The first snapshot taken from the offline snapshots
+        /// and used to get the reduced initial condition default = 0.
+        ///
+        Eigen::MatrixXd solveOnline_PPE(Eigen::MatrixXd& temp_now_BC,
+                                        Eigen::MatrixXd& vel_now_BC, label NParaSet = 0,
+                                        label startSnap = 0);
 
         /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique.
         /// stabilisation method

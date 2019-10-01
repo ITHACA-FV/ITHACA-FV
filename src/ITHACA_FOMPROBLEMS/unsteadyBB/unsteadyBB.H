@@ -111,6 +111,9 @@ class unsteadyBB: public unsteadyNS
         /// Buoyancy term - momentum equation
         Eigen::MatrixXd H_matrix;
 
+        /// Buoyancy term - PPE equation
+        Eigen::MatrixXd HP_matrix;
+
         /// Diffusive term - energy equation
         Eigen::MatrixXd Y_matrix;
 
@@ -175,6 +178,19 @@ class unsteadyBB: public unsteadyNS
         /// Source Term Heat
         autoPtr<volScalarField> _S;
 
+        /// Pointers for perfoming Nested-POD Method
+        /// List of pointers used to form the Weighted nested-POD modes for             velocity field
+        PtrList<volVectorField> UModesWeighted;
+
+        /// List of pointers used to form the Weighted nested-POD modes for             pressure field
+        PtrList<volScalarField> PModesWeighted;
+
+        /// List of pointers used to form the Weighted nested-POD modes for             temperature field
+        PtrList<volScalarField> TModesWeighted;
+
+        /// List of pointers used to form the Weighted nested-POD modes for             nut-field
+        PtrList<volScalarField> NUTModesWeighted;
+
         // Functions
         /// Perform a truthsolve for parameters mu_now
         void truthSolve(List<scalar> mu_now);
@@ -209,6 +225,16 @@ class unsteadyBB: public unsteadyNS
                         label NSUPmodes);
 
         //--------------------------------------------------------------------------
+        /// Project using a PPE approach
+        ///
+        /// @param[in]  folder     The folder used to save the reduced matrices.
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        void projectPPE(fileName folder, label NUmodes, label NPrghmodes, label NTmodes,
+                        label NSUPmodes);
+        //--------------------------------------------------------------------------
         /// Gradient of pressure
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
@@ -231,8 +257,8 @@ class unsteadyBB: public unsteadyNS
         ///
         Eigen::MatrixXd diffusive_term_temperature(label NUmodes, label NTmodes,
                 label NSUPmodes);
-
         //--------------------------------------------------------------------------
+
         /// Divergence Term (supremizer approach)
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
@@ -278,6 +304,16 @@ class unsteadyBB: public unsteadyNS
         /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the convective term.
         ///
         Eigen::MatrixXd buoyant_term(label NUmodes, label NTmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Buoyant Term PPE Equation
+        ///
+        /// @param[in]  NPrghmodes    The number of Prgh Pressure modes.
+        /// @param[in]  NTmodes    The number of temperature modes.
+        ///
+        /// @return     reduced matrix in List <Eigen::MatrixXd> format for the buoyancy-related PPE term.
+        ///
+        Eigen::MatrixXd buoyant_term_poisson(label NPrghmodes, label NTmodes);
 
         //--------------------------------------------------------------------------
         /// Function to check if the solution must be exported.
