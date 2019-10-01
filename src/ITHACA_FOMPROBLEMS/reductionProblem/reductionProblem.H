@@ -130,6 +130,27 @@ class reductionProblem
         /// \\end{bmatrix}
         /// \\]
         Eigen::MatrixXi inletIndex;
+
+	/// Matrix that contains informations about the inlet boundaries
+	/// without specifing the direction
+        /// Rows = Number of parametrized boundary conditions <br>
+        /// Cols = 1 <br>
+        /// Example: <br>
+        /// example.inletIndex.resize(2, 1); <br>
+        /// example.inletIndex(0, 0) = 0; <br>
+        /// example.inletIndex(1, 0) = 1; <br>
+        /// Means that there are two parametrized boundary conditions of which the
+	/// first row is of patch 0 and the second row of patch 1.
+        /// The Matrix should be implemented in the following way:
+        /// \\[
+        /// \\mbox{inletIndex}=\\begin{bmatrix}
+        /// \\mbox{BC1_index}  \\\\ \
+        /// \\mbox{BC2_index}  \\\\ \
+        /// \\vdots & \\vdots \\\\ \
+        /// \\mbox{BCN_index}  \\ \
+        /// \\end{bmatrix}
+        /// \\]
+	Eigen::MatrixXi inletPatch;
 #pragma GCC diagnostic pop
 
         // Functions
