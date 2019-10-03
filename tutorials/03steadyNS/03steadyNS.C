@@ -30,7 +30,7 @@ SourceFiles
 #include "steadyNS.H"
 #include "ITHACAstream.H"
 #include "ITHACAPOD.H"
-#include "reducedSteadyNS.H"
+#include "ReducedSteadyNS.H"
 #include "forces.H"
 #include "IOmanip.H"
 

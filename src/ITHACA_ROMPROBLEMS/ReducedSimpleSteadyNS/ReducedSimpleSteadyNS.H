@@ -34,12 +34,12 @@ SourceFiles
 /// \dir
 /// Directory containing the header and source files for the reducedSteadyNS class
 
-#ifndef reducedSimpleSteadyNS_H
-#define reducedSimpleSteadyNS_H
+#ifndef ReducedSimpleSteadyNS_H
+#define ReducedSimpleSteadyNS_H
 
 #include "fvCFD.H"
 #include "IOmanip.H"
-#include "reducedProblem.H"
+#include "ReducedProblem.H"
 #include "SteadyNSSimple.H"
 #include "ITHACAutilities.H"
 #include "EigenFunctions.H"

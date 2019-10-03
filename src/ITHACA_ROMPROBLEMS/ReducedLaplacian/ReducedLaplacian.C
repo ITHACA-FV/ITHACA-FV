@@ -31,7 +31,7 @@ License
 /// \file
 /// Source file of the reducedLaplacian class
 
-#include "reducedLaplacian.H"
+#include "ReducedLaplacian.H"
 
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //

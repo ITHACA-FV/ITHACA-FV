@@ -46,7 +46,7 @@ SourceFiles
 #include "reductionProblem.H"
 #include "steadyNS.H"
 #include "SteadyNSTurb.H"
-#include "reducedSteadyNS.H"
+#include "ReducedSteadyNS.H"
 #include "ReducedSteadyNSTurb.H"
 
 /// \brief Class where the tutorial number 6 is implemented.

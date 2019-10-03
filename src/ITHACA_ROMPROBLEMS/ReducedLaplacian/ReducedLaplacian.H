@@ -35,13 +35,13 @@ SourceFiles
 /// Directory containing the header and source files for the reducedLaplacian class
 
 
-#ifndef reducedLaplacian_H
-#define reducedLaplacian_H
+#ifndef ReducedLaplacian_H
+#define ReducedLaplacian_H
 
 #include "fvCFD.H"
 #include "IOmanip.H"
 #include "laplacianProblem.H"
-#include "reducedProblem.H"
+#include "ReducedProblem.H"
 #include <Eigen/Eigen>
 
 /*---------------------------------------------------------------------------*\

@@ -32,7 +32,7 @@ License
 /// Source file of the reducedUnsteadyNS class
 
 
-#include "reducedUnsteadyNS.H"
+#include "ReducedUnsteadyNS.H"
 
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //

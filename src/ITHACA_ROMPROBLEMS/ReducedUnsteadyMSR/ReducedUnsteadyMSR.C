@@ -22,13 +22,12 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
-#include "reducedMSR.H"
+#include "ReducedUnsteadyMSR.H"
 
-reducedMSR::reducedMSR()
-{
-}
 
-reducedMSR::reducedMSR(msrProblem& FOMproblem)
+reducedusMSR::reducedusMSR() {}
+
+reducedusMSR::reducedusMSR(usmsrProblem& FOMproblem)
 {
     problem = &FOMproblem;
     N_BC = problem->inletIndex.rows();
@@ -173,22 +172,25 @@ reducedMSR::reducedMSR(msrProblem& FOMproblem)
         TXSsnapshots.append(problem->TXSFields[k]);
     }
 
-    newton_object_fd = newton_msr_fd(Nphi_u + Nphi_p, Nphi_u + Nphi_p, FOMproblem);
-    newton_object_n = newton_msr_n(Nphi_flux + Nphi_prec1 + Nphi_prec2 + Nphi_prec3
-                                   + Nphi_prec4 + Nphi_prec5 + Nphi_prec6 + Nphi_prec7 + Nphi_prec8,
-                                   Nphi_flux + Nphi_prec1 + Nphi_prec2 + Nphi_prec3 + Nphi_prec4 + Nphi_prec5 +
-                                   Nphi_prec6 + Nphi_prec7 + Nphi_prec8, FOMproblem);
-    newton_object_t = newton_msr_t(Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3,
-                                   Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3, FOMproblem);
+    newton_object_fd = newton_usmsr_fd(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
+                                       FOMproblem);
+    newton_object_n = newton_usmsr_n(Nphi_flux + Nphi_prec1 + Nphi_prec2 +
+                                     Nphi_prec3 + Nphi_prec4 + Nphi_prec5 + Nphi_prec6 + Nphi_prec7 + Nphi_prec8,
+                                     Nphi_flux + Nphi_prec1 + Nphi_prec2 + Nphi_prec3 + Nphi_prec4 + Nphi_prec5 +
+                                     Nphi_prec6 + Nphi_prec7 + Nphi_prec8, FOMproblem);
+    newton_object_t = newton_usmsr_t(Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3,
+                                     Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3, FOMproblem);
 }
 
-int newton_msr_fd::operator()(const Eigen::VectorXd& x,
-                              Eigen::VectorXd& fvec) const
+int newton_usmsr_fd::operator()(const Eigen::VectorXd& x,
+                                Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_tmp(Nphi_u);
     Eigen::VectorXd b_tmp(Nphi_p);
     a_tmp = x.head(Nphi_u);
     b_tmp = x.tail(Nphi_p);
+    Eigen::VectorXd a_dot(Nphi_u);
+    a_dot = (x.head(Nphi_u) - y_old.head(Nphi_u)) / dt;
     /// Fluid-dynamics terms
     // Convective terms
     Eigen::MatrixXd cc(1, 1);
@@ -198,6 +200,8 @@ int newton_msr_fd::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
     // Gradient of pressure
     Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
+    // Mass Term
+    Eigen::VectorXd M5 = problem->M_matrix * a_dot;
     // Pressure Term
     Eigen::VectorXd M3 = problem->D_matrix * b_tmp;
     // BC PPE
@@ -208,17 +212,15 @@ int newton_msr_fd::operator()(const Eigen::VectorXd& x,
     for (label i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
-        fvec(i) =  M1(i) - cc(0, 0) - M2(i);
+        fvec(i) =  -M5(i) + M1(i) - cc(0, 0) - M2(i);
     }
-
-    label p_fvec = Nphi_u;
 
     for (label i = 0; i < Nphi_p; i++)
     {
-        label k = i + p_fvec;
+        label k = i + Nphi_u;
         gg = a_tmp.transpose() * problem->G_matrix[i] * a_tmp;
         //bb = a_tmp.transpose() * problem->BC2_matrix[i] * a_tmp;
-        fvec(k) =  M3(i, 0) + gg(0, 0) - M7(i, 0);
+        fvec(k) = M3(i, 0) + gg(0, 0) - M7(i, 0);
     }
 
     for (label j = 0; j < N_BC; j++)
@@ -229,15 +231,17 @@ int newton_msr_fd::operator()(const Eigen::VectorXd& x,
     return 0;
 }
 
-int newton_msr_fd::df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const
+int newton_usmsr_fd::df(const Eigen::VectorXd& x,
+                        Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_msr_fd> numDiff(*this);
+    Eigen::NumericalDiff<newton_usmsr_fd> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
 
-int newton_msr_n::operator()(const Eigen::VectorXd& n,
-                             Eigen::VectorXd& fvecn) const
+
+int newton_usmsr_n::operator()(const Eigen::VectorXd& n,
+                               Eigen::VectorXd& fvecn) const
 {
     Eigen::VectorXd c_tmp(Nphi_flux);  //for flux
     Eigen::VectorXd d1_tmp(Nphi_prec1); //for prec1
@@ -265,7 +269,35 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     d7_tmp = n.segment(pos, Nphi_prec7);
     pos = pos + Nphi_prec7;
     d8_tmp = n.segment(pos, Nphi_prec8);
+    Eigen::VectorXd c_dot(Nphi_flux);
+    Eigen::VectorXd d1_dot(Nphi_prec1);
+    Eigen::VectorXd d2_dot(Nphi_prec2);
+    Eigen::VectorXd d3_dot(Nphi_prec3);
+    Eigen::VectorXd d4_dot(Nphi_prec4);
+    Eigen::VectorXd d5_dot(Nphi_prec5);
+    Eigen::VectorXd d6_dot(Nphi_prec6);
+    Eigen::VectorXd d7_dot(Nphi_prec7);
+    Eigen::VectorXd d8_dot(Nphi_prec8);
+    c_dot = (n.head(Nphi_flux) - w_old.head(Nphi_flux)) / dt;
+    pos = Nphi_flux;
+    d1_dot = (n.segment(pos, Nphi_prec1) - w_old.segment(pos, Nphi_prec1)) / dt;
+    pos += Nphi_prec1;
+    d2_dot = (n.segment(pos, Nphi_prec2) - w_old.segment(pos, Nphi_prec2)) / dt;
+    pos += Nphi_prec2;
+    d3_dot = (n.segment(pos, Nphi_prec3) - w_old.segment(pos, Nphi_prec3)) / dt;
+    pos += Nphi_prec3;
+    d4_dot = (n.segment(pos, Nphi_prec4) - w_old.segment(pos, Nphi_prec4)) / dt;
+    pos += Nphi_prec4;
+    d5_dot = (n.segment(pos, Nphi_prec5) - w_old.segment(pos, Nphi_prec5)) / dt;
+    pos += Nphi_prec5;
+    d6_dot = (n.segment(pos, Nphi_prec6) - w_old.segment(pos, Nphi_prec6)) / dt;
+    pos += Nphi_prec6;
+    d7_dot = (n.segment(pos, Nphi_prec7) - w_old.segment(pos, Nphi_prec7)) / dt;
+    pos += Nphi_prec7;
+    d8_dot = (n.segment(pos, Nphi_prec8) - w_old.segment(pos, Nphi_prec8)) / dt;
     /// Neutronics terms
+    // ddt flux term
+    Eigen::VectorXd F_dot = problem->MF_matrix * c_dot * iv;
     // Laplacian flux term
     Eigen::MatrixXd lf(1, 1);
     // flux production term
@@ -281,6 +313,15 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     Eigen::VectorXd F3_6 = problem->PS6_matrix * d6_tmp * l6;
     Eigen::VectorXd F3_7 = problem->PS7_matrix * d7_tmp * l7;
     Eigen::VectorXd F3_8 = problem->PS8_matrix * d8_tmp * l8;
+    //ddt prec term
+    Eigen::VectorXd Pdot_1 = problem->MP1_matrix * d1_dot;
+    Eigen::VectorXd Pdot_2 = problem->MP2_matrix * d2_dot;
+    Eigen::VectorXd Pdot_3 = problem->MP3_matrix * d3_dot;
+    Eigen::VectorXd Pdot_4 = problem->MP4_matrix * d4_dot;
+    Eigen::VectorXd Pdot_5 = problem->MP5_matrix * d5_dot;
+    Eigen::VectorXd Pdot_6 = problem->MP6_matrix * d6_dot;
+    Eigen::VectorXd Pdot_7 = problem->MP7_matrix * d7_dot;
+    Eigen::VectorXd Pdot_8 = problem->MP8_matrix * d8_dot;
     // Convective terms in prec-eq:
     Eigen::MatrixXd pp1(1, 1);
     Eigen::MatrixXd pp2(1, 1);
@@ -323,8 +364,8 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
         lf = d_c.transpose() * problem->LF_matrix[i] * c_tmp;
         pf = nsf_c.transpose() * problem->PF_matrix[i] * c_tmp * (1 - btot);
         af = a_c.transpose() * problem->AF_matrix[i] * c_tmp;
-        fvecn(i) = lf(0, 0) + pf(0, 0) - af(0,
-                                            0) + F3_1(i) + F3_2(i) + F3_3(i) + F3_4(i) + F3_5(i) + F3_6(i) + F3_7(i) + F3_8(
+        fvecn(i) = -F_dot(i) + lf(0, 0) + pf(0, 0) - af(0,
+                   0) + F3_1(i) + F3_2(i) + F3_3(i) + F3_4(i) + F3_5(i) + F3_6(i) + F3_7(i) + F3_8(
                        i);
     }
 
@@ -335,7 +376,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
         label k = i + pfvecn;
         pp1 = a_tmp.transpose() * problem->ST1_matrix[i] * d1_tmp;
         fs1 = nsf_c.transpose() * problem->FS1_matrix[i] * c_tmp * b1;
-        fvecn(k) = -pp1(0, 0) + P1_1(i) - P2_1(i) + fs1(0, 0);
+        fvecn(k) = -Pdot_1(i) - pp1(0, 0) + P1_1(i) - P2_1(i) + fs1(0, 0);
     }
 
     pfvecn += Nphi_prec1;
@@ -345,7 +386,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
         label k = i + pfvecn;
         pp2 = a_tmp.transpose() * problem->ST2_matrix[i] * d2_tmp;
         fs2 = nsf_c.transpose() * problem->FS2_matrix[i] * c_tmp * b2;
-        fvecn(k) = -pp2(0, 0) + P1_2(i) - P2_2(i) + fs2(0, 0);
+        fvecn(k) = -Pdot_2(i) - pp2(0, 0) + P1_2(i) - P2_2(i) + fs2(0, 0);
     }
 
     pfvecn += Nphi_prec2;
@@ -355,7 +396,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
         label k = i + pfvecn;
         pp3 = a_tmp.transpose() * problem->ST3_matrix[i] * d3_tmp;
         fs3 = nsf_c.transpose() * problem->FS3_matrix[i] * c_tmp * b3;
-        fvecn(k) = -pp3(0, 0) + P1_3(i) - P2_3(i) + fs3(0, 0);
+        fvecn(k) = -Pdot_3(i) - pp3(0, 0) + P1_3(i) - P2_3(i) + fs3(0, 0);
     }
 
     pfvecn += Nphi_prec3;
@@ -365,7 +406,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
         label k = i + pfvecn;
         pp4 = a_tmp.transpose() * problem->ST4_matrix[i] * d4_tmp;
         fs4 = nsf_c.transpose() * problem->FS4_matrix[i] * c_tmp * b4;
-        fvecn(k) = -pp4(0, 0) + P1_4(i) - P2_4(i) + fs4(0, 0);
+        fvecn(k) = -Pdot_4(i) - pp4(0, 0) + P1_4(i) - P2_4(i) + fs4(0, 0);
     }
 
     pfvecn += Nphi_prec4;
@@ -375,7 +416,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
         label k = i + pfvecn;
         pp5 = a_tmp.transpose() * problem->ST5_matrix[i] * d5_tmp;
         fs5 = nsf_c.transpose() * problem->FS5_matrix[i] * c_tmp * b5;
-        fvecn(k) = -pp5(0, 0) + P1_5(i) - P2_5(i) + fs5(0, 0);
+        fvecn(k) = -Pdot_5(i) - pp5(0, 0) + P1_5(i) - P2_5(i) + fs5(0, 0);
     }
 
     pfvecn += Nphi_prec5;
@@ -385,7 +426,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
         label k = i + pfvecn;
         pp6 = a_tmp.transpose() * problem->ST6_matrix[i] * d6_tmp;
         fs6 = nsf_c.transpose() * problem->FS6_matrix[i] * c_tmp * b6;
-        fvecn(k) = -pp6(0, 0) + P1_6(i) - P2_6(i) + fs6(0, 0);
+        fvecn(k) = -Pdot_6(i) - pp6(0, 0) + P1_6(i) - P2_6(i) + fs6(0, 0);
     }
 
     pfvecn += Nphi_prec6;
@@ -395,7 +436,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
         label k = i + pfvecn;
         pp7 = a_tmp.transpose() * problem->ST7_matrix[i] * d7_tmp;
         fs7 = nsf_c.transpose() * problem->FS7_matrix[i] * c_tmp * b7;
-        fvecn(k) = -pp7(0, 0) + P1_7(i) - P2_7(i) + fs7(0, 0);
+        fvecn(k) = -Pdot_7(i) - pp7(0, 0) + P1_7(i) - P2_7(i) + fs7(0, 0);
     }
 
     pfvecn += Nphi_prec7;
@@ -405,22 +446,22 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
         label k = i + pfvecn;
         pp8 = a_tmp.transpose() * problem->ST8_matrix[i] * d8_tmp;
         fs8 = nsf_c.transpose() * problem->FS8_matrix[i] * c_tmp * b8;
-        fvecn(k) = -pp8(0, 0) + P1_8(i) - P2_8(i) + fs8(0, 0);
+        fvecn(k) = -Pdot_8(i) - pp8(0, 0) + P1_8(i) - P2_8(i) + fs8(0, 0);
     }
 
     return 0;
 }
 
-int newton_msr_n::df(const Eigen::VectorXd& n,
-                     Eigen::MatrixXd& fjacn) const
+int newton_usmsr_n::df(const Eigen::VectorXd& n,
+                       Eigen::MatrixXd& fjacn) const
 {
-    Eigen::NumericalDiff<newton_msr_n> numDiff(*this);
+    Eigen::NumericalDiff<newton_usmsr_n> numDiff(*this);
     numDiff.df(n, fjacn);
     return 0;
 }
 
-int newton_msr_t::operator()(const Eigen::VectorXd& t,
-                             Eigen::VectorXd& fvect) const
+int newton_usmsr_t::operator()(const Eigen::VectorXd& t,
+                               Eigen::VectorXd& fvect) const
 {
     Eigen::VectorXd e_tmp(Nphi_T);  //for T
     Eigen::VectorXd f1_tmp(Nphi_dec1); //for dec1
@@ -433,7 +474,20 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
     f2_tmp = t.segment(pos, Nphi_dec2);
     pos += Nphi_dec2;
     f3_tmp = t.segment(pos, Nphi_dec3);
+    Eigen::VectorXd e_dot(Nphi_T);  //for T
+    Eigen::VectorXd f1_dot(Nphi_dec1); //for dec1
+    Eigen::VectorXd f2_dot(Nphi_dec2); //for dec2
+    Eigen::VectorXd f3_dot(Nphi_dec3); //for dec3
+    e_dot = (t.head(Nphi_T) - z_old.head(Nphi_T)) / dt;
+    pos = Nphi_T;
+    f1_dot = (t.segment(pos, Nphi_dec1) - z_old.segment(pos, Nphi_dec1)) / dt;
+    pos += Nphi_dec1;
+    f2_dot = (t.segment(pos, Nphi_dec2) - z_old.segment(pos, Nphi_dec2)) / dt;
+    pos += Nphi_dec2;
+    f3_dot = (t.segment(pos, Nphi_dec3) - z_old.segment(pos, Nphi_dec3)) / dt;
     /// Thermal terms
+    //ddt T term
+    Eigen::VectorXd T_dot = problem->TM_matrix * e_dot;
     // convective term in T_eqn
     Eigen::MatrixXd tt(1, 1);
     // laplacian of T
@@ -444,6 +498,10 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
     Eigen::MatrixXd dhs1(1, 1);
     Eigen::MatrixXd dhs2(1, 1);
     Eigen::MatrixXd dhs3(1, 1);
+    //ddt dec term
+    Eigen::VectorXd DHdot_1 = problem->MD1_matrix * f1_dot;
+    Eigen::VectorXd DHdot_2 = problem->MD2_matrix * f2_dot;
+    Eigen::VectorXd DHdot_3 = problem->MD3_matrix * f3_dot;
     // convective term in decay heat eq.
     Eigen::MatrixXd dh1(1, 1);
     Eigen::MatrixXd dh2(1, 1);
@@ -468,7 +526,8 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
         dhs1 = v_c.transpose() * problem->THS1_matrix[i] * f1_tmp * (dl1 / cp);
         dhs2 = v_c.transpose() * problem->THS2_matrix[i] * f2_tmp * (dl2 / cp);
         dhs3 = v_c.transpose() * problem->THS3_matrix[i] * f3_tmp * (dl3 / cp);
-        fvect(i) = -tt(0, 0) + T1(i) + xsf(0, 0) + dhs1(0, 0) + dhs2(0, 0) + dhs3(0, 0);
+        fvect(i) = -T_dot(i) - tt(0, 0) + T1(i) + xsf(0, 0) + dhs1(0, 0) + dhs2(0,
+                   0) + dhs3(0, 0);
     }
 
     label pfvect = Nphi_T;
@@ -478,7 +537,7 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
         label k = i + pfvect;
         dh1 = a_tmp.transpose() * problem->SD1_matrix[i] * f1_tmp;
         dfs1 = sp_c.transpose() * problem->DFS1_matrix[i] * c_tmp * db1;
-        fvect(k) = -dh1(0, 0) + DH1_1(i) - DH2_1(i) + dfs1(0, 0);
+        fvect(k) = -DHdot_1(i) - dh1(0, 0) + DH1_1(i) - DH2_1(i) + dfs1(0, 0);
     }
 
     pfvect += Nphi_dec1;
@@ -488,7 +547,7 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
         label k = i + pfvect;
         dh2 = a_tmp.transpose() * problem->SD2_matrix[i] * f2_tmp;
         dfs2 = sp_c.transpose() * problem->DFS2_matrix[i] * c_tmp * db2;
-        fvect(k) = -dh2(0, 0) + DH1_2(i) - DH2_2(i) + dfs2(0, 0);
+        fvect(k) = -DHdot_2(i) - dh2(0, 0) + DH1_2(i) - DH2_2(i) + dfs2(0, 0);
     }
 
     pfvect += Nphi_dec2;
@@ -498,7 +557,7 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
         label k = i + pfvect;
         dh3 = a_tmp.transpose() * problem->SD3_matrix[i] * f3_tmp;
         dfs3 = sp_c.transpose() * problem->DFS3_matrix[i] * c_tmp * db3;
-        fvect(k) = -dh3(0, 0) + DH1_3(i) - DH2_3(i) + dfs3(0, 0);
+        fvect(k) = -DHdot_3(i) - dh3(0, 0) + DH1_3(i) - DH2_3(i) + dfs3(0, 0);
     }
 
     for (label i = 0; i < N_BCt; i++)
@@ -509,61 +568,81 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
     return 0;
 }
 
-int newton_msr_t::df(const Eigen::VectorXd& t,
-                     Eigen::MatrixXd& fjact) const
+int newton_usmsr_t::df(const Eigen::VectorXd& t,
+                       Eigen::MatrixXd& fjact) const
 {
-    Eigen::NumericalDiff<newton_msr_t> numDiff(*this);
+    Eigen::NumericalDiff<newton_usmsr_t> numDiff(*this);
     numDiff.df(t, fjact);
     return 0;
 }
 
 
-void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
-                             Eigen::VectorXd mu_online)
+void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
+                               Eigen::MatrixXd temp_now, Eigen::VectorXd mu_online, label startSnap)
 {
     Info << "\n Starting online stage...\n" << endl;
-    y.resize(Nphi_u + Nphi_p, 1);
+    y.resize(Nphi_u + Nphi_p, 1); //for fd
     y.setZero();
     w.resize(Nphi_flux + Nphi_prec1 + Nphi_prec2 + Nphi_prec3 + Nphi_prec4 +
-             Nphi_prec5 + Nphi_prec6 + Nphi_prec7 + Nphi_prec8, 1);
+             Nphi_prec5 + Nphi_prec6 + Nphi_prec7 + Nphi_prec8, 1); //for n
     w.setZero();
-    z.resize(Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3, 1);
+    z.resize(Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3, 1); //for t
     z.setZero();
+    int pos_w = 0;
+    int pos_z = 0;
+    y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
+    y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
 
     for (label j = 0; j < N_BC; j++)
     {
         y(j) = vel_now(j, 0);
     }
 
+    w.head(Nphi_flux) = ITHACAutilities::get_coeffs(Fluxsnapshots[startSnap],
+                        Fluxmodes);
+    pos_w += Nphi_flux;
+    w.segment(pos_w, Nphi_prec1) = ITHACAutilities::get_coeffs(
+                                       Prec1snapshots[startSnap], Prec1modes);
+    pos_w += Nphi_prec1;
+    w.segment(pos_w, Nphi_prec2) = ITHACAutilities::get_coeffs(
+                                       Prec2snapshots[startSnap], Prec2modes);
+    pos_w += Nphi_prec2;
+    w.segment(pos_w, Nphi_prec3) = ITHACAutilities::get_coeffs(
+                                       Prec3snapshots[startSnap], Prec3modes);
+    pos_w += Nphi_prec3;
+    w.segment(pos_w, Nphi_prec4) = ITHACAutilities::get_coeffs(
+                                       Prec4snapshots[startSnap], Prec4modes);
+    pos_w += Nphi_prec4;
+    w.segment(pos_w, Nphi_prec5) = ITHACAutilities::get_coeffs(
+                                       Prec5snapshots[startSnap], Prec5modes);
+    pos_w += Nphi_prec5;
+    w.segment(pos_w, Nphi_prec6) = ITHACAutilities::get_coeffs(
+                                       Prec6snapshots[startSnap], Prec6modes);
+    pos_w += Nphi_prec6;
+    w.segment(pos_w, Nphi_prec7) = ITHACAutilities::get_coeffs(
+                                       Prec7snapshots[startSnap], Prec7modes);
+    pos_w += Nphi_prec7;
+    w.segment(pos_w, Nphi_prec8) = ITHACAutilities::get_coeffs(
+                                       Prec8snapshots[startSnap], Prec8modes);
+    z.head(Nphi_T) = ITHACAutilities::get_coeffs(Tsnapshots[startSnap], Tmodes);
+    pos_z += Nphi_T;
+    z.segment(pos_z, Nphi_dec1) = ITHACAutilities::get_coeffs(
+                                      Dec1snapshots[startSnap], Dec1modes);
+    pos_z += Nphi_dec1;
+    z.segment(pos_z, Nphi_dec2) = ITHACAutilities::get_coeffs(
+                                      Dec2snapshots[startSnap], Dec2modes);
+    pos_z += Nphi_dec2;
+    z.segment(pos_z, Nphi_dec3) = ITHACAutilities::get_coeffs(
+                                      Dec3snapshots[startSnap], Dec3modes);
+
     for (label j = 0; j < N_BCt; j++)
     {
         z(j) = temp_now(j, 0);
     }
 
-    for (label i = 0; i < Nphi_const; i++)
-    {
-        newton_object_n.d_c(i) = problem->rbfsplines_D[i]->eval(mu_online);
-        newton_object_n.nsf_c(i) = problem->rbfsplines_NSF[i]->eval(mu_online);
-        newton_object_n.a_c(i) = problem->rbfsplines_A[i]->eval(mu_online);
-        newton_object_t.v_c(i) = problem->rbfsplines_v[i]->eval(mu_online);
-        newton_object_t.sp_c(i) = problem->rbfsplines_SP[i]->eval(mu_online);
-        newton_object_t.txs_c(i) = problem->rbfsplines_TXS[i]->eval(mu_online);
-    }
-
-    online_solution_fd.resize(1);
-    online_solution_n.resize(1);
-    online_solution_t.resize(1);
-    online_solution_C.resize(1);
-    online_solution_fd[0].resize(y.rows() + 1, 1);
-    online_solution_n[0].resize(w.rows() + 1, 1);
-    online_solution_t[0].resize(z.rows() + 1, 1);
-    online_solution_C[0].resize(6 * Nphi_const + 1, 1);
-    Color::Modifier red(Color::FG_RED);
-    Color::Modifier green(Color::FG_GREEN);
-    Color::Modifier def(Color::FG_DEFAULT);
-    Eigen::HybridNonLinearSolver<newton_msr_fd> hnls_fd(newton_object_fd);
-    Eigen::HybridNonLinearSolver<newton_msr_n> hnls_n(newton_object_n);
-    Eigen::HybridNonLinearSolver<newton_msr_t> hnls_t(newton_object_t);
+    newton_object_fd.nu = nu;
+    newton_object_fd.y_old = y;
+    newton_object_fd.dt = dt;
     newton_object_fd.BC.resize(N_BC);
 
     for (label j = 0; j < N_BC; j++)
@@ -571,10 +650,13 @@ void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
         newton_object_fd.BC(j) = vel_now(j, 0);
     }
 
-    newton_object_fd.nu = nu;
     newton_object_n.nu = nu;
+    newton_object_n.d = d;
+    newton_object_n.m = m;
+    newton_object_n.nsf = nsf;
+    newton_object_n.Keff = Keff;
     newton_object_n.iv = iv;
-    newton_object_n.l1 = l1; //lambda-ith
+    newton_object_n.l1 = l1;
     newton_object_n.l2 = l2;
     newton_object_n.l3 = l3;
     newton_object_n.l4 = l4;
@@ -582,7 +664,7 @@ void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
     newton_object_n.l6 = l6;
     newton_object_n.l7 = l7;
     newton_object_n.l8 = l8;
-    newton_object_n.b1 = b1; //beta-ith
+    newton_object_n.b1 = b1;
     newton_object_n.b2 = b2;
     newton_object_n.b3 = b3;
     newton_object_n.b4 = b4;
@@ -591,7 +673,12 @@ void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
     newton_object_n.b7 = b7;
     newton_object_n.b8 = b8;
     newton_object_n.btot = btot;
+    newton_object_n.Sc = Sc;
+    newton_object_n.w_old = w;
+    newton_object_n.dt = dt;
     newton_object_t.nu = nu;
+    newton_object_t.Keff = Keff;
+    newton_object_t.sp = sp;
     newton_object_t.cp = cp;
     newton_object_t.dl1 = dl1;
     newton_object_t.dl2 = dl2;
@@ -600,6 +687,10 @@ void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
     newton_object_t.db2 = db2;
     newton_object_t.db3 = db3;
     newton_object_t.dbtot = dbtot;
+    newton_object_t.Sc = Sc;
+    newton_object_t.Pr = Pr;
+    newton_object_t.dt = dt;
+    newton_object_t.z_old = z;
     newton_object_t.BCt.resize(N_BCt);
 
     for (label j = 0; j < N_BCt; j++)
@@ -607,79 +698,243 @@ void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
         newton_object_t.BCt(j) = temp_now(j, 0);
     }
 
-    hnls_fd.solve(y);
-    Eigen::VectorXd res_fd(y);
-    newton_object_n.a_tmp = y.head(Nphi_u);
-    hnls_n.solve(w);
-    Eigen::VectorXd res_n(w);
-    newton_object_t.a_tmp = y.head(Nphi_u);
-    newton_object_t.c_tmp = w.head(Nphi_flux);
-    hnls_t.solve(z);
-    Eigen::VectorXd res_t(z);
-    newton_object_fd.operator()(y, res_fd);
-    newton_object_n.operator()(w, res_n);
-    newton_object_t.operator()(z, res_t);
-    std::cout << "################## Online solve N° " <<  count_online_solve <<
-              " ##################" << std::endl;
+    // Set number of online solutions
+    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    online_solution_fd.resize(Ntsteps);
+    online_solution_n.resize(Ntsteps);
+    online_solution_t.resize(Ntsteps);
+    online_solution_C.resize(Ntsteps);
+    // Set the initial time
+    time = tstart;
+    // Counting variable
+    int counter = 0;
+    // Create vector to store temporal solution and save initial condition as first solution
+    Eigen::MatrixXd tmp_sol_fd(Nphi_u + Nphi_p + 1, 1);
+    tmp_sol_fd(0) = time;
+    tmp_sol_fd.col(0).tail(y.rows()) = y;
+    Eigen::MatrixXd tmp_sol_n(Nphi_flux + Nphi_prec1 + Nphi_prec2 + Nphi_prec3 +
+                              Nphi_prec4 + Nphi_prec5 + Nphi_prec6 + Nphi_prec7 + Nphi_prec8 + 1, 1);
+    tmp_sol_n(0) = time;
+    tmp_sol_n.col(0).tail(w.rows()) = w;
+    Eigen::MatrixXd tmp_sol_t(Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3 + 1, 1);
+    tmp_sol_t(0) = time;
+    tmp_sol_t.col(0).tail(z.rows()) = z;
+    Eigen::MatrixXd tmp_sol_C(6 * Nphi_const + 1, 1);
+    tmp_sol_C(0) = time;
+    Eigen::VectorXd v_c0;
+    Eigen::VectorXd d_c0;
+    Eigen::VectorXd nsf_c0;
+    Eigen::VectorXd a_c0;
+    Eigen::VectorXd sp_c0;
+    Eigen::VectorXd txs_c0;
+    v_c0.resize(Nphi_const);
+    d_c0.resize(Nphi_const);
+    nsf_c0.resize(Nphi_const);
+    a_c0.resize(Nphi_const);
+    sp_c0.resize(Nphi_const);
+    txs_c0.resize(Nphi_const);
+    std::vector<double> tv0;
+    tv0.resize(mu_online.size() + 1);
+    tv0[0] = time;
 
-    if (res_fd.norm() / y.norm() < 1e-5)
+    for (int k = 1; k < tv0.size(); k++)
     {
-        std::cout << green << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
-                  " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
-                  << std::endl;
-    }
-    else
-    {
-        std::cout << red << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
-                  " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
-                  << std::endl;
-    }
-
-    if (res_n.norm() / w.norm() < 1e-5)
-    {
-        std::cout << green << "|F_n(x)| = " << res_n.norm() / w.norm() <<
-                  " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
-                  std::endl;
-    }
-    else
-    {
-        std::cout << red << "|F_n(x)| = " << res_n.norm() / w.norm() <<
-                  " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
-                  std::endl;
-    }
-
-    if (res_t.norm() / z.norm() < 1e-5)
-    {
-        std::cout << green << "|F_t(x)| = " << res_t.norm() / z.norm() <<
-                  " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
-                  std::endl;
-    }
-    else
-    {
-        std::cout << red << "|F_t(x)| = " << res_t.norm() / z.norm() <<
-                  " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
-                  std::endl;
+        tv0[k] = mu_online(k - 1);
     }
 
-    online_solution_fd[0](0, 0) = count_online_solve;
-    online_solution_fd[0].col(0).tail(y.rows()) = y;
-    online_solution_n[0](0, 0) = count_online_solve;
-    online_solution_n[0].col(0).tail(w.rows()) = w;
-    online_solution_t[0](0, 0) = count_online_solve;
-    online_solution_t[0].col(0).tail(z.rows()) = z;
-    online_solution_C[0](0, 0) = count_online_solve;
+    for (label i = 0; i < Nphi_const; i++)
+    {
+        v_c0(i) = problem->rbfsplines_v[i]->eval(tv0);
+        d_c0(i) = problem->rbfsplines_D[i]->eval(tv0);
+        nsf_c0(i) = problem->rbfsplines_NSF[i]->eval(tv0);
+        a_c0(i) = problem->rbfsplines_A[i]->eval(tv0);
+        sp_c0(i) = problem->rbfsplines_SP[i]->eval(tv0);
+        txs_c0(i) = problem->rbfsplines_TXS[i]->eval(tv0);
+    }
+
     int pos_c = 1;
-    online_solution_C[0].col(0).segment(pos_c, Nphi_const) = newton_object_t.v_c;
+    tmp_sol_C.col(0).segment(pos_c, Nphi_const) = v_c0;
     pos_c += Nphi_const;
-    online_solution_C[0].col(0).segment(pos_c, Nphi_const) = newton_object_n.d_c;
+    tmp_sol_C.col(0).segment(pos_c, Nphi_const) = d_c0;
     pos_c += Nphi_const;
-    online_solution_C[0].col(0).segment(pos_c, Nphi_const) = newton_object_n.nsf_c;
+    tmp_sol_C.col(0).segment(pos_c, Nphi_const) = nsf_c0;
     pos_c += Nphi_const;
-    online_solution_C[0].col(0).segment(pos_c, Nphi_const) = newton_object_n.a_c;
+    tmp_sol_C.col(0).segment(pos_c, Nphi_const) = a_c0;
     pos_c += Nphi_const;
-    online_solution_C[0].col(0).segment(pos_c, Nphi_const) = newton_object_t.sp_c;
+    tmp_sol_C.col(0).segment(pos_c, Nphi_const) = sp_c0;
     pos_c += Nphi_const;
-    online_solution_C[0].col(0).segment(pos_c, Nphi_const) = newton_object_t.txs_c;
+    tmp_sol_C.col(0).segment(pos_c, Nphi_const) = txs_c0;
+    online_solution_fd[counter] = tmp_sol_fd;
+    online_solution_n[counter] = tmp_sol_n;
+    online_solution_t[counter] = tmp_sol_t;
+    online_solution_C[counter] = tmp_sol_C;
+    counter++;
+    // Create nonlinear solver object
+    Eigen::HybridNonLinearSolver<newton_usmsr_fd> hnls_fd(newton_object_fd);
+    Eigen::HybridNonLinearSolver<newton_usmsr_n> hnls_n(newton_object_n);
+    Eigen::HybridNonLinearSolver<newton_usmsr_t> hnls_t(newton_object_t);
+    Color::Modifier red(Color::FG_RED);
+    Color::Modifier green(Color::FG_GREEN);
+    Color::Modifier def(Color::FG_DEFAULT);
+
+    while (time < finalTime + dt)
+    {
+        time = time + dt;
+        std::vector<double> tv;
+        tv.resize(mu_online.size() + 1);
+        tv[0] = time;
+
+        for (int k = 1; k < tv.size(); k++)
+        {
+            tv[k] = mu_online(k - 1);
+        }
+
+        for (label i = 0; i < Nphi_const; i++)
+        {
+            newton_object_n.d_c(i) = problem->rbfsplines_D[i]->eval(tv);
+            newton_object_n.nsf_c(i) = problem->rbfsplines_NSF[i]->eval(tv);
+            newton_object_n.a_c(i) = problem->rbfsplines_A[i]->eval(tv);
+            newton_object_t.v_c(i) = problem->rbfsplines_v[i]->eval(tv);
+            newton_object_t.sp_c(i) = problem->rbfsplines_SP[i]->eval(tv);
+            newton_object_t.txs_c(i) = problem->rbfsplines_TXS[i]->eval(tv);
+        }
+
+        Eigen::VectorXd res_fd(y);
+        Eigen::VectorXd res_n(w);
+        Eigen::VectorXd res_t(z);
+        res_fd.setZero();
+        res_n.setZero();
+        res_t.setZero();
+        hnls_fd.solve(y);
+
+        for (label j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
+
+        newton_object_n.a_tmp = y.head(Nphi_u);
+        hnls_n.solve(w);
+        newton_object_t.a_tmp = y.head(Nphi_u);
+        newton_object_t.c_tmp = w.head(Nphi_flux);
+        hnls_t.solve(z);
+
+        for (label j = 0; j < N_BCt; j++)
+        {
+            z(j) = temp_now(j, 0);
+        }
+
+        newton_object_fd.operator()(y, res_fd);
+        newton_object_fd.y_old = y;
+        newton_object_n.operator()(w, res_n);
+        newton_object_n.w_old = w;
+        newton_object_t.operator()(z, res_t);
+        newton_object_t.z_old = z;
+        std::cout << "################## Online solve N° " << count_online_solve <<
+                  " ##################" << std::endl;
+        Info << "Time = " << time << endl;
+
+        if (res_fd.norm() / y.norm() < 1e-5)
+        {
+            std::cout << green << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
+                      " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
+                      << std::endl;
+        }
+        else
+        {
+            std::cout << red << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
+                      " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
+                      << std::endl;
+        }
+
+        if (res_n.norm() / w.norm() < 1e-5)
+        {
+            std::cout << green << "|F_n(x)| = " << res_n.norm() / w.norm() <<
+                      " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
+                      std::endl;
+        }
+        else
+        {
+            std::cout << red << "|F_n(x)| = " << res_n.norm() / w.norm() <<
+                      " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
+                      std::endl;
+        }
+
+        if (res_t.norm() / z.norm() < 1e-5)
+        {
+            std::cout << green << "|F_t(x)| = " << res_t.norm() / z.norm() <<
+                      " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
+                      std::endl;
+        }
+        else
+        {
+            std::cout << red << "|F_t(x)| = " << res_t.norm() / z.norm() <<
+                      " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
+                      std::endl;
+        }
+
+        count_online_solve += 1;
+        tmp_sol_fd(0) = time;
+        tmp_sol_fd.col(0).tail(y.rows()) = y;
+
+        if (counter >= online_solution_fd.size())
+        {
+            online_solution_fd.append(tmp_sol_fd);
+        }
+        else
+        {
+            online_solution_fd[counter] = tmp_sol_fd;
+        }
+
+        tmp_sol_n(0) = time;
+        tmp_sol_n.col(0).tail(w.rows()) = w;
+
+        if (counter >= online_solution_n.size())
+        {
+            online_solution_n.append(tmp_sol_n);
+        }
+        else
+        {
+            online_solution_n[counter] = tmp_sol_n;
+        }
+
+        tmp_sol_t(0) = time;
+        tmp_sol_t.col(0).tail(z.rows()) = z;
+
+        if (counter >= online_solution_t.size())
+        {
+            online_solution_t.append(tmp_sol_t);
+        }
+        else
+        {
+            online_solution_t[counter] = tmp_sol_t;
+        }
+
+        tmp_sol_C(0) = time;
+        pos_c = 1;
+        tmp_sol_C.col(0).segment(pos_c, Nphi_const) = newton_object_t.v_c;
+        pos_c += Nphi_const;
+        tmp_sol_C.col(0).segment(pos_c, Nphi_const) = newton_object_n.d_c;
+        pos_c += Nphi_const;
+        tmp_sol_C.col(0).segment(pos_c, Nphi_const) = newton_object_n.nsf_c;
+        pos_c += Nphi_const;
+        tmp_sol_C.col(0).segment(pos_c, Nphi_const) = newton_object_n.a_c;
+        pos_c += Nphi_const;
+        tmp_sol_C.col(0).segment(pos_c, Nphi_const) = newton_object_t.sp_c;
+        pos_c += Nphi_const;
+        tmp_sol_C.col(0).segment(pos_c, Nphi_const) = newton_object_t.txs_c;
+
+        if (counter >= online_solution_C.size())
+        {
+            online_solution_C.append(tmp_sol_C);
+        }
+        else
+        {
+            online_solution_C[counter] = tmp_sol_C;
+        }
+
+        counter++;
+    }
+
     ITHACAstream::exportMatrix(online_solution_fd, "red_coeff_fd", "matlab",
                                "./ITHACAoutput/red_coeff_fd");
     ITHACAstream::exportMatrix(online_solution_n, "red_coeff_n", "matlab",
@@ -688,10 +943,9 @@ void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
                                "./ITHACAoutput/red_coeff_t");
     ITHACAstream::exportMatrix(online_solution_C, "red_coeff_C", "matlab",
                                "./ITHACAoutput/red_coeff_C");
-    count_online_solve += 1;
 }
 
-void reducedMSR::reconstructAP(fileName folder, int printevery)
+void reducedusMSR::reconstructAP(fileName folder, int printevery)
 {
     recall = true;
     mkDir(folder);
@@ -700,10 +954,9 @@ void reducedMSR::reconstructAP(fileName folder, int printevery)
     reconstruct_n(folder, printevery);
     reconstruct_C(folder, printevery);
     reconstruct_t(folder, printevery);
-    return;
 }
 
-void reducedMSR::reconstruct_fd(fileName folder, int printevery)
+void reducedusMSR::reconstruct_fd(fileName folder, int printevery)
 {
     if (recall == false)
     {
@@ -736,6 +989,8 @@ void reducedMSR::reconstruct_fd(fileName folder, int printevery)
             }
 
             ITHACAstream::exportSolution(P_rec, name(counter2), folder);
+            std::ofstream of(folder + "/" + name(counter2) + "/" + name(
+                                 online_solution_fd[i](0)));
             nextwrite += printevery;
             counter2 ++;
             UREC.append(U_rec);
@@ -748,7 +1003,7 @@ void reducedMSR::reconstruct_fd(fileName folder, int printevery)
     Info << "End" << endl;
 }
 
-void reducedMSR::reconstruct_n(fileName folder, int printevery)
+void reducedusMSR::reconstruct_n(fileName folder, int printevery)
 {
     if (recall == false)
     {
@@ -761,7 +1016,7 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
     int nextwrite = 0;
     int counter2 = 1;
 
-    for (label i = 0; i < online_solution_fd.size(); i++)
+    for (label i = 0; i < online_solution_n.size(); i++)
     {
         if (counter == nextwrite)
         {
@@ -845,6 +1100,8 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
             }
 
             ITHACAstream::exportSolution(Prec8_rec, name(counter2), folder);
+            std::ofstream of(folder + "/" + name(counter2) + "/" + name(
+                                 online_solution_n[i](0)));
             nextwrite += printevery;
             counter2 ++;
             FLUXREC.append(Flux_rec);
@@ -864,7 +1121,7 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
     Info << "End" << endl;
 }
 
-void reducedMSR::reconstruct_t(fileName folder, int printevery)
+void reducedusMSR::reconstruct_t(fileName folder, int printevery)
 {
     if (recall == false)
     {
@@ -925,6 +1182,8 @@ void reducedMSR::reconstruct_t(fileName folder, int printevery)
             ITHACAstream::exportSolution(Dec3_rec, name(counter2), folder);
             PowerDens_rec += (1 - dbtot) * SPREC[counter2 - 1] * FLUXREC[counter2 - 1];
             ITHACAstream::exportSolution(PowerDens_rec, name(counter2), folder);
+            std::ofstream of(folder + "/" + name(counter2) + "/" + name(
+                                 online_solution_t[i](0)));
             nextwrite += printevery;
             counter2 ++;
             TREC.append(T_rec);
@@ -940,7 +1199,7 @@ void reducedMSR::reconstruct_t(fileName folder, int printevery)
     Info << "End" << endl;
 }
 
-void reducedMSR::reconstruct_C(fileName folder, int printevery)
+void reducedusMSR::reconstruct_C(fileName folder, int printevery)
 {
     if (recall == false)
     {
@@ -1026,65 +1285,5 @@ void reducedMSR::reconstruct_C(fileName folder, int printevery)
     }
 
     Info << "End" << endl;
-}
-
-
-void reducedMSR::loadConstants(msrProblem* problem)
-{
-    nu = problem->_nu().value();
-    iv = problem->_IV1().value();
-    l1 = problem->_lam1().value();
-    l2 = problem->_lam2().value();
-    l3 = problem->_lam3().value();
-    l4 = problem->_lam4().value();
-    l5 = problem->_lam5().value();
-    l6 = problem->_lam6().value();
-    l7 = problem->_lam7().value();
-    l8 = problem->_lam8().value();
-    b1 = problem->_beta1().value();
-    b2 = problem->_beta2().value();
-    b3 = problem->_beta3().value();
-    b4 = problem->_beta4().value();
-    b5 = problem->_beta5().value();
-    b6 = problem->_beta6().value();
-    b7 = problem->_beta7().value();
-    b8 = problem->_beta8().value();
-    btot = problem->_betaTot().value();
-    cp = problem->_CpRef().value();
-    dl1 = problem->_decLam1().value();
-    dl2 = problem->_decLam2().value();
-    dl3 = problem->_decLam3().value();
-    db1 = problem->_decBeta1().value();
-    db2 = problem->_decBeta2().value();
-    db3 = problem->_decBeta3().value();
-    dbtot = problem->_decbetaTot().value();
-    Pr = problem->_Pr().value();
-    Sc = problem->_Sc().value();
-}
-
-void reducedMSR::clearFields()
-{
-    UREC.clear();
-    PREC.clear();
-    FLUXREC.clear();
-    PREC1REC.clear();
-    PREC2REC.clear();
-    PREC3REC.clear();
-    PREC4REC.clear();
-    PREC5REC.clear();
-    PREC6REC.clear();
-    PREC7REC.clear();
-    PREC8REC.clear();
-    TREC.clear();
-    DEC1REC.clear();
-    DEC2REC.clear();
-    DEC3REC.clear();
-    POWERDENSREC.clear();
-    vREC.clear();
-    DREC.clear();
-    NSFREC.clear();
-    AREC.clear();
-    SPREC.clear();
-    TXSREC.clear();
 }
 
