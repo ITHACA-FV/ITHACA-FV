@@ -65,16 +65,16 @@ class ITHACAPOD
         // Public Members
 
         //--------------------------------------------------------------------------
-        /// Compute the bases or read them for a vector field
+        /// Computes the bases or reads them for a vector field
         ///
-        /// @param[in]  snapshots   a PtrList of volVectorField or volScalarField snapshots.
-        /// @param[out] modes       a PtrList of volVectorField or volScalarField snapshots where modes are stored (it must be passed empty).
-        /// @param[in]  podex       boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
-        /// @param[in]  supex       boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
-        /// @param[in]  sup         boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
-        /// @param[in]  nmodes      int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
+        /// @param[in]  snapshots   List of snapshots.
+        /// @param[out] modes       A PtrList where modes are stored (it must be passed empty).
+        /// @param[in]  podex       If 1, the functions read the stored mode. If 0, the function computes the modes and stores them.
+        /// @param[in]  supex       If 1, the functions read the stored supremizer mode. If 0, the function computes and stores them.
+        /// @param[in]  sup         If 1 it computes the supremizer modes.
+        /// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum number of modes will computed.
         ///
-        /// @tparam     Field_type  It can be vector or scalar
+        /// @tparam     Field_type  volVectorField or volScalarField.
         ///
         template<class Field_type>
         static void getModes(PtrList<GeometricField<Field_type, fvPatchField, volMesh>>&
@@ -84,14 +84,14 @@ class ITHACAPOD
         //--------------------------------------------------------------------------
         /// @brief      Gets the bases for a scalar field using SVD instead of the method of snapshots
         ///
-        /// @param[in]  snapshots   a PtrList of volVectorField or volScalarField snapshots.
-        /// @param[out] modes       a PtrList of volVectorField or volScalarField snapshots where modes are stored (it must be passed empty).
-        /// @param[in]  podex       boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
-        /// @param[in]  supex       boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
-        /// @param[in]  sup         boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
-        /// @param[in]  nmodes      int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
+        /// @param[in]  snapshots   List of snapshots.
+        /// @param[out] modes       A PtrList where modes are stored (it must be passed empty).
+        /// @param[in]  podex       If 1, the functions read the stored mode. If 0, the function computes the modes and stores them.
+        /// @param[in]  supex       If 1, the functions read the stored supremizer mode. If 0, the function computes and stores them.
+        /// @param[in]  sup         If 1 it computes the supremizer modes.
+        /// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum number of modes will computed.
         ///
-        /// @tparam     Field_type  It can be vector or scalar
+        /// @tparam     Field_type  volVectorField or volScalarField.
         ///
         template<class Field_type>
         static void getModesSVD(
@@ -101,14 +101,14 @@ class ITHACAPOD
 
 
         //--------------------------------------------------------------------------
-        /// Nested-POD approach. Compute the nested snapshot matrix and weighted bases for a vector field
+        /// Nested-POD approach. Computes the nested snapshot matrix and weighted bases for a vector field
         ///
-        /// @param[in]  snapshots       a PtrList of volVectorField or volScalarField snapshots.
-        /// @param[out] UModesGlobal    a PtrList of volVectorField or volScalarField snapshots where modes are stored (it must be passed empty).
-        /// @param[in]  Npar            int variable which is equal with the number of parameters
-        /// @param[in]  NnestedOut      int variable to set the number of weighted modes to be stored for the assembly of the nested matrix
+        /// @param[in]  snapshots       List of snapshots.
+        /// @param[out] UModesGlobal    List of snapshots where modes are stored (it must be passed empty).
+        /// @param[in]  Npar            Number of parameters
+        /// @param[in]  NnestedOut      Number of weighted modes to be stored for the assembly of the nested matrix
         ///
-        /// @tparam     Field_type  It can be vector or scalar
+        /// @tparam     Field_type  volVectorField or volScalarField.
         ///
         template<class Field_type>
         static void getNestedSnapshotMatrix(
@@ -118,17 +118,16 @@ class ITHACAPOD
 
 
         //--------------------------------------------------------------------------
-
-        /// Compute the weighted bases (using the nested-pod approach) or read them for a vector field
+        /// Computes the weighted bases (using the nested-pod approach) or read them for a vector field
         ///
-        /// @param[in]  snapshots   a PtrList of volVectorField or volScalarField snapshots.
-        /// @param[out] modes       a PtrList of volVectorField or volScalarField snapshots where modes are stored (it must be passed empty).
-        /// @param[in]  podex       boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
-        /// @param[in]  supex       boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
-        /// @param[in]  sup         boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
-        /// @param[in]  nmodes      int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
+        /// @param[in]  snapshots   List of snapshots.
+        /// @param[out] modes       A PtrList where modes are stored (it must be passed empty).
+        /// @param[in]  podex       If 1, the functions read the stored mode. If 0, the function computes the modes and stores them.
+        /// @param[in]  supex       If 1, the functions read the stored supremizer mode. If 0, the function computes and stores them.
+        /// @param[in]  sup         If 1, it computes the supremizer modes.
+        /// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum number of modes will computed.
         ///
-        /// @tparam     Field_type  It can be vector or scalar
+        /// @tparam     Field_type  volVectorField or volScalarField.
         ///
         template<class Field_type>
         static void getWeightedModes(
@@ -138,16 +137,16 @@ class ITHACAPOD
             int nmodes = 0);
 
         //--------------------------------------------------------------------------
-        /// @brief      Perform GrammSchmidt orthonormalization on an Eigen Matrix
+        /// @brief      Performs GrammSchmidt orthonormalization on an Eigen Matrix
         ///
-        /// @param      Matrix  The matrix
+        /// @param[out]      Matrix  The matrix
         ///
         static void GrammSchmidt(Eigen::MatrixXd& Matrix);
 
         //--------------------------------------------------------------------------
         /// Computes the correlation matrix given a vector field snapshot Matrix using different norms depending on the input snapshots
         ///
-        /// @param[in] snapshots    a list of snapshots in different format
+        /// @param[in]  snapshots   List of snapshots.
         ///
         /// @return    the Eigen::MatrixXd correlation matrix.
         ///
@@ -158,7 +157,7 @@ class ITHACAPOD
 
 
         //--------------------------------------------------------------------------
-        /// Export the basis for an OpenFOAM GeometricField into the ITHACAOutput/POD or ITHACAOutput/supremizer
+        /// Exports the basis for an OpenFOAM GeometricField into the ITHACAOutput/POD or ITHACAOutput/supremizer
         ///
         /// @param[in] s        a PtrList of GeometricField where the snapshots associated with the bases are stored.
         /// @param[in] bases    a PtrList of GeometricField where the bases are stored.
@@ -173,11 +172,11 @@ class ITHACAPOD
             bool sup = 0);
 
         //--------------------------------------------------------------------------
-        /// Export the eigenvalues as a txt file
+        /// Exports the eigenvalues as a txt file
         ///
         /// @param[in] Eigenvalues  a scalarField of eigenvalues.
         /// @param[in] name         a fileName to indicate the name of the txt file.
-        /// @param[in] sup          a boolean variable 1 if you want to export the eigenValues (in ITHACAOutput/supremizer) 0 elsewhere (Default is 0).
+        /// @param[in] sup          If 1, it exports the eigenValues in "ITHACAOutput/supremizer". If 0, no actions (Default is 0).
         ///
         static void exportEigenvalues(scalarField Eigenvalues, fileName name,
                                       bool sup = 0);
@@ -187,7 +186,7 @@ class ITHACAPOD
         ///
         /// @param[in] cumEigenvalues   a scalarField of cumEigenvalues.
         /// @param[in] name             a fileName to indicate the name of the txt file.
-        /// @param[in] sup              a boolean variable 1 if you want to export the cumEigenValues (in ITHACAOutput/supremizer) 0 elsewhere (Default is 0).
+        /// @param[in] sup              If 1, it exports the cumEigenValues in "ITHACAOutput/supremizer". If 0, no actions (Default is 0).
         ///
         static void exportcumEigenvalues(scalarField cumEigenvalues,  fileName name,
                                          bool sup = 0);
@@ -207,15 +206,15 @@ class ITHACAPOD
                     word FunctionName);
 
         //--------------------------------------------------------------------------
-        /// @brief      Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function
+        /// @brief      Get the DEIM modes for a generic non-parametrized matrix coming from a differential operator function
         ///
         /// @param[in]  MatrixList   The matrix list as a list of pointers
         /// @param[in]  nmodes       The number of modes
         /// @param[in]  MatrixName   The matrix name, used to save the matrix
         ///
-        /// @tparam     the type of matrix, can be fvScalarMatrix or fvVectorMatrix
+        /// @tparam     The type of matrix, can be fvScalarMatrix or fvVectorMatrix
         ///
-        /// @return     it returns a tuple containing the list of modes for the matrix and the list of modes for the source term
+        /// @return     It returns a tuple containing the list of modes for the matrix and the list of modes for the source term
         ///
         template<typename type_matrix>
         static std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
@@ -229,9 +228,9 @@ class ITHACAPOD
         /// @param[in]  nmodes       The number of modes
         /// @param[in]  MatrixName   The matrix name, used to save the matrix
         ///
-        /// @tparam     the type of matrix, can be fvScalarMatrix or fvVectorMatrix
+        /// @tparam     The type of matrix, can be fvScalarMatrix or fvVectorMatrix
         ///
-        /// @return     it returns a tuple containing the list of modes for the matrix and the list of modes for the source term
+        /// @return     It returns a tuple containing the list of modes for the matrix and the list of modes for the source term
         ///
         static std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 DEIMmodes(List<Eigen::SparseMatrix<double>>& A, List<Eigen::VectorXd>& b,
@@ -241,13 +240,12 @@ class ITHACAPOD
         //--------------------------------------------------------------------------
         /// @brief      Gets the modes.
         ///
-        /// @param      snapshots   The snapshots
-        /// @param      modes       The modes
-        /// @param      Volumes     The volumes
-        /// @param[in]  podex       The podex
-        /// @param[in]  supex       The supex
-        /// @param[in]  sup         The sup
-        /// @param[in]  nmodes      The nmodes
+        /// @param[in]  snapshots   List of snapshots.
+        /// @param[out] modes       A PtrList where modes are stored (it must be passed empty).
+        /// @param[in]  podex       If 1, the functions read the stored mode. If 0, the function computes the modes and stores them.
+        /// @param[in]  supex       If 1, the functions read the stored supremizer mode. If 0, the function computes and stores them.
+        /// @param[in]  sup         If 1 it computes the supremizer modes.
+        /// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum number of modes will computed.
         ///
         /// @tparam     Field_type  Type of field
         ///
