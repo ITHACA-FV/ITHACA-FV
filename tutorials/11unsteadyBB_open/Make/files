@@ -1,5 +1,0 @@
-11unsteadyBB_open.C
-
-
-EXE = $(FOAM_USER_APPBIN)/11unsteadyBB_open
-
