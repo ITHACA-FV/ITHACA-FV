@@ -33,17 +33,17 @@ Description
     Reduction class for a NON-Stationary NS plus Energy Equation turbulent problem
 
 SourceFiles
-    unsteadyNSTturb.C
+    unsteadyNSTTurb.C
 
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the unsteadyNSTturb class.
+/// Header file of the unsteadyNSTTurb class.
 /// \dir
-/// Directory containing the header and source files for the unsteadyNSTturb class.
+/// Directory containing the header and source files for the unsteadyNSTTurb class.
 
-#ifndef unsteadyNSTturb_H
-#define unsteadyNSTturb_H
+#ifndef unsteadyNSTTurb_H
+#define unsteadyNSTTurb_H
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
@@ -64,23 +64,23 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*---------------------------------------------------------------------------*\
-                        Class SteadyNSTturb Declaration
+                        Class  Declaration
 \*---------------------------------------------------------------------------*/
 
 /// Implementation of a parametrized full order <b> unsteady NST problem weakly coupled with the energy equation </b> and preparation of the the reduced matrices for the online solve.
-/** In this class are implemented the methods for the offline solve of a unsteady NSTturb problem
+/** In this class are implemented the methods for the offline solve of a unsteady NSTTurb problem
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the unsteadyNST class */
-class unsteadyNSTturb: public unsteadyNST
+class unsteadyNSTTurb: public unsteadyNST
 {
     public:
         // Constructors
         /// Construct Null
-        unsteadyNSTturb();
+        unsteadyNSTTurb();
 
         /// Construct with argc and argv
-        unsteadyNSTturb(int argc, char* argv[]);
-        ~unsteadyNSTturb() {};
+        unsteadyNSTTurb(int argc, char* argv[]);
+        ~unsteadyNSTTurb() {};
 
         // Specific variable for the unstationary case
 
@@ -237,13 +237,3 @@ class unsteadyNSTturb: public unsteadyNST
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-
-
-
-
-
-
-
-
-

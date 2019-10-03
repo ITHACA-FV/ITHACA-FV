@@ -24,7 +24,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNS \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyBB \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/UnsteadyNSTurb \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNSTturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNSTTurb \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNST \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNSSimple \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
@@ -58,4 +58,4 @@ EXE_LIBS = \
     -lcompressibleRASModels \
     -lforces \
     -lfileFormats \
-    -lcompressibleLESModels 
+    -lcompressibleLESModels
