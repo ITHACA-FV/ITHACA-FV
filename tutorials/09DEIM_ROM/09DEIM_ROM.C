@@ -115,10 +115,10 @@ class DEIM_function : public DEIM<fvScalarMatrix>
         PtrList<volScalarField> fieldsB;
 };
 
-class DEIMlaplacian: public laplacianProblem
+class DEIMLaplacian: public laplacianProblem
 {
     public:
-        explicit DEIMlaplacian(int argc, char* argv[])
+        explicit DEIMLaplacian(int argc, char* argv[])
             :
             laplacianProblem(argc, argv),
             nu(_nu()),
@@ -262,7 +262,7 @@ class DEIMlaplacian: public laplacianProblem
 int main(int argc, char* argv[])
 {
     // Construct the case
-    DEIMlaplacian example(argc, argv);
+    DEIMLaplacian example(argc, argv);
     // Create the offline parameters for the solve
     example.mu = ITHACAutilities::rand(100, 2, -0.5, 0.5);
     // Solve the offline problem to compute the snapshots for the projections
@@ -276,7 +276,7 @@ int main(int argc, char* argv[])
     // Solve the online problem with the new parameters
     example.OnlineSolve(par_new1, "Online_red");
     // Solve a new full problem with the new parameters (necessary to compute speed up and error)
-    DEIMlaplacian example_new(argc, argv);
+    DEIMLaplacian example_new(argc, argv);
     example_new.OnlineSolveFull(par_new1, "Online_full");
     // Output some infos
     std::cout << std::endl << "The FOM Solve took: " << example_new.time_full  <<
