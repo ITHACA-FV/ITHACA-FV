@@ -21,23 +21,23 @@ Description
     Example of Boussinesq approximation for two way coupling NS-momentum equation
     and heat transport equation for enclosed flows.
 SourceFiles
-    10unsteadyBB_enclosed.C
+    10UnsteadyBBEnclosed.C
 \*---------------------------------------------------------------------------*/
 
-#include "unsteadyBB.H"
+#include "UnsteadyBB.H"
 #include "ITHACAPOD.H"
-#include "reducedUnsteadyBB.H"
+#include "ReducedUnsteadyBB.H"
 #include "ITHACAstream.H"
 #include <chrono>
 #include <math.h>
 #include <iomanip>
 
-class tutorial10: public unsteadyBB
+class tutorial10: public UnsteadyBB
 {
     public:
         explicit tutorial10(int argc, char* argv[])
             :
-            unsteadyBB(argc, argv),
+            UnsteadyBB(argc, argv),
             U(_U()),
             p(_p()),
             p_rgh(_p_rgh()),
@@ -281,7 +281,7 @@ int main(int argc, char* argv[])
     example.Tmodes.resize(NmodesTproj);
     example.Umodes.resize(NmodesUproj);
     // Online part
-    reducedUnsteadyBB reduced(example);
+    ReducedUnsteadyBB reduced(example);
     // Set values of the online solve
     reduced.nu = 0.00001;
     reduced.Pr = 0.71;
@@ -359,7 +359,7 @@ int main(int argc, char* argv[])
 /// \file
 /// \brief Implementation of tutorial 10 for an unsteady Buoyant Boussinesq problem for an enclosed cavity
 ///
-/// \example 10unsteadyBB_enclosed.C
+/// \example 10UnsteadyBBEnclosed.C
 /// \section intro_unsteadyBB Introduction to tutorial 10
 /// In this tutorial an unsteady Buoyant Boussinesq (BB) 2D problem with paramerized temperature boundary conditions is implemented.
 /// The physical problem represents a differentially heated cavity. A uniform temperature is
@@ -378,17 +378,17 @@ int main(int argc, char* argv[])
 ///
 /// First of all let's have a look at the header files that need to be included and what they are responsible for.
 ///
-/// The header files of ITHACA-FV necessary for this tutorial are: <unsteadyBB.H> for the full order unsteady BB problem,
-/// <ITHACAPOD.H> for the POD decomposition, <reducedUnsteadyBB.H> for the construction of the reduced order problem,
+/// The header files of ITHACA-FV necessary for this tutorial are: <UnsteadyBB.H> for the full order unsteady BB problem,
+/// <ITHACAPOD.H> for the POD decomposition, <ReducedUnsteadyBB.H> for the construction of the reduced order problem,
 /// and finally <ITHACAstream.H> for some ITHACA input-output operations.
 ///
-/// \dontinclude 10unsteadyBB_enclosed.C
-/// \skip unsteadyBB
+/// \dontinclude 10UnsteadyBBEnclosed.C
+/// \skip UnsteadyBB
 /// \until ITHACAstream
 ///
 /// \subsection classtutorial10 Definition of the tutorial10 class
 ///
-/// We define the tutorial10 class as a child of the unsteadyBB class.
+/// We define the tutorial10 class as a child of the UnsteadyBB class.
 /// The constructor is defined with members that are the fields need to be manipulated
 /// during the resolution of the full order problem using the BuoyancyBoussinesqPimpleFoam solver. Such fields are
 /// also initialized with the same initial conditions in the solver.
@@ -540,9 +540,9 @@ int main(int argc, char* argv[])
 ///
 /// Now that we obtained all the necessary information from the POD decomposition and the reduced matrices,
 /// we are ready to construct the dynamical system for the reduced order model (ROM). We proceed
-/// by constructing the object "reduced" of type reducedUnsteadyBB:
+/// by constructing the object "reduced" of type ReducedUnsteadyBB:
 ///
-/// \skipline reducedUnsteadyBB
+/// \skipline ReducedUnsteadyBB
 ///
 /// We can use the new constructed ROM to perform the online procedure, from which we can simulate the
 /// problem at new set of parameters. For instance, we solve the problem for 10 seconds of physical time:
