@@ -9,7 +9,7 @@ follow these steps from point number [1](#1);
 However, before creating the development branch that contains the new feature
 you want to add, remember to pull the last changes (see [here](https://help.github.com/articles/syncing-a-fork/) for more information).
 
-If you intend to add some new classes or methods please follow the naming convention reported [here](https://gist.github.com/lefticus/10191322).
+If you intend to add some new classes or methods please follow the naming convention reported [here](https://gist.github.com/lefticus/10191322) and in particular use the CamelCase convention.
 
 1. <div id="1">Create a new fork of the public repository
    [ITHACA-FV](https://github.com/mathlab/ITHACA-FV)
