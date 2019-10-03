@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------*\
+unsteadyNSTTurb/*---------------------------------------------------------------------------*\
      ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
      ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
      ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
@@ -28,21 +28,21 @@
 
 \*---------------------------------------------------------------------------*/
 
-#include "unsteadyNSTturb.H"
+#include "unsteadyNSTTurb.H"
 #include "viscosityModel.H"
 #include "alphatJayatillekeWallFunctionFvPatchScalarField.H"
 
 
 /// \file
-/// Source file of the unsteadyNSTturb class.
+/// Source file of the unsteadyNSTTurb class.
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Construct Null
-unsteadyNSTturb::unsteadyNSTturb() {};
+unsteadyNSTTurb::unsteadyNSTTurb() {};
 
 // Construct from zero
-unsteadyNSTturb::unsteadyNSTturb(int argc, char* argv[])
+unsteadyNSTTurb::unsteadyNSTTurb(int argc, char* argv[])
 {
 #include "setRootCase.H"
 #include "createTime.H"
@@ -64,7 +64,7 @@ unsteadyNSTturb::unsteadyNSTturb(int argc, char* argv[])
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void unsteadyNSTturb::truthSolve(List<scalar> mu_now)
+void unsteadyNSTTurb::truthSolve(List<scalar> mu_now)
 {
     Time& runTime = _runTime();
     surfaceScalarField& phi = _phi();
@@ -144,7 +144,7 @@ void unsteadyNSTturb::truthSolve(List<scalar> mu_now)
     }
 }
 
-bool unsteadyNSTturb::checkWrite(Time& timeObject)
+bool unsteadyNSTTurb::checkWrite(Time& timeObject)
 {
     scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
     scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
@@ -160,7 +160,7 @@ bool unsteadyNSTturb::checkWrite(Time& timeObject)
     }
 }
 
-void unsteadyNSTturb::liftSolveT()
+void unsteadyNSTTurb::liftSolveT()
 {
     for (label k = 0; k < inletIndexT.rows(); k++)
     {
@@ -231,7 +231,7 @@ void unsteadyNSTturb::liftSolveT()
     }
 }
 
-List <Eigen::MatrixXd> unsteadyNSTturb::turbulence_term1(label NUmodes,
+List <Eigen::MatrixXd> unsteadyNSTTurb::turbulence_term1(label NUmodes,
         label NSUPmodes, label Nnutmodes)
 {
     label Csize = NUmodes + NSUPmodes + liftfield.size();
@@ -296,7 +296,7 @@ List <Eigen::MatrixXd> unsteadyNSTturb::turbulence_term1(label NUmodes,
     return CT1_matrix;
 }
 
-List <Eigen::MatrixXd> unsteadyNSTturb::turbulence_term2(label NUmodes,
+List <Eigen::MatrixXd> unsteadyNSTTurb::turbulence_term2(label NUmodes,
         label NSUPmodes, label Nnutmodes)
 {
     label Csize = NUmodes + NSUPmodes + liftfield.size();
@@ -361,7 +361,7 @@ List <Eigen::MatrixXd> unsteadyNSTturb::turbulence_term2(label NUmodes,
     return CT2_matrix;
 }
 
-Eigen::MatrixXd unsteadyNSTturb::BT_turbulence(label NUmodes, label NSUPmodes)
+Eigen::MatrixXd unsteadyNSTTurb::BT_turbulence(label NUmodes, label NSUPmodes)
 {
     label BTsize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::MatrixXd BT_matrix(BTsize, BTsize);
@@ -413,7 +413,7 @@ Eigen::MatrixXd unsteadyNSTturb::BT_turbulence(label NUmodes, label NSUPmodes)
     return BT_matrix;
 }
 
-List <Eigen::MatrixXd> unsteadyNSTturb::temperature_turbulence_term(
+List <Eigen::MatrixXd> unsteadyNSTTurb::temperature_turbulence_term(
     label NTmodes, label Nnutmodes)
 {
     label Stsize = NTmodes + liftfieldT.size();
@@ -469,7 +469,7 @@ List <Eigen::MatrixXd> unsteadyNSTturb::temperature_turbulence_term(
     return S_matrix;
 }
 
-void unsteadyNSTturb::projectSUP(fileName folder, label NU, label NP,
+void unsteadyNSTTurb::projectSUP(fileName folder, label NU, label NP,
                                  label NSUP, label Nnut, label NT)
 {
     if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))

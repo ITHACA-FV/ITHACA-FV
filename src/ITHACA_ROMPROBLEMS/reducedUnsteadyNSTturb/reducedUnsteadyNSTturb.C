@@ -32,17 +32,17 @@ License
 /// Source file of the reducedUnsteadyNS class
 
 
-#include "reducedUnsteadyNSTturb.H"
+#include "reducedUnsteadyNSTTurb.H"
 
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-reducedUnsteadyNSTturb::reducedUnsteadyNSTturb()
+reducedUnsteadyNSTTurb::reducedUnsteadyNSTTurb()
 {
 }
 
-reducedUnsteadyNSTturb::reducedUnsteadyNSTturb(unsteadyNSTturb& FOMproblem)
+reducedUnsteadyNSTTurb::reducedUnsteadyNSTTurb(unsteadyNSTTurb& FOMproblem)
 
 //problem(&FOMproblem)
 {
@@ -99,15 +99,15 @@ reducedUnsteadyNSTturb::reducedUnsteadyNSTturb(unsteadyNSTturb& FOMproblem)
         Tsnapshots.append(problem->Tfield[k]);
     }
 
-    newton_object_sup = newton_unsteadyNSTturb_sup(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
+    newton_object_sup = newton_unsteadyNSTTurb_sup(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
                         FOMproblem);
-    newton_object_sup_t = newton_unsteadyNSTturb_sup_t(Nphi_t, Nphi_t, FOMproblem);
+    newton_object_sup_t = newton_unsteadyNSTTurb_sup_t(Nphi_t, Nphi_t, FOMproblem);
 }
 
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-int newton_unsteadyNSTturb_sup::operator()(const Eigen::VectorXd& x,
+int newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
@@ -151,16 +151,16 @@ int newton_unsteadyNSTturb_sup::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newton_unsteadyNSTturb_sup::df(const Eigen::VectorXd& x,
+int newton_unsteadyNSTTurb_sup::df(const Eigen::VectorXd& x,
                                    Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNSTturb_sup> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
 
 
-int newton_unsteadyNSTturb_sup_t::operator()(const Eigen::VectorXd& t,
+int newton_unsteadyNSTTurb_sup_t::operator()(const Eigen::VectorXd& t,
         Eigen::VectorXd& fvect) const
 {
     // Eigen::VectorXd a_tmp(Nphi_u);
@@ -190,17 +190,17 @@ int newton_unsteadyNSTturb_sup_t::operator()(const Eigen::VectorXd& t,
 
     return 0;
 }
-int newton_unsteadyNSTturb_sup_t::df(const Eigen::VectorXd& t,
+int newton_unsteadyNSTTurb_sup_t::df(const Eigen::VectorXd& t,
                                      Eigen::MatrixXd& fjact) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNSTturb_sup_t> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup_t> numDiff(*this);
     numDiff.df(t, fjact);
     return 0;
 }
 
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-void reducedUnsteadyNSTturb::solveOnline_sup(Eigen::MatrixXd& vel_now,
+void reducedUnsteadyNSTTurb::solveOnline_sup(Eigen::MatrixXd& vel_now,
         Eigen::MatrixXd& temp_now, label startSnap)
 {
     // Create and resize the solution vector
@@ -279,9 +279,9 @@ void reducedUnsteadyNSTturb::solveOnline_sup(Eigen::MatrixXd& vel_now,
     tmp_solt.col(0).tail(z.rows()) = z;
     online_solutiont[counter] = tmp_solt;
     counter ++;
-    Eigen::HybridNonLinearSolver<newton_unsteadyNSTturb_sup> hnls(
+    Eigen::HybridNonLinearSolver<newton_unsteadyNSTTurb_sup> hnls(
         newton_object_sup);
-    Eigen::HybridNonLinearSolver<newton_unsteadyNSTturb_sup_t> hnlst(
+    Eigen::HybridNonLinearSolver<newton_unsteadyNSTTurb_sup_t> hnlst(
         newton_object_sup_t);
     // Set output colors for fancy output
     Color::Modifier red(Color::FG_RED);
@@ -397,7 +397,7 @@ void reducedUnsteadyNSTturb::solveOnline_sup(Eigen::MatrixXd& vel_now,
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void reducedUnsteadyNSTturb::reconstruct_sup(fileName folder, int printevery)
+void reducedUnsteadyNSTTurb::reconstruct_sup(fileName folder, int printevery)
 {
     mkDir(folder);
     system("ln -s ../../constant " + folder + "/constant");
@@ -438,7 +438,7 @@ void reducedUnsteadyNSTturb::reconstruct_sup(fileName folder, int printevery)
     }
 }
 
-void reducedUnsteadyNSTturb::reconstruct_supt(fileName folder, int printevery)
+void reducedUnsteadyNSTTurb::reconstruct_supt(fileName folder, int printevery)
 {
     mkDir(folder);
     system("ln -s ../../constant " + folder + "/constant");
@@ -469,4 +469,3 @@ void reducedUnsteadyNSTturb::reconstruct_supt(fileName folder, int printevery)
     }
 }
 // ************************************************************************* //
-

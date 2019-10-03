@@ -25,13 +25,13 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyBB \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/UnsteadyNSTurb \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNST \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNSTturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNSTTurb \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNS_simple \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedProblem \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyNS \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyBB \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSTurb \
-    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyNSTturb \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyNSTTurb \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedUnsteadyNST \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedSteadyNS \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedSteadyNSTurb \
@@ -72,4 +72,4 @@ EXE_LIBS = \
     -lcompressibleRASModels \
     -lforces \
     -lfileFormats \
-    -lcompressibleLESModels 
+    -lcompressibleLESModels

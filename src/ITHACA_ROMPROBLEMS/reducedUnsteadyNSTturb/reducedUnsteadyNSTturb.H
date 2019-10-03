@@ -33,33 +33,33 @@ Description
     A reduced problem for the unsteady NS plus the energy equations for turbulence modelling
 
 SourceFiles
-    reducedUnsteadyNSTturb.C
+    reducedUnsteadyNSTTurb.C
 
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the reducedUnsteadyNSTturb class.
+/// Header file of the reducedUnsteadyNSTTurb class.
 /// \dir
-/// Directory containing the header and source files for the reducedUnsteadyNSTturb class
+/// Directory containing the header and source files for the reducedUnsteadyNSTTurb class
 
-#ifndef reducedUnsteadyNSTturb_H
-#define reducedUnsteadyNSTturb_H
+#ifndef reducedUnsteadyNSTTurb_H
+#define reducedUnsteadyNSTTurb_H
 
 #include "fvCFD.H"
 #include "IOmanip.H"
 #include "reducedSteadyNS.H"
 #include "reducedUnsteadyNST.H"
-#include "unsteadyNSTturb.H"
+#include "unsteadyNSTTurb.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
 
-struct newton_unsteadyNSTturb_sup: public newton_argument<double>
+struct newton_unsteadyNSTTurb_sup: public newton_argument<double>
 {
     public:
-        newton_unsteadyNSTturb_sup() {}
-        newton_unsteadyNSTturb_sup(int Nx, int Ny,
-                                   unsteadyNSTturb& problem): newton_argument<double>(Nx, Ny),
+        newton_unsteadyNSTTurb_sup() {}
+        newton_unsteadyNSTTurb_sup(int Nx, int Ny,
+                                   unsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_nut(problem.Nnutmodes),
@@ -70,7 +70,7 @@ struct newton_unsteadyNSTturb_sup: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-        unsteadyNSTturb* problem;
+        unsteadyNSTTurb* problem;
         int Nphi_u;
         int Nphi_nut;
         int Nphi_p;
@@ -85,12 +85,12 @@ struct newton_unsteadyNSTturb_sup: public newton_argument<double>
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
-struct newton_unsteadyNSTturb_sup_t: public newton_argument<double>
+struct newton_unsteadyNSTTurb_sup_t: public newton_argument<double>
 {
     public:
-        newton_unsteadyNSTturb_sup_t() {}
-        newton_unsteadyNSTturb_sup_t(int Nx, int Ny,
-                                     unsteadyNSTturb& problem): newton_argument<double>(Nx, Ny),
+        newton_unsteadyNSTTurb_sup_t() {}
+        newton_unsteadyNSTTurb_sup_t(int Nx, int Ny,
+                                     unsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
             N_BC_t(problem.inletIndexT.rows()),
@@ -99,7 +99,7 @@ struct newton_unsteadyNSTturb_sup_t: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-        unsteadyNSTturb* problem;
+        unsteadyNSTTurb* problem;
         int Nphi_t;
         int N_BC_t;
         int Nphi_u;
@@ -127,7 +127,7 @@ struct newton_unsteadyNSTturb_sup_t: public newton_argument<double>
 /// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes weakly coupled with the energy equation </b> problem.
 /** In this class are implemented the methods to solve a reduced version of the non-stationary Navier-stokes coupled with the energy
 equations. This class must be used together with the unsteadyNST class */
-class reducedUnsteadyNSTturb: public reducedUnsteadyNST
+class reducedUnsteadyNSTTurb: public reducedUnsteadyNST
 {
     private:
 
@@ -135,16 +135,16 @@ class reducedUnsteadyNSTturb: public reducedUnsteadyNST
         // Constructors
         /// Construct Null
         //
-        reducedUnsteadyNSTturb();
+        reducedUnsteadyNSTTurb();
 
         /// Construct Null
         ///
         /// @param[in]  problem  a full order unsteadyNS problem
         /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
         ///
-        explicit reducedUnsteadyNSTturb(unsteadyNSTturb& problem);
+        explicit reducedUnsteadyNSTTurb(unsteadyNSTTurb& problem);
 
-        ~reducedUnsteadyNSTturb() {};
+        ~reducedUnsteadyNSTTurb() {};
 
         /// List of snapshots for the solution for eddy viscosity
         PtrList<volScalarField> nutFields;
@@ -156,10 +156,10 @@ class reducedUnsteadyNSTturb: public reducedUnsteadyNST
         PtrList<volScalarField> nutREC;
 
         /// Functor object to call the non linear solver sup. approach
-        newton_unsteadyNSTturb_sup newton_object_sup;
+        newton_unsteadyNSTTurb_sup newton_object_sup;
 
         /// Functor object to call the non linear solver sup. approach for temperature field
-        newton_unsteadyNSTturb_sup_t newton_object_sup_t;
+        newton_unsteadyNSTTurb_sup_t newton_object_sup_t;
 
         /// Scalar to store the turbulent Prandtl number
         scalar Prt;
@@ -180,7 +180,7 @@ class reducedUnsteadyNSTturb: public reducedUnsteadyNST
         double tstart;
 
         /// Pointer to the FOM problem
-        unsteadyNSTturb* problem;
+        unsteadyNSTTurb* problem;
 
         /// Number of nut field modes
         int Nphi_nut;
@@ -223,9 +223,3 @@ class reducedUnsteadyNSTturb: public reducedUnsteadyNST
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
-
-
-
-
-
