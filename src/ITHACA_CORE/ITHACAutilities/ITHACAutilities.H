@@ -202,8 +202,8 @@ class ITHACAutilities
         static double error_fields(TypeField& field1, TypeField& field2);
 
         //--------------------------------------------------------------------------
-        /// Computes the relative error between two volVectorFields in 
-	/// L2 norm, given the mesh volumes field
+        /// Computes the relative error between two volVectorFields in
+        /// L2 norm, given the mesh volumes field
         ///
         /// @param[in]  field1  The field 1
         /// @param[in]  field2  The field 2
@@ -247,7 +247,7 @@ class ITHACAutilities
 
         //--------------------------------------------------------------------------
         /// Computes the relative error in L2 norm between two lists of Fields
-	/// given the list of mesh volumes fields
+        /// given the list of mesh volumes fields
         ///
         /// @param[in]  fields1  The fields 1, scalar or vector
         /// @param[in]  fields2  The fields 2, scalar or vector
@@ -325,8 +325,8 @@ class ITHACAutilities
             GeometricField<TypeField, fvPatchField, volMesh>& snapshot);
 
         //--------------------------------------------------------------------------
-        /// Projects a snapshot vector field on a non-orthogonal basis function and 
-	/// gets the coefficients of the projection
+        /// Projects a snapshot vector field on a non-orthogonal basis function and
+        /// gets the coefficients of the projection
         ///
         /// @param[in]  snapshot  The snapshots.
         /// @param[in]  modes     The modes.
@@ -375,9 +375,10 @@ class ITHACAutilities
         /// @return     The coefficients of the projection.
         ///
         template<class TypeField>
-        static Eigen::VectorXd get_coeffs_ortho(GeometricField<TypeField, fvPatchField, volMesh> snapshot,
-                                                PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& modes, 
-						int Nmodes = 0);
+        static Eigen::VectorXd get_coeffs_ortho(
+            GeometricField<TypeField, fvPatchField, volMesh> snapshot,
+            PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& modes,
+            int Nmodes = 0);
 
         //--------------------------------------------------------------------------
         /// @brief      Gets the coeffs ortho.
