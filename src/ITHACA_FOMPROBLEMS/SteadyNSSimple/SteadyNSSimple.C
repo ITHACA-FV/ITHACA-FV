@@ -32,22 +32,22 @@
 /// \file
 /// Source file of the steadyNS class.
 
-#include "steadyNS_simple.H"
+#include "SteadyNSSimple.H"
 #include "viscosityModel.H"
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-steadyNS_simple::steadyNS_simple() {}
+SteadyNSSimple::SteadyNSSimple() {}
 
-steadyNS_simple::steadyNS_simple(int argc, char* argv[])
+SteadyNSSimple::SteadyNSSimple(int argc, char* argv[])
     :
     steadyNS(argc, argv)
 {
     Info << offline << endl;
 }
 
-fvVectorMatrix steadyNS_simple::get_Umatrix(volVectorField& U,
+fvVectorMatrix SteadyNSSimple::get_Umatrix(volVectorField& U,
         volScalarField& p)
 {
     IOMRFZoneList& MRF = _MRF();
@@ -68,7 +68,7 @@ fvVectorMatrix steadyNS_simple::get_Umatrix(volVectorField& U,
     return Ueqn;
 }
 
-fvScalarMatrix steadyNS_simple::get_Pmatrix(volVectorField& U,
+fvScalarMatrix SteadyNSSimple::get_Pmatrix(volVectorField& U,
         volScalarField& p, scalar& presidual)
 {
     IOMRFZoneList& MRF = _MRF();
@@ -132,7 +132,7 @@ fvScalarMatrix steadyNS_simple::get_Pmatrix(volVectorField& U,
     return pEqn;
 }
 
-void steadyNS_simple::truthSolve2(List<scalar> mu_now)
+void SteadyNSSimple::truthSolve2(List<scalar> mu_now)
 {
     Time& runTime = _runTime();
     volScalarField& p = _p();
