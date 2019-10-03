@@ -587,6 +587,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<TypeField> snapshots,
     return coeff;
 }
 
+template<>
 Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
         PtrList<volScalarField>& modes, int Nmodes)
 {
@@ -614,6 +615,7 @@ Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
     return b;
 }
 
+template<>
 Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volVectorField
         snapshot, PtrList<volVectorField>& modes, int Nmodes)
 {
@@ -1431,5 +1433,4 @@ template void ITHACAutilities::changeBCtype<scalar>
 template void ITHACAutilities::changeBCtype<vector>
 (GeometricField<vector, fvPatchField, volMesh>& field, word BCtype,
  label BC_ind);
-
 
