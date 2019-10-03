@@ -28,7 +28,7 @@
 
 \*---------------------------------------------------------------------------*/
 
-#include "unsteadyNSTTurb.H"
+#include "unsteadyNSTturb.H"
 #include "viscosityModel.H"
 #include "alphatJayatillekeWallFunctionFvPatchScalarField.H"
 
