@@ -22,20 +22,20 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Class
-    unsteadyBB
+    UnsteadyBB
 Description
     Reduction class for a Stationary Navier-Stokes problem.
 SourceFiles
-    unsteadyBB.C
+    UnsteadyBB.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the unsteadyBB class.
+/// Header file of the UnsteadyBB class.
 /// \dir
-/// Directory containing the header and source files for the unsteadyBB class.
+/// Directory containing the header and source files for the UnsteadyBB class.
 
-#ifndef unsteadyBB_H
-#define unsteadyBB_H
+#ifndef UnsteadyBB_H
+#define UnsteadyBB_H
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
@@ -56,16 +56,16 @@ SourceFiles
 /** In this class are implemented the methods for the offline solve of a unsteady Boussinesq problem (two way coupling between momentum and energy equation)
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the reduction problem class */
-class unsteadyBB: public unsteadyNS
+class UnsteadyBB: public unsteadyNS
 {
     public:
         // Constructors
         /// Null constructor
-        unsteadyBB();
+        UnsteadyBB();
 
         /// Construct with argc and argv
-        unsteadyBB(int argc, char* argv[]);
-        ~unsteadyBB() {};
+        UnsteadyBB(int argc, char* argv[]);
+        ~UnsteadyBB() {};
 
         // Member Functions
 

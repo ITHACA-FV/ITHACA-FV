@@ -22,25 +22,25 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Class
-    reducedUnsteadyBB
+    ReducedUnsteadyBB
 Description
     A reduced problem for the unsteady Boussinesq equations
 SourceFiles
-    reducedUnsteadyBB.C
+    ReducedUnsteadyBB.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the reducedUnsteadyBB class.
+/// Header file of the ReducedUnsteadyBB class.
 /// \dir
-/// Directory containing the header and source files for the reducedUnsteadyBB class
+/// Directory containing the header and source files for the ReducedUnsteadyBB class
 
-#ifndef reducedUnsteadyBB_H
-#define reducedUnsteadyBB_H
+#ifndef ReducedUnsteadyBB_H
+#define ReducedUnsteadyBB_H
 
 #include "fvCFD.H"
 #include "IOmanip.H"
-#include "reducedUnsteadyNS.H"
-#include "unsteadyBB.H"
+#include "ReducedUnsteadyNS.H"
+#include "UnsteadyBB.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
@@ -51,7 +51,7 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
     public:
         newton_unsteadyBB_sup() {}
         newton_unsteadyBB_sup(int Nx, int Ny,
-                              unsteadyBB& problem): newton_argument<double>(Nx, Ny),
+                              UnsteadyBB& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
@@ -62,7 +62,7 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-        unsteadyBB* problem;
+        UnsteadyBB* problem;
         int Nphi_u;
         int Nphi_t;
         int N_BC_t;
@@ -83,7 +83,7 @@ struct newton_unsteadyBB_PPE: public newton_argument<double>
     public:
         newton_unsteadyBB_PPE() {}
         newton_unsteadyBB_PPE(int Nx, int Ny,
-                              unsteadyBB& problem): newton_argument<double>(Nx, Ny),
+                              UnsteadyBB& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
@@ -96,7 +96,7 @@ struct newton_unsteadyBB_PPE: public newton_argument<double>
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
-        unsteadyBB* problem;
+        UnsteadyBB* problem;
         int Nphi_u;
         int Nphi_p;
         int Nphi_t;
@@ -123,20 +123,20 @@ struct newton_unsteadyBB_PPE: public newton_argument<double>
 /// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem.
 /** In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes
 equations. This class must be used together with the steadyNS class */
-class reducedUnsteadyBB: public reducedUnsteadyNS
+class ReducedUnsteadyBB: public reducedUnsteadyNS
 {
     private:
 
     public:
         // Constructors
         /// Construct Null
-        reducedUnsteadyBB();
+        ReducedUnsteadyBB();
         /// Construct Null
         ///
-        /// @param[in]  problem  a full order unsteadyBB problem
+        /// @param[in]  problem  a full order UnsteadyBB problem
         ///
-        explicit reducedUnsteadyBB(unsteadyBB& problem);
-        ~reducedUnsteadyBB() {};
+        explicit ReducedUnsteadyBB(UnsteadyBB& problem);
+        ~ReducedUnsteadyBB() {};
 
         /// List of Eigen matrices to store current online solution for temperature equation
         Eigen::MatrixXd online_solutiont;
@@ -171,7 +171,7 @@ class reducedUnsteadyBB: public reducedUnsteadyNS
         scalar Pr;
 
         /// Pointer to the FOM problem
-        unsteadyBB* problem;
+        UnsteadyBB* problem;
 
         // Functions
 
