@@ -5,8 +5,8 @@ unsteadyNS/unsteadyNS.C
 unsteadyBB/unsteadyBB.C
 UnsteadyNSTurb/UnsteadyNSTurb.C
 unsteadyNST/unsteadyNST.C
-unsteadyNSTTurb/unsteadyNSTTurb.C
-steadyNS_simple/steadyNS_simple.C
+unsteadyNSTturb/unsteadyNSTturb.C
+SteadyNSSimple/SteadyNSSimple.C
 laplacianProblem/laplacianProblem.C
 msrProblem/msrProblem.C
 unsteadymsrProblem/usmsrProblem.C

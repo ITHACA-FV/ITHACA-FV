@@ -40,7 +40,7 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS()
 {
 }
 
-reducedSimpleSteadyNS::reducedSimpleSteadyNS(steadyNS_simple& FOMproblem)
+reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
     :
     problem(&FOMproblem)
 {
