@@ -34,8 +34,8 @@ SourceFiles
 /// \dir
 /// Directory containing the header and source files for the steadyNS class.
 
-#ifndef steadyNS_simple_H
-#define steadyNS_simple_H
+#ifndef SteadyNSSimple_H
+#define SteadyNSSimple_H
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
@@ -61,17 +61,17 @@ SourceFiles
 /** In this class are implemented the methods for the offline solve of a steady NS problem
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the reduction problem class */
-class steadyNS_simple: public steadyNS
+class SteadyNSSimple: public steadyNS
 {
 
     public:
         // Constructors
         /// Null constructor
-        steadyNS_simple();
+        SteadyNSSimple();
 
         /// Construct with argc and argv
-        steadyNS_simple(int argc, char* argv[]);
-        ~steadyNS_simple() {};
+        SteadyNSSimple(int argc, char* argv[]);
+        ~SteadyNSSimple() {};
 
         // Variables
         /// Initialization for the full velocity linear system.
