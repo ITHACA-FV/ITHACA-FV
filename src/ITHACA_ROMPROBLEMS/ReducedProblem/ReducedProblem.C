@@ -31,7 +31,7 @@ License
 /// \file
 /// Source file of the reducedProblem class.
 
-#include "reducedProblem.H"
+#include "ReducedProblem.H"
 
 // ******************** //
 // class reducedProblem //

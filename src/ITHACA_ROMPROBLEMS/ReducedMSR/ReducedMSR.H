@@ -22,13 +22,13 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
-#ifndef reducedMSR_H
-#define reducedMSR_H
+#ifndef ReducedMSR_H
+#define ReducedMSR_H
 
 #include "fvCFD.H"
 #include "IOmanip.H"
-#include "reducedProblem.H"
-#include "../../ITHACA_FOMPROBLEMS/msrProblem/msrProblem.H"
+#include "ReducedProblem.H"
+#include "msrProblem.H"
 #include "ITHACAutilities.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>

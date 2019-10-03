@@ -29,7 +29,7 @@ SourceFiles
 
 #include "unsteadyNS.H"
 #include "ITHACAPOD.H"
-#include "reducedUnsteadyNS.H"
+#include "ReducedUnsteadyNS.H"
 #include "ITHACAstream.H"
 #include <chrono>
 #include<math.h>

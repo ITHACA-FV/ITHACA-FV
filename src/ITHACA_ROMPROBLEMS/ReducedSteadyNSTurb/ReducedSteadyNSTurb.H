@@ -39,8 +39,8 @@ SourceFiles
 
 #include "fvCFD.H"
 #include "IOmanip.H"
-#include "reducedProblem.H"
-#include "reducedSteadyNS.H"
+#include "ReducedProblem.H"
+#include "ReducedSteadyNS.H"
 #include "SteadyNSTurb.H"
 #include "ITHACAutilities.H"
 #include <Eigen/Dense>

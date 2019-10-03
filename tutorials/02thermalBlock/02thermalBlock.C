@@ -32,7 +32,7 @@ SourceFiles
 #include "IOmanip.H"
 #include "Time.H"
 #include "laplacianProblem.H"
-#include "reducedLaplacian.H"
+#include "ReducedLaplacian.H"
 #include "ITHACAPOD.H"
 #include "ITHACAutilities.H"
 #include <Eigen/Dense>

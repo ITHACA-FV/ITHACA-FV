@@ -27,8 +27,8 @@ SourceFiles
 
 #include "unsteadyNST.H"
 #include "ITHACAPOD.H"
-#include "reducedUnsteadyNS.H"
-#include "reducedUnsteadyNST.H"
+#include "ReducedUnsteadyNS.H"
+#include "ReducedUnsteadyNST.H"
 #include "ITHACAstream.H"
 #include <chrono>
 #include<math.h>

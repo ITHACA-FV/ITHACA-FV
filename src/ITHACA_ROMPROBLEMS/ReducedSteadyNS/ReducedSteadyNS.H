@@ -22,36 +22,38 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Class
-    reducedProblem
+    reducedSteadyNS
 Description
-    A reduced problem for the unsteady NS equations
+    A reduced problem for the stationary NS equations
 SourceFiles
-    reducedUnsteadyNS.C
+    reducedSteadyNS.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the reducedUnsteadyNS class.
+/// Header file of the reducedSteadyNS class.
 /// \dir
-/// Directory containing the header and source files for the reducedUnsteadyNS class
+/// Directory containing the header and source files for the reducedSteadyNS class
 
-#ifndef reducedUnsteadyNS_H
-#define reducedUnsteadyNS_H
+#ifndef ReducedSteadyNS_H
+#define ReducedSteadyNS_H
 
 #include "fvCFD.H"
 #include "IOmanip.H"
-#include "reducedSteadyNS.H"
-#include "unsteadyNS.H"
-#include <Eigen/Dense>
+#include "ReducedProblem.H"
+#include "steadyNS.H"
+#include "ITHACAutilities.H"
+#include "EigenFunctions.H"
+#include <Eigen/Eigen>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
 
-/// Newton object for the resolution of the reduced problem using a supremizer approach
-struct newton_unsteadyNS_sup: public newton_argument<double>
+/// Structure to implement a newton object for a stationary NS problem
+struct newton_steadyNS: public newton_argument<double>
 {
     public:
-        newton_unsteadyNS_sup() {}
-        newton_unsteadyNS_sup(int Nx, int Ny,
-                              unsteadyNS& problem): newton_argument<double>(Nx, Ny),
+        newton_steadyNS() {}
+        newton_steadyNS(int Nx, int Ny, steadyNS& problem): newton_argument<double>(Nx,
+                    Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_p(problem.NPmodes),
@@ -61,40 +63,12 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
-        unsteadyNS* problem;
+        steadyNS* problem;
         int Nphi_u;
         int Nphi_p;
         int N_BC;
         scalar nu;
-        scalar dt;
-        Eigen::VectorXd y_old;
-        Eigen::VectorXd BC;
-};
-
-
-/// Newton object for the resolution of the reduced problem using a PPE approach
-struct newton_unsteadyNS_PPE: public newton_argument<double>
-{
-    public:
-        newton_unsteadyNS_PPE() {}
-        newton_unsteadyNS_PPE(int Nx, int Ny,
-                              unsteadyNS& problem): newton_argument<double>(Nx, Ny),
-            problem(&problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size()),
-            Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows())
-        {}
-
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-
-        unsteadyNS* problem;
-        int Nphi_u;
-        int Nphi_p;
-        int N_BC;
-        scalar nu;
-        scalar dt;
-        Eigen::VectorXd y_old;
+        Eigen::MatrixXd tauU;
         Eigen::VectorXd BC;
 };
 
@@ -103,88 +77,141 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
                         Class reducedProblem Declaration
 \*---------------------------------------------------------------------------*/
 
-/// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem.
+/// Class where it is implemented a reduced problem for the <b> steady Navier-stokes </b> problem.
 /** In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes
 equations. This class must be used together with the steadyNS class */
-class reducedUnsteadyNS: public reducedSteadyNS
+class reducedSteadyNS: public reducedProblem
 {
     private:
 
     public:
         // Constructors
         /// Construct Null
-        reducedUnsteadyNS();
+        reducedSteadyNS();
+
         /// Construct Null
         ///
-        /// @param      problem  a full order unsteadyNS problem
+        /// @param[in]  problem  a full order steadyNS problem
+        /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
         ///
-        explicit reducedUnsteadyNS(unsteadyNS& problem);
+        explicit reducedSteadyNS(steadyNS& problem);
 
-        ~reducedUnsteadyNS() {};
+        ~reducedSteadyNS() {};
 
-        /// Function object to call the non linear solver sup approach
-        newton_unsteadyNS_sup newton_object_sup;
+        /// parameters to be read from the ITHACAdict file
+        ITHACAparameters* para;
 
-        /// Function object to call the non linear solver PPE approach
-        newton_unsteadyNS_PPE newton_object_PPE;
+        /// Online inlet velocity vector
+        Eigen::MatrixXd vel_now;
 
-        /// Scalar to store the current time
-        scalar time;
+        /// Reduced matrix for tangent forces
+        Eigen::MatrixXd fTau;
 
-        /// Scalar to store the time increment
-        double dt;
+        /// Reduced matrix for normal forces
+        Eigen::MatrixXd fN;
 
-        /// Scalar to store the final time if the online simulation
-        scalar finalTime;
+        /// Vector to store the previous solution during the Newton procedure
+        Eigen::VectorXd y_old;
 
-        /// Scalar to store the initial time if the online simulation
-        scalar tstart;
+        /// Vector to store the solution during the Newton procedure
+        Eigen::VectorXd y;
 
-        /// A variable for storing the reduced coefficients
-        double storeEvery;
+        /// Reduced viscosity in case of parametrized viscosity
+        scalar nu;
 
-        /// A variable for exporting the fields
-        double exportEvery;
+        /// List of Eigen matrices to store the online solution
+        List < Eigen::MatrixXd> online_solution;
+
+        /// List of pointers to store the modes for velocity
+        PtrList<volVectorField> Umodes;
+
+        /// List of pointers to store the modes for pressure
+        PtrList<volScalarField> Pmodes;
+
+        /// List of pointers to store the snapshots for velocity
+        PtrList<volVectorField> Usnapshots;
+
+        /// List of pointers to store the snapshots for pressure
+        PtrList<volScalarField> Psnapshots;
+
+        /// Reconstructed pressure field
+        PtrList<volScalarField> PREC;
+
+        /// Recontructed velocity field
+        PtrList<volVectorField> UREC;
+
+        /// Newton object used to solve the non linear problem
+        newton_steadyNS newton_object;
 
         /// Pointer to the FOM problem
-        unsteadyNS* problem;
+        steadyNS* problem;
+
+        /// Number of velocity modes
+        int Nphi_u;
+
+        /// Number of pressure modes
+        int Nphi_p;
+
+        /// Number of supremizer modes
+        int Nphi_sup;
+
+        /// Number of parametrized boundary conditions
+        int N_BC;
+
+        /// Counter to count the online solutions
+        int count_online_solve = 1;
+
+        /// Penalty Factor
+        Eigen::MatrixXd tauU;
 
         // Functions
 
-
         /// Method to perform an online solve using a PPE stabilisation method
         ///
-        /// @param[in]  vel_now   The vector of online velocity. It is defined in
+        /// @param[in]  vel_now  The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
-        /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
-        /// and used to get the reduced initial condition.
         ///
-        void solveOnline_PPE(Eigen::MatrixXd vel_now, label startSnap = 0);
+        void solveOnline_PPE(Eigen::MatrixXd vel_now);
 
-        /// Method to perform an online solve using a supremizer stabilisation method
+        /// Method to perform an online solve using a supremizer stabilisation
+        /// method
         ///
-        /// @param[in]  vel_now   The vector of online velocity. It is defined in
+        /// @param[in]  vel_now  The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
-        /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
-        /// and used to get the reduced initial condition.
         ///
-        void solveOnline_sup(Eigen::MatrixXd vel_now, label startSnap = 0);
+        void solveOnline_sup(Eigen::MatrixXd vel_now);
 
         /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
         /// stabilisation method
         ///
         /// @param[in]  folder      The folder where to output the solutions
+        /// @param[in]  printevery  The printevery
         ///
-        void reconstruct_PPE(fileName folder = "./online_rec");
+        void reconstruct_PPE(fileName folder = "./ITHACAOutput/online_rec",
+                             int printevery = 1);
 
         /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
         ///
         /// @param[in]  folder      The folder where to output the solutions
+        /// @param[in]  printevery  The printevery
         ///
-        void reconstruct_sup(fileName folder = "./online_rec");
+        void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec",
+                             int printevery = 1);
+
+        /// Method to compute the reduced order forces
+        ///
+        /// @param      problem  a steadyNS full order problem.
+        /// @param[in]  folder   The folder where to output the forces matrices
+        ///
+        void reconstructLiftAndDrag(steadyNS& problem, fileName folder);
+
+        /// Method to evaluate the online inf-sup constant
+        ///
+        /// @return     return the reduced version of the inf-sup constant.
+        double inf_sup_constant();
 
         ///
         /// @brief      Sets the online velocity.
@@ -197,10 +224,14 @@ class reducedUnsteadyNS: public reducedSteadyNS
 
 };
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
 
 #endif
+
+
+
+
+
 

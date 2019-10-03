@@ -39,8 +39,8 @@ SourceFiles
 
 #include "fvCFD.H"
 #include "IOmanip.H"
-#include "reducedSteadyNS.H"
-#include "reducedUnsteadyNS.H"
+#include "ReducedSteadyNS.H"
+#include "ReducedUnsteadyNS.H"
 #include "UnsteadyNSTurb.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>

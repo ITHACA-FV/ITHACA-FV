@@ -31,7 +31,7 @@ License
 /// \file
 /// Source file of the reducedSteadyNS class
 
-#include "reducedSteadyNS.H"
+#include "ReducedSteadyNS.H"
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
