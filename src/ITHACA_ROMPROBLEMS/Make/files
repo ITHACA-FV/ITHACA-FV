@@ -1,6 +1,6 @@
 reducedProblem/reducedProblem.C
 reducedUnsteadyNS/reducedUnsteadyNS.C
-reducedUnsteadyBB/reducedUnsteadyBB.C
+ReducedUnsteadyBB/ReducedUnsteadyBB.C
 ReducedUnsteadyNSTurb/ReducedUnsteadyNSTurb.C
 reducedUnsteadyNST/reducedUnsteadyNST.C
 reducedUnsteadyNSTturb/reducedUnsteadyNSTturb.C

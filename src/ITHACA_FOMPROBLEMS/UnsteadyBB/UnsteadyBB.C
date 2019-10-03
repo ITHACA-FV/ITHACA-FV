@@ -30,16 +30,16 @@
 
 
 /// \file
-/// Source file of the unsteadyBB class.
+/// Source file of the UnsteadyBB class.
 
-#include "unsteadyBB.H"
+#include "UnsteadyBB.H"
 #include <cmath>
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-unsteadyBB::unsteadyBB() {}
-unsteadyBB::unsteadyBB(int argc, char* argv[])
+UnsteadyBB::UnsteadyBB() {}
+UnsteadyBB::UnsteadyBB(int argc, char* argv[])
 {
     _args = autoPtr<argList>
             (
@@ -76,7 +76,7 @@ unsteadyBB::unsteadyBB(int argc, char* argv[])
 #include "fvCFD.H"
 
 // Method to performa a truthSolve
-void unsteadyBB::truthSolve(List<scalar> mu_now)
+void UnsteadyBB::truthSolve(List<scalar> mu_now)
 {
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
@@ -170,7 +170,7 @@ void unsteadyBB::truthSolve(List<scalar> mu_now)
     }
 }
 
-void unsteadyBB::truthSolve(fileName folder)
+void UnsteadyBB::truthSolve(fileName folder)
 {
 #include "initContinuityErrs.H"
     Time& runTime = _runTime();
@@ -261,7 +261,7 @@ void unsteadyBB::truthSolve(fileName folder)
 
 
 
-bool unsteadyBB::checkWrite(Time& timeObject)
+bool UnsteadyBB::checkWrite(Time& timeObject)
 {
     scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
     scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
@@ -278,7 +278,7 @@ bool unsteadyBB::checkWrite(Time& timeObject)
 }
 
 // Method to solve the supremizer problem
-void unsteadyBB::solvesupremizer(word type)
+void UnsteadyBB::solvesupremizer(word type)
 {
     PtrList<volScalarField> P_sup;
 
@@ -418,7 +418,7 @@ void unsteadyBB::solvesupremizer(word type)
 
 
 // Method to compute the lifting function for temperature
-void unsteadyBB::liftSolveT()
+void UnsteadyBB::liftSolveT()
 {
     for (label k = 0; k < inletIndexT.rows(); k++)
     {
@@ -484,7 +484,7 @@ void unsteadyBB::liftSolveT()
 
 // * * * * * * * * * * * * * * Projection Methods * * * * * * * * * * * * * * //
 
-void unsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
+void UnsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
                             label NSUP)
 {
     NUmodes = NU;
@@ -648,7 +648,7 @@ void unsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
 }
 
 
-void unsteadyBB::projectPPE(fileName folder, label NU, label NP, label NT,
+void UnsteadyBB::projectPPE(fileName folder, label NU, label NP, label NT,
                             label NSUP)
 {
     NUmodes = NU;
@@ -831,7 +831,7 @@ void unsteadyBB::projectPPE(fileName folder, label NU, label NP, label NT,
     }
 }
 // * * * * * * * * * * * * * * Momentum Eq. Methods * * * * * * * * * * * * * //
-Eigen::MatrixXd unsteadyBB::pressure_gradient_term(label NUmodes,
+Eigen::MatrixXd UnsteadyBB::pressure_gradient_term(label NUmodes,
         label NPrghmodes,
         label NSUPmodes)
 {
@@ -860,7 +860,7 @@ Eigen::MatrixXd unsteadyBB::pressure_gradient_term(label NUmodes,
 
 // * * * * * * * * * * * * * * Continuity Eq. Methods * * * * * * * * * * * * * //
 
-Eigen::MatrixXd unsteadyBB::divergence_term(label NUmodes, label NPrghmodes,
+Eigen::MatrixXd UnsteadyBB::divergence_term(label NUmodes, label NPrghmodes,
         label NSUPmodes)
 {
     label P1size = NPrghmodes;
@@ -884,7 +884,7 @@ Eigen::MatrixXd unsteadyBB::divergence_term(label NUmodes, label NPrghmodes,
     return P_matrix;
 }
 
-Eigen::MatrixXd unsteadyBB::buoyant_term(label NUmodes, label NTmodes,
+Eigen::MatrixXd UnsteadyBB::buoyant_term(label NUmodes, label NTmodes,
         label NSUPmodes)
 {
     label H1size = NUmodes + liftfield.size() + NSUPmodes;
@@ -916,7 +916,7 @@ Eigen::MatrixXd unsteadyBB::buoyant_term(label NUmodes, label NTmodes,
 }
 
 // * * * * * * * * * * * * * * Additional term for the PPE Method * * * * * * * * * * * * * //
-Eigen::MatrixXd unsteadyBB::buoyant_term_poisson(label NPrghmodes,
+Eigen::MatrixXd UnsteadyBB::buoyant_term_poisson(label NPrghmodes,
         label NTmodes)
 {
     label H1size = NPrghmodes;
@@ -951,7 +951,7 @@ Eigen::MatrixXd unsteadyBB::buoyant_term_poisson(label NPrghmodes,
 
 
 // * * * * * * * * * * * * * * Energy Eq. Methods * * * * * * * * * * * * * //
-List<Eigen::MatrixXd> unsteadyBB::convective_term_temperature(label NUmodes,
+List<Eigen::MatrixXd> UnsteadyBB::convective_term_temperature(label NUmodes,
         label NTmodes, label NSUPmodes)
 {
     label Qsize = NUmodes + liftfield.size() + NSUPmodes;
@@ -986,7 +986,7 @@ List<Eigen::MatrixXd> unsteadyBB::convective_term_temperature(label NUmodes,
 
 
 
-Eigen::MatrixXd unsteadyBB::diffusive_term_temperature(label NUmodes,
+Eigen::MatrixXd UnsteadyBB::diffusive_term_temperature(label NUmodes,
         label NTmodes, label NSUPmodes)
 {
     label Ysize = NTmodes  + liftfieldT.size();
@@ -1008,7 +1008,7 @@ Eigen::MatrixXd unsteadyBB::diffusive_term_temperature(label NUmodes,
 }
 
 
-Eigen::MatrixXd unsteadyBB::mass_term_temperature(label NUmodes, label NTmodes,
+Eigen::MatrixXd UnsteadyBB::mass_term_temperature(label NUmodes, label NTmodes,
         label NSUPmodes)
 {
     label Wsize = NTmodes  + liftfieldT.size();
@@ -1030,7 +1030,7 @@ Eigen::MatrixXd unsteadyBB::mass_term_temperature(label NUmodes, label NTmodes,
 
 
 // Method to compute the lifting function for velocity
-void unsteadyBB::liftSolve()
+void UnsteadyBB::liftSolve()
 {
     for (label k = 0; k < inletIndex.rows(); k++)
     {
@@ -1133,7 +1133,7 @@ void unsteadyBB::liftSolve()
     }
 }
 
-void unsteadyBB::change_viscosity(double mu)
+void UnsteadyBB::change_viscosity(double mu)
 {
     const volScalarField& nu =  _laminarTransport().nu();
     volScalarField& ciao = const_cast<volScalarField&>(nu);

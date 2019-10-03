@@ -30,20 +30,20 @@ License
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Source file of the reducedUnsteadyBB class
+/// Source file of the ReducedUnsteadyBB class
 
 
-#include "reducedUnsteadyBB.H"
+#include "ReducedUnsteadyBB.H"
 
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-reducedUnsteadyBB::reducedUnsteadyBB()
+ReducedUnsteadyBB::ReducedUnsteadyBB()
 {
 }
 
-reducedUnsteadyBB::reducedUnsteadyBB(unsteadyBB& FOMproblem)
+ReducedUnsteadyBB::ReducedUnsteadyBB(UnsteadyBB& FOMproblem)
     :
     problem(&FOMproblem)
 {
@@ -246,7 +246,7 @@ int newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
 }
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
+Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
         Eigen::MatrixXd& vel_now_BC, label NParaSet, label startSnap)
 {
     std::cout << "################## Online solve N° " << NParaSet <<
@@ -379,7 +379,7 @@ Eigen::MatrixXd reducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
 }
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-Eigen::MatrixXd reducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
+Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
         temp_now_BC,
         Eigen::MatrixXd& vel_now_BC, label NParaSet, label startSnap)
 {
@@ -549,7 +549,7 @@ Eigen::MatrixXd reducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     return online_solutiont;
 }
 
-void reducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
+void ReducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
 {
     if (ITHACAutilities::check_folder(folder))
     {
