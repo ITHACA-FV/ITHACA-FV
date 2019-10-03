@@ -27,7 +27,7 @@ SourceFiles
     03steadyNS.C
 \*---------------------------------------------------------------------------*/
 
-#include "steadyNS_simple.H"
+#include "SteadyNSSimple.H"
 #include "ITHACAstream.H"
 #include "ITHACAPOD.H"
 #include "reducedSimpleSteadyNS.H"
@@ -35,13 +35,13 @@ SourceFiles
 #include "IOmanip.H"
 
 
-class tutorial12 : public steadyNS_simple
+class tutorial12 : public SteadyNSSimple
 {
     public:
         /// Constructor
         explicit tutorial12(int argc, char* argv[])
             :
-            steadyNS_simple(argc, argv),
+            SteadyNSSimple(argc, argv),
             U(_U()),
             p(_p()),
             phi(_phi())

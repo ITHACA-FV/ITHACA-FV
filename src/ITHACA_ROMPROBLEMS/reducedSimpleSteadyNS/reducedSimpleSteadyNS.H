@@ -40,7 +40,7 @@ SourceFiles
 #include "fvCFD.H"
 #include "IOmanip.H"
 #include "reducedProblem.H"
-#include "steadyNS_simple.H"
+#include "SteadyNSSimple.H"
 #include "ITHACAutilities.H"
 #include "EigenFunctions.H"
 #include <Eigen/Eigen>
@@ -70,7 +70,7 @@ class reducedSimpleSteadyNS: public reducedProblem
         /// @param[in]  problem  a full order steadyNS problem
         /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
         ///
-        explicit reducedSimpleSteadyNS(steadyNS_simple& problem);
+        explicit reducedSimpleSteadyNS(SteadyNSSimple& problem);
 
         ~reducedSimpleSteadyNS() {};
 
@@ -122,7 +122,7 @@ class reducedSimpleSteadyNS: public reducedProblem
         Modes<vector> ULmodes;
 
         /// Full problem.
-        steadyNS_simple* problem;
+        SteadyNSSimple* problem;
 
         /// Imposed boundary conditions.
         Eigen::MatrixXd vel_now;

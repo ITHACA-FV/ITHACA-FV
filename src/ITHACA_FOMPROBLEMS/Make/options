@@ -26,7 +26,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/UnsteadyNSTurb \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/UnsteadyNSTTurb \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNST \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNS_simple \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNSSimple \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
