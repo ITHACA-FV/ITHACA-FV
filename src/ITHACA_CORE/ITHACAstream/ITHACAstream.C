@@ -41,51 +41,20 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
-void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder,
-                                word fieldname)
-{
-    ITHACAutilities::createSymLink(folder);
-    Info << "######### Exporting the Data for " << fieldname << " #########" <<
-         endl;
-
-    for (label j = 0; j < field.size() ; j++)
-    {
-        exportSolution(field[j], name(j + 1), folder, fieldname);
-        printProgress(double(j + 1) / field.size());
-    }
-
-    std::cout << std::endl;
-}
-
-void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder,
-                                word fieldname)
-{
-    ITHACAutilities::createSymLink(folder);
-    Info << "######### Exporting the Data for " << fieldname << " #########" <<
-         endl;
-
-    for (label j = 0; j < field.size() ; j++)
-    {
-        exportSolution(field[j], name(j + 1), folder, fieldname);
-        printProgress(double(j + 1) / field.size());
-    }
-
-    std::cout << std::endl;
-}
 template <typename T>
 void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
-                                word Name, word tipo,
+                                word Name, word type,
                                 word folder)
 {
-    std::string message = "The extension \"" +  tipo +
+    std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
-    M_Assert(tipo == "python" || tipo == "matlab"
-             || tipo == "eigen", message.c_str()
+    M_Assert(type == "python" || type == "matlab"
+             || type == "eigen", message.c_str()
             );
     mkDir(folder);
     word est;
 
-    if (tipo == "python")
+    if (type == "python")
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -114,7 +83,7 @@ void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
         str << "]])" << endl;
     }
 
-    if (tipo == "matlab")
+    if (type == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -136,7 +105,7 @@ void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
         str << "];" << endl;
     }
 
-    if (tipo == "eigen")
+    if (type == "eigen")
     {
         std::ofstream ofs;
         ofs.open (folder + "/" + Name + "_mat.txt");
@@ -147,30 +116,30 @@ void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
 }
 
 template void ITHACAstream::exportMatrix(Eigen::Matrix < double, -1,
-        -1 > & matrix, word Name, word tipo,
+        -1 > & matrix, word Name, word type,
         word folder);
 
 template void ITHACAstream::exportMatrix(Eigen::Matrix < int, -1,
-        -1 > & matrix, word Name, word tipo,
+        -1 > & matrix, word Name, word type,
         word folder);
 
 template void ITHACAstream::exportMatrix(Eigen::Matrix < float, -1,
-        -1 > & matrix, word Name, word tipo,
+        -1 > & matrix, word Name, word type,
         word folder);
 
 void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
-                                word tipo, word folder)
+                                word type, word folder)
 {
-    std::string message = "The extension \"" +  tipo +
+    std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
-    M_Assert(tipo == "python" || tipo == "matlab"
-             || tipo == "eigen", message.c_str()
+    M_Assert(type == "python" || type == "matlab"
+             || type == "eigen", message.c_str()
             );
     mkDir(folder);
     word est;
 
     // Python Case
-    if (tipo == "python")
+    if (type == "python")
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -205,7 +174,7 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
         }
     }
     // Matlab case
-    else if (tipo == "matlab")
+    else if (type == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -230,7 +199,7 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
             str << "];" << endl;
         }
     }
-    else if (tipo == "eigen")
+    else if (type == "eigen")
     {
         for (label i = 0; i < matrix.size(); i++)
         {
@@ -242,18 +211,18 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
 
 template<typename T>
 void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
-                                word tipo, word folder)
+                                word type, word folder)
 {
-    std::string message = "The extension \"" +  tipo +
+    std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
-    M_Assert(tipo == "python" || tipo == "matlab"
-             || tipo == "eigen", message.c_str()
+    M_Assert(type == "python" || type == "matlab"
+             || type == "eigen", message.c_str()
             );
     mkDir(folder);
     word est;
 
     // Python Case
-    if (tipo == "python")
+    if (type == "python")
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -295,7 +264,7 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
         }
     }
     // Matlab case
-    else if (tipo == "matlab")
+    else if (type == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -324,7 +293,7 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
             str << "];" << endl;
         }
     }
-    else if (tipo == "eigen")
+    else if (type == "eigen")
     {
         for (label i = 0; i < tensor.dimension(0); i++)
         {
@@ -337,15 +306,15 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
 
 template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3 > tensor,
         word Name,
-        word tipo, word folder);
+        word type, word folder);
 
 template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3 > tensor,
         word Name,
-        word tipo, word folder);
+        word type, word folder);
 
 template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3 > tensor,
         word Name,
-        word tipo, word folder);
+        word type, word folder);
 
 List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
 {
@@ -426,314 +395,6 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     }
 
     return result;
-}
-
-void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name,
-                               fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << "######### Reading the Data for " << Name << " #########" << endl;
-        fileName rootpath(".");
-        label last_s;
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        fvMesh mesh
-        (
-            Foam::IOobject
-            (
-                Foam::fvMesh::defaultRegion,
-                casename + runTime2.timeName(),
-                runTime2,
-                Foam::IOobject::MUST_READ
-            )
-        );
-
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 2);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            //Info << "Reading " << Name << " number " << i - 1 << endl;
-            volVectorField tmp_field(
-                IOobject
-                (
-                    Name,
-                    runTime2.times()[i].name(),
-                    mesh,
-                    IOobject::MUST_READ
-                ),
-                mesh
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        std::cerr << "File: ITHACAstream.C, Line: 343" << std::endl;
-    }
-}
-
-void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name,
-                               fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << " ######### Reading the Data for " << Name << " #########" << endl;
-        fileName rootpath(".");
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        label last_s;
-        fvMesh mesh
-        (
-            Foam::IOobject
-            (
-                Foam::fvMesh::defaultRegion,
-                casename + runTime2.timeName(),
-                runTime2,
-                Foam::IOobject::MUST_READ
-            )
-        );
-
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 2);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            //Info << "Reading " << Name << " number " << i - 1 << endl;
-            volScalarField tmp_field(
-                IOobject
-                (
-                    Name,
-                    runTime2.times()[i].name(),
-                    mesh,
-                    IOobject::MUST_READ
-                ),
-                mesh
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        std::cerr << "File: ITHACAstream.C, Line: 403" << std::endl;
-    }
-}
-
-void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
-                               volScalarField& field, fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        fileName rootpath(".");
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        label last_s;
-
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 1);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i - 1 << endl;
-            volScalarField tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    casename + runTime2.times()[i].name(),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        word timename(field.mesh().time().rootPath() + "/" +
-                      field.mesh().time().caseName() );
-        timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
-        label last_s = numberOfFiles(casename,
-                                     "processor" + name(Pstream::myProcNo()) + "/");
-
-        if (first_snap > last_s)
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-        }
-        else
-        {
-            last_s = min(last_s, n_snap + 1);
-        }
-
-        for (label i = first_snap + 1; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i << endl;
-            volScalarField tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    timename + "/" + name(i),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        Info << endl;
-    }
-}
-
-void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
-                               volVectorField& field, fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        fileName rootpath(".");
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        label last_s;
-
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 1);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i - 1 << endl;
-            volVectorField tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    casename + runTime2.times()[i].name(),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        word timename(field.mesh().time().rootPath() + "/" +
-                      field.mesh().time().caseName() );
-        timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
-        label last_s = numberOfFiles(casename,
-                                     "processor" + name(Pstream::myProcNo()) + "/");
-
-        if (first_snap > last_s)
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-        }
-        else
-        {
-            last_s = min(last_s, n_snap + 1);
-        }
-
-        for (label i = first_snap + 1; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i << endl;
-            volVectorField tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    timename + "/" + name(i),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        Info << endl;
-    }
 }
 
 int ITHACAstream::numberOfFiles(word folder, word MatrixName)

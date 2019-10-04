@@ -102,119 +102,96 @@ class ITHACAstream
         static void exportFvMatrix(fvMatrix<T>& Matrix, word folder, word MatrixName);
 
         //--------------------------------------------------------------------------
-        /// Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format
-        /* In this case the function is implemented for a second order matrix  */
+        /// Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format
+        /// The function is implemented for a second order matrix
         ///
-        /// @param[in] matrice Eigen::MatrixXd that you want to export.
-        /// @param[in] Name string to identify the name you want to use to save the file.
-        /// @param[in] tipo string to identify format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
-        /// @param[in] folder string to identify the folder where you want to save the file.
+        /// @param[in] matrix    Eigen::MatrixXd that you want to export.
+        /// @param[in] Name      Name of saved file.
+        /// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
+        /// @param[in] folder    Directory in which the fali is saved.
         ///
         template<typename T>
         static void exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix, word Name,
-                                 word tipo = "python", word folder = "./Matrices");
+                                 word type = "python", word folder = "./Matrices");
 
         //--------------------------------------------------------------------------
-        /// Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format
-        /* In this case the function is implemented for a third order matrix
-        the eigen matrix is stored as a set of two dimensional matrices where
-        each matrix is in a different file */
+        /// Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format
+        /// The function is implemented for a third order matrix
+        /// The eigen matrix is stored as a set of two dimensional matrices where
+        /// each matrix is in a different file
         ///
-        /// @param[in] matrice List < Eigen::MatrixXd > that you want to export.
-        /// @param[in] Name string to identify the name you want to use to save the file.
-        /// @param[in] tipo format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen").
-        /// @param[in] folder string to identify the folder where you want to save the file.
+        /// @param[in] matrix    Eigen::MatrixXd that you want to export.
+        /// @param[in] Name      Name of saved file.
+        /// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
+        /// @param[in] folder    Directory in which the fali is saved.
         ///
         static void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
-                                 word tipo = "python", word folder = "./Matrices");
+                                 word type = "python", word folder = "./Matrices");
 
 
-        ///
-        /// @brief      { Export the reduced tensors in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format }
+        //--------------------------------------------------------------------------
+        /// Export the reduced tensor in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format
         ///
         /// @param[in]  tensor  The tensor that you want to export.
-        /// @param[in]  Name    The Name string to identify the name you want to use to save the file.
-        /// @param[in]  tipo    The tipo format to export the matrix if numpy (tipo="python"),
-        /// if matlab (tipo="matlab") if txt (tipo="eigen").
+        /// @param[in]  Name    Name of saved file.
+        /// @param[in]  type    Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
+        /// @param[in]  folder  Directory in which the fali is saved.
         /// @param[in]  folder  folder string to identify the folder where you want to save the file.
         ///
-        /// @tparam     T       { description }
+        /// @tparam     T       The tensor can be of integers, double or float
         ///
         template<typename T>
         static void exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
-                                 word tipo = "python", word folder = "./Matrices");
+                                 word type = "python", word folder = "./Matrices");
 
 
         //--------------------------------------------------------------------------
-        /// Funtion to read a list of volVectorField from name of the field and casename
+        /// Read a list of fields from a folder
         ///
-        /// @param[in]  Lfield      a PtrList of volVectorField where you want to store the field.
+        /// @param[in]  Lfield      A PtrList of scalar of vector fields where you want to store the field.
         /// @param[in]  Name        The name of the field you want to read.
         /// @param[in]  casename    The folder where the field is stored.
-        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
-        /// @param[in]  n_snap      The number of snapshots you want to read.
+        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field (default is 0).
+        /// @param[in]  n_snap      The number of snapshots you want to read (default is all).
         ///
-        static void read_fields(PtrList<volVectorField>& Lfield, word Name,
+        /// @tparam     T           Type of field: scalar of vector
+        ///
+        template<typename T>
+        static void read_fields(PtrList<T>& Lfield, word Name,
                                 fileName casename, label first_snap = 0, label n_snap = 0);
 
-        //--------------------------------------------------------------------------
-        /// Funtion to read a list of volScalarField from name of the field and folder name
-        ///
-        /// @param[in]  Lfield      a PtrList of volScalarField where you want to store the field.
-        /// @param[in]  Name        The name of the field you want to read.
-        /// @param[in]  casename    The folder where the field is stored.
-        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
-        /// @param[in]  n_snap      The number of snapshots you want to read.
-        ///
-        static void read_fields(PtrList<volScalarField>& Lfield, word Name,
-                                fileName casename, label first_snap = 0, label n_snap = 0);
 
         //--------------------------------------------------------------------------
-        /// Funtion to read a list of volVectorField from name of the field a volVectorField if it is already existing
+        /// Read a list of fields given the casename and a sample field with the same name
         ///
-        /// @param[in]  Lfield      a PtrList of volVectorField where you want to store the field.
+        /// @param[in]  Lfield      A PtrList of scalar of vector fields where you want to store the field.
         /// @param[in]  field       The field used as template to read other fields.
         /// @param[in]  casename    The folder where the field is stored.
-        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
-        /// @param[in]  n_snap      The number of snapshots you want to read.
+        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field (default is 0).
+        /// @param[in]  n_snap      The number of snapshots you want to read (default is all).
         ///
-        static void read_fields(PtrList<volVectorField>& Lfield, volVectorField& field,
+        /// @tparam     T           Type of field: scalar of vector
+        ///
+        template<typename T>
+        static void read_fields(PtrList<T>& Lfield, T& field,
                                 fileName casename, label first_snap = 0, label n_snap = 0);
 
         //--------------------------------------------------------------------------
-        /// Funtion to read a list of volScalarField from casename and a list of volScalarField with the same name
-        ///
-        /// @param[in]  Lfield      a PtrList of volScalarField where you want to store the field.
-        /// @param[in]  field       The field used as template to read other fields.
-        /// @param[in]  casename    The folder where the field is stored.
-        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
-        /// @param[in]  n_snap      The number of snapshots you want to read.
-        static void read_fields(PtrList<volScalarField>& Lfield, volScalarField& field,
-                                fileName casename, label first_snap = 0, label n_snap = 0);
-
-        //--------------------------------------------------------------------------
-        /// Function to export volVectorFields
+        /// Function to export a scalar of vector field
         ///
         /// @param[in]  field      The field you want to export.
         /// @param[in]  folder     The folder where you want to save the field.
         /// @param[in]  fieldname  The name you want to give to the file.
         ///
-        static void exportFields(PtrList<volVectorField>& field, word folder,
+        /// @tparam     T           Type of field: scalar of vector
+        ///
+        template<typename T>
+        static void exportFields(PtrList<T>& field, word folder,
                                  word fieldname);
 
         //--------------------------------------------------------------------------
-        /// Function to export volScalarFields
-        ///
-        /// @param[in]  field      The field you want to export.
-        /// @param[in]  folder     The folder where you want to save the field.
-        /// @param[in]  fieldname  The name you want to give to the file.
-        ///
-        static void exportFields(PtrList<volScalarField>& field, word folder,
-                                 word fieldname);
-
-        //--------------------------------------------------------------------------
-        /// Read a two dimensional matrix from e a txt fle in Eigen format
-        /*One has to provide the complete filename with the absolute or relative path*/
+        /// Read a two dimensional matrix from a txt file in Eigen format
+        /// One has to provide the complete filename with the absolute or relative path
         ///
         /// @param[in]  filename  The filename of the matrix.
         ///
@@ -224,10 +201,10 @@ class ITHACAstream
 
         //--------------------------------------------------------------------------
         /// Read a three dimensional matrix from a txt file in Eigen format
-        /*One has to provide the folder containing the matrix files and the filename of the
-        the matrix. Since it is stored as a List of matrices each matrix must be stored in a
-        different file with the following format:
-        matFileName(i)_mat.txt*/
+        /// One has to provide the folder containing the matrix files and the filename of the
+        /// the matrix. Since it is stored as a List of matrices each matrix must be stored in a
+        /// different file with the following format:
+        /// matFileName(i)_mat.txt
         ///
         /// @param[in]  folder    The folder where the txt files are located
         /// @param[in]  mat_name  The matrix name
@@ -237,35 +214,37 @@ class ITHACAstream
         static List <Eigen::MatrixXd> readMatrix(word folder, word mat_name);
 
         //--------------------------------------------------------------------------
-        /// Export a generic field to file in a certain folder and subfolder
-        /* This is a function to export a generic field into a certain subfolder */
+        /// Export a field to file in a certain folder and subfolder
         ///
-        /// @param[in] s volVectorField or volScalarField.
-        /// @param[in] subfolder string to indicated the subfolder where the field is stored.
-        /// @param[in] folder string to indicated the folder where the field is stored.
-        /// @param[in] fieldName string to indicate the name of the field/file.
+        /// @param[in] s          Field
+        /// @param[in] subfolder  Subfolder where the field is stored
+        /// @param[in] folder     Folder where the field is stored
+        /// @param[in] fieldName  Name of the field/file
+        ///
+        /// @tparam     T         volVectorField or volScalarField
         ///
         template<typename T>
         static void exportSolution(T& s, fileName subfolder, fileName folder,
                                    word fieldName);
 
         //--------------------------------------------------------------------------
-        /// Export a generic field to file in a certain folder and subfolder
-        /* This is a function to export a generic field into a certain subfolder */
+        /// Export a field to file in a certain folder and subfolder
         ///
-        /// @param[in] s volVectorField or volScalarField.
-        /// @param[in] subfolder string to indicated the subfolder where the field is stored.
-        /// @param[in] folder string to indicated the folder where the field is stored.
+        /// @param[in] s          Field
+        /// @param[in] subfolder  Subfolder where the field is stored
+        /// @param[in] folder     Folder where the field is stored
+        ///
+        /// @tparam     T         volVectorField or volScalarField
         ///
         template<typename T>
         static void exportSolution(T& s, fileName subfolder, fileName folder);
 
         //--------------------------------------------------------------------------
-        /// @brief      Export a list type object to file
+        /// Export a list to file
         ///
         /// @param[in]  list      The list
-        /// @param[in]  filename  The filename
-        /// @param[in]  folder    The folder
+        /// @param[in]  filename  Name of saved file
+        /// @param[in]  folder    Folder where the field is stored
         ///
         /// @tparam     T         generic list type object
         ///
@@ -274,9 +253,9 @@ class ITHACAstream
 
 
         //--------------------------------------------------------------------------
-        /// @brief      Saves an Eigen sparse matrix into bynary format file
+        /// Export an Eigen sparse matrix into bynary format file
         ///
-        /// @param      m           Eigen::SparseMatrix m
+        /// @param      m           Eigen::SparseMatrix
         /// @param[in]  folder      The folder where you want to save the matrix
         /// @param[in]  MatrixName  The matrix name for the output file
         ///
@@ -289,7 +268,7 @@ class ITHACAstream
                                      word folder, word MatrixName);
 
         //--------------------------------------------------------------------------
-        /// @brief      Reads an Eigen sparse matrix from a bynary format file
+        /// Read an Eigen sparse matrix from a bynary format file
         ///
         /// @param[in,out]  m           Eigen::SparseMatrix m
         /// @param[in]      folder      The folder from where you want to read the matrix
@@ -304,11 +283,11 @@ class ITHACAstream
                                      word folder, word MatrixName);
 
         //--------------------------------------------------------------------------
-        /// @brief      Saves a dense matrix to a binary format file
+        /// Save a dense matrix to a binary format file
         ///
-        /// @param[in]  Matrix      The  Eigen dense matrix
-        /// @param[in]  folder      he folder where you want to save the matrix
-        /// @param[in]  MatrixName  The matrix name for the output file
+        /// @param[in]  Matrix      Eigen dense matrix
+        /// @param[in]  folder      Folder where you want to save the matrix
+        /// @param[in]  MatrixName  Name of the output file
         ///
         /// @tparam     MatrixType  type of the matrix, i.e. double, float, ...
         ///
@@ -316,11 +295,11 @@ class ITHACAstream
         static void SaveDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
 
         //--------------------------------------------------------------------------
-        /// @brief      Reads a dense matrix from a binary format file
+        /// Read a dense matrix from a binary format file
         ///
-        /// @param[in,out]  Matrix      The Eigen dense matrix
-        /// @param[in]      folder      The folder from where you want to read the matrix
-        /// @param[in]      MatrixName  The matrix name of the input file
+        /// @param[in,out]  Matrix      Eigen dense matrix
+        /// @param[in]      folder      Folder from where you want to read the matrix
+        /// @param[in]      MatrixName  Name of the input file
         ///
         /// @tparam     MatrixType  type of the matrix, i.e. double, float, ...
         ///
@@ -329,10 +308,10 @@ class ITHACAstream
 
 
         //----------------------------------------------------------------------
-        /// @brief      Saves a dense tensor.
+        /// Save a dense tensor to file
         ///
-        /// @param      Tensor      The tensor
-        /// @param[in]  folder      The folder
+        /// @param[in]  Tensor      The tensor
+        /// @param[in]  folder      Folder where you want to save the tensor
         /// @param[in]  MatrixName  The matrix name
         ///
         /// @tparam     TensorType  type of the tensor, i.e. double, float, ...
@@ -342,19 +321,19 @@ class ITHACAstream
 
 
         //----------------------------------------------------------------------
-        /// @brief      Reads a dense tensor.
+        /// Read a dense tensor from file
         ///
-        /// @param      Tensor      The tensor
-        /// @param[in]  folder      The folder
-        /// @param[in]  MatrixName  The matrix name
+        /// @param[in/out] Tensor      The tensor
+        /// @param[in]     folder      Folder where you want to read the tensor
+        /// @param[in]     MatrixName  The matrix name
         ///
-        /// @tparam     TensorType   type of the tensor, i.e. double, float, ...
+        /// @tparam        TensorType   type of the tensor, i.e. double, float, ...
         ///
         template <typename TensorType>
         static void ReadDenseTensor(TensorType& Tensor, word folder, word MatrixName);
 
         //--------------------------------------------------------------------------
-        /// @brief      Saves a sparse matrix list to bynary files
+        /// Save a sparse matrix list to bynary files
         ///
         /// @param[in]  MatrixList  The matrix list
         /// @param[in]  folder      The folder where you want to save files
@@ -367,7 +346,7 @@ class ITHACAstream
                                          word MatrixName);
 
         //--------------------------------------------------------------------------
-        /// @brief      Reads a sparse matrix list to bynary files
+        /// Read a sparse matrix list to bynary files
         ///
         /// @param[in,out]  MatrixList  The matrix list
         /// @param[in]      folder      The folder from where you want to read the files
@@ -380,7 +359,7 @@ class ITHACAstream
                                          word folder, word MatrixName);
 
         //--------------------------------------------------------------------------
-        /// @brief      Saves a dense matrix list to bynary files
+        /// Save a dense matrix list to bynary files
         ///
         /// @param[in]  MatrixList  The matrix list
         /// @param[in]  folder      The folder where you want to save files
@@ -394,7 +373,7 @@ class ITHACAstream
 
 
         //--------------------------------------------------------------------------
-        /// @brief      Reads a sparse matrix list to bynary files
+        /// Read a sparse matrix list to bynary files
         ///
         /// @param[in,out]  MatrixList  The matrix list
         /// @param[in]      folder      The folder from where you want to read the files
@@ -407,17 +386,17 @@ class ITHACAstream
                                         word MatrixName);
 
         //--------------------------------------------------------------------------
-        /// @brief      Count the number of files with a certain name prefix, used by reading functions of list of matrices
+        /// Count the number of files with a certain name prefix, used by reading functions of list of matrices
         ///
         /// @param[in]  folder      The folder
         /// @param[in]  MatrixName  The matrix name
         ///
-        /// @return     the number of files matching the request
+        /// @return     Number of files matching the request
         ///
         static int numberOfFiles(word folder, word MatrixName);
 
         //--------------------------------------------------------------------------
-        /// @brief      Writes points of a mesh to a file
+        /// Write points of a mesh to a file
         ///
         /// @param[in]  points     The points you want to write
         /// @param[in]  folder     The folder where you want to save the file
@@ -425,8 +404,8 @@ class ITHACAstream
         ///
         static void writePoints(pointField points, fileName folder, fileName subfolder);
 
-        ///
-        /// @brief      Print progress bar given the percentage
+        //--------------------------------------------------------------------------
+        /// Print progress bar given the percentage
         ///
         /// @param[in]  percentage  The percentage
         ///
@@ -497,6 +476,86 @@ Istream& operator>> (Istream& is, Eigen::Tensor<T, 3>& tens)
 }
 
 template<typename T>
+void read_fields(PtrList<T>& Lfield, word Name,
+                               fileName casename, label first_snap, label n_snap)
+{
+    if (!Pstream::parRun())
+    {
+        Info << "######### Reading the Data for " << Name << " #########" << endl;
+        fileName rootpath(".");
+        label last_s;
+        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
+        fvMesh mesh
+        (
+            Foam::IOobject
+            (
+                Foam::fvMesh::defaultRegion,
+                casename + runTime2.timeName(),
+                runTime2,
+                Foam::IOobject::MUST_READ
+            )
+        );
+
+        if (first_snap >= runTime2.times().size())
+        {
+            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+                 << endl;
+            exit(0);
+        }
+
+        if (n_snap == 0)
+        {
+            last_s = runTime2.times().size();
+        }
+        else
+        {
+            last_s = min(runTime2.times().size(), n_snap + 2);
+        }
+
+        for (label i = 2 + first_snap; i < last_s; i++)
+        {
+            ITHACAstream::printProgress(double(i + 1) / last_s);
+            //Info << "Reading " << Name << " number " << i - 1 << endl;
+            T tmp_field(
+                IOobject
+                (
+                    Name,
+                    runTime2.times()[i].name(),
+                    mesh,
+                    IOobject::MUST_READ
+                ),
+                mesh
+            );
+            Lfield.append(tmp_field);
+        }
+
+        std::cout << std::endl;
+    }
+    else
+    {
+        std::cerr << "File: ITHACAstream.C, Line: 343" << std::endl;
+    }
+}
+
+template<typename T>
+void ITHACAstream::exportFields(PtrList<T>& field, word folder,
+                                word fieldname)
+{
+    ITHACAutilities::createSymLink(folder);
+    Info << "######### Exporting the Data for " << fieldname << " #########" <<
+         endl;
+
+    for (label j = 0; j < field.size() ; j++)
+    {
+        exportSolution(field[j], name(j + 1), folder, fieldname);
+        printProgress(double(j + 1) / field.size());
+    }
+
+    std::cout << std::endl;
+}
+
+
+template<typename T>
 void ITHACAstream::exportFvMatrix(fvMatrix<T>& Matrix, word folder,
                                   word MatrixName)
 {
@@ -532,6 +591,100 @@ void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder,
         OFstream os(fieldname);
         act.writeHeader(os);
         os << act << endl;
+    }
+}
+
+template<typename T>
+static void read_fields(PtrList<T>& Lfield, T& field,
+                        fileName casename, label first_snap, label n_snap)
+{
+    if (!Pstream::parRun())
+    {
+        Info << "######### Reading the Data for " << field.name() << " #########" <<
+             endl;
+        fileName rootpath(".");
+        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
+        label last_s;
+
+        if (first_snap >= runTime2.times().size())
+        {
+            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+                 << endl;
+            exit(0);
+        }
+
+        if (n_snap == 0)
+        {
+            last_s = runTime2.times().size();
+        }
+        else
+        {
+            last_s = min(runTime2.times().size(), n_snap + 1);
+        }
+
+        for (label i = 2 + first_snap; i < last_s; i++)
+        {
+            //Info << "Reading " << field.name() << " number " << i - 1 << endl;
+            T tmp_field(
+                IOobject
+                (
+                    field.name(),
+                    casename + runTime2.times()[i].name(),
+                    field.mesh(),
+                    IOobject::MUST_READ
+                ),
+                field.mesh()
+            );
+            Lfield.append(tmp_field);
+            ITHACAstream::printProgress(double(i + 1) / last_s);
+        }
+
+        std::cout << std::endl;
+    }
+    else
+    {
+        Info << "######### Reading the Data for " << field.name() << " #########" <<
+             endl;
+        word timename(field.mesh().time().rootPath() + "/" +
+                      field.mesh().time().caseName() );
+        timename = timename.substr(0, timename.find_last_of("\\/"));
+        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
+        label last_s = ITHACAstream::numberOfFiles(casename,
+                                     "processor" + name(Pstream::myProcNo()) + "/");
+
+        if (first_snap > last_s)
+        {
+            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+                 << endl;
+            exit(0);
+        }
+
+        if (n_snap == 0)
+        {
+        }
+        else
+        {
+            last_s = min(last_s, n_snap + 1);
+        }
+
+        for (label i = first_snap + 1; i < last_s; i++)
+        {
+            //Info << "Reading " << field.name() << " number " << i << endl;
+            T tmp_field(
+                IOobject
+                (
+                    field.name(),
+                    timename + "/" + name(i),
+                    field.mesh(),
+                    IOobject::MUST_READ
+                ),
+                field.mesh()
+            );
+            Lfield.append(tmp_field);
+            ITHACAstream::printProgress(double(i + 1) / last_s);
+        }
+
+        Info << endl;
     }
 }
 
