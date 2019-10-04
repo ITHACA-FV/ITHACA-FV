@@ -329,7 +329,15 @@ template<class TypeField>
 double ITHACAutilities::error_fields(TypeField& field1,
                                      TypeField& field2)
 {
-    double err = L2norm(field1 - field2) / L2norm(field1);
+    double err;
+    if (L2norm(field1) == 0)
+    {
+        err = 0;
+    }
+    else
+    {
+ 	err = L2norm(field1 - field2) / L2norm(field1);
+    }
     return err;
 }
 
