@@ -419,31 +419,6 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
             D_matrix = laplacian_pressure(NPmodes);
         }
 
-        word bc1_str = "BC1_" + name(liftfield.size()) + "_" + name(
-                           NUmodes) + "_" + name(NPmodes);
-
-        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + bc1_str))
-        {
-            ITHACAstream::ReadDenseMatrix(BC1_matrix, "./ITHACAoutput/Matrices/", bc1_str);
-        }
-        else
-        {
-            BC1_matrix = pressure_BC1(NUmodes, NPmodes);
-        }
-
-        word bc2_str = "bc2Pressure_" + name(liftfield.size()) + "_" + name(
-                           NUmodes) + "_" + name(
-                           NSUPmodes) + "_" + name(NPmodes) + "_t";
-
-        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + bc2_str))
-        {
-            ITHACAstream::ReadDenseTensor(bc2Tensor, "./ITHACAoutput/Matrices/", bc2_str);
-        }
-        else
-        {
-            bc2Tensor = pressureBC2(NUmodes, NPmodes);
-        }
-
         word bc3_str = "BC3_" + name(liftfield.size()) + "_" + name(
                            NUmodes) + "_" + name(NPmodes);
 
@@ -454,6 +429,18 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         else
         {
             BC3_matrix = pressure_BC3(NUmodes, NPmodes);
+        }
+
+	word bc4_str = "BC4_" + name(liftfield.size()) + "_" + name(
+                           NUmodes) + "_" + name(NPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + bc4_str))
+        {
+            ITHACAstream::ReadDenseMatrix(BC4_matrix, "./ITHACAoutput/Matrices/", bc4_str);
+        }
+        else
+        {
+            BC4_matrix = pressure_BC4(NUmodes, NPmodes);
         }
 
         word C_str = "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
@@ -494,9 +481,8 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         D_matrix = laplacian_pressure(NPmodes);
         gTensor = divMomentum(NUmodes, NPmodes);
-        BC1_matrix = pressure_BC1(NUmodes, NPmodes);
-        bc2Tensor = pressureBC2(NUmodes, NPmodes);
         BC3_matrix = pressure_BC3(NUmodes, NPmodes);
+	BC4_matrix = pressure_BC4(NUmodes, NPmodes);
 
         if (bcMethod == "penalty")
         {
@@ -512,14 +498,12 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         ITHACAstream::exportMatrix(K_matrix, "K", "python", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(D_matrix, "D", "python", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(M_matrix, "M", "python", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(BC1_matrix, "BC1", "python",
-                                   "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(BC3_matrix, "BC3", "python",
+                                   "./ITHACAoutput/Matrices/");
+	ITHACAstream::exportMatrix(BC4_matrix, "BC4", "python",
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(C_tensor, "C", "python", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(gTensor, "G", "python", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(bc2Tensor, "BC2", "python",
-                                   "./ITHACAoutput/Matrices/");
     }
 
     if (para->exportMatlab)
@@ -528,14 +512,12 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         ITHACAstream::exportMatrix(K_matrix, "K", "matlab", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(D_matrix, "D", "matlab", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(M_matrix, "M", "matlab", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(BC1_matrix, "BC1", "matlab",
-                                   "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(BC3_matrix, "BC3", "matlab",
+                                   "./ITHACAoutput/Matrices/");
+	ITHACAstream::exportMatrix(BC4_matrix, "BC4", "matlab",
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(C_tensor, "C", "matlab", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(gTensor, "G", "matlab", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(bc2Tensor, "BC2", "matlab",
-                                   "./ITHACAoutput/Matrices/");
     }
 
     if (para->exportTxt)
@@ -544,16 +526,14 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         ITHACAstream::exportMatrix(K_matrix, "K", "eigen", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(D_matrix, "D", "eigen", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(M_matrix, "M", "eigen", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(BC1_matrix, "BC1", "eigen",
-                                   "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(BC3_matrix, "BC3", "eigen",
+                                   "./ITHACAoutput/Matrices/");
+	ITHACAstream::exportMatrix(BC4_matrix, "BC4", "eigen",
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(C_tensor, "C", "eigen",
                                    "./ITHACAoutput/Matrices/C");
         ITHACAstream::exportTensor(gTensor, "G", "eigen",
                                    "./ITHACAoutput/Matrices/G");
-        ITHACAstream::exportTensor(bc2Tensor, "BC2", "eigen",
-                                   "./ITHACAoutput/Matrices/BC2");
     }
 }
 
@@ -1149,30 +1129,47 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
     return BC3_matrix;
 }
 
+Eigen::MatrixXd steadyNS::pressure_BC4(label NUmodes, label NPmodes)
+{
+    label P4_BC1size = NPmodes;
+    label P4_BC2size = NUmodes + liftfield.size();
+    Eigen::MatrixXd BC4_matrix(P4_BC1size, P4_BC2size);
+    fvMesh& mesh = _mesh();
+    surfaceVectorField n(mesh.Sf() / mesh.magSf());
+
+    for (label i = 0; i < P4_BC1size; i++)
+    {
+        for (label j = 0; j < P4_BC2size; j++)
+        {
+            surfaceScalarField BC3 = fvc::interpolate(Pmodes[i]);
+            surfaceScalarField BC4 = n & fvc::interpolate(L_U_SUPmodes[j]);
+            surfaceScalarField BC5 = (BC3 * BC4) * mesh.magSf();
+            double s = 0;
+
+            for (label k = 0; k < BC5.boundaryField().size(); k++)
+            {
+                s += gSum(BC5.boundaryField()[k]);
+            }
+
+            BC4_matrix(i, j) = s;
+        }
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(BC4_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    ITHACAstream::SaveDenseMatrix(BC4_matrix, "./ITHACAoutput/Matrices/",
+                                  "BC4_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NPmodes));
+    return BC4_matrix;
+}
+
 List< Eigen::MatrixXd > steadyNS::bcVelocityVec(label NUmodes,
         label NSUPmodes)
 {
-    PtrList<volVectorField> Together(0);
-
-    if (NUmodes != 0)
-    {
-        for (label k = 0; k < NUmodes; k++)
-        {
-            Together.append(Umodes[k]);
-        }
-    }
-
-    if (NSUPmodes != 0)
-    {
-        for (label k = 0; k < NSUPmodes; k++)
-        {
-            Together.append(supmodes[k]);
-        }
-    }
-
     label BCsize = NUmodes + NSUPmodes;
     List < Eigen::MatrixXd > bcVelVec(inletIndex.rows());
-    //List < Eigen::MatrixXd > bcVelVec(patches_penalty.size());
 
     for (label j = 0; j < inletIndex.rows(); j++)
     {
@@ -1186,8 +1183,8 @@ List< Eigen::MatrixXd > steadyNS::bcVelocityVec(label NUmodes,
 
         for (label i = 0; i < BCsize; i++)
         {
-            bcVelVec[k](i, 0) = gSum(Together[i].boundaryField()[BCind]).component(
-                                    BCcomp);
+            bcVelVec[k](i, 0) = gSum(L_U_SUPmodes[i].boundaryField()[BCind].component(
+                                    BCcomp));
         }
     }
 
@@ -1199,24 +1196,6 @@ List< Eigen::MatrixXd > steadyNS::bcVelocityVec(label NUmodes,
 List< Eigen::MatrixXd > steadyNS::bcVelocityMat(label NUmodes,
         label NSUPmodes)
 {
-    PtrList<volVectorField> Together(0);
-
-    if (NUmodes != 0)
-    {
-        for (label k = 0; k < NUmodes; k++)
-        {
-            Together.append(Umodes[k]);
-        }
-    }
-
-    if (NSUPmodes != 0)
-    {
-        for (label k = 0; k < NSUPmodes; k++)
-        {
-            Together.append(supmodes[k]);
-        }
-    }
-
     label BCsize = NUmodes + NSUPmodes;
     label BCUsize = inletIndex.rows();
     List < Eigen::MatrixXd > bcVelMat(BCUsize);
@@ -1235,8 +1214,8 @@ List< Eigen::MatrixXd > steadyNS::bcVelocityMat(label NUmodes,
         {
             for (label j = 0; j < BCsize; j++)
             {
-                bcVelMat[k](i, j) = gSum(Together[i].boundaryField()[BCind].component(BCcomp) *
-                                         Together[j].boundaryField()[BCind].component(BCcomp));
+                bcVelMat[k](i, j) = gSum(L_U_SUPmodes[i].boundaryField()[BCind].component(BCcomp) *
+                                         L_U_SUPmodes[j].boundaryField()[BCind].component(BCcomp));
             }
         }
     }

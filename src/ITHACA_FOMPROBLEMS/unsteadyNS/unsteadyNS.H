@@ -99,15 +99,24 @@ class unsteadyNS: public steadyNS
         /// maxDeltaT
         scalar maxDeltaT;
 
+	// Counter used for the time-dependent boundary conditions
+        label counter2 = 1;
+
+        /// Time-dependent Boundary Method
+        word timedepbcMethod;
+
+	// Matrix containing the time-dependent boundary conditions for each time step
+        Eigen::MatrixXd timeBCoff;
+
         // Functions
 
         //--------------------------------------------------------------------------
         /// @brief      Perform a truthsolve
         /// @param[in]  mu_now  The actual value of the parameter for this truthSolve. Used only
-        /// to construct mu_interp matrix which is written out in the Offline folder, also for par file in
-        /// the Parameters folder.
+        /// to construct mu_interp matrix which is written out in a specified folder, also for par 
+        /// file in the Parameters folder.
         ///
-        void truthSolve(List<scalar> mu_now);
+        void truthSolve(List<scalar> mu_now, fileName folder = "./ITHACAoutput/Offline/");
 
         //--------------------------------------------------------------------------
         /// Function to check if the solution must be exported.
