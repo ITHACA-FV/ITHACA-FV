@@ -180,7 +180,7 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
     // BC PPE
     Eigen::VectorXd M7 = problem->BC3_matrix * a_tmp * nu;
     // BC PPE time-dependents BCs
-    Eigen::VectorXd M8 = problem->BC4_matrix * a_tmp * nu;
+    Eigen::VectorXd M8 = problem->BC4_matrix * a_dot;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
