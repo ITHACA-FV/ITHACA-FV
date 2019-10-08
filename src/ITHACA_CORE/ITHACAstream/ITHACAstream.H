@@ -146,34 +146,51 @@ class ITHACAstream
 
 
         //--------------------------------------------------------------------------
-        /// Read a list of fields from a folder
+        /// Funtion to read a list of volVectorField from name of the field and casename
         ///
-        /// @param[in]  Lfield      A PtrList of scalar of vector fields where you want to store the field.
+        /// @param[in]  Lfield      a PtrList of volVectorField where you want to store the field.
         /// @param[in]  Name        The name of the field you want to read.
         /// @param[in]  casename    The folder where the field is stored.
-        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field (default is 0).
-        /// @param[in]  n_snap      The number of snapshots you want to read (default is all).
+        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
+        /// @param[in]  n_snap      The number of snapshots you want to read.
         ///
-        /// @tparam     T           Type of field: scalar of vector
-        ///
-        template<typename T>
-        static void read_fields(PtrList<T>& Lfield, word Name,
+        static void read_fields(PtrList<volVectorField>& Lfield, word Name,
                                 fileName casename, label first_snap = 0, label n_snap = 0);
 
+        //--------------------------------------------------------------------------
+        /// Funtion to read a list of volScalarField from name of the field and folder name
+        ///
+        /// @param[in]  Lfield      a PtrList of volScalarField where you want to store the field.
+        /// @param[in]  Name        The name of the field you want to read.
+        /// @param[in]  casename    The folder where the field is stored.
+        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
+        /// @param[in]  n_snap      The number of snapshots you want to read.
+        ///
+        static void read_fields(PtrList<volScalarField>& Lfield, word Name,
+                                fileName casename, label first_snap = 0, label n_snap = 0);
+        
 
         //--------------------------------------------------------------------------
-        /// Read a list of fields given the casename and a sample field with the same name
+        /// Funtion to read a list of volVectorField from name of the field a volVectorField if it is already existing
         ///
-        /// @param[in]  Lfield      A PtrList of scalar of vector fields where you want to store the field.
+        /// @param[in]  Lfield      a PtrList of volVectorField where you want to store the field.
         /// @param[in]  field       The field used as template to read other fields.
         /// @param[in]  casename    The folder where the field is stored.
-        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field (default is 0).
-        /// @param[in]  n_snap      The number of snapshots you want to read (default is all).
+        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
+        /// @param[in]  n_snap      The number of snapshots you want to read.
         ///
-        /// @tparam     T           Type of field: scalar of vector
+        static void read_fields(PtrList<volVectorField>& Lfield, volVectorField& field,
+                                fileName casename, label first_snap = 0, label n_snap = 0);
+
+        //--------------------------------------------------------------------------
+        /// Funtion to read a list of volScalarField from casename and a list of volScalarField with the same name
         ///
-        template<typename T>
-        static void read_fields(PtrList<T>& Lfield, T& field,
+        /// @param[in]  Lfield      a PtrList of volScalarField where you want to store the field.
+        /// @param[in]  field       The field used as template to read other fields.
+        /// @param[in]  casename    The folder where the field is stored.
+        /// @param[in]  first_snap  The first snapshots from which you want to start reading the field.
+        /// @param[in]  n_snap      The number of snapshots you want to read.
+        static void read_fields(PtrList<volScalarField>& Lfield, volScalarField& field,
                                 fileName casename, label first_snap = 0, label n_snap = 0);
 
         //--------------------------------------------------------------------------
@@ -476,68 +493,6 @@ Istream& operator>> (Istream& is, Eigen::Tensor<T, 3>& tens)
 }
 
 template<typename T>
-void read_fields(PtrList<T>& Lfield, word Name,
-                               fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << "######### Reading the Data for " << Name << " #########" << endl;
-        fileName rootpath(".");
-        label last_s;
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        fvMesh mesh
-        (
-            Foam::IOobject
-            (
-                Foam::fvMesh::defaultRegion,
-                casename + runTime2.timeName(),
-                runTime2,
-                Foam::IOobject::MUST_READ
-            )
-        );
-
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 2);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            ITHACAstream::printProgress(double(i + 1) / last_s);
-            //Info << "Reading " << Name << " number " << i - 1 << endl;
-            T tmp_field(
-                IOobject
-                (
-                    Name,
-                    runTime2.times()[i].name(),
-                    mesh,
-                    IOobject::MUST_READ
-                ),
-                mesh
-            );
-            Lfield.append(tmp_field);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        std::cerr << "File: ITHACAstream.C, Line: 343" << std::endl;
-    }
-}
-
-template<typename T>
 void ITHACAstream::exportFields(PtrList<T>& field, word folder,
                                 word fieldname)
 {
@@ -594,99 +549,6 @@ void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder,
     }
 }
 
-template<typename T>
-static void read_fields(PtrList<T>& Lfield, T& field,
-                        fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        fileName rootpath(".");
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        label last_s;
-
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 1);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i - 1 << endl;
-            T tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    casename + runTime2.times()[i].name(),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            ITHACAstream::printProgress(double(i + 1) / last_s);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        word timename(field.mesh().time().rootPath() + "/" +
-                      field.mesh().time().caseName() );
-        timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
-        label last_s = ITHACAstream::numberOfFiles(casename,
-                                     "processor" + name(Pstream::myProcNo()) + "/");
-
-        if (first_snap > last_s)
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-        }
-        else
-        {
-            last_s = min(last_s, n_snap + 1);
-        }
-
-        for (label i = first_snap + 1; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i << endl;
-            T tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    timename + "/" + name(i),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            ITHACAstream::printProgress(double(i + 1) / last_s);
-        }
-
-        Info << endl;
-    }
-}
 
 template<typename T>
 void ITHACAstream::exportSolution(T& s, fileName subfolder, fileName folder)
