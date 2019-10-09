@@ -123,7 +123,7 @@ class ITHACAstream
         /// @param[in] matrix    Eigen::MatrixXd that you want to export.
         /// @param[in] Name      Name of saved file.
         /// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
-        /// @param[in] folder    Directory in which the fali is saved.
+        /// @param[in] folder    Directory in which the file is saved.
         ///
         static void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                                  word type = "python", word folder = "./Matrices");
@@ -168,7 +168,7 @@ class ITHACAstream
         ///
         static void read_fields(PtrList<volScalarField>& Lfield, word Name,
                                 fileName casename, label first_snap = 0, label n_snap = 0);
-        
+
 
         //--------------------------------------------------------------------------
         /// Funtion to read a list of volVectorField from name of the field a volVectorField if it is already existing
@@ -208,7 +208,7 @@ class ITHACAstream
 
         //--------------------------------------------------------------------------
         /// Read a two dimensional matrix from a txt file in Eigen format
-        /// One has to provide the complete filename with the absolute or relative path
+        /* One has to provide the complete filename with the absolute or relative path */
         ///
         /// @param[in]  filename  The filename of the matrix.
         ///
@@ -218,10 +218,10 @@ class ITHACAstream
 
         //--------------------------------------------------------------------------
         /// Read a three dimensional matrix from a txt file in Eigen format
-        /// One has to provide the folder containing the matrix files and the filename of the
-        /// the matrix. Since it is stored as a List of matrices each matrix must be stored in a
-        /// different file with the following format:
-        /// matFileName(i)_mat.txt
+        /* One has to provide the folder containing the matrix files and the filename of the
+         the matrix. Since it is stored as a List of matrices each matrix must be stored in a
+         different file with the following format:
+         matFileName(i)_mat.txt */
         ///
         /// @param[in]  folder    The folder where the txt files are located
         /// @param[in]  mat_name  The matrix name

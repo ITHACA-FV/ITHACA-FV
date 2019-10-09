@@ -69,7 +69,7 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
         scalar dt;
         Eigen::VectorXd y_old;
         Eigen::VectorXd BC;
-	Eigen::MatrixXd tauU;
+        Eigen::MatrixXd tauU;
 };
 
 
@@ -97,7 +97,7 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
         scalar dt;
         Eigen::VectorXd y_old;
         Eigen::VectorXd BC;
-	Eigen::MatrixXd tauU;
+        Eigen::MatrixXd tauU;
 };
 
 
@@ -149,7 +149,7 @@ class reducedUnsteadyNS: public reducedSteadyNS
         double exportEvery;
 
         /// Number of timesteps calculated for the iterative penalty method
-	int timeStepPenalty = 1;
+        int timeStepPenalty = 1;
 
         /// Penalty Factor determined with iterative solver
         Eigen::MatrixXd tauIter;
@@ -158,38 +158,40 @@ class reducedUnsteadyNS: public reducedSteadyNS
         scalar maxIterPenalty;
 
         /// Tolerance for the residual of the boundary values, there is the same tolerance for velocity and temperature
-	scalar tolerancePenalty;
+        scalar tolerancePenalty;
 
         /// Pointer to the FOM problem
         unsteadyNS* problem;
 
         // Functions
 
-	/// Method to determine the penalty factors iteratively.
+        /// Method to determine the penalty factors iteratively.
         ///
         /// @param[in]  vel_now   The vector of online velocity. It is defined in
-        /// with an Eigen::MatrixXd and must have one col or as many cols as timesteps to be performed 
-	/// in case of time-dependent BCs and as many rows as the number of parametrized boundary conditions.
-	///
-	/// @param[in]  tauIter   The penalty factors determined one iteration step
-	///
-	/// @param[in]  startSnap The first snapshot taken from the offline snapshots
+        /// with an Eigen::MatrixXd and must have one col or as many cols as timesteps to be performed
+        /// in case of time-dependent BCs and as many rows as the number of parametrized boundary conditions.
+        ///
+        /// @param[in]  tauIter   The penalty factors determined one iteration step
+        ///
+        /// @param[in]  startSnap The first snapshot taken from the offline snapshots
         /// and used to get the reduced initial condition.
         ///
-	Eigen::MatrixXd penalty_PPE(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& tauIter,label startSnap = 0);
+        Eigen::MatrixXd penalty_PPE(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& tauIter,
+                                    label startSnap = 0);
 
         /// Method to determine the penalty factors iteratively.
         ///
         /// @param[in]  vel_now   The vector of online velocity. It is defined in
-        /// with an Eigen::MatrixXd and must have one col or as many cols as timesteps to be performed 
-	/// in case of time-dependent BCs and as many rows as the number of parametrized boundary conditions.
-	///
-	/// @param[in]  tauIter   The penalty factors determined one iteration step
-	///
-	/// @param[in]  startSnap The first snapshot taken from the offline snapshots
+        /// with an Eigen::MatrixXd and must have one col or as many cols as timesteps to be performed
+        /// in case of time-dependent BCs and as many rows as the number of parametrized boundary conditions.
+        ///
+        /// @param[in]  tauIter   The penalty factors determined one iteration step
+        ///
+        /// @param[in]  startSnap The first snapshot taken from the offline snapshots
         /// and used to get the reduced initial condition.
         ///
-	Eigen::MatrixXd penalty_sup(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& tauIter,label startSnap = 0);
+        Eigen::MatrixXd penalty_sup(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& tauIter,
+                                    label startSnap = 0);
 
         /// Method to perform an online solve using a PPE stabilisation method
         ///

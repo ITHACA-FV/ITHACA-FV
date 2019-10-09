@@ -131,8 +131,8 @@ class reductionProblem
         /// \\]
         Eigen::MatrixXi inletIndex;
 
-	/// Matrix that contains informations about the inlet boundaries
-	/// without specifing the direction
+        /// Matrix that contains informations about the inlet boundaries
+        /// without specifing the direction
         /// Rows = Number of parametrized boundary conditions <br>
         /// Cols = 1 <br>
         /// Example: <br>
@@ -140,7 +140,7 @@ class reductionProblem
         /// example.inletIndex(0, 0) = 0; <br>
         /// example.inletIndex(1, 0) = 1; <br>
         /// Means that there are two parametrized boundary conditions of which the
-	/// first row is of patch 0 and the second row of patch 1.
+        /// first row is of patch 0 and the second row of patch 1.
         /// The Matrix should be implemented in the following way:
         /// \\[
         /// \\mbox{inletIndex}=\\begin{bmatrix}
@@ -150,7 +150,7 @@ class reductionProblem
         /// \\mbox{BCN_index}  \\ \
         /// \\end{bmatrix}
         /// \\]
-	Eigen::MatrixXi inletPatch;
+        Eigen::MatrixXi inletPatch;
 
 #pragma GCC diagnostic pop
 

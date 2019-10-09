@@ -121,7 +121,7 @@ class ITHACADMD : public ITHACAPOD
         /// If true, it uses the Randomized SVD
         bool redSVD;
 
-	//--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
         /// Get the DMD modes
         ///
         /// @param[in]  SVD_rank        The svd rank
@@ -131,19 +131,19 @@ class ITHACADMD : public ITHACAPOD
         void getModes(int SVD_rank = -1, bool exact = true,
                       bool exportDMDmodes = false);
 
-	//--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
         /// Convert the EigenModes in Matrix form into OpenFOAM GeometricFields
         ///
         void convert2Foam();
 
-	//--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
         /// Export the eigenvalues in numpy format.
         ///
         /// @param[in]  exportFolder  Export folder path
         ///
         void exportEigs(word exportFolder);
 
-	//--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
         /// Export the dynamics of DMD given an initial time step, a final one and a time step.
         ///
         /// @param[in]  tStart  Intial time
@@ -152,7 +152,7 @@ class ITHACADMD : public ITHACAPOD
         ///
         void getDynamics(double tStart, double tFinal, double dt);
 
-	//--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
         /// Reconstruct and export the solution using the computed dynamics
         ///
         void reconstruct(word exportFolder, word fieldName);

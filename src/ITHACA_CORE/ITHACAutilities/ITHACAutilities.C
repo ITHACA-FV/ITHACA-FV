@@ -330,14 +330,16 @@ double ITHACAutilities::error_fields(TypeField& field1,
                                      TypeField& field2)
 {
     double err;
+
     if (L2norm(field1) <= 1e-6)
     {
         err = 0;
     }
     else
     {
- 	err = L2norm(field1 - field2) / L2norm(field1);
+        err = L2norm(field1 - field2) / L2norm(field1);
     }
+
     return err;
 }
 
