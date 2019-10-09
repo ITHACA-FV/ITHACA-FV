@@ -73,7 +73,7 @@ class ITHACADMD : public ITHACAPOD
         ///
         /// @brief      Constructs the object.
         ///
-        /// @param      snapshots  The snapshots on which you want to perform DMD
+        /// @param[in]  snapshots  The snapshots on which you want to perform DMD
         /// @param[in]  dt         The Time Step used to acquire the snapshots
         ///
         ITHACADMD(PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
@@ -88,68 +88,73 @@ class ITHACADMD : public ITHACAPOD
         /// Modes object used to store the Imaginary part of the DMD modes
         Modes<Field_type> DMDmodesImag;
 
-        /// The eigenvalues of the dynamics mode decomposition
+        /// Eigenvalues of the dynamics mode decomposition
         Eigen::VectorXcd eigenValues;
 
-        /// The DMD modes stored in a complex Eigen::Matrix, it is the object used for computations
+        /// DMD modes stored in a complex Eigen::Matrix, it is the object used for computations
         Eigen::MatrixXcd DMDEigenModes;
 
-        /// The DMD modes on the boundary stored in a List of complex Eigen::Matrix, it is the object used for computations
+        /// DMD modes on the boundary stored in a List of complex Eigen::Matrix, it is the object used for computations
         List<Eigen::MatrixXcd> DMDEigenModesBC;
 
-        /// A complex matrix used to store the POD modes, used only for compution in the projected approach
+        /// Complex matrix used to store the POD modes, used only for compution in the projected approach
         Eigen::MatrixXcd PODm;
 
-        /// A list of complex matrices used to store the POD modes on the boundaries, used only for compution in the projected approach
+        /// List of complex matrices used to store the POD modes on the boundaries, used only for compution in the projected approach
         List<Eigen::MatrixXcd> PODmBC;
 
-        /// The amplitudes of DMD
+        /// Amplitudes of DMD
         Eigen::VectorXd Amplitudes;
 
-        /// A complex Eigen::Matrix used to store the Dynamics of the DMD modes
+        /// Complex Eigen::Matrix used to store the Dynamics of the DMD modes
         Eigen::MatrixXcd dynamics;
 
-        /// An integer that contains the number of snapshots
+        /// Number of snapshots
         int NSnaps;
 
-        /// An integer that contains the RANK of the DMD
+        /// Rank of the DMD
         int SVD_rank_public;
 
-        /// The Original time step used to acquire the snapshots
+        /// Original time step used to acquire the snapshots
         double originalDT;
 
-        /// If true it uses the Randomized SVD
+        /// If true, it uses the Randomized SVD
         bool redSVD;
 
-        ///
-        /// @brief      Function to get the DMD modes
+        //--------------------------------------------------------------------------
+        /// Get the DMD modes
         ///
         /// @param[in]  SVD_rank        The svd rank
-        /// @param[in]  exact           True if you want the exact DMD modes computations or false if you want the projected modes
+        /// @param[in]  exact           True (default) if you want the exact DMD modes computations. False if you want the projected modes
         /// @param[in]  exportDMDmodes  A flag to export the DMD modes, both real and imaginary parts are exported
         ///
         void getModes(int SVD_rank = -1, bool exact = true,
                       bool exportDMDmodes = false);
 
-        /// Function to convert the EigenModes in Matrix form into OpenFOAM GeometricFields
+        //--------------------------------------------------------------------------
+        /// Convert the EigenModes in Matrix form into OpenFOAM GeometricFields
+        ///
         void convert2Foam();
 
-        /// Function to export the eigenvalues in npy file format.
+        //--------------------------------------------------------------------------
+        /// Export the eigenvalues in numpy format.
         ///
-        /// @param[in]  exportFolder  export folder path
+        /// @param[in]  exportFolder  Export folder path
         ///
         void exportEigs(word exportFolder);
 
+        //--------------------------------------------------------------------------
+        /// Export the dynamics of DMD given an initial time step, a final one and a time step.
         ///
-        /// @brief      Function to export the dynamics of DMD given an initial time step, a final one and a time step.
-        ///
-        /// @param[in]  tStart  The intial time
-        /// @param[in]  tFinal  The final time
-        /// @param[in]  dt      The time step
+        /// @param[in]  tStart  Intial time
+        /// @param[in]  tFinal  Final time
+        /// @param[in]  dt      Time step
         ///
         void getDynamics(double tStart, double tFinal, double dt);
 
-        /// Function to reconstruct and export the solution using the computed dynamics
+        //--------------------------------------------------------------------------
+        /// Reconstruct and export the solution using the computed dynamics
+        ///
         void reconstruct(word exportFolder, word fieldName);
 };
 #endif

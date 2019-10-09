@@ -80,7 +80,7 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
              "The BC method must be set to lift or penalty in ITHACAdict");
     timedepbcMethod = ITHACAdict->lookupOrDefault<word>("timedepbcMethod", "no");
     M_Assert(timedepbcMethod == "yes" || timedepbcMethod == "no",
-    	     "The BC method can be set to yes or no");
+             "The BC method can be set to yes or no");
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();
@@ -110,15 +110,17 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
     // Set time-dependent velocity BCs for initial condition
     if (timedepbcMethod == "yes")
     {
-	for (label i = 0; i < inletPatch.rows(); i++)
-	{
-	    Vector<double> inl(0, 0, 0);
-	     for (label j = 0; j < inl.size(); j++)
-	     {            
-                inl[j] = timeBCoff(i*inl.size()+j, 0);
-	     }
-	     assignBC(U, inletPatch(i, 0), inl);
-	}
+        for (label i = 0; i < inletPatch.rows(); i++)
+        {
+            Vector<double> inl(0, 0, 0);
+
+            for (label j = 0; j < inl.size(); j++)
+            {
+                inl[j] = timeBCoff(i * inl.size() + j, 0);
+            }
+
+            assignBC(U, inletPatch(i, 0), inl);
+        }
     }
 
     // Export and store the initial conditions for velocity and pressure
@@ -138,23 +140,26 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
 #include "CourantNo.H"
 #include "setDeltaT.H"
         runTime.setEndTime(finalTime);
-	runTime++;
+        runTime++;
         Info << "Time = " << runTime.timeName() << nl << endl;
 
-	// Set time-dependent velocity BCs
-    	if (timedepbcMethod == "yes")
-    	{
-	    for (label i = 0; i < inletPatch.rows(); i++)
-	    {
-	    	Vector<double> inl(0, 0, 0);
-	     	for (label j = 0; j < inl.size(); j++)
-	     	{            
-                    inl[j] = timeBCoff(i*inl.size()+j, counter2);
-	     	}
-	     	assignBC(U, inletPatch(i, 0), inl);
-	    }
-	    counter2 ++;
-    	}
+        // Set time-dependent velocity BCs
+        if (timedepbcMethod == "yes")
+        {
+            for (label i = 0; i < inletPatch.rows(); i++)
+            {
+                Vector<double> inl(0, 0, 0);
+
+                for (label j = 0; j < inl.size(); j++)
+                {
+                    inl[j] = timeBCoff(i * inl.size() + j, counter2);
+                }
+
+                assignBC(U, inletPatch(i, 0), inl);
+            }
+
+            counter2 ++;
+        }
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
@@ -198,7 +203,6 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
                 mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
             }
         }
-
     }
 
     // Resize to Unitary if not initialized by user (i.e. non-parametric problem)

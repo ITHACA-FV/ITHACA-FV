@@ -41,51 +41,20 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
-void ITHACAstream::exportFields(PtrList<volVectorField>& field, word folder,
-                                word fieldname)
-{
-    ITHACAutilities::createSymLink(folder);
-    Info << "######### Exporting the Data for " << fieldname << " #########" <<
-         endl;
-
-    for (label j = 0; j < field.size() ; j++)
-    {
-        exportSolution(field[j], name(j + 1), folder, fieldname);
-        printProgress(double(j + 1) / field.size());
-    }
-
-    std::cout << std::endl;
-}
-
-void ITHACAstream::exportFields(PtrList<volScalarField>& field, word folder,
-                                word fieldname)
-{
-    ITHACAutilities::createSymLink(folder);
-    Info << "######### Exporting the Data for " << fieldname << " #########" <<
-         endl;
-
-    for (label j = 0; j < field.size() ; j++)
-    {
-        exportSolution(field[j], name(j + 1), folder, fieldname);
-        printProgress(double(j + 1) / field.size());
-    }
-
-    std::cout << std::endl;
-}
 template <typename T>
 void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
-                                word Name, word tipo,
+                                word Name, word type,
                                 word folder)
 {
-    std::string message = "The extension \"" +  tipo +
+    std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
-    M_Assert(tipo == "python" || tipo == "matlab"
-             || tipo == "eigen", message.c_str()
+    M_Assert(type == "python" || type == "matlab"
+             || type == "eigen", message.c_str()
             );
     mkDir(folder);
     word est;
 
-    if (tipo == "python")
+    if (type == "python")
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -114,7 +83,7 @@ void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
         str << "]])" << endl;
     }
 
-    if (tipo == "matlab")
+    if (type == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -136,7 +105,7 @@ void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
         str << "];" << endl;
     }
 
-    if (tipo == "eigen")
+    if (type == "eigen")
     {
         std::ofstream ofs;
         ofs.open (folder + "/" + Name + "_mat.txt");
@@ -147,30 +116,30 @@ void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
 }
 
 template void ITHACAstream::exportMatrix(Eigen::Matrix < double, -1,
-        -1 > & matrix, word Name, word tipo,
+        -1 > & matrix, word Name, word type,
         word folder);
 
 template void ITHACAstream::exportMatrix(Eigen::Matrix < int, -1,
-        -1 > & matrix, word Name, word tipo,
+        -1 > & matrix, word Name, word type,
         word folder);
 
 template void ITHACAstream::exportMatrix(Eigen::Matrix < float, -1,
-        -1 > & matrix, word Name, word tipo,
+        -1 > & matrix, word Name, word type,
         word folder);
 
 void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
-                                word tipo, word folder)
+                                word type, word folder)
 {
-    std::string message = "The extension \"" +  tipo +
+    std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
-    M_Assert(tipo == "python" || tipo == "matlab"
-             || tipo == "eigen", message.c_str()
+    M_Assert(type == "python" || type == "matlab"
+             || type == "eigen", message.c_str()
             );
     mkDir(folder);
     word est;
 
     // Python Case
-    if (tipo == "python")
+    if (type == "python")
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -205,7 +174,7 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
         }
     }
     // Matlab case
-    else if (tipo == "matlab")
+    else if (type == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -230,7 +199,7 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
             str << "];" << endl;
         }
     }
-    else if (tipo == "eigen")
+    else if (type == "eigen")
     {
         for (label i = 0; i < matrix.size(); i++)
         {
@@ -242,18 +211,18 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
 
 template<typename T>
 void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
-                                word tipo, word folder)
+                                word type, word folder)
 {
-    std::string message = "The extension \"" +  tipo +
+    std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
-    M_Assert(tipo == "python" || tipo == "matlab"
-             || tipo == "eigen", message.c_str()
+    M_Assert(type == "python" || type == "matlab"
+             || type == "eigen", message.c_str()
             );
     mkDir(folder);
     word est;
 
     // Python Case
-    if (tipo == "python")
+    if (type == "python")
     {
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -295,7 +264,7 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
         }
     }
     // Matlab case
-    else if (tipo == "matlab")
+    else if (type == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -324,7 +293,7 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
             str << "];" << endl;
         }
     }
-    else if (tipo == "eigen")
+    else if (type == "eigen")
     {
         for (label i = 0; i < tensor.dimension(0); i++)
         {
@@ -333,99 +302,6 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
             exportMatrix(matrixAux, Namei, "eigen", folder);
         }
     }
-}
-
-template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3 > tensor,
-        word Name,
-        word tipo, word folder);
-
-template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3 > tensor,
-        word Name,
-        word tipo, word folder);
-
-template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3 > tensor,
-        word Name,
-        word tipo, word folder);
-
-List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
-{
-    int file_count = 0;
-    DIR* dirp;
-    struct dirent* entry;
-    dirp = opendir(folder.c_str());
-    List <Eigen::MatrixXd> result;
-
-    while ((entry = readdir(dirp)) != NULL)
-    {
-        if (entry->d_type == DT_REG)
-        {
-            file_count++;
-        }
-    }
-
-    closedir (dirp);
-
-    for (label j = 0; j < file_count ; j++)
-    {
-        word matname = folder + "/" + mat_name + name(j) + "_mat.txt";
-        Eigen::MatrixXd temp = readMatrix(matname);
-        result.append(temp);
-    }
-
-    return result;
-}
-
-Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
-{
-    int cols = 0, rows = 0;
-    double buff[MAXBUFSIZE];
-    // Read numbers from file into buffer.
-    std::ifstream infile;
-    infile.open(filename.c_str());
-    std::string message = "The matrix file \"" +  filename +
-                          "\" does not exist. Check the existence of the file or the way it is named.";
-    M_Assert(infile.good() != 0, message.c_str()
-            );
-
-    while (! infile.eof())
-    {
-        string line;
-        getline(infile, line);
-        int temp_cols = 0;
-        std::stringstream stream(line);
-
-        while (! stream.eof())
-        {
-            stream >> buff[cols * rows + temp_cols++];
-        }
-
-        if (temp_cols == 0)
-        {
-            continue;
-        }
-
-        if (cols == 0)
-        {
-            cols = temp_cols;
-        }
-
-        rows++;
-    }
-
-    infile.close();
-    rows--;
-    // Populate matrix with numbers.
-    Eigen::MatrixXd result(rows, cols);
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            result(i, j) = buff[ cols * i + j ];
-        }
-    }
-
-    return result;
 }
 
 void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name,
@@ -734,6 +610,99 @@ void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
 
         Info << endl;
     }
+}
+
+template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3 > tensor,
+        word Name,
+        word type, word folder);
+
+template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3 > tensor,
+        word Name,
+        word type, word folder);
+
+template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3 > tensor,
+        word Name,
+        word type, word folder);
+
+List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
+{
+    int file_count = 0;
+    DIR* dirp;
+    struct dirent* entry;
+    dirp = opendir(folder.c_str());
+    List <Eigen::MatrixXd> result;
+
+    while ((entry = readdir(dirp)) != NULL)
+    {
+        if (entry->d_type == DT_REG)
+        {
+            file_count++;
+        }
+    }
+
+    closedir (dirp);
+
+    for (label j = 0; j < file_count ; j++)
+    {
+        word matname = folder + "/" + mat_name + name(j) + "_mat.txt";
+        Eigen::MatrixXd temp = readMatrix(matname);
+        result.append(temp);
+    }
+
+    return result;
+}
+
+Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
+{
+    int cols = 0, rows = 0;
+    double buff[MAXBUFSIZE];
+    // Read numbers from file into buffer.
+    std::ifstream infile;
+    infile.open(filename.c_str());
+    std::string message = "The matrix file \"" +  filename +
+                          "\" does not exist. Check the existence of the file or the way it is named.";
+    M_Assert(infile.good() != 0, message.c_str()
+            );
+
+    while (! infile.eof())
+    {
+        string line;
+        getline(infile, line);
+        int temp_cols = 0;
+        std::stringstream stream(line);
+
+        while (! stream.eof())
+        {
+            stream >> buff[cols * rows + temp_cols++];
+        }
+
+        if (temp_cols == 0)
+        {
+            continue;
+        }
+
+        if (cols == 0)
+        {
+            cols = temp_cols;
+        }
+
+        rows++;
+    }
+
+    infile.close();
+    rows--;
+    // Populate matrix with numbers.
+    Eigen::MatrixXd result(rows, cols);
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            result(i, j) = buff[ cols * i + j ];
+        }
+    }
+
+    return result;
 }
 
 int ITHACAstream::numberOfFiles(word folder, word MatrixName)

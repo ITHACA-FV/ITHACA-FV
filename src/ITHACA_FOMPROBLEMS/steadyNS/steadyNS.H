@@ -166,7 +166,7 @@ class steadyNS: public reductionProblem
         /// PPE BC3
         Eigen::MatrixXd BC3_matrix;
 
-	/// PPE BC4
+        /// PPE BC4
         Eigen::MatrixXd BC4_matrix;
         ///@}
         //
@@ -416,9 +416,9 @@ class steadyNS: public reductionProblem
         ///
         Eigen::MatrixXd pressure_BC3(label NPmodes, label NUmodes);
 
-	//--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
         /// @brief      Term N° 4 given by the additional boundary condition using a PPE approach
-	///		for time-dependent BCs
+        ///     for time-dependent BCs
         ///
         /// @param[in]  NPmodes  The number of pressure modes.
         /// @param[in]  NUmodes  The number of velocity modes.
