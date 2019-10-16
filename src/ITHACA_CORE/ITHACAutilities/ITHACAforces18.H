@@ -295,10 +295,10 @@ class ITHACAforces
         virtual vector momentEff() const;
 
         //- Return the viscous forces
-        virtual vector force_tau() const;
+        virtual vector forceTau() const;
 
         //- Return the pressure forces
-        virtual vector force_pressure() const;
+        virtual vector forcePressure() const;
 
         //- Execute, currently does nothing
         virtual bool execute();
