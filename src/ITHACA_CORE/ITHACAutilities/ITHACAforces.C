@@ -1061,12 +1061,12 @@ bool Foam::functionObjects::ITHACAforces::write()
 }
 
 
-Foam::vector Foam::functionObjects::ITHACAforces::force_pressure() const
+Foam::vector Foam::functionObjects::ITHACAforces::forcePressure() const
 {
     return sum(force_[0]);
 }
 
-Foam::vector Foam::functionObjects::ITHACAforces::force_tau() const
+Foam::vector Foam::functionObjects::ITHACAforces::forceTau() const
 {
     return sum(force_[1]);
 }
@@ -1883,17 +1883,17 @@ bool Foam::functionObjects::ITHACAforces::execute()
     return true;
 }
 
-Foam::vector Foam::functionObjects::ITHACAforces::force_porous() const
+Foam::vector Foam::functionObjects::ITHACAforces::forcePorous() const
 {
     return sum(force_[2]);
 }
 
-Foam::vector Foam::functionObjects::ITHACAforces::force_pressure() const
+Foam::vector Foam::functionObjects::ITHACAforces::forcePressure() const
 {
     return sum(force_[0]);
 }
 
-Foam::vector Foam::functionObjects::ITHACAforces::force_tau() const
+Foam::vector Foam::functionObjects::ITHACAforces::forceTau() const
 {
     return sum(force_[1]);
 }

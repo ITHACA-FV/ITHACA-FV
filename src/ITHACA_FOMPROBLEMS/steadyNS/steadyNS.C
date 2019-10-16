@@ -1287,7 +1287,7 @@ void steadyNS::forcesMatrices(label NUmodes, label NPmodes, label NSUPmodes)
 
         for (label j = 0; j < 3; j++)
         {
-            tauMatrix(i, j) = f.force_tau()[j];
+            tauMatrix(i, j) = f.forceTau()[j];
         }
     }
 
@@ -1301,7 +1301,7 @@ void steadyNS::forcesMatrices(label NUmodes, label NPmodes, label NSUPmodes)
 
         for (label j = 0; j < 3; j++)
         {
-            nMatrix(i, j) = f.force_pressure()[j];
+            nMatrix(i, j) = f.forcePressure()[j];
         }
     }
 
