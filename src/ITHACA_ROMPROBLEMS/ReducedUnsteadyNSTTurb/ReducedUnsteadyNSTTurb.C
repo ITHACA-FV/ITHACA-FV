@@ -303,7 +303,7 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
 
         for (label i = 0; i < Nphi_nut; i++)
         {
-            newton_object_sup.nu_c(i) = problem->rbfsplines[i]->eval(vel_now);
+            newton_object_sup.nu_c(i) = problem->rbfsplines[i]->eval(tv);
         }
 
         volScalarField nut_rec("nut_rec", problem->nuTmodes[0] * 0);
