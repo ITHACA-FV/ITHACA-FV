@@ -49,7 +49,7 @@ SourceFiles
 #include "IOmanip.H"
 #include "ReducedSteadyNS.H"
 #include "ReducedUnsteadyNST.H"
-#include "unsteadyNSTturb.H"
+#include "UnsteadyNSTTurb.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
@@ -59,7 +59,7 @@ struct newton_unsteadyNSTTurb_sup: public newton_argument<double>
     public:
         newton_unsteadyNSTTurb_sup() {}
         newton_unsteadyNSTTurb_sup(int Nx, int Ny,
-                                   unsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
+                                   UnsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_nut(problem.Nnutmodes),
@@ -70,7 +70,7 @@ struct newton_unsteadyNSTTurb_sup: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-        unsteadyNSTTurb* problem;
+        UnsteadyNSTTurb* problem;
         int Nphi_u;
         int Nphi_nut;
         int Nphi_p;
@@ -90,7 +90,7 @@ struct newton_unsteadyNSTTurb_sup_t: public newton_argument<double>
     public:
         newton_unsteadyNSTTurb_sup_t() {}
         newton_unsteadyNSTTurb_sup_t(int Nx, int Ny,
-                                     unsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
+                                     UnsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
             N_BC_t(problem.inletIndexT.rows()),
@@ -99,7 +99,7 @@ struct newton_unsteadyNSTTurb_sup_t: public newton_argument<double>
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-        unsteadyNSTTurb* problem;
+        UnsteadyNSTTurb* problem;
         int Nphi_t;
         int N_BC_t;
         int Nphi_u;
@@ -127,7 +127,7 @@ struct newton_unsteadyNSTTurb_sup_t: public newton_argument<double>
 /// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes weakly coupled with the energy equation </b> problem.
 /** In this class are implemented the methods to solve a reduced version of the non-stationary Navier-stokes coupled with the energy
 equations. This class must be used together with the unsteadyNST class */
-class reducedUnsteadyNSTTurb: public reducedUnsteadyNST
+class ReducedUnsteadyNSTTurb: public reducedUnsteadyNST
 {
     private:
 
@@ -135,16 +135,16 @@ class reducedUnsteadyNSTTurb: public reducedUnsteadyNST
         // Constructors
         /// Construct Null
         //
-        reducedUnsteadyNSTTurb();
+        ReducedUnsteadyNSTTurb();
 
         /// Construct Null
         ///
         /// @param[in]  problem  a full order unsteadyNS problem
         /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
         ///
-        explicit reducedUnsteadyNSTTurb(unsteadyNSTTurb& problem);
+        explicit ReducedUnsteadyNSTTurb(UnsteadyNSTTurb& problem);
 
-        ~reducedUnsteadyNSTTurb() {};
+        ~ReducedUnsteadyNSTTurb() {};
 
         /// List of snapshots for the solution for eddy viscosity
         PtrList<volScalarField> nutFields;
@@ -180,7 +180,7 @@ class reducedUnsteadyNSTTurb: public reducedUnsteadyNST
         double tstart;
 
         /// Pointer to the FOM problem
-        unsteadyNSTTurb* problem;
+        UnsteadyNSTTurb* problem;
 
         /// Number of nut field modes
         int Nphi_nut;
@@ -198,7 +198,7 @@ class reducedUnsteadyNSTTurb: public reducedUnsteadyNST
         /// and used to get the reduced initial condition.
         ///
         //void solveOnline_sup(Eigen::MatrixXd, label startSnap=0);
-        void solveOnline_sup(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& temp_now,
+        void solveOnlineSup(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& temp_now,
                              label startSnap = 0);
 
         /// Method to reconstruct a solution for velocity and pressure from an online solve with a supremizer stabilisation technique.
@@ -207,7 +207,7 @@ class reducedUnsteadyNSTTurb: public reducedUnsteadyNST
         /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
-        void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec",
+        void reconstructSup(fileName folder = "./ITHACAOutput/online_rec",
                              int printevery = 1);
 
         /// Method to reconstruct a solution for temperature from an online solve with a supremizer stabilisation technique.
@@ -216,7 +216,7 @@ class reducedUnsteadyNSTTurb: public reducedUnsteadyNST
         /// @param[in]  folder      The folder where you want to store the results (default is "./ITHACAOutput/online_rec").
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
-        void reconstruct_supt(fileName folder = "./ITHACAOutput/online_rec",
+        void reconstructSupt(fileName folder = "./ITHACAOutput/online_rec",
                               int printevery = 1);
 };
 

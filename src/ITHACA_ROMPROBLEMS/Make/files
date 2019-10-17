@@ -3,7 +3,7 @@ ReducedUnsteadyNS/ReducedUnsteadyNS.C
 ReducedUnsteadyBB/ReducedUnsteadyBB.C
 ReducedUnsteadyNSTurb/ReducedUnsteadyNSTurb.C
 ReducedUnsteadyNST/ReducedUnsteadyNST.C
-ReducedUnsteadyNSTturb/ReducedUnsteadyNSTturb.C
+ReducedUnsteadyNSTTurb/ReducedUnsteadyNSTTurb.C
 ReducedSteadyNS/ReducedSteadyNS.C
 ReducedSteadyNSTurb/ReducedSteadyNSTurb.C
 ReducedLaplacian/ReducedLaplacian.C
