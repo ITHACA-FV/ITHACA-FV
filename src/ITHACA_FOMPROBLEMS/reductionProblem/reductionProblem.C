@@ -190,7 +190,7 @@ void reductionProblem::assignBC(volVectorField& s, label BC_ind,
 }
 
 // Reconstruct using a Matrix of coefficients (vector field)
-void reductionProblem::reconstruct_from_matrix(PtrList<volVectorField>&
+void reductionProblem::reconstructFromMatrix(PtrList<volVectorField>&
         rec_field2, PtrList<volVectorField>& modes, label Nmodes,
         Eigen::MatrixXd coeff_matrix)
 {
@@ -212,7 +212,7 @@ void reductionProblem::reconstruct_from_matrix(PtrList<volVectorField>&
 
 
 // Reconstruct using a Matrix of coefficients (vector field)
-void reductionProblem::reconstruct_from_matrix(PtrList<volScalarField>&
+void reductionProblem::reconstructFromMatrix(PtrList<volScalarField>&
         rec_field2, PtrList<volScalarField>& modes, label Nmodes,
         Eigen::MatrixXd coeff_matrix)
 {
