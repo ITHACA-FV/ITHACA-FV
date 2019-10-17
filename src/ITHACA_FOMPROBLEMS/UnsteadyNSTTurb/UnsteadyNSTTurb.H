@@ -71,16 +71,16 @@ SourceFiles
 /** In this class are implemented the methods for the offline solve of a unsteady NSTTurb problem
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the unsteadyNST class */
-class unsteadyNSTTurb: public unsteadyNST
+class UnsteadyNSTTurb: public unsteadyNST
 {
     public:
         // Constructors
         /// Construct Null
-        unsteadyNSTTurb();
+        UnsteadyNSTTurb();
 
         /// Construct with argc and argv
-        unsteadyNSTTurb(int argc, char* argv[]);
-        ~unsteadyNSTTurb() {};
+        UnsteadyNSTTurb(int argc, char* argv[]);
+        ~UnsteadyNSTTurb() {};
 
         // Specific variable for the unstationary case
 
@@ -165,7 +165,7 @@ class unsteadyNSTTurb: public unsteadyNST
         ///
         /// @return     BT matrix for turbulence treatment
         ///
-        Eigen::MatrixXd BT_turbulence(label NUmodes, label NSUPmodes);
+        Eigen::MatrixXd BTturbulence(label NUmodes, label NSUPmodes);
 
         ///
         /// @brief      CT1 added matrix for the turbulence treatement
@@ -176,7 +176,7 @@ class unsteadyNSTTurb: public unsteadyNST
         ///
         /// @return     CT1 matrix for turbulence treatment
         ///
-        List < Eigen::MatrixXd > turbulence_term1(label NUmodes, label NSUPmodes,
+        List < Eigen::MatrixXd > turbulenceTerm1(label NUmodes, label NSUPmodes,
                 label Nnutmodes);
 
         ///
@@ -187,7 +187,7 @@ class unsteadyNSTTurb: public unsteadyNST
         ///
         /// @return     S matrix for turbulence treatment
         ///
-        List < Eigen::MatrixXd > temperature_turbulence_term(label NTmodes,
+        List < Eigen::MatrixXd > temperatureTurbulenceTerm(label NTmodes,
                 label Nnutmodes);
 
         ///
@@ -199,7 +199,7 @@ class unsteadyNSTTurb: public unsteadyNST
         ///
         /// @return     CT2 matrix for turbulence treatment
         ///
-        List < Eigen::MatrixXd > turbulence_term2(label NUmodes, label NSUPmodes,
+        List < Eigen::MatrixXd > turbulenceTerm2(label NUmodes, label NSUPmodes,
                 label Nnutmodes);
 
         //--------------------------------------------------------------------------

@@ -32,17 +32,17 @@ License
 /// Source file of the reducedUnsteadyNS class
 
 
-#include "ReducedUnsteadyNSTturb.H"
+#include "ReducedUnsteadyNSTTurb.H"
 
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-reducedUnsteadyNSTTurb::reducedUnsteadyNSTTurb()
+ReducedUnsteadyNSTTurb::ReducedUnsteadyNSTTurb()
 {
 }
 
-reducedUnsteadyNSTTurb::reducedUnsteadyNSTTurb(unsteadyNSTTurb& FOMproblem)
+ReducedUnsteadyNSTTurb::ReducedUnsteadyNSTTurb(UnsteadyNSTTurb& FOMproblem)
 
 //problem(&FOMproblem)
 {
@@ -200,7 +200,7 @@ int newton_unsteadyNSTTurb_sup_t::df(const Eigen::VectorXd& t,
 
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-void reducedUnsteadyNSTTurb::solveOnline_sup(Eigen::MatrixXd& vel_now,
+void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
         Eigen::MatrixXd& temp_now, label startSnap)
 {
     // Create and resize the solution vector
@@ -397,7 +397,7 @@ void reducedUnsteadyNSTTurb::solveOnline_sup(Eigen::MatrixXd& vel_now,
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void reducedUnsteadyNSTTurb::reconstruct_sup(fileName folder, int printevery)
+void ReducedUnsteadyNSTTurb::reconstructSup(fileName folder, int printevery)
 {
     mkDir(folder);
     system("ln -s ../../constant " + folder + "/constant");
@@ -438,7 +438,7 @@ void reducedUnsteadyNSTTurb::reconstruct_sup(fileName folder, int printevery)
     }
 }
 
-void reducedUnsteadyNSTTurb::reconstruct_supt(fileName folder, int printevery)
+void ReducedUnsteadyNSTTurb::reconstructSupt(fileName folder, int printevery)
 {
     mkDir(folder);
     system("ln -s ../../constant " + folder + "/constant");

@@ -28,21 +28,21 @@
 
 \*---------------------------------------------------------------------------*/
 
-#include "unsteadyNSTturb.H"
+#include "UnsteadyNSTTurb.H"
 #include "viscosityModel.H"
 #include "alphatJayatillekeWallFunctionFvPatchScalarField.H"
 
 
 /// \file
-/// Source file of the unsteadyNSTTurb class.
+/// Source file of the UnsteadyNSTTurb class.
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Construct Null
-unsteadyNSTTurb::unsteadyNSTTurb() {};
+UnsteadyNSTTurb::UnsteadyNSTTurb() {};
 
 // Construct from zero
-unsteadyNSTTurb::unsteadyNSTTurb(int argc, char* argv[])
+UnsteadyNSTTurb::UnsteadyNSTTurb(int argc, char* argv[])
 {
 #include "setRootCase.H"
 #include "createTime.H"
@@ -64,7 +64,7 @@ unsteadyNSTTurb::unsteadyNSTTurb(int argc, char* argv[])
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void unsteadyNSTTurb::truthSolve(List<scalar> mu_now)
+void UnsteadyNSTTurb::truthSolve(List<scalar> mu_now)
 {
     Time& runTime = _runTime();
     surfaceScalarField& phi = _phi();
@@ -144,7 +144,7 @@ void unsteadyNSTTurb::truthSolve(List<scalar> mu_now)
     }
 }
 
-bool unsteadyNSTTurb::checkWrite(Time& timeObject)
+bool UnsteadyNSTTurb::checkWrite(Time& timeObject)
 {
     scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
     scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
@@ -160,7 +160,7 @@ bool unsteadyNSTTurb::checkWrite(Time& timeObject)
     }
 }
 
-void unsteadyNSTTurb::liftSolveT()
+void UnsteadyNSTTurb::liftSolveT()
 {
     for (label k = 0; k < inletIndexT.rows(); k++)
     {
@@ -231,7 +231,7 @@ void unsteadyNSTTurb::liftSolveT()
     }
 }
 
-List <Eigen::MatrixXd> unsteadyNSTTurb::turbulence_term1(label NUmodes,
+List <Eigen::MatrixXd> UnsteadyNSTTurb::turbulenceTerm1(label NUmodes,
         label NSUPmodes, label Nnutmodes)
 {
     label Csize = NUmodes + NSUPmodes + liftfield.size();
@@ -296,7 +296,7 @@ List <Eigen::MatrixXd> unsteadyNSTTurb::turbulence_term1(label NUmodes,
     return CT1_matrix;
 }
 
-List <Eigen::MatrixXd> unsteadyNSTTurb::turbulence_term2(label NUmodes,
+List <Eigen::MatrixXd> UnsteadyNSTTurb::turbulenceTerm2(label NUmodes,
         label NSUPmodes, label Nnutmodes)
 {
     label Csize = NUmodes + NSUPmodes + liftfield.size();
@@ -361,7 +361,7 @@ List <Eigen::MatrixXd> unsteadyNSTTurb::turbulence_term2(label NUmodes,
     return CT2_matrix;
 }
 
-Eigen::MatrixXd unsteadyNSTTurb::BT_turbulence(label NUmodes, label NSUPmodes)
+Eigen::MatrixXd UnsteadyNSTTurb::BTturbulence(label NUmodes, label NSUPmodes)
 {
     label BTsize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::MatrixXd BT_matrix(BTsize, BTsize);
@@ -413,7 +413,7 @@ Eigen::MatrixXd unsteadyNSTTurb::BT_turbulence(label NUmodes, label NSUPmodes)
     return BT_matrix;
 }
 
-List <Eigen::MatrixXd> unsteadyNSTTurb::temperature_turbulence_term(
+List <Eigen::MatrixXd> UnsteadyNSTTurb::temperatureTurbulenceTerm(
     label NTmodes, label Nnutmodes)
 {
     label Stsize = NTmodes + liftfieldT.size();
@@ -469,7 +469,7 @@ List <Eigen::MatrixXd> unsteadyNSTTurb::temperature_turbulence_term(
     return S_matrix;
 }
 
-void unsteadyNSTTurb::projectSUP(fileName folder, label NU, label NP,
+void UnsteadyNSTTurb::projectSUP(fileName folder, label NU, label NP,
                                  label NSUP, label Nnut, label NT)
 {
     if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
@@ -502,10 +502,10 @@ void unsteadyNSTTurb::projectSUP(fileName folder, label NU, label NP,
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
         M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
-        BT_matrix = BT_turbulence(NUmodes, NSUPmodes);
-        CT1_matrix = turbulence_term1(NUmodes, NSUPmodes, Nnutmodes);
-        CT2_matrix = turbulence_term2(NUmodes, NSUPmodes, Nnutmodes);
-        S_matrix = temperature_turbulence_term(NTmodes, Nnutmodes);
+        BT_matrix = BTturbulence(NUmodes, NSUPmodes);
+        CT1_matrix = turbulenceTerm1(NUmodes, NSUPmodes, Nnutmodes);
+        CT2_matrix = turbulenceTerm2(NUmodes, NSUPmodes, Nnutmodes);
+        S_matrix = temperatureTurbulenceTerm(NTmodes, Nnutmodes);
         Q_matrix = convective_term_temperature(NUmodes, NTmodes, NSUPmodes);
         Y_matrix = diffusive_term_temperature(NUmodes, NTmodes, NSUPmodes);
         MT_matrix = mass_term_temperature(NUmodes, NTmodes, NSUPmodes);
