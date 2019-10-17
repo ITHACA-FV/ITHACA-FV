@@ -101,7 +101,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
                                       ind_colA);
     int ind_rowAOF = ind_rowA;
     int ind_colAOF = ind_colA;
-    check3D_indices(ind_rowAOF, ind_colAOF, xyz_rowA, xyz_colA);
+    check3DIndices(ind_rowAOF, ind_colAOF, xyz_rowA, xyz_colA);
     Pair <int> indA(ind_rowAOF, ind_colAOF);
     Pair <int> xyzA(xyz_rowA, xyz_colA);
     xyz_A.append(xyzA);
@@ -124,7 +124,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
         rhoA(i) = maxA;
         int ind_rowAOF = ind_rowA;
         int ind_colAOF = ind_colA;
-        check3D_indices(ind_rowAOF, ind_colAOF, xyz_rowA, xyz_colA);
+        check3DIndices(ind_rowAOF, ind_colAOF, xyz_rowA, xyz_colA);
         Pair <int> indA(ind_rowAOF, ind_colAOF);
         Pair <int> xyzA(xyz_rowA, xyz_colA);
         xyz_A.append(xyzA);
@@ -146,7 +146,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     int ind_rowB, xyz_rowB, c1;
     double maxB = std::get<1>(Matrix_Modes)[0].maxCoeff(&ind_rowB, &c1);
     int ind_rowBOF = ind_rowB;
-    check3D_indices(ind_rowBOF, xyz_rowB);
+    check3DIndices(ind_rowBOF, xyz_rowB);
     rhoB(0) = maxB;
     xyz_B.append(xyz_rowB);
     magicPointsB.append(ind_rowBOF);
@@ -162,7 +162,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
         rB = std::get<1>(Matrix_Modes)[i] - UB * cB;
         maxB = rB.cwiseAbs().maxCoeff(&ind_rowB, &c1);
         ind_rowBOF = ind_rowB;
-        check3D_indices(ind_rowBOF, xyz_rowB);
+        check3DIndices(ind_rowBOF, xyz_rowB);
         xyz_B.append(xyz_rowB);
         PB.conservativeResize((std::get<1>(Matrix_Modes)[i]).size(), i + 1);
         PB.insert(ind_rowB, i) = 1;
@@ -508,7 +508,7 @@ List<Pair <int >> DEIM<T>::global2local(List<Pair <int >>& points,
 }
 
 template<typename T>
-void DEIM<T>::check3D_indices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
+void DEIM<T>::check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
                               int& xyz_colA)
 {
     if (ind_rowA < sizeM)
@@ -543,7 +543,7 @@ void DEIM<T>::check3D_indices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
 };
 
 template<typename T>
-void DEIM<T>::check3D_indices(int& ind_rowA, int& xyz_rowA)
+void DEIM<T>::check3DIndices(int& ind_rowA, int& xyz_rowA)
 {
     if (ind_rowA < sizeM)
     {

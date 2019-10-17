@@ -202,7 +202,7 @@ class DEIM
         /// @param      xyz_rowA  The xyz row a
         /// @param      xyz_colA  The xyz col a
         ///
-        void check3D_indices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
+        void check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
                              int& xyz_colA);
 
         ///
@@ -211,7 +211,7 @@ class DEIM
         /// @param      ind_rowA  The ind row a
         /// @param      xyz_rowA  The xyz row a
         ///
-        void check3D_indices(int& ind_rowA, int& xyz_rowA);
+        void check3DIndices(int& ind_rowA, int& xyz_rowA);
 
 };
 
