@@ -29,26 +29,26 @@ License
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Source file of the reducedUnsteadyNS class
+/// Source file of the ReducedUnsteadyNSTurbIntrusive class
 
 
-#include "ReducedUnsteadyNSTurb.H"
+#include "ReducedUnsteadyNSTurbIntrusive.H"
 
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb()
+ReducedUnsteadyNSTurbIntrusive::ReducedUnsteadyNSTurbIntrusive()
 {
 }
 
-ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
+ReducedUnsteadyNSTurbIntrusive::ReducedUnsteadyNSTurbIntrusive(
+    UnsteadyNSTurbIntrusive& fomProblem)
 {
     problem = &fomProblem;
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
-    nphiNut = problem->cTotalTensor.dimension(1);
 
     // Create locally the velocity modes
     for (label k = 0; k < problem->liftfield.size(); k++)
@@ -72,12 +72,6 @@ ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
         Pmodes.append(problem->Pmodes[k]);
     }
 
-    // Create locally the eddy viscosity modes
-    for (label k = 0; k < problem->nNutModes; k++)
-    {
-        nutModes.append(problem->nutModes[k]);
-    }
-
     // Store locally the snapshots for projections
     for (label k = 0; k < problem->Ufield.size(); k++)
     {
@@ -85,9 +79,11 @@ ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
         Psnapshots.append(problem->Pfield[k]);
     }
 
-    newtonObjectSUP = newtonUnsteadyNSTurbSUP(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
+    newtonObjectSUP = newtonUnsteadyNSTurbSUPIntrusive(Nphi_u + Nphi_p,
+                      Nphi_u + Nphi_p,
                       fomProblem);
-    newtonObjectPPE = newtonUnsteadyNSTurbPPE(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
+    newtonObjectPPE = newtonUnsteadyNSTurbPPEIntrusive(Nphi_u + Nphi_p,
+                      Nphi_u + Nphi_p,
                       fomProblem);
 }
 
@@ -95,8 +91,8 @@ ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
-                                        Eigen::VectorXd& fvec) const
+int newtonUnsteadyNSTurbSUPIntrusive::operator()(const Eigen::VectorXd& x,
+        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd aTmp(Nphi_u);
@@ -128,9 +124,8 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * aTmp - gNut.transpose() *
-             Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
+        cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->cTotalTensor, 0,
+                i) * aTmp;
         fvec(i) = - m5(i) + m1(i) - cc(0, 0) - m2(i);
     }
 
@@ -149,10 +144,10 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newtonUnsteadyNSTurbSUP::df(const Eigen::VectorXd& x,
-                                Eigen::MatrixXd& fjac) const
+int newtonUnsteadyNSTurbSUPIntrusive::df(const Eigen::VectorXd& x,
+        Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonUnsteadyNSTurbSUP> numDiff(*this);
+    Eigen::NumericalDiff<newtonUnsteadyNSTurbSUPIntrusive> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -160,8 +155,8 @@ int newtonUnsteadyNSTurbSUP::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Operators PPE * * * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
-                                        Eigen::VectorXd& fvec) const
+int newtonUnsteadyNSTurbPPEIntrusive::operator()(const Eigen::VectorXd& x,
+        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd aTmp(Nphi_u);
@@ -199,9 +194,8 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
 
     for (label i = 0; i < Nphi_u; i++)
     {
-        cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * aTmp - gNut.transpose() *
-             Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
+        cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->cTotalTensor, 0,
+                i) * aTmp;
         fvec(i) = - m5(i) + m1(i) - cc(0, 0) - m2(i);
     }
 
@@ -225,10 +219,10 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newtonUnsteadyNSTurbPPE::df(const Eigen::VectorXd& x,
-                                Eigen::MatrixXd& fjac) const
+int newtonUnsteadyNSTurbPPEIntrusive::df(const Eigen::VectorXd& x,
+        Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonUnsteadyNSTurbPPE> numDiff(*this);
+    Eigen::NumericalDiff<newtonUnsteadyNSTurbPPEIntrusive> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -236,7 +230,7 @@ int newtonUnsteadyNSTurbPPE::df(const Eigen::VectorXd& x,
 
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
+void ReducedUnsteadyNSTurbIntrusive::solveOnlineSUP(Eigen::MatrixXd vel,
         label startSnap)
 {
     M_Assert(exportEvery >= dt,
@@ -282,7 +276,6 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
     int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
     int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
-    rbfCoeffMat.resize(nphiNut + 1, onlineSize + 3);
     // Set the initial time
     time = tstart;
     // Counting variable
@@ -296,46 +289,22 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
     {
         online_solution[counter] = tmp_sol;
         counter ++;
+        counter2++;
+        nextStore += numberOfStores;
     }
 
     // Create nonlinear solver object
-    Eigen::HybridNonLinearSolver<newtonUnsteadyNSTurbSUP> hnls(newtonObjectSUP);
+    Eigen::HybridNonLinearSolver<newtonUnsteadyNSTurbSUPIntrusive> hnls(
+        newtonObjectSUP);
     // Set output colors for fancy output
     Color::Modifier red(Color::FG_RED);
     Color::Modifier green(Color::FG_GREEN);
     Color::Modifier def(Color::FG_DEFAULT);
 
-    // This part up to the while loop is just to compute the eddy viscosity field at time = startTime if time is not equal to zero
-    if (time != 0)
-    {
-        Eigen::VectorXd gNut0;
-        gNut0.resize(nphiNut);
-        Eigen::VectorXd tv0;
-        tv0 = y.head(Nphi_u);
-
-        for (label i = 0; i < nphiNut; i++)
-        {
-            gNut0(i) = problem->rbfSplines[i]->eval(tv0);
-        }
-
-        rbfCoeffMat(0, counter2) = time;
-        rbfCoeffMat.block(1, counter2, nphiNut, 1) = gNut0;
-        counter2++;
-        nextStore += numberOfStores;
-    }
-
     // Start the time loop
     while (time < finalTime)
     {
         time = time + dt;
-        Eigen::VectorXd tv;
-        tv = y.head(Nphi_u);
-
-        for (label i = 0; i < nphiNut; i++)
-        {
-            newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(tv);
-        }
-
         Eigen::VectorXd res(y);
         res.setZero();
         hnls.solve(y);
@@ -379,8 +348,6 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
                 online_solution[counter2] = tmp_sol;
             }
 
-            rbfCoeffMat(0, counter2) = time;
-            rbfCoeffMat.block(1, counter2, nphiNut, 1) = newtonObjectSUP.gNut;
             nextStore += numberOfStores;
             counter2 ++;
         }
@@ -397,7 +364,7 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
 }
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
-void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
+void ReducedUnsteadyNSTurbIntrusive::solveOnlinePPE(Eigen::MatrixXd vel,
         label startSnap)
 {
     M_Assert(exportEvery >= dt,
@@ -443,7 +410,6 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
     int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
     int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
-    rbfCoeffMat.resize(nphiNut + 1, onlineSize + 3);
     // Set the initial time
     time = tstart;
     // Counting variable
@@ -460,43 +426,17 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
     }
 
     // Create nonlinear solver object
-    Eigen::HybridNonLinearSolver<newtonUnsteadyNSTurbPPE> hnls(newtonObjectPPE);
+    Eigen::HybridNonLinearSolver<newtonUnsteadyNSTurbPPEIntrusive> hnls(
+        newtonObjectPPE);
     // Set output colors for fancy output
     Color::Modifier red(Color::FG_RED);
     Color::Modifier green(Color::FG_GREEN);
     Color::Modifier def(Color::FG_DEFAULT);
 
-    // This part up to the while loop is just to compute the eddy viscosity field at time = startTime if time is not equal to zero
-    if (time != 0)
-    {
-        Eigen::VectorXd gNut0;
-        gNut0.resize(nphiNut);
-        Eigen::VectorXd tv0;
-        tv0 = y.head(Nphi_u);
-
-        for (label i = 0; i < nphiNut; i++)
-        {
-            gNut0(i) = problem->rbfSplines[i]->eval(tv0);
-        }
-
-        rbfCoeffMat(0, counter2) = time;
-        rbfCoeffMat.block(1, counter2, nphiNut, 1) = gNut0;
-        counter2++;
-        nextStore += numberOfStores;
-    }
-
     // Start the time loop
     while (time < finalTime)
     {
         time = time + dt;
-        Eigen::VectorXd tv;
-        tv = y.head(Nphi_u);
-
-        for (label i = 0; i < nphiNut; i++)
-        {
-            newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(tv);
-        }
-
         Eigen::VectorXd res(y);
         res.setZero();
         hnls.solve(y);
@@ -540,8 +480,6 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
                 online_solution[counter2] = tmp_sol;
             }
 
-            rbfCoeffMat(0, counter2) = time;
-            rbfCoeffMat.block(1, counter2, nphiNut, 1) = newtonObjectPPE.gNut;
             nextStore += numberOfStores;
             counter2 ++;
         }
@@ -557,7 +495,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
     count_online_solve += 1;
 }
 
-void ReducedUnsteadyNSTurb::reconstructPPE(fileName folder)
+void ReducedUnsteadyNSTurbIntrusive::reconstructPPE(fileName folder)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
@@ -585,15 +523,7 @@ void ReducedUnsteadyNSTurb::reconstructPPE(fileName folder)
                 pRec += Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
 
-            volScalarField nutRec("nutRec", nutModes[0] * 0);
-
-            for (label j = 0; j < nphiNut; j++)
-            {
-                nutRec += nutModes[j] * rbfCoeffMat(j + 1, i);
-            }
-
             ITHACAstream::exportSolution(pRec, name(counter2), folder);
-            ITHACAstream::exportSolution(nutRec, name(counter2), folder);
             nextWrite += exportEveryIndex;
             double timeNow = online_solution[i](0, 0);
             std::ofstream of(folder + name(counter2) + "/" + name(timeNow));
@@ -604,7 +534,7 @@ void ReducedUnsteadyNSTurb::reconstructPPE(fileName folder)
     }
 }
 
-void ReducedUnsteadyNSTurb::reconstructSUP(fileName folder)
+void ReducedUnsteadyNSTurbIntrusive::reconstructSUP(fileName folder)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
@@ -632,15 +562,7 @@ void ReducedUnsteadyNSTurb::reconstructSUP(fileName folder)
                 pRec += Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
 
-            volScalarField nutRec("nutRec", nutModes[0] * 0);
-
-            for (label j = 0; j < nphiNut; j++)
-            {
-                nutRec += nutModes[j] * rbfCoeffMat(j + 1, i);
-            }
-
             ITHACAstream::exportSolution(pRec, name(counter2), folder);
-            ITHACAstream::exportSolution(nutRec, name(counter2), folder);
             nextWrite += exportEveryIndex;
             double timeNow = online_solution[i](0, 0);
             std::ofstream of(folder + name(counter2) + "/" + name(timeNow));
@@ -651,7 +573,8 @@ void ReducedUnsteadyNSTurb::reconstructSUP(fileName folder)
     }
 }
 
-Eigen::MatrixXd ReducedUnsteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
+Eigen::MatrixXd ReducedUnsteadyNSTurbIntrusive::setOnlineVelocity(
+    Eigen::MatrixXd vel)
 {
     assert(problem->inletIndex.rows() == vel.rows()
            && "Imposed boundary conditions dimensions do not match given values matrix dimensions");

@@ -108,6 +108,10 @@ class unsteadyNS: public steadyNS
         // Matrix containing the time-dependent boundary conditions for each time step
         Eigen::MatrixXd timeBCoff;
 
+        // Time derivative numerical scheme order
+        word timeDerivativeSchemeOrder;
+
+
         // Functions
 
         //--------------------------------------------------------------------------

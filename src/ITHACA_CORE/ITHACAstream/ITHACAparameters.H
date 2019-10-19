@@ -80,6 +80,7 @@ class ITHACAparameters
             exportPython = ITHACAdict->lookupOrDefault<bool>("exportPython", 0);
             exportMatlab = ITHACAdict->lookupOrDefault<bool>("exportMatlab", 0);
             exportTxt = ITHACAdict->lookupOrDefault<bool>("exportTxt", 0);
+            debug = ITHACAdict->lookupOrDefault<bool>("debug", 0);
         }
         /// type of eigensolver used in the eigenvalue decomposition can be either be eigen or spectra
         word eigensolver;
@@ -91,6 +92,7 @@ class ITHACAparameters
         bool exportPython;
         bool exportMatlab;
         bool exportTxt;
+        bool debug;
 
         /// type of output format can be fixed or scientific
         std::_Ios_Fmtflags outytpe;

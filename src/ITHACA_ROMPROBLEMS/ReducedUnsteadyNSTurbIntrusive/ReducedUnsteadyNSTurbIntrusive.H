@@ -22,51 +22,48 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Class
-    ReducedUnsteadyNSTurb
+    ReducedUnsteadyNSTurbIntrusive
 Description
-    A reduced problem for the unsteady turbulent NS equations
+    A reduced problem for the unsteady turbulent NS equations using fully intrusive approach
 SourceFiles
-    ReducedUnsteadyNSTurb.C
+    ReducedUnsteadyNSTurbIntrusive.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the ReducedUnsteadyNSTurb class.
+/// Header file of the ReducedUnsteadyNSTurbIntrusive class.
 /// \dir
-/// Directory containing the header and source files for the ReducedUnsteadyNSTurb class
+/// Directory containing the header and source files for the ReducedUnsteadyNSTurbIntrusive class
 
-#ifndef ReducedUnsteadyNSTurb_H
-#define ReducedUnsteadyNSTurb_H
+#ifndef ReducedUnsteadyNSTurbIntrusive_H
+#define ReducedUnsteadyNSTurbIntrusive_H
 
 #include "fvCFD.H"
 #include "IOmanip.H"
 #include "ReducedSteadyNS.H"
 #include "ReducedUnsteadyNS.H"
-#include "UnsteadyNSTurb.H"
+#include "UnsteadyNSTurbIntrusive.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
 
 
-struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
+struct newtonUnsteadyNSTurbSUPIntrusive: public newton_argument<double>
 {
     public:
-        newtonUnsteadyNSTurbSUP() {}
-        newtonUnsteadyNSTurbSUP(int Nx, int Ny,
-                                UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
+        newtonUnsteadyNSTurbSUPIntrusive() {}
+        newtonUnsteadyNSTurbSUPIntrusive(int Nx, int Ny,
+                                         UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-            nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows()),
-            gNut(problem.nNutModes)
+            N_BC(problem.inletIndex.rows())
         {}
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
-        UnsteadyNSTurb* problem;
+        UnsteadyNSTurbIntrusive* problem;
         int Nphi_u;
-        int nphiNut;
         int Nphi_p;
         int N_BC;
         scalar nu;
@@ -74,32 +71,27 @@ struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
         Eigen::VectorXd y_old;
         Eigen::VectorXd yOldOld;
         Eigen::VectorXd bc;
-        Eigen::VectorXd gNut;
-        std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
 
 
-struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
+struct newtonUnsteadyNSTurbPPEIntrusive: public newton_argument<double>
 {
     public:
-        newtonUnsteadyNSTurbPPE() {}
-        newtonUnsteadyNSTurbPPE(int Nx, int Ny,
-                                UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
+        newtonUnsteadyNSTurbPPEIntrusive() {}
+        newtonUnsteadyNSTurbPPEIntrusive(int Nx, int Ny,
+                                         UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
-            nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows()),
-            gNut(problem.nNutModes)
+            N_BC(problem.inletIndex.rows())
         {}
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
-        UnsteadyNSTurb* problem;
+        UnsteadyNSTurbIntrusive* problem;
         int Nphi_u;
-        int nphiNut;
         int Nphi_p;
         int N_BC;
         scalar nu;
@@ -107,8 +99,6 @@ struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
         Eigen::VectorXd y_old;
         Eigen::VectorXd yOldOld;
         Eigen::VectorXd bc;
-        Eigen::VectorXd gNut;
-        std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
 
@@ -120,24 +110,24 @@ struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
 /// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem.
 /** In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes
 equations. This class must be used together with the steadyNS class */
-class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
+class ReducedUnsteadyNSTurbIntrusive: public reducedUnsteadyNS
 {
     private:
 
     public:
         // Constructors
         /// Construct Null
-        ReducedUnsteadyNSTurb();
+        ReducedUnsteadyNSTurbIntrusive();
         /// Construct Null
         ///
-        /// @param      problem  a full order UnsteadyNSTurb problem
+        /// @param      problem  a full order UnsteadyNSTurbIntrusive problem
         ///
-        explicit ReducedUnsteadyNSTurb(UnsteadyNSTurb& problem);
+        explicit ReducedUnsteadyNSTurbIntrusive(UnsteadyNSTurbIntrusive& problem);
 
-        ~ReducedUnsteadyNSTurb() {};
+        ~ReducedUnsteadyNSTurbIntrusive() {};
 
         /// Pointer to the FOM problem
-        UnsteadyNSTurb* problem;
+        UnsteadyNSTurbIntrusive* problem;
 
         /// Number of viscosity modes
         int nphiNut;
@@ -145,14 +135,11 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         /// List of pointers to store the modes for the eddy viscosity
         PtrList<volScalarField> nutModes;
 
-        /// The matrix of the eddy viscosity RBF interoplated coefficients
-        Eigen::MatrixXd rbfCoeffMat;
-
         /// Function object to call the non linear solver sup approach
-        newtonUnsteadyNSTurbSUP newtonObjectSUP;
+        newtonUnsteadyNSTurbSUPIntrusive newtonObjectSUP;
 
         /// Function object to call the non linear solver PPE approach
-        newtonUnsteadyNSTurbPPE newtonObjectPPE;
+        newtonUnsteadyNSTurbPPEIntrusive newtonObjectPPE;
 
         // Functions
 

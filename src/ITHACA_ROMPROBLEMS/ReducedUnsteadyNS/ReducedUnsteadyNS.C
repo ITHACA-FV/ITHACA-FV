@@ -89,7 +89,18 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd b_tmp(Nphi_p);
     a_tmp = x.head(Nphi_u);
     b_tmp = x.tail(Nphi_p);
-    a_dot = (x.head(Nphi_u) - y_old.head(Nphi_u)) / dt;
+
+    // Choose the order of the numerical difference scheme for approximating the time derivative
+    if (problem->timeDerivativeSchemeOrder == "first")
+    {
+        a_dot = (x.head(Nphi_u) - y_old.head(Nphi_u)) / dt;
+    }
+    else
+    {
+        a_dot = (1.5 * x.head(Nphi_u) - 2 * y_old.head(Nphi_u) + 0.5 * yOldOld.head(
+                     Nphi_u)) / dt;
+    }
+
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
@@ -166,7 +177,18 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd b_tmp(Nphi_p);
     a_tmp = x.head(Nphi_u);
     b_tmp = x.tail(Nphi_p);
-    a_dot = (x.head(Nphi_u) - y_old.head(Nphi_u)) / dt;
+
+    // Choose the order of the numerical difference scheme for approximating the time derivative
+    if (problem->timeDerivativeSchemeOrder == "first")
+    {
+        a_dot = (x.head(Nphi_u) - y_old.head(Nphi_u)) / dt;
+    }
+    else
+    {
+        a_dot = (1.5 * x.head(Nphi_u) - 2 * y_old.head(Nphi_u) + 0.5 * yOldOld.head(
+                     Nphi_u)) / dt;
+    }
+
     // Convective terms
     Eigen::MatrixXd cc(1, 1);
     Eigen::MatrixXd gg(1, 1);
@@ -293,6 +315,7 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
     // Set some properties of the newton object
     newton_object_sup.nu = nu;
     newton_object_sup.y_old = y;
+    newton_object_sup.yOldOld = newton_object_sup.y_old;
     newton_object_sup.dt = dt;
     newton_object_sup.BC.resize(N_BC);
     newton_object_sup.tauU = tauU;
@@ -358,6 +381,7 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
         }
 
         newton_object_sup.operator()(y, res);
+        newton_object_sup.yOldOld = newton_object_sup.y_old;
         newton_object_sup.y_old = y;
         std::cout << "################## Online solve N° " << counter <<
                   " ##################" << std::endl;
@@ -451,6 +475,7 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
     // Set some properties of the newton object
     newton_object_PPE.nu = nu;
     newton_object_PPE.y_old = y;
+    newton_object_PPE.yOldOld = newton_object_PPE.y_old;
     newton_object_PPE.dt = dt;
     newton_object_PPE.BC.resize(N_BC);
     newton_object_PPE.tauU = tauU;
@@ -517,6 +542,7 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
         }
 
         newton_object_PPE.operator()(y, res);
+        newton_object_PPE.yOldOld = newton_object_PPE.y_old;
         newton_object_PPE.y_old = y;
         std::cout << "################## Online solve N° " << counter <<
                   " ##################" << std::endl;
