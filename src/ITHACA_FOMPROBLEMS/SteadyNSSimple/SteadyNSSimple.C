@@ -132,7 +132,7 @@ fvScalarMatrix SteadyNSSimple::get_Pmatrix(volVectorField& U,
     return pEqn;
 }
 
-void SteadyNSSimple::truthSolve2(List<scalar> mu_now)
+void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
 {
     Time& runTime = _runTime();
     volScalarField& p = _p();
@@ -141,8 +141,8 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now)
     simpleControl& simple = _simple();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
 #include "NLsolve.H"
-    ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-    ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(U, name(counter), Folder);
+    ITHACAstream::exportSolution(p, name(counter), Folder);
     Ufield.append(U);
     Pfield.append(p);
     counter++;
@@ -164,6 +164,6 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now)
     if (mu_samples.rows() == mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-                                   "./ITHACAoutput/Offline");
+                                   Folder);
     }
 }
