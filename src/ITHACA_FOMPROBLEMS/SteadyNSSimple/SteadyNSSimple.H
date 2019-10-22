@@ -106,7 +106,7 @@ class SteadyNSSimple: public steadyNS
         ///
         /// @param[in]  mu_now  Viscosity (parametrized) we want to solve the problem with.
         ///
-        void truthSolve2(List<scalar> mu_now);
+        void truthSolve2(List<scalar> mu_now, word Folder = "./ITHACAoutput/Offline/");
 };
 
 #endif
