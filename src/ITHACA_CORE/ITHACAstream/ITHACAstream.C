@@ -304,313 +304,7 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
     }
 }
 
-void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield, word Name,
-                               fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << "######### Reading the Data for " << Name << " #########" << endl;
-        fileName rootpath(".");
-        label last_s;
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        fvMesh mesh
-        (
-            Foam::IOobject
-            (
-                Foam::fvMesh::defaultRegion,
-                casename + runTime2.timeName(),
-                runTime2,
-                Foam::IOobject::MUST_READ
-            )
-        );
 
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 2);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            //Info << "Reading " << Name << " number " << i - 1 << endl;
-            volVectorField tmp_field(
-                IOobject
-                (
-                    Name,
-                    runTime2.times()[i].name(),
-                    mesh,
-                    IOobject::MUST_READ
-                ),
-                mesh
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        std::cerr << "File: ITHACAstream.C, Line: 343" << std::endl;
-    }
-}
-
-void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield, word Name,
-                               fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << " ######### Reading the Data for " << Name << " #########" << endl;
-        fileName rootpath(".");
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        label last_s;
-        fvMesh mesh
-        (
-            Foam::IOobject
-            (
-                Foam::fvMesh::defaultRegion,
-                casename + runTime2.timeName(),
-                runTime2,
-                Foam::IOobject::MUST_READ
-            )
-        );
-
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 2);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            //Info << "Reading " << Name << " number " << i - 1 << endl;
-            volScalarField tmp_field(
-                IOobject
-                (
-                    Name,
-                    runTime2.times()[i].name(),
-                    mesh,
-                    IOobject::MUST_READ
-                ),
-                mesh
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        std::cerr << "File: ITHACAstream.C, Line: 403" << std::endl;
-    }
-}
-
-void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
-                               volScalarField& field, fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        fileName rootpath(".");
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        label last_s;
-
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 1);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i - 1 << endl;
-            volScalarField tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    casename + runTime2.times()[i].name(),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        word timename(field.mesh().time().rootPath() + "/" +
-                      field.mesh().time().caseName() );
-        timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
-        label last_s = numberOfFiles(casename,
-                                     "processor" + name(Pstream::myProcNo()) + "/");
-
-        if (first_snap > last_s)
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-        }
-        else
-        {
-            last_s = min(last_s, n_snap + 1);
-        }
-
-        for (label i = first_snap + 1; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i << endl;
-            volScalarField tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    timename + "/" + name(i),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        Info << endl;
-    }
-}
-
-void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
-                               volVectorField& field, fileName casename, label first_snap, label n_snap)
-{
-    if (!Pstream::parRun())
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        fileName rootpath(".");
-        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        label last_s;
-
-        if (first_snap >= runTime2.times().size())
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-            last_s = runTime2.times().size();
-        }
-        else
-        {
-            last_s = min(runTime2.times().size(), n_snap + 1);
-        }
-
-        for (label i = 2 + first_snap; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i - 1 << endl;
-            volVectorField tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    casename + runTime2.times()[i].name(),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        std::cout << std::endl;
-    }
-    else
-    {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
-             endl;
-        word timename(field.mesh().time().rootPath() + "/" +
-                      field.mesh().time().caseName() );
-        timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
-        label last_s = numberOfFiles(casename,
-                                     "processor" + name(Pstream::myProcNo()) + "/");
-
-        if (first_snap > last_s)
-        {
-            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
-                 << endl;
-            exit(0);
-        }
-
-        if (n_snap == 0)
-        {
-        }
-        else
-        {
-            last_s = min(last_s, n_snap + 1);
-        }
-
-        for (label i = first_snap + 1; i < last_s; i++)
-        {
-            //Info << "Reading " << field.name() << " number " << i << endl;
-            volVectorField tmp_field(
-                IOobject
-                (
-                    field.name(),
-                    timename + "/" + name(i),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
-            Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
-        }
-
-        Info << endl;
-    }
-}
 
 template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3 > tensor,
         word Name,
@@ -705,6 +399,163 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     return result;
 }
 
+template<typename fieldType>
+void ITHACAstream::read_fields(PtrList<fieldType>& Lfield, word Name,
+                               fileName casename, label first_snap, label n_snap)
+{
+    if (!Pstream::parRun())
+    {
+        Info << "######### Reading the Data for " << Name << " #########" << endl;
+        fileName rootpath(".");
+        label last_s;
+        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
+        fvMesh mesh
+        (
+            Foam::IOobject
+            (
+                Foam::fvMesh::defaultRegion,
+                casename + runTime2.timeName(),
+                runTime2,
+                Foam::IOobject::MUST_READ
+            )
+        );
+
+        if (first_snap >= runTime2.times().size())
+        {
+            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+                 << endl;
+            exit(0);
+        }
+
+        if (n_snap == 0)
+        {
+            last_s = runTime2.times().size();
+        }
+        else
+        {
+            last_s = min(runTime2.times().size(), n_snap + 2);
+        }
+
+        for (label i = 2 + first_snap; i < last_s; i++)
+        {
+            //Info << "Reading " << Name << " number " << i - 1 << endl;
+            fieldType tmp_field(
+                IOobject
+                (
+                    Name,
+                    runTime2.times()[i].name(),
+                    mesh,
+                    IOobject::MUST_READ
+                ),
+                mesh
+            );
+            Lfield.append(tmp_field);
+            printProgress(double(i + 1) / last_s);
+        }
+
+        std::cout << std::endl;
+    }
+    else
+    {
+        std::cerr << "File: ITHACAstream.C, Line: 343" << std::endl;
+    }
+}
+
+template<typename fieldType>
+void ITHACAstream::read_fields(PtrList<fieldType>& Lfield,
+                               fieldType& field, fileName casename, label first_snap, label n_snap)
+{
+    if (!Pstream::parRun())
+    {
+        Info << "######### Reading the Data for " << field.name() << " #########" <<
+             endl;
+        fileName rootpath(".");
+        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
+        label last_s;
+
+        if (first_snap >= runTime2.times().size())
+        {
+            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+                 << endl;
+            exit(0);
+        }
+
+        if (n_snap == 0)
+        {
+            last_s = runTime2.times().size();
+        }
+        else
+        {
+            last_s = min(runTime2.times().size(), n_snap + 1);
+        }
+
+        for (label i = 2 + first_snap; i < last_s; i++)
+        {
+            //Info << "Reading " << field.name() << " number " << i - 1 << endl;
+            fieldType tmp_field(
+                IOobject
+                (
+                    field.name(),
+                    casename + runTime2.times()[i].name(),
+                    field.mesh(),
+                    IOobject::MUST_READ
+                ),
+                field.mesh()
+            );
+            Lfield.append(tmp_field);
+            printProgress(double(i + 1) / last_s);
+        }
+
+        std::cout << std::endl;
+    }
+    else
+    {
+        Info << "######### Reading the Data for " << field.name() << " #########" <<
+             endl;
+        word timename(field.mesh().time().rootPath() + "/" +
+                      field.mesh().time().caseName() );
+        timename = timename.substr(0, timename.find_last_of("\\/"));
+        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
+        label last_s = numberOfFiles(casename,
+                                     "processor" + name(Pstream::myProcNo()) + "/");
+
+        if (first_snap > last_s)
+        {
+            Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
+                 << endl;
+            exit(0);
+        }
+
+        if (n_snap == 0)
+        {
+        }
+        else
+        {
+            last_s = min(last_s, n_snap + 1);
+        }
+
+        for (label i = first_snap + 1; i < last_s; i++)
+        {
+            //Info << "Reading " << field.name() << " number " << i << endl;
+            fieldType tmp_field(
+                IOobject
+                (
+                    field.name(),
+                    timename + "/" + name(i),
+                    field.mesh(),
+                    IOobject::MUST_READ
+                ),
+                field.mesh()
+            );
+            Lfield.append(tmp_field);
+            printProgress(double(i + 1) / last_s);
+        }
+
+        Info << endl;
+    }
+}
+
+
 int ITHACAstream::numberOfFiles(word folder, word MatrixName)
 {
     int number_of_files = 0;
@@ -747,3 +598,24 @@ void ITHACAstream::printProgress(double percentage)
         fflush (stdout);
     }
 }
+
+template void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
+                                        word Name,
+                                        fileName casename, label first_snap, label n_snap);
+template void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
+                                        word Name,
+                                        fileName casename, label first_snap, label n_snap);
+template void ITHACAstream::read_fields(PtrList<surfaceScalarField>& Lfield,
+                                        word Name,
+                                        fileName casename, label first_snap, label n_snap);
+template void ITHACAstream::read_fields(PtrList<surfaceVectorField>& Lfield,
+                                        word Name,
+                                        fileName casename, label first_snap, label n_snap);
+template void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
+                                        volScalarField& field, fileName casename, label first_snap, label n_snap);
+template void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
+                                        volVectorField& field, fileName casename, label first_snap, label n_snap);
+template void ITHACAstream::read_fields(PtrList<surfaceScalarField>& Lfield,
+                                        surfaceScalarField& field, fileName casename, label first_snap, label n_snap);
+template void ITHACAstream::read_fields(PtrList<surfaceVectorField>& Lfield,
+                                        surfaceVectorField& field, fileName casename, label first_snap, label n_snap);

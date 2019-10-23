@@ -199,7 +199,7 @@ class ReducedUnsteadyNSTTurb: public reducedUnsteadyNST
         ///
         //void solveOnline_sup(Eigen::MatrixXd, label startSnap=0);
         void solveOnlineSup(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& temp_now,
-                             label startSnap = 0);
+                            label startSnap = 0);
 
         /// Method to reconstruct a solution for velocity and pressure from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
@@ -208,7 +208,7 @@ class ReducedUnsteadyNSTTurb: public reducedUnsteadyNST
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
         void reconstructSup(fileName folder = "./ITHACAOutput/online_rec",
-                             int printevery = 1);
+                            int printevery = 1);
 
         /// Method to reconstruct a solution for temperature from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
@@ -217,7 +217,7 @@ class ReducedUnsteadyNSTTurb: public reducedUnsteadyNST
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
         void reconstructSupt(fileName folder = "./ITHACAOutput/online_rec",
-                              int printevery = 1);
+                             int printevery = 1);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

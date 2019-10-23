@@ -209,7 +209,7 @@ class reductionProblem
         /// @param[in]  coeff_matrix  The matrix of coefficients.
         ///
         void reconstructFromMatrix(PtrList<volVectorField>& rec_field2,
-                                     PtrList<volVectorField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
+                                   PtrList<volVectorField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
         //--------------------------------------------------------------------------
         /// Exact reconstruction using a certain number of modes for vector list of
@@ -222,7 +222,7 @@ class reductionProblem
         ///
         /// Exact reconstruction using a certain number of modes for scalar list of fields
         void reconstructFromMatrix(PtrList<volScalarField>& rec_field2,
-                                     PtrList<volScalarField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
+                                   PtrList<volScalarField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
         //--------------------------------------------------------------------------
         /// Assign internal field condition

@@ -509,7 +509,7 @@ List<Pair <int >> DEIM<T>::global2local(List<Pair <int >>& points,
 
 template<typename T>
 void DEIM<T>::check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
-                              int& xyz_colA)
+                             int& xyz_colA)
 {
     if (ind_rowA < sizeM)
     {

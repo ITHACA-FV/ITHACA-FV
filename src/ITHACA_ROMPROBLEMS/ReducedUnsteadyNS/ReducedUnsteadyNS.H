@@ -68,6 +68,7 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
+        Eigen::VectorXd yOldOld;
         Eigen::VectorXd BC;
         Eigen::MatrixXd tauU;
 };
@@ -96,6 +97,7 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
+        Eigen::VectorXd yOldOld;
         Eigen::VectorXd BC;
         Eigen::MatrixXd tauU;
 };

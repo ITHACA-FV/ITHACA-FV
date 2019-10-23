@@ -254,6 +254,27 @@ class ITHACAPOD
                              PtrList<volScalarField>& Volumes, bool podex, bool supex = 0, bool sup = 0,
                              int nmodes = 0);
 
+        //----------------------------------------------------------------------
+        /// @brief      Gets Modes based on eigenvalue decomposition of another
+        ///             Field
+        ///
+        /// @param      snapshots     The snapshots of which we want to create
+        ///                           the modes
+        /// @param      modes         The modes of the snapshots
+        /// @param      fields2       The fields that we want to use for the eigenvalue decomposition
+        /// @param[in]  podex         boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
+        /// @param[in]  supex         boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
+        /// @param[in]  sup           boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
+        /// @param[in]  nmodes        int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
+        ///
+        /// @tparam     Field_type    Type of field snapshots
+        /// @tparam     Field_type_2  Type of the other fields
+        ///
+        template<class Field_type, class Field_type_2>
+        static void getModes(PtrList<Field_type>& snapshots, PtrList<Field_type>& modes,
+                             PtrList<Field_type_2>& fields2, bool podex, bool supex = 0, bool sup = 0,
+                             int nmodes = 0);
+
 };
 
 template<>

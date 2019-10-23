@@ -81,6 +81,11 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
     timedepbcMethod = ITHACAdict->lookupOrDefault<word>("timedepbcMethod", "no");
     M_Assert(timedepbcMethod == "yes" || timedepbcMethod == "no",
              "The BC method can be set to yes or no");
+    timeDerivativeSchemeOrder =
+        ITHACAdict->lookupOrDefault<word>("timeDerivativeSchemeOrder", "second");
+    M_Assert(timeDerivativeSchemeOrder == "first"
+             || timeDerivativeSchemeOrder == "second",
+             "The time derivative approximation must be set to either first or second order scheme in ITHACAdict");
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();
