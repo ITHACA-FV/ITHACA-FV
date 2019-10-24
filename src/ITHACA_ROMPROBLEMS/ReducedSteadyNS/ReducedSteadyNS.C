@@ -144,13 +144,25 @@ void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now)
 
 void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
 {
-    vel_now = setOnlineVelocity(vel);
+    if (problem->bcMethod == "lift")
+    {
+        vel_now = setOnlineVelocity(vel);
+    }
+    else if (problem->bcMethod == "penalty")
+    {
+        vel_now = vel;
+    }
+
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
 
-    for (label j = 0; j < N_BC; j++)
+    // Change initial condition for the lifting function
+    if (problem->bcMethod == "lift")
     {
-        y(j) = vel_now(j, 0);
+        for (label j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
     }
 
     Color::Modifier red(Color::FG_RED);
