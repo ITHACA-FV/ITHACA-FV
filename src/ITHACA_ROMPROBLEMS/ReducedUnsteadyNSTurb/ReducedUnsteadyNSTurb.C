@@ -125,6 +125,18 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd m5 = problem->M_matrix * a_dot;
     // Pressure Term
     Eigen::VectorXd m3 = problem->P_matrix * aTmp;
+    // Penalty term
+    Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+
+    // Term for penalty method
+    if (problem->bcMethod == "penalty")
+    {
+        for (label l = 0; l < N_BC; l++)
+        {
+            penaltyU.col(l) = bc(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
+                              aTmp;
+        }
+    }
 
     for (label i = 0; i < Nphi_u; i++)
     {
@@ -132,6 +144,11 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
                 i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
         fvec(i) = - m5(i) + m1(i) - cc(0, 0) - m2(i);
+
+        if (problem->bcMethod == "penalty")
+        {
+            fvec(i) += ((penaltyU * tauU)(i, 0));
+        }
     }
 
     for (label j = 0; j < Nphi_p; j++)
@@ -140,9 +157,12 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
         fvec(k) = m3(j);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    if (problem->bcMethod == "lift")
     {
-        fvec(j) = x(j) - bc(j);
+        for (label j = 0; j < N_BC; j++)
+        {
+            fvec(j) = x(j) - bc(j);
+        }
     }
 
     return 0;
@@ -196,6 +216,18 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd m6 = problem->BC1_matrix * aTmp * nu;
     // BC PPE
     Eigen::VectorXd m7 = problem->BC3_matrix * aTmp * nu;
+    // Penalty term
+    Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+
+    // Term for penalty method
+    if (problem->bcMethod == "penalty")
+    {
+        for (label l = 0; l < N_BC; l++)
+        {
+            penaltyU.col(l) = bc(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
+                              aTmp;
+        }
+    }
 
     for (label i = 0; i < Nphi_u; i++)
     {
@@ -203,6 +235,11 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
                 i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
         fvec(i) = - m5(i) + m1(i) - cc(0, 0) - m2(i);
+
+        if (problem->bcMethod == "penalty")
+        {
+            fvec(i) += ((penaltyU * tauU)(i, 0));
+        }
     }
 
     for (label j = 0; j < Nphi_p; j++)
@@ -216,9 +253,12 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
         fvec(k) = m3(j, 0) + gg(0, 0) - m7(j, 0);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    if (problem->bcMethod == "lift")
     {
-        fvec(j) = x(j) - bc(j);
+        for (label j = 0; j < N_BC; j++)
+        {
+            fvec(j) = x(j) - bc(j);
+        }
     }
 
     return 0;
@@ -250,7 +290,16 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
     int numberOfStores = round(storeEvery / dt);
-    vel_now = setOnlineVelocity(vel);
+
+    if (problem->bcMethod == "lift")
+    {
+        vel_now = setOnlineVelocity(vel);
+    }
+    else if (problem->bcMethod == "penalty")
+    {
+        vel_now = vel;
+    }
+
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
@@ -261,9 +310,12 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
     int counter2 = 0;
 
     // Change initial condition for the lifting function
-    for (label j = 0; j < N_BC; j++)
+    if (problem->bcMethod == "lift")
     {
-        y(j) = vel_now(j, 0);
+        for (label j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
     }
 
     // Set some properties of the newton object
@@ -272,6 +324,7 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
     newtonObjectSUP.yOldOld = newtonObjectSUP.y_old;
     newtonObjectSUP.dt = dt;
     newtonObjectSUP.bc.resize(N_BC);
+    newtonObjectSUP.tauU = tauU;
 
     for (label j = 0; j < N_BC; j++)
     {
@@ -340,9 +393,13 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel,
         res.setZero();
         hnls.solve(y);
 
-        for (label j = 0; j < N_BC; j++)
+        // Change initial condition for the lifting function
+        if (problem->bcMethod == "lift")
         {
-            y(j) = vel_now(j, 0);
+            for (label j = 0; j < N_BC; j++)
+            {
+                y(j) = vel_now(j, 0);
+            }
         }
 
         newtonObjectSUP.operator()(y, res);
@@ -411,7 +468,16 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
     int numberOfStores = round(storeEvery / dt);
-    vel_now = setOnlineVelocity(vel);
+
+    if (problem->bcMethod == "lift")
+    {
+        vel_now = setOnlineVelocity(vel);
+    }
+    else if (problem->bcMethod == "penalty")
+    {
+        vel_now = vel;
+    }
+
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
@@ -422,9 +488,12 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
     int counter2 = 0;
 
     // Change initial condition for the lifting function
-    for (label j = 0; j < N_BC; j++)
+    if (problem->bcMethod == "lift")
     {
-        y(j) = vel_now(j, 0);
+        for (label j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
     }
 
     // Set some properties of the newton object
@@ -433,6 +502,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
     newtonObjectPPE.yOldOld = newtonObjectPPE.y_old;
     newtonObjectPPE.dt = dt;
     newtonObjectPPE.bc.resize(N_BC);
+    newtonObjectPPE.tauU = tauU;
 
     for (label j = 0; j < N_BC; j++)
     {
@@ -501,9 +571,13 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel,
         res.setZero();
         hnls.solve(y);
 
-        for (label j = 0; j < N_BC; j++)
+        // Change initial condition for the lifting function
+        if (problem->bcMethod == "lift")
         {
-            y(j) = vel_now(j, 0);
+            for (label j = 0; j < N_BC; j++)
+            {
+                y(j) = vel_now(j, 0);
+            }
         }
 
         newtonObjectPPE.operator()(y, res);

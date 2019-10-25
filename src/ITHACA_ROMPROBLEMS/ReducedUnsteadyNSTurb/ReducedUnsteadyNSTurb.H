@@ -74,6 +74,7 @@ struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
         Eigen::VectorXd y_old;
         Eigen::VectorXd yOldOld;
         Eigen::VectorXd bc;
+        Eigen::MatrixXd tauU;
         Eigen::VectorXd gNut;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
@@ -107,6 +108,7 @@ struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
         Eigen::VectorXd y_old;
         Eigen::VectorXd yOldOld;
         Eigen::VectorXd bc;
+        Eigen::MatrixXd tauU;
         Eigen::VectorXd gNut;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
