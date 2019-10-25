@@ -118,6 +118,7 @@ public:
 
     RBFSpline(const DataTable &samples, RadialBasisFunctionType type);
     RBFSpline(const DataTable &samples, RadialBasisFunctionType type, bool normalized);
+    RBFSpline(const DataTable& samples, RadialBasisFunctionType type, DenseMatrix w);
 
     virtual RBFSpline* clone() const { return new RBFSpline(*this); }
 
@@ -128,6 +129,7 @@ public:
     DenseMatrix evalHessian(DenseVector x) const {}; // TODO: implement via RBF_fn
     //    std::vector<double> getDomainUpperBound() const;
     //    std::vector<double> getDomainLowerBound() const;
+    DenseMatrix weights;
 
     unsigned int getNumVariables() const { return dim; }
 
@@ -139,7 +141,6 @@ private:
 
     std::shared_ptr<RadialBasisFunction> fn;
 
-    DenseMatrix weights;
 
     DenseMatrix computePreconditionMatrix() const;
 

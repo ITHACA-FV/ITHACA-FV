@@ -21,6 +21,42 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type)
 }
 
 RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
+                     DenseMatrix w)
+    : samples(samples),
+      normalized(false),
+      precondition(false),
+      dim(samples.getNumVariables()),
+      numSamples(samples.getNumSamples())
+{
+    if (type == RadialBasisFunctionType::THIN_PLATE_SPLINE)
+    {
+        fn = std::shared_ptr<RadialBasisFunction>(new ThinPlateSpline());
+    }
+    else if (type == RadialBasisFunctionType::MULTIQUADRIC)
+    {
+        fn = std::shared_ptr<RadialBasisFunction>(new Multiquadric());
+    }
+    else if (type == RadialBasisFunctionType::INVERSE_QUADRIC)
+    {
+        fn = std::shared_ptr<RadialBasisFunction>(new InverseQuadric());
+    }
+    else if (type == RadialBasisFunctionType::INVERSE_MULTIQUADRIC)
+    {
+        fn = std::shared_ptr<RadialBasisFunction>(new InverseMultiquadric());
+    }
+    else if (type == RadialBasisFunctionType::GAUSSIAN)
+    {
+        fn = std::shared_ptr<RadialBasisFunction>(new Gaussian());
+    }
+    else
+    {
+        fn = std::shared_ptr<RadialBasisFunction>(new ThinPlateSpline());
+    }
+
+    weights = w;
+}
+
+RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
                      bool normalized)
     : samples(samples),
       normalized(normalized),
