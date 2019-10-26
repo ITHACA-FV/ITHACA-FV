@@ -1337,6 +1337,105 @@ void steadyNS::forcesMatrices(label NUmodes, label NPmodes, label NSUPmodes)
     }
 }
 
+void steadyNS::forcesMatrices(label nModes)
+{
+    tauMatrix.resize(nModes, 3);
+    nMatrix.resize(nModes, 3);
+    tauMatrix = tauMatrix * 0;
+    nMatrix = nMatrix * 0;
+    Time& runTime = _runTime();
+    instantList Times = runTime.times();
+    fvMesh& mesh = _mesh();
+    volScalarField& p = _p();
+    volVectorField& U = _U();
+    //Read FORCESdict
+    IOdictionary FORCESdict
+    (
+        IOobject
+        (
+            "FORCESdict",
+            runTime.system(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
+    IOdictionary transportProperties
+    (
+        IOobject
+        (
+            "transportProperties",
+            runTime.constant(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
+    word pName(FORCESdict.lookup("pName"));
+    word UName(FORCESdict.lookup("UName"));
+    functionObjects::ITHACAforces f("Forces", mesh, FORCESdict);
+
+    for (label i = 0; i < nModes; i++)
+    {
+        U = Umodes[i];
+        p = Pmodes[0];
+        mesh.readUpdate();
+        f.write();
+        f.calcForcesMoment();
+
+        for (label j = 0; j < 3; j++)
+        {
+            tauMatrix(i, j) = f.forceTau()[j];
+        }
+    }
+
+    for (label i = 0; i < nModes; i++)
+    {
+        U = Umodes[0];
+        p = Pmodes[i];
+        mesh.readUpdate();
+        f.write();
+        f.calcForcesMoment();
+
+        for (label j = 0; j < 3; j++)
+        {
+            nMatrix(i, j) = f.forcePressure()[j];
+        }
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(tauMatrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(nMatrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (para->exportPython)
+    {
+        ITHACAstream::exportMatrix(tauMatrix, "tau", "python",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(nMatrix, "n", "python", "./ITHACAoutput/Matrices/");
+    }
+
+    if (para->exportMatlab)
+    {
+        ITHACAstream::exportMatrix(tauMatrix, "tau", "matlab",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(nMatrix, "n", "matlab", "./ITHACAoutput/Matrices/");
+    }
+
+    if (para->exportTxt)
+    {
+        ITHACAstream::exportMatrix(tauMatrix, "tau", "eigen",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(nMatrix, "n", "eigen", "./ITHACAoutput/Matrices/");
+    }
+}
+
+
 
 void steadyNS::restart()
 {
