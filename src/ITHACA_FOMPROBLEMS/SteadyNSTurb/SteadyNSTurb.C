@@ -544,18 +544,42 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                                   "coeffL2_nut_" + name(nNutModes));
     samples.resize(nNutModes);
     rbfSplines.resize(nNutModes);
+    Eigen::MatrixXd weights;
 
     for (int i = 0; i < nNutModes; i++)
     {
-        samples[i] = new SPLINTER::DataTable(1, 1);
+        word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
+                          + name(NUmodes) + "_" + name(NSUPmodes) ;
 
-        for (int j = 0; j < coeffL2.cols(); j++)
+        if (ITHACAutilities::check_file("./ITHACAoutput/weightsSUP/" + weightName))
         {
-            samples[i]->addSample(mu.row(j), coeffL2(i, j));
-        }
+            samples[i] = new SPLINTER::DataTable(1, 1);
 
-        rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
-        std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            for (int j = 0; j < coeffL2.cols(); j++)
+            {
+                samples[i]->addSample(mu.row(j), coeffL2(i, j));
+            }
+
+            ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsSUP/",
+                                          weightName);
+            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
+            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+        }
+        else
+        {
+            samples[i] = new SPLINTER::DataTable(1, 1);
+
+            for (int j = 0; j < coeffL2.cols(); j++)
+            {
+                samples[i]->addSample(mu.row(j), coeffL2(i, j));
+            }
+
+            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+            ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
+                                          "./ITHACAoutput/weightsSUP/", weightName);
+            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+        }
     }
 }
