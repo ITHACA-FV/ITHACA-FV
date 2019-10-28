@@ -969,6 +969,37 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
     }
 }
 
+Eigen::MatrixXd ITHACAutilities::parTimeCombMat(List<Eigen::VectorXd>
+        acquiredSnapshotsTimes,
+        Eigen::MatrixXd parameters)
+{
+    int parsNum = parameters.cols();
+    int parsSamplesNum = parameters.rows();
+    M_Assert(parsSamplesNum == acquiredSnapshotsTimes.size(),
+             "The list of time instants does not have the same number of vectors as the number of parameters samples");
+    Eigen::MatrixXd comb;
+    int totalSnapshotsNum = 0;
+
+    for (label k = 0; k < acquiredSnapshotsTimes.size(); k++)
+    {
+        totalSnapshotsNum += acquiredSnapshotsTimes[k].size();
+    }
+
+    comb.resize(totalSnapshotsNum, parsNum + 1);
+    label i = 0;
+
+    for (label j = 0; j < acquiredSnapshotsTimes.size(); j++)
+    {
+        for (label k = 0; k < acquiredSnapshotsTimes[j].size(); k++)
+        {
+            comb(i, parsNum) = (acquiredSnapshotsTimes[j])(k, 0);
+            comb.block(i, 0, 1, parsNum) = parameters.row(j);
+            i = i + 1;
+        }
+    }
+
+    return comb;
+}
 
 template<class TypeField>
 void ITHACAutilities::changeBCtype(

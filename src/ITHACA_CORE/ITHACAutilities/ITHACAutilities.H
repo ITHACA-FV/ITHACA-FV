@@ -462,6 +462,21 @@ class ITHACAutilities
         static void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd valueVec);
 
         //--------------------------------------------------------------------------
+        /// @brief      A method to comput the time-parameter combined matrix whose any single element
+        /// corresponds to a unique snapshot in the snapshots acquired for the offline stage
+        ///
+        /// @param[in]  acquiredSnapshotsTimes  The time instants at which snapshots are acquired
+        /// @param[in]  parameters   The parameters for which the simulations are run oredered with respect to
+        /// vectors acquiredSnapshotsTimes which contain the corresponding time instants at which we acquired
+        /// snapshots
+        ///
+        /// @return     A matrix which has in each row the parameters value and the time instants which
+        /// correspond to a unique snapshot in the offline folder.
+        ///
+        static Eigen::MatrixXd parTimeCombMat(List<Eigen::VectorXd>
+                                              acquiredSnapshotsTimes, Eigen::MatrixXd parameters);
+
+        //--------------------------------------------------------------------------
         /// Evaluate the L2 norm of a volScalarField
         ///
         /// @param[in]  field  The field.
