@@ -10,6 +10,9 @@ if(CMAKE_COMPILER_IS_GNUCXX)
   endif(CMAKE_SYSTEM_NAME MATCHES Linux)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
+# some examples and snippets needs c++11, so let's check it once
+check_cxx_compiler_flag("-std=c++11" EIGEN_COMPILER_SUPPORT_CPP11)
+
 option(EIGEN_INTERNAL_DOCUMENTATION "Build internal documentation" OFF)
 
 
@@ -103,7 +106,7 @@ add_custom_target(doc ALL
   COMMAND doxygen Doxyfile-unsupported
   COMMAND ${CMAKE_COMMAND} -E copy ${Eigen_BINARY_DIR}/doc/html/group__TopicUnalignedArrayAssert.html ${Eigen_BINARY_DIR}/doc/html/TopicUnalignedArrayAssert.html
   COMMAND ${CMAKE_COMMAND} -E rename html eigen-doc
-  COMMAND ${CMAKE_COMMAND} -E remove eigen-doc/eigen-doc.tgz
+  COMMAND ${CMAKE_COMMAND} -E remove eigen-doc/eigen-doc.tgz eigen-doc/unsupported/_formulas.log eigen-doc/_formulas.log
   COMMAND ${CMAKE_COMMAND} -E tar cfz eigen-doc.tgz eigen-doc
   COMMAND ${CMAKE_COMMAND} -E rename eigen-doc.tgz eigen-doc/eigen-doc.tgz
   COMMAND ${CMAKE_COMMAND} -E rename eigen-doc html

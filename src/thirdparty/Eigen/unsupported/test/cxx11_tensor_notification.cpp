@@ -13,15 +13,6 @@
 #include "main.h"
 #include <Eigen/CXX11/Tensor>
 
-#if EIGEN_OS_WIN || EIGEN_OS_WIN64
-#include <windows.h>
-void sleep(int seconds) {
-  Sleep(seconds*1000);
-}
-#else
-#include <unistd.h>
-#endif
-
 
 namespace {
 
@@ -40,7 +31,7 @@ static void test_notification_single()
   Eigen::Notification n;
   std::function<void()> func = std::bind(&WaitAndAdd, &n, &counter);
   thread_pool.Schedule(func);
-  sleep(1);
+  EIGEN_SLEEP(1000);
 
   // The thread should be waiting for the notification.
   VERIFY_IS_EQUAL(counter, 0);
@@ -48,7 +39,7 @@ static void test_notification_single()
   // Unblock the thread
   n.Notify();
 
-  sleep(1);
+  EIGEN_SLEEP(1000);
 
   // Verify the counter has been incremented
   VERIFY_IS_EQUAL(counter, 1);
@@ -67,14 +58,14 @@ static void test_notification_multiple()
   thread_pool.Schedule(func);
   thread_pool.Schedule(func);
   thread_pool.Schedule(func);
-  sleep(1);
+  EIGEN_SLEEP(1000);
   VERIFY_IS_EQUAL(counter, 0);
   n.Notify();
-  sleep(1);
+  EIGEN_SLEEP(1000);
   VERIFY_IS_EQUAL(counter, 4);
 }
 
-void test_cxx11_tensor_notification()
+EIGEN_DECLARE_TEST(cxx11_tensor_notification)
 {
   CALL_SUBTEST(test_notification_single());
   CALL_SUBTEST(test_notification_multiple());
