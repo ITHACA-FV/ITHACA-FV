@@ -396,7 +396,7 @@ class steadyNS: public reductionProblem
         ///
         List < Eigen::MatrixXd > pressure_BC2(label NPmodes, label NUmodes);
 
-        ///
+        //--------------------------------------------------------------------------
         /// @brief      Term N° 2 given by the additional boundary condition using a PPE approach
         ///
         /// @param[in]  NPmodes  The n pmodes
@@ -462,6 +462,14 @@ class steadyNS: public reductionProblem
         /// @param[in]  NSUPmodes  The N of supremizer modes
         ///
         void forcesMatrices(label NUmodes, label NPmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Compute lift and drag matrices offline matrices for the case of same number of velocity
+        /// and pressure modes
+        ///
+        /// @param[in]  nModes  The number of modes used in the online stage for all reduced variables
+        ///
+        void forcesMatrices(label nModes);
 
         //--------------------------------------------------------------------------
         /// @brief      Export convective term as a tensor
