@@ -102,10 +102,14 @@ template<typename VectorType> void ref_vector(const VectorType& m)
   Index i = internal::random<Index>(0,size-1);
   Index bsize = internal::random<Index>(1,size-i);
   
-  RefMat rm0 = v1;
-  VERIFY_IS_EQUAL(rm0, v1);
-  RefDynMat rv1 = v1;
-  VERIFY_IS_EQUAL(rv1, v1);
+  { RefMat    rm0 = v1;                   VERIFY_IS_EQUAL(rm0, v1); }
+  { RefMat    rm0 = v1.block(0,0,size,1); VERIFY_IS_EQUAL(rm0, v1); }
+  { RefDynMat rv1 = v1;                   VERIFY_IS_EQUAL(rv1, v1); }
+  { RefDynMat rv1 = v1.block(0,0,size,1); VERIFY_IS_EQUAL(rv1, v1); }
+  { VERIFY_RAISES_ASSERT( RefMat    rm0 = v1.block(0, 0, size, 0); EIGEN_UNUSED_VARIABLE(rm0); ); }
+  if(VectorType::SizeAtCompileTime!=1)
+  { VERIFY_RAISES_ASSERT( RefDynMat rv1 = v1.block(0, 0, size, 0); EIGEN_UNUSED_VARIABLE(rv1); ); }
+
   RefDynMat rv2 = v1.segment(i,bsize);
   VERIFY_IS_EQUAL(rv2, v1.segment(i,bsize));
   rv2.setOnes();
@@ -255,8 +259,8 @@ void test_ref_overloads()
 
 void test_ref_fixed_size_assert()
 {
-  Vector4f v4;
-  VectorXf vx(10);
+  Vector4f v4 = Vector4f::Random();
+  VectorXf vx = VectorXf::Random(10);
   VERIFY_RAISES_STATIC_ASSERT( Ref<Vector3f> y = v4; (void)y; );
   VERIFY_RAISES_STATIC_ASSERT( Ref<Vector3f> y = vx.head<4>(); (void)y; );
   VERIFY_RAISES_STATIC_ASSERT( Ref<const Vector3f> y = v4; (void)y; );
@@ -264,7 +268,7 @@ void test_ref_fixed_size_assert()
   VERIFY_RAISES_STATIC_ASSERT( Ref<const Vector3f> y = 2*v4; (void)y; );
 }
 
-void test_ref()
+EIGEN_DECLARE_TEST(ref)
 {
   for(int i = 0; i < g_repeat; i++) {
     CALL_SUBTEST_1( ref_vector(Matrix<float, 1, 1>()) );

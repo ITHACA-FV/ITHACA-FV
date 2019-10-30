@@ -9,11 +9,7 @@
 
 #include "main.h"
 
-#include <Eigen/src/Core/arch/CUDA/Half.h>
-
-#ifdef EIGEN_HAS_CUDA_FP16
-#error "EIGEN_HAS_CUDA_FP16 should not be defined in this CPU unit test"
-#endif
+#include <Eigen/src/Core/arch/Default/Half.h>
 
 // Make sure it's possible to forward declare Eigen::half
 namespace Eigen {
@@ -201,6 +197,11 @@ void test_basic_functions()
   VERIFY_IS_APPROX(float(numext::exp(half(EIGEN_PI))), 20.f + float(EIGEN_PI));
   VERIFY_IS_APPROX(float(exp(half(EIGEN_PI))), 20.f + float(EIGEN_PI));
 
+  VERIFY_IS_EQUAL(float(numext::expm1(half(0.0f))), 0.0f);
+  VERIFY_IS_EQUAL(float(expm1(half(0.0f))), 0.0f);
+  VERIFY_IS_APPROX(float(numext::expm1(half(2.0f))), 6.3890561f);
+  VERIFY_IS_APPROX(float(expm1(half(2.0f))), 6.3890561f);
+
   VERIFY_IS_EQUAL(float(numext::log(half(1.0f))), 0.0f);
   VERIFY_IS_EQUAL(float(log(half(1.0f))), 0.0f);
   VERIFY_IS_APPROX(float(numext::log(half(10.0f))), 2.30273f);
@@ -256,13 +257,31 @@ void test_array()
   ss << a1;
 }
 
-void test_half_float()
+void test_product()
 {
-  CALL_SUBTEST(test_conversion());
+  typedef Matrix<half,Dynamic,Dynamic> MatrixXh;
+  Index rows  = internal::random<Index>(1,EIGEN_TEST_MAX_SIZE);
+  Index cols  = internal::random<Index>(1,EIGEN_TEST_MAX_SIZE);
+  Index depth = internal::random<Index>(1,EIGEN_TEST_MAX_SIZE);
+  MatrixXh Ah = MatrixXh::Random(rows,depth);
+  MatrixXh Bh = MatrixXh::Random(depth,cols);
+  MatrixXh Ch = MatrixXh::Random(rows,cols);
+  MatrixXf Af = Ah.cast<float>();
+  MatrixXf Bf = Bh.cast<float>();
+  MatrixXf Cf = Ch.cast<float>();
+  VERIFY_IS_APPROX(Ch.noalias()+=Ah*Bh, (Cf.noalias()+=Af*Bf).cast<half>());
+}
+
+EIGEN_DECLARE_TEST(half_float)
+{
   CALL_SUBTEST(test_numtraits());
-  CALL_SUBTEST(test_arithmetic());
-  CALL_SUBTEST(test_comparison());
-  CALL_SUBTEST(test_basic_functions());
-  CALL_SUBTEST(test_trigonometric_functions());
-  CALL_SUBTEST(test_array());
+  for(int i = 0; i < g_repeat; i++) {
+    CALL_SUBTEST(test_conversion());
+    CALL_SUBTEST(test_arithmetic());
+    CALL_SUBTEST(test_comparison());
+    CALL_SUBTEST(test_basic_functions());
+    CALL_SUBTEST(test_trigonometric_functions());
+    CALL_SUBTEST(test_array());
+    CALL_SUBTEST(test_product());
+  }
 }

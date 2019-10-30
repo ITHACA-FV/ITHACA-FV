@@ -25,6 +25,10 @@ const int Dynamic = -1;
   */
 const int DynamicIndex = 0xffffff;
 
+/** This value means that the increment to go from one value to another in a sequence is not constant for each step.
+  */
+const int UndefinedIncr = 0xfffffe;
+
 /** This value means +Infinity; it is currently used only as the p parameter to MatrixBase::lpNorm<int>().
   * The value Infinity there means the L-infinity norm.
   */
@@ -335,6 +339,8 @@ enum SideType {
   OnTheRight = 2  
 };
 
+
+
 /* the following used to be written as:
  *
  *   struct NoChange_t {};
@@ -464,6 +470,7 @@ namespace Architecture
     AltiVec = 0x2,
     VSX = 0x3,
     NEON = 0x4,
+    MSA = 0x5,
 #if defined EIGEN_VECTORIZE_SSE
     Target = SSE
 #elif defined EIGEN_VECTORIZE_ALTIVEC
@@ -472,6 +479,8 @@ namespace Architecture
     Target = VSX
 #elif defined EIGEN_VECTORIZE_NEON
     Target = NEON
+#elif defined EIGEN_VECTORIZE_MSA
+    Target = MSA
 #else
     Target = Generic
 #endif

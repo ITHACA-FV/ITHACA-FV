@@ -25,12 +25,21 @@
 namespace Eigen {
 namespace TensorSycl {
 namespace internal {
+
+template <typename Expr, typename Dims>
+struct DeviceFixedSizeTensor;
+
+template <typename Expr, typename std::ptrdiff_t... Indices>
+struct DeviceFixedSizeTensor<Expr, Eigen::Sizes<Indices...>>{
+  template<typename Data>
+  static EIGEN_ALWAYS_INLINE Expr instantiate(Data& dt) {return Expr(ConvertToActualTypeSycl(typename Expr::Scalar, dt), Indices...);}
+};
 /// this class is used by EvalToOp in order to create an lhs expression which is
 /// a pointer from an accessor on device-only buffer
 template <typename PtrType, size_t N, typename... Params>
 struct EvalToLHSConstructor {
   PtrType expr;
-  EvalToLHSConstructor(const utility::tuple::Tuple<Params...> &t): expr((&(*(utility::tuple::get<N>(t).get_pointer())))) {}
+  EvalToLHSConstructor(const utility::tuple::Tuple<Params...> &t) : expr(ConvertToActualTypeSycl(typename Eigen::internal::remove_all<PtrType>::type, utility::tuple::get<N>(t))) {}
 };
 
 /// struct ExprConstructor is used to reconstruct the expression on the device and
@@ -45,20 +54,38 @@ struct ExprConstructor;
 /// specialisation of the \ref ExprConstructor struct when the node type is
 /// TensorMap
 #define TENSORMAP(CVQual)\
-template <typename Scalar_, int Options_, int Options2_, int Options3_, int NumIndices_, typename IndexType_,\
+template <typename T,  int Options_,\
 template <class> class MakePointer_, size_t N, typename... Params>\
-struct ExprConstructor< CVQual TensorMap<Tensor<Scalar_, NumIndices_, Options_, IndexType_>, Options2_, MakeGlobalPointer>,\
-CVQual PlaceHolder<CVQual TensorMap<Tensor<Scalar_, NumIndices_, Options_, IndexType_>, Options3_, MakePointer_>, N>, Params...>{\
-  typedef  CVQual TensorMap<Tensor<Scalar_, NumIndices_, Options_, IndexType_>, Options2_, MakeGlobalPointer>  Type;\
+struct ExprConstructor< CVQual TensorMap<T, Options_, MakeGlobalPointer>,\
+CVQual PlaceHolder<CVQual TensorMap<T, Options_, MakePointer_>, N>, Params...>{\
+  typedef  CVQual TensorMap<T, Options_, MakeGlobalPointer>  Type;\
   Type expr;\
   template <typename FuncDetector>\
   ExprConstructor(FuncDetector &fd, const utility::tuple::Tuple<Params...> &t)\
-  : expr(Type((&(*(utility::tuple::get<N>(t).get_pointer()))), fd.dimensions())) {}\
+  : expr(Type(ConvertToActualTypeSycl(typename Type::Scalar, utility::tuple::get<N>(t)), fd.dimensions())){}\
 };
 
 TENSORMAP(const)
 TENSORMAP()
 #undef TENSORMAP
+
+/// specialisation of the \ref ExprConstructor struct when the node type is
+/// TensorMap
+#define TENSORMAPFIXEDSIZE(CVQual)\
+template <typename Scalar_, typename Dimensions_, int Options_2, typename IndexType, int Options_,\
+template <class> class MakePointer_, size_t N, typename... Params>\
+struct ExprConstructor< CVQual TensorMap<TensorFixedSize<Scalar_, Dimensions_, Options_2, IndexType>, Options_, MakeGlobalPointer>,\
+CVQual PlaceHolder<CVQual TensorMap<TensorFixedSize<Scalar_, Dimensions_, Options_2, IndexType>, Options_, MakePointer_>, N>, Params...>{\
+  typedef  CVQual TensorMap<TensorFixedSize<Scalar_, Dimensions_, Options_2, IndexType>, Options_, MakeGlobalPointer>  Type;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &, const utility::tuple::Tuple<Params...> &t)\
+  : expr(DeviceFixedSizeTensor<Type,Dimensions_>::instantiate(utility::tuple::get<N>(t))){}\
+};
+
+TENSORMAPFIXEDSIZE(const)
+TENSORMAPFIXEDSIZE()
+#undef TENSORMAPFIXEDSIZE
 
 #define UNARYCATEGORY(CVQual)\
 template <template<class, class> class UnaryCategory, typename OP, typename OrigRHSExpr, typename RHSExpr, typename... Params>\
@@ -161,8 +188,27 @@ struct ExprConstructor<CVQual TensorAssignOp<OrigLHSExpr, OrigRHSExpr>,  CVQual 
  ASSIGN(const)
  ASSIGN()
  #undef ASSIGN
+
+ /// specialisation of the \ref ExprConstructor struct when the node type is
+ /// const TensorAssignOp
+ #define CONVERSIONEXPRCONST(CVQual)\
+ template <typename OrigNestedExpr, typename ConvertType, typename NestedExpr, typename... Params>\
+ struct ExprConstructor<CVQual TensorConversionOp<ConvertType, OrigNestedExpr>,  CVQual TensorConversionOp<ConvertType, NestedExpr>, Params...> {\
+   typedef ExprConstructor<OrigNestedExpr, NestedExpr, Params...> my_nested_type;\
+   typedef CVQual TensorConversionOp<ConvertType, typename my_nested_type::Type>  Type;\
+   my_nested_type nestedExpr;\
+   Type expr;\
+   template <typename FuncDetector>\
+   ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
+   : nestedExpr(funcD.subExpr, t), expr(nestedExpr.expr) {}\
+  };
+
+  CONVERSIONEXPRCONST(const)
+  CONVERSIONEXPRCONST()
+  #undef CONVERSIONEXPRCONST
+
 /// specialisation of the \ref ExprConstructor struct when the node type is
-///  TensorEvalToOp
+///  TensorEvalToOp /// 0 here is the output number in the buffer
 #define EVALTO(CVQual)\
 template <typename OrigExpr, typename Expr, typename... Params>\
 struct ExprConstructor<CVQual TensorEvalToOp<OrigExpr, MakeGlobalPointer>, CVQual TensorEvalToOp<Expr>, Params...> {\
@@ -174,7 +220,7 @@ struct ExprConstructor<CVQual TensorEvalToOp<OrigExpr, MakeGlobalPointer>, CVQua
   Type expr;\
   template <typename FuncDetector>\
   ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
-  : nestedExpression(funcD.rhsExpr, t), buffer(t), expr(buffer.expr, nestedExpression.expr) {}\
+  : nestedExpression(funcD.xprExpr, t), buffer(t), expr(buffer.expr, nestedExpression.expr) {}\
 };
 
 EVALTO(const)
@@ -185,44 +231,273 @@ EVALTO()
 /// TensorForcedEvalOp
 #define FORCEDEVAL(CVQual)\
 template <typename OrigExpr, typename DevExpr, size_t N, typename... Params>\
-struct ExprConstructor<CVQual TensorForcedEvalOp<OrigExpr, MakeGlobalPointer>,\
+struct ExprConstructor<CVQual TensorForcedEvalOp<OrigExpr>,\
 CVQual PlaceHolder<CVQual TensorForcedEvalOp<DevExpr>, N>, Params...> {\
-  typedef CVQual TensorMap<Tensor<typename TensorForcedEvalOp<DevExpr, MakeGlobalPointer>::Scalar,\
-  TensorForcedEvalOp<DevExpr, MakeGlobalPointer>::NumDimensions, 0, typename TensorForcedEvalOp<DevExpr>::Index>, 0, MakeGlobalPointer> Type;\
+  typedef  TensorForcedEvalOp<OrigExpr> XprType;\
+  typedef CVQual TensorMap<\
+                            Tensor<typename XprType::Scalar,XprType::NumDimensions, Eigen::internal::traits<XprType>::Layout,typename XprType::Index>,\
+                            Eigen::internal::traits<XprType>::Layout, \
+                            MakeGlobalPointer\
+                          > Type;\
   Type expr;\
   template <typename FuncDetector>\
   ExprConstructor(FuncDetector &fd, const utility::tuple::Tuple<Params...> &t)\
-  : expr(Type((&(*(utility::tuple::get<N>(t).get_pointer()))), fd.dimensions())) {}\
+  : expr(Type(ConvertToActualTypeSycl(typename Type::Scalar, utility::tuple::get<N>(t)), fd.dimensions())) {}\
 };
 
 FORCEDEVAL(const)
 FORCEDEVAL()
 #undef FORCEDEVAL
 
-template <bool Conds,  size_t X , size_t Y > struct ValueCondition {
-  static const size_t Res =X;
+#define TENSORCUSTOMUNARYOP(CVQual)\
+template <typename CustomUnaryFunc, typename OrigExpr, typename DevExpr, size_t N, typename... Params>\
+struct ExprConstructor<CVQual TensorCustomUnaryOp<CustomUnaryFunc, OrigExpr>,\
+CVQual PlaceHolder<CVQual TensorCustomUnaryOp<CustomUnaryFunc, DevExpr>, N>, Params...> {\
+  typedef TensorCustomUnaryOp<CustomUnaryFunc, OrigExpr> XprType;\
+  typedef CVQual TensorMap<\
+                            Tensor<typename XprType::Scalar,XprType::NumDimensions, Eigen::internal::traits<XprType>::Layout,typename XprType::Index>,\
+                            Eigen::internal::traits<XprType>::Layout, \
+                            MakeGlobalPointer\
+                          > Type;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &fd, const utility::tuple::Tuple<Params...> &t)\
+  : expr(Type(ConvertToActualTypeSycl(typename Type::Scalar, utility::tuple::get<N>(t)), fd.dimensions())) {}\
 };
-template<size_t X, size_t Y> struct ValueCondition<false, X , Y> {
-  static const size_t Res =Y;
-};
+
+TENSORCUSTOMUNARYOP(const)
+TENSORCUSTOMUNARYOP()
+#undef TENSORCUSTOMUNARYOP
 
 /// specialisation of the \ref ExprConstructor struct when the node type is TensorReductionOp
 #define SYCLREDUCTIONEXPR(CVQual)\
 template <typename OP, typename Dim, typename OrigExpr, typename DevExpr, size_t N, typename... Params>\
 struct ExprConstructor<CVQual TensorReductionOp<OP, Dim, OrigExpr, MakeGlobalPointer>,\
 CVQual PlaceHolder<CVQual TensorReductionOp<OP, Dim, DevExpr>, N>, Params...> {\
-  static const size_t NumIndices= ValueCondition< TensorReductionOp<OP, Dim, DevExpr, MakeGlobalPointer>::NumDimensions==0,  1, TensorReductionOp<OP, Dim, DevExpr, MakeGlobalPointer>::NumDimensions >::Res;\
+  static const auto NumIndices= ValueCondition< TensorReductionOp<OP, Dim, DevExpr, MakeGlobalPointer>::NumDimensions==0,  1, TensorReductionOp<OP, Dim, DevExpr, MakeGlobalPointer>::NumDimensions >::Res;\
   typedef CVQual TensorMap<Tensor<typename TensorReductionOp<OP, Dim, DevExpr, MakeGlobalPointer>::Scalar,\
-  NumIndices, 0, typename TensorReductionOp<OP, Dim, DevExpr>::Index>, 0, MakeGlobalPointer> Type;\
+  NumIndices, Eigen::internal::traits<TensorReductionOp<OP, Dim, DevExpr, MakeGlobalPointer>>::Layout, typename TensorReductionOp<OP, Dim, DevExpr>::Index>, Eigen::internal::traits<TensorReductionOp<OP, Dim, DevExpr, MakeGlobalPointer>>::Layout, MakeGlobalPointer> Type;\
   Type expr;\
   template <typename FuncDetector>\
   ExprConstructor(FuncDetector &fd, const utility::tuple::Tuple<Params...> &t)\
-  : expr(Type((&(*(utility::tuple::get<N>(t).get_pointer()))), fd.dimensions())) {}\
+  :expr(Type(ConvertToActualTypeSycl(typename Type::Scalar, utility::tuple::get<N>(t)), fd.dimensions())) {}\
 };
 
 SYCLREDUCTIONEXPR(const)
 SYCLREDUCTIONEXPR()
 #undef SYCLREDUCTIONEXPR
+
+/// specialisation of the \ref ExprConstructor struct when the node type is TensorTupleReducerOp
+/// use reductionOp instead of the TensorTupleReducerOp in order to build the tensor map. Because the tensorMap is the output of Tensor ReductionOP.
+#define SYCLTUPLEREDUCTIONEXPR(CVQual)\
+template <typename OP, typename Dim, typename OrigExpr, typename DevExpr, size_t N, typename... Params>\
+struct ExprConstructor<CVQual TensorTupleReducerOp<OP, Dim, OrigExpr>,\
+CVQual PlaceHolder<CVQual TensorTupleReducerOp<OP, Dim, DevExpr>, N>, Params...> {\
+  static const auto NumRedDims= TensorReductionOp<OP, Dim, const TensorIndexTupleOp<OrigExpr> , MakeGlobalPointer>::NumDimensions;\
+  static const auto NumIndices= ValueCondition<NumRedDims==0, 1, NumRedDims>::Res;\
+static const int Layout =static_cast<int>(Eigen::internal::traits<TensorReductionOp<OP, Dim, const TensorIndexTupleOp<OrigExpr>, MakeGlobalPointer>>::Layout);\
+  typedef CVQual TensorMap<\
+                          Tensor<typename TensorIndexTupleOp<OrigExpr>::CoeffReturnType,NumIndices, Layout, typename TensorTupleReducerOp<OP, Dim, OrigExpr>::Index>,\
+                          Layout,\
+                          MakeGlobalPointer\
+                          > XprType;\
+  typedef typename TensorEvaluator<const TensorIndexTupleOp<OrigExpr> , SyclKernelDevice>::Dimensions InputDimensions;\
+  static const int NumDims = Eigen::internal::array_size<InputDimensions>::value;\
+  typedef array<Index, NumDims> StrideDims;\
+  typedef const TensorTupleReducerDeviceOp<StrideDims, XprType> Type;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &fd, const utility::tuple::Tuple<Params...> &t)\
+  :expr(Type(XprType(ConvertToActualTypeSycl(typename XprType::CoeffReturnType, utility::tuple::get<N>(t)), fd.dimensions()),\
+    fd.return_dim(), fd.strides(), fd.stride_mod(), fd.stride_div())) {\
+    }\
+};
+
+SYCLTUPLEREDUCTIONEXPR(const)
+SYCLTUPLEREDUCTIONEXPR()
+#undef SYCLTUPLEREDUCTIONEXPR
+
+/// specialisation of the \ref ExprConstructor struct when the node type is
+/// TensorContractionOp, TensorConvolutionOp TensorCustomBinaryOp
+#define SYCLCONTRACTCONVCUSBIOPS(CVQual, ExprNode)\
+template <typename Indices, typename OrigLhsXprType, typename OrigRhsXprType, typename LhsXprType, typename RhsXprType, size_t N, typename... Params>\
+struct ExprConstructor<CVQual ExprNode<Indices, OrigLhsXprType, OrigRhsXprType>,\
+CVQual PlaceHolder<CVQual ExprNode<Indices, LhsXprType,  RhsXprType>, N>, Params...> {\
+  typedef ExprNode<Indices, OrigLhsXprType, OrigRhsXprType> XprTyp;\
+  static const auto NumIndices= Eigen::internal::traits<XprTyp>::NumDimensions;\
+  typedef CVQual TensorMap<\
+                            Tensor<typename XprTyp::Scalar,NumIndices, Eigen::internal::traits<XprTyp>::Layout, typename XprTyp::Index>,\
+                            Eigen::internal::traits<XprTyp>::Layout, \
+                            MakeGlobalPointer\
+                          > Type;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &fd, const utility::tuple::Tuple<Params...> &t)\
+  :expr(Type(ConvertToActualTypeSycl(typename Type::Scalar, utility::tuple::get<N>(t)), fd.dimensions())) {}\
+};
+
+//TensorContractionOp
+SYCLCONTRACTCONVCUSBIOPS(const, TensorContractionOp)
+SYCLCONTRACTCONVCUSBIOPS(, TensorContractionOp)
+//TensorConvolutionOp
+SYCLCONTRACTCONVCUSBIOPS(const, TensorConvolutionOp)
+SYCLCONTRACTCONVCUSBIOPS(, TensorConvolutionOp)
+//TensorCustomBinaryOp
+SYCLCONTRACTCONVCUSBIOPS(const, TensorCustomBinaryOp)
+SYCLCONTRACTCONVCUSBIOPS(, TensorCustomBinaryOp)
+#undef SYCLCONTRACTCONVCUSBIOPS
+
+//TensorSlicingOp
+#define SYCLSLICEOPEXPR(CVQual)\
+template<typename StartIndices, typename Sizes, typename OrigXprType, typename XprType, typename... Params>\
+struct ExprConstructor<CVQual TensorSlicingOp <StartIndices, Sizes, OrigXprType> , CVQual TensorSlicingOp<StartIndices, Sizes, XprType>, Params... >{\
+  typedef ExprConstructor<OrigXprType, XprType, Params...> my_xpr_type;\
+  typedef CVQual TensorSlicingOp<StartIndices, Sizes, typename my_xpr_type::Type> Type;\
+  my_xpr_type xprExpr;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
+  : xprExpr(funcD.xprExpr, t), expr(xprExpr.expr, funcD.startIndices(), funcD.dimensions()) {}\
+};
+
+SYCLSLICEOPEXPR(const)
+SYCLSLICEOPEXPR()
+#undef SYCLSLICEOPEXPR
+
+//TensorStridingSlicingOp
+#define SYCLSLICESTRIDEOPEXPR(CVQual)\
+template<typename StartIndices, typename StopIndices, typename Strides, typename OrigXprType, typename XprType, typename... Params>\
+struct ExprConstructor<CVQual TensorStridingSlicingOp<StartIndices, StopIndices, Strides, OrigXprType>, CVQual TensorStridingSlicingOp<StartIndices, StopIndices, Strides, XprType>, Params... >{\
+  typedef ExprConstructor<OrigXprType, XprType, Params...> my_xpr_type;\
+  typedef CVQual TensorStridingSlicingOp<StartIndices, StopIndices, Strides, typename my_xpr_type::Type> Type;\
+  my_xpr_type xprExpr;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
+  : xprExpr(funcD.xprExpr, t), expr(xprExpr.expr, funcD.startIndices(), funcD.stopIndices(),funcD.strides()) {}\
+};
+
+SYCLSLICESTRIDEOPEXPR(const)
+SYCLSLICESTRIDEOPEXPR()
+#undef SYCLSLICESTRIDEOPEXPR
+
+//TensorReshapingOp and TensorShufflingOp
+#define SYCLRESHAPEANDSHUFFLEOPEXPRCONST(OPEXPR, CVQual)\
+template<typename Param, typename OrigXprType, typename XprType, typename... Params>\
+struct ExprConstructor<CVQual OPEXPR <Param, OrigXprType> , CVQual OPEXPR <Param, XprType>, Params... >{\
+  typedef ExprConstructor<OrigXprType, XprType, Params...> my_xpr_type;\
+  typedef CVQual OPEXPR <Param, typename my_xpr_type::Type> Type ;\
+  my_xpr_type xprExpr;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
+  : xprExpr(funcD.xprExpr, t), expr(xprExpr.expr, funcD.param()) {}\
+};
+
+// TensorReshapingOp
+SYCLRESHAPEANDSHUFFLEOPEXPRCONST(TensorReshapingOp, const)
+SYCLRESHAPEANDSHUFFLEOPEXPRCONST(TensorReshapingOp, )
+// TensorShufflingOp
+SYCLRESHAPEANDSHUFFLEOPEXPRCONST(TensorShufflingOp, const)
+SYCLRESHAPEANDSHUFFLEOPEXPRCONST(TensorShufflingOp, )
+#undef SYCLRESHAPEANDSHUFFLEOPEXPRCONST
+
+//TensorPaddingOp
+#define SYCLPADDINGOPEXPRCONST(OPEXPR, CVQual)\
+template<typename Param, typename OrigXprType, typename XprType, typename... Params>\
+struct ExprConstructor<CVQual OPEXPR <Param, OrigXprType> , CVQual OPEXPR <Param, XprType>, Params... >{\
+  typedef ExprConstructor<OrigXprType, XprType, Params...> my_xpr_type;\
+  typedef CVQual OPEXPR <Param, typename my_xpr_type::Type> Type ;\
+  my_xpr_type xprExpr;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
+  : xprExpr(funcD.xprExpr, t), expr(xprExpr.expr, funcD.param() , funcD.scalar_param()) {}\
+};
+
+//TensorPaddingOp
+SYCLPADDINGOPEXPRCONST(TensorPaddingOp, const)
+SYCLPADDINGOPEXPRCONST(TensorPaddingOp, )
+#undef SYCLPADDINGOPEXPRCONST
+
+// TensorChippingOp
+#define SYCLTENSORCHIPPINGOPEXPR(CVQual)\
+template<DenseIndex DimId, typename OrigXprType, typename XprType, typename... Params>\
+struct ExprConstructor<CVQual TensorChippingOp <DimId, OrigXprType> , CVQual TensorChippingOp<DimId, XprType>, Params... >{\
+  typedef ExprConstructor<OrigXprType, XprType, Params...> my_xpr_type;\
+  typedef CVQual TensorChippingOp<DimId, typename my_xpr_type::Type> Type;\
+  my_xpr_type xprExpr;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
+  : xprExpr(funcD.xprExpr, t), expr(xprExpr.expr, funcD.offset(), funcD.dimId()) {}\
+};
+
+SYCLTENSORCHIPPINGOPEXPR(const)
+SYCLTENSORCHIPPINGOPEXPR()
+#undef SYCLTENSORCHIPPINGOPEXPR
+
+// TensorImagePatchOp
+#define SYCLTENSORIMAGEPATCHOPEXPR(CVQual)\
+template<DenseIndex Rows, DenseIndex Cols, typename OrigXprType, typename XprType, typename... Params>\
+struct  ExprConstructor<CVQual TensorImagePatchOp<Rows, Cols, OrigXprType>, CVQual TensorImagePatchOp<Rows, Cols, XprType>, Params... > {\
+  typedef ExprConstructor<OrigXprType, XprType, Params...> my_xpr_type;\
+  typedef CVQual TensorImagePatchOp<Rows, Cols, typename my_xpr_type::Type> Type;\
+  my_xpr_type xprExpr;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
+  : xprExpr(funcD.xprExpr, t), expr(xprExpr.expr, funcD.m_patch_rows, funcD.m_patch_cols, funcD.m_row_strides, funcD.m_col_strides,\
+    funcD.m_in_row_strides, funcD.m_in_col_strides, funcD.m_row_inflate_strides, funcD.m_col_inflate_strides, funcD.m_padding_explicit, \
+    funcD.m_padding_top, funcD.m_padding_bottom, funcD.m_padding_left, funcD.m_padding_right, funcD.m_padding_type, funcD.m_padding_value){}\
+};
+
+SYCLTENSORIMAGEPATCHOPEXPR(const)
+SYCLTENSORIMAGEPATCHOPEXPR()
+#undef SYCLTENSORIMAGEPATCHOPEXPR
+
+// TensorVolumePatchOp
+#define SYCLTENSORVOLUMEPATCHOPEXPR(CVQual)\
+template<DenseIndex Planes, DenseIndex Rows, DenseIndex Cols, typename OrigXprType, typename XprType, typename... Params>\
+struct  ExprConstructor<CVQual TensorVolumePatchOp<Planes, Rows, Cols, OrigXprType>, CVQual TensorVolumePatchOp<Planes, Rows, Cols, XprType>, Params... > {\
+  typedef ExprConstructor<OrigXprType, XprType, Params...> my_xpr_type;\
+  typedef CVQual TensorVolumePatchOp<Planes, Rows, Cols, typename my_xpr_type::Type> Type;\
+  my_xpr_type xprExpr;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
+  : xprExpr(funcD.xprExpr, t), expr(xprExpr.expr, funcD.m_patch_planes, funcD.m_patch_rows, funcD.m_patch_cols, funcD.m_plane_strides, funcD.m_row_strides, funcD.m_col_strides,\
+    funcD.m_in_plane_strides, funcD.m_in_row_strides, funcD.m_in_col_strides,funcD.m_plane_inflate_strides, funcD.m_row_inflate_strides, funcD.m_col_inflate_strides, \
+    funcD.m_padding_explicit, funcD.m_padding_top_z, funcD.m_padding_bottom_z, funcD.m_padding_top, funcD.m_padding_bottom, funcD.m_padding_left, funcD.m_padding_right, \
+    funcD.m_padding_type, funcD.m_padding_value ){\
+    }\
+};
+
+SYCLTENSORVOLUMEPATCHOPEXPR(const)
+SYCLTENSORVOLUMEPATCHOPEXPR()
+#undef SYCLTENSORVOLUMEPATCHOPEXPR
+
+// TensorLayoutSwapOp and TensorIndexTupleOp
+#define SYCLTENSORLAYOUTSWAPINDEXTUPLEOPEXPR(CVQual, ExprNode)\
+template<typename OrigXprType, typename XprType, typename... Params>\
+struct ExprConstructor<CVQual ExprNode <OrigXprType> , CVQual ExprNode<XprType>, Params... >{\
+  typedef ExprConstructor<OrigXprType, XprType, Params...> my_xpr_type;\
+  typedef CVQual ExprNode<typename my_xpr_type::Type> Type;\
+  my_xpr_type xprExpr;\
+  Type expr;\
+  template <typename FuncDetector>\
+  ExprConstructor(FuncDetector &funcD, const utility::tuple::Tuple<Params...> &t)\
+  : xprExpr(funcD.xprExpr, t), expr(xprExpr.expr) {}\
+};
+
+//TensorLayoutSwapOp
+SYCLTENSORLAYOUTSWAPINDEXTUPLEOPEXPR(const, TensorLayoutSwapOp)
+SYCLTENSORLAYOUTSWAPINDEXTUPLEOPEXPR(, TensorLayoutSwapOp)
+//TensorIndexTupleOp
+SYCLTENSORLAYOUTSWAPINDEXTUPLEOPEXPR(const, TensorIndexTupleOp)
+SYCLTENSORLAYOUTSWAPINDEXTUPLEOPEXPR(, TensorIndexTupleOp)
+
+#undef SYCLTENSORLAYOUTSWAPINDEXTUPLEOPEXPR
 
 /// template deduction for \ref ExprConstructor struct
 template <typename OrigExpr, typename IndexExpr, typename FuncD, typename... Params>
