@@ -18,8 +18,8 @@ EXE_INC = \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/reductionProblem \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMSlaplacianProblem \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMSsteadyNS \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/laplacianProblem \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNS \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/SteadyNSTurb \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/SteadyNSTurbIntrusive \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNS \
@@ -28,7 +28,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/UnsteadyNSTurbIntrusive \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/UnsteadyNSTTurb \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNST \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNSSimple \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/SteadyNSSimple \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
@@ -40,7 +40,6 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/EigenFunctions \
     -Wno-comment \
-    -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11
 
