@@ -30,7 +30,6 @@ SourceFiles
 #include "unsteadyNSmulti.H"
 #include "ITHACAstream.H"
 #include "ITHACAPOD.H"
-#include "reducedSimpleSteadyNS.H"
 #include "forces.H"
 #include "IOmanip.H"
 
