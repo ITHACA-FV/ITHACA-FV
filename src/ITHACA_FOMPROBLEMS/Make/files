@@ -8,6 +8,7 @@ UnsteadyNSTurb/UnsteadyNSTurb.C
 UnsteadyNSTurbIntrusive/UnsteadyNSTurbIntrusive.C
 unsteadyNST/unsteadyNST.C
 UnsteadyNSTTurb/UnsteadyNSTTurb.C
+unsteadyNSmulti/unsteadyNSmulti.C
 SteadyNSSimple/SteadyNSSimple.C
 laplacianProblem/laplacianProblem.C
 msrProblem/msrProblem.C
