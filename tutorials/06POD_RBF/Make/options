@@ -43,6 +43,7 @@ EXE_LIBS = \
     -lturbulenceModels \
     -lincompressibleTransportModels \
     -lincompressibleTurbulenceModels \
+    -limmiscibleIncompressibleTwoPhaseMixture \
     -lfiniteVolume \
     -lmeshTools \
     -lfvOptions \

@@ -43,6 +43,7 @@ EXE_LIBS = \
     -lfvOptions \
     -lsampling \
     -lfluidThermophysicalModels \
+    -limmiscibleIncompressibleTwoPhaseMixture \
     -lradiationModels \
     -lspecie \
     -lforces \
