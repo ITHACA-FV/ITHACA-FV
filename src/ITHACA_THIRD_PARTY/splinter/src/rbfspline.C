@@ -15,13 +15,14 @@
 namespace SPLINTER
 {
 
-RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type)
+RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
+                     double e)
     : RBFSpline(samples, type, false)
 {
 }
 
 RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
-                     DenseMatrix w)
+                     DenseMatrix w, double e)
     : samples(samples),
       normalized(false),
       precondition(false),
@@ -31,6 +32,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
     if (type == RadialBasisFunctionType::THIN_PLATE_SPLINE)
     {
         fn = std::shared_ptr<RadialBasisFunction>(new ThinPlateSpline());
+        fn->e = e;
     }
     else if (type == RadialBasisFunctionType::MULTIQUADRIC)
     {
@@ -47,6 +49,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
     else if (type == RadialBasisFunctionType::GAUSSIAN)
     {
         fn = std::shared_ptr<RadialBasisFunction>(new Gaussian());
+        fn->e = e;
     }
     else
     {
@@ -57,7 +60,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
 }
 
 RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
-                     bool normalized)
+                     bool normalized, double e)
     : samples(samples),
       normalized(normalized),
       precondition(false),
@@ -83,6 +86,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
     else if (type == RadialBasisFunctionType::GAUSSIAN)
     {
         fn = std::shared_ptr<RadialBasisFunction>(new Gaussian());
+        fn->e = e;
     }
     else
     {
@@ -148,21 +152,23 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
 
 #ifndef NDEBUG
     std::cout << "Computing RBF weights using dense solver." << std::endl;
+    std::cout << "The radius of the RBF is equal to " << e << std::endl;
 #endif // NDEBUG
     // SVD analysis
-    Eigen::JacobiSVD<DenseMatrix> svd(A, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    auto svals = svd.singularValues();
-    double svalmax = svals(0);
-    double svalmin = svals(svals.rows() - 1);
-    double rcondnum = (svalmax <= 0.0 || svalmin <= 0.0) ? 0.0 : svalmin / svalmax;
-#ifndef NDEBUG
-    std::cout << "The reciprocal of the condition number is: " << rcondnum <<
-              std::endl;
-    std::cout << "Largest/smallest singular value: " << svalmax << " / " << svalmin
-              << std::endl;
-#endif // NDEBUG
-    // Solve for weights
-    weights = svd.solve(b);
+    //         Eigen::JacobiSVD<DenseMatrix> svd(A, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    //         auto svals = svd.singularValues();
+    //         double svalmax = svals(0);
+    //         double svalmin = svals(svals.rows() - 1);
+    //         double rcondnum = (svalmax <= 0.0 || svalmin <= 0.0) ? 0.0 : svalmin / svalmax;
+    // #ifndef NDEBUG
+    //         std::cout << "The reciprocal of the condition number is: " << rcondnum <<
+    //         std::endl;
+    //         std::cout << "Largest/smallest singular value: " << svalmax << " / " << svalmin
+    //         << std::endl;
+    // #endif // NDEBUG
+    //     // Solve for weights
+    //         weights = svd.solve(b);
+    weights = A.colPivHouseholderQr().solve(b);
 #ifndef NDEBUG
     // Compute error. If it is used later on, move this statement above the NDEBUG
     double err = (A * weights - b).norm() / b.norm();
