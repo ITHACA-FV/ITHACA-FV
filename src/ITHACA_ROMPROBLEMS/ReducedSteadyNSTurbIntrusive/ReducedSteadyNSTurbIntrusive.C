@@ -43,25 +43,14 @@ ReducedSteadyNSTurbIntrusive::ReducedSteadyNSTurbIntrusive(
     problem(&fomProblem)
 {
     N_BC = problem->inletIndex.rows();
-    Nphi_u = problem->B_matrix.rows();
-    Nphi_p = problem->K_matrix.cols();
+    Nphi_u = problem->bMatrix.rows();
 
-    for (label k = 0; k < problem->liftfield.size(); k++)
-    {
-        Umodes.append(problem->liftfield[k]);
-    }
-
-    for (label k = 0; k < problem->NUmodes; k++)
+    for (label k = 0; k < Nphi_u; k++)
     {
         Umodes.append(problem->Umodes[k]);
     }
 
-    for (label k = 0; k < problem->NSUPmodes; k++)
-    {
-        Umodes.append(problem->supmodes[k]);
-    }
-
-    newtonObject = newtonSteadyNSTurbIntrusive(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
+    newtonObject = newtonSteadyNSTurbIntrusive(Nphi_u, Nphi_u,
                    fomProblem);
 }
 
@@ -69,17 +58,13 @@ int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd aTmp(Nphi_u);
-    Eigen::VectorXd bTmp(Nphi_p);
-    aTmp = x.head(Nphi_u);
-    bTmp = x.tail(Nphi_p);
+    aTmp = x;
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
     Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
     // Gradient of pressure
-    Eigen::VectorXd m2 = problem->K_matrix * bTmp;
-    // Pressure Term
-    Eigen::VectorXd m3 = problem->P_matrix * aTmp;
+    Eigen::VectorXd m2 = problem->kMatrix * aTmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -105,12 +90,6 @@ int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
         }
     }
 
-    for (label j = 0; j < Nphi_p; j++)
-    {
-        label k = j + Nphi_u;
-        fvec(k) = m3(j);
-    }
-
     if (problem->bcMethod == "lift")
     {
         for (label j = 0; j < N_BC; j++)
@@ -134,15 +113,27 @@ int newtonSteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
 
-void ReducedSteadyNSTurbIntrusive::solveOnlineSUP(Eigen::MatrixXd vel)
+void ReducedSteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
 {
-    vel_now = setOnlineVelocity(vel);
-    y.resize(Nphi_u + Nphi_p, 1);
+    if (problem->bcMethod == "lift")
+    {
+        vel_now = setOnlineVelocity(vel);
+    }
+    else if (problem->bcMethod == "penalty")
+    {
+        vel_now = vel;
+    }
+
+    y.resize(Nphi_u, 1);
     y.setZero();
 
-    for (label j = 0; j < N_BC; j++)
+    // Change initial condition for the lifting function
+    if (problem->bcMethod == "lift")
     {
-        y(j) = vel_now(j, 0);
+        for (label j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
     }
 
     Color::Modifier red(Color::FG_RED);
@@ -180,7 +171,7 @@ void ReducedSteadyNSTurbIntrusive::solveOnlineSUP(Eigen::MatrixXd vel)
 }
 
 
-void ReducedSteadyNSTurbIntrusive::reconstructSUP(fileName folder,
+void ReducedSteadyNSTurbIntrusive::reconstruct(fileName folder,
         int printEvery)
 {
     mkDir(folder);
@@ -193,24 +184,22 @@ void ReducedSteadyNSTurbIntrusive::reconstructSUP(fileName folder,
         if (counter == nextWrite)
         {
             volVectorField uRec("uRec", Umodes[0] * 0);
+            volScalarField pRec("pRec", problem->Pmodes[0] * 0);
+            volScalarField nutTemp("nutTemp", problem->nutModes[0] * 0);
 
             for (label j = 0; j < Nphi_u; j++)
             {
                 uRec += Umodes[j] * online_solution[i](j + 1, 0);
+                pRec += problem->Pmodes[j] * online_solution[i](j + 1, 0);
+                nutTemp += problem->nutModes[j] * online_solution[i](j + 1, 0);
             }
 
             ITHACAstream::exportSolution(uRec, name(online_solution[i](0, 0)), folder);
-            volScalarField pRec("pRec", problem->Pmodes[0] * 0);
-
-            for (label j = 0; j < Nphi_p; j++)
-            {
-                pRec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
-            }
-
             ITHACAstream::exportSolution(pRec, name(online_solution[i](0, 0)), folder);
             nextWrite += printEvery;
             UREC.append(uRec);
             PREC.append(pRec);
+            nutRec.append(nutTemp);
         }
 
         counter++;
@@ -237,5 +226,66 @@ Eigen::MatrixXd ReducedSteadyNSTurbIntrusive::setOnlineVelocity(
 
     return vel_scal;
 }
+
+void ReducedSteadyNSTurbIntrusive::reconstructLiftAndDrag(
+    SteadyNSTurbIntrusive& problem,
+    fileName folder)
+{
+    mkDir(folder);
+    system("ln -s ../../constant " + folder + "/constant");
+    system("ln -s ../../0 " + folder + "/0");
+    system("ln -s ../../system " + folder + "/system");
+    Eigen::VectorXd cl(online_solution.size());
+    Eigen::VectorXd cd(online_solution.size());
+    //Read FORCESdict
+    IOdictionary FORCESdict
+    (
+        IOobject
+        (
+            "FORCESdict",
+            "./system",
+            Umodes[0].mesh(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
+    fTau.setZero(online_solution.size(), 3);
+    fN.setZero(online_solution.size(), 3);
+
+    for (label i = 0; i < online_solution.size(); i++)
+    {
+        for (label j = 0; j < Nphi_u; j++)
+        {
+            fTau.row(i) += problem.tauMatrix.row(j) * online_solution[i](j + 1, 0);
+        }
+
+        for (label j = 0; j < Nphi_u; j++)
+        {
+            fN.row(i) += problem.nMatrix.row(j) * online_solution[i](j + 1, 0);
+        }
+    }
+
+    // Export the matrices
+    if (para->exportPython)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "python", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "python", folder);
+    }
+
+    if (para->exportMatlab)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "matlab", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "matlab", folder);
+    }
+
+    if (para->exportTxt)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "eigen", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "eigen", folder);
+    }
+}
+// ************************************************************************* //
+
+
 // ************************************************************************* //
 

@@ -55,8 +55,7 @@ struct newtonSteadyNSTurbIntrusive: public newton_argument<double>
         newtonSteadyNSTurbIntrusive(int Nx, int Ny,
                                     SteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-            Nphi_p(problem.NPmodes),
+            Nphi_u(problem.nModesOnline),
             N_BC(problem.inletIndex.rows())
         {}
 
@@ -65,7 +64,6 @@ struct newtonSteadyNSTurbIntrusive: public newton_argument<double>
 
         SteadyNSTurbIntrusive* problem;
         int Nphi_u;
-        int Nphi_p;
         int N_BC;
         scalar nu;
         Eigen::MatrixXd tauU;
@@ -107,9 +105,6 @@ class ReducedSteadyNSTurbIntrusive: public reducedSteadyNS
         /// Reconstructed eddy viscosity field
         PtrList<volScalarField> nutRec;
 
-        /// Vector of eddy viscosity RBF interoplated coefficients
-        Eigen::VectorXd rbfCoeff;
-
         /// Number of viscosity modes
         int nphiNut;
 
@@ -128,7 +123,7 @@ class ReducedSteadyNSTurbIntrusive: public reducedSteadyNS
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnlineSUP(Eigen::MatrixXd velNow);
+        void solveOnline(Eigen::MatrixXd velNow);
 
         /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
@@ -136,8 +131,8 @@ class ReducedSteadyNSTurbIntrusive: public reducedSteadyNS
         /// @param[in]  folder      The folder where to output the solutions
         /// @param[in]  printEvery  The printEvery
         ///
-        void reconstructSUP(fileName folder = "./ITHACAOutput/online_rec",
-                            int printEvery = 1);
+        void reconstruct(fileName folder = "./ITHACAOutput/online_rec",
+                         int printEvery = 1);
 
         ///
         /// @brief      Sets the online velocity.
@@ -147,6 +142,15 @@ class ReducedSteadyNSTurbIntrusive: public reducedSteadyNS
         /// @return     The rescaled velocity vector
         ///
         Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Method to compute the reduced order forces for same number of modes of velocity and pressure
+        ///
+        /// @param      problem  A SteadyNSTurbIntrusive full order problem.
+        /// @param[in]  folder   The folder where to output the forces matrices
+        ///
+        void reconstructLiftAndDrag(SteadyNSTurbIntrusive& problem,
+                                    fileName folder);
 
 
 };
