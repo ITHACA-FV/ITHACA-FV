@@ -150,6 +150,9 @@ class reducedUnsteadyNS: public reducedSteadyNS
         /// A variable for exporting the fields
         double exportEvery;
 
+        /// A variable for starting solving the reduced system from zero or not
+        bool startFromZero = false;
+
         /// Number of timesteps calculated for the iterative penalty method
         int timeStepPenalty = 1;
 

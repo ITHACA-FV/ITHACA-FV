@@ -47,14 +47,39 @@ SourceFiles
 #include <unsupported/Eigen/NumericalDiff>
 
 
-struct newtonUnsteadyNSTurbSUPIntrusive: public newton_argument<double>
+struct newtonUnsteadyNSTurbIntrusive: public newton_argument<double>
 {
     public:
-        newtonUnsteadyNSTurbSUPIntrusive() {}
-        newtonUnsteadyNSTurbSUPIntrusive(int Nx, int Ny,
+        newtonUnsteadyNSTurbIntrusive() {}
+        newtonUnsteadyNSTurbIntrusive(int Nx, int Ny,
+                                      UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
+            problem(&problem),
+            Nphi_u(problem.nModesOnline),
+            N_BC(problem.inletIndex.rows())
+        {}
+
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+
+        UnsteadyNSTurbIntrusive* problem;
+        int Nphi_u;
+        int N_BC;
+        scalar nu;
+        scalar dt;
+        Eigen::VectorXd y_old;
+        Eigen::VectorXd yOldOld;
+        Eigen::VectorXd bc;
+        Eigen::MatrixXd tauU;
+};
+
+struct newtonUnsteadyNSTurbIntrusivePPE: public newton_argument<double>
+{
+    public:
+        newtonUnsteadyNSTurbIntrusivePPE() {}
+        newtonUnsteadyNSTurbIntrusivePPE(int Nx, int Ny,
                                          UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
+            Nphi_u(problem.NUmodes),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows())
         {}
@@ -71,37 +96,8 @@ struct newtonUnsteadyNSTurbSUPIntrusive: public newton_argument<double>
         Eigen::VectorXd y_old;
         Eigen::VectorXd yOldOld;
         Eigen::VectorXd bc;
+        Eigen::MatrixXd tauU;
 };
-
-
-
-struct newtonUnsteadyNSTurbPPEIntrusive: public newton_argument<double>
-{
-    public:
-        newtonUnsteadyNSTurbPPEIntrusive() {}
-        newtonUnsteadyNSTurbPPEIntrusive(int Nx, int Ny,
-                                         UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
-            problem(&problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size()),
-            Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows())
-        {}
-
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-
-        UnsteadyNSTurbIntrusive* problem;
-        int Nphi_u;
-        int Nphi_p;
-        int N_BC;
-        scalar nu;
-        scalar dt;
-        Eigen::VectorXd y_old;
-        Eigen::VectorXd yOldOld;
-        Eigen::VectorXd bc;
-};
-
-
 
 /*---------------------------------------------------------------------------*\
                         Class reducedProblem Declaration
@@ -129,56 +125,53 @@ class ReducedUnsteadyNSTurbIntrusive: public reducedUnsteadyNS
         /// Pointer to the FOM problem
         UnsteadyNSTurbIntrusive* problem;
 
-        /// Number of viscosity modes
-        int nphiNut;
-
         /// List of pointers to store the modes for the eddy viscosity
         PtrList<volScalarField> nutModes;
 
         /// Function object to call the non linear solver sup approach
-        newtonUnsteadyNSTurbSUPIntrusive newtonObjectSUP;
+        newtonUnsteadyNSTurbIntrusive newtonObject;
 
-        /// Function object to call the non linear solver PPE approach
-        newtonUnsteadyNSTurbPPEIntrusive newtonObjectPPE;
+        /// Function object to call the non linear solver sup approach
+        newtonUnsteadyNSTurbIntrusivePPE newtonObjectPPE;
+
+        /// Tha matrix containing the initial conditions for the reduced variables,
+        /// in case of PPE approach it must be one column with the head being
+        /// the degrees of freedom of velocity adn the tail the ones of pressure
+        Eigen::MatrixXd initCond;
 
         // Functions
 
+        //--------------------------------------------------------------------------
+        /// @brief      Method to perform an online solve using an intrusive approach
+        ///
+        /// @param[in]  vel   The velocity
+        ///
+        void solveOnline(Eigen::MatrixXd vel);
 
-        /// Method to perform an online solve using a PPE stabilisation method
+        //--------------------------------------------------------------------------
+        /// @brief      Method to perform an online solve using an intrusive approach with the usage of PPE
         ///
         /// @param[in]  velNow   The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
-        /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
-        /// and used to get the reduced initial condition.
         ///
-        void solveOnlinePPE(Eigen::MatrixXd velNow, label startSnap = 0);
+        void solveOnlinePPE(Eigen::MatrixXd vel);
 
-        /// Method to perform an online solve using a supremizer stabilisation method
-        ///
-        /// @param[in]  velNow   The vector of online velocity. It is defined in
-        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
-        /// of parametrized boundary conditions.
-        /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
-        /// and used to get the reduced initial condition.
-        ///
-        void solveOnlineSUP(Eigen::MatrixXd velNow, label startSnap = 0);
-
-        /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
-        /// stabilisation method
+        //--------------------------------------------------------------------------
+        /// @brief      Method to reconstruct the solutions from an online solve with same number of modes for all variables
         ///
         /// @param[in]  folder      The folder where to output the solutions
         ///
-        void reconstructPPE(fileName folder = "./online_rec");
+        void reconstruct(fileName folder = "./online_rec");
 
-        /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
-        /// stabilisation method
+        //--------------------------------------------------------------------------
+        /// @brief      Method to reconstruct the solutions from an online solve with number of modes different for pressure
         ///
         /// @param[in]  folder      The folder where to output the solutions
         ///
-        void reconstructSUP(fileName folder = "./online_rec");
+        void reconstructPPE(fileName folder);
 
-        ///
+        //--------------------------------------------------------------------------
         /// @brief      Sets the online velocity.
         ///
         /// @param[in]  vel   The velocity
@@ -186,6 +179,15 @@ class ReducedUnsteadyNSTurbIntrusive: public reducedUnsteadyNS
         /// @return     The rescaled velocity vector
         ///
         Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Method to compute the reduced order forces for same number of modes of velocity and pressure
+        ///
+        /// @param      problem  A UnsteadyNSTurbIntrusive full order problem.
+        /// @param[in]  folder   The folder where to output the forces matrices
+        ///
+        void reconstructLiftAndDrag(UnsteadyNSTurbIntrusive& problem,
+                                    fileName folder);
 
 };
 

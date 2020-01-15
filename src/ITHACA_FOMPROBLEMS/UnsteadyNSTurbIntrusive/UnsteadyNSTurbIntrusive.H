@@ -82,8 +82,17 @@ class UnsteadyNSTurbIntrusive: public unsteadyNS
         /// List of POD modes for eddy viscosity
         PtrList<volScalarField> nutModes;
 
-        /// Turbulent viscosity term
+        /// Diffusive matrix
+        Eigen::MatrixXd bMatrix;
+
+        /// Pressure Gradient matrix
+        Eigen::MatrixXd kMatrix;
+
+        /// Turbulent viscosity matrix
         Eigen::MatrixXd btMatrix;
+
+        /// Convective tensor
+        Eigen::Tensor<double, 3 > convTensor;
 
         /// Turbulent viscosity tensor
         Eigen::Tensor<double, 3 > ct2Tensor;
@@ -97,6 +106,9 @@ class UnsteadyNSTurbIntrusive: public unsteadyNS
         /// Total B Matrix
         Eigen::MatrixXd bTotalMatrix;
 
+        /// Number of modes used in the online stage
+        label nModesOnline;
+
         /// Eddy viscosity field
         autoPtr<volScalarField> _nut;
 
@@ -109,57 +121,170 @@ class UnsteadyNSTurbIntrusive: public unsteadyNS
         void truthSolve(List<scalar> mu_now);
 
         //--------------------------------------------------------------------------
-        /// @brief      Project using a supremizer approach
+        /// @brief      The projection method for computing the reduced order matrices with the uniform approach
         ///
-        /// @param[in]  folder     The folder used to save the reduced matrices.
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NPmodes    The number of pressure modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  folder  The folder used to save the reduced matrices.
+        /// @param[in]  nModes  The number of modes used in the online stage for all reduced variables
         ///
-        void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes);
-
+        void project(fileName folder, label nModes);
 
         //--------------------------------------------------------------------------
-        /// Project using the Poisson Equation for pressure
+        /// @brief      The projection method for computing the reduced order matrices
+        ///  with the usage of Poisson equation for pressure
         ///
-        /// @param[in]  folder     The folder used to save the reduced matrices.
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NPmodes    The number of pressure modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  folder  The folder used to save the reduced matrices.
+        /// @param[in]  nUModes  The number of modes used in the online stage for the velocity and eddy viscosity fields
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
         ///
-        void projectPPE(fileName folder, label NUmodes, label NPmodes, label NSUPmodes);
+        void projectPPE(fileName folder, label nUModes, label nPModes);
 
         //--------------------------------------------------------------------------
         /// @brief      bt added matrix for the turbulence treatement
         ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nModes  The number of modes used in the online stage for all reduced variables
         ///
         /// @return     bt matrix for turbulence treatment
         ///
-        Eigen::MatrixXd btTurbulence(label NUmodes, label NSUPmodes);
+        Eigen::MatrixXd btTurbulence(label nModes);
+
 
         //--------------------------------------------------------------------------
-        /// @brief      Method to compute one of the turbulence eddy viscosity tensors
+        /// @brief      Method to compute one of the turbulence tensors
         ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nModes  The number of modes used in the online stage for all reduced variables
         ///
         /// @return     ct1 tensor for the turbulence treatement
         ///
-        Eigen::Tensor<double, 3 > turbulenceTensor1(label NUmodes,
-                label NSUPmodes);
+        Eigen::Tensor<double, 3 > turbulenceTensor1(label nModes);
+
 
         //--------------------------------------------------------------------------
-        /// @brief      Method to compute one of the turbulence eddy viscosity tensors
+        /// @brief      Method to compute one of the turbulence tensors
         ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nModes  The number of modes used in the online stage for all reduced variables
         ///
         /// @return     ct2 tensor for the turbulence treatement
         ///
-        Eigen::Tensor<double, 3 > turbulenceTensor2(label NUmodes,
-                label NSUPmodes);
+        Eigen::Tensor<double, 3 > turbulenceTensor2(label nModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Diffusive Term
+        ///
+        /// @param[in]  nModes  The number of modes used in the online stage for all reduced variables
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
+        ///
+        Eigen::MatrixXd diffusiveTerm(label nModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      The method for computing the convective term tensor
+        ///
+        /// @param[in]  nModes  The number of modes used in the online stage for all reduced variables
+        ///
+        /// @return     c Tensor for the treatement of the convective term
+        ///
+        Eigen::Tensor<double, 3> convectiveTerm(label nModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      The method for computing the pressure gradient term with number of modes of pressure
+        /// being equal to the number of modes of velocity and with modes of pressure computed using the SVD of
+        /// velocity snapshots
+        ///
+        /// @param[in]  nModes  The number of modes used in the online stage for all reduced variables
+        ///
+        /// @return     A reduced order matrix which is square and represents the pressure gradient term
+        ///
+        Eigen::MatrixXd pressureGradientTerm(label nModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      The method for computing the pressure gradient term with number of modes of pressure
+        /// NOT equal to the number of modes of velocity and with modes of pressure computed using the SVD of
+        /// pressure snapshots
+        ///
+        /// @param[in]  nUModes  The number of modes used in the online stage for the velocity and eddy viscosity fields
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
+        ///
+        /// @return     A reduced order matrix which is not necessary square and represents the pressure gradient term
+        ///
+        Eigen::MatrixXd pressureGradientTerm(label nUModes, label nPModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Laplacian of pressure term (PPE approach)
+        ///
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
+        ///
+        /// @return     A reduced matrix for the laplacian of pressure.
+        ///
+        Eigen::MatrixXd laplacianPressure(label nPModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Divergence of convective term (PPE approach)
+        ///
+        /// @param[in]  nUModes  The number of modes used in the online stage for the velocity and eddy viscosity fields
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
+        ///
+        /// @return     A reduced third order tensor for the conv. term which is used for the PPE approach
+        ///
+        Eigen::Tensor<double, 3> divMomentum(label nUModes, label nPModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Term N° 1 given by the additional boundary condition using a PPE approach
+        ///
+        /// @param[in]  nUModes  The number of modes used in the online stage for the velocity and eddy viscosity fields
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
+        ///
+        /// @return     A reduced matrix for the BC1 using a PPE approach.
+        ///
+        Eigen::MatrixXd pressureBC1(label nUModes, label nPModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Term N° 2 given by the additional boundary condition using a PPE approach
+        ///
+        /// @param[in]  nUModes  The number of modes used in the online stage for the velocity and eddy viscosity fields
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
+        ///
+        /// @return     A reduced tensor for the BC2 using a PPE approach.
+        ///
+        Eigen::Tensor<double, 3 > pressureBC2(label nUModes, label nPModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Term N° 3 given by the additional boundary condition using a PPE approach
+        ///
+        /// @param[in]  nUModes  The number of modes used in the online stage for the velocity and eddy viscosity fields
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
+        ///
+        /// @return     A reduced matrix for the BC3 using a PPE approach.
+        ///
+        Eigen::MatrixXd pressureBC3(label nUModes, label nPModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Term N° 4 given by the additional boundary condition using a PPE approach
+        ///
+        /// @param[in]  nUModes  The number of modes used in the online stage for the velocity and eddy viscosity fields
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
+        ///
+        /// @return     A reduced matrix for the BC4 using a PPE approach.
+        ///
+        Eigen::MatrixXd pressureBC4(label nUModes, label nPModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Boundary integral modes on boundary used by the penaly method
+        ///
+        /// @param[in]  nModes  The number of modes used in the online stage for the velocity field
+        ///
+        /// @return     A list of redueced order vectors for the penalty method which contain the boundary
+        /// integral of the velocity modes.
+        ///
+        List< Eigen::MatrixXd > bcVelocityVec(label nModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Boundary integral modes on boundary used by the penaly method
+        ///
+        /// @param[in]  nModes  The number of modes used in the online stage for the velocity field
+        ///
+        /// @return     A list of redueced order matrices for the penalty method which contain the boundary
+        /// integral of the scalar products of the velocity modes.
+        List< Eigen::MatrixXd > bcVelocityMat(label nModes);
 
 };
 
