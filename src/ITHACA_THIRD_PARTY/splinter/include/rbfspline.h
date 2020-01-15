@@ -37,8 +37,9 @@ public:
     RadialBasisFunction(double e) : e(e) {}
     virtual double eval(double r) const = 0;
     virtual double evalDerivative(double r) const = 0;
-protected:
     double e;
+protected:
+
 };
 
 class ThinPlateSpline : public RadialBasisFunction
@@ -116,9 +117,9 @@ class RBFSpline : public Spline
 {
 public:
 
-    RBFSpline(const DataTable &samples, RadialBasisFunctionType type);
-    RBFSpline(const DataTable &samples, RadialBasisFunctionType type, bool normalized);
-    RBFSpline(const DataTable& samples, RadialBasisFunctionType type, DenseMatrix w);
+    RBFSpline(const DataTable &samples, RadialBasisFunctionType type, double e=1.0);
+    RBFSpline(const DataTable &samples, RadialBasisFunctionType type, bool normalized, double e=1.0);
+    RBFSpline(const DataTable& samples, RadialBasisFunctionType type, DenseMatrix w, double e=1.0);
 
     virtual RBFSpline* clone() const { return new RBFSpline(*this); }
 
