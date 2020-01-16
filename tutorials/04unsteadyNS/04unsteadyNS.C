@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
     // Set the online velocity
     Eigen::MatrixXd vel_now(1, 1);
     vel_now(0, 0) = 1;
-    reduced.solveOnline_sup(vel_now,1);
+    reduced.solveOnline_sup(vel_now, 1);
     // Reconstruct the solution and export it
     reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/");
     exit(0);

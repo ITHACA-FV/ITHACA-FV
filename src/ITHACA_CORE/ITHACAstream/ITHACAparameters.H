@@ -59,8 +59,43 @@ class ITHACAparameters
                     "ITHACAdict",
                     "./system",
                     mesh,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE
+                    IOobject::MUST_READ_IF_MODIFIED,
+                    IOobject::NO_WRITE,
+                    true
+                )
+            );
+            precision = ITHACAdict->lookupOrDefault<int>("OutPrecision", 10);
+            word typeout = ITHACAdict->lookupOrDefault<word>("OutType", "fixed");
+
+            if (typeout == "fixed")
+            {
+                outytpe = std::ios_base::fixed;
+            }
+
+            if (typeout == "scientific")
+            {
+                outytpe = std::ios_base::scientific;
+            }
+
+            eigensolver = ITHACAdict->lookupOrDefault<word>("EigenSolver", "spectra");
+            exportPython = ITHACAdict->lookupOrDefault<bool>("exportPython", 0);
+            exportMatlab = ITHACAdict->lookupOrDefault<bool>("exportMatlab", 0);
+            exportTxt = ITHACAdict->lookupOrDefault<bool>("exportTxt", 0);
+            debug = ITHACAdict->lookupOrDefault<bool>("debug", 0);
+        }
+
+        ITHACAparameters(Foam::Time& runTime)
+        {
+            ITHACAdict = new IOdictionary
+            (
+                IOobject
+                (
+                    "ITHACAdict",
+                    "./system",
+                    runTime,
+                    IOobject::MUST_READ_IF_MODIFIED,
+                    IOobject::NO_WRITE,
+                    true
                 )
             );
             precision = ITHACAdict->lookupOrDefault<int>("OutPrecision", 10);
