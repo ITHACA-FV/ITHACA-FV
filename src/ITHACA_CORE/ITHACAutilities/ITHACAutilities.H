@@ -396,6 +396,21 @@ class ITHACAutilities
                                                 PtrList<TypeField>& modes, int Nmodes = 0);
 
         //--------------------------------------------------------------------------
+        /// @brief      Gets the coeffs of Frobenius projection.
+        ///
+        /// @param[in]  snapshots  The snapshots
+        /// @param      modes      The modes
+        /// @param[in]  Nmodes     Number of modes, 0 for all.
+        ///
+        /// @tparam     TypeField   type of field
+        ///
+        /// @return     The coeffs of Frobenius projection.
+        ///
+        template<class TypeField>
+        static Eigen::MatrixXd getCoeffsFrobenius(PtrList<TypeField> snapshots,
+                PtrList<TypeField>& modes, int nModes = 0);
+
+        //--------------------------------------------------------------------------
         /// Assign internal field
         ///
         /// @param[in,out]  s      Field to which assign the internal field
@@ -511,6 +526,16 @@ class ITHACAutilities
         /// @return     H1 seminorm of the volVectorField.
         ///
         static double H1seminorm(volVectorField field);
+
+        //--------------------------------------------------------------------------
+        /// Evaluate the Frobenius norm of a field
+        ///
+        /// @param[in]  field  The field.
+        ///
+        /// @return     Frobenius norm of the field.
+        ///
+        template<class TypeField>
+        static double frobNorm(TypeField field);
 
         //--------------------------------------------------------------------------
         /// Convert a List of volVectorField snapshots to eigen matrix (only internalfield)
