@@ -277,6 +277,23 @@ class ITHACAutilities
         static Eigen::MatrixXd error_listfields_abs(PtrList<TypeField>& fields1,
                 PtrList<TypeField>& fields2);
 
+        //-----------------------------------------------------------------------------
+        /// @brief      A function to compute time-averaged fields for a set of different parameter samples
+        /// and also the fields with the corresponding averaged subtracted
+        ///
+        /// @param[in]  fields     The fields from which the time-averaged fields have to be computed
+        /// @param[in]  ind        The indices at which fields for different samples of the parameter start
+        /// @param      ave        The computed time-averaged fields
+        ///
+        /// @tparam     TypeField  Type of field
+        ///
+        /// @return     A list of fields which correspond to the original fields subtracted by
+        /// the time-averaged part
+        ///
+        template<class TypeField>
+        static PtrList<TypeField> averageSubtract(PtrList<TypeField>
+                fields, Eigen::MatrixXd ind, PtrList<TypeField>& ave);
+
         //--------------------------------------------------------------------------
         /// Computes a Mass Matrix from a list of Basis Functions (vectorial) for L2 projection
         ///

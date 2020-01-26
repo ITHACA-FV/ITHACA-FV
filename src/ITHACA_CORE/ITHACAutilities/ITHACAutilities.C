@@ -1007,6 +1007,41 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
         }
     }
 }
+template<class TypeField>
+PtrList<TypeField> ITHACAutilities::averageSubtract(PtrList<TypeField>
+        fields, Eigen::MatrixXd ind, PtrList<TypeField>& ave)
+{
+    PtrList<TypeField> aveSubtracted;
+    Eigen::VectorXd newInd;
+    newInd.resize(ind.size() + 1);
+    newInd.head(ind.size()) = ind;
+    newInd(ind.size()) = fields.size();
+
+    for (label i = 0; i < ind.size(); i++)
+    {
+        TypeField aveTemp("nut", fields[0] * 0);
+
+        for (label j = newInd(i); j < newInd(i + 1); j++)
+        {
+            aveTemp += fields[j];
+        }
+
+        aveTemp /= newInd(i + 1) - newInd(i);
+        ave.append(aveTemp);
+    }
+
+    for (label i = 0; i < ind.size(); i++)
+    {
+        for (label j = newInd(i); j < newInd(i + 1); j++)
+        {
+            TypeField newfield("nut", fields[0] * 0);
+            newfield = fields[j] - ave[i];
+            aveSubtracted.append(newfield);
+        }
+    }
+
+    return aveSubtracted;
+}
 
 Eigen::MatrixXd ITHACAutilities::parTimeCombMat(List<Eigen::VectorXd>
         acquiredSnapshotsTimes,
@@ -1457,6 +1492,13 @@ template PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
     PtrList<volScalarField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
 template PtrList<volVectorField> ITHACAutilities::reconstruct_from_coeff(
     PtrList<volVectorField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
+
+template PtrList<volScalarField> ITHACAutilities::averageSubtract(
+    PtrList<volScalarField>
+    fields, Eigen::MatrixXd ind, PtrList<volScalarField>& ave);
+template PtrList<volVectorField> ITHACAutilities::averageSubtract(
+    PtrList<volVectorField>
+    fields, Eigen::MatrixXd ind, PtrList<volVectorField>& ave);
 
 template double ITHACAutilities::error_fields(volScalarField& field1,
         volScalarField& field2);

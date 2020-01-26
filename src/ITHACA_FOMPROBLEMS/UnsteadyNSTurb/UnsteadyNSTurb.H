@@ -82,6 +82,9 @@ class UnsteadyNSTurb: public unsteadyNS
         /// List of POD modes for eddy viscosity
         PtrList<volScalarField> nutModes;
 
+        /// List of for eddy viscosity time-averaged fields
+        PtrList<volScalarField> nutAve;
+
         /// Create a Rbf splines for interpolation
         std::vector<SPLINTER::DataTable*> samples;
 
@@ -91,17 +94,44 @@ class UnsteadyNSTurb: public unsteadyNS
         /// Turbulent viscosity term
         Eigen::MatrixXd btMatrix;
 
-        /// Turbulent viscosity tensor
-        List <Eigen::MatrixXd> ct2Matrix;
-        Eigen::Tensor<double, 3 > ct2Tensor;
+        /// Time-parameter combined matrix
+        Eigen::MatrixXd z;
 
         /// Turbulent viscosity tensor
-        List <Eigen::MatrixXd> ct1Matrix;
         Eigen::Tensor<double, 3 > ct1Tensor;
 
-        /// Total Turbulent tensor
-        List <Eigen::MatrixXd> cTotalMatrix;
+        /// Turbulent average viscosity tensor for the splitting approach
+        Eigen::Tensor<double, 3 > ct1AveTensor;
+
+        /// Turbulent viscosity tensor in the PPE equation
+        Eigen::Tensor<double, 3 > ct1PPETensor;
+
+        /// Turbulent average viscosity tensor for the splitting approach in the PPE equation
+        Eigen::Tensor<double, 3 > ct1PPEAveTensor;
+
+        /// Turbulent viscosity tensor
+        Eigen::Tensor<double, 3 > ct2Tensor;
+
+        /// Turbulent average viscosity tensor for the splitting approach
+        Eigen::Tensor<double, 3 > ct2AveTensor;
+
+        /// Turbulent viscosity tensor in the PPE equation
+        Eigen::Tensor<double, 3 > ct2PPETensor;
+
+        /// Turbulent average viscosity tensor for the splitting approach in the PPE equation
+        Eigen::Tensor<double, 3 > ct2PPEAveTensor;
+
+        /// Turbulent total viscosity tensor
         Eigen::Tensor<double, 3 > cTotalTensor;
+
+        /// Turbulent total average viscosity tensor for the splitting approach
+        Eigen::Tensor<double, 3 > cTotalAveTensor;
+
+        /// Turbulent total viscosity tensor in the PPE equation
+        Eigen::Tensor<double, 3 > cTotalPPETensor;
+
+        /// Turbulent total average viscosity tensor for the splitting approach in the PPE equation
+        Eigen::Tensor<double, 3 > cTotalPPEAveTensor;
 
         /// Total B Matrix
         Eigen::MatrixXd bTotalMatrix;
@@ -109,11 +139,17 @@ class UnsteadyNSTurb: public unsteadyNS
         /// The matrix of L2 projection coefficients for the eddy viscosity
         Eigen::MatrixXd coeffL2;
 
-        /// The vector of L2 projection coefficients for the eddy viscosity snapshot
-        Eigen::VectorXd nutCoeff;
+        /// Velocity coefficients for RBF interpolation
+        Eigen::MatrixXd velRBF;
+
+        /// RBF functions radius
+        double e = 1;
 
         /// Number of viscoisty modes used for the projection
         label nNutModes;
+
+        /// Interpolation independent variable choice
+        int interChoice = 1;
 
         /// Eddy viscosity field
         autoPtr<volScalarField> _nut;
@@ -129,19 +165,7 @@ class UnsteadyNSTurb: public unsteadyNS
         Eigen::MatrixXd btTurbulence(label NUmodes, label NSUPmodes);
 
         //--------------------------------------------------------------------------
-        /// @brief      ct1 added matrix for the turbulence treatement
-        ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
-        ///
-        /// @return     ct1 matrix for turbulence treatment
-        ///
-        List < Eigen::MatrixXd > turbulenceTerm1(label NUmodes, label NSUPmodes,
-                label nNutModes);
-
-        //--------------------------------------------------------------------------
-        /// @brief      { function_description }
+        /// @brief      ct1 added tensor for the turbulence treatement
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
@@ -153,19 +177,7 @@ class UnsteadyNSTurb: public unsteadyNS
                 label NSUPmodes, label nNutModes);
 
         //--------------------------------------------------------------------------
-        /// @brief      ct2 added matrix for the turbulence treatement
-        ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
-        ///
-        /// @return     ct2 matrix for turbulence treatment
-        ///
-        List < Eigen::MatrixXd > turbulenceTerm2(label NUmodes, label NSUPmodes,
-                label nNutModes);
-
-        //--------------------------------------------------------------------------
-        /// @brief      { function_description }
+        /// @brief      ct2 added tensor for the turbulence treatement
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
@@ -176,6 +188,81 @@ class UnsteadyNSTurb: public unsteadyNS
         Eigen::Tensor<double, 3 > turbulenceTensor2(label NUmodes,
                 label NSUPmodes, label nNutModes);
 
+        //--------------------------------------------------------------------------
+        /// @brief      ct1PPE added tensor for the turbulence treatement in the PPE method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct1PPE tensor for the turbulence treatement in the PPE method
+        ///
+        Eigen::Tensor<double, 3 > turbulencePPETensor1(label NUmodes,
+                label NSUPmodes, label NPmodes, label nNutModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      ct2PPE added tensor for the turbulence treatement in the PPE method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct2PPE tensor for the turbulence treatement in the PPE method
+        ///
+        Eigen::Tensor<double, 3 > turbulencePPETensor2(label NUmodes,
+                label NSUPmodes, label NPmodes, label nNutModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      ct1Ave added tensor for approximation of the averaged part of the eddy viscosity
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     ct1Ave tensor corresponding to the approximation of the averaged part
+        ///  of the eddy viscosity for the turbulence treatement
+        ///
+        Eigen::Tensor<double, 3> turbulenceAveTensor1(label NUmodes,
+                label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      ct2Ave added tensor for approximation of the averaged part of the eddy viscosity
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     ct2Ave tensor corresponding to the approximation of the averaged part
+        ///  of the eddy viscosity for the turbulence treatement
+        ///
+        Eigen::Tensor<double, 3> turbulenceAveTensor2(label NUmodes,
+                label NSUPmodes);
+        //--------------------------------------------------------------------------
+        /// @brief      ct1PPEAve added tensor for approximation of the averaged part of the eddy viscosity
+        /// with the usage of the PPE approach
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        ///
+        /// @return     ct1PPEAve tensor corresponding to the approximation of the averaged part
+        ///  of the eddy viscosity for the turbulence treatement with the usage of the PPE approach
+        ///
+        Eigen::Tensor<double, 3> turbulencePPEAveTensor1(label NUmodes,
+                label NSUPmodes, label NPmodes);
+        //--------------------------------------------------------------------------
+        /// @brief      ct2PPEAve added tensor for approximation of the averaged part of the eddy viscosity
+        /// with the usage of the PPE approach
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        ///
+        /// @return     ct2PPEAve tensor corresponding to the approximation of the averaged part
+        ///  of the eddy viscosity for the turbulence treatement with the usage of the PPE approach
+        ///
+        Eigen::Tensor<double, 3> turbulencePPEAveTensor2(label NUmodes,
+                label NSUPmodes, label NPmodes);
         //--------------------------------------------------------------------------
         /// @brief      Perform a truthsolve
         /// @param[in]  mu_now  The actual value of the parameter for this truthSolve. Used only
@@ -207,6 +294,70 @@ class UnsteadyNSTurb: public unsteadyNS
         ///
         void projectPPE(fileName folder, label NUmodes, label NPmodes, label NSUPmodes,
                         label nNutModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      A method to compute the two matrices needed for the RBF interpolation by combining
+        /// the velocity L2 projection coefficients and their time derivatives
+        ///
+        /// @param[in]  A            The velocity L2 projection coefficients
+        /// @param[in]  G            The eddy viscoisty L2 projection coefficients
+        /// @param[in]  initSnapInd  The initial snapshots indices for the different parameter samples
+        /// @param[in]  timeSnap     The time rate at which snapshots were taken for the different parameter samples
+        ///
+        /// @return     The matrix of the combined velocity L2 projection coefficients starting from the second
+        /// snapshots for each parameter sample together with their time derivatives and also the matrix of the
+        /// eddy viscosity L2 projection coefficients associated with the first matrix
+        ///
+        List < Eigen::MatrixXd > velDerivativeCoeff(Eigen::MatrixXd A,
+                Eigen::MatrixXd G,
+                Eigen::VectorXd initSnapInd, Eigen::VectorXd timeSnap);
+
+        //--------------------------------------------------------------------------
+        /// @brief      A method to compute the two matrices needed for the RBF interpolation by combining
+        /// the parameter samples values with the velocity L2 projection coefficients
+        ///
+        /// @param[in]  A            The velocity L2 projection coefficients
+        /// @param[in]  G            The eddy viscoisty L2 projection coefficients
+        ///
+        /// @return     The matrix of the combined parameter and velocity L2 projection coefficients and also
+        /// the corresponding matrix of eddy viscosity L2 projection coefficients
+        ///
+        List < Eigen::MatrixXd > velParCoeff(Eigen::MatrixXd A, Eigen::MatrixXd G);
+
+
+        //--------------------------------------------------------------------------
+        /// @brief      A method to compute the two matrices needed for the RBF interpolation by combining
+        /// the parameter value and the velocity L2 projection coefficients and their time derivatives
+        ///
+        /// @param[in]  A            The velocity L2 projection coefficients
+        /// @param[in]  G            The eddy viscoisty L2 projection coefficients
+        /// @param[in]  initSnapInd  The initial snapshots indices for the different parameter samples
+        /// @param[in]  timeSnap     The time rate at which snapshots were taken for the different parameter samples
+        ///
+        /// @return     The matrix of the combined parameter samples values with their corresponding
+        /// velocity L2 projection coefficients starting from the second snapshots for each
+        /// parameter sample together with their time derivatives and also the matrix of the
+        /// eddy viscosity L2 projection coefficients associated with the previous matrix
+        ///
+        List < Eigen::MatrixXd > velParDerivativeCoeff(Eigen::MatrixXd A,
+                Eigen::MatrixXd G,
+                Eigen::VectorXd initSnapInd, Eigen::VectorXd timeSnap);
+
+        //--------------------------------------------------------------------------
+        /// @brief      A method to compute the matrix of the combination of the parameter sample value and
+        /// the matrix of velocity projection coefficients together with their time derivatives
+        /// based on the backward scheme
+        ///
+        /// @param[in]  A         The velocity L2 projection coefficients
+        /// @param[in]  par       The parameter vector corresponding to the matrix A
+        /// @param[in]  timeSnap  The time rate at which snapshots are taken in matrix A
+        ///
+        /// @return     the matrix of the combination of the parameter sample value and
+        /// the matrix of velocity projection coefficients together with their time derivatives
+        /// based on the backward scheme
+        ///
+        Eigen::MatrixXd velParDerivativeCoeff(Eigen::MatrixXd A,
+                                              Eigen::VectorXd par, double timeSnap);
 
 };
 
