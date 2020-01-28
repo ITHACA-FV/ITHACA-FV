@@ -10,6 +10,8 @@ Working_examples
 **/Offline
 **/processor*
 *.pdf
+*.cnpy
+*.png
 *.dep
 *.orig
 examples

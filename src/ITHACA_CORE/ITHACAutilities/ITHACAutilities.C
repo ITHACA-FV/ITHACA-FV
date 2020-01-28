@@ -678,6 +678,36 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<TypeField>
     return coeff;
 }
 
+template<class TypeField>
+Eigen::MatrixXd getCoeffsFrobenius(PtrList<TypeField> snapshots,
+                                   PtrList<TypeField>& modes, int nModes)
+{
+    label Msize;
+
+    if (nModes == 0)
+    {
+        Msize =  modes.size();
+    }
+    else
+    {
+        Msize = nModes;
+    }
+
+    Eigen::MatrixXd ModesE = (Foam2Eigen::PtrList2Eigen(modes)).leftCols(nModes);
+    Eigen::MatrixXd SnapsE = Foam2Eigen::PtrList2Eigen(snapshots);
+    Eigen::MatrixXd Mass = ModesE.transpose() * ModesE;
+    Eigen::MatrixXd rhs = ModesE.transpose() * SnapsE;
+    Eigen::MatrixXd coeffs;
+    coeffs.resize(ModesE.cols(), SnapsE.cols());
+
+    for (int j = 0; j < SnapsE.cols(); j++)
+    {
+        coeffs.col(j) = Mass.fullPivLu().solve(rhs.col(j));
+    }
+
+    return coeffs;
+}
+
 double ITHACAutilities::L2norm(volScalarField field)
 {
     double a;
@@ -706,6 +736,15 @@ double ITHACAutilities::H1seminorm(volVectorField field)
     a = Foam::sqrt(fvc::domainIntegrate(fvc::grad(field)
                                         && fvc::grad(field)).value());
     return a;
+}
+
+template<class TypeField>
+double frobNorm(TypeField field)
+{
+    double norm(0);
+    Eigen::VectorXd vF = Foam2Eigen::field2Eigen(field);
+    norm = vF.norm();
+    return norm;
 }
 
 void ITHACAutilities::setBoxToValue(volScalarField& field, Eigen::MatrixXd Box,
