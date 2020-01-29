@@ -112,7 +112,24 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
     // Initialize Nsnapshots
     int nsnapshots = 0;
 
+ //++++++++++++++++++++++++++++++++++++ AMODIO +++++++++++++++++++++++++++++++++
+                                                                             
+                                                                             
     
+    // Export and store the initial conditions for velocity and pressure
+    ITHACAstream::exportSolution(U, name(counter), folder);
+    ITHACAstream::exportSolution(p, name(counter), folder);
+    std::ofstream of(folder + name(counter) + "/" +
+                     runTime.timeName());
+    Ufield.append(U);
+    Pfield.append(p);
+    counter++;
+    nextWrite += writeEvery;
+
+
+ //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
         while (runTime.run())
     {
         #include "readDyMControls.H"
@@ -147,95 +164,73 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
             << nl << endl;
     }
 
-//     Time& runTime = _runTime();
-//     surfaceScalarField& phi = _phi();
-//     fvMesh& mesh = _mesh();
-//     fv::options& fvOptions = _fvOptions();
-//     pimpleControl& pimple = _pimple();
-//     volScalarField p = _p();
-//     volVectorField U = _U();
-//     IOMRFZoneList& MRF = _MRF();
-//     singlePhaseTransportModel& laminarTransport = _laminarTransport();
-//     instantList Times = runTime.times();
-//     runTime.setEndTime(finalTime);
-//     // Perform a TruthSolve
-//     runTime.setTime(Times[1], 1);
-//     runTime.setDeltaT(timeStep);
-//     nextWrite = startTime;
-//     // Initialize Nsnapshots
-//     int nsnapshots = 0;
 
-//     // Start the time loop
-//     while (runTime.run())
-//     {
-// #include "readTimeControls.H"
-// #include "CourantNo.H"
-// #include "setDeltaT.H"
-//         runTime.setEndTime(finalTime + timeStep);
-//         Info << "Time = " << runTime.timeName() << nl << endl;
+//++++++++++++++++++++++++++++++++++++++ AMODIO ++++++++++++++++++++++++++++++++++++++++++++++++
 
-//         // --- Pressure-velocity PIMPLE corrector loop
-//         while (pimple.loop())
-//         {
 
-// #include "alphaControls.H"
-// #include "alphaEqnSubCycle.H"
+        if (checkWrite(runTime))
+        {
+            ITHACAstream::exportSolution(U, name(counter), folder);
+            ITHACAstream::exportSolution(p, name(counter), folder);
+            std::ofstream of(folder + name(counter) + "/" +
+                             runTime.timeName());
+            Ufield.append(U);
+            Pfield.append(p);
+	    
 
-// mixture.correct();
+	    rhoSnapshots.append(rho);
+            p_rghSnapshots.append(p_rgh);
+	    alpha1Snapshots.append(alpha1); 
+            alpha2Snapshots.append(alpha2);
 
-// #include "UEqn.H"
+            counter++;
+            nextWrite += writeEvery;
+            writeMu(mu_now);
 
-//             // --- Pressure corrector loop
-//             while (pimple.correct())
-//             {
-// #include "pEqn.H"
-//             }
+            // --- Fill in the mu_samples with parameters (time, mu) for PODI
+            mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
+            mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
 
-//             if (pimple.turbCorr())
-//             {
-//                 //laminarTransport.correct(); //not present in interFoam (?)
-//                 turbulence->correct();
-//             }
-//         }
+            for (int i = 0; i < mu_now.size(); i++)
+            {
+                mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
+            }
+        }
+    }
 
-//         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-//              << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-//              << nl << endl;
+    // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
+    if (mu.cols() == 0)
+    {
+        mu.resize(1, 1);
+    }
 
-//         if (checkWrite(runTime))
-//         {
-//             nsnapshots += 1;
-//             ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-//             ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-//             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
-//                              runTime.timeName());
-//             Ufield.append(U);
-//             Pfield.append(p);
-//             counter++;
-//             nextWrite += writeEvery;
-//             writeMu(mu_now);
-//             // --- Fill in the mu_samples with parameters (time, mu) to be used for the PODI sample points
-//             mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
-//             mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
-
-//             for (int i = 0; i < mu_now.size(); i++)
-//             {
-//                 mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
-//             }
-//         }
-
-//         runTime++;
-//     }
-
-//     // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
-//     if (mu.cols() == 0)
-//     {
-//         mu.resize(1, 1);
-//     }
-
-//     if (mu_samples.rows() == nsnapshots * mu.cols())
-//     {
-//         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-//                                    "./ITHACAoutput/Offline");
-//     }
+    if (mu_samples.rows() == counter * mu.cols())
+    {
+        ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
+                                   folder);
+    }
 }
+
+
+bool unsteadyNS::checkWrite(Time& timeObject)
+{
+    scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
+    scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
+                          timeObject.deltaTValue());
+
+    if ( diffnow < diffnext)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+

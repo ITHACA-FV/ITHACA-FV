@@ -95,7 +95,11 @@ class unsteadyNSmulti: public unsteadyNS
         tmp<volScalarField> rAU;
 
         autoPtr<surfaceVectorField> Uf;
-        
+
+//---------------------------------------------AMODIO-----------
+	autoPtr<volScalarField> alpha1;
+        autoPtr<volScalarField> alpha2;
+//--------------------------------------------------------------        
         bool correctPhi;
 
         bool checkMeshCourantNo;  
@@ -106,6 +110,24 @@ class unsteadyNSmulti: public unsteadyNS
 
         bool LTS;
 
+ //-------------------------------------------------- AMODIO------------
+
+	PtrList<volScalarField> rhoSnapshots;
+	PtrList<volScalarField> rhoModes;
+        
+	
+	PtrList<volScalarField> p_rghSnapshots;
+	PtrList<volScalarField> p_rghModes;
+
+
+	PtrList<volScalarField> alpha1Snapshots;
+	PtrList<volScalarField> alpha1Modes;
+
+
+	PtrList<volScalarField> alpha2Snapshots;
+	PtrList<volScalarField> alpha2Modes;
+
+ //------------------------------------------------------------------------
 
         // Functions
 
@@ -121,7 +143,6 @@ class unsteadyNSmulti: public unsteadyNS
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
-
 
 
 
