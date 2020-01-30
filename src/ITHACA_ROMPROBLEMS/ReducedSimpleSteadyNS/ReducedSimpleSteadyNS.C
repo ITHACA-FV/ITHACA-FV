@@ -192,6 +192,18 @@ fvScalarMatrix reducedSimpleSteadyNS::get_Pmatrix_Online(volVectorField& U,
 void reducedSimpleSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
 {
     M_Assert(problem->inletIndex.rows() == vel.size(),
-           "Imposed boundary conditions dimensions do not match given values matrix dimensions");
-    vel_now = vel;
+             "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+    Eigen::MatrixXd vel_scal;
+    vel_scal.resize(vel.rows(), vel.cols());
+
+    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    {
+        label p = problem->inletIndex(k, 0);
+        label l = problem->inletIndex(k, 1);
+        scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
+        scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
+                           problem->liftfield[k].boundaryField()[p]).component(l) / area;
+        vel_scal(k, 0) = vel(k, 0) / u_lf;
+    }
+    vel_now = vel_scal;
 }
