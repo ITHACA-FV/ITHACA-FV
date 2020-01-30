@@ -191,7 +191,7 @@ fvScalarMatrix reducedSimpleSteadyNS::get_Pmatrix_Online(volVectorField& U,
 
 void reducedSimpleSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
 {
-    assert(problem->inletIndex.rows() == vel.size()
-           && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+    M_Assert(problem->inletIndex.rows() == vel.size(),
+           "Imposed boundary conditions dimensions do not match given values matrix dimensions");
     vel_now = vel;
 }
