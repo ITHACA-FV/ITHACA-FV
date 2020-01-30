@@ -41,14 +41,14 @@ unsteadyNSmulti::unsteadyNSmulti(){};
 // Construct from zero
 unsteadyNSmulti::unsteadyNSmulti(int argc, char* argv[])
 {
- _args = autoPtr<argList>
- (
-   new argList(argc, argv)
-   );
- if (!_args->checkRootCase())
- {
-   Foam::FatalError.exit();
- }
+	_args = autoPtr<argList>
+		(
+		 new argList(argc, argv)
+		);
+	if (!_args->checkRootCase())
+	{
+		Foam::FatalError.exit();
+	}
 
  argList& args = _args();
  #include "createTime.H"
@@ -59,7 +59,7 @@ unsteadyNSmulti::unsteadyNSmulti(int argc, char* argv[])
    (
      mesh
      )
-   );
+ );
  pimpleControl& pimple = _pimple();
  #include "createTimeControls.H"               
  correctPhi = pimple.dict().lookupOrDefault("correctPhi", mesh.dynamic());
@@ -77,7 +77,7 @@ unsteadyNSmulti::unsteadyNSmulti(int argc, char* argv[])
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
+void unsteadyNSmulti::truthSolve(List<scalar> mu_now, fileName folder)
 {
 #include "initContinuityErrs.H"
     Time& runTime = _runTime();
@@ -130,7 +130,7 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-        while (runTime.run())
+    while (runTime.run())
     {
         #include "readDyMControls.H"
         #include "CourantNo.H"
@@ -157,13 +157,11 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
             }
         }
 
-                runTime.write();
+        runTime.write();
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
             << nl << endl;
-    }
-
 
 //++++++++++++++++++++++++++++++++++++++ AMODIO ++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -212,7 +210,7 @@ void unsteadyNSmulti::truthSolve(List<scalar> mu_now)
 }
 
 
-bool unsteadyNS::checkWrite(Time& timeObject)
+bool unsteadyNSmulti::checkWrite(Time& timeObject)
 {
     scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
     scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -

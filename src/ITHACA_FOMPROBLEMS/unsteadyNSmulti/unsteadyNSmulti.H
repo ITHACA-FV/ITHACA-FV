@@ -137,7 +137,17 @@ class unsteadyNSmulti: public unsteadyNS
         /// to construct mu_interp matrix which is written out in the Offline folder, also for par file in
         /// the Parameters folder.
         ///
-        void truthSolve(List<scalar> mu_now);
+	void truthSolve(List<scalar> mu_now,
+                        fileName folder = "./ITHACAoutput/Offline/");
+
+	//--------------------------------------------------------------------------
+        /// Function to check if the solution must be exported.
+        ///
+        /// @param      timeObject  The time object of OpenFOAM.
+        ///
+        /// @return     1 if we must write 0 elsewhere.
+        ///
+        bool checkWrite(Time& timeObject);
 
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
