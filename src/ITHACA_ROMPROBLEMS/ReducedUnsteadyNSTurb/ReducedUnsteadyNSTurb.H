@@ -113,6 +113,75 @@ struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
+struct newtonUnsteadyNSTurbSUPAve: public newton_argument<double>
+{
+    public:
+        newtonUnsteadyNSTurbSUPAve() {}
+        newtonUnsteadyNSTurbSUPAve(int Nx, int Ny,
+                                   UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
+            problem(&problem),
+            Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
+            nphiNut(problem.nNutModes),
+            Nphi_p(problem.NPmodes),
+            N_BC(problem.inletIndex.rows()),
+            gNut(problem.nNutModes),
+            gNutAve(problem.nutAve.size())
+        {}
+
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+
+        UnsteadyNSTurb* problem;
+        int Nphi_u;
+        int nphiNut;
+        int Nphi_p;
+        int N_BC;
+        scalar nu;
+        scalar dt;
+        Eigen::VectorXd y_old;
+        Eigen::VectorXd yOldOld;
+        Eigen::VectorXd bc;
+        Eigen::MatrixXd tauU;
+        Eigen::VectorXd gNut;
+        Eigen::VectorXd gNutAve;
+        std::vector<SPLINTER::RBFSpline*> SPLINES;
+};
+
+struct newtonUnsteadyNSTurbPPEAve: public newton_argument<double>
+{
+    public:
+        newtonUnsteadyNSTurbPPEAve() {}
+        newtonUnsteadyNSTurbPPEAve(int Nx, int Ny,
+                                   UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
+            problem(&problem),
+            Nphi_u(problem.NUmodes + problem.liftfield.size()),
+            nphiNut(problem.nNutModes),
+            Nphi_p(problem.NPmodes),
+            N_BC(problem.inletIndex.rows()),
+            gNut(problem.nNutModes),
+            gNutAve(problem.nutAve.size())
+
+        {}
+
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+
+        UnsteadyNSTurb* problem;
+        int Nphi_u;
+        int nphiNut;
+        int Nphi_p;
+        int N_BC;
+        scalar nu;
+        scalar dt;
+        Eigen::VectorXd y_old;
+        Eigen::VectorXd yOldOld;
+        Eigen::VectorXd bc;
+        Eigen::MatrixXd tauU;
+        Eigen::VectorXd gNut;
+        Eigen::VectorXd gNutAve;
+        std::vector<SPLINTER::RBFSpline*> SPLINES;
+};
+
 
 
 /*---------------------------------------------------------------------------*\
@@ -144,40 +213,77 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         /// Number of viscosity modes
         int nphiNut;
 
+        /// Dimension of the interpolation independent variable
+        int dimA;
+
         /// List of pointers to store the modes for the eddy viscosity
         PtrList<volScalarField> nutModes;
 
         /// The matrix of the eddy viscosity RBF interoplated coefficients
         Eigen::MatrixXd rbfCoeffMat;
 
+        /// The matrix of the initial velocity and pressure reduced coefficients
+        Eigen::MatrixXd initCond;
+
+        /// The initial eddy viscosity reduced coefficients
+        Eigen::VectorXd nut0;
+
         /// Function object to call the non linear solver sup approach
         newtonUnsteadyNSTurbSUP newtonObjectSUP;
+
+        /// Function object to call the non linear solver sup approach with the splitting of the eddy viscosity
+        newtonUnsteadyNSTurbSUPAve newtonObjectSUPAve;
 
         /// Function object to call the non linear solver PPE approach
         newtonUnsteadyNSTurbPPE newtonObjectPPE;
 
+        /// Function object to call the non linear solver PPE approach with the splitting of the eddy viscosity
+        newtonUnsteadyNSTurbPPEAve newtonObjectPPEAve;
+
+        /// Online parameter value
+        Eigen::VectorXd muStar;
+
+        /// The reduced average vector for viscosity coefficients
+        Eigen::VectorXd gNutAve;
+
+        /// Interpolation independent variable choice
+        int interChoice = 1;
+
         // Functions
 
-
+        ///
         /// Method to perform an online solve using a PPE stabilisation method
         ///
         /// @param[in]  velNow   The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
-        /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
-        /// and used to get the reduced initial condition.
         ///
-        void solveOnlinePPE(Eigen::MatrixXd velNow, label startSnap = 0);
+        void solveOnlinePPE(Eigen::MatrixXd velNow);
 
+        ///
         /// Method to perform an online solve using a supremizer stabilisation method
         ///
         /// @param[in]  velNow   The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
-        /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
-        /// and used to get the reduced initial condition.
         ///
-        void solveOnlineSUP(Eigen::MatrixXd velNow, label startSnap = 0);
+        void solveOnlineSUP(Eigen::MatrixXd velNow);
+
+        ///
+        /// Method to perform an online solve using a supremizer stabilisation method
+        /// with the use of the average splitting approach for the eddy viscosity
+        ///
+        /// @param[in]  velNow  The velocity now
+        ///
+        void solveOnlineSUPAve(Eigen::MatrixXd velNow);
+
+        ///
+        /// Method to perform an online solve using a PPE stabilisation method
+        /// with the use of the average splitting approach for the eddy viscosity
+        ///
+        /// @param[in]  velNow  The velocity now
+        ///
+        void solveOnlinePPEAve(Eigen::MatrixXd velNow);
 
         /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
         /// stabilisation method
