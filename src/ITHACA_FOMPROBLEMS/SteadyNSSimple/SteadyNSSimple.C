@@ -137,10 +137,96 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     Time& runTime = _runTime();
     volScalarField& p = _p();
     volVectorField& U = _U();
-    fv::options& fvOptions = _fvOptions();
+    fvMesh& mesh = _mesh();
+    surfaceScalarField& phi = _phi();
     simpleControl& simple = _simple();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
-#include "NLsolve.H"
+    scalar residual = 1;
+    scalar uresidual = 1;
+    Vector<double> uresidual_v(0, 0, 0);
+    scalar presidual = 1;
+    scalar csolve = 0;
+    // Variable that can be changed
+    turbulence->read();
+    std::ofstream res_os;
+    res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
+#if OFVER == 6
+
+    while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
+#else
+    while (simple.loop() && residual > tolerance && csolve < maxIter )
+#endif
+    {
+        Info << "Time = " << runTime.timeName() << nl << endl;
+        volScalarField nueff = turbulence->nuEff();
+        fvVectorMatrix UEqn
+        (
+            fvm::div(phi, U)
+            - fvm::laplacian(nueff, U)
+            - fvc::div(nueff * dev2(T(fvc::grad(U))))
+        );
+        UEqn.relax();
+        UEqn == - fvc::grad(p);
+
+        if (simple.momentumPredictor())
+        {
+            uresidual_v = solve(UEqn).initialResidual();
+        }
+
+        scalar C = 0;
+
+        for (label i = 0; i < 3; i++)
+        {
+            if (C < uresidual_v[i])
+            {
+                C = uresidual_v[i];
+            }
+        }
+
+        uresidual = C;
+        volVectorField HbyA(constrainHbyA(1.0 / UEqn.A() * UEqn.H(), U, p));
+        surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
+        int i = 0;
+
+        while (simple.correctNonOrthogonal())
+        {
+            fvScalarMatrix pEqn
+            (
+                fvm::laplacian(1.0 / UEqn.A(), p) == fvc::div(phiHbyA)
+            );
+            pEqn.setReference(pRefCell, pRefValue);
+
+            if (i == 0)
+            {
+                presidual = pEqn.solve().initialResidual();
+            }
+            else
+            {
+                pEqn.solve().initialResidual();
+            }
+
+            if (simple.finalNonOrthogonalIter())
+            {
+                phi = phiHbyA - pEqn.flux();
+            }
+
+            i++;
+        }
+
+#include "continuityErrs.H"
+        p.relax();
+        // Momentum corrector
+        U = HbyA - 1.0 / UEqn.A() * fvc::grad(p);
+        U.correctBoundaryConditions();
+        residual = max(presidual, uresidual);
+        Info << "Time = " << runTime.timeName() << nl << endl;
+        laminarTransport.correct();
+        turbulence->correct();
+    }
+
+    res_os << residual << std::endl;
+    res_os.close();
+    runTime.setTime(runTime.startTime(), 0);
     ITHACAstream::exportSolution(U, name(counter), Folder);
     ITHACAstream::exportSolution(p, name(counter), Folder);
     Ufield.append(U);

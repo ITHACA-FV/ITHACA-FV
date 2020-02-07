@@ -86,7 +86,11 @@ class reducedSimpleSteadyNS: public reducedProblem
         ///
         /// @param[in]  NmodesPproj The number of modes required for pressure projection
         ///
-        void solveOnline_Simple(scalar mu_now, scalar NmodesUproj, scalar NmodesPproj);
+        /// @param[in]  Folder The folder where we want to esport solutions (default is "./ITHACAoutput/Reconstruct/")
+        ///
+        void solveOnline_Simple(scalar mu_now, int NmodesUproj, int NmodesPproj,
+                                int NmodesSup = 0,
+                                word Folder = "./ITHACAoutput/Reconstruct/");
 
         ///
         /// @brief      Gets the Umatrix for the online solver: it just assembles the pure matrix.
@@ -136,7 +140,6 @@ class reducedSimpleSteadyNS: public reducedProblem
 
 
 #endif
-
 
 
 
