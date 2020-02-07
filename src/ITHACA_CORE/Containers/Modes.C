@@ -91,6 +91,32 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes)
     return LinSys;
 }
 
+template<class T>
+Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>
+                                  field, int numberOfModes)
+{
+    Eigen::MatrixXd fieldEig = Foam2Eigen::field2Eigen(field);
+    Eigen::MatrixXd projField;
+
+    if (EigenModes.size() == 0)
+    {
+        toEigen();
+    }
+
+    if (numberOfModes == 0)
+    {
+        projField = EigenModes[0].transpose() * fieldEig;
+    }
+    else
+    {
+        M_Assert(numberOfModes <= EigenModes[0].cols(),
+                 "Number of required modes for projection is higher then the number of available ones");
+        projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * fieldEig;
+    }
+
+    return projField;
+}
+
 
 template<class T>
 GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
