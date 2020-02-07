@@ -91,7 +91,7 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         //--------------------------------------------------------------------------
         /// @brief     A function that project an FvMatrix (OpenFoam linear System) on the modes
         ///
-        /// @details   Used to project and FvMatrix that is a standard linear system of OpenFoam
+        /// @details   Used to project an FvMatrix that is a standard linear system of OpenFoam
         /// onto the modes defined inside the Modes container. The output is a list of matrices that
         /// contains in the first element the reduced matrix and in the second element the source term.
         ///
@@ -103,6 +103,20 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// system.
         ///
         List<Eigen::MatrixXd> project(fvMatrix<T>& Af, int numberOfModes = 0);
+
+        //--------------------------------------------------------------------------
+        /// @brief     A function that project a field on the modes
+        ///
+        /// @details   Used to project a field onto the modes defined inside the Modes container. The output is matrix
+        /// containing the projected field.
+        ///
+        /// @param[in]      field   The field to be projected, it can be vector or scalar.
+        /// @param[in]      numberOfModes   The number of modes used to project. If not given it will use all the available ones.
+        ///
+        /// @return     An Eigen Matrix.
+        ///
+        Eigen::MatrixXd project(GeometricField<T, fvPatchField, volMesh> field,
+                                int numberOfModes = 0);
 
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
