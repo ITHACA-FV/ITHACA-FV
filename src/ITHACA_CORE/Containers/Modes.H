@@ -113,10 +113,25 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @param[in]      field   The field to be projected, it can be vector or scalar.
         /// @param[in]      numberOfModes   The number of modes used to project. If not given it will use all the available ones.
         ///
-        /// @return     An Eigen Matrix.
+        /// @return     An Eigen MatrixXd.
         ///
-        Eigen::MatrixXd project(GeometricField<T, fvPatchField, volMesh> field,
+        Eigen::MatrixXd project(GeometricField<T, fvPatchField, volMesh>& field,
                                 int numberOfModes = 0);
+
+        //--------------------------------------------------------------------------
+        /// @brief     A function that project a list of fields on the modes
+        ///
+        /// @details   Used to project a list of fields onto the modes defined inside the Modes container. The output is a list of matrices
+        /// containing the projected field.
+        ///
+        /// @param[in]      fields   The fields list to be projected, it can be vector or scalar.
+        /// @param[in]      numberOfModes   The number of modes used to project. If not given it will use all the available ones.
+        ///
+        /// @return     An Eigen MatricxXd list.
+        ///
+        Eigen::MatrixXd project(PtrList<GeometricField<T, fvPatchField, volMesh>>&
+                                      fields,
+                                      int numberOfModes = 0);
 
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
