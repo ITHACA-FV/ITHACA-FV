@@ -92,7 +92,7 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes)
 }
 
 template<class T>
-Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>
+Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
                                   field, int numberOfModes)
 {
     Eigen::MatrixXd fieldEig = Foam2Eigen::field2Eigen(field);
@@ -115,6 +115,26 @@ Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>
     }
 
     return projField;
+}
+
+template<class T>
+Eigen::MatrixXd Modes<T>::project(
+    PtrList<GeometricField<T, fvPatchField, volMesh>>&
+    fields, int numberOfModes)
+{
+    if (numberOfModes == 0)
+    {
+        numberOfModes = EigenModes[0].cols();
+    }
+
+    Eigen::MatrixXd projFields(numberOfModes, fields.size());
+
+    for (label i = 0; i < fields.size(); i++)
+    {
+        projFields.col(i) = project(fields[i]);
+    }
+
+    return projFields;
 }
 
 
