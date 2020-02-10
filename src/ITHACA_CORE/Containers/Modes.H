@@ -130,8 +130,8 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @return     An Eigen MatricxXd list.
         ///
         Eigen::MatrixXd project(PtrList<GeometricField<T, fvPatchField, volMesh>>&
-                                      fields,
-                                      int numberOfModes = 0);
+                                fields,
+                                int numberOfModes = 0);
 
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the

@@ -436,7 +436,7 @@ void ITHACAstream::read_fields(PtrList<fieldType>& Lfield, word Name,
             last_s = min(runTime2.times().size(), n_snap + 2);
         }
 
-        for (label i = 2 + first_snap; i < last_s; i++)
+        for (label i = 2 + first_snap; i < last_s + first_snap; i++)
         {
             //Info << "Reading " << Name << " number " << i - 1 << endl;
             fieldType tmp_field(
@@ -450,7 +450,7 @@ void ITHACAstream::read_fields(PtrList<fieldType>& Lfield, word Name,
                 mesh
             );
             Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
+            printProgress(double(i + 1) / (last_s + first_snap));
         }
 
         std::cout << std::endl;
@@ -486,10 +486,10 @@ void ITHACAstream::read_fields(PtrList<fieldType>& Lfield,
         }
         else
         {
-            last_s = min(runTime2.times().size(), n_snap + 1);
+            last_s = min(runTime2.times().size(), n_snap + 2);
         }
 
-        for (label i = 2 + first_snap; i < last_s; i++)
+        for (label i = 2 + first_snap; i < last_s + first_snap; i++)
         {
             //Info << "Reading " << field.name() << " number " << i - 1 << endl;
             fieldType tmp_field(
@@ -503,7 +503,7 @@ void ITHACAstream::read_fields(PtrList<fieldType>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
+            printProgress(double(i + 1) / (last_s + first_snap));
         }
 
         std::cout << std::endl;
@@ -531,10 +531,10 @@ void ITHACAstream::read_fields(PtrList<fieldType>& Lfield,
         }
         else
         {
-            last_s = min(last_s, n_snap + 1);
+            last_s = min(last_s, n_snap + 2);
         }
 
-        for (label i = first_snap + 1; i < last_s; i++)
+        for (label i = first_snap + 1; i < last_s + first_snap; i++)
         {
             //Info << "Reading " << field.name() << " number " << i << endl;
             fieldType tmp_field(
@@ -548,7 +548,7 @@ void ITHACAstream::read_fields(PtrList<fieldType>& Lfield,
                 field.mesh()
             );
             Lfield.append(tmp_field);
-            printProgress(double(i + 1) / last_s);
+            printProgress(double(i + 1) / (last_s + first_snap));
         }
 
         Info << endl;
