@@ -679,7 +679,7 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<TypeField>
 }
 
 template<class TypeField>
-Eigen::MatrixXd getCoeffsFrobenius(PtrList<TypeField> snapshots,
+Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(PtrList<TypeField> snapshots,
                                    PtrList<TypeField>& modes, int nModes)
 {
     label Msize;
