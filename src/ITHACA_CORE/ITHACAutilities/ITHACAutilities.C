@@ -679,8 +679,9 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<TypeField>
 }
 
 template<class TypeField>
-Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(PtrList<TypeField> snapshots,
-                                   PtrList<TypeField>& modes, int nModes)
+Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(PtrList<TypeField>
+        snapshots,
+        PtrList<TypeField>& modes, int nModes)
 {
     label Msize;
 
@@ -1042,6 +1043,22 @@ PtrList<TypeField> ITHACAutilities::averageSubtract(PtrList<TypeField>
 
     return aveSubtracted;
 }
+
+template<class TypeField>
+TypeField ITHACAutilities::computeAverage(PtrList<TypeField>& fields)
+{
+    TypeField av(fields[0]);
+
+    for (int i = 1; i < fields.size(); i++)
+    {
+        av += fields[i];
+    }
+
+    av = av / fields.size();
+    return av;
+}
+
+
 
 Eigen::MatrixXd ITHACAutilities::parTimeCombMat(List<Eigen::VectorXd>
         acquiredSnapshotsTimes,
@@ -1499,6 +1516,10 @@ template PtrList<volScalarField> ITHACAutilities::averageSubtract(
 template PtrList<volVectorField> ITHACAutilities::averageSubtract(
     PtrList<volVectorField>
     fields, Eigen::MatrixXd ind, PtrList<volVectorField>& ave);
+template volVectorField ITHACAutilities::computeAverage(
+    PtrList<volVectorField>& fields);
+template volScalarField ITHACAutilities::computeAverage(
+    PtrList<volScalarField>& fields);
 
 template double ITHACAutilities::error_fields(volScalarField& field1,
         volScalarField& field2);

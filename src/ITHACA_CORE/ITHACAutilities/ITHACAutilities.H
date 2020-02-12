@@ -294,6 +294,18 @@ class ITHACAutilities
         static PtrList<TypeField> averageSubtract(PtrList<TypeField>
                 fields, Eigen::MatrixXd ind, PtrList<TypeField>& ave);
 
+        //-----------------------------------------------------------------------------
+        /// @brief      Calculates the average of a list of fields
+        ///
+        /// @param      fields     The fields
+        ///
+        /// @tparam     TypeField  { description }
+        ///
+        /// @return     The average.
+        ///
+        template<class TypeField>
+        static TypeField computeAverage(PtrList<TypeField>& fields);
+
         //--------------------------------------------------------------------------
         /// Computes a Mass Matrix from a list of Basis Functions (vectorial) for L2 projection
         ///
