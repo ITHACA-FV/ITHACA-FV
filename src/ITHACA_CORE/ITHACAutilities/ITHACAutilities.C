@@ -1495,6 +1495,14 @@ template void ITHACAutilities::normalizeFields(
 template void ITHACAutilities::normalizeFields(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields);
 
+template Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(
+    PtrList<volScalarField> snapshots,
+    PtrList<volScalarField>& modes, int nModes);
+
+template Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(
+    PtrList<volVectorField> snapshots,
+    PtrList<volVectorField>& modes, int nModes);
+
 template fvMeshSubset* ITHACAutilities::getSubMeshFromBox(
     GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 template fvMeshSubset* ITHACAutilities::getSubMeshFromBox(

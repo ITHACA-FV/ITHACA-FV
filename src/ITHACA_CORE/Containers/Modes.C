@@ -79,7 +79,6 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes)
         LinSys[0] = EigenModes[0].transpose() * Ae * EigenModes[0];
         LinSys[1] = EigenModes[0].transpose() * be;
     }
-
     else
     {
         M_Assert(numberOfModes <= EigenModes[0].cols(),
@@ -109,7 +108,6 @@ Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
     {
         projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
     }
-
     else
     {
         M_Assert(numberOfModes <= EigenModes[0].cols(),
@@ -140,12 +138,12 @@ Eigen::MatrixXd Modes<T>::project(
     {
         projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
     }
-
     else
     {
         M_Assert(numberOfModes <= EigenModes[0].cols(),
                  "Number of required modes for projection is higher then the number of available ones");
-        projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * vol.asDiagonal() * fieldEig;
+        projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
+                    vol.asDiagonal() * fieldEig;
     }
 
     return projField;
@@ -237,7 +235,6 @@ PtrList<GeometricField<T, fvPatchField, volMesh>>
     {
         Modes = EigenModes[0];
     }
-
     else
     {
         Modes = EigenModes[0].leftCols(numberOfModes);
@@ -257,7 +254,6 @@ PtrList<GeometricField<T, fvPatchField, volMesh>>
             M = Modes.transpose() * (totVolumes.col(i)).asDiagonal() * Modes;
             projSnapI = Modes.transpose() * (totVolumes.col(i)).asDiagonal() * F_eigen;
         }
-
         else //Frobenius
         {
             M = Modes.transpose() * Modes;
@@ -300,7 +296,6 @@ PtrList<GeometricField<T, fvPatchField, volMesh>>
     {
         Modes = EigenModes[0];
     }
-
     else
     {
         Modes = EigenModes[0].leftCols(numberOfModes);
@@ -325,12 +320,10 @@ PtrList<GeometricField<T, fvPatchField, volMesh>>
         {
             M_vol = ITHACAutilities::get_mass_matrix_FV(snapshots[i]);
         }
-
         else if (innerProduct == "Frobenius")
         {
             M_vol =  Eigen::VectorXd::Identity(F_eigen.rows(), 1);
         }
-
         else
         {
             std::cout << "Inner product not defined" << endl;
