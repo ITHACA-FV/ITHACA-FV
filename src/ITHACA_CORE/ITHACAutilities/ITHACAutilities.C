@@ -1288,6 +1288,55 @@ List<vector> ITHACAutilities::rotatePoints(const List<vector>& originalPoints,
     return rotatedPoints;
 }
 
+Field<vector> ITHACAutilities::rotateMesh(fvMesh& mesh, double r1, double r2,
+        vector axis,
+        double alpha, labelList movingPointsIDs,
+        List<double> radii, word angleVariationMethod, double v)
+{
+    M_Assert(angleVariationMethod == "Linear"
+             || angleVariationMethod == "Sinusoidal" || angleVariationMethod == "Sigmoid",
+             "The variation function of the angle from the inner radius to the outer radius must be either Linear or Sinusoidal or Sigmoid");
+    Field<vector> pointRot(mesh.points());
+
+    for (int i = 0; i < movingPointsIDs.size(); i++)
+    {
+        double l = radii[i];
+        vector pointNow = pointRot[movingPointsIDs[i]];
+
+        if (l <= r1)
+        {
+            double theta = alpha / 180 *  constant::mathematical::pi;
+            quaternion q(axis, theta);
+            pointRot[movingPointsIDs[i]] = q.transform(pointNow);
+        }
+        else if (l > r1 && l <= r2)
+        {
+            if (angleVariationMethod == "Linear")
+            {
+                double theta = alpha / 180 *  constant::mathematical::pi * (r2 - l) / (r2 - r1);
+                quaternion q(axis, theta);
+                pointRot[movingPointsIDs[i]] = q.transform(pointNow);
+            }
+            else if (angleVariationMethod == "Sinusoidal")
+            {
+                double theta = alpha / 180 *  constant::mathematical::pi * std::sin(
+                                   constant::mathematical::pi / 2 * (r2 - l) / (r2 - r1));
+                quaternion q(axis, theta);
+                pointRot[movingPointsIDs[i]] = q.transform(pointNow);
+            }
+            else if (angleVariationMethod == "Sigmoid")
+            {
+                double theta = alpha / 180 *  constant::mathematical::pi * (1 - 1 /
+                               (1 + std::exp(
+                                    -v * (l - (r1 + r2) / 2))));
+                quaternion q(axis, theta);
+                pointRot[movingPointsIDs[i]] = q.transform(pointNow);
+            }
+        }
+    }
+
+    return pointRot;
+}
 
 Eigen::MatrixXd ITHACAutilities::rotationMatrix(vector AxisOfRotation,
         double AngleOfRotation)
@@ -1418,6 +1467,36 @@ void ITHACAutilities::assignMixedBC(
         gradTpatch = grad;
         valueFracTpatch = valueFrac;
     }
+}
+
+List<int> ITHACAutilities::getIndicesFromDisc(fvMesh& mesh, double radius,
+        vector origin, vector axis, List<double>& radii)
+{
+    pointField meshPoints(mesh.points());
+    List<int> indices(meshPoints.size());
+    radii.resize(meshPoints.size());
+    int k = 0;
+
+    for (int i = 0; i < meshPoints.size(); i++)
+    {
+        vector pointNow = meshPoints[i];
+        vector r = pointNow - origin;
+        vector projComponent = (r & axis) / (pow(mag(axis), 2)) * axis;
+        vector d = r - projComponent;
+        double l = Foam::sqrt(pow(d[0],
+                                  2) + pow(d[1], 2) + pow(d[2], 2));
+
+        if (l < radius)
+        {
+            indices[k] = i;
+            radii[k] = l;
+            k++;
+        }
+    }
+
+    indices.resize(k);
+    radii.resize(k);
+    return indices;
 }
 
 template<typename type_f>
