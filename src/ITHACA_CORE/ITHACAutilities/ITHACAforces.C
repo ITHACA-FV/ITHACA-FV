@@ -535,7 +535,11 @@ void Foam::functionObjects::ITHACAforces::writeIntegratedForceMoment
     if (writeToFile())
     {
         Ostream& os = osPtr();
+#if OPENFOAM > 1906
+        writeCurrentTime(os);
+#else
         writeTime(os);
+#endif
         os  << tab << total
             << tab << pressure
             << tab << viscous;
@@ -618,7 +622,11 @@ void Foam::functionObjects::ITHACAforces::writeBinnedForceMoment
     }
 
     Ostream& os = osPtr();
+#if OPENFOAM > 1906
+    writeCurrentTime(os);
+#else
     writeTime(os);
+#endif
     forAll(f[0], i)
     {
         vector total = f[0][i] + f[1][i] + f[2][i];
