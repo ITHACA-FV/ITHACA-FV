@@ -117,7 +117,8 @@ Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys,
     }
     else if (solverType == "bdcSvd")
     {
-        y = LinSys[0].bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(LinSys[1]);
+        y = LinSys[0].bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(
+                LinSys[1]);
     }
     else if (solverType == "jacobiSvd")
     {
@@ -127,10 +128,12 @@ Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys,
     return y;
 }
 
-Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys, Eigen::MatrixXd x, Eigen::VectorXd& residual, const std::string solverType)
+Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys,
+        Eigen::MatrixXd x, Eigen::VectorXd& residual, const std::string solverType)
 {
     const Eigen::MatrixXd& bc = Eigen::MatrixXd::Zero(0, 0);
-    Eigen::MatrixXd y = reducedProblem::solveLinearSys(LinSys, x, residual, bc, solverType);
+    Eigen::MatrixXd y = reducedProblem::solveLinearSys(LinSys, x, residual, bc,
+                        solverType);
     return y;
 }
 

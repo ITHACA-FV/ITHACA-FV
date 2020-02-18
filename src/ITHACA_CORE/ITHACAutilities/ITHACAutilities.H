@@ -702,6 +702,28 @@ class ITHACAutilities
                                          vector AxisOfRotation, double AngleOfRotation);
 
         //--------------------------------------------------------------------------
+        /// @brief      A function that rotates the mesh rigidly, by a fixed specified angle for the points
+        /// lying within a disc of radius r1, and by a an angle which diminishes from the former angle to zero
+        /// either linearly or following a Sinusoidal relation or Sigmoid function in a disc of radius
+        /// r2 larger than r1.
+        ///
+        /// @param      mesh                  The mesh which you want to rotate rigidly
+        /// @param[in]  r1                    The inner disc radius
+        /// @param[in]  r2                    The outer disc radius
+        /// @param[in]  axis                  The axis of rotation
+        /// @param[in]  alpha                 The angle of rotation in degrees
+        /// @param[in]  movingPointsIDs       The list of id's of the points to be rotated
+        /// @param[in]  radii                 The distances of the points to be rotated to the origin of the rotation
+        /// @param[in]  angleVariationMethod  The angle variation method either Linear or Sinusoidal or Sigmoid functions
+        /// @param[in]  v                     The tuning parameter in case of using the Sigmoid function
+        ///
+        /// @return     The vector field of the newly rotated points
+        ///
+        static Field<vector> rotateMesh(fvMesh& mesh, double r1, double r2, vector axis,
+                                        double alpha, labelList movingPointsIDs,
+                                        List<double> radii, word angleVariationMethod = "Linear", double v = 3);
+
+        //--------------------------------------------------------------------------
         /// @brief      Functions that return a Rotation Matrix given an axis of rotation and an angle in degrees
         ///
         /// @param[in]  AxisOfRotation   The axis of rotation
@@ -754,6 +776,20 @@ class ITHACAutilities
         static void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
                                   label BC_ind, List<type_f>& value,
                                   List<type_f>& grad, List<scalar>& valueFrac);
+        //--------------------------------------------------------------------------
+        /// @brief      Gets the indices of the points which are inside a disc of a specified radius before
+        /// carrying out a rotation around an axis.
+        ///
+        /// @param      mesh    The mesh for which you want to find the indices of the points inside a disc
+        /// @param[in]  radius  The radius of the disc
+        /// @param[in]  origin  The origin of the disc
+        /// @param[in]  axis    The axis of the rotation
+        /// @param      radii   The distances of the points lying inside the disc to the origin
+        ///
+        /// @return     The indices of the points lying inside the specified the disc.
+        ///
+        static List<int> getIndicesFromDisc(fvMesh& mesh, double radius,
+                                            vector origin, vector axis, List<double>& radii);
 
         //--------------------------------------------------------------------------
         /// @brief      Gets the indices from coordinates of a given box.
