@@ -534,7 +534,7 @@ void ITHACAstream::read_fields(PtrList<fieldType>& Lfield,
             last_s = min(last_s, n_snap + 2);
         }
 
-        for (label i = first_snap + 1; i < last_s + first_snap; i++)
+        for (label i = 2 + first_snap; i < last_s + first_snap; i++)
         {
             //Info << "Reading " << field.name() << " number " << i << endl;
             fieldType tmp_field(
