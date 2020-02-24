@@ -72,11 +72,6 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModes, word FunctionName)
     MatrixOnline = U * ((P.transpose() * U).inverse());
 }
 
-template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, int MaxModes,
-                                    word FunctionName);
-template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, int MaxModes,
-                                    word FunctionName);
-
 
 template<typename T>
 DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
@@ -84,7 +79,10 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     SnapShotsMatrix(s),
     MaxModesA(MaxModesA),
     MaxModesB(MaxModesB),
-    MatrixName(MatrixName)
+    MatrixName(MatrixName),
+    runSubMesh(false),
+    runSubMeshA(false),
+    runSubMeshB(false)
 
 {
     Eigen::MatrixXd AA;
@@ -187,10 +185,6 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     }
 }
 
-template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix>& s, int MaxModesA,
-                                     int MaxModesB, word MatrixName);
-template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix>& s, int MaxModesA,
-                                     int MaxModesB, word MatrixName);
 
 
 template<typename T>
@@ -260,19 +254,6 @@ PtrList<S> DEIM<T>::generateSubmeshes(int layers, fvMesh& mesh, S field,
     return fields;
 }
 
-template PtrList<volScalarField> DEIM<volScalarField>::generateSubmeshes(
-    int layers, fvMesh& mesh, volScalarField field,
-    int secondTime);
-template PtrList<volVectorField> DEIM<volVectorField>::generateSubmeshes(
-    int layers, fvMesh& mesh, volVectorField field,
-    int secondTime);
-template PtrList<volScalarField> DEIM<volVectorField>::generateSubmeshes(
-    int layers, fvMesh& mesh, volScalarField field,
-    int secondTime);
-template PtrList<volVectorField> DEIM<volScalarField>::generateSubmeshes(
-    int layers, fvMesh& mesh, volVectorField field,
-    int secondTime);
-
 template<typename T>
 template<typename S>
 PtrList<S> DEIM<T>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
@@ -341,29 +322,9 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
                                     );
     }
 
+    runSubMeshA = true;
     return fieldsA;
 }
-
-template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
-    int layers, fvMesh& mesh, volScalarField field, int secondTime);
-template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
-    int layers, fvMesh& mesh, volVectorField field, int secondTime);
-template PtrList<surfaceScalarField>
-DEIM<fvScalarMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
-        surfaceScalarField field, int secondTime);
-template PtrList<surfaceVectorField>
-DEIM<fvScalarMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
-        surfaceVectorField field, int secondTime);
-template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubmeshesMatrix(
-    int layers, fvMesh& mesh, volScalarField field, int secondTime);
-template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubmeshesMatrix(
-    int layers, fvMesh& mesh, volVectorField field, int secondTime);
-template PtrList<surfaceScalarField>
-DEIM<fvVectorMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
-        surfaceScalarField field, int secondTime);
-template PtrList<surfaceVectorField>
-DEIM<fvVectorMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
-        surfaceVectorField field, int secondTime);
 
 template<typename T>
 template<typename S>
@@ -431,29 +392,9 @@ PtrList<S> DEIM<T>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
                                     );
     }
 
+    runSubMeshB = true;
     return fieldsB;
 }
-
-template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubmeshesVector(
-    int layers, fvMesh& mesh, volScalarField field, int secondTime);
-template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubmeshesVector(
-    int layers, fvMesh& mesh, volVectorField field, int secondTime);
-template PtrList<surfaceScalarField>
-DEIM<fvScalarMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
-        surfaceScalarField field, int secondTime);
-template PtrList<surfaceVectorField>
-DEIM<fvScalarMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
-        surfaceVectorField field, int secondTime);
-template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubmeshesVector(
-    int layers, fvMesh& mesh, volScalarField field, int secondTime);
-template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubmeshesVector(
-    int layers, fvMesh& mesh, volVectorField field, int secondTime);
-template PtrList<surfaceScalarField>
-DEIM<fvVectorMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
-        surfaceScalarField field, int secondTime);
-template PtrList<surfaceVectorField>
-DEIM<fvVectorMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
-        surfaceVectorField field, int secondTime);
 
 
 template<typename T>
@@ -478,10 +419,10 @@ List<int> DEIM<T>::global2local(List<int>& points,
 }
 
 template<typename T>
-List<Pair <int >> DEIM<T>::global2local(List<Pair <int >>& points,
-                                        PtrList<fvMeshSubset>& submeshList)
+List<Pair <int>> DEIM<T>::global2local(List<Pair <int>>& points,
+                                       PtrList<fvMeshSubset>& submeshList)
 {
-    List< Pair <int>> localPoints(points.size());
+    List<Pair <int>> localPoints(points.size());
 
     for (int i = 0; i < points.size(); i++)
     {
@@ -560,4 +501,143 @@ void DEIM<T>::check3DIndices(int& ind_rowA, int& xyz_rowA)
         ind_rowA = ind_rowA - 2 * sizeM;
     }
 };
+
+template<class T>
+template <class F>
+PtrList<F> DEIM<T>::generateSubFieldsMatrix(F& field)
+{
+    PtrList<F> fields;
+    M_Assert(runSubMeshA == true,
+             "You have to compute the magicPointsA before calling this function, try to rerun generateSubmeshesMatrix");
+
+    for (int i = 0; i < submeshListA.size(); i++)
+    {
+        F f = submeshListA[i].interpolate(field);
+        fields.append(f);
+    }
+
+    return fields;
+}
+
+template<typename T>
+template <class F>
+PtrList<F> DEIM<T>::generateSubFieldsVector(F& field)
+{
+    M_Assert(runSubMeshB == true,
+             "You have to compute the magicPointsB before calling this function, try to rerun generateSubmeshesVector");
+    PtrList<F> fields;
+
+    for (int i = 0; i < submeshListB.size(); i++)
+    {
+        F f = submeshListB[i].interpolate(field);
+        fields.append(f);
+    }
+
+    return fields;
+}
+
+
+// Specialization of the constructor
+template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix>& s, int MaxModesA,
+                                     int MaxModesB, word MatrixName);
+template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix>& s, int MaxModesA,
+                                     int MaxModesB, word MatrixName);
+template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, int MaxModes,
+                                    word FunctionName);
+template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, int MaxModes,
+                                    word FunctionName);
+
+// Specialization for generateSubFieldsMatrix
+template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubFieldsMatrix(
+    volScalarField& field);
+template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubFieldsMatrix(
+    volVectorField& field);
+template PtrList<surfaceScalarField>
+DEIM<fvScalarMatrix>::generateSubFieldsMatrix(surfaceScalarField& field);
+template PtrList<surfaceVectorField>
+DEIM<fvScalarMatrix>::generateSubFieldsMatrix(surfaceVectorField& field);
+template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubFieldsMatrix(
+    volScalarField& field);
+template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubFieldsMatrix(
+    volVectorField& field);
+template PtrList<surfaceScalarField>
+DEIM<fvVectorMatrix>::generateSubFieldsMatrix(surfaceScalarField& field);
+template PtrList<surfaceVectorField>
+DEIM<fvVectorMatrix>::generateSubFieldsMatrix(surfaceVectorField& field);
+
+// Specialization for generateSubFieldsVector
+template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubFieldsVector(
+    volScalarField& field);
+template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubFieldsVector(
+    volVectorField& field);
+template PtrList<surfaceScalarField>
+DEIM<fvScalarMatrix>::generateSubFieldsVector(surfaceScalarField& field);
+template PtrList<surfaceVectorField>
+DEIM<fvScalarMatrix>::generateSubFieldsVector(surfaceVectorField& field);
+template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubFieldsVector(
+    volScalarField& field);
+template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubFieldsVector(
+    volVectorField& field);
+template PtrList<surfaceScalarField>
+DEIM<fvVectorMatrix>::generateSubFieldsVector(surfaceScalarField& field);
+template PtrList<surfaceVectorField>
+DEIM<fvVectorMatrix>::generateSubFieldsVector(surfaceVectorField& field);
+
+// Specialization for generateSubmeshes
+template PtrList<volScalarField> DEIM<volScalarField>::generateSubmeshes(
+    int layers, fvMesh& mesh, volScalarField field,
+    int secondTime);
+template PtrList<volVectorField> DEIM<volVectorField>::generateSubmeshes(
+    int layers, fvMesh& mesh, volVectorField field,
+    int secondTime);
+template PtrList<volScalarField> DEIM<volVectorField>::generateSubmeshes(
+    int layers, fvMesh& mesh, volScalarField field,
+    int secondTime);
+template PtrList<volVectorField> DEIM<volScalarField>::generateSubmeshes(
+    int layers, fvMesh& mesh, volVectorField field,
+    int secondTime);
+
+// Specialization for generateSubmeshesVector
+template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubmeshesVector(
+    int layers, fvMesh& mesh, volScalarField field, int secondTime);
+template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubmeshesVector(
+    int layers, fvMesh& mesh, volVectorField field, int secondTime);
+template PtrList<surfaceScalarField>
+DEIM<fvScalarMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
+        surfaceScalarField field, int secondTime);
+template PtrList<surfaceVectorField>
+DEIM<fvScalarMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
+        surfaceVectorField field, int secondTime);
+template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubmeshesVector(
+    int layers, fvMesh& mesh, volScalarField field, int secondTime);
+template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubmeshesVector(
+    int layers, fvMesh& mesh, volVectorField field, int secondTime);
+template PtrList<surfaceScalarField>
+DEIM<fvVectorMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
+        surfaceScalarField field, int secondTime);
+template PtrList<surfaceVectorField>
+DEIM<fvVectorMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
+        surfaceVectorField field, int secondTime);
+template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
+    int layers, fvMesh& mesh, volScalarField field, int secondTime);
+template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
+    int layers, fvMesh& mesh, volVectorField field, int secondTime);
+template PtrList<surfaceScalarField>
+
+// Specialization for generateSubmeshesMatrix
+DEIM<fvScalarMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
+        surfaceScalarField field, int secondTime);
+template PtrList<surfaceVectorField>
+DEIM<fvScalarMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
+        surfaceVectorField field, int secondTime);
+template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubmeshesMatrix(
+    int layers, fvMesh& mesh, volScalarField field, int secondTime);
+template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubmeshesMatrix(
+    int layers, fvMesh& mesh, volVectorField field, int secondTime);
+template PtrList<surfaceScalarField>
+DEIM<fvVectorMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
+        surfaceScalarField field, int secondTime);
+template PtrList<surfaceVectorField>
+DEIM<fvVectorMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
+        surfaceVectorField field, int secondTime);
 
