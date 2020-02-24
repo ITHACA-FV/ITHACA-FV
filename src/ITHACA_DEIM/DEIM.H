@@ -137,6 +137,11 @@ class DEIM
         PtrList<fvMeshSubset> submeshListA;
         PtrList<fvMeshSubset> submeshListB;
 
+        /// List of bool variables to check if the SubMeshes are available
+        bool runSubMesh;
+        bool runSubMeshA;
+        bool runSubMeshB;
+
         /// @brief      Function to generate the submeshes
         ///
         /// @param[in]  layers  Number of layers used to generate each submesh
@@ -167,6 +172,30 @@ class DEIM
         template <class S>
         PtrList<S> generateSubmeshesVector(int layers, fvMesh& mesh, S field,
                                            int secondTime = 0);
+
+        ///
+        /// @brief      Function to generate a PtrList of subfield in the location of the magic points computed for the Matrix (LHS)
+        ///
+        /// @param      field  For which you want the create the submeshes
+        ///
+        /// @tparam     F      type of field (can be volVectorField, volScalarField, surfaceScalar and surfaceVector)
+        ///
+        /// @return     a PtrList with the fields
+        ///
+        template <class F>
+        PtrList<F> generateSubFieldsMatrix(F& field);
+
+        ///
+        /// @brief      Function to generate a PtrList of subfield in the location of the magic points computed for the Vector (RHS)
+        ///
+        /// @param      field  For which you want the create the submeshes
+        ///
+        /// @tparam     F      type of field (can be volVectorField, volScalarField, surfaceScalar and surfaceVector)
+        ///
+        /// @return     a PtrList with the fields
+        ///
+        template <class F>
+        PtrList<F> generateSubFieldsVector(F& field);
 
         ///
         /// @brief      Function to get the onlineCoeffs of the DEIM approx. It is problem dependent so it must be overridden.
