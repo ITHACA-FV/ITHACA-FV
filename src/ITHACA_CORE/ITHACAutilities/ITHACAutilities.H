@@ -452,6 +452,32 @@ class ITHACAutilities
         static void assignIF(T& s, G& value);
 
         //--------------------------------------------------------------------------
+        /// Assign internal field
+        ///
+        /// @param[in,out]  s      Field to which assign the internal field
+        /// @param          value  The value you want to assign
+        /// @param          indices  The list of indices where you want assign
+        ///
+        /// @tparam         T      type of field (volVectorField or volScalarField)
+        /// @tparam         G      type of value you want to assign (OpenFOAM vector or scalar)
+        ///
+        template<typename T, typename G>
+        static void assignIF(T& s, G& value, List<int>& indices);
+
+        //--------------------------------------------------------------------------
+        /// Assign internal field
+        ///
+        /// @param[in,out]  s      Field to which assign the internal field
+        /// @param          value  The value you want to assign
+        /// @param          index  The index where you want assign
+        ///
+        /// @tparam         T      type of field (volVectorField or volScalarField)
+        /// @tparam         G      type of value you want to assign (OpenFOAM vector or scalar)
+        ///
+        template<typename T, typename G>
+        static void assignIF(T& s, G& value, int index);
+
+        //--------------------------------------------------------------------------
         /// Assign one to volScalarField
         ///
         /// @param[in,out] s     field where you want to assign the internal field
@@ -885,6 +911,21 @@ void ITHACAutilities::assignIF(T& s, G& value)
     {
         s.ref()[i] = value;
     }
+}
+
+template<typename T, typename G>
+void ITHACAutilities::assignIF(T& s, G& value, List<int>& indices)
+{
+    for (label i = 0; i < indices.size(); i++)
+    {
+        s.ref()[indices[i]] = value;
+    }
+}
+
+template<typename T, typename G>
+void ITHACAutilities::assignIF(T& s, G& value, int index)
+{
+    s.ref()[index] = value;
 }
 
 template<typename T>

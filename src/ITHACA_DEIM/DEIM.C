@@ -273,7 +273,8 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionSet(0, 0, 0, 0, 0)
+        dimensionedScalar(MatrixName + "_A_indices", dimensionSet(0, 0, 0, 0, 0, 0, 0),
+                          Foam::scalar(0))
     );
 
     if (!secondTime)
@@ -317,6 +318,15 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
 
     if (!secondTime)
     {
+        for (int i = 0; i < magicPointsA.size(); i++)
+        {
+            Indici.ref()[magicPointsA[i].first()] = 10;
+            Indici.ref()[magicPointsA[i].second()] = 10;
+        }
+    }
+
+    if (!secondTime)
+    {
         localMagicPointsA = global2local(magicPointsA, submeshListA);
         ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + MatrixName
                                     );
@@ -345,7 +355,8 @@ PtrList<S> DEIM<T>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionSet(0, 0, 0, 0, 0)
+        dimensionedScalar(MatrixName + "_A_indices", dimensionSet(0, 0, 0, 0, 0, 0, 0),
+                          Foam::scalar(0))
     );
 
     if (!secondTime)
@@ -382,6 +393,14 @@ PtrList<S> DEIM<T>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
         if (!secondTime)
         {
             submeshListB.append(submesh);
+        }
+    }
+
+    if (!secondTime)
+    {
+        for (int i = 0; i < magicPointsB.size(); i++)
+        {
+            Indici.ref()[magicPointsB[i]] = 10;
         }
     }
 
