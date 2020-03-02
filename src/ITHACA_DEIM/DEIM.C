@@ -69,7 +69,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModes, word FunctionName)
         magicPoints.append(ind_max);
     }
 
-    MatrixOnline = U * ((P.transpose() * U).inverse());
+    MatrixOnline = U * ((P.transpose() * U).fullPivLu().inverse());
 }
 
 
@@ -92,7 +92,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     Eigen::VectorXd rhoA(1);
     Matrix_Modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModesA, MaxModesB,
                                         MatrixName);
-    sizeM = std::get<1>(Matrix_Modes)[0].rows();
+    Ncells = getNcells(std::get<1>(Matrix_Modes)[0].rows());
     int ind_rowA, ind_colA, xyz_rowA, xyz_colA;
     ind_rowA = ind_colA = xyz_rowA = xyz_colA = 0;
     double maxA = EigenFunctions::max(std::get<0>(Matrix_Modes)[0], ind_rowA,
@@ -115,7 +115,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     {
         AA = EigenFunctions::innerProduct(PA, UA);
         bA = EigenFunctions::innerProduct(PA, std::get<0>(Matrix_Modes)[i]);
-        cA = AA.colPivHouseholderQr().solve(bA);
+        cA = AA.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(bA);
         rA = std::get<0>(Matrix_Modes)[i] - EigenFunctions::MVproduct(UA, cA);
         double maxA = EigenFunctions::max(rA, ind_rowA, ind_colA);
         rhoA.conservativeResize(i + 1);
@@ -134,7 +134,8 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
         PA.append(Pnow);
     }
 
-    Eigen::MatrixXd Aaux = EigenFunctions::innerProduct(PA, UA).inverse();
+    Eigen::MatrixXd Aaux = EigenFunctions::innerProduct(PA,
+                           UA).fullPivLu().inverse();
     MatrixOnlineA = EigenFunctions::MMproduct(UA, Aaux);
     Eigen::MatrixXd AB;
     Eigen::VectorXd bB;
@@ -156,7 +157,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     {
         AB = PB.transpose() * UB;
         bB = PB.transpose() * std::get<1>(Matrix_Modes)[i];
-        cB = AB.colPivHouseholderQr().solve(bB);
+        cB = AB.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(bB);
         rB = std::get<1>(Matrix_Modes)[i] - UB * cB;
         maxB = rB.cwiseAbs().maxCoeff(&ind_rowB, &c1);
         ind_rowBOF = ind_rowB;
@@ -175,13 +176,16 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     {
         MatrixOnlineB = Eigen::MatrixXd::Zero(std::get<1>(Matrix_Modes)[0].rows(), 1);
     }
+
     else if (MaxModesB != 1)
     {
-        MatrixOnlineB = UB * ((PB.transpose() * UB).inverse());
+        MatrixOnlineB = UB * ((PB.transpose() * UB).fullPivLu().inverse());
     }
+
     else
     {
-        MatrixOnlineB = UB;
+        Eigen::MatrixXd aux = PB.transpose() * UB;
+        MatrixOnlineB = UB * 1 / aux(0, 0);
     }
 }
 
@@ -471,53 +475,59 @@ template<typename T>
 void DEIM<T>::check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
                              int& xyz_colA)
 {
-    if (ind_rowA < sizeM)
+    if (ind_rowA < Ncells)
     {
         xyz_rowA = 0;
     }
-    else if (ind_rowA < sizeM * 2)
+
+    else if (ind_rowA < Ncells * 2)
     {
         xyz_rowA = 1;
-        ind_rowA = ind_rowA - sizeM;
+        ind_rowA = ind_rowA - Ncells;
     }
+
     else
     {
         xyz_rowA = 2;
-        ind_rowA = ind_rowA - 2 * sizeM;
+        ind_rowA = ind_rowA - 2 * Ncells;
     }
 
-    if (ind_colA < sizeM )
+    if (ind_colA < Ncells )
     {
         xyz_colA = 0;
     }
-    else if (ind_colA < sizeM * 2)
+
+    else if (ind_colA < Ncells * 2)
     {
         xyz_colA = 1;
-        ind_colA = ind_colA - 2 * sizeM;
+        ind_colA = ind_colA - 2 * Ncells;
     }
+
     else
     {
         xyz_colA = 2;
-        ind_colA = ind_colA - 2 * sizeM;
+        ind_colA = ind_colA - 2 * Ncells;
     }
 };
 
 template<typename T>
 void DEIM<T>::check3DIndices(int& ind_rowA, int& xyz_rowA)
 {
-    if (ind_rowA < sizeM)
+    if (ind_rowA < Ncells)
     {
         xyz_rowA = 0;
     }
-    else if (ind_rowA < sizeM * 2)
+
+    else if (ind_rowA < Ncells * 2)
     {
         xyz_rowA = 1;
-        ind_rowA = ind_rowA - sizeM;
+        ind_rowA = ind_rowA - Ncells;
     }
+
     else
     {
         xyz_rowA = 2;
-        ind_rowA = ind_rowA - 2 * sizeM;
+        ind_rowA = ind_rowA - 2 * Ncells;
     }
 };
 
@@ -555,6 +565,18 @@ PtrList<F> DEIM<T>::generateSubFieldsVector(F& field)
     return fields;
 }
 
+
+template<> int DEIM<fvScalarMatrix>::getNcells(int sizeM)
+{
+    int Ncells = sizeM;
+    return sizeM;
+}
+
+template<> int DEIM<fvVectorMatrix>::getNcells(int sizeM)
+{
+    int Ncells=sizeM/3;
+    return Ncells;
+}
 
 // Specialization of the constructor
 template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix>& s, int MaxModesA,
