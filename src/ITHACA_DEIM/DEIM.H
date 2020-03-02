@@ -93,8 +93,8 @@ class DEIM
         Eigen::VectorXd thetaA;
         Eigen::VectorXd thetaB;
 
-        /// Int size M;
-        int sizeM;
+        /// Int Number of Cells;
+        int Ncells;
 
         /// source
         bool source;
@@ -203,28 +203,28 @@ class DEIM
         void onlineCoeffs();
 
         ///
-        /// @brief      { function_description }
+        /// @brief      Get local indices in the submeshes from indices in the global ones
         ///
         /// @param      points       The points
         /// @param      submeshList  The submesh list
         ///
-        /// @return     { description_of_the_return_value }
+        /// @return     The local indices
         ///
         List<int> global2local(List<int>& points, PtrList<fvMeshSubset>& submeshList);
 
         ///
-        /// @brief      { function_description }
+        /// @brief      Get local indices in the submeshes from indices in the global ones
         ///
         /// @param      points       The points
         /// @param      submeshList  The submesh list
         ///
-        /// @return     { description_of_the_return_value }
+        /// @return     The local indices
         ///
         List<Pair <int >> global2local(List< Pair <int>>& points,
                                        PtrList<fvMeshSubset>& submeshList);
 
         ///
-        /// @brief      { function_description }
+        /// @brief      check3DIndices in case of three dimensional fields
         ///
         /// @param      ind_rowA  The ind row a
         /// @param      ind_colA  The ind col a
@@ -235,12 +235,20 @@ class DEIM
                             int& xyz_colA);
 
         ///
-        /// @brief      { function_description }
+        /// @brief      check3DIndices in case of three dimensional fields
         ///
         /// @param      ind_rowA  The ind row a
         /// @param      xyz_rowA  The xyz row a
         ///
         void check3DIndices(int& ind_rowA, int& xyz_rowA);
+
+        /// @brief      get the number of cells from the dimension of a LHS matrix
+        ///
+        /// @param      sizeM  The number of rows of the original Matrix
+        ///
+        /// @return     The number of cells
+        ///
+        int getNcells(int sizeM);
 
 };
 
