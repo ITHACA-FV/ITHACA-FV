@@ -67,8 +67,6 @@ class tutorial18 : public unsteadyNS
             {
                 ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-                mu_samples =
-                    ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }
 
             else
@@ -80,12 +78,12 @@ class tutorial18 : public unsteadyNS
                     //assignBC(U, BCind, inl);
                     assignIF(U, inl);
                     change_viscosity( mu(0, i));
-                    truthSolve(mu_now);
+                    truthSolve(mu_now, "./ITHACAoutput/Offline/");
                 }
             }
         }
 
-        void truthSolve(List<scalar> mu_now)
+        void truthSolve(List<scalar> mu_now, word folder)
         {
             Time& runTime = _runTime();
             surfaceScalarField& phi = _phi();
@@ -95,6 +93,21 @@ class tutorial18 : public unsteadyNS
             pisoControl piso(mesh);
             singlePhaseTransportModel& laminarTransport = _laminarTransport();
             volScalarField nu = laminarTransport.nu();
+            instantList Times = runTime.times();
+            runTime.setEndTime(finalTime);
+            runTime.setTime(Times[1], 1);
+            runTime.setDeltaT(timeStep);
+            nextWrite = startTime;
+            // Export and store the initial conditions for velocity and pressure
+            ITHACAstream::exportSolution(U, name(counter), folder);
+            ITHACAstream::exportSolution(p, name(counter), folder);
+            std::ofstream of(folder + name(counter) + "/" +
+                             runTime.timeName());
+            Ufield.append(U);
+            Pfield.append(p);
+            counter = 0;
+            counter++;
+            nextWrite += writeEvery;
 
             while (runTime.run())
             {
@@ -138,7 +151,7 @@ class tutorial18 : public unsteadyNS
                             fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
                         );
                         pEqn.setReference(pRefCell, pRefValue);
-                        pEqn.solve(mesh.solver(p.select(piso.finalInnerIter())));
+                        pEqn.solve();
 
                         if (piso.finalNonOrthogonalIter())
                         {
@@ -152,41 +165,200 @@ class tutorial18 : public unsteadyNS
 
                 if (checkWrite(runTime))
                 {
-                    ITHACAstream::exportSolution(U, name(counter), "ITHACAoutput/Offline/");
-                    ITHACAstream::exportSolution(p, name(counter), "ITHACAoutput/Offline/");
-                    std::ofstream of("ITHACAoutput/Offline/" + name(counter) + "/" +
+                    ITHACAstream::exportSolution(U, name(counter), folder);
+                    ITHACAstream::exportSolution(p, name(counter), folder);
+                    std::ofstream of(folder + name(counter) + "/" +
                                      runTime.timeName());
                     Ufield.append(U);
                     Pfield.append(p);
                     counter++;
                     nextWrite += writeEvery;
-                    writeMu(mu_now);
-                    // --- Fill in the mu_samples with parameters (time, mu) to be used for the PODI sample points
-                    mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
-                    mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
-
-                    for (int i = 0; i < mu_now.size(); i++)
-                    {
-                        mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
-                    }
-                }
-                // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
-                if (mu.cols() == 0)
-                {
-                    mu.resize(1, 1);
-                }
-
-                if (mu_samples.rows() == counter * mu.cols())
-                {
-                    ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-                                               "ITHACAoutput/Offline/");
                 }
             }
 
             Info << "End\n" << endl;
         }
+};
 
+class tutorial18red : public reducedUnsteadyNS
+{
+    public:
 
+        tutorial18red(unsteadyNS& FOMproblem)
+            :
+            reducedUnsteadyNS(FOMproblem)
+        {}
+
+        int counter;
+
+        Modes<vector> ULmodes;
+        /// Imposed boundary conditions.
+        Eigen::MatrixXd vel_now;
+        Eigen::MatrixXd redGradP;
+
+        void solveOnlineICO(int NmodesUproj, int NmodesPproj, word folder)
+        {
+            ULmodes.resize(0);
+
+            for (int i = 0; i < problem->inletIndex.rows(); i++)
+            {
+                ULmodes.append(problem->liftfield[i]);
+            }
+
+            for (int i = 0; i < NmodesUproj; i++)
+            {
+                ULmodes.append(problem->Umodes.toPtrList()[i]);
+            }
+
+            int UprojN = ULmodes.size();
+            int PprojN = NmodesPproj;
+            Eigen::VectorXd uresidualOld = Eigen::VectorXd::Zero(UprojN);
+            Eigen::VectorXd presidualOld = Eigen::VectorXd::Zero(PprojN);
+            Eigen::VectorXd uresidual = Eigen::VectorXd::Zero(UprojN);
+            Eigen::VectorXd presidual = Eigen::VectorXd::Zero(PprojN);
+            scalar U_norm_res(1);
+            scalar P_norm_res(1);
+            Eigen::MatrixXd a = Eigen::VectorXd::Zero(UprojN);
+            Eigen::MatrixXd b = Eigen::VectorXd::Zero(PprojN);
+            std::cerr << "File: 18ICOFOAM.C, Line: 223"<< std::endl;
+            a(0) = vel_now(0, 0);
+            std::cerr << "File: 18ICOFOAM.C, Line: 225"<< std::endl;
+            /// Velocity field
+            volVectorField& U = problem->_U();
+            /// Pressure field
+            volScalarField& p = problem->_p();
+            ///
+            surfaceScalarField& phi = problem->_phi();
+            Time& runTime = problem->_runTime();
+            fvMesh& mesh = problem->_mesh();
+            pisoControl piso(mesh);
+            singlePhaseTransportModel& laminarTransport = problem->_laminarTransport();
+            volScalarField nu = laminarTransport.nu();
+            instantList Times = runTime.times();
+            runTime.setEndTime(problem->finalTime);
+            runTime.setTime(Times[1], 1);
+            runTime.timeName();
+            runTime.setDeltaT(problem->timeStep);
+            problem->nextWrite = problem->startTime;
+            U.rename("Ured");
+            p.rename("Pred");
+            // Export and store the initial conditions for velocity and pressure
+            ITHACAstream::exportSolution(U, name(counter), folder);
+            ITHACAstream::exportSolution(p, name(counter), folder);
+            U.rename("U");
+            p.rename("p");
+            counter = 0;
+            counter++;
+            problem->nextWrite += problem->writeEvery;
+            std::cerr << "debug point 1" << std::endl;
+
+            while (runTime.run())
+            {
+                runTime++;
+                Info << "Time = " << runTime.timeName() << nl << endl;
+                // Momentum predictor
+                fvVectorMatrix UEqn
+                (
+                    fvm::ddt(U)
+                    + fvm::div(phi, U)
+                    - fvm::laplacian(nu, U)
+                );
+                UEqn.relax();
+                List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(UEqn, UprojN);
+                volVectorField H = UEqn.H();
+                volScalarField A = UEqn.A();
+                RedLinSysU[1] += redGradP * b;
+                a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
+                ULmodes.reconstruct(U, a, "U");
+                List<Eigen::MatrixXd> RedLinSysP;
+
+                // if (piso.momentumPredictor())
+                // {
+                //     solve(UEqn == -fvc::grad(p));
+                // }
+
+                // --- PISO loop
+                while (piso.correct())
+                {
+                    volScalarField rAU(1.0 / UEqn.A());
+                    volVectorField HbyA(constrainHbyA(rAU * UEqn.H(), U, p));
+                    surfaceScalarField phiHbyA
+                    (
+                        "phiHbyA",
+                        fvc::flux(HbyA)
+                        + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi)
+                    );
+                    adjustPhi(phiHbyA, U, p);
+                    // Update the pressure BCs to ensure flux consistency
+                    constrainPressure(p, U, phiHbyA, rAU);
+
+                    // Non-orthogonal pressure corrector loop
+                    while (piso.correctNonOrthogonal())
+                    {
+                        // Pressure corrector
+                        fvScalarMatrix pEqn
+                        (
+                            fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
+                        );
+                        pEqn.setReference(problem->pRefCell, problem->pRefValue);
+                        RedLinSysP = problem->Pmodes.project(pEqn, PprojN);
+                        b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
+                        problem->Pmodes.reconstruct(p, b, "p");
+
+                        //pEqn.solve();
+
+                        if (piso.finalNonOrthogonalIter())
+                        {
+                            phi = phiHbyA - pEqn.flux();
+                        }
+                    }
+
+                    U = HbyA - rAU * fvc::grad(p);
+                    U.correctBoundaryConditions();
+                }
+
+                if (problem->checkWrite(runTime))
+                {
+                    U.rename("Ured");
+                    p.rename("Pred");
+                    ITHACAstream::exportSolution(U, name(counter), folder);
+                    ITHACAstream::exportSolution(p, name(counter), folder);
+                    std::ofstream of(folder + name(counter) + "/" +
+                                     runTime.timeName());
+                    counter++;
+                    problem->nextWrite += problem->writeEvery;
+                    U.rename("U");
+                    p.rename("p");
+                }
+            }
+        }
+
+        void project(int nModesU, int nModesP)
+        {
+            ULmodes.resize(0);
+
+            for (int i = 0; i < problem->inletIndex.rows(); i++)
+            {
+                ULmodes.append(problem->liftfield[i]);
+            }
+
+            for (int i = 0; i < nModesU; i++)
+            {
+                ULmodes.append(problem->Umodes.toPtrList()[i]);
+            }
+
+            ULmodes.toEigen();
+            volScalarField& P = problem->_p();
+            volVectorField& U = problem->_U();
+            PtrList<volVectorField> gradP;
+            gradP.resize(0);
+
+            for (int i = 0; i < nModesP; i++)
+            {
+                gradP.append(-fvc::grad(problem->Pmodes[i]));
+            }
+            redGradP = ULmodes.project(gradP);
+        }
 
 
 };
@@ -223,6 +395,25 @@ int main(int argc, char* argv[])
     example.writeEvery = 0.01;
     // Perform The Offline Solve;
     example.offlineSolve();
+    example.liftfield.append(ITHACAutilities::computeAverage(example.Ufield));
+    ITHACAutilities::normalizeFields(example.liftfield);
+    example.liftfield[0].rename("Ulift0");
+    //ITHACAutilities::changeBCtype(example.liftfield[0],"fixedValue",0);
+    ITHACAstream::exportSolution(example.liftfield[0], "0", "./");
+    // Homogenize the snapshots
+    example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
+    // Perform POD on velocity and pressure and store the first 10 modes
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0,
+                        NmodesUout);
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
+                        NmodesPout);
+    // Create the reduced object
+    Eigen::MatrixXd vel(1, 1);
+    vel(0, 0) = 1.0;
+    tutorial18red reduced(example);
+    reduced.vel_now = reduced.setOnlineVelocity(vel);
+    reduced.project(10,10);
+    reduced.solveOnlineICO(10, 10, "./ITHACAoutput/Offline/");
     //example.liftSolve();
     exit(0);
 }
