@@ -361,7 +361,7 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
 
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar>& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<scalar>& foam_matrix,
                                 Eigen::MatrixXd& A,
                                 Eigen::VectorXd& b)
 {
@@ -396,7 +396,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar>& foam_matrix,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector>& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<vector>& foam_matrix,
                                 Eigen::MatrixXd& A,
                                 Eigen::VectorXd& b)
 {
@@ -443,7 +443,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector>& foam_matrix,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar>& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<scalar>& foam_matrix,
                                 Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
@@ -484,7 +484,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar>& foam_matrix,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector>& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<vector>& foam_matrix,
                                 Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
