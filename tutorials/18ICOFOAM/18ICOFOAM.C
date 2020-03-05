@@ -41,25 +41,49 @@ class tutorial18 : public unsteadyNS
     public:
         /// Constructor
         explicit tutorial18(int argc, char* argv[])
-            :
-            unsteadyNS(argc, argv),
-            U(_U()),
-            p(_p()),
-            phi(_phi())
-        {}
+        {
+            _args = autoPtr<argList>
+                    (
+                        new argList(argc, argv)
+                    );
 
-        /// Velocity field
-        volVectorField& U;
-        /// Pressure field
-        volScalarField& p;
-        ///
-        surfaceScalarField& phi;
+            if (!_args->checkRootCase())
+            {
+                Foam::FatalError.exit();
+            }
+
+            argList& args = _args();
+#include "createTime.H"
+#include "createMesh.H"
+            std::cerr << "debug point 1" << std::endl;
+#include "createFields.H"
+            std::cerr << "debug point 2" << std::endl;
+            _piso = autoPtr<pisoControl>
+                    (
+                        new pisoControl
+                        (
+                            mesh
+                        )
+                    );
+            para = new ITHACAparameters;
+            offline = ITHACAutilities::check_off();
+            podex = ITHACAutilities::check_pod();
+            std::cerr << "debug point 1" << std::endl;
+        }
+
+        autoPtr<IOdictionary> _transportProperties;
+        autoPtr<dimensionedScalar> _nu;
+        autoPtr<pisoControl> _piso;
+
+
 
 
 
         /// Perform an Offline solve
         void offlineSolve()
         {
+            volVectorField& U = _U();
+            volScalarField& p = _p();
             Vector<double> inl(1, 0, 0);
             List<scalar> mu_now(1);
 
@@ -73,11 +97,7 @@ class tutorial18 : public unsteadyNS
             {
                 for (label i = 0; i < mu.cols(); i++)
                 {
-                    //inl[0] = mu(0, i);
                     mu_now[0] = mu(0, i);
-                    //assignBC(U, BCind, inl);
-                    assignIF(U, inl);
-                    change_viscosity( mu(0, i));
                     truthSolve(mu_now, "./ITHACAoutput/Offline/");
                 }
             }
@@ -89,10 +109,10 @@ class tutorial18 : public unsteadyNS
             surfaceScalarField& phi = _phi();
             fvMesh& mesh = _mesh();
 #include "initContinuityErrs.H"
-            fv::options& fvOptions = _fvOptions();
-            pisoControl piso(mesh);
-            singlePhaseTransportModel& laminarTransport = _laminarTransport();
-            volScalarField nu = laminarTransport.nu();
+            pisoControl piso = _piso();
+            volVectorField& U = _U();
+            volScalarField& p = _p();
+            dimensionedScalar nu = _nu();
             instantList Times = runTime.times();
             runTime.setEndTime(finalTime);
             runTime.setTime(Times[1], 1);
@@ -150,7 +170,7 @@ class tutorial18 : public unsteadyNS
                         (
                             fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
                         );
-                        pEqn.setReference(pRefCell, pRefValue);
+                        pEqn.setReference(0, 0);
                         pEqn.solve();
 
                         if (piso.finalNonOrthogonalIter())
@@ -178,15 +198,27 @@ class tutorial18 : public unsteadyNS
 
             Info << "End\n" << endl;
         }
+        void restart()
+        {
+            volScalarField& p = _p();
+            volScalarField& p0 = _p0();
+            volVectorField& U = _U();
+            volVectorField& U0 = _U0();
+            surfaceScalarField& phi = _phi();
+            surfaceScalarField& phi0 = _phi0();
+            p = p0;
+            U = U0;
+            phi = phi0;
+        }
 };
 
 class tutorial18red : public reducedUnsteadyNS
 {
     public:
 
-        tutorial18red(unsteadyNS& FOMproblem)
+        tutorial18red(tutorial18& FOMproblem)
             :
-            reducedUnsteadyNS(FOMproblem)
+            problem(&FOMproblem)
         {}
 
         int counter;
@@ -195,9 +227,11 @@ class tutorial18red : public reducedUnsteadyNS
         /// Imposed boundary conditions.
         Eigen::MatrixXd vel_now;
         Eigen::MatrixXd redGradP;
+        tutorial18* problem;
 
         void solveOnlineICO(int NmodesUproj, int NmodesPproj, word folder)
         {
+            problem->restart();
             ULmodes.resize(0);
 
             for (int i = 0; i < problem->inletIndex.rows(); i++)
@@ -220,9 +254,7 @@ class tutorial18red : public reducedUnsteadyNS
             scalar P_norm_res(1);
             Eigen::MatrixXd a = Eigen::VectorXd::Zero(UprojN);
             Eigen::MatrixXd b = Eigen::VectorXd::Zero(PprojN);
-            std::cerr << "File: 18ICOFOAM.C, Line: 223"<< std::endl;
             a(0) = vel_now(0, 0);
-            std::cerr << "File: 18ICOFOAM.C, Line: 225"<< std::endl;
             /// Velocity field
             volVectorField& U = problem->_U();
             /// Pressure field
@@ -231,9 +263,8 @@ class tutorial18red : public reducedUnsteadyNS
             surfaceScalarField& phi = problem->_phi();
             Time& runTime = problem->_runTime();
             fvMesh& mesh = problem->_mesh();
-            pisoControl piso(mesh);
-            singlePhaseTransportModel& laminarTransport = problem->_laminarTransport();
-            volScalarField nu = laminarTransport.nu();
+            pisoControl piso = problem->_piso();
+            dimensionedScalar nu = problem->_nu();
             instantList Times = runTime.times();
             runTime.setEndTime(problem->finalTime);
             runTime.setTime(Times[1], 1);
@@ -243,11 +274,11 @@ class tutorial18red : public reducedUnsteadyNS
             U.rename("Ured");
             p.rename("Pred");
             // Export and store the initial conditions for velocity and pressure
+            counter = 0;
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(p, name(counter), folder);
             U.rename("U");
             p.rename("p");
-            counter = 0;
             counter++;
             problem->nextWrite += problem->writeEvery;
             std::cerr << "debug point 1" << std::endl;
@@ -300,7 +331,7 @@ class tutorial18red : public reducedUnsteadyNS
                         (
                             fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
                         );
-                        pEqn.setReference(problem->pRefCell, problem->pRefValue);
+                        pEqn.setReference(0, 0);
                         RedLinSysP = problem->Pmodes.project(pEqn, PprojN);
                         b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
                         problem->Pmodes.reconstruct(p, b, "p");
@@ -357,7 +388,32 @@ class tutorial18red : public reducedUnsteadyNS
             {
                 gradP.append(-fvc::grad(problem->Pmodes[i]));
             }
+
             redGradP = ULmodes.project(gradP);
+        }
+
+        Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel)
+        {
+            assert(problem->inletIndex.rows() == vel.rows()
+                   && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+            Eigen::MatrixXd vel_scal;
+            vel_scal.resize(vel.rows(), vel.cols());
+
+            for (int k = 0; k < problem->inletIndex.rows(); k++)
+            {
+                label p = problem->inletIndex(k, 0);
+                label l = problem->inletIndex(k, 1);
+                scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
+                scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
+                                   problem->liftfield[k].boundaryField()[p]).component(l) / area;
+
+                for (int i = 0; i < vel.cols(); i++)
+                {
+                    vel_scal(k, i) = vel(k, i) / u_lf;
+                }
+            }
+
+            return vel_scal;
         }
 
 
@@ -412,7 +468,7 @@ int main(int argc, char* argv[])
     vel(0, 0) = 1.0;
     tutorial18red reduced(example);
     reduced.vel_now = reduced.setOnlineVelocity(vel);
-    reduced.project(10,10);
+    reduced.project(10, 10);
     reduced.solveOnlineICO(10, 10, "./ITHACAoutput/Offline/");
     //example.liftSolve();
     exit(0);
