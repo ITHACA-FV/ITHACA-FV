@@ -19,9 +19,9 @@ EigenSolver eigen;
 
 // Number of modes to output and to use for projection
 NmodesUout 50;
-NmodesUproj 7;
+NmodesUproj 40;
 NmodesPout 50;
-NmodesPproj 6;
+NmodesPproj 40;
 NmodesSUPout 0;
 NmodesSUPproj 0;
 

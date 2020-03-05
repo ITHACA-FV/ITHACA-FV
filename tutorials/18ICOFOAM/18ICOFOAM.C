@@ -229,8 +229,12 @@ class tutorial18red : public reducedUnsteadyNS
         Eigen::MatrixXd redGradP;
         tutorial18* problem;
 
+	PtrList<volVectorField> Ufield_on;
+	PtrList<volScalarField> Pfield_on;
+
         void solveOnlineICO(int NmodesUproj, int NmodesPproj, word folder)
         {
+	    
             problem->restart();
             ULmodes.resize(0);
 
@@ -277,6 +281,9 @@ class tutorial18red : public reducedUnsteadyNS
             counter = 0;
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(p, name(counter), folder);
+
+      	    Ufield_on.append(U);
+             Pfield_on.append(p);
             U.rename("U");
             p.rename("p");
             counter++;
@@ -356,6 +363,9 @@ class tutorial18red : public reducedUnsteadyNS
                     ITHACAstream::exportSolution(p, name(counter), folder);
                     std::ofstream of(folder + name(counter) + "/" +
                                      runTime.timeName());
+
+		    Ufield_on.append(U);
+                    Pfield_on.append(p);
                     counter++;
                     problem->nextWrite += problem->writeEvery;
                     U.rename("U");
@@ -468,8 +478,22 @@ int main(int argc, char* argv[])
     vel(0, 0) = 1.0;
     tutorial18red reduced(example);
     reduced.vel_now = reduced.setOnlineVelocity(vel);
-    reduced.project(10, 10);
-    reduced.solveOnlineICO(10, 10, "./ITHACAoutput/Offline/");
+    reduced.project(NmodesUproj, NmodesPproj);
+    reduced.solveOnlineICO(NmodesUproj, NmodesPproj, "./ITHACAoutput/Offline/");
     //example.liftSolve();
+
+
+    // Calculate error between online- and corresponding full order solution
+    Eigen::MatrixXd L2errorMatrixU = ITHACAutilities::error_listfields(
+                                         example.Ufield, reduced.Ufield_on);
+    Eigen::MatrixXd L2errorMatrixP = ITHACAutilities::error_listfields(
+                                         example.Pfield, reduced.Pfield_on);
+    //Export the matrix containing the error
+    ITHACAstream::exportMatrix(L2errorMatrixU, "L2errorMatrixU", "eigen",
+                               "./ITHACAoutput/l2error");
+    ITHACAstream::exportMatrix(L2errorMatrixP, "L2errorMatrixP", "eigen",
+                               "./ITHACAoutput/l2error");
+
+
     exit(0);
 }
