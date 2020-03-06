@@ -361,7 +361,7 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
 
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<scalar>& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
                                 Eigen::MatrixXd& A,
                                 Eigen::VectorXd& b)
 {
@@ -389,14 +389,15 @@ void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<scalar>& foam_matrix,
         forAll(ptch, J)
         {
             int w = ptch.faceCells()[J];
-            A(w, w) += foam_matrix.internalCoeffs()[I][J];
+            const double intern = foam_matrix.internalCoeffs()[I][J];
+            A(w, w) += intern;
             b(w, 0)   += foam_matrix.boundaryCoeffs()[I][J];
         }
     }
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<vector>& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
                                 Eigen::MatrixXd& A,
                                 Eigen::VectorXd& b)
 {
@@ -443,7 +444,7 @@ void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<vector>& foam_matrix,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<scalar>& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
                                 Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
@@ -484,7 +485,7 @@ void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<scalar>& foam_matrix,
 }
 
 template<>
-void Foam2Eigen::fvMatrix2Eigen(const fvMatrix<vector>& foam_matrix,
+void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
                                 Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
 {
     int sizeA = foam_matrix.diag().size();
