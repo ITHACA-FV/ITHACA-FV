@@ -72,7 +72,7 @@ class Foam2Eigen
         /// @tparam         type_B            The type source term vector or the list can be Eigen::VectorXd or List<Eigen::VectorXd>
         ///
         template <class type_foam_matrix, class type_A, class type_B>
-        static void fvMatrix2Eigen(const fvMatrix<type_foam_matrix>& foam_matrix, type_A& A,
+        static void fvMatrix2Eigen(fvMatrix<type_foam_matrix> foam_matrix, type_A& A,
                                    type_B& b);
 
         //--------------------------------------------------------------------------
