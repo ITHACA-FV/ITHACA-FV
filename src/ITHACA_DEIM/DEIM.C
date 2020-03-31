@@ -176,12 +176,10 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     {
         MatrixOnlineB = Eigen::MatrixXd::Zero(std::get<1>(Matrix_Modes)[0].rows(), 1);
     }
-
     else if (MaxModesB != 1)
     {
         MatrixOnlineB = UB * ((PB.transpose() * UB).fullPivLu().inverse());
     }
-
     else
     {
         Eigen::MatrixXd aux = PB.transpose() * UB;
@@ -479,13 +477,11 @@ void DEIM<T>::check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
     {
         xyz_rowA = 0;
     }
-
     else if (ind_rowA < Ncells * 2)
     {
         xyz_rowA = 1;
         ind_rowA = ind_rowA - Ncells;
     }
-
     else
     {
         xyz_rowA = 2;
@@ -496,13 +492,11 @@ void DEIM<T>::check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
     {
         xyz_colA = 0;
     }
-
     else if (ind_colA < Ncells * 2)
     {
         xyz_colA = 1;
         ind_colA = ind_colA - 2 * Ncells;
     }
-
     else
     {
         xyz_colA = 2;
@@ -517,13 +511,11 @@ void DEIM<T>::check3DIndices(int& ind_rowA, int& xyz_rowA)
     {
         xyz_rowA = 0;
     }
-
     else if (ind_rowA < Ncells * 2)
     {
         xyz_rowA = 1;
         ind_rowA = ind_rowA - Ncells;
     }
-
     else
     {
         xyz_rowA = 2;
@@ -574,7 +566,7 @@ template<> int DEIM<fvScalarMatrix>::getNcells(int sizeM)
 
 template<> int DEIM<fvVectorMatrix>::getNcells(int sizeM)
 {
-    int Ncells=sizeM/3;
+    int Ncells = sizeM / 3;
     return Ncells;
 }
 

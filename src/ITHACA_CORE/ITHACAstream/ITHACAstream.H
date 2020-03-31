@@ -184,6 +184,22 @@ class ITHACAstream
         static void read_fields(PtrList<fieldType>& Lfield, fieldType& field,
                                 fileName casename, label first_snap = 0, label n_snap = 0);
 
+        //----------------------------------------------------------------------
+        /// Funtion to read a list of volVectorField from name of the field a
+        /// volVectorField if it is already existing
+        ///
+        /// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
+        ///                         to store the field.
+        /// @param[in]  field       The field used as template to read other
+        ///                         fields.
+        /// @param[in]  casename    The folder where the field is stored.
+        ///
+        /// @tparam     fieldType   Type of field can be volVectorField, volScalarField, surfaceScalarField
+        ///
+        template<typename fieldType>
+        static void readMiddleFields(PtrList<fieldType>& Lfield, fieldType& field,
+                                     fileName casename);
+
         //--------------------------------------------------------------------------
         /// Function to export a scalar of vector field
         ///

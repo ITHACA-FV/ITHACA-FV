@@ -555,6 +555,20 @@ void ITHACAstream::read_fields(PtrList<fieldType>& Lfield,
     }
 }
 
+template<typename fieldType>
+void ITHACAstream::readMiddleFields(PtrList<fieldType>& Lfield,
+                                    fieldType& field, fileName casename)
+{
+    int par = 1;
+    M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
+             "No parameter dependent solutions stored into Offline folder");
+
+    while (ITHACAutilities::check_folder(casename + name(par)))
+    {
+        ITHACAstream::read_fields(Lfield, field, casename + name(par) + "/");
+        par++;
+    }
+}
 
 int ITHACAstream::numberOfFiles(word folder, word MatrixName)
 {
