@@ -647,3 +647,11 @@ template void ITHACAstream::read_fields(PtrList<surfaceScalarField>& Lfield,
                                         surfaceScalarField& field, fileName casename, label first_snap, label n_snap);
 template void ITHACAstream::read_fields(PtrList<surfaceVectorField>& Lfield,
                                         surfaceVectorField& field, fileName casename, label first_snap, label n_snap);
+template void ITHACAstream::readMiddleFields(PtrList<volScalarField>& Lfield,
+        volScalarField& field, fileName casename);
+template void ITHACAstream::readMiddleFields(PtrList<volVectorField>& Lfield,
+        volVectorField& field, fileName casename);
+template void ITHACAstream::readMiddleFields(PtrList<surfaceScalarField>&
+        Lfield, surfaceScalarField& field, fileName casename);
+template void ITHACAstream::readMiddleFields(PtrList<surfaceVectorField>&
+        Lfield, surfaceVectorField& field, fileName casename);
