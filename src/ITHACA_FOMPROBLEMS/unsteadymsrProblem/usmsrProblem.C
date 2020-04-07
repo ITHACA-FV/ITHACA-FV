@@ -145,11 +145,11 @@ void usmsrProblem::truthSolve(List<scalar> mu_now)
     volScalarField powerDens = (1 - decbetaTot) * flux * SP +
                                (decLam1 * dec1 + decLam2 * dec2 + decLam3 * dec3);
     powerDens.rename("powerDens");
-    ITHACAparameters para;
-    startTime = para.ITHACAdict->lookupOrDefault("startTime", 0);
-    finalTime = para.ITHACAdict->lookupOrDefault("finalTime", 1);
-    timeStep = para.ITHACAdict->lookupOrDefault("timeStep", 0.1);
-    writeEvery = para.ITHACAdict->lookupOrDefault("writeEvery", 0.1);
+    para = ITHACAparameters::getInstance(mesh, runTime);
+    startTime = para->ITHACAdict->lookupOrDefault("startTime", 0);
+    finalTime = para->ITHACAdict->lookupOrDefault("finalTime", 1);
+    timeStep = para->ITHACAdict->lookupOrDefault("timeStep", 0.1);
+    writeEvery = para->ITHACAdict->lookupOrDefault("writeEvery", 0.1);
     instantList Times = runTime.times();
     runTime.setEndTime(finalTime);
     runTime.setTime(Times[1], 1);
@@ -410,11 +410,11 @@ void usmsrProblem::truthSolve(List<scalar> mu_now, std::string folder)
                                (decLam1 * dec1 + decLam2 * dec2 + decLam3 * dec3);
     powerDens.rename("powerDens");
     dimensionedScalar& tau = _tau();
-    ITHACAparameters para;
-    startTime = para.ITHACAdict->lookupOrDefault("startTime", 0);
-    finalTime = para.ITHACAdict->lookupOrDefault("finalTime", 1);
-    timeStep = para.ITHACAdict->lookupOrDefault("timeStep", 0.1);
-    writeEvery = para.ITHACAdict->lookupOrDefault("writeEvery", 0.1);
+    para = ITHACAparameters::getInstance(mesh, runTime);
+    startTime = para->ITHACAdict->lookupOrDefault("startTime", 0);
+    finalTime = para->ITHACAdict->lookupOrDefault("finalTime", 1);
+    timeStep = para->ITHACAdict->lookupOrDefault("timeStep", 0.1);
+    writeEvery = para->ITHACAdict->lookupOrDefault("writeEvery", 0.1);
     instantList Times = runTime.times();
     runTime.setEndTime(finalTime);
     runTime.setTime(Times[1], 1);

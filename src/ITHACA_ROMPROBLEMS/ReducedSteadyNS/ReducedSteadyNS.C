@@ -38,7 +38,7 @@ License
 // Constructor
 reducedSteadyNS::reducedSteadyNS()
 {
-    para = new ITHACAparameters;
+    para = ITHACAparameters::getInstance();
 }
 
 reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)

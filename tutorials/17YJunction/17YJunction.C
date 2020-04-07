@@ -207,14 +207,15 @@ int main(int argc, char* argv[])
     word par_online_BC("./timeBCon");
     par_on_BC = ITHACAstream::readMatrix(par_online_BC);
     // Read parameters from ITHACAdict file
-    ITHACAparameters para;
-    int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
-    int NmodesPout = para.ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
-    int NmodesSUPout = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 15);
-    int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
-    int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
-    int NmodesSUPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
-    int NmodesOut = para.ITHACAdict->lookupOrDefault<int>("NmodesOut", 20);
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
+    int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+    int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
+    int NmodesSUPout = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 15);
+    int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
+    int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+    int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
+    int NmodesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesOut", 20);
     /// Set the number of parameters
     example.Pnumber = 1;
     /// Set samples

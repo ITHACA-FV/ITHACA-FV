@@ -90,11 +90,12 @@ int main(int argc, char* argv[])
     // Construct the tutorial object
     tutorial12 example(argc, argv);
     // Read some parameters from file
-    ITHACAparameters para;
-    int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
-    int NmodesPout = para.ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
-    int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
-    int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
+    int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+    int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
+    int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
+    int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
     // Read the par file where the parameters are stored
     word filename("./par");
     example.mu = ITHACAstream::readMatrix(filename);
@@ -117,7 +118,7 @@ int main(int argc, char* argv[])
     PtrList<volVectorField> U_rec_list;
     PtrList<volScalarField> P_rec_list;
     // Reads inlet volocities boundary conditions.
-    word vel_file(para.ITHACAdict->lookup("online_velocities"));
+    word vel_file(para->ITHACAdict->lookup("online_velocities"));
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
 
     //Perform the online solutions

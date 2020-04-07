@@ -75,8 +75,6 @@ class DEIM_function : public DEIM<volScalarField>
 int main(int argc, char* argv[])
 {
     // Read parameters from ITHACAdict file
-    ITHACAparameters para;
-    int NDEIM = para.ITHACAdict->lookupOrDefault<int>("NDEIM", 15);
 #include "setRootCase.H"
     Foam::Time runTime(Foam::Time::controlDictName, args);
     Foam::fvMesh mesh
@@ -89,6 +87,8 @@ int main(int argc, char* argv[])
             Foam::IOobject::MUST_READ
         )
     );
+    ITHACAparameters* para = ITHACAparameters::getInstance(mesh, runTime);
+    int NDEIM = para->ITHACAdict->lookupOrDefault<int>("NDEIM", 15);
     simpleControl simple(mesh);
 #include "createFields.H"
     // List of volScalarField where the snapshots are stored

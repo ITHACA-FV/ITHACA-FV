@@ -1,4 +1,5 @@
 ITHACAstream/ITHACAstream.C
+ITHACAstream/ITHACAparameters.C
 ITHACAstream/cnpy.C
 ITHACAutilities/ITHACAutilities.C
 ITHACAparallel/ITHACAparallel.C

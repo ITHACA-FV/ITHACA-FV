@@ -164,13 +164,14 @@ int main(int argc, char* argv[])
     example.inletIndex(0, 1) = 0;
     example.inletIndex(1, 0) = 0;
     example.inletIndex(1, 1) = 1;
-    ITHACAparameters para;
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
     // Read parameters from ITHACAdict file
-    int NmodesU = para.ITHACAdict->lookupOrDefault<int>("NmodesU", 5);
-    int NmodesP = para.ITHACAdict->lookupOrDefault<int>("NmodesP", 5);
-    int NmodesSUP = para.ITHACAdict->lookupOrDefault<int>("NmodesSUP", 5);
-    int NmodesNUT = para.ITHACAdict->lookupOrDefault<int>("NmodesNUT", 5);
-    int NmodesProject = para.ITHACAdict->lookupOrDefault<int>("NmodesProject", 5);
+    int NmodesU = para->ITHACAdict->lookupOrDefault<int>("NmodesU", 5);
+    int NmodesP = para->ITHACAdict->lookupOrDefault<int>("NmodesP", 5);
+    int NmodesSUP = para->ITHACAdict->lookupOrDefault<int>("NmodesSUP", 5);
+    int NmodesNUT = para->ITHACAdict->lookupOrDefault<int>("NmodesNUT", 5);
+    int NmodesProject = para->ITHACAdict->lookupOrDefault<int>("NmodesProject", 5);
     // Perform The Offline Solve;
     example.offlineSolve();
     // Read the lift functions

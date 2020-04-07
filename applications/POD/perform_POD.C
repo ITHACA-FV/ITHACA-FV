@@ -55,6 +55,7 @@ SourceFiles
 #include <string>
 #include <stdio.h>
 #include "ITHACAPOD.H"
+#include "ITHACAparameters.H"
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])

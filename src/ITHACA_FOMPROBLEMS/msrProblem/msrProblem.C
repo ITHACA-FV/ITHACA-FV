@@ -34,6 +34,7 @@ msrProblem::msrProblem(int argc, char* argv[])
             IOobject::NO_WRITE
         )
     );
+    para = ITHACAparameters::getInstance(mesh, runTime);
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
     offline = ITHACAutilities::check_off();
@@ -149,23 +150,22 @@ void msrProblem::truthSolve(List<scalar> mu_now)
 // Get the modes function SVD
 void msrProblem::msrgetModesSVD()
 {
-    ITHACAparameters para;
-    int NU = para.ITHACAdict->lookupOrDefault<int>("NUout", 10);
-    int NP = para.ITHACAdict->lookupOrDefault<int>("NPout", 10);
-    int NF = para.ITHACAdict->lookupOrDefault<int>("NFluxout", 10);
-    int NPrec1 = para.ITHACAdict->lookupOrDefault<int>("NPrecout1", 10);
-    int NPrec2 = para.ITHACAdict->lookupOrDefault<int>("NPrecout2", 10);
-    int NPrec3 = para.ITHACAdict->lookupOrDefault<int>("NPrecout3", 10);
-    int NPrec4 = para.ITHACAdict->lookupOrDefault<int>("NPrecout4", 10);
-    int NPrec5 = para.ITHACAdict->lookupOrDefault<int>("NPrecout5", 10);
-    int NPrec6 = para.ITHACAdict->lookupOrDefault<int>("NPrecout6", 10);
-    int NPrec7 = para.ITHACAdict->lookupOrDefault<int>("NPrecout7", 10);
-    int NPrec8 = para.ITHACAdict->lookupOrDefault<int>("NPrecout8", 10);
-    int NT = para.ITHACAdict->lookupOrDefault<int>("NTout", 10);
-    int NDec1 = para.ITHACAdict->lookupOrDefault<int>("NDecout1", 10);
-    int NDec2 = para.ITHACAdict->lookupOrDefault<int>("NDecout2", 10);
-    int NDec3 = para.ITHACAdict->lookupOrDefault<int>("NDecout3", 10);
-    int NC = para.ITHACAdict->lookupOrDefault<int>("NCout", 10);
+    int NU = para->ITHACAdict->lookupOrDefault<int>("NUout", 10);
+    int NP = para->ITHACAdict->lookupOrDefault<int>("NPout", 10);
+    int NF = para->ITHACAdict->lookupOrDefault<int>("NFluxout", 10);
+    int NPrec1 = para->ITHACAdict->lookupOrDefault<int>("NPrecout1", 10);
+    int NPrec2 = para->ITHACAdict->lookupOrDefault<int>("NPrecout2", 10);
+    int NPrec3 = para->ITHACAdict->lookupOrDefault<int>("NPrecout3", 10);
+    int NPrec4 = para->ITHACAdict->lookupOrDefault<int>("NPrecout4", 10);
+    int NPrec5 = para->ITHACAdict->lookupOrDefault<int>("NPrecout5", 10);
+    int NPrec6 = para->ITHACAdict->lookupOrDefault<int>("NPrecout6", 10);
+    int NPrec7 = para->ITHACAdict->lookupOrDefault<int>("NPrecout7", 10);
+    int NPrec8 = para->ITHACAdict->lookupOrDefault<int>("NPrecout8", 10);
+    int NT = para->ITHACAdict->lookupOrDefault<int>("NTout", 10);
+    int NDec1 = para->ITHACAdict->lookupOrDefault<int>("NDecout1", 10);
+    int NDec2 = para->ITHACAdict->lookupOrDefault<int>("NDecout2", 10);
+    int NDec3 = para->ITHACAdict->lookupOrDefault<int>("NDecout3", 10);
+    int NC = para->ITHACAdict->lookupOrDefault<int>("NCout", 10);
 
     if (homboolU == true)
     {
@@ -211,23 +211,22 @@ void msrProblem::msrgetModesSVD()
 // Get the modes function Compliance matrix method
 void msrProblem::msrgetModesEVD()
 {
-    ITHACAparameters para;
-    int NU = para.ITHACAdict->lookupOrDefault<int>("NUout", 10);
-    int NP = para.ITHACAdict->lookupOrDefault<int>("NPout", 10);
-    int NF = para.ITHACAdict->lookupOrDefault<int>("NFluxout", 10);
-    int NPrec1 = para.ITHACAdict->lookupOrDefault<int>("NPrecout1", 10);
-    int NPrec2 = para.ITHACAdict->lookupOrDefault<int>("NPrecout2", 10);
-    int NPrec3 = para.ITHACAdict->lookupOrDefault<int>("NPrecout3", 10);
-    int NPrec4 = para.ITHACAdict->lookupOrDefault<int>("NPrecout4", 10);
-    int NPrec5 = para.ITHACAdict->lookupOrDefault<int>("NPrecout5", 10);
-    int NPrec6 = para.ITHACAdict->lookupOrDefault<int>("NPrecout6", 10);
-    int NPrec7 = para.ITHACAdict->lookupOrDefault<int>("NPrecout7", 10);
-    int NPrec8 = para.ITHACAdict->lookupOrDefault<int>("NPrecout8", 10);
-    int NT = para.ITHACAdict->lookupOrDefault<int>("NTout", 10);
-    int NDec1 = para.ITHACAdict->lookupOrDefault<int>("NDecout1", 10);
-    int NDec2 = para.ITHACAdict->lookupOrDefault<int>("NDecout2", 10);
-    int NDec3 = para.ITHACAdict->lookupOrDefault<int>("NDecout3", 10);
-    int NC = para.ITHACAdict->lookupOrDefault<int>("NCout", 10);
+    int NU = para->ITHACAdict->lookupOrDefault<int>("NUout", 10);
+    int NP = para->ITHACAdict->lookupOrDefault<int>("NPout", 10);
+    int NF = para->ITHACAdict->lookupOrDefault<int>("NFluxout", 10);
+    int NPrec1 = para->ITHACAdict->lookupOrDefault<int>("NPrecout1", 10);
+    int NPrec2 = para->ITHACAdict->lookupOrDefault<int>("NPrecout2", 10);
+    int NPrec3 = para->ITHACAdict->lookupOrDefault<int>("NPrecout3", 10);
+    int NPrec4 = para->ITHACAdict->lookupOrDefault<int>("NPrecout4", 10);
+    int NPrec5 = para->ITHACAdict->lookupOrDefault<int>("NPrecout5", 10);
+    int NPrec6 = para->ITHACAdict->lookupOrDefault<int>("NPrecout6", 10);
+    int NPrec7 = para->ITHACAdict->lookupOrDefault<int>("NPrecout7", 10);
+    int NPrec8 = para->ITHACAdict->lookupOrDefault<int>("NPrecout8", 10);
+    int NT = para->ITHACAdict->lookupOrDefault<int>("NTout", 10);
+    int NDec1 = para->ITHACAdict->lookupOrDefault<int>("NDecout1", 10);
+    int NDec2 = para->ITHACAdict->lookupOrDefault<int>("NDecout2", 10);
+    int NDec3 = para->ITHACAdict->lookupOrDefault<int>("NDecout3", 10);
+    int NC = para->ITHACAdict->lookupOrDefault<int>("NCout", 10);
 
     if (homboolU == true)
     {
