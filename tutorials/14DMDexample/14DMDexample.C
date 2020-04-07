@@ -80,15 +80,16 @@ int main(int argc, char* argv[])
     // Construct the tutorial04 object
     tutorial14 example(argc, argv);
     // Read parameters from ITHACAdict file
-    ITHACAparameters para;
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
     // Read some input parameters for DMD
-    double dtDMD = readScalar(para.ITHACAdict->lookup("dtDMD"));
-    double finalTimeDMD = readScalar(para.ITHACAdict->lookup("finalTimeDMD"));
-    double startTimeDMD = readScalar(para.ITHACAdict->lookup("startTimeDMD"));
-    int numberOfModesDMD = readInt(para.ITHACAdict->lookup("numberOfModesDMD"));
-    bool exactDMD = readBool(para.ITHACAdict->lookup("exactDMD"));
-    bool exportDMDModes = readBool(para.ITHACAdict->lookup("exportDMDModes"));
-    word exportFolder = string(para.ITHACAdict->lookup("exportFolder"));
+    double dtDMD = readScalar(para->ITHACAdict->lookup("dtDMD"));
+    double finalTimeDMD = readScalar(para->ITHACAdict->lookup("finalTimeDMD"));
+    double startTimeDMD = readScalar(para->ITHACAdict->lookup("startTimeDMD"));
+    int numberOfModesDMD = readInt(para->ITHACAdict->lookup("numberOfModesDMD"));
+    bool exactDMD = readBool(para->ITHACAdict->lookup("exactDMD"));
+    bool exportDMDModes = readBool(para->ITHACAdict->lookup("exportDMDModes"));
+    word exportFolder = string(para->ITHACAdict->lookup("exportFolder"));
     /// Set the number of parameters
     example.Pnumber = 1;
     /// Set samples (for DMD you set only one sample)

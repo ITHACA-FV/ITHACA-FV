@@ -41,8 +41,8 @@ ITHACADMD<FieldType>::ITHACADMD(
     NSnaps(snapshots.size()),
     originalDT(dt)
 {
-    ITHACAparameters para;
-    redSVD = para.ITHACAdict->lookupOrDefault<bool>("redSVD", false);
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+    redSVD = para->ITHACAdict->lookupOrDefault<bool>("redSVD", false);
 }
 
 

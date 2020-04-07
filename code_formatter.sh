@@ -33,7 +33,7 @@ done
 
 # Set the files to format
 [[ $# != 0 ]] && src_files=$@ || src_files="--recursive $code_directory**.C,**.H --exclude=lnInclude"
-[[ $# != 0 ]] && tutorial_files=$@ || tutorial_files="--recursive $tutorial_directory*.C,*.H --exclude=ITHACAoutput"
+[[ $# != 0 ]] && tutorial_files=$@ || tutorial_files="--recursive $tutorial_directory*.C,*.H --exclude=ITHACAoutput  --exclude=ITHACAoutput_old"
 
 echo $tutorial_files
 echo $src_files

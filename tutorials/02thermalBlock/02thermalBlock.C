@@ -169,9 +169,10 @@ int main(int argc, char* argv[])
     // Create the example object of the tutorial02 type
     tutorial02 example(argc, argv);
     // Read some parameters from file
-    ITHACAparameters para;
-    int NmodesTout = para.ITHACAdict->lookupOrDefault<int>("NmodesTout", 15);
-    int NmodesTproj = para.ITHACAdict->lookupOrDefault<int>("NmodesTproj", 10);
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
+    int NmodesTout = para->ITHACAdict->lookupOrDefault<int>("NmodesTout", 15);
+    int NmodesTproj = para->ITHACAdict->lookupOrDefault<int>("NmodesTproj", 10);
     // Set the number of parameters
     example.Pnumber = 9;
     example.Tnumber = 500;

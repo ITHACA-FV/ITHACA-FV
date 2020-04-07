@@ -93,13 +93,14 @@ int main(int argc, char* argv[])
     // Construct the tutorial object
     tutorial03 example(argc, argv);
     // Read some parameters from file
-    ITHACAparameters para;
-    int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
-    int NmodesPout = para.ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
-    int NmodesSUPout = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 15);
-    int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
-    int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
-    int NmodesSUPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
+    int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+    int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
+    int NmodesSUPout = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 15);
+    int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
+    int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+    int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
     // Read the par file where the parameters are stored
     word filename("./par");
     example.mu = ITHACAstream::readMatrix(filename);

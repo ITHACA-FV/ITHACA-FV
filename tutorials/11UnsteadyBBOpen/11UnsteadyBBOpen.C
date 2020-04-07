@@ -195,13 +195,15 @@ int main(int argc, char* argv[])
     Eigen::MatrixXd par_off_BC = ITHACAstream::readMatrix(par_offline_BC);
     Eigen::MatrixXd par_on_BC = ITHACAstream::readMatrix(par_online_BC);
     // Read some parameters from file
-    ITHACAparameters para;
-    int NmodesUproj   = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 5);
-    int NmodesPproj   = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 5);
-    int NmodesPrghproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPrghproj", 5);
-    int NmodesTproj   = para.ITHACAdict->lookupOrDefault<int>("NmodesTproj", 5);
-    int NmodesSUPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
-    int NmodesOut     = para.ITHACAdict->lookupOrDefault<int>("NmodesOut", 15);
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
+    int NmodesUproj   = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 5);
+    int NmodesPproj   = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 5);
+    int NmodesPrghproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPrghproj",
+                         5);
+    int NmodesTproj   = para->ITHACAdict->lookupOrDefault<int>("NmodesTproj", 5);
+    int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
+    int NmodesOut     = para->ITHACAdict->lookupOrDefault<int>("NmodesOut", 15);
     // Set the number of parameters
     example.Pnumber = 1;
     // Set samples

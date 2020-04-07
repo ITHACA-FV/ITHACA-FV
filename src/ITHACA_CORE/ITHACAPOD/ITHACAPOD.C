@@ -40,7 +40,7 @@ void ITHACAPOD::getNestedSnapshotMatrix(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& ModesGlobal,
     int Npar, int NnestedOut)
 {
-    ITHACAparameters para;
+    ITHACAparameters* para(ITHACAparameters::getInstance());
     List<PtrList<GeometricField<Field_type, fvPatchField, volMesh>>>
     SnapMatrixNested;
     int Nt = snapshots.size() / Npar;
@@ -88,11 +88,11 @@ void ITHACAPOD::getModes(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, bool podex,
     bool supex, bool sup, int nmodes)
 {
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+
     if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
-        ITHACAparameters para;
-
-        if (para.eigensolver == "spectra" )
+        if (para->eigensolver == "spectra" )
         {
             if (nmodes == 0)
             {
@@ -136,7 +136,7 @@ void ITHACAPOD::getModes(
         Spectra::DenseSymMatProd<double> op(_corMatrix);
         Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> esEg;
 
-        if (para.eigensolver == "spectra")
+        if (para->eigensolver == "spectra")
         {
             Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                     es(&op, nmodes, ncv);
@@ -148,7 +148,7 @@ void ITHACAPOD::getModes(
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-        else if (para.eigensolver == "eigen")
+        else if (para->eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
             esEg.compute(_corMatrix);
@@ -211,11 +211,11 @@ void ITHACAPOD::getModes(
         }
 
         Eigen::saveMarketVector(eigenValueseig,
-                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
         Eigen::saveMarketVector(cumEigenValues,
-                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
     }
     else
     {
@@ -244,6 +244,8 @@ void ITHACAPOD::getWeightedModes(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, bool podex,
     bool supex, bool sup, int nmodes)
 {
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+
     if (nmodes == 0)
     {
         nmodes = snapshots.size() - 2;
@@ -254,7 +256,6 @@ void ITHACAPOD::getWeightedModes(
 
     if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
-        ITHACAparameters para;
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshots);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshots);
         int NBC = snapshots[0].boundaryField().size();
@@ -272,7 +273,7 @@ void ITHACAPOD::getWeightedModes(
         Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                 es(&op, nmodes, ncv);
 
-        if (para.eigensolver == "spectra")
+        if (para->eigensolver == "spectra")
         {
             std::cout << "Using Spectra EigenSolver " << std::endl;
             es.init();
@@ -282,7 +283,7 @@ void ITHACAPOD::getWeightedModes(
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-        else if (para.eigensolver == "eigen")
+        else if (para->eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
             esEg.compute(_corMatrix);
@@ -357,11 +358,11 @@ void ITHACAPOD::getWeightedModes(
         }
 
         Eigen::saveMarketVector(eigenValueseig,
-                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
         Eigen::saveMarketVector(cumEigenValues,
-                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
     }
     else
     {
@@ -390,6 +391,8 @@ void ITHACAPOD::getModesSVD(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, bool podex,
     bool supex, bool sup, int nmodes)
 {
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+
     if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
         PtrList<volVectorField> Bases;
@@ -432,7 +435,6 @@ void ITHACAPOD::getModesSVD(
 
         Info << "####### Saving the POD bases for " << snapshots[0].name() <<
              " #######" << endl;
-        ITHACAparameters para;
 
         if (sup)
         {
@@ -446,11 +448,11 @@ void ITHACAPOD::getModesSVD(
 
         //ITHACAPOD::exportBases(modes, snapshots, sup);
         Eigen::saveMarketVector(eigenValueseig,
-                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
         Eigen::saveMarketVector(cumEigenValues,
-                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
     }
     else
     {
@@ -727,7 +729,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
         ITHACAPOD::DEIMmodes(List<Eigen::SparseMatrix<double>>& A,
                              List<Eigen::VectorXd>& b, int nmodesA, int nmodesB, word MatrixName)
 {
-    ITHACAparameters para;
+    ITHACAparameters* para(ITHACAparameters::getInstance());
     List<Eigen::SparseMatrix<double>> ModesA(nmodesA);
     List<Eigen::VectorXd> ModesB(nmodesB);
 
@@ -947,19 +949,19 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
                          PtrList<volScalarField>& modes, PtrList<volScalarField>& Volumes, bool podex,
                          bool supex, bool sup, int nmodes)
 {
-    ITHACAparameters para;
+    ITHACAparameters* para(ITHACAparameters::getInstance());
 
-    if (nmodes == 0 && para.eigensolver == "spectra")
+    if (nmodes == 0 && para->eigensolver == "spectra")
     {
         nmodes = snapshots.size() - 2;
     }
 
-    if (nmodes == 0 && para.eigensolver == "eigen")
+    if (nmodes == 0 && para->eigensolver == "eigen")
     {
         nmodes = snapshots.size();
     }
 
-    if (para.eigensolver == "spectra")
+    if (para->eigensolver == "spectra")
     {
         M_Assert(nmodes <= snapshots.size() - 2,
                  "The number of requested modes cannot be bigger than the number of Snapshots - 2");
@@ -1005,7 +1007,7 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
         Spectra::DenseSymMatProd<double> op(_corMatrix);
         Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> esEg;
 
-        if (para.eigensolver == "spectra")
+        if (para->eigensolver == "spectra")
         {
             Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                     es(&op, nmodes, ncv);
@@ -1017,7 +1019,7 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-        else if (para.eigensolver == "eigen")
+        else if (para->eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
             esEg.compute(_corMatrix);
@@ -1070,11 +1072,11 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
              << endl;
         ITHACAPOD::exportBases(modes, snapshots, sup);
         Eigen::saveMarketVector(eigenValueseig,
-                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
         Eigen::saveMarketVector(cumEigenValues,
-                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
     }
     else
     {
@@ -1096,19 +1098,19 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
                          PtrList<volVectorField>& modes, PtrList<volScalarField>& Volumes, bool podex,
                          bool supex, bool sup, int nmodes)
 {
-    ITHACAparameters para;
+    ITHACAparameters* para(ITHACAparameters::getInstance());
 
-    if (nmodes == 0 && para.eigensolver == "spectra")
+    if (nmodes == 0 && para->eigensolver == "spectra")
     {
         nmodes = snapshots.size() - 2;
     }
 
-    if (nmodes == 0 && para.eigensolver == "eigen")
+    if (nmodes == 0 && para->eigensolver == "eigen")
     {
         nmodes = snapshots.size();
     }
 
-    if (para.eigensolver == "spectra")
+    if (para->eigensolver == "spectra")
     {
         M_Assert(nmodes <= snapshots.size() - 2,
                  "The number of requested modes cannot be bigger than the number of Snapshots - 2");
@@ -1153,7 +1155,7 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
         Spectra::DenseSymMatProd<double> op(_corMatrix);
         Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> esEg;
 
-        if (para.eigensolver == "spectra")
+        if (para->eigensolver == "spectra")
         {
             Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                     es(&op, nmodes, ncv);
@@ -1165,7 +1167,7 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-        else if (para.eigensolver == "eigen")
+        else if (para->eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
             esEg.compute(_corMatrix);
@@ -1218,11 +1220,11 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
              << endl;
         ITHACAPOD::exportBases(modes, snapshots, sup);
         Eigen::saveMarketVector(eigenValueseig,
-                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
         Eigen::saveMarketVector(cumEigenValues,
-                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
     }
     else
     {
@@ -1244,7 +1246,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
         ITHACAPOD::DEIMmodes(PtrList<type_matrix>& MatrixList, int nmodesA, int nmodesB,
                              word MatrixName)
 {
-    ITHACAparameters para;
+    ITHACAparameters* para(ITHACAparameters::getInstance());
     List<Eigen::SparseMatrix<double>> ModesA(nmodesA);
     List<Eigen::VectorXd> ModesB(nmodesB);
 
@@ -1262,7 +1264,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
         Eigen::VectorXd eigenValueseigB;
         Eigen::MatrixXd eigenVectorseigB;
 
-        if (para.eigensolver == "spectra")
+        if (para->eigensolver == "spectra")
         {
             Info << "####### Performing the POD decomposition for the Matrix List using Spectra #######"
                  << endl;
@@ -1306,7 +1308,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 eigenVectorseigB(0, 0) = 1;
             }
         }
-        else if (para.eigensolver == "eigen")
+        else if (para->eigensolver == "eigen")
         {
             Info << "####### Performing the POD decomposition for the Matrix List using Eigen #######"
                  << endl;
@@ -1380,19 +1382,18 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                                           "./ITHACAoutput/DEIM/" + MatrixName + "/", "B_" + MatrixName + name(i));
         }
 
-        ITHACAparameters para;
         Eigen::saveMarketVector(eigenValueseigA,
-                                "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesA", para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesA", para->precision,
+                                para->outytpe);
         Eigen::saveMarketVector(eigenValueseigB,
-                                "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesB", para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesB", para->precision,
+                                para->outytpe);
         Eigen::saveMarketVector(cumEigenValuesA,
-                                "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesA", para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesA", para->precision,
+                                para->outytpe);
         Eigen::saveMarketVector(cumEigenValuesB,
-                                "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesB", para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesB", para->precision,
+                                para->outytpe);
     }
     else
     {
@@ -1545,11 +1546,11 @@ void ITHACAPOD::getModes(PtrList<Field_type>& snapshots,
                          PtrList<Field_type>& modes, PtrList<Field_type_2>& fields2, bool podex,
                          bool supex, bool sup, int nmodes)
 {
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+
     if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
-        ITHACAparameters para;
-
-        if (para.eigensolver == "spectra" )
+        if (para->eigensolver == "spectra" )
         {
             if (nmodes == 0)
             {
@@ -1593,7 +1594,7 @@ void ITHACAPOD::getModes(PtrList<Field_type>& snapshots,
         Spectra::DenseSymMatProd<double> op(_corMatrix);
         Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> esEg;
 
-        if (para.eigensolver == "spectra")
+        if (para->eigensolver == "spectra")
         {
             Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
                     es(&op, nmodes, ncv);
@@ -1605,7 +1606,7 @@ void ITHACAPOD::getModes(PtrList<Field_type>& snapshots,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
-        else if (para.eigensolver == "eigen")
+        else if (para->eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
             esEg.compute(_corMatrix);
@@ -1659,11 +1660,11 @@ void ITHACAPOD::getModes(PtrList<Field_type>& snapshots,
         }
 
         Eigen::saveMarketVector(eigenValueseig,
-                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
         Eigen::saveMarketVector(cumEigenValues,
-                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para.precision,
-                                para.outytpe);
+                                "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
+                                para->outytpe);
     }
     else
     {

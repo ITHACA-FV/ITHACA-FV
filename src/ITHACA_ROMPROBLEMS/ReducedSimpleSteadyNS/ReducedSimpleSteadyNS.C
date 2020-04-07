@@ -110,11 +110,11 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     Eigen::MatrixXd a = Eigen::VectorXd::Zero(UprojN);
     Eigen::MatrixXd b = Eigen::VectorXd::Zero(PprojN);
     a(0) = vel_now(0, 0);
-    ITHACAparameters para;
     float residualJumpLim =
-        para.ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
+        problem->para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
     float normalizedResidualLim =
-        para.ITHACAdict->lookupOrDefault<float>("normalizedResidualLim", 1e-5);
+        problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim",
+                1e-5);
     scalar residual_jump(1 + residualJumpLim);
     problem->restart();
     volScalarField& P = problem->_p();
@@ -177,7 +177,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
         U_norm_res = uresidual.sum() / (RedLinSysU[1].cwiseAbs()).sum();
         P_norm_res = presidual.sum() / (RedLinSysP[1].cwiseAbs()).sum();
 
-        if (para.debug)
+        if (problem->para->debug)
         {
             std::cout << "Residual jump = " << residual_jump << std::endl;
             std::cout << "Normalized residual = " << std::max(U_norm_res,

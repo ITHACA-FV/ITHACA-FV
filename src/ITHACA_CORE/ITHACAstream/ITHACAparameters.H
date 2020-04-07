@@ -33,90 +33,16 @@ SourceFiles
 
 #include <iostream>
 #include "fvCFD.H"
+#include "ITHACAassert.H"
 
 /// Class for the definition of some general parameters, the parameters must be defined from the file ITHACAdict inside the
 /// system folder.
 class ITHACAparameters
 {
     public:
-        ITHACAparameters()
-        {
-            Foam::Time runTime(Foam::Time::controlDictName, "./", "");
-            Foam::fvMesh mesh
-            (
-                Foam::IOobject
-                (
-                    Foam::fvMesh::defaultRegion,
-                    runTime.timeName(),
-                    runTime,
-                    Foam::IOobject::MUST_READ
-                )
-            );
-            ITHACAdict = new IOdictionary
-            (
-                IOobject
-                (
-                    "ITHACAdict",
-                    "./system",
-                    mesh,
-                    IOobject::MUST_READ_IF_MODIFIED,
-                    IOobject::NO_WRITE,
-                    true
-                )
-            );
-            precision = ITHACAdict->lookupOrDefault<int>("OutPrecision", 10);
-            word typeout = ITHACAdict->lookupOrDefault<word>("OutType", "fixed");
 
-            if (typeout == "fixed")
-            {
-                outytpe = std::ios_base::fixed;
-            }
+        ITHACAparameters(fvMesh& mesh, Time& localTime);
 
-            if (typeout == "scientific")
-            {
-                outytpe = std::ios_base::scientific;
-            }
-
-            eigensolver = ITHACAdict->lookupOrDefault<word>("EigenSolver", "spectra");
-            exportPython = ITHACAdict->lookupOrDefault<bool>("exportPython", 0);
-            exportMatlab = ITHACAdict->lookupOrDefault<bool>("exportMatlab", 0);
-            exportTxt = ITHACAdict->lookupOrDefault<bool>("exportTxt", 0);
-            debug = ITHACAdict->lookupOrDefault<bool>("debug", 0);
-        }
-
-        ITHACAparameters(Foam::Time& runTime)
-        {
-            ITHACAdict = new IOdictionary
-            (
-                IOobject
-                (
-                    "ITHACAdict",
-                    "./system",
-                    runTime,
-                    IOobject::MUST_READ_IF_MODIFIED,
-                    IOobject::NO_WRITE,
-                    true
-                )
-            );
-            precision = ITHACAdict->lookupOrDefault<int>("OutPrecision", 10);
-            word typeout = ITHACAdict->lookupOrDefault<word>("OutType", "fixed");
-
-            if (typeout == "fixed")
-            {
-                outytpe = std::ios_base::fixed;
-            }
-
-            if (typeout == "scientific")
-            {
-                outytpe = std::ios_base::scientific;
-            }
-
-            eigensolver = ITHACAdict->lookupOrDefault<word>("EigenSolver", "spectra");
-            exportPython = ITHACAdict->lookupOrDefault<bool>("exportPython", 0);
-            exportMatlab = ITHACAdict->lookupOrDefault<bool>("exportMatlab", 0);
-            exportTxt = ITHACAdict->lookupOrDefault<bool>("exportTxt", 0);
-            debug = ITHACAdict->lookupOrDefault<bool>("debug", 0);
-        }
         /// type of eigensolver used in the eigenvalue decomposition can be either be eigen or spectra
         word eigensolver;
 
@@ -134,6 +60,39 @@ class ITHACAparameters
 
         /// Dictionary for input objects from file
         IOdictionary* ITHACAdict;
+
+        /// runTime defined locally
+        Time& runTime;
+
+        /// Mesh object defined locally
+        fvMesh& mesh;
+
+        /// Pointer to the ITHACAparameters class
+        static ITHACAparameters* instance;
+
+    public:
+        ///
+        /// @brief      Gets an instance of ITHACAparameters, to be used if the instance is not existing.
+        ///
+        /// @param      mesh       The mesh
+        /// @param      localTime  The runtime object
+        ///
+        /// @return     The instance.
+        ///
+        static ITHACAparameters* getInstance(fvMesh& mesh, Time& localTime);
+
+        ///
+        /// @brief      Gets an instance of ITHACAparameters, to be used if the instance is already existing.
+        ///
+        /// @return     The instance.
+        ///
+        static ITHACAparameters* getInstance();
+
+
+        /// Delete empty constructor
+        ~ITHACAparameters() = delete;
+
+
     private:
 
 };

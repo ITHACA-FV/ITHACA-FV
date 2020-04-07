@@ -84,15 +84,16 @@ int main(int argc, char* argv[])
     // Construct the tutorial object
     tutorial07 example(argc, argv);
     // Read some parameters from file
-    ITHACAparameters para;
-    int NmodesUout = para.ITHACAdict->lookupOrDefault<int>("NmodesUout", 5);
-    int NmodesPout = para.ITHACAdict->lookupOrDefault<int>("NmodesPout", 5);
-    int NmodesTout = para.ITHACAdict->lookupOrDefault<int>("NmodesTout", 5);
-    int NmodesSUPout = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 5);
-    int NmodesUproj = para.ITHACAdict->lookupOrDefault<int>("NmodesUproj", 5);
-    int NmodesPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesPproj", 15);
-    int NmodesTproj = para.ITHACAdict->lookupOrDefault<int>("NmodesTproj", 5);
-    int NmodesSUPproj = para.ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
+    int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 5);
+    int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 5);
+    int NmodesTout = para->ITHACAdict->lookupOrDefault<int>("NmodesTout", 5);
+    int NmodesSUPout = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 5);
+    int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 5);
+    int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 15);
+    int NmodesTproj = para->ITHACAdict->lookupOrDefault<int>("NmodesTproj", 5);
+    int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
     /// Set the number of parameters
     example.Pnumber = 1;
     /// Set samples

@@ -368,6 +368,8 @@ class msrProblem: public reductionProblem
         /// absorption flux
         List<Eigen::MatrixXd> AF_matrix;
 
+        ITHACAparameters* para;
+
         /// prec_source 1
         Eigen::MatrixXd PS1_matrix;
         /// prec_source 2
