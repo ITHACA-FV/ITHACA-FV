@@ -116,11 +116,14 @@ int main(int argc, char* argv[])
     // Homogenize the snapshots
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     // Perform POD on velocity pressure and supremizers and store the first 10 modes
-    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0,
                         NmodesUout);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+                        example.podex, 0, 0,
                         NmodesPout);
-    ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex,
+    ITHACAPOD::getModes(example.supfield, example.supmodes, example._U().name(),
+                        example.podex,
                         example.supex, 1, NmodesSUPout);
     // Perform the Galerkin Projection
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);

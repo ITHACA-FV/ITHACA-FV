@@ -123,11 +123,14 @@ int main(int argc, char* argv[])
     // Create homogeneous basis functions for velocity
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     // Perform a POD decomposition for velocity and pressure
-    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0,
                         NmodesUout);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+                        example.podex, 0, 0,
                         NmodesPout);
-    ITHACAPOD::getModes(example.supfield, example.supmodes, example.podex,
+    ITHACAPOD::getModes(example.supfield, example.supmodes, example._U().name(),
+                        example.podex,
                         example.supex, 1, NmodesSUPout);
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
     reducedUnsteadyNS reduced(example);

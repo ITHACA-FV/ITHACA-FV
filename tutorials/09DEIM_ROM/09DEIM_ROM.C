@@ -268,7 +268,8 @@ int main(int argc, char* argv[])
     // Solve the offline problem to compute the snapshots for the projections
     example.OfflineSolve(example.mu, "Offline");
     // Compute the POD modes
-    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.podex, 0, 0, 20);
+    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
+                        example.podex, 0, 0, 20);
     // Compute the offline part of the DEIM procedure
     example.PODDEIM();
     // Construct a new set of parameters

@@ -195,7 +195,8 @@ int main(int argc, char* argv[])
     // Perform an Offline Solve
     example.offlineSolve();
     // Perform a POD decomposition and get the modes
-    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
+                        example.podex, 0, 0,
                         NmodesTout);
     // Perform the Galerkin projection onto the space spanned by the POD modes
     /// [project]

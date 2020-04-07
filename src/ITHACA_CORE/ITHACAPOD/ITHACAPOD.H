@@ -64,32 +64,48 @@ class ITHACAPOD
 
         // Public Members
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         /// Computes the bases or reads them for a vector field
         ///
         /// @param[in]  snapshots   List of snapshots.
-        /// @param[out] modes       A PtrList where modes are stored (it must be passed empty).
-        /// @param[in]  podex       If 1, the functions read the stored mode. If 0, the function computes the modes and stores them.
-        /// @param[in]  supex       If 1, the functions read the stored supremizer mode. If 0, the function computes and stores them.
+        /// @param[out] modes       A PtrList where modes are stored (it must be
+        ///                         passed empty).
+        /// @param[in]  fieldName   The field name
+        /// @param[in]  podex       If 1, the functions read the stored mode. If
+        ///                         0, the function computes the modes and
+        ///                         stores them.
+        /// @param[in]  supex       If 1, the functions read the stored
+        ///                         supremizer mode. If 0, the function computes
+        ///                         and stores them.
         /// @param[in]  sup         If 1 it computes the supremizer modes.
-        /// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum number of modes will computed.
+        /// @param[in]  nmodes      Number of modes to be stored. If 0, the
+        ///                         maximum number of modes will computed.
         ///
         /// @tparam     Field_type  volVectorField or volScalarField.
         ///
         template<class Field_type>
         static void getModes(PtrList<GeometricField<Field_type, fvPatchField, volMesh>>&
                              snapshots, PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+                             word fieldName,
                              bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
-        //--------------------------------------------------------------------------
-        /// @brief      Gets the bases for a scalar field using SVD instead of the method of snapshots
+        //----------------------------------------------------------------------
+        /// @brief      Gets the bases for a scalar field using SVD instead of
+        ///             the method of snapshots
         ///
         /// @param[in]  snapshots   List of snapshots.
-        /// @param[out] modes       A PtrList where modes are stored (it must be passed empty).
-        /// @param[in]  podex       If 1, the functions read the stored mode. If 0, the function computes the modes and stores them.
-        /// @param[in]  supex       If 1, the functions read the stored supremizer mode. If 0, the function computes and stores them.
+        /// @param[out] modes       A PtrList where modes are stored (it must be
+        ///                         passed empty).
+        /// @param[in]  fieldName   The file name
+        /// @param[in]  podex       If 1, the functions read the stored mode. If
+        ///                         0, the function computes the modes and
+        ///                         stores them.
+        /// @param[in]  supex       If 1, the functions read the stored
+        ///                         supremizer mode. If 0, the function computes
+        ///                         and stores them.
         /// @param[in]  sup         If 1 it computes the supremizer modes.
-        /// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum number of modes will computed.
+        /// @param[in]  nmodes      Number of modes to be stored. If 0, the
+        ///                         maximum number of modes will computed.
         ///
         /// @tparam     Field_type  volVectorField or volScalarField.
         ///
@@ -97,42 +113,58 @@ class ITHACAPOD
         static void getModesSVD(
             PtrList<GeometricField<Field_type, fvPatchField, volMesh>>&
             snapshots, PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+            word fieldName,
             bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
 
-        //--------------------------------------------------------------------------
-        /// Nested-POD approach. Computes the nested snapshot matrix and weighted bases for a vector field
+        //----------------------------------------------------------------------
+        /// Nested-POD approach. Computes the nested snapshot matrix and
+        /// weighted bases for a vector field
         ///
-        /// @param[in]  snapshots       List of snapshots.
-        /// @param[out] UModesGlobal    List of snapshots where modes are stored (it must be passed empty).
-        /// @param[in]  Npar            Number of parameters
-        /// @param[in]  NnestedOut      Number of weighted modes to be stored for the assembly of the nested matrix
+        /// @param[in]  snapshots   List of snapshots.
+        /// @param      modes       The modes
+        /// @param[in]  fieldName   The field name
+        /// @param[in]  Npar        Number of parameters
+        /// @param[in]  NnestedOut  Number of weighted modes to be stored for
+        ///                         the assembly of the nested matrix
+        /// @param[out] UModesGlobal  List of snapshots where modes are stored (it must be
+        ///                           passed empty).
         ///
         /// @tparam     Field_type  volVectorField or volScalarField.
         ///
         template<class Field_type>
         static void getNestedSnapshotMatrix(
             PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
-            PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, int Npar,
+            PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+            word fieldName, int Npar,
             int NnestedOut);
 
 
-        //--------------------------------------------------------------------------
-        /// Computes the weighted bases (using the nested-pod approach) or read them for a vector field
+        //----------------------------------------------------------------------
+        /// Computes the weighted bases (using the nested-pod approach) or read
+        /// them for a vector field
         ///
         /// @param[in]  snapshots   List of snapshots.
-        /// @param[out] modes       A PtrList where modes are stored (it must be passed empty).
-        /// @param[in]  podex       If 1, the functions read the stored mode. If 0, the function computes the modes and stores them.
-        /// @param[in]  supex       If 1, the functions read the stored supremizer mode. If 0, the function computes and stores them.
+        /// @param[out] modes       A PtrList where modes are stored (it must be
+        ///                         passed empty).
+        /// @param[in]  fieldName   The field name
+        /// @param[in]  podex       If 1, the functions read the stored mode. If
+        ///                         0, the function computes the modes and
+        ///                         stores them.
+        /// @param[in]  supex       If 1, the functions read the stored
+        ///                         supremizer mode. If 0, the function computes
+        ///                         and stores them.
         /// @param[in]  sup         If 1, it computes the supremizer modes.
-        /// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum number of modes will computed.
+        /// @param[in]  nmodes      Number of modes to be stored. If 0, the
+        ///                         maximum number of modes will computed.
         ///
         /// @tparam     Field_type  volVectorField or volScalarField.
         ///
         template<class Field_type>
         static void getWeightedModes(
             PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
-            PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, bool podex,
+            PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+            word fieldName, bool podex,
             bool supex = 0, bool sup = 0,
             int nmodes = 0);
 
@@ -156,12 +188,20 @@ class ITHACAPOD
         static Eigen::MatrixXd corMatrix(Field_type& snapshots);
 
 
-        //--------------------------------------------------------------------------
-        /// Exports the basis for an OpenFOAM GeometricField into the ITHACAOutput/POD or ITHACAOutput/supremizer
+        //----------------------------------------------------------------------
+        /// Exports the basis for an OpenFOAM GeometricField into the
+        /// ITHACAOutput/POD or ITHACAOutput/supremizer
         ///
-        /// @param[in] s        a PtrList of GeometricField where the snapshots associated with the bases are stored.
-        /// @param[in] bases    a PtrList of GeometricField where the bases are stored.
-        /// @param[in] sup      a boolean variable 1 if you want to export the supremizer bases (in ITHACAOutput/supremizer) 0 elsewhere (Default is 0).
+        /// @param      snapshots   The snapshots
+        /// @param[in]  bases       a PtrList of GeometricField where the bases
+        ///                         are stored.
+        /// @param[in]  fieldName   The field name
+        /// @param[in]  sup         a boolean variable 1 if you want to export
+        ///                         the supremizer bases (in
+        ///                         ITHACAOutput/supremizer) 0 elsewhere
+        ///                         (Default is 0).
+        /// @param[in]  s     a PtrList of GeometricField where the snapshots associated
+        ///                   with the bases are stored.
         ///
         /// @tparam     Field_type  It can be vector or scalar
         ///
@@ -169,6 +209,7 @@ class ITHACAPOD
         static void exportBases(
             PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
             PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& bases,
+            word fieldName,
             bool sup = 0);
 
         //--------------------------------------------------------------------------
@@ -251,7 +292,8 @@ class ITHACAPOD
         ///
         template<class Field_type>
         static void getModes(PtrList<Field_type>& snapshots, PtrList<Field_type>& modes,
-                             PtrList<volScalarField>& Volumes, bool podex, bool supex = 0, bool sup = 0,
+                             PtrList<volScalarField>& Volumes, word fieldName, bool podex, bool supex = 0,
+                             bool sup = 0,
                              int nmodes = 0);
 
         //----------------------------------------------------------------------
@@ -272,7 +314,8 @@ class ITHACAPOD
         ///
         template<class Field_type, class Field_type_2>
         static void getModes(PtrList<Field_type>& snapshots, PtrList<Field_type>& modes,
-                             PtrList<Field_type_2>& fields2, bool podex, bool supex = 0, bool sup = 0,
+                             PtrList<Field_type_2>& fields2, word fieldName, bool podex, bool supex = 0,
+                             bool sup = 0,
                              int nmodes = 0);
 
 };
@@ -292,11 +335,11 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(List<Eigen::VectorXd>& snapshots);
 
 template<>
 void ITHACAPOD::exportBases(PtrList<volVectorField>& snapshots,
-                            PtrList<volVectorField>& bases, bool sup);
+                            PtrList<volVectorField>& bases, word fieldName, bool sup);
 
 template<>
 void ITHACAPOD::exportBases(PtrList<volScalarField>& snapshots,
-                            PtrList<volScalarField>& bases, bool sup);
+                            PtrList<volScalarField>& bases, word fieldName, bool sup);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

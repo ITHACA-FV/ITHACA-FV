@@ -237,13 +237,17 @@ int main(int argc, char* argv[])
     // Create homogeneous basis functions for temperature
     example.computeLiftT(example.Tfield, example.liftfieldT, example.Tomfield);
     // Perform a POD decomposition for velocity ,temperature and pressure fields
-    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0,
                         NmodesOut);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+                        example.podex, 0, 0,
                         NmodesOut);
-    ITHACAPOD::getModes(example.Prghfield, example.Prghmodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Prghfield, example.Prghmodes,
+                        example._p_rgh().name(), example.podex, 0, 0,
                         NmodesOut);
-    ITHACAPOD::getModes(example.Tomfield, example.Tmodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Tomfield, example.Tmodes, example._T().name(),
+                        example.podex, 0, 0,
                         NmodesOut);
     // Solve the supremizer problem
     example.solvesupremizer("modes");
