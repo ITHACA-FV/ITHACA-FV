@@ -98,9 +98,11 @@ int main(int argc, char* argv[])
     // Perform the offline solve
     example.offlineSolve();
     // Perform POD on velocity pressure and supremizers and store the first 10 modes
-    ITHACAPOD::getModes(example.Ufield, example.Umodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0,
                         NmodesUout);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+                        example.podex, 0, 0,
                         NmodesPout);
     exit(0);
 }

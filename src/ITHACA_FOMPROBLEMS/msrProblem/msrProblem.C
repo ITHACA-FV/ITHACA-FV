@@ -169,42 +169,53 @@ void msrProblem::msrgetModesSVD()
 
     if (homboolU == true)
     {
-        ITHACAPOD::getModesSVD(Uomfield, Umodes, podex, 0, 0, NU);
+        ITHACAPOD::getModesSVD(Uomfield, Umodes, _U().name(), podex, 0, 0, NU);
     }
     else
     {
-        ITHACAPOD::getModesSVD(Ufield, Umodes, podex, 0, 0, NU);
+        ITHACAPOD::getModesSVD(Ufield, Umodes, _U().name(), podex, 0, 0, NU);
     }
 
-    ITHACAPOD::getModesSVD(Pfield, Pmodes, podex, 0, 0, NP);
-    ITHACAPOD::getModesSVD(Fluxfield, Fluxmodes, podex, 0, 0, NF);
-    ITHACAPOD::getModesSVD(Prec1field, Prec1modes, podex, 0, 0, NPrec1);
-    ITHACAPOD::getModesSVD(Prec2field, Prec2modes, podex, 0, 0, NPrec2);
-    ITHACAPOD::getModesSVD(Prec3field, Prec3modes, podex, 0, 0, NPrec3);
-    ITHACAPOD::getModesSVD(Prec4field, Prec4modes, podex, 0, 0, NPrec4);
-    ITHACAPOD::getModesSVD(Prec5field, Prec5modes, podex, 0, 0, NPrec5);
-    ITHACAPOD::getModesSVD(Prec6field, Prec6modes, podex, 0, 0, NPrec6);
-    ITHACAPOD::getModesSVD(Prec7field, Prec7modes, podex, 0, 0, NPrec7);
-    ITHACAPOD::getModesSVD(Prec8field, Prec8modes, podex, 0, 0, NPrec8);
+    ITHACAPOD::getModesSVD(Pfield, Pmodes, _p().name(), podex, 0, 0, NP);
+    ITHACAPOD::getModesSVD(Fluxfield, Fluxmodes, _flux().name(), podex, 0, 0, NF);
+    ITHACAPOD::getModesSVD(Prec1field, Prec1modes, _prec1().name(), podex, 0, 0,
+                           NPrec1);
+    ITHACAPOD::getModesSVD(Prec2field, Prec2modes, _prec2().name(), podex, 0, 0,
+                           NPrec2);
+    ITHACAPOD::getModesSVD(Prec3field, Prec3modes, _prec3().name(), podex, 0, 0,
+                           NPrec3);
+    ITHACAPOD::getModesSVD(Prec4field, Prec4modes, _prec4().name(), podex, 0, 0,
+                           NPrec4);
+    ITHACAPOD::getModesSVD(Prec5field, Prec5modes, _prec5().name(), podex, 0, 0,
+                           NPrec5);
+    ITHACAPOD::getModesSVD(Prec6field, Prec6modes, _prec6().name(), podex, 0, 0,
+                           NPrec6);
+    ITHACAPOD::getModesSVD(Prec7field, Prec7modes, _prec7().name(), podex, 0, 0,
+                           NPrec7);
+    ITHACAPOD::getModesSVD(Prec8field, Prec8modes, _prec8().name(), podex, 0, 0,
+                           NPrec8);
 
     if (homboolT == true)
     {
-        ITHACAPOD::getModesSVD(Tomfield, Tmodes, podex, 0, 0, NT);
+        ITHACAPOD::getModesSVD(Tomfield, Tmodes, _T().name(), podex, 0, 0, NT);
     }
     else
     {
-        ITHACAPOD::getModesSVD(Tfield, Tmodes, podex, 0, 0, NT);
+        ITHACAPOD::getModesSVD(Tfield, Tmodes, _T().name(), podex, 0, 0, NT);
     }
 
-    ITHACAPOD::getModesSVD(Dec1field, Dec1modes, podex, 0, 0, NDec1);
-    ITHACAPOD::getModesSVD(Dec2field, Dec2modes, podex, 0, 0, NDec2);
-    ITHACAPOD::getModesSVD(Dec3field, Dec3modes, podex, 0, 0, NDec3);
-    ITHACAPOD::getModesSVD(vFields, vmodes, podex, 0, 0, NC);
-    ITHACAPOD::getModesSVD(DFields, Dmodes, podex, 0, 0, NC);
-    ITHACAPOD::getModesSVD(NSFFields, NSFmodes, podex, 0, 0, NC);
-    ITHACAPOD::getModesSVD(AFields, Amodes, podex, 0, 0, NC);
-    ITHACAPOD::getModesSVD(SPFields, SPmodes, podex, 0, 0, NC);
-    ITHACAPOD::getModesSVD(TXSFields, TXSmodes, podex, 0, 0, NC);
+    ITHACAPOD::getModesSVD(Dec1field, Dec1modes, _dec1().name(), podex, 0, 0,
+                           NDec1);
+    ITHACAPOD::getModesSVD(Dec2field, Dec2modes, _dec2().name(), podex, 0, 0,
+                           NDec2);
+    ITHACAPOD::getModesSVD(Dec3field, Dec3modes, _dec3().name(), podex, 0, 0,
+                           NDec3);
+    ITHACAPOD::getModesSVD(vFields, vmodes, _v().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModesSVD(DFields, Dmodes, _D().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModesSVD(NSFFields, NSFmodes, _NSF().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModesSVD(AFields, Amodes, _A().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModesSVD(SPFields, SPmodes, _SP().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModesSVD(TXSFields, TXSmodes, _TXS().name(), podex, 0, 0, NC);
     Info << "End\n" << endl;
 }
 
@@ -230,42 +241,50 @@ void msrProblem::msrgetModesEVD()
 
     if (homboolU == true)
     {
-        ITHACAPOD::getModes(Uomfield, Umodes, podex, 0, 0, NU);
+        ITHACAPOD::getModes(Uomfield, Umodes, _U().name(), podex, 0, 0, NU);
     }
     else
     {
-        ITHACAPOD::getModes(Ufield, Umodes, podex, 0, 0, NU);
+        ITHACAPOD::getModes(Ufield, Umodes, _U().name(), podex, 0, 0, NU);
     }
 
-    ITHACAPOD::getModes(Pfield, Pmodes, podex, 0, 0, NP);
-    ITHACAPOD::getModes(Fluxfield, Fluxmodes, podex, 0, 0, NF);
-    ITHACAPOD::getModes(Prec1field, Prec1modes, podex, 0, 0, NPrec1);
-    ITHACAPOD::getModes(Prec2field, Prec2modes, podex, 0, 0, NPrec2);
-    ITHACAPOD::getModes(Prec3field, Prec3modes, podex, 0, 0, NPrec3);
-    ITHACAPOD::getModes(Prec4field, Prec4modes, podex, 0, 0, NPrec4);
-    ITHACAPOD::getModes(Prec5field, Prec5modes, podex, 0, 0, NPrec5);
-    ITHACAPOD::getModes(Prec6field, Prec6modes, podex, 0, 0, NPrec6);
-    ITHACAPOD::getModes(Prec7field, Prec7modes, podex, 0, 0, NPrec7);
-    ITHACAPOD::getModes(Prec8field, Prec8modes, podex, 0, 0, NPrec8);
+    ITHACAPOD::getModes(Pfield, Pmodes, _U().name(), podex, 0, 0, NP);
+    ITHACAPOD::getModes(Fluxfield, Fluxmodes, _U().name(), podex, 0, 0, NF);
+    ITHACAPOD::getModes(Prec1field, Prec1modes, _prec1().name(), podex, 0, 0,
+                        NPrec1);
+    ITHACAPOD::getModes(Prec2field, Prec2modes, _prec2().name(), podex, 0, 0,
+                        NPrec2);
+    ITHACAPOD::getModes(Prec3field, Prec3modes, _prec3().name(), podex, 0, 0,
+                        NPrec3);
+    ITHACAPOD::getModes(Prec4field, Prec4modes, _prec4().name(), podex, 0, 0,
+                        NPrec4);
+    ITHACAPOD::getModes(Prec5field, Prec5modes, _prec5().name(), podex, 0, 0,
+                        NPrec5);
+    ITHACAPOD::getModes(Prec6field, Prec6modes, _prec6().name(), podex, 0, 0,
+                        NPrec6);
+    ITHACAPOD::getModes(Prec7field, Prec7modes, _prec7().name(), podex, 0, 0,
+                        NPrec7);
+    ITHACAPOD::getModes(Prec8field, Prec8modes, _prec8().name(), podex, 0, 0,
+                        NPrec8);
 
     if (homboolT == true)
     {
-        ITHACAPOD::getModes(Tomfield, Tmodes, podex, 0, 0, NT);
+        ITHACAPOD::getModes(Tomfield, Tmodes, _T().name(), podex, 0, 0, NT);
     }
     else
     {
-        ITHACAPOD::getModes(Tfield, Tmodes, podex, 0, 0, NT);
+        ITHACAPOD::getModes(Tfield, Tmodes, _T().name(), podex, 0, 0, NT);
     }
 
-    ITHACAPOD::getModes(Dec1field, Dec1modes, podex, 0, 0, NDec1);
-    ITHACAPOD::getModes(Dec2field, Dec2modes, podex, 0, 0, NDec2);
-    ITHACAPOD::getModes(Dec3field, Dec3modes, podex, 0, 0, NDec3);
-    ITHACAPOD::getModes(vFields, vmodes, podex, 0, 0, NC);
-    ITHACAPOD::getModes(DFields, Dmodes, podex, 0, 0, NC);
-    ITHACAPOD::getModes(NSFFields, NSFmodes, podex, 0, 0, NC);
-    ITHACAPOD::getModes(AFields, Amodes, podex, 0, 0, NC);
-    ITHACAPOD::getModes(SPFields, SPmodes, podex, 0, 0, NC);
-    ITHACAPOD::getModes(TXSFields, TXSmodes, podex, 0, 0, NC);
+    ITHACAPOD::getModes(Dec1field, Dec1modes, _dec1().name(), podex, 0, 0, NDec1);
+    ITHACAPOD::getModes(Dec2field, Dec2modes, _dec2().name(), podex, 0, 0, NDec2);
+    ITHACAPOD::getModes(Dec3field, Dec3modes, _dec3().name(), podex, 0, 0, NDec3);
+    ITHACAPOD::getModes(vFields, vmodes, _v().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModes(DFields, Dmodes, _D().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModes(NSFFields, NSFmodes, _NSF().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModes(AFields, Amodes, _A().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModes(SPFields, SPmodes, _SP().name(), podex, 0, 0, NC);
+    ITHACAPOD::getModes(TXSFields, TXSmodes, _TXS().name(), podex, 0, 0, NC);
     Info << "End\n" << endl;
 }
 
@@ -563,11 +582,11 @@ Eigen::MatrixXd msrProblem::pressure_gradient_term(label NUmodes, label NPmodes)
     return K_matrix;
 }
 
-List < Eigen::MatrixXd > msrProblem::convective_term(label NUmodes,
+List <Eigen::MatrixXd> msrProblem::convective_term(label NUmodes,
         label NPmodes)
 {
     label Csize = NUmodes + liftfield.size();
-    List < Eigen::MatrixXd > C_matrix;
+    List <Eigen::MatrixXd> C_matrix;
     C_matrix.setSize(Csize);
 
     for (label j = 0; j < Csize; j++)
@@ -690,11 +709,11 @@ Eigen::MatrixXd msrProblem::divergence_term(label NUmodes, label NPmodes)
 }
 
 
-List < Eigen::MatrixXd > msrProblem::div_momentum(label NUmodes, label NPmodes)
+List <Eigen::MatrixXd> msrProblem::div_momentum(label NUmodes, label NPmodes)
 {
     label G1size = NPmodes;
     label G2size = NUmodes + liftfield.size();
-    List < Eigen::MatrixXd > G_matrix;
+    List <Eigen::MatrixXd> G_matrix;
     G_matrix.setSize(G1size);
 
     for (label j = 0; j < G1size; j++)
@@ -806,11 +825,11 @@ Eigen::MatrixXd msrProblem::pressure_BC1(label NUmodes, label NPmodes)
 }
 
 
-List < Eigen::MatrixXd > msrProblem::pressure_BC2(label NUmodes, label NPmodes)
+List <Eigen::MatrixXd> msrProblem::pressure_BC2(label NUmodes, label NPmodes)
 {
     label P2_BC1size = NPmodes;
     label P2_BC2size = NUmodes + liftfield.size();
-    List < Eigen::MatrixXd > BC2_matrix;
+    List <Eigen::MatrixXd> BC2_matrix;
     fvMesh& mesh = _mesh();
     BC2_matrix.setSize(P2_BC1size);
 

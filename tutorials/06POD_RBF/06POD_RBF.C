@@ -182,11 +182,14 @@ int main(int argc, char* argv[])
     ITHACAstream::exportFields(example.Uomfield, "./ITHACAoutput/Offline",
                                "Uofield");
     // Perform a POD decomposition for the velocity, the pressure and the eddy viscosity
-    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example.podex,
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
+                        example.podex,
                         example.supex, 0, NmodesProject);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.podex,
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._U().name(),
+                        example.podex,
                         example.supex, 0, NmodesProject);
-    ITHACAPOD::getModes(example.nutFields, example.nutModes, example.podex,
+    ITHACAPOD::getModes(example.nutFields, example.nutModes, example._nut().name(),
+                        example.podex,
                         example.supex, 0, NmodesProject);
     // Solve the supremizer problem based on the pressure modes
     example.solvesupremizer("modes");

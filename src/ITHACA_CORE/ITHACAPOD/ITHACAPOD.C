@@ -38,6 +38,7 @@ template<class Field_type>
 void ITHACAPOD::getNestedSnapshotMatrix(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& ModesGlobal,
+    word fieldName,
     int Npar, int NnestedOut)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -78,15 +79,17 @@ void ITHACAPOD::getNestedSnapshotMatrix(
 }
 
 template void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volScalarField>&
-        snapshots, PtrList<volScalarField>& ModesGlobal, int Npar, int NnestedOut);
+        snapshots, PtrList<volScalarField>& ModesGlobal, word fieldName, int Npar,
+        int NnestedOut);
 template void ITHACAPOD::getNestedSnapshotMatrix(PtrList<volVectorField>&
-        snapshots, PtrList<volVectorField>& ModesGlobal, int Npar, int NnestedOut);
+        snapshots, PtrList<volVectorField>& ModesGlobal, word fieldName, int Npar,
+        int NnestedOut);
 
 template<class Field_type>
 void ITHACAPOD::getModes(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, bool podex,
-    bool supex, bool sup, int nmodes)
+    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+    word fieldName, bool podex, bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
 
@@ -233,15 +236,18 @@ void ITHACAPOD::getModes(
 }
 
 template void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
-                                  PtrList<volVectorField>& modes, bool podex, bool supex, bool sup, int nmodes);
+                                  PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
+                                  bool sup, int nmodes);
 template void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
-                                  PtrList<volScalarField>& modes, bool podex, bool supex, bool sup, int nmodes);
+                                  PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
+                                  bool sup, int nmodes);
 
 
 template<class Field_type>
 void ITHACAPOD::getWeightedModes(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, bool podex,
+    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+    word fieldName, bool podex,
     bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -380,15 +386,18 @@ void ITHACAPOD::getWeightedModes(
 }
 
 template void ITHACAPOD::getWeightedModes(PtrList<volScalarField>& snapshots,
-        PtrList<volScalarField>& modes, bool podex, bool supex, bool sup, int nmodes);
+        PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
+        bool sup, int nmodes);
 
 template void ITHACAPOD::getWeightedModes(PtrList<volVectorField>& snapshots,
-        PtrList<volVectorField>& modes, bool podex, bool supex, bool sup, int nmodes);
+        PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
+        bool sup, int nmodes);
 
 template<class Field_type>
 void ITHACAPOD::getModesSVD(
     PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes, bool podex,
+    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+    word fieldName, bool podex,
     bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -470,10 +479,12 @@ void ITHACAPOD::getModesSVD(
 }
 
 template void ITHACAPOD::getModesSVD(PtrList<volScalarField>& snapshots,
-                                     PtrList<volScalarField>& modes, bool podex, bool supex, bool sup, int nmodes);
+                                     PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
+                                     bool sup, int nmodes);
 
 template void ITHACAPOD::getModesSVD(PtrList<volVectorField>& snapshots,
-                                     PtrList<volVectorField>& modes, bool podex, bool supex, bool sup, int nmodes);
+                                     PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
+                                     bool sup, int nmodes);
 
 
 
@@ -600,7 +611,7 @@ Eigen::MatrixXd ITHACAPOD::corMatrix(List<Eigen::VectorXd>& snapshots)
 /// Export the Bases
 template<>
 void ITHACAPOD::exportBases(PtrList<volVectorField>& s,
-                            PtrList<volVectorField>& bases, bool sup)
+                            PtrList<volVectorField>& bases, word fieldName, bool sup)
 {
     if (sup)
     {
@@ -635,7 +646,7 @@ void ITHACAPOD::exportBases(PtrList<volVectorField>& s,
 /// Export the Bases
 template<>
 void ITHACAPOD::exportBases(PtrList<volScalarField>& s,
-                            PtrList<volScalarField>& bases, bool sup)
+                            PtrList<volScalarField>& bases, word fieldName, bool sup)
 {
     if (sup)
     {
@@ -946,7 +957,8 @@ void ITHACAPOD::GrammSchmidt(Eigen::MatrixXd& Matrix)
 
 template<>
 void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
-                         PtrList<volScalarField>& modes, PtrList<volScalarField>& Volumes, bool podex,
+                         PtrList<volScalarField>& modes, PtrList<volScalarField>& Volumes,
+                         word fieldName, bool podex,
                          bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -1070,7 +1082,7 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
 
         Info << "####### Saving the POD bases for " << snapshots[0].name() << " #######"
              << endl;
-        ITHACAPOD::exportBases(modes, snapshots, sup);
+        ITHACAPOD::exportBases(modes, snapshots, fieldName, sup);
         Eigen::saveMarketVector(eigenValueseig,
                                 "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
@@ -1095,7 +1107,8 @@ void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
 
 template<>
 void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
-                         PtrList<volVectorField>& modes, PtrList<volScalarField>& Volumes, bool podex,
+                         PtrList<volVectorField>& modes, PtrList<volScalarField>& Volumes,
+                         word fieldName, bool podex,
                          bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -1218,7 +1231,7 @@ void ITHACAPOD::getModes(PtrList<volVectorField>& snapshots,
 
         Info << "####### Saving the POD bases for " << snapshots[0].name() << " #######"
              << endl;
-        ITHACAPOD::exportBases(modes, snapshots, sup);
+        ITHACAPOD::exportBases(modes, snapshots, fieldName, sup);
         Eigen::saveMarketVector(eigenValueseig,
                                 "./ITHACAoutput/POD/Eigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
@@ -1543,7 +1556,8 @@ PtrList<GeometricField<T, fvPatchField, volMesh>> ITHACAPOD::DEIMmodes(
 
 template<class Field_type, class Field_type_2>
 void ITHACAPOD::getModes(PtrList<Field_type>& snapshots,
-                         PtrList<Field_type>& modes, PtrList<Field_type_2>& fields2, bool podex,
+                         PtrList<Field_type>& modes, PtrList<Field_type_2>& fields2, word fieldName,
+                         bool podex,
                          bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -1683,12 +1697,14 @@ void ITHACAPOD::getModes(PtrList<Field_type>& snapshots,
 
 template void ITHACAPOD::getModes(PtrList<surfaceScalarField>& snapshots,
                                   PtrList<surfaceScalarField>& modes,
-                                  PtrList<volVectorField>& fields2, bool podex, bool supex, bool sup,
+                                  PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
+                                  bool sup,
                                   int nmodes);
 
 template void ITHACAPOD::getModes(PtrList<volScalarField>& snapshots,
                                   PtrList<volScalarField>& modes,
-                                  PtrList<volVectorField>& fields2, bool podex, bool supex, bool sup,
+                                  PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
+                                  bool sup,
                                   int nmodes);
 
 template PtrList<GeometricField<scalar, fvPatchField, volMesh>>

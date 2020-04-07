@@ -218,9 +218,11 @@ int main(int argc, char* argv[])
     // Create homogeneous basis functions for temperature
     example.computeLiftT(example.Tfield, example.liftfieldT, example.Tomfield);
     // Perform a POD decomposition for velocity temperature and pressure fields
-    ITHACAPOD::getModes(example.Ufield, example.Umodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0,
                         NmodesOut);
-    ITHACAPOD::getModes(example.Tomfield, example.Tmodes, example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Tomfield, example.Tmodes, example._T().name(),
+                        example.podex, 0, 0,
                         NmodesOut);
     // Create a list with number of modes for which the projection needs to be performed
     Eigen::MatrixXd List_of_modes(NmodesOut - 5, 1);
