@@ -45,6 +45,24 @@ SteadyNSSimple::SteadyNSSimple(int argc, char* argv[])
     steadyNS(argc, argv)
 {
     Info << offline << endl;
+
+    /// Number of velocity modes to be calculated
+    NUmodesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+
+    /// Number of pressure modes to be calculated
+    NPmodesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
+
+    /// Number of nut modes to be calculated
+    NNutModesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesNutOut", 15);
+
+    /// Number of velocity modes used for the projection
+    NUmodes = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
+
+    /// Number of pressure modes used for the projection
+    NPmodes = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+
+    /// Number of nut modes used for the projection
+    NNutModes = para->ITHACAdict->lookupOrDefault<int>("NmodesNutProj", 0);
 }
 
 fvVectorMatrix SteadyNSSimple::get_Umatrix(volVectorField& U,
@@ -130,6 +148,53 @@ fvScalarMatrix SteadyNSSimple::get_Pmatrix(volVectorField& U,
         fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
     );
     return pEqn;
+}
+
+void SteadyNSSimple::getTurbRBF(int NNutModes)
+{
+    if(NNutModes==0)
+    {
+        NNutModes = nutModes.size();
+    }
+    coeffL2 = ITHACAutilities::get_coeffs_ortho(nutFields, nutModes, NNutModes);
+    samples.resize(NNutModes);
+    rbfSplines.resize(NNutModes);
+    Eigen::MatrixXd weights;
+
+    for (int i = 0; i < NNutModes; i++)
+    {
+        word weightName = "wRBF_M" + name(i + 1);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/weights/" + weightName))
+        {
+            samples[i] = new SPLINTER::DataTable(1, 1);
+
+            for (int j = 0; j < coeffL2.cols(); j++)
+            {
+                samples[i]->addSample(mu.row(j), coeffL2(i, j));
+            }
+
+            ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weights/", weightName);
+            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
+            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+        }
+        else
+        {
+            samples[i] = new SPLINTER::DataTable(1, 1);
+
+            for (int j = 0; j < coeffL2.cols(); j++)
+            {
+                samples[i]->addSample(mu.row(j), coeffL2(i, j));
+            }
+
+            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+            ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
+                                          "./ITHACAoutput/weights/", weightName);
+            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+        }
+    }
 }
 
 void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
@@ -229,6 +294,12 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     runTime.setTime(runTime.startTime(), 0);
     ITHACAstream::exportSolution(U, name(counter), Folder);
     ITHACAstream::exportSolution(p, name(counter), Folder);
+    if (ITHACAutilities::isTurbulent())
+    {
+        volScalarField _nut(turbulence->nut());
+        ITHACAstream::exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
+        nutFields.append(_nut);
+    }
     Ufield.append(U);
     Pfield.append(p);
     counter++;
@@ -252,4 +323,5 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
                                    Folder);
     }
+
 }

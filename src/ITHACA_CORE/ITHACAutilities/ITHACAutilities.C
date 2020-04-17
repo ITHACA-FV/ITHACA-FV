@@ -30,6 +30,8 @@ License
 
 #include "ITHACAutilities.H"
 #include "ITHACAstream.H"
+#include "ITHACAparameters.H"
+#include "turbulentTransportModel.H"
 
 /// \file
 /// Source file of the ITHACAutilities class.
@@ -187,6 +189,25 @@ bool ITHACAutilities::isInteger(double ratio)
 
     return checkResult;
 }
+
+bool ITHACAutilities::isTurbulent()
+{
+    bool checkTurb;
+    ITHACAparameters* para = ITHACAparameters::getInstance();
+    auto& tur = para->mesh.lookupObject<incompressible::turbulenceModel>("turbulenceProperties");
+
+    if (tur.type() == "Stokes" || tur.type() == "Maxwell" || tur.type() == "laminarModel")
+    {
+        checkTurb = false;
+    }
+    else
+    {
+        checkTurb = true;
+    }
+
+    return checkTurb;
+}
+
 // Check if the modes exists
 bool ITHACAutilities::check_pod()
 {

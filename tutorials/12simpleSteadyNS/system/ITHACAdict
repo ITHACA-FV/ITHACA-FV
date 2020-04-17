@@ -24,6 +24,8 @@ NmodePUout 15;
 NmodesPproj 10;
 NmodesSUPout 15;
 NmodesSUPproj 10;
+NmodesNutOut 15;
+NmodesNutProj 0;
 
 // Output format to save market vectors.
 OutPrecision 20;

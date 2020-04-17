@@ -92,10 +92,6 @@ int main(int argc, char* argv[])
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
-    int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
-    int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
-    int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
-    int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
     // Read the par file where the parameters are stored
     word filename("./par");
     example.mu = ITHACAstream::readMatrix(filename);
@@ -111,10 +107,18 @@ int main(int argc, char* argv[])
     // Perform POD on velocity and pressure and store the first 10 modes
     ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
                         example.podex, 0, 0,
-                        NmodesUout);
+                        example.NUmodesOut);
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                         example.podex, 0, 0,
-                        NmodesPout);
+                        example.NPmodesOut);
+    if(ITHACAutilities::isTurbulent())
+    {
+        ITHACAPOD::getModes(example.nutFields, example.nutModes, "nut",
+                        example.podex, 0, 0, example.NNutModesOut);
+        // Create the RBF for turbulence
+        example.getTurbRBF(example.NNutModes);
+    }
+
     // Create the reduced object
     reducedSimpleSteadyNS reduced(example);
     PtrList<volVectorField> U_rec_list;
@@ -129,7 +133,17 @@ int main(int argc, char* argv[])
         scalar mu_now = example.mu(0, k);
         example.change_viscosity(mu_now);
         reduced.setOnlineVelocity(vel);
-        reduced.solveOnline_Simple(mu_now, NmodesUproj, NmodesPproj);
+        if(ITHACAutilities::isTurbulent())
+        {
+            std::cout << "sono turb" << std::endl;
+            reduced.solveOnline_Simple(mu_now, example.NUmodes, example.NPmodes, example.NNutModes);
+        }
+        else
+        {
+            std::cout << "non sono turb" << std::endl;
+            reduced.solveOnline_Simple(mu_now, example.NUmodes, example.NPmodes);
+   
+        }
     }
 
     exit(0);

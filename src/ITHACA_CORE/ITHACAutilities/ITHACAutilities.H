@@ -134,6 +134,13 @@ class ITHACAutilities
         static bool isInteger(double ratio);
 
         //--------------------------------------------------------------------------
+        /// This function checks if the case is turbulent
+        ///
+        /// @return     1 if the case is turbulent
+        ///
+        static bool isTurbulent();
+
+        //--------------------------------------------------------------------------
         /// Checks if a folder exists
         ///
         /// @param[in]  folder  The folder you want to check.

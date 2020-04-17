@@ -49,6 +49,11 @@ SourceFiles
 #include "ITHACAforces.H"
 #include "volFields.H"
 #include <iostream>
+#include <datatable.h>
+#include <bspline.h>
+#include <bsplinebuilder.h>
+#include <rbfspline.h>
+#include <spline.h>
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -72,6 +77,21 @@ class SteadyNSSimple: public steadyNS
         /// Construct with argc and argv
         SteadyNSSimple(int argc, char* argv[]);
         ~SteadyNSSimple() {};
+
+        /// List of snapshots for the solution for eddy viscosity
+        PtrList<volScalarField> nutFields;
+
+        /// List of POD modes for eddy viscosity
+        Modes<scalar> nutModes;
+
+        /// Create a samples for interpolation
+        std::vector<SPLINTER::DataTable*> samples;
+
+        /// Create a RBF splines for interpolation
+        std::vector<SPLINTER::RBFSpline*> rbfSplines;
+
+        /// The matrix of L2 projection coefficients for the eddy viscosity
+        Eigen::MatrixXd coeffL2;
 
         // Variables
         /// Initialization for the full velocity linear system.
@@ -101,6 +121,12 @@ class SteadyNSSimple: public steadyNS
         ///
         fvScalarMatrix get_Pmatrix(volVectorField& U, volScalarField& p,
                                    scalar& presidual);
+        ///
+        /// @brief      Function to calculate RBF weights for turbulence.
+        ///
+        /// @param[in]  NNutModes  Number of modes to be used for nut.
+        ///
+        void getTurbRBF(int NNutModes);
         ///
         /// @brief      Offline solver for the whole Navier-Stokes problem.
         ///

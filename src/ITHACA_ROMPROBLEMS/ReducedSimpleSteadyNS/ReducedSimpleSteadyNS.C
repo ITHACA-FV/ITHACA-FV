@@ -60,7 +60,7 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
 
 
 void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
-        int NmodesUproj, int NmodesPproj, int NmodesSup, word Folder)
+        int NmodesUproj, int NmodesPproj, int NmodesNut, int NmodesSup, word Folder)
 {
     ULmodes.resize(0);
 
@@ -125,6 +125,23 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     int iter = 0;
     simpleControl& simple = problem->_simple();
 
+    if(ITHACAutilities::isTurbulent())
+    {
+        Eigen::MatrixXd nutCoeff;
+        nutCoeff.resize(NmodesNut,1);
+        for(int i=0; i<NmodesNut; i++)
+        {
+            Eigen::MatrixXd muEval;
+            muEval.resize(1,1);
+            muEval(0,0) = mu_now;
+            nutCoeff(i,0) = problem->rbfSplines[i]->eval(muEval);
+        }
+
+        volScalarField& nut = const_cast<volScalarField&>(problem->_mesh().lookupObject<volScalarField>("nut"));
+        //nut = ITHACAutilities::reconstruct_from_coeff(problem->nutModes, nutCoeff, NmodesNut)[0];
+        nut = problem->nutModes.reconstruct(nutCoeff, "nut");
+    }
+    
     while (residual_jump > residualJumpLim
             || std::max(U_norm_res, P_norm_res) > normalizedResidualLim)
     {

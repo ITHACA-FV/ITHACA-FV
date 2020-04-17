@@ -9,23 +9,36 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      turbulenceProperties;
+    class       volScalarField;
+    location    "0";
+    object      omega;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-simulationType RAS;
+dimensions      [0 0 -1 0 0 0 0];
 
-RAS
+internalField   uniform 440.15;
+
+boundaryField
 {
-    // Tested with kEpsilon, realizableKE, kOmega, kOmegaSST, v2f,
-    // ShihQuadraticKE, LienCubicKE.
-    RASModel        kOmegaSST;
-
-    turbulence      on;
-
-    printCoeffs     on;
+    walls
+    {
+        type            omegaWallFunction;
+        value           $internalField;
+    }
+    inlet
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    outlet
+    {
+        type            zeroGradient;
+    }
+    frontAndBack
+    {
+        type            empty;
+    }
 }
 
 

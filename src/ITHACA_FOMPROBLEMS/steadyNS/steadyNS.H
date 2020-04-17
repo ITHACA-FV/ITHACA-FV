@@ -115,6 +115,18 @@ class steadyNS: public reductionProblem
         /// Number of maximum iterations to be done for the computation of the truth solution
         scalar maxIter;
 
+        /// Number of velocity modes to be calculated
+        label NUmodesOut;
+
+        /// Number of pressure modes to be calculated
+        label NPmodesOut;
+
+        /// Number of supremizer modes to be calculated
+        label NSUPmodesOut;
+
+        /// Number of nut modes to be calculated
+        label NNutModesOut;
+
         /// Number of velocity modes used for the projection
         label NUmodes;
 
@@ -123,6 +135,9 @@ class steadyNS: public reductionProblem
 
         /// Number of supremizer modes used for the projection
         label NSUPmodes;
+
+        /// Number of nut modes used for the projection
+        label NNutModes;
 
         /** @name Reduced Matrices
         *
