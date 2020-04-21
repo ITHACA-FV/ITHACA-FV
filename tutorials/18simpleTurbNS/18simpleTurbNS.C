@@ -35,11 +35,11 @@ SourceFiles
 #include "IOmanip.H"
 
 
-class tutorial12 : public SteadyNSSimple
+class tutorial18 : public SteadyNSSimple
 {
     public:
         /// Constructor
-        explicit tutorial12(int argc, char* argv[])
+        explicit tutorial18(int argc, char* argv[])
             :
             SteadyNSSimple(argc, argv),
             U(_U()),
@@ -61,7 +61,15 @@ class tutorial12 : public SteadyNSSimple
             List<scalar> mu_now(1);
 
             // if the offline solution is already performed read the fields
-            if (offline)
+            if (offline && ITHACAutilities::isTurbulent())
+            {
+                ITHACAstream::readMiddleFields(Ufield, U, "./ITHACAoutput/Offline/");
+                ITHACAstream::readMiddleFields(Pfield, p, "./ITHACAoutput/Offline/");
+                auto nut = _mesh().lookupObject<volScalarField>("nut");
+                readNut(nutFields, nut, "./ITHACAoutput/Offline/");
+                mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+            }
+            else if (offline)
             {
                 ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
@@ -73,10 +81,10 @@ class tutorial12 : public SteadyNSSimple
                 Vector<double> Uinl(1, 0, 0);
                 label BCind = 0;
 
-                for (label i = 0; i < mu.cols(); i++)
+                for (label i = 0; i < mu.rows(); i++)
                 {
-                    mu_now[0] = mu(0, i);
-                    change_viscosity(mu(0, i));
+                    mu_now[0] = mu(i, 0);
+                    change_viscosity(mu_now[0]);
                     assignIF(U, Uinl);
                     truthSolve2(mu_now);
                 }
@@ -88,21 +96,45 @@ class tutorial12 : public SteadyNSSimple
 int main(int argc, char* argv[])
 {
     // Construct the tutorial object
-    tutorial12 example(argc, argv);
+    tutorial18 example(argc, argv);
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
-    int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
-    int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
-    int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
-    int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
     // Read the par file where the parameters are stored
-    word filename("./par");
-    example.mu = ITHACAstream::readMatrix(filename);
+    std::ifstream exFileOff("./parsOff_mat.txt");
+    if (exFileOff)
+    {
+        example.mu  = ITHACAstream::readMatrix("./parsOff_mat.txt");
+    }
+
+    else
+    {
+        example.mu  = Eigen::VectorXd::LinSpaced(50, 1.00e-02, 1.00e-03);
+        ITHACAstream::exportMatrix(example.mu , "parsOff", "eigen", "./");
+    }
+
+    Eigen::MatrixXd parOn;
+    std::ifstream exFileOn("./parsOn_mat.txt");
+    if (exFileOn)
+    {
+        parOn = ITHACAstream::readMatrix("./parsOn_mat.txt");
+    }
+
+    else
+    {
+        parOn = ITHACAutilities::rand(20, 1, 1.00e-02, 1.00e-03);
+        ITHACAstream::exportMatrix(parOn, "parsOn", "eigen", "./");
+    }
+    //word filename("./par");
+    //example.mu = ITHACAstream::readMatrix(filename);
     // Set the inlet boundaries patch 0 directions x and y
     example.inletIndex.resize(1, 2);
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
+
+    // Set the maximum iterations number for the offline phase
+    example.maxIter = para->ITHACAdict->lookupOrDefault<int>("maxIter", 2000);
+
     // Perform the offline solve
     example.offlineSolve();
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
@@ -111,10 +143,18 @@ int main(int argc, char* argv[])
     // Perform POD on velocity and pressure and store the first 10 modes
     ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
                         example.podex, 0, 0,
-                        NmodesUout);
+                        example.NUmodesOut);
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                         example.podex, 0, 0,
-                        NmodesPout);
+                        example.NPmodesOut);
+    if(ITHACAutilities::isTurbulent())
+    {
+        ITHACAPOD::getModes(example.nutFields, example.nutModes, "nut",
+                        example.podex, 0, 0, example.NNutModesOut);
+        // Create the RBF for turbulence
+        example.getTurbRBF(example.NNutModes);
+    }
+
     // Create the reduced object
     reducedSimpleSteadyNS reduced(example);
     PtrList<volVectorField> U_rec_list;
@@ -123,13 +163,26 @@ int main(int argc, char* argv[])
     word vel_file(para->ITHACAdict->lookup("online_velocities"));
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
 
+    // Set the maximum iterations number for the online phase
+    reduced.maxIterOn = para->ITHACAdict->lookupOrDefault<int>("maxIterOn", 2000);
+
     //Perform the online solutions
-    for (label k = 0; k < (example.mu).size(); k++)
+    for (label k = 0; k < parOn.size(); k++)
     {
-        scalar mu_now = example.mu(0, k);
+        scalar mu_now = parOn(k, 0);
         example.change_viscosity(mu_now);
         reduced.setOnlineVelocity(vel);
-        reduced.solveOnline_Simple(mu_now, NmodesUproj, NmodesPproj);
+        if(ITHACAutilities::isTurbulent())
+        {
+            std::cout << "sono turb" << std::endl;
+            reduced.solveOnline_Simple(mu_now, example.NUmodes, example.NPmodes, example.NNutModes);
+        }
+        else
+        {
+            std::cout << "non sono turb" << std::endl;
+            reduced.solveOnline_Simple(mu_now, example.NUmodes, example.NPmodes, example.NNutModes);
+   
+        }
     }
 
     exit(0);

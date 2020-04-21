@@ -128,8 +128,14 @@ class reducedSimpleSteadyNS: public reducedProblem
         /// Full problem.
         SteadyNSSimple* problem;
 
+        /// Projected gradient of the pressure modes.
+        Eigen::MatrixXd projGradModP;
+
         /// Imposed boundary conditions.
         Eigen::MatrixXd vel_now;
+
+        /// Maximum iterations number for the online step
+        int maxIterOn;
 
         /// Counter.
         int counter = 0;

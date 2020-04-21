@@ -26,8 +26,14 @@ gradSchemes
 
 divSchemes
 {
-    default         Gauss linear upwind;
-    div(phi,U)      Gauss linear upwind;
+    default         none;
+    div(phi,U)      bounded Gauss linearUpwind grad(U);
+    div(phi,k)      bounded Gauss limitedLinear 1;
+    div(phi,epsilon) bounded Gauss limitedLinear 1;
+    div(phi,omega)  bounded Gauss limitedLinear 1;
+    div(phi,v2)     bounded Gauss limitedLinear 1;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(nonlinearStress) Gauss linear;
 }
 
 laplacianSchemes
@@ -56,6 +62,11 @@ fluxRequired
     p;
     Phi             ;
 
+}
+
+wallDist
+{
+    method meshWave;
 }
 
 // ************************************************************************* //

@@ -161,7 +161,7 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
     rbfSplines.resize(NNutModes);
     Eigen::MatrixXd weights;
 
-    for (int i = 0; i < NNutModes; i++)
+    for (int i = 0; i < NNutModes; i++) // i is the nnumber of th mode
     {
         word weightName = "wRBF_M" + name(i + 1);
 
@@ -169,7 +169,7 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++)
+            for (int j = 0; j < coeffL2.cols(); j++) // j is the number of the nut snapshot
             {
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
@@ -183,7 +183,7 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++)
+            for (int j = 0; j < coeffL2.cols(); j++) // j is the number of the nut snapshot
             {
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
@@ -217,11 +217,20 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
 #if OFVER == 6
 
+    if (ITHACAutilities::isTurbulent())
+    {
+        folderN = 0;
+        saver = 0;
+        middleStep = para->ITHACAdict->lookupOrDefault<int>("middleStep", 20);
+    }
+
     while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
 #else
     while (simple.loop() && residual > tolerance && csolve < maxIter )
 #endif
     {
+        csolve++;
+        saver++;
         Info << "Time = " << runTime.timeName() << nl << endl;
         volScalarField nueff = turbulence->nuEff();
         fvVectorMatrix UEqn
@@ -231,11 +240,11 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             - fvc::div(nueff * dev2(T(fvc::grad(U))))
         );
         UEqn.relax();
-        UEqn == - fvc::grad(p);
+        //UEqn == - fvc::grad(p);
 
         if (simple.momentumPredictor())
         {
-            uresidual_v = solve(UEqn).initialResidual();
+            uresidual_v = solve(UEqn == - fvc::grad(p)).initialResidual();
         }
 
         scalar C = 0;
@@ -287,19 +296,44 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         Info << "Time = " << runTime.timeName() << nl << endl;
         laminarTransport.correct();
         turbulence->correct();
+
+        if (ITHACAutilities::isTurbulent() && saver==middleStep)
+        {
+          saver = 0;
+          folderN++;
+          ITHACAstream::exportSolution(U, name(folderN), folder + name(counter));
+          ITHACAstream::exportSolution(p, name(folderN), folder + name(counter));
+          Ufield.append(U);
+          Pfield.append(p);
+        }
     }
 
     res_os << residual << std::endl;
     res_os.close();
     runTime.setTime(runTime.startTime(), 0);
-    ITHACAstream::exportSolution(U, name(counter), Folder);
-    ITHACAstream::exportSolution(p, name(counter), Folder);
+
     if (ITHACAutilities::isTurbulent())
     {
-        volScalarField _nut(turbulence->nut());
-        ITHACAstream::exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
-        nutFields.append(_nut);
+        ITHACAstream::exportSolution(U, name(folderN+1), folder + name(counter));
+        ITHACAstream::exportSolution(p, name(folderN+1), folder + name(counter));
+        auto nut = mesh.lookupObject<volScalarField>("nut");
+        ITHACAstream::exportSolution(nut, name(folderN+1), folder + name(counter));
+        nutFields.append(nut);
     }
+    else
+    {
+        ITHACAstream::exportSolution(U, name(counter), folder);
+        ITHACAstream::exportSolution(p, name(counter), folder);
+    }
+    // ITHACAstream::exportSolution(U, name(counter), Folder);
+    // ITHACAstream::exportSolution(p, name(counter), Folder);
+    // if (ITHACAutilities::isTurbulent())
+    // {
+    //     auto nut = mesh.lookupObject<volScalarField>("nut");
+    //     ITHACAstream::exportSolution(nut, name(counter), "./ITHACAoutput/Offline/");
+    //     nutFields.append(nut);
+    // }
+    
     Ufield.append(U);
     Pfield.append(p);
     counter++;

@@ -24,6 +24,8 @@ NmodePUout 15;
 NmodesPproj 10;
 NmodesSUPout 15;
 NmodesSUPproj 10;
+NmodesNutOut 15;
+NmodesNutProj 0;
 
 // Output format to save market vectors.
 OutPrecision 20;
@@ -32,11 +34,18 @@ OutType fixed;
 // Specific problem of a stationary case
 tolerance 1e-5;
 
+// Maximum number of iterations
+maxIter 2000;
+maxIterOn 2000;
+
 // Reduced simple cicle parameters
 residualJumpLim 1e-5;
 normalizedResidualLim 1e-5;
 
 // Inlet boundary conditions velocities.
 online_velocities vel.txt;
+
+// Distancing between intermediate snapshots to be exported (for turbulent case only)
+middleStep 100;
 
 

@@ -93,6 +93,15 @@ class SteadyNSSimple: public steadyNS
         /// The matrix of L2 projection coefficients for the eddy viscosity
         Eigen::MatrixXd coeffL2;
 
+        /// Distancing between intermediate steps (for turbulent case only)
+        int middleStep;
+
+        /// Counter to check if the middleStep has been reached or not (for turbulent case only)
+        int saver;
+
+        /// Counter to save intermediate steps in the correct folder (for turbulent case only)
+        int folderN;
+
         // Variables
         /// Initialization for the full velocity linear system.
         fvVectorMatrix* Ueqn_global;
