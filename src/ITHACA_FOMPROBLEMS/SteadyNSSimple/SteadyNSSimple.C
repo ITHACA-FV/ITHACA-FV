@@ -197,6 +197,35 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
     }
 }
 
+void SteadyNSSimple::readNut(PtrList<volScalarField>& Lfield,
+                                    volScalarField& field, fileName casename)
+{
+    int par = 1;
+    std::cout << "######### Reading the Data for nut #########" << std::endl;
+    while (ITHACAutilities::check_folder(casename + name(par)))
+    {
+        int last = 1;
+        while (ITHACAutilities::check_folder(casename + name(par) + "/" + name(last)))
+        {
+            last++;
+        }
+        volScalarField nut
+        (
+            IOobject
+            (
+                "nut",
+                casename + name(par) + "/" + name(last),
+                _mesh,
+                IOobject::MUST_READ,
+                IOobject::AUTO_WRITE
+            ),
+            _mesh
+        );
+        Lfield.append(nut);
+        par++;
+    }
+}
+
 void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
 {
     Time& runTime = _runTime();
@@ -301,8 +330,8 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         {
           saver = 0;
           folderN++;
-          ITHACAstream::exportSolution(U, name(folderN), folder + name(counter));
-          ITHACAstream::exportSolution(p, name(folderN), folder + name(counter));
+          ITHACAstream::exportSolution(U, name(folderN), Folder + name(counter));
+          ITHACAstream::exportSolution(p, name(folderN), Folder + name(counter));
           Ufield.append(U);
           Pfield.append(p);
         }
@@ -314,16 +343,16 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
 
     if (ITHACAutilities::isTurbulent())
     {
-        ITHACAstream::exportSolution(U, name(folderN+1), folder + name(counter));
-        ITHACAstream::exportSolution(p, name(folderN+1), folder + name(counter));
+        ITHACAstream::exportSolution(U, name(folderN+1), Folder + name(counter));
+        ITHACAstream::exportSolution(p, name(folderN+1), Folder + name(counter));
         auto nut = mesh.lookupObject<volScalarField>("nut");
-        ITHACAstream::exportSolution(nut, name(folderN+1), folder + name(counter));
+        ITHACAstream::exportSolution(nut, name(folderN+1), Folder + name(counter));
         nutFields.append(nut);
     }
     else
     {
-        ITHACAstream::exportSolution(U, name(counter), folder);
-        ITHACAstream::exportSolution(p, name(counter), folder);
+        ITHACAstream::exportSolution(U, name(counter), Folder);
+        ITHACAstream::exportSolution(p, name(counter), Folder);
     }
     // ITHACAstream::exportSolution(U, name(counter), Folder);
     // ITHACAstream::exportSolution(p, name(counter), Folder);

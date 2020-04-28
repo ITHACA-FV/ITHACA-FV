@@ -165,7 +165,6 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
             || std::max(U_norm_res, P_norm_res) > normalizedResidualLim && iter<maxIterOn)
     {
         iter++;
-        std::cerr << "debug point 1" << std::endl;
         P.storePrevIter();
         volScalarField nueff = problem->turbulence->nuEff();
         fvVectorMatrix UEqn
@@ -176,11 +175,9 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
         );
         UEqn.relax();
         //UEqn == -fvc::grad(P);
-        std::cerr << "debug point 2" << std::endl;
         List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(UEqn, UprojN);
         RedLinSysU[1] = RedLinSysU[1] - projGradModP * b;
         a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
-        std::cerr << "debug point 3" << std::endl;
         ULmodes.reconstruct(U, a, "U");
         volVectorField HbyA(constrainHbyA(1.0 / UEqn.A() * UEqn.H(), U, P));
         surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
