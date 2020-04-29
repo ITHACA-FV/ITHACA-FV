@@ -1,0 +1,18 @@
+EXE_INC = \
+    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
+    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/cnpy \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/redsvd \
+    -I$(TORCH_LIBRARIES)/include \
+    -I$(TORCH_LIBRARIES)/include/torch/csrc/api/include \
+    -std=c++14 \
+    -w \
+    -Wno-old-style-cast \
+    -Wno-non-virtual-dtor \
+    -Wno-return-type \
+    -Wno-sign-compare 
+
+EXE_LIBS = \
+    -Wl,-rpath,$(TORCH_LIBRARIES)/lib $(TORCH_LIBRARIES)/lib/libtorch.so $(TORCH_LIBRARIES)/lib/libc10.so $(TORCH_LIBRARIES)/lib/libc10d.a \
+    -Wl,--no-as-needed,$(TORCH_LIBRARIES)/lib/libcaffe2_detectron_ops.so \
+    -Wl,--as-needed $(TORCH_LIBRARIES)/lib/libc10.so \
