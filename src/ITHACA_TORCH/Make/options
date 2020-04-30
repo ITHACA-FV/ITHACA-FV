@@ -1,6 +1,6 @@
 EXE_INC = \
-    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/cnpy \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/redsvd \
     -I$(TORCH_LIBRARIES)/include \
