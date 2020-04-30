@@ -1,12 +1,58 @@
 #!/bin/bash
 cd ${0%/*} || exit 1    # Run from this directory
-cd src
 
-for d in ./*/ ; do   
-    echo $d    
+help_flag=''
+tutorial_flag=''
+torch_flag=''
+applications_flag=''
+unit_tests_flag=''
+
+while getopts 'htmj:au' flag; do
+  case "${flag}" in
+    h) help_flag='true' ;;
+    t) tutorial_flag='true' ;;
+    m) torch_flag="true" ;;
+    a) applications_flag="true" ;;
+    u) unit_tests_flag="true" ;;
+    j) parallel_flag="-j ${OPTARG}" ;;
+    *) print_usage
+       exit 1 ;;
+  esac
+done
+
+if [[ $help_flag == 'true' ]]; then
+    echo "Help of the ITHACA-FV ./Allwmake utility"
+    echo 
+    echo "options:"
+    echo "-h,     show brief help"
+    echo "-t,     enable disable tutorials compilation, False by default"
+    echo "-m,     enable TORCH extension, False by default"
+    echo "-j,     enable parallel compilation with specified number of cores"
+    echo "-a,     enable application compilation, False by default"
+    echo "-u,     enable unitTests compilation, False by default"    
+    echo 
+    echo "Help for the standard wmake OpenFOAM utility"
+    wmake -h
+    exit
+fi
+
+
+cd src
+for d in ./*/ ; do     
     cd $d
     if [ -f "Make/files" ]; then
-    wmake $1 $2
+        if [[ $d == './ITHACA_TORCH/' ]]; then
+            if [[ $torch_flag == 'true' ]]; then 
+                echo $d 
+                wmake $parallel_flag
+            else
+                cd ..
+                break
+            fi
+        else
+            echo $d  
+            wmake $parallel_flag
+        fi
      if [ $? -ne 0 ]
      then
       echo $d "did not compile"
@@ -15,37 +61,34 @@ for d in ./*/ ; do
     fi
     cd ../
 done
-
-
-#wmake -j
-#if [ $? -ne 0 ]
-#then
-# echo "library did not compile"
-# exit 1
-#fi
 cd ..
 
-for d in applications/*/ ; do   
+cd applications
+if [[ $applications_flag == 'true' ]]; then
+for d in ./*/ ; do   
     echo $d    
     cd $d
     if [ -f "Make/files" ]; then
-    wmake $1 $2
+    wmake $parallel_flag
     if [ $? -ne 0 ]
     then
      echo $d "did not compile"
      exit 1
     fi
 	fi
-    cd ../..
+    cd ../
 done
+fi
+cd ..
+
 
 cd tutorials
-
+if [[ $tutorial_flag == 'true' ]]; then
 for d in ./*/ ; do   
     echo $d    
     cd $d
     if [ -f "Make/files" ]; then
-    wmake $1 $2
+    wmake $parallel_flag
      if [ $? -ne 0 ]
      then
       echo $d "did not compile"
@@ -54,14 +97,16 @@ for d in ./*/ ; do
     fi
     cd ../
 done
+fi
+cd ..
 
-cd ../unitTests
-
+cd unitTests
+if [[ $unit_tests_flag == 'true' ]]; then
 for d in ./*/ ; do   
     echo $d    
     cd $d
     if [ -f "Make/files" ]; then
-    wmake $1 $2
+    wmake $parallel_flag
     if [ $? -ne 0 ]
     then
      echo $d "did not compile"
@@ -70,7 +115,8 @@ for d in ./*/ ; do
     fi
     cd ../
 done
-
+fi
+cd ..
 
 
 

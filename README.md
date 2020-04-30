@@ -38,10 +38,11 @@ Linear and non-linear algebra operations which are not already implemented in Op
 * [**OpenFOAM 6.0**](https://openfoam.org/version/6) 
 * [**OpenFOAM 5.0**](https://openfoam.org/version/5-0) or 
 * [**OpenFOAM 1812**](https://www.openfoam.com/releases/openfoam-v1812/)
+* [**OpenFOAM 1906**](https://www.openfoam.com/releases/openfoam-v1812/)
 
 
 ### 2. Installation and usage
-First of all you need to source the bashrc file of your installation of **OpenFOAM 6.0** or **OpenFOAM 5.0** or **OpenFOAM 1812**. This is of course depending on the location of your OpenFOAM installation and of your particular version of OpenFOAM
+First of all you need to source the bashrc file of your installation of **OpenFOAM 6.0** or **OpenFOAM 5.0** or **OpenFOAM 1812** or **OpenFOAM 1906**. This is of course depending on the location of your OpenFOAM installation and of your particular version of OpenFOAM
 ```
 source $HOME/OpenFOAM/OpenFOAM-6/etc/bashrc
 ``` 
@@ -53,14 +54,35 @@ Now you can clone the **ITHACA-FV** repository inside the selected folder
 ```
 git clone https://github.com/mathLab/ITHACA-FV
 ```
-and you can compile **ITHACA-FV** by navigating inside the src folder, sourcing the bashrc file of ITHACA-FV and compiling using wmake
+and you can compile **ITHACA-FV** by navigating inside the src folder, sourcing the bashrc file of ITHACA-FV and compiling using wmake:
 ```
 cd ITHACA-FV
 source etc/bashrc
-./Allwmake 
+./Allwmake
 ```
-For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://mathlab.github.io/ITHACA-FV/).
+By default the `Allwmake` routine will only compile the ITHACA-FV library with standard packages and without applications, unitTests and tutorials. For more informations concerning the possible options one can execute the command with the `-h` flag.
 
+For example in order to compile the library with also all the applications, tutorials and unit tests the following commands needs to be executed:
+```
+cd ITHACA-FV
+source etc/bashrc
+./Allwmake -tau
+```
+
+To enable parallel compilation the `-j` flag followed by the number of processors that you want to use can be added. For example, to compile the library with `4` processors the following command can be issued:
+```
+cd ITHACA-FV
+source etc/bashrc
+./Allwmake -tau -j 4
+```
+
+In the near future the ITHACA-FV will also be linked with the pytorch package for machine learning. Some basic functions are already available. In order to compile these additional functionalities one will need to have torch installed and compile the library with the `-m` options. Moreover one will need to install a version of libtorch with ABI enabled. The one available at the following link for example has it:
+```
+    curl https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.4.0%2Bcpu.zip > libtorch.zip && \
+    unzip libtorch.zip -d opt/ && \
+```
+
+For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://mathlab.github.io/ITHACA-FV/).
 
 ### 3. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
 Several tutorials are provided the [**tutorials** subfolder](./tutorials).
