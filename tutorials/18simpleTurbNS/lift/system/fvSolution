@@ -18,30 +18,15 @@ solvers
 {
     p
     {
-        solver           GAMG;
-        tolerance        1e-10;
-        relTol           0.01;
-        smoother         GaussSeidel;
-        nPreSweeps       0;
-        nPostSweeps      2;
-        cacheAgglomeration on;
-        agglomerator     faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        mergeLevels      1;
-    }
-
-    u_sup
-    {
-        solver          smoothSolver;
-        smoother        GaussSeidel;
-        nSweeps         1;
-        tolerance       1e-09;
-        relTol          0.1;
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        relTol          0;
     }
 
     pcorr
     {
-        
+
         $p;
         tolerance        0.02;
         relTol           0;
@@ -55,43 +40,16 @@ solvers
         relTol           0;
     }
 
-    "(U|k|omega)"
+    "(U|k|epsilon|omega|f|v2)"
     {
-	solver           GAMG;
-        tolerance        1e-10;
-        relTol           0.0001;
-        smoother         GaussSeidel;
-        nPreSweeps       0;
-        nPostSweeps      2;
-        cacheAgglomeration on;
-        agglomerator     faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        mergeLevels      1;
-    }
-
-    "(U|k|omega)Final"
-    {
-        $U;
-        tolerance       1e-08;
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-8;
         relTol          0;
     }
     Phi
     {
         $p;
-    }
-
-    Usup
-    {
-	    solver           GAMG;
-        tolerance        1e-7;
-        relTol           0.001;
-        smoother         GaussSeidel;
-        nPreSweeps       0;
-        nPostSweeps      2;
-        cacheAgglomeration on;
-        agglomerator     faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        mergeLevels      1;
     }
 }
 
@@ -139,6 +97,7 @@ PIMPLE
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
+    consistent      yes;
     nOuterCorrectors    2;
     nCorrectors         2;
     pRefCell        0;
@@ -149,6 +108,14 @@ SIMPLE
         p               1e-9;
         U               1e-9;
         nuTilda         1e-6;
+    }
+}
+relaxationFactors
+{
+    equations
+    {
+        U               0.9; // 0.9 is more stable but 0.95 more convergent
+        ".*"            0.9; // 0.9 is more stable but 0.95 more convergent
     }
 }
 

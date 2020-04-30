@@ -570,6 +570,37 @@ void ITHACAstream::readMiddleFields(PtrList<fieldType>& Lfield,
     }
 }
 
+template<typename fieldType>
+void ITHACAstream::readConvergedFields(PtrList<fieldType>& Lfield, fieldType& field,
+                                     fileName casename)
+{
+    int par = 1;
+    M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
+             "No parameter dependent solutions stored into Offline folder");
+    std::cout << "######### Reading the Data for " << field.name() << " #########" << std::endl;
+    while (ITHACAutilities::check_folder(casename + name(par)))
+    {
+        int last = 1;
+        while (ITHACAutilities::check_folder(casename + name(par) + "/" + name(last)))
+        {
+            last++;
+        }
+        fieldType tmpField(
+
+            IOobject
+            (
+                field.name(),
+                casename + name(par) + "/" + name(last-1),
+                field.mesh(),
+                IOobject::MUST_READ
+            ),
+            field.mesh()
+        );
+        Lfield.append(tmpField);
+        par++;
+    }
+}
+
 int ITHACAstream::numberOfFiles(word folder, word MatrixName)
 {
     int number_of_files = 0;
@@ -654,4 +685,12 @@ template void ITHACAstream::readMiddleFields(PtrList<volVectorField>& Lfield,
 template void ITHACAstream::readMiddleFields(PtrList<surfaceScalarField>&
         Lfield, surfaceScalarField& field, fileName casename);
 template void ITHACAstream::readMiddleFields(PtrList<surfaceVectorField>&
+        Lfield, surfaceVectorField& field, fileName casename);
+template void ITHACAstream::readConvergedFields(PtrList<volScalarField>& Lfield,
+        volScalarField& field, fileName casename);
+template void ITHACAstream::readConvergedFields(PtrList<volVectorField>& Lfield,
+        volVectorField& field, fileName casename);
+template void ITHACAstream::readConvergedFields(PtrList<surfaceScalarField>&
+        Lfield, surfaceScalarField& field, fileName casename);
+template void ITHACAstream::readConvergedFields(PtrList<surfaceVectorField>&
         Lfield, surfaceVectorField& field, fileName casename);

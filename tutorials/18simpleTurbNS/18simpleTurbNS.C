@@ -66,7 +66,8 @@ class tutorial18 : public SteadyNSSimple
                 ITHACAstream::readMiddleFields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::readMiddleFields(Pfield, p, "./ITHACAoutput/Offline/");
                 auto nut = _mesh().lookupObject<volScalarField>("nut");
-                readNut(nutFields, nut, "./ITHACAoutput/Offline/");
+                //readNut(nutFields, nut, "./ITHACAoutput/Offline/");
+                ITHACAstream::readConvergedFields(nutFields, nut, "./ITHACAoutput/Offline/");
                 mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }
             else if (offline)
@@ -170,6 +171,7 @@ int main(int argc, char* argv[])
     for (label k = 0; k < parOn.size(); k++)
     {
         scalar mu_now = parOn(k, 0);
+        example.restart();
         example.change_viscosity(mu_now);
         reduced.setOnlineVelocity(vel);
         if(ITHACAutilities::isTurbulent())

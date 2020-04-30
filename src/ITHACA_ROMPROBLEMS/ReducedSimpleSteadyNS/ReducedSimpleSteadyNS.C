@@ -121,38 +121,35 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
         problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim",
                 1e-5);
     scalar residual_jump(1 + residualJumpLim);
-    problem->restart();
+    //problem->restart();
     volScalarField& P = problem->_p();
     volVectorField& U = problem->_U();
     P.rename("p");
-    surfaceScalarField phi(problem->_phi());
-    phi = fvc::interpolate(U) & U.mesh().Sf();
+    surfaceScalarField& phi(problem->_phi());
+    //phi = fvc::interpolate(U) & U.mesh().Sf();
     int iter = 0;
     simpleControl& simple = problem->_simple();
 
-    // if(ITHACAutilities::isTurbulent())
-    // {
-    //     Eigen::MatrixXd nutCoeff;
-    //     nutCoeff.resize(NmodesNut,1);
-    //     std::cout << "ciao" << NmodesNut << std::endl;
-    //     for(int i=0; i<NmodesNut; i++)
-    //     {
-    //         std::cerr << "eccolo" << std::endl;
-    //         Eigen::MatrixXd muEval;
-    //         muEval.resize(1,1);
-    //         muEval(0,0) = mu_now;
-    //         nutCoeff(i,0) = problem->rbfSplines[i]->eval(muEval);
-    //     }
-    //     volScalarField nueffPre = problem->turbulence->nuEff();
-    //     ITHACAstream::exportSolution(nueffPre, "pre", Folder);
-    //     volScalarField& nut = const_cast<volScalarField&>(problem->_mesh().lookupObject<volScalarField>("nut"));
-    //     //nut = ITHACAutilities::reconstruct_from_coeff(problem->nutModes, nutCoeff, NmodesNut)[0];
-    //     nut = problem->nutModes.reconstruct(nutCoeff, "nut");
-    //     std::cerr << "eccoli" << std::endl;
-    //     ITHACAstream::exportSolution(nut, name(counter), Folder);
-    //     volScalarField nueffPost = problem->turbulence->nuEff();
-    //     ITHACAstream::exportSolution(nueffPost, "post", Folder);
-    // }
+    if(ITHACAutilities::isTurbulent())
+    {
+        Eigen::MatrixXd nutCoeff;
+        nutCoeff.resize(NmodesNut,1);
+        for(int i=0; i<NmodesNut; i++)
+        {
+            Eigen::MatrixXd muEval;
+            muEval.resize(1,1);
+            muEval(0,0) = mu_now;
+            nutCoeff(i,0) = problem->rbfSplines[i]->eval(muEval);
+        }
+        //volScalarField nueffPre = problem->turbulence->nuEff();
+        //ITHACAstream::exportSolution(nueffPre, "pre", Folder);
+        volScalarField& nut = const_cast<volScalarField&>(problem->_mesh().lookupObject<volScalarField>("nut"));
+        //nut = ITHACAutilities::reconstruct_from_coeff(problem->nutModes, nutCoeff, NmodesNut)[0];
+        nut = problem->nutModes.reconstruct(nutCoeff, "nut");
+        ITHACAstream::exportSolution(nut, name(counter), Folder);
+        //volScalarField nueffPost = problem->turbulence->nuEff();
+        //ITHACAstream::exportSolution(nueffPost, "post", Folder);
+    }
 
     PtrList<volVectorField> gradModP;
     for (label i = 0; i < NmodesPproj; i++)
@@ -178,6 +175,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
         List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(UEqn, UprojN);
         RedLinSysU[1] = RedLinSysU[1] - projGradModP * b;
         a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
+        //solve(UEqn == - fvc::grad(P)); // Debug purposes only
         ULmodes.reconstruct(U, a, "U");
         volVectorField HbyA(constrainHbyA(1.0 / UEqn.A() * UEqn.H(), U, P));
         surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
@@ -192,6 +190,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
             RedLinSysP = problem->Pmodes.project(pEqn, PprojN);
             b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
             problem->Pmodes.reconstruct(P, b, "p");
+            //pEqn.solve();
 
             if (simple.finalNonOrthogonalIter())
             {
@@ -220,7 +219,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
             std::cout << "Normalized residual = " << std::max(U_norm_res,
                       P_norm_res) << std::endl;
         }
-        problem->turbulence->correct();
+        //problem->turbulence->correct();
     }
 
     std::cout << "Solution " << counter << " converged in " << iter <<
