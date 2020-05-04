@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 
     else
     {
-        example.mu  = Eigen::VectorXd::LinSpaced(50, 1.00e-02, 1.00e-03);
+        example.mu  = Eigen::VectorXd::LinSpaced(50, 1.00e-04, 1.00e-05);
         ITHACAstream::exportMatrix(example.mu , "parsOff", "eigen", "./");
     }
 
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 
     else
     {
-        parOn = ITHACAutilities::rand(20, 1, 1.00e-02, 1.00e-03);
+        parOn = ITHACAutilities::rand(20, 1, 1.00e-04, 1.00e-05);
         ITHACAstream::exportMatrix(parOn, "parsOn", "eigen", "./");
     }
     //word filename("./par");

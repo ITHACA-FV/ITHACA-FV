@@ -45,22 +45,16 @@ SteadyNSSimple::SteadyNSSimple(int argc, char* argv[])
     steadyNS(argc, argv)
 {
     Info << offline << endl;
-
     /// Number of velocity modes to be calculated
     NUmodesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
-
     /// Number of pressure modes to be calculated
     NPmodesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
-
     /// Number of nut modes to be calculated
     NNutModesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesNutOut", 15);
-
     /// Number of velocity modes used for the projection
     NUmodes = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
-
     /// Number of pressure modes used for the projection
     NPmodes = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
-
     /// Number of nut modes used for the projection
     NNutModes = para->ITHACAdict->lookupOrDefault<int>("NmodesNutProj", 0);
 }
@@ -125,6 +119,7 @@ fvScalarMatrix SteadyNSSimple::get_Pmatrix(volVectorField& U,
         {
             presidual = pEqn.solve().initialResidual();
         }
+
         else
         {
             pEqn.solve().initialResidual();
@@ -152,10 +147,11 @@ fvScalarMatrix SteadyNSSimple::get_Pmatrix(volVectorField& U,
 
 void SteadyNSSimple::getTurbRBF(int NNutModes)
 {
-    if(NNutModes==0)
+    if (NNutModes == 0)
     {
         NNutModes = nutModes.size();
     }
+
     coeffL2 = ITHACAutilities::get_coeffs_ortho(nutFields, nutModes, NNutModes);
     samples.resize(NNutModes);
     rbfSplines.resize(NNutModes);
@@ -179,6 +175,7 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
+
         else
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
@@ -198,17 +195,20 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
 }
 
 void SteadyNSSimple::readNut(PtrList<volScalarField>& Lfield,
-                                    volScalarField& field, fileName casename)
+                             volScalarField& field, fileName casename)
 {
     int par = 1;
     std::cout << "######### Reading the Data for nut #########" << std::endl;
+
     while (ITHACAutilities::check_folder(casename + name(par)))
     {
         int last = 1;
+
         while (ITHACAutilities::check_folder(casename + name(par) + "/" + name(last)))
         {
             last++;
         }
+
         volScalarField nut
         (
             IOobject
@@ -287,15 +287,27 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         }
 
         uresidual = C;
+        volScalarField rAU(1.0 / UEqn.A());
         volVectorField HbyA(constrainHbyA(1.0 / UEqn.A() * UEqn.H(), U, p));
         surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
+        adjustPhi(phiHbyA, U, p);
+        tmp<volScalarField> rAtU(rAU);
+
+        if (simple.consistent())
+        {
+            rAtU = 1.0 / (1.0 / rAU - UEqn.H1());
+            phiHbyA +=
+                fvc::interpolate(rAtU() - rAU) * fvc::snGrad(p) * mesh.magSf();
+            HbyA -= (rAU - rAtU()) * fvc::grad(p);
+        }
+
         int i = 0;
 
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix pEqn
             (
-                fvm::laplacian(1.0 / UEqn.A(), p) == fvc::div(phiHbyA)
+                fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
             );
             pEqn.setReference(pRefCell, pRefValue);
 
@@ -303,6 +315,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             {
                 presidual = pEqn.solve().initialResidual();
             }
+
             else
             {
                 pEqn.solve().initialResidual();
@@ -319,21 +332,21 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
 #include "continuityErrs.H"
         p.relax();
         // Momentum corrector
-        U = HbyA - 1.0 / UEqn.A() * fvc::grad(p);
+        U = HbyA - rAtU() * fvc::grad(p);
         U.correctBoundaryConditions();
         residual = max(presidual, uresidual);
         Info << "Time = " << runTime.timeName() << nl << endl;
         laminarTransport.correct();
         turbulence->correct();
 
-        if (ITHACAutilities::isTurbulent() && saver==middleStep)
+        if (ITHACAutilities::isTurbulent() && saver == middleStep)
         {
-          saver = 0;
-          folderN++;
-          ITHACAstream::exportSolution(U, name(folderN), Folder + name(counter));
-          ITHACAstream::exportSolution(p, name(folderN), Folder + name(counter));
-          Ufield.append(U);
-          Pfield.append(p);
+            saver = 0;
+            folderN++;
+            ITHACAstream::exportSolution(U, name(folderN), Folder + name(counter));
+            ITHACAstream::exportSolution(p, name(folderN), Folder + name(counter));
+            Ufield.append(U);
+            Pfield.append(p);
         }
     }
 
@@ -343,17 +356,19 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
 
     if (ITHACAutilities::isTurbulent())
     {
-        ITHACAstream::exportSolution(U, name(folderN+1), Folder + name(counter));
-        ITHACAstream::exportSolution(p, name(folderN+1), Folder + name(counter));
+        ITHACAstream::exportSolution(U, name(folderN + 1), Folder + name(counter));
+        ITHACAstream::exportSolution(p, name(folderN + 1), Folder + name(counter));
         auto nut = mesh.lookupObject<volScalarField>("nut");
-        ITHACAstream::exportSolution(nut, name(folderN+1), Folder + name(counter));
+        ITHACAstream::exportSolution(nut, name(folderN + 1), Folder + name(counter));
         nutFields.append(nut);
     }
+
     else
     {
         ITHACAstream::exportSolution(U, name(counter), Folder);
         ITHACAstream::exportSolution(p, name(counter), Folder);
     }
+
     // ITHACAstream::exportSolution(U, name(counter), Folder);
     // ITHACAstream::exportSolution(p, name(counter), Folder);
     // if (ITHACAutilities::isTurbulent())
@@ -362,7 +377,6 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     //     ITHACAstream::exportSolution(nut, name(counter), "./ITHACAoutput/Offline/");
     //     nutFields.append(nut);
     // }
-    
     Ufield.append(U);
     Pfield.append(p);
     counter++;
@@ -386,5 +400,4 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
                                    Folder);
     }
-
 }
