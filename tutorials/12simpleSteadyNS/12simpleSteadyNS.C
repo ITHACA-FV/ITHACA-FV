@@ -22,7 +22,7 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Description
-    Example of steady NS Reduction Problem
+    Example of steady NS Reduction Problem solved by the use of the SIMPLE algorithm
 SourceFiles
     03steadyNS.C
 \*---------------------------------------------------------------------------*/

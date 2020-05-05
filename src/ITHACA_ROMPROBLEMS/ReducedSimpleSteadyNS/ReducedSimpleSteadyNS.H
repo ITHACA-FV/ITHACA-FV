@@ -89,6 +89,7 @@ class reducedSimpleSteadyNS: public reducedProblem
         /// @param[in]  Folder The folder where we want to esport solutions (default is "./ITHACAoutput/Reconstruct/")
         ///
         void solveOnline_Simple(scalar mu_now, int NmodesUproj, int NmodesPproj,
+                                int NmodesNut = 0,
                                 int NmodesSup = 0,
                                 word Folder = "./ITHACAoutput/Reconstruct/");
 
@@ -128,8 +129,14 @@ class reducedSimpleSteadyNS: public reducedProblem
         /// Full problem.
         SteadyNSSimple* problem;
 
+        /// Projected gradient of the pressure modes.
+        Eigen::MatrixXd projGradModP;
+
         /// Imposed boundary conditions.
         Eigen::MatrixXd vel_now;
+
+        /// Maximum iterations number for the online step
+        int maxIterOn;
 
         /// Counter.
         int counter = 0;
