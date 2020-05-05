@@ -97,7 +97,7 @@ PIMPLE
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
-    consistent      yes;
+    consistent      true;
     nOuterCorrectors    2;
     nCorrectors         2;
     pRefCell        0;
