@@ -31,6 +31,8 @@ NmodesNutProj 0;
 OutPrecision 20;
 OutType fixed;
 
+debug 1;
+
 // Specific problem of a stationary case
 tolerance 1e-5;
 
