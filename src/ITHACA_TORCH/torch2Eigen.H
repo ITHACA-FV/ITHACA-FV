@@ -24,7 +24,7 @@ License
 Class
     torch2Eigen
 Description
-    Reduction class for a Stationary Navier-Stokes problem.
+    set of functions to convert Eigen object to Torch objects and viceversa
 SourceFiles
     torch2Eigen.C
 \*---------------------------------------------------------------------------*/
@@ -52,9 +52,13 @@ namespace torch2Eigen
 ///
 /// @param[in]  eigenMatrix  The eigen matrix
 ///
+/// @tparam     type         Can be double, float, int
+///
 /// @return     a matrix in Eigen float format
 ///
-torch::Tensor eigenMatrix2torchTensor(Eigen::MatrixXf eigenMatrix);
+template<class type>
+torch::Tensor eigenMatrix2torchTensor(
+    Eigen::Matrix<type, Eigen::Dynamic, Eigen::Dynamic> eigenMatrix);
 
 
 ///
@@ -62,9 +66,13 @@ torch::Tensor eigenMatrix2torchTensor(Eigen::MatrixXf eigenMatrix);
 ///
 /// @param      torchTensor  The torch tensor
 ///
+/// @tparam     type         Can be double, float, int
+///
 /// @return     a torch tensor
 ///
-Eigen::MatrixXf torchTensor2eigenMatrix(torch::Tensor& torchTensor);
+template<class type>
+Eigen::Matrix<type, Eigen::Dynamic, Eigen::Dynamic> torchTensor2eigenMatrix(
+    torch::Tensor& torchTensor);
 }
 
 }
