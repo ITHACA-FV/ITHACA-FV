@@ -137,18 +137,6 @@ class SteadyNSSimple: public steadyNS
         ///
         void getTurbRBF(int NNutModes);
         ///
-        /// @brief      Function to read the nut fields
-        /// 
-        /// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
-        ///                         to store the field.
-        /// @param[in]  field       The field used as template to read other
-        ///                         fields.
-        /// @param[in]  casename    The folder where the field is stored.
-        ///
-        /// @tparam     fieldType   Type of field can be volVectorField, volScalarField, surfaceScalarField
-        ///
-        void readNut(PtrList<volScalarField>& Lfield, volScalarField& field, fileName casename);
-        ///
         /// @brief      Offline solver for the whole Navier-Stokes problem.
         ///
         /// @param[in]  mu_now  Viscosity (parametrized) we want to solve the problem with.

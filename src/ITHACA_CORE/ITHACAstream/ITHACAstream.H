@@ -211,7 +211,7 @@ class ITHACAstream
         ///
         template<typename fieldType>
         static void readConvergedFields(PtrList<fieldType>& Lfield, fieldType& field,
-                                     fileName casename);
+                                        fileName casename);
 
         //--------------------------------------------------------------------------
         /// Function to export a scalar of vector field

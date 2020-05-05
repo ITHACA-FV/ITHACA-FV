@@ -88,7 +88,8 @@ class reducedSimpleSteadyNS: public reducedProblem
         ///
         /// @param[in]  Folder The folder where we want to esport solutions (default is "./ITHACAoutput/Reconstruct/")
         ///
-        void solveOnline_Simple(scalar mu_now, int NmodesUproj, int NmodesPproj, int NmodesNut = 0,
+        void solveOnline_Simple(scalar mu_now, int NmodesUproj, int NmodesPproj,
+                                int NmodesNut = 0,
                                 int NmodesSup = 0,
                                 word Folder = "./ITHACAoutput/Reconstruct/");
 

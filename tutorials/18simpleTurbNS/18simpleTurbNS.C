@@ -22,7 +22,7 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Description
-    Example of steady NS Reduction Problem
+    Example of turbulent steady NS Reduction Problem solved by the use of the SIMPLE algorithm
 SourceFiles
     03steadyNS.C
 \*---------------------------------------------------------------------------*/
@@ -66,7 +66,6 @@ class tutorial18 : public SteadyNSSimple
                 ITHACAstream::readMiddleFields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::readMiddleFields(Pfield, p, "./ITHACAoutput/Offline/");
                 auto nut = _mesh().lookupObject<volScalarField>("nut");
-                //readNut(nutFields, nut, "./ITHACAoutput/Offline/");
                 ITHACAstream::readConvergedFields(nutFields, nut, "./ITHACAoutput/Offline/");
                 mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }
@@ -126,8 +125,6 @@ int main(int argc, char* argv[])
         parOn = ITHACAutilities::rand(20, 1, 1.00e-04, 1.00e-05);
         ITHACAstream::exportMatrix(parOn, "parsOn", "eigen", "./");
     }
-    //word filename("./par");
-    //example.mu = ITHACAstream::readMatrix(filename);
     // Set the inlet boundaries patch 0 directions x and y
     example.inletIndex.resize(1, 2);
     example.inletIndex(0, 0) = 0;

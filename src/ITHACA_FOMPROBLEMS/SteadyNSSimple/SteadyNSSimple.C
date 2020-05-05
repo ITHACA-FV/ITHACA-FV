@@ -119,7 +119,6 @@ fvScalarMatrix SteadyNSSimple::get_Pmatrix(volVectorField& U,
         {
             presidual = pEqn.solve().initialResidual();
         }
-
         else
         {
             pEqn.solve().initialResidual();
@@ -175,7 +174,6 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
-
         else
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
@@ -191,38 +189,6 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
                                           "./ITHACAoutput/weights/", weightName);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
-    }
-}
-
-void SteadyNSSimple::readNut(PtrList<volScalarField>& Lfield,
-                             volScalarField& field, fileName casename)
-{
-    int par = 1;
-    std::cout << "######### Reading the Data for nut #########" << std::endl;
-
-    while (ITHACAutilities::check_folder(casename + name(par)))
-    {
-        int last = 1;
-
-        while (ITHACAutilities::check_folder(casename + name(par) + "/" + name(last)))
-        {
-            last++;
-        }
-
-        volScalarField nut
-        (
-            IOobject
-            (
-                "nut",
-                casename + name(par) + "/" + name(last),
-                _mesh,
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
-            ),
-            _mesh
-        );
-        Lfield.append(nut);
-        par++;
     }
 }
 
@@ -269,7 +235,6 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             - fvc::div(nueff * dev2(T(fvc::grad(U))))
         );
         UEqn.relax();
-        //UEqn == - fvc::grad(p);
 
         if (simple.momentumPredictor())
         {
@@ -315,7 +280,6 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             {
                 presidual = pEqn.solve().initialResidual();
             }
-
             else
             {
                 pEqn.solve().initialResidual();
@@ -362,21 +326,12 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         ITHACAstream::exportSolution(nut, name(folderN + 1), Folder + name(counter));
         nutFields.append(nut);
     }
-
     else
     {
         ITHACAstream::exportSolution(U, name(counter), Folder);
         ITHACAstream::exportSolution(p, name(counter), Folder);
     }
 
-    // ITHACAstream::exportSolution(U, name(counter), Folder);
-    // ITHACAstream::exportSolution(p, name(counter), Folder);
-    // if (ITHACAutilities::isTurbulent())
-    // {
-    //     auto nut = mesh.lookupObject<volScalarField>("nut");
-    //     ITHACAstream::exportSolution(nut, name(counter), "./ITHACAoutput/Offline/");
-    //     nutFields.append(nut);
-    // }
     Ufield.append(U);
     Pfield.append(p);
     counter++;

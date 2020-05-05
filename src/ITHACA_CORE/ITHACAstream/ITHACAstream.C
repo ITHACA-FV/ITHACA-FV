@@ -571,26 +571,30 @@ void ITHACAstream::readMiddleFields(PtrList<fieldType>& Lfield,
 }
 
 template<typename fieldType>
-void ITHACAstream::readConvergedFields(PtrList<fieldType>& Lfield, fieldType& field,
-                                     fileName casename)
+void ITHACAstream::readConvergedFields(PtrList<fieldType>& Lfield,
+                                       fieldType& field,
+                                       fileName casename)
 {
     int par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
              "No parameter dependent solutions stored into Offline folder");
-    std::cout << "######### Reading the Data for " << field.name() << " #########" << std::endl;
+    std::cout << "######### Reading the Data for " << field.name() << " #########"
+              << std::endl;
+
     while (ITHACAutilities::check_folder(casename + name(par)))
     {
         int last = 1;
+
         while (ITHACAutilities::check_folder(casename + name(par) + "/" + name(last)))
         {
             last++;
         }
-        fieldType tmpField(
 
+        fieldType tmpField(
             IOobject
             (
                 field.name(),
-                casename + name(par) + "/" + name(last-1),
+                casename + name(par) + "/" + name(last - 1),
                 field.mesh(),
                 IOobject::MUST_READ
             ),

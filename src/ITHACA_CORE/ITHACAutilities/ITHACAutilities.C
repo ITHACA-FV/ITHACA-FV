@@ -194,9 +194,11 @@ bool ITHACAutilities::isTurbulent()
 {
     bool checkTurb;
     ITHACAparameters* para = ITHACAparameters::getInstance();
-    auto& tur = para->mesh.lookupObject<incompressible::turbulenceModel>("turbulenceProperties");
+    auto& tur =
+        para->mesh.lookupObject<incompressible::turbulenceModel>("turbulenceProperties");
 
-    if (tur.type() == "Stokes" || tur.type() == "Maxwell" || tur.type() == "laminarModel")
+    if (tur.type() == "Stokes" || tur.type() == "Maxwell"
+            || tur.type() == "laminarModel")
     {
         checkTurb = false;
     }

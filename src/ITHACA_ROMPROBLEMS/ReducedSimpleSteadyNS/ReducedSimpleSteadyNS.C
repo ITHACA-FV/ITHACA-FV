@@ -87,7 +87,6 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     {
         UprojN = ULmodes.size();
     }
-
     else
     {
         UprojN = NmodesUproj + NmodesSup;
@@ -97,7 +96,6 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     {
         PprojN = problem->Pmodes.size();
     }
-
     else
     {
         PprojN = NmodesPproj;
@@ -149,15 +147,10 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
             nutCoeff(i, 0) = problem->rbfSplines[i]->eval(muEval);
         }
 
-        //volScalarField nueffPre = problem->turbulence->nuEff();
-        //ITHACAstream::exportSolution(nueffPre, "pre", Folder);
         volScalarField& nut = const_cast<volScalarField&>
                               (problem->_mesh().lookupObject<volScalarField>("nut"));
-        //nut = ITHACAutilities::reconstruct_from_coeff(problem->nutModes, nutCoeff, NmodesNut)[0];
         nut = problem->nutModes.reconstruct(nutCoeff, "nut");
         ITHACAstream::exportSolution(nut, name(counter), Folder);
-        //volScalarField nueffPost = problem->turbulence->nuEff();
-        //ITHACAstream::exportSolution(nueffPost, "post", Folder);
     }
 
     PtrList<volVectorField> gradModP;
@@ -176,10 +169,8 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
 #if OFVER == 6
         simple.loop(runTime);
 #else
-
         simple.loop();
 #endif
-
         volScalarField nueff = problem->turbulence->nuEff();
         fvVectorMatrix UEqn
         (
@@ -188,11 +179,9 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
             - fvc::div(nueff * dev2(T(fvc::grad(U))))
         );
         UEqn.relax();
-        //UEqn == -fvc::grad(P);
         List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(UEqn, UprojN);
         RedLinSysU[1] = RedLinSysU[1] - projGradModP * b;
         a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
-        //solve(UEqn == - fvc::grad(P)); // Debug purposes only
         ULmodes.reconstruct(U, a, "U");
         volScalarField rAU(1.0 / UEqn.A());
         volVectorField HbyA(constrainHbyA(1.0 / UEqn.A() * UEqn.H(), U, P));
@@ -219,7 +208,6 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
             RedLinSysP = problem->Pmodes.project(pEqn, PprojN);
             b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
             problem->Pmodes.reconstruct(P, b, "p");
-            //pEqn.solve();
 
             if (simple.finalNonOrthogonalIter())
             {
@@ -248,8 +236,6 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
             std::cout << "Normalized residual = " << std::max(U_norm_res,
                       P_norm_res) << std::endl;
         }
-
-        //problem->turbulence->correct();
     }
 
     std::cout << "Solution " << counter << " converged in " << iter <<
