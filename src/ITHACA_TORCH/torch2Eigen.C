@@ -68,18 +68,25 @@ Eigen::Matrix<type, Eigen::Dynamic, Eigen::Dynamic> torchTensor2eigenMatrix(
     return eigenMatrix;
 }
 
-template torch::Tensor eigenMatrix2torchTensor(
-    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> eigenMatrix);
-template Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>
-torchTensor2eigenMatrix<float>(torch::Tensor& torchTensor);
-template torch::Tensor eigenMatrix2torchTensor(
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> eigenMatrix);
-template Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
-torchTensor2eigenMatrix<double>(torch::Tensor& torchTensor);
-template torch::Tensor eigenMatrix2torchTensor(
-    Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic> eigenMatrix);
 template Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>
 torchTensor2eigenMatrix<int>(torch::Tensor& torchTensor);
+
+template Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
+torchTensor2eigenMatrix<double>(torch::Tensor& torchTensor);
+
+template Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>
+torchTensor2eigenMatrix<float>(torch::Tensor& torchTensor);
+
+template torch::Tensor eigenMatrix2torchTensor<float>(
+    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> eigenMatrix);
+
+template torch::Tensor eigenMatrix2torchTensor<double>(
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> eigenMatrix);
+
+template torch::Tensor eigenMatrix2torchTensor<int>(
+    Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic> eigenMatrix);
+
+
 
 }
 
