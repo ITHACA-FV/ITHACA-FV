@@ -47,7 +47,7 @@ for d in ./*/ ; do
                 wmake $parallel_flag
             else
                 cd ..
-                break
+                continue 2
             fi
         else
             echo $d  
