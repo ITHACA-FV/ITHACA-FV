@@ -717,7 +717,7 @@ Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(PtrList<TypeField>
         Msize = nModes;
     }
 
-    Eigen::MatrixXd ModesE = (Foam2Eigen::PtrList2Eigen(modes)).leftCols(nModes);
+    Eigen::MatrixXd ModesE = (Foam2Eigen::PtrList2Eigen(modes)).leftCols(Msize);
     Eigen::MatrixXd SnapsE = Foam2Eigen::PtrList2Eigen(snapshots);
     Eigen::MatrixXd Mass = ModesE.transpose() * ModesE;
     Eigen::MatrixXd rhs = ModesE.transpose() * SnapsE;
