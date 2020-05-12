@@ -88,8 +88,8 @@ int main(int argc, char *argv[])
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-        )
-    );
+            )
+        );
 
     IOdictionary transportProperties
     (
@@ -100,8 +100,8 @@ int main(int argc, char *argv[])
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-        )
-    );
+            )
+        );
 
     word pName(FORCESdict.lookup("pName"));
     word UName(FORCESdict.lookup("UName"));
@@ -136,9 +136,11 @@ int main(int argc, char *argv[])
                 runTime.timeName(),
                 mesh,
                 IOobject::MUST_READ
-            ),
+                ),
             mesh
-        );
+            );
+
+        U.rename("U");
 
         volScalarField P
         (
@@ -148,9 +150,11 @@ int main(int argc, char *argv[])
                 runTime.timeName(),
                 mesh,
                 IOobject::MUST_READ
-            ),
+                ),
             mesh
-        );
+            );
+
+        P.rename("p");
 
         fc.execute();
         fc.write();
