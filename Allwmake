@@ -29,7 +29,7 @@ if [[ $help_flag == 'true' ]]; then
     echo "-h,     show brief help"
     echo "-t,     enable disable tutorials compilation, False by default"
     echo "-m,     enable TORCH extension, False by default"
-    echo "-M,     enable MUQ2 extension, False by default"
+    echo "-q,     enable MUQ2 extension, False by default"
     echo "-j,     enable parallel compilation with specified number of cores"
     echo "-a,     enable application compilation, False by default"
     echo "-u,     enable unitTests compilation, False by default"    
