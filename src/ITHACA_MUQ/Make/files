@@ -1,0 +1,3 @@
+muq2ithaca.C
+
+LIB = $(FOAM_USER_LIBBIN)/libITHACA_MUQ

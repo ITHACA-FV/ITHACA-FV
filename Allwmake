@@ -4,14 +4,16 @@ cd ${0%/*} || exit 1    # Run from this directory
 help_flag=''
 tutorial_flag=''
 torch_flag=''
+muq_flag=''
 applications_flag=''
 unit_tests_flag=''
 
-while getopts 'htmj:au' flag; do
+while getopts 'htmMj:au' flag; do
   case "${flag}" in
     h) help_flag='true' ;;
     t) tutorial_flag='true' ;;
     m) torch_flag="true" ;;
+    M) muq_flag="true" ;;
     a) applications_flag="true" ;;
     u) unit_tests_flag="true" ;;
     j) parallel_flag="-j ${OPTARG}" ;;
@@ -27,6 +29,7 @@ if [[ $help_flag == 'true' ]]; then
     echo "-h,     show brief help"
     echo "-t,     enable disable tutorials compilation, False by default"
     echo "-m,     enable TORCH extension, False by default"
+    echo "-M,     enable MUQ2 extension, False by default"
     echo "-j,     enable parallel compilation with specified number of cores"
     echo "-a,     enable application compilation, False by default"
     echo "-u,     enable unitTests compilation, False by default"    
@@ -43,6 +46,14 @@ for d in ./*/ ; do
     if [ -f "Make/files" ]; then
         if [[ $d == './ITHACA_TORCH/' ]]; then
             if [[ $torch_flag == 'true' ]]; then 
+                echo $d 
+                wmake $parallel_flag
+            else
+                cd ..
+                continue 2
+            fi
+        elif [[ $d == './ITHACA_MUQ/' ]]; then
+            if [[ $muq_flag == 'true' ]]; then 
                 echo $d 
                 wmake $parallel_flag
             else

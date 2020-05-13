@@ -1,0 +1,32 @@
+EXE_INC = \
+    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/cnpy \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/redsvd \
+    -I$(MUQ_LIBRARIES)/include \
+    -I$(MUQ_EXT_LIBRARIES)/include\
+    -DOFVER=$${WM_PROJECT_VERSION%.*} \
+    -Wno-comment \
+    -g \
+    -std=c++11 \
+    -Wall \
+    -Wno-maybe-uninitialized \
+    -Wno-sign-compare \
+    -Wno-unknown-pragmas \
+    -Wno-unused-variable \
+    -Wno-unused-local-typedefs \
+    -fopenmp \
+    -pthread \
+    -ldl \
+    -O3 \
+    -msse4 \
+    -mavx 
+
+EXE_LIBS = \
+    -L$(MUQ_LIBRARIES)/lib \
+    -lmuqApproximation \
+    -lmuqInference \
+    -lmuqModeling \
+    -lmuqOptimization \
+    -lmuqSamplingAlgorithms \
+    -lmuqUtilities 
