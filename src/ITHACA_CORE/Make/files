@@ -2,6 +2,7 @@ ITHACAstream/ITHACAstream.C
 ITHACAstream/ITHACAparameters.C
 ITHACAstream/cnpy.C
 ITHACAutilities/ITHACAutilities.C
+ITHACAutilities/geometry.C
 ITHACAparallel/ITHACAparallel.C
 ITHACAutilities/ITHACAforces.C
 ITHACAPOD/ITHACAPOD.C

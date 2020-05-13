@@ -38,10 +38,55 @@ License
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index, int layers)
+namespace ITHACAutilities
+{
+
+double L2norm(volScalarField field)
+{
+    double a;
+    a = Foam::sqrt(fvc::domainIntegrate(field * field).value());
+    return a;
+}
+
+double L2norm(volVectorField field)
+{
+    double a;
+    a = Foam::sqrt(fvc::domainIntegrate(field & field).value());
+    return a;
+}
+
+bool check_folder(word folder)
+{
+    struct stat sb;
+    bool exist;
+
+    if (stat(folder.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode))
+    {
+        exist = true;
+    }
+    else
+    {
+        exist = false;
+    }
+
+    return exist;
+}
+
+template<class TypeField>
+double frobNorm(TypeField& field)
+{
+    double norm(0);
+    Eigen::VectorXd vF = Foam2Eigen::field2Eigen(field);
+    norm = vF.norm();
+    return norm;
+}
+
+template double frobNorm(volScalarField& field);
+template double frobNorm(volVectorField& field);
+
+List<int> getIndices(fvMesh& mesh, int index, int layers)
 {
     List<int> out;
     out.resize(1);
@@ -67,8 +112,8 @@ List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index, int layers)
     return out2;
 }
 
-List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index_row,
-                                      int index_col, int layers)
+List<int> getIndices(fvMesh& mesh, int index_row,
+                     int index_col, int layers)
 {
     List<int> out;
     out.resize(2);
@@ -96,7 +141,7 @@ List<int> ITHACAutilities::getIndices(fvMesh& mesh, int index_row,
 }
 
 
-void ITHACAutilities::createSymLink(word folder)
+void createSymLink(word folder)
 {
     if (!Pstream::parRun())
     {
@@ -144,8 +189,8 @@ void ITHACAutilities::createSymLink(word folder)
     }
 }
 
-Eigen::MatrixXd ITHACAutilities::rand(int rows, int cols, double min,
-                                      double max)
+Eigen::MatrixXd rand(int rows, int cols, double min,
+                     double max)
 {
     std::srand(static_cast<long unsigned int>
                (std::chrono::high_resolution_clock::now().time_since_epoch().count()));
@@ -156,7 +201,7 @@ Eigen::MatrixXd ITHACAutilities::rand(int rows, int cols, double min,
     return matr;
 }
 
-Eigen::MatrixXd ITHACAutilities::rand(int rows, Eigen::MatrixXd minMax)
+Eigen::MatrixXd rand(int rows, Eigen::MatrixXd minMax)
 {
     std::srand(static_cast<long unsigned int>
                (std::chrono::high_resolution_clock::now().time_since_epoch().count()));
@@ -174,7 +219,7 @@ Eigen::MatrixXd ITHACAutilities::rand(int rows, Eigen::MatrixXd minMax)
 }
 
 
-bool ITHACAutilities::isInteger(double ratio)
+bool isInteger(double ratio)
 {
     bool checkResult = 0;
 
@@ -190,7 +235,7 @@ bool ITHACAutilities::isInteger(double ratio)
     return checkResult;
 }
 
-bool ITHACAutilities::isTurbulent()
+bool isTurbulent()
 {
     bool checkTurb;
     ITHACAparameters* para = ITHACAparameters::getInstance();
@@ -211,7 +256,7 @@ bool ITHACAutilities::isTurbulent()
 }
 
 // Check if the modes exists
-bool ITHACAutilities::check_pod()
+bool check_pod()
 {
     bool pod_exist = 0;
 
@@ -241,7 +286,7 @@ bool ITHACAutilities::check_pod()
 }
 
 // Check if the offline data exist
-bool ITHACAutilities::check_off()
+bool check_off()
 {
     bool off_exist = 0;
 
@@ -271,7 +316,7 @@ bool ITHACAutilities::check_off()
 }
 
 // Check if the supremizer data exist
-bool ITHACAutilities::check_sup()
+bool check_sup()
 {
     bool sup_exist = 0;
 
@@ -300,31 +345,14 @@ bool ITHACAutilities::check_sup()
     return sup_exist;
 }
 
-bool ITHACAutilities::check_folder(word folder)
-{
-    struct stat sb;
-    bool exist;
-
-    if (stat(folder.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode))
-    {
-        exist = true;
-    }
-    else
-    {
-        exist = false;
-    }
-
-    return exist;
-}
-
-bool ITHACAutilities::check_file(std::string fileName)
+bool check_file(std::string fileName)
 {
     std::ifstream infile(fileName);
     return infile.good();
 }
 
 template<class TypeField>
-PtrList<TypeField> ITHACAutilities::reconstruct_from_coeff(
+PtrList<TypeField> reconstruct_from_coeff(
     PtrList<TypeField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes)
 {
     PtrList<TypeField> rec_field;
@@ -349,11 +377,11 @@ PtrList<TypeField> ITHACAutilities::reconstruct_from_coeff(
 }
 
 template<class TypeField>
-double ITHACAutilities::errorFieldsFrob(TypeField& field1,
-                                        TypeField& field2)
+double errorFieldsFrob(TypeField& field1,
+                       TypeField& field2)
 {
     double err;
-    TypeField errField = field1-field2;
+    TypeField errField = field1 - field2;
 
     if (frobNorm(field1) <= 1e-6)
     {
@@ -368,8 +396,8 @@ double ITHACAutilities::errorFieldsFrob(TypeField& field1,
 }
 
 template<class TypeField>
-double ITHACAutilities::error_fields(TypeField& field1,
-                                     TypeField& field2)
+double error_fields(TypeField& field1,
+                    TypeField& field2)
 {
     double err;
 
@@ -379,14 +407,18 @@ double ITHACAutilities::error_fields(TypeField& field1,
     }
     else
     {
-        err = L2norm(field1 - field2) / L2norm(field1);
+        err = L2norm(field1 - field2) / L2norm(
+                  field1);
     }
 
     return err;
 }
 
+template double error_fields(volScalarField& field1, volScalarField& field2);
+template double error_fields(volVectorField& field1, volVectorField& field2);
+
 template<>
-double ITHACAutilities::error_fields(
+double error_fields(
     GeometricField<vector, fvPatchField, volMesh>& field1,
     GeometricField<vector, fvPatchField, volMesh>& field2, volScalarField& Volumes)
 
@@ -397,7 +429,7 @@ double ITHACAutilities::error_fields(
 }
 
 template<>
-double ITHACAutilities::error_fields(
+double error_fields(
     GeometricField<scalar, fvPatchField, volMesh>& field1,
     GeometricField<scalar, fvPatchField, volMesh>& field2, volScalarField& Volumes)
 
@@ -408,16 +440,16 @@ double ITHACAutilities::error_fields(
 }
 
 template<class TypeField>
-double ITHACAutilities::error_fields_abs(TypeField& field1,
-        TypeField& field2)
+double error_fields_abs(TypeField& field1,
+                        TypeField& field2)
 {
     double err = L2norm(field1 - field2);
     return err;
 }
 
 template<class TypeField>
-Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<TypeField>&
-        fields1, PtrList<TypeField>& fields2)
+Eigen::MatrixXd error_listfields(PtrList<TypeField>&
+                                 fields1, PtrList<TypeField>& fields2)
 {
     Eigen::VectorXd err;
 
@@ -439,8 +471,8 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<TypeField>&
 }
 
 template<class TypeField>
-Eigen::MatrixXd ITHACAutilities::errorListFieldsFrob(PtrList<TypeField>&
-        fields1, PtrList<TypeField>& fields2)
+Eigen::MatrixXd errorListFieldsFrob(PtrList<TypeField>&
+                                    fields1, PtrList<TypeField>& fields2)
 {
     Eigen::VectorXd err;
 
@@ -462,7 +494,7 @@ Eigen::MatrixXd ITHACAutilities::errorListFieldsFrob(PtrList<TypeField>&
 }
 
 template<class TypeField>
-Eigen::MatrixXd ITHACAutilities::error_listfields(
+Eigen::MatrixXd error_listfields(
     PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& fields1,
     PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& fields2,
     PtrList<volScalarField>& Volumes)
@@ -484,8 +516,8 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(
 }
 
 template<class TypeField>
-Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<TypeField>&
-        fields1, PtrList<TypeField>& fields2)
+Eigen::MatrixXd error_listfields_abs(PtrList<TypeField>&
+                                     fields1, PtrList<TypeField>& fields2)
 {
     Eigen::VectorXd err;
 
@@ -506,8 +538,8 @@ Eigen::MatrixXd ITHACAutilities::error_listfields_abs(PtrList<TypeField>&
     return err;
 }
 
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes,
-        int Nmodes)
+Eigen::MatrixXd get_mass_matrix(PtrList<volVectorField> modes,
+                                int Nmodes)
 {
     label Msize;
 
@@ -536,8 +568,8 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volVectorField> modes,
     return M_matrix;
 }
 
-Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
-        int Nmodes)
+Eigen::MatrixXd get_mass_matrix(PtrList<volScalarField> modes,
+                                int Nmodes)
 {
     label Msize;
 
@@ -567,7 +599,7 @@ Eigen::MatrixXd ITHACAutilities::get_mass_matrix(PtrList<volScalarField> modes,
 }
 
 template<class TypeField>
-Eigen::VectorXd ITHACAutilities::get_mass_matrix_FV(
+Eigen::VectorXd get_mass_matrix_FV(
     GeometricField<TypeField, fvPatchField, volMesh>& snapshot)
 {
     Eigen::MatrixXd snapEigen = Foam2Eigen::field2Eigen(snapshot);
@@ -577,8 +609,8 @@ Eigen::VectorXd ITHACAutilities::get_mass_matrix_FV(
     return vol3;
 }
 
-Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,
-        PtrList<volVectorField>& modes, int Nmodes)
+Eigen::VectorXd get_coeffs(volVectorField snapshot,
+                           PtrList<volVectorField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -607,8 +639,8 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volVectorField snapshot,
     return a;
 }
 
-Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot,
-        PtrList<volScalarField>& modes, int Nmodes)
+Eigen::VectorXd get_coeffs(volScalarField snapshot,
+                           PtrList<volScalarField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -638,8 +670,8 @@ Eigen::VectorXd ITHACAutilities::get_coeffs(volScalarField snapshot,
 }
 
 template<class TypeField>
-Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<TypeField> snapshots,
-        PtrList<TypeField> modes, int Nmodes)
+Eigen::MatrixXd get_coeffs(PtrList<TypeField> snapshots,
+                           PtrList<TypeField> modes, int Nmodes)
 {
     label Msize;
 
@@ -663,8 +695,8 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<TypeField> snapshots,
 }
 
 template<>
-Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
-        PtrList<volScalarField>& modes, int Nmodes)
+Eigen::VectorXd get_coeffs_ortho(volScalarField snapshot,
+                                 PtrList<volScalarField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -691,8 +723,8 @@ Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volScalarField snapshot,
 }
 
 template<>
-Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volVectorField
-        snapshot, PtrList<volVectorField>& modes, int Nmodes)
+Eigen::VectorXd get_coeffs_ortho(volVectorField
+                                 snapshot, PtrList<volVectorField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -719,8 +751,8 @@ Eigen::VectorXd ITHACAutilities::get_coeffs_ortho(volVectorField
 }
 
 template<class TypeField>
-Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<TypeField>
-        snapshots, PtrList<TypeField>& modes, int Nmodes)
+Eigen::MatrixXd get_coeffs_ortho(PtrList<TypeField>
+                                 snapshots, PtrList<TypeField>& modes, int Nmodes)
 {
     label Msize;
 
@@ -744,9 +776,9 @@ Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(PtrList<TypeField>
 }
 
 template<class TypeField>
-Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(PtrList<TypeField>
-        snapshots,
-        PtrList<TypeField>& modes, int nModes)
+Eigen::MatrixXd getCoeffsFrobenius(PtrList<TypeField>
+                                   snapshots,
+                                   PtrList<TypeField>& modes, int nModes)
 {
     label Msize;
 
@@ -774,21 +806,7 @@ Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(PtrList<TypeField>
     return coeffs;
 }
 
-double ITHACAutilities::L2norm(volScalarField field)
-{
-    double a;
-    a = Foam::sqrt(fvc::domainIntegrate(field * field).value());
-    return a;
-}
-
-double ITHACAutilities::L2norm(volVectorField field)
-{
-    double a;
-    a = Foam::sqrt(fvc::domainIntegrate(field & field).value());
-    return a;
-}
-
-double ITHACAutilities::H1seminorm(volScalarField field)
+double H1seminorm(volScalarField field)
 {
     double a;
     a = Foam::sqrt(fvc::domainIntegrate(fvc::grad(field) & fvc::grad(
@@ -796,7 +814,7 @@ double ITHACAutilities::H1seminorm(volScalarField field)
     return a;
 }
 
-double ITHACAutilities::H1seminorm(volVectorField field)
+double H1seminorm(volVectorField field)
 {
     double a;
     a = Foam::sqrt(fvc::domainIntegrate(fvc::grad(field)
@@ -804,17 +822,8 @@ double ITHACAutilities::H1seminorm(volVectorField field)
     return a;
 }
 
-template<class TypeField>
-double ITHACAutilities::frobNorm(TypeField& field)
-{
-    double norm(0);
-    Eigen::VectorXd vF = Foam2Eigen::field2Eigen(field);
-    norm = vF.norm();
-    return norm;
-}
-
-void ITHACAutilities::setBoxToValue(volScalarField& field, Eigen::MatrixXd Box,
-                                    double value)
+void setBoxToValue(volScalarField& field, Eigen::MatrixXd Box,
+                   double value)
 {
     M_Assert(Box.rows() == 2
              && Box.cols() == 3,
@@ -854,7 +863,7 @@ void ITHACAutilities::setBoxToValue(volScalarField& field, Eigen::MatrixXd Box,
     }
 }
 
-void ITHACAutilities::assignONE(volScalarField& s, List<int>& L)
+void assignONE(volScalarField& s, List<int>& L)
 {
     for (label i = 0; i < L.size(); i++)
     {
@@ -863,7 +872,7 @@ void ITHACAutilities::assignONE(volScalarField& s, List<int>& L)
 }
 
 // Assign a BC for a vector field
-void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
+void assignBC(volScalarField& s, label BC_ind, double& value)
 {
     if (s.boundaryField()[BC_ind].type() == "fixedValue"
             || s.boundaryField()[BC_ind].type() == "calculated")
@@ -925,8 +934,8 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind, double& value)
 }
 
 // Assign a BC for a scalar field
-void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
-                               List<double> value)
+void assignBC(volScalarField& s, label BC_ind,
+              List<double> value)
 {
     if (s.boundaryField()[BC_ind].type() == "fixedValue")
     {
@@ -951,8 +960,8 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
 }
 
 // Assign a BC for a scalar field
-void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
-                               Vector<double>& value)
+void assignBC(volVectorField& s, label BC_ind,
+              Vector<double>& value)
 {
     if (s.boundaryField()[BC_ind].type() == "fixedValue"
             || s.boundaryField()[BC_ind].type() == "processor"
@@ -985,8 +994,8 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
     }
 }
 
-void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
-                               Eigen::MatrixXd valueVec)
+void assignBC(volScalarField& s, label BC_ind,
+              Eigen::MatrixXd valueVec)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
 
@@ -1033,8 +1042,8 @@ void ITHACAutilities::assignBC(volScalarField& s, label BC_ind,
 }
 
 // Assign a BC for a scalar field
-void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
-                               Eigen::MatrixXd valueVec)
+void assignBC(volVectorField& s, label BC_ind,
+              Eigen::MatrixXd valueVec)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
     int sizeBC = s.boundaryField()[BC_ind].size();
@@ -1074,8 +1083,8 @@ void ITHACAutilities::assignBC(volVectorField& s, label BC_ind,
     }
 }
 template<class TypeField>
-PtrList<TypeField> ITHACAutilities::averageSubtract(PtrList<TypeField>
-        fields, Eigen::MatrixXd ind, PtrList<TypeField>& ave)
+PtrList<TypeField> averageSubtract(PtrList<TypeField>
+                                   fields, Eigen::MatrixXd ind, PtrList<TypeField>& ave)
 {
     PtrList<TypeField> aveSubtracted;
     Eigen::VectorXd newInd;
@@ -1110,7 +1119,7 @@ PtrList<TypeField> ITHACAutilities::averageSubtract(PtrList<TypeField>
 }
 
 template<class TypeField>
-TypeField ITHACAutilities::computeAverage(PtrList<TypeField>& fields)
+TypeField computeAverage(PtrList<TypeField>& fields)
 {
     TypeField av(fields[0]);
 
@@ -1125,9 +1134,9 @@ TypeField ITHACAutilities::computeAverage(PtrList<TypeField>& fields)
 
 
 
-Eigen::MatrixXd ITHACAutilities::parTimeCombMat(List<Eigen::VectorXd>
-        acquiredSnapshotsTimes,
-        Eigen::MatrixXd parameters)
+Eigen::MatrixXd parTimeCombMat(List<Eigen::VectorXd>
+                               acquiredSnapshotsTimes,
+                               Eigen::MatrixXd parameters)
 {
     int parsNum = parameters.cols();
     int parsSamplesNum = parameters.rows();
@@ -1158,7 +1167,7 @@ Eigen::MatrixXd ITHACAutilities::parTimeCombMat(List<Eigen::VectorXd>
 }
 
 template<class TypeField>
-void ITHACAutilities::changeBCtype(
+void changeBCtype(
     GeometricField<TypeField, fvPatchField, volMesh>& field, word BCtype,
     label BC_ind)
 {
@@ -1166,8 +1175,8 @@ void ITHACAutilities::changeBCtype(
                                  field.mesh().boundary()[BC_ind], field));
 }
 
-List<vector> ITHACAutilities::displacedSegment(List<vector> x0, double mux1,
-        double mux2, double muy1, double muy2)
+List<vector> displacedSegment(List<vector> x0, double mux1,
+                              double mux2, double muy1, double muy2)
 {
     vector minimum = min(x0);
     vector maximum = max(x0);
@@ -1193,9 +1202,8 @@ List<vector> ITHACAutilities::displacedSegment(List<vector> x0, double mux1,
     return displ;
 }
 
-template<>
-void ITHACAutilities::setIndices2Value(labelList& ind2set,
-                                       List<vector>& value2set, labelList& movingIDS, List<vector>& originalList)
+void setIndices2Value(labelList& ind2set,
+                      List<vector>& value2set, labelList& movingIDS, List<vector>& originalList)
 {
     M_Assert(ind2set.size() == value2set.size(),
              "The size of the indices must be equal to the size of the values list");
@@ -1221,8 +1229,8 @@ void ITHACAutilities::setIndices2Value(labelList& ind2set,
     }
 }
 
-volScalarField ITHACAutilities::meshNonOrtho(fvMesh& mesh,
-        volScalarField& NonOrtho)
+volScalarField meshNonOrtho(fvMesh& mesh,
+                            volScalarField& NonOrtho)
 {
     scalarField sno = (polyMeshTools::faceOrthogonality(mesh, mesh.Sf(), mesh.C()));
 
@@ -1257,8 +1265,8 @@ volScalarField ITHACAutilities::meshNonOrtho(fvMesh& mesh,
     return NonOrtho;
 }
 
-void ITHACAutilities::getPointsFromPatch(fvMesh& mesh, label ind,
-        List<vector>& points, labelList& indices)
+void getPointsFromPatch(fvMesh& mesh, label ind,
+                        List<vector>& points, labelList& indices)
 {
     pointField meshPoints(mesh.points());
     const polyPatch& patchFound = mesh.boundaryMesh()[ind];
@@ -1273,9 +1281,9 @@ void ITHACAutilities::getPointsFromPatch(fvMesh& mesh, label ind,
     indices = labelPatchFound;
 }
 
-vector ITHACAutilities::displacePoint(vector x0, vector x_low, vector x_up,
-                                      double mux_low, double mux_up, double muy_low, double muy_up, double muz_low,
-                                      double muz_up)
+vector displacePoint(vector x0, vector x_low, vector x_up,
+                     double mux_low, double mux_up, double muy_low, double muy_up, double muz_low,
+                     double muz_up)
 {
     vector direction = x_up - x_low;
     double t0;
@@ -1338,8 +1346,8 @@ vector ITHACAutilities::displacePoint(vector x0, vector x_low, vector x_up,
     return def_point;
 }
 
-List<vector> ITHACAutilities::rotatePoints(const List<vector>& originalPoints,
-        vector AxisOfRotation, double AngleOfRotation)
+List<vector> rotatePoints(const List<vector>& originalPoints,
+                          vector AxisOfRotation, double AngleOfRotation)
 {
     double theta = AngleOfRotation / 180 *  constant::mathematical::pi;
     quaternion q(AxisOfRotation, theta);
@@ -1353,10 +1361,10 @@ List<vector> ITHACAutilities::rotatePoints(const List<vector>& originalPoints,
     return rotatedPoints;
 }
 
-Field<vector> ITHACAutilities::rotateMesh(fvMesh& mesh, double r1, double r2,
-        vector axis,
-        double alpha, labelList movingPointsIDs,
-        List<double> radii, word angleVariationMethod, double v)
+Field<vector> rotateMesh(fvMesh& mesh, double r1, double r2,
+                         vector axis,
+                         double alpha, labelList movingPointsIDs,
+                         List<double> radii, word angleVariationMethod, double v)
 {
     M_Assert(angleVariationMethod == "Linear"
              || angleVariationMethod == "Sinusoidal" || angleVariationMethod == "Sigmoid",
@@ -1403,8 +1411,8 @@ Field<vector> ITHACAutilities::rotateMesh(fvMesh& mesh, double r1, double r2,
     return pointRot;
 }
 
-Eigen::MatrixXd ITHACAutilities::rotationMatrix(vector AxisOfRotation,
-        double AngleOfRotation)
+Eigen::MatrixXd rotationMatrix(vector AxisOfRotation,
+                               double AngleOfRotation)
 {
     Eigen::MatrixXd R(3, 3);
     double theta = AngleOfRotation / 180 *  constant::mathematical::pi;
@@ -1424,7 +1432,7 @@ Eigen::MatrixXd ITHACAutilities::rotationMatrix(vector AxisOfRotation,
     return R;
 }
 
-Eigen::VectorXd ITHACAutilities::boudaryFaceToCellDistance(
+Eigen::VectorXd boudaryFaceToCellDistance(
     fvMesh& mesh, label BC_ind)
 {
     Eigen::VectorXd cellFaceDistance;
@@ -1445,9 +1453,66 @@ Eigen::VectorXd ITHACAutilities::boudaryFaceToCellDistance(
     return (cellFaceDistance);
 }
 
+template<typename T>
+void assignIF(GeometricField<T, fvPatchField, volMesh>& s,
+              T& value)
+{
+    for (label i = 0; i < s.internalField().size(); i++)
+    {
+        s.ref()[i] = value;
+    }
+}
 
-template<>
-void ITHACAutilities::assignMixedBC(
+template void assignIF(
+    GeometricField<scalar, fvPatchField, volMesh>& field, scalar& value);
+template void assignIF(
+    GeometricField<vector, fvPatchField, volMesh>& field, vector& value);
+
+template<typename T>
+void assignIF(GeometricField<T, fvPatchField, volMesh>& s,
+              T& value, List<int>& indices)
+{
+    for (label i = 0; i < indices.size(); i++)
+    {
+        s.ref()[indices[i]] = value;
+    }
+}
+
+template<typename T>
+void assignIF(GeometricField<T, fvPatchField, volMesh>& s, T& value, int index)
+{
+    s.ref()[index] = value;
+}
+
+template void assignIF(GeometricField<scalar, fvPatchField, volMesh>& field,
+                       scalar& value, int index);
+template void assignIF(GeometricField<vector, fvPatchField, volMesh>& field,
+                       vector& value, int index);
+
+
+template<typename T>
+Eigen::MatrixXd get_mass_matrix_Eigen(PtrList<T>& fields,
+                                      bool consider_volumes)
+{
+    Eigen::MatrixXd F = Foam2Eigen::PtrList2Eigen(fields);
+    Eigen::VectorXd V = Foam2Eigen::field2Eigen(fields[0].mesh().V());
+    Eigen::MatrixXd VM = V.asDiagonal();
+    Eigen::MatrixXd M;
+
+    if (consider_volumes)
+    {
+        M = F.transpose() * VM * F;
+    }
+    else
+    {
+        M = F.transpose() * F;
+    }
+
+    return M;
+}
+
+
+void assignMixedBC(
     GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
     Eigen::MatrixXd& value, Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac)
 {
@@ -1468,8 +1533,7 @@ void ITHACAutilities::assignMixedBC(
     }
 }
 
-template<>
-void ITHACAutilities::assignMixedBC(
+void assignMixedBC(
     GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
     Eigen::MatrixXd& value, Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac)
 {
@@ -1490,8 +1554,7 @@ void ITHACAutilities::assignMixedBC(
     }
 }
 
-template<>
-void ITHACAutilities::assignMixedBC(
+void assignMixedBC(
     GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
     List<scalar>& value, List<scalar>& grad, List<scalar>& valueFrac)
 {
@@ -1512,8 +1575,7 @@ void ITHACAutilities::assignMixedBC(
     }
 }
 
-template<>
-void ITHACAutilities::assignMixedBC(
+void assignMixedBC(
     GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
     List<vector>& value, List<vector>& grad, List<scalar>& valueFrac)
 {
@@ -1534,8 +1596,8 @@ void ITHACAutilities::assignMixedBC(
     }
 }
 
-List<int> ITHACAutilities::getIndicesFromDisc(fvMesh& mesh, double radius,
-        vector origin, vector axis, List<double>& radii)
+List<int> getIndicesFromDisc(fvMesh& mesh, double radius,
+                             vector origin, vector axis, List<double>& radii)
 {
     pointField meshPoints(mesh.points());
     List<int> indices(meshPoints.size());
@@ -1565,7 +1627,7 @@ List<int> ITHACAutilities::getIndicesFromDisc(fvMesh& mesh, double radius,
 }
 
 template<typename type_f>
-List<int> ITHACAutilities::getIndicesFromBox(
+List<int> getIndicesFromBox(
     GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
 {
     M_Assert(Box.rows() == 2
@@ -1593,7 +1655,7 @@ List<int> ITHACAutilities::getIndicesFromBox(
 }
 
 template<typename type_f>
-fvMeshSubset* ITHACAutilities::getSubMeshFromBox(
+fvMeshSubset* getSubMeshFromBox(
     GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
 {
     List<int> indices = getIndicesFromBox(field, Box);
@@ -1609,7 +1671,7 @@ fvMeshSubset* ITHACAutilities::getSubMeshFromBox(
 }
 
 template<typename type_f>
-void ITHACAutilities::normalizeFields(
+void normalizeFields(
     PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields)
 {
     Eigen::MatrixXd eigenFields = Foam2Eigen::PtrList2Eigen(fields);
@@ -1627,120 +1689,114 @@ void ITHACAutilities::normalizeFields(
         for (int k = 0; k < tmp.boundaryField().size(); k++)
         {
             Eigen::MatrixXd vec = eigenFieldsBC[k].col(i) / norm;
-            ITHACAutilities::assignBC(tmp, k, vec);
+            assignBC(tmp, k, vec);
         }
 
         fields.set(i, tmp);
     }
 }
 
-template void ITHACAutilities::normalizeFields(
+template void normalizeFields(
     PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields);
-template void ITHACAutilities::normalizeFields(
+template void normalizeFields(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields);
 
-template Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(
+template Eigen::MatrixXd getCoeffsFrobenius(
     PtrList<volScalarField> snapshots,
     PtrList<volScalarField>& modes, int nModes);
 
-template Eigen::MatrixXd ITHACAutilities::getCoeffsFrobenius(
+template Eigen::MatrixXd getCoeffsFrobenius(
     PtrList<volVectorField> snapshots,
     PtrList<volVectorField>& modes, int nModes);
 
-template fvMeshSubset* ITHACAutilities::getSubMeshFromBox(
+template fvMeshSubset* getSubMeshFromBox(
     GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
-template fvMeshSubset* ITHACAutilities::getSubMeshFromBox(
+template fvMeshSubset* getSubMeshFromBox(
     GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 
-template List<int> ITHACAutilities::getIndicesFromBox(
+template List<int> getIndicesFromBox(
     GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
-template List<int> ITHACAutilities::getIndicesFromBox(
+template List<int> getIndicesFromBox(
     GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 
-template PtrList<volScalarField> ITHACAutilities::reconstruct_from_coeff(
+template PtrList<volScalarField> reconstruct_from_coeff(
     PtrList<volScalarField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
-template PtrList<volVectorField> ITHACAutilities::reconstruct_from_coeff(
+template PtrList<volVectorField> reconstruct_from_coeff(
     PtrList<volVectorField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
-template PtrList<volScalarField> ITHACAutilities::averageSubtract(
+template PtrList<volScalarField> averageSubtract(
     PtrList<volScalarField>
     fields, Eigen::MatrixXd ind, PtrList<volScalarField>& ave);
-template PtrList<volVectorField> ITHACAutilities::averageSubtract(
+template PtrList<volVectorField> averageSubtract(
     PtrList<volVectorField>
     fields, Eigen::MatrixXd ind, PtrList<volVectorField>& ave);
-template volVectorField ITHACAutilities::computeAverage(
+template volVectorField computeAverage(
     PtrList<volVectorField>& fields);
-template volScalarField ITHACAutilities::computeAverage(
+template volScalarField computeAverage(
     PtrList<volScalarField>& fields);
 
-template double ITHACAutilities::frobNorm(volScalarField& field);
-template double ITHACAutilities::frobNorm(volVectorField& field);
+template double errorFieldsFrob(volScalarField& field1,
+                                volScalarField& field2);
+template double errorFieldsFrob(volVectorField& field1,
+                                volVectorField& field2);
 
-template double ITHACAutilities::errorFieldsFrob(volScalarField& field1,
-        volScalarField& field2);
-template double ITHACAutilities::errorFieldsFrob(volVectorField& field1,
-        volVectorField& field2);
+template double error_fields_abs(volScalarField& field1,
+                                 volScalarField& field2);
+template double error_fields_abs(volVectorField& field1,
+                                 volVectorField& field2);
 
-template double ITHACAutilities::error_fields(volScalarField& field1,
-        volScalarField& field2);
-template double ITHACAutilities::error_fields(volVectorField& field1,
-        volVectorField& field2);
-
-template double ITHACAutilities::error_fields_abs(volScalarField& field1,
-        volScalarField& field2);
-template double ITHACAutilities::error_fields_abs(volVectorField& field1,
-        volVectorField& field2);
-
-template Eigen::MatrixXd ITHACAutilities::error_listfields(
+template Eigen::MatrixXd error_listfields(
     PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields1,
     PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields2,
     PtrList<volScalarField>& Volumes);
-template Eigen::MatrixXd ITHACAutilities::error_listfields(
+template Eigen::MatrixXd error_listfields(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields1,
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields2,
     PtrList<volScalarField>& Volumes);
 
 
-template Eigen::MatrixXd ITHACAutilities::error_listfields(
+template Eigen::MatrixXd error_listfields(
     PtrList<volScalarField>& fields1,
     PtrList<volScalarField>& fields2);
-template Eigen::MatrixXd ITHACAutilities::error_listfields(
+template Eigen::MatrixXd error_listfields(
     PtrList<volVectorField>& fields1,
     PtrList<volVectorField>& fields2);
 
-template Eigen::MatrixXd ITHACAutilities::errorListFieldsFrob(
+template Eigen::MatrixXd errorListFieldsFrob(
     PtrList<volScalarField>& fields1,
     PtrList<volScalarField>& fields2);
-template Eigen::MatrixXd ITHACAutilities::errorListFieldsFrob(
+template Eigen::MatrixXd errorListFieldsFrob(
     PtrList<volVectorField>& fields1,
     PtrList<volVectorField>& fields2);
 
-template Eigen::MatrixXd ITHACAutilities::error_listfields_abs(
+template Eigen::MatrixXd error_listfields_abs(
     PtrList<volScalarField>& fields1,
     PtrList<volScalarField>& fields2);
-template Eigen::MatrixXd ITHACAutilities::error_listfields_abs(
+template Eigen::MatrixXd error_listfields_abs(
     PtrList<volVectorField>& fields1,
     PtrList<volVectorField>& fields2);
 
-template Eigen::VectorXd ITHACAutilities::get_mass_matrix_FV(
+template Eigen::VectorXd get_mass_matrix_FV(
     GeometricField<scalar, fvPatchField, volMesh>& snapshot);
-template Eigen::VectorXd ITHACAutilities::get_mass_matrix_FV(
+template Eigen::VectorXd get_mass_matrix_FV(
     GeometricField<vector, fvPatchField, volMesh>& snapshot);
 
-template Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<volScalarField>
-        snapshots, PtrList<volScalarField> modes, int Nmodes);
-template Eigen::MatrixXd ITHACAutilities::get_coeffs(PtrList<volVectorField>
-        snapshots, PtrList<volVectorField> modes, int Nmodes);
+template Eigen::MatrixXd get_coeffs(PtrList<volScalarField>
+                                    snapshots, PtrList<volScalarField> modes, int Nmodes);
+template Eigen::MatrixXd get_coeffs(PtrList<volVectorField>
+                                    snapshots, PtrList<volVectorField> modes, int Nmodes);
 
-template Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(
+template Eigen::MatrixXd get_coeffs_ortho(
     PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes, int Nmodes);
-template Eigen::MatrixXd ITHACAutilities::get_coeffs_ortho(
+template Eigen::MatrixXd get_coeffs_ortho(
     PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes, int Nmodes);
 
-template void ITHACAutilities::changeBCtype<scalar>
+template void changeBCtype<scalar>
 (GeometricField<scalar, fvPatchField, volMesh>& field, word BCtype,
  label BC_ind);
-template void ITHACAutilities::changeBCtype<vector>
+template void changeBCtype<vector>
 (GeometricField<vector, fvPatchField, volMesh>& field, word BCtype,
  label BC_ind);
+
+}
 

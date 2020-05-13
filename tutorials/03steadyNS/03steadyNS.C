@@ -73,7 +73,7 @@ class tutorial03 : public steadyNS
                 Vector<double> Uinl(0, 0, 0);
 
                 for (label i = 0; i < mu.cols(); i++)
-                {           
+                {
                     mu_now[0] = mu(0, i);
                     change_viscosity(mu(0, i));
                     truthSolve(mu_now);
