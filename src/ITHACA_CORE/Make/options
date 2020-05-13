@@ -30,7 +30,8 @@ EXE_INC = \
     -w \
     -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11 
+    -std=c++11 \
+    -mavx 
 
 
 EXE_LIBS = \
