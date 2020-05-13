@@ -15,7 +15,14 @@ EXE_INC = \
     -Wno-comment \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11
+    -std=c++11 \
+    -fopenmp \
+    -pthread \
+    -ldl \
+    -O3 \
+    -msse4 \
+    -mavx 
+
 
 
 EXE_LIBS = \
