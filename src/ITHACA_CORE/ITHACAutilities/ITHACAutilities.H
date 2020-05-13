@@ -196,10 +196,23 @@ class ITHACAutilities
                 Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
         //--------------------------------------------------------------------------
+        /// Computes the relative error between two Fields in the Frobenius norm
+        ///
+        /// @param      field1     The reference field to which the norm is computed
+        /// @param      field2     The field for which the error is computed
+        ///
+        /// @tparam     TypeField  type of field
+        ///
+        /// @return     The Frobenius norm of the relative error.
+        ///
+        template<class TypeField>
+        static double errorFieldsFrob(TypeField& field1, TypeField& field2);
+
+        //--------------------------------------------------------------------------
         /// Computes the relative error between two Fields in L2 norm
         ///
         /// @param[in]  field1  The field 1
-        /// @param[in]  fideld2  The field 2
+        /// @param[in]  field2  The field 2
         ///
         /// @tparam     TypeField   type of field
         ///
@@ -238,19 +251,32 @@ class ITHACAutilities
         static double error_fields_abs(TypeField& field1, TypeField& field2);
 
         //--------------------------------------------------------------------------
-        /// Computes the relative error in L2 norm between two lists of Fields
+        /// Computes the relative error in L2 norm between two lists of fields
         ///
-        /// @param[in]  fields1  The fields 1, scalar or vector
-        /// @param[in]  fields2  The fields 2, scalar or vector
+        /// @param      fields1  The reference fields to which the norm is computed
+        /// @param      fields2  The fields for which the error is computed
         ///
         /// @tparam     TypeField   type of field
         ///
-        /// @return     Column vector, in each row the L2 norm of the error.
+        /// @return     Column vector, in each row the L2 norm of the relative error.
         ///
         template<class TypeField>
         static Eigen::MatrixXd error_listfields(PtrList<TypeField>& fields1,
                                                 PtrList<TypeField>& fields2);
 
+        //--------------------------------------------------------------------------
+        /// Computes the relative error in the Frobenius norm between two lists of fields
+        ///
+        /// @param      fields1  The reference fields to which the norm is computed
+        /// @param      fields2  The fields for which the error is computed
+        ///
+        /// @tparam     TypeField   type of field
+        ///
+        /// @return     Column vector, in each row the Frobenius norm of the relative error.
+        ///
+        template<class TypeField>
+        static Eigen::MatrixXd errorListFieldsFrob(PtrList<TypeField>& fields1,
+                                                PtrList<TypeField>& fields2);
 
         //--------------------------------------------------------------------------
         /// Computes the relative error in L2 norm between two lists of Fields
@@ -597,7 +623,7 @@ class ITHACAutilities
         /// @return     Frobenius norm of the field.
         ///
         template<class TypeField>
-        static double frobNorm(TypeField field);
+        static double frobNorm(TypeField& field);
 
         //--------------------------------------------------------------------------
         /// Convert a List of volVectorField snapshots to eigen matrix (only internalfield)
