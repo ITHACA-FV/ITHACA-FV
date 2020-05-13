@@ -30,14 +30,7 @@ EXE_INC = \
     -Wno-comment \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11 \
-    -fopenmp \
-    -pthread \
-    -ldl \
-    -msse4 \
-    -mavx 
-
-
+    -std=c++11 
 
 EXE_LIBS = \
     -lturbulenceModels \

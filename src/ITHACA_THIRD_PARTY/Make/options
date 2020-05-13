@@ -8,12 +8,6 @@ EXE_INC = \
     -Wno-old-style-cast \
     -Wno-non-virtual-dtor \
     -Wno-return-type \
-    -Wno-sign-compare  \
-    -fopenmp \
-    -pthread \
-    -ldl \
-    -msse4 \
-    -mavx 
-
+    -Wno-sign-compare  
 
 EXE_LIBS = 
