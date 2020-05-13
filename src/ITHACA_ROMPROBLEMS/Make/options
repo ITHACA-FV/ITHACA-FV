@@ -68,7 +68,6 @@ EXE_INC = \
     -fopenmp \
     -pthread \
     -ldl \
-    -O1 \
     -msse4 \
     -mavx 
 
