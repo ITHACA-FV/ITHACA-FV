@@ -90,7 +90,7 @@ class tutorial06 : public SteadyNSTurb
                     {
                         Uinl[0] = mu(i, 0);
                         Uinl[1] = mu(i, 1);
-                        assignBC(U, BCind, Uinl);
+                        assignBC(_U(), BCind, Uinl);
                         counter = Ufield.size() + 1;
                         truthSolve("./ITHACAoutput/Offline/");
                     }
@@ -105,7 +105,7 @@ class tutorial06 : public SteadyNSTurb
                 {
                     Uinl[0] = mu(i, 0);
                     Uinl[1] = mu(i, 1);
-                    assignBC(U, BCind, Uinl);
+                    assignBC(_U(), BCind, Uinl);
                     truthSolve("./ITHACAoutput/Offline/");
                 }
             }
@@ -122,7 +122,7 @@ class tutorial06 : public SteadyNSTurb
             {
                 Uinl[0] = par(i, 0);
                 Uinl[1] = par(i, 1);
-                assignBC(U, BCind, Uinl);
+                assignBC(_U(), BCind, Uinl);
                 truthSolve(folder);
             }
         }

@@ -59,8 +59,6 @@ class tutorial03 : public steadyNS
         {
             Vector<double> inl(0, 0, 0);
             List<scalar> mu_now(1);
-            volVectorField U0 = U;
-            volScalarField P0 = p;
 
             // if the offline solution is already performed read the fields
             if (offline)
@@ -75,9 +73,7 @@ class tutorial03 : public steadyNS
                 Vector<double> Uinl(0, 0, 0);
 
                 for (label i = 0; i < mu.cols(); i++)
-                {
-                    U = U0;
-                    p = P0;
+                {           
                     mu_now[0] = mu(0, i);
                     change_viscosity(mu(0, i));
                     truthSolve(mu_now);
