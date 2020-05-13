@@ -123,7 +123,7 @@ struct StorageMemory<T, const SyclDevice> : StorageMemory<T, SyclDevice> {};
 
 namespace TensorSycl {
 namespace internal{
-template <typename Evaluator, typename Op> class ReductionFunctor;
+template <typename Evaluator, typename Op> class GenericNondeterministicReducer;
 }
 }
 #endif
@@ -157,8 +157,7 @@ struct IsVectorizable<GpuDevice, Expression> {
 // Tiled evaluation strategy.
 enum TiledEvaluation {
   Off = 0,    // tiled evaluation is not supported
-  On = 1,     // still work in progress (see TensorBlockV2.h)
-  Legacy = 2  // soon to be deprecated (see TensorBock.h)
+  On = 1,     // still work in progress (see TensorBlock.h)
 };
 
 template <typename Device, typename Expression>
@@ -170,14 +169,8 @@ struct IsTileable {
       TensorEvaluator<Expression, Device>::BlockAccess &&
       TensorEvaluator<Expression, Device>::PreferBlockAccess;
 
-  static const bool BlockAccessV2 =
-      TensorEvaluator<Expression, Device>::BlockAccessV2 &&
-      TensorEvaluator<Expression, Device>::PreferBlockAccess;
-
   static const TiledEvaluation value =
-      BlockAccessV2
-          ? TiledEvaluation::On
-          : (BlockAccess ? TiledEvaluation::Legacy : TiledEvaluation::Off);
+      BlockAccess ? TiledEvaluation::On : TiledEvaluation::Off;
 };
 
 template <typename Expression, typename Device,

@@ -31,15 +31,41 @@ inline std::ptrdiff_t manage_caching_sizes_helper(std::ptrdiff_t a, std::ptrdiff
   return a<=0 ? b : a;
 }
 
-#if EIGEN_ARCH_i386_OR_x86_64
-const std::ptrdiff_t defaultL1CacheSize = 32*1024;
-const std::ptrdiff_t defaultL2CacheSize = 256*1024;
-const std::ptrdiff_t defaultL3CacheSize = 2*1024*1024;
+#if defined(EIGEN_DEFAULT_L1_CACHE_SIZE)
+#define EIGEN_SET_DEFAULT_L1_CACHE_SIZE(val) EIGEN_DEFAULT_L1_CACHE_SIZE
 #else
-const std::ptrdiff_t defaultL1CacheSize = 16*1024;
-const std::ptrdiff_t defaultL2CacheSize = 512*1024;
-const std::ptrdiff_t defaultL3CacheSize = 512*1024;
+#define EIGEN_SET_DEFAULT_L1_CACHE_SIZE(val) val
+#endif // defined(EIGEN_DEFAULT_L1_CACHE_SIZE)
+
+#if defined(EIGEN_DEFAULT_L2_CACHE_SIZE)
+#define EIGEN_SET_DEFAULT_L2_CACHE_SIZE(val) EIGEN_DEFAULT_L2_CACHE_SIZE
+#else
+#define EIGEN_SET_DEFAULT_L2_CACHE_SIZE(val) val
+#endif // defined(EIGEN_DEFAULT_L2_CACHE_SIZE)
+
+#if defined(EIGEN_DEFAULT_L3_CACHE_SIZE)
+#define EIGEN_SET_DEFAULT_L3_CACHE_SIZE(val) EIGEN_SET_DEFAULT_L3_CACHE_SIZE
+#else
+#define EIGEN_SET_DEFAULT_L3_CACHE_SIZE(val) val
+#endif // defined(EIGEN_DEFAULT_L3_CACHE_SIZE)
+  
+#if EIGEN_ARCH_i386_OR_x86_64
+const std::ptrdiff_t defaultL1CacheSize = EIGEN_SET_DEFAULT_L1_CACHE_SIZE(32*1024);
+const std::ptrdiff_t defaultL2CacheSize = EIGEN_SET_DEFAULT_L2_CACHE_SIZE(256*1024);
+const std::ptrdiff_t defaultL3CacheSize = EIGEN_SET_DEFAULT_L3_CACHE_SIZE(2*1024*1024);
+#elif EIGEN_ARCH_PPC
+const std::ptrdiff_t defaultL1CacheSize = EIGEN_SET_DEFAULT_L1_CACHE_SIZE(64*1024);
+const std::ptrdiff_t defaultL2CacheSize = EIGEN_SET_DEFAULT_L2_CACHE_SIZE(512*1024);
+const std::ptrdiff_t defaultL3CacheSize = EIGEN_SET_DEFAULT_L3_CACHE_SIZE(4*1024*1024);
+#else
+const std::ptrdiff_t defaultL1CacheSize = EIGEN_SET_DEFAULT_L1_CACHE_SIZE(16*1024);
+const std::ptrdiff_t defaultL2CacheSize = EIGEN_SET_DEFAULT_L2_CACHE_SIZE(512*1024);
+const std::ptrdiff_t defaultL3CacheSize = EIGEN_SET_DEFAULT_L3_CACHE_SIZE(512*1024);
 #endif
+
+#undef EIGEN_SET_DEFAULT_L1_CACHE_SIZE
+#undef EIGEN_SET_DEFAULT_L2_CACHE_SIZE
+#undef EIGEN_SET_DEFAULT_L3_CACHE_SIZE
 
 /** \internal */
 struct CacheSizes {
@@ -55,7 +81,6 @@ struct CacheSizes {
   std::ptrdiff_t m_l2;
   std::ptrdiff_t m_l3;
 };
-
 
 /** \internal */
 inline void manage_caching_sizes(Action action, std::ptrdiff_t* l1, std::ptrdiff_t* l2, std::ptrdiff_t* l3)
@@ -2649,8 +2674,14 @@ template<typename Scalar, typename Index, typename DataMapper, int nr, bool Conj
 struct gemm_pack_rhs<Scalar, Index, DataMapper, nr, RowMajor, Conjugate, PanelMode>
 {
   typedef typename packet_traits<Scalar>::type Packet;
+  typedef typename unpacket_traits<Packet>::half HalfPacket;
+  typedef typename unpacket_traits<typename unpacket_traits<Packet>::half>::half QuarterPacket;
   typedef typename DataMapper::LinearMapper LinearMapper;
-  enum { PacketSize = packet_traits<Scalar>::size };
+  enum { PacketSize = packet_traits<Scalar>::size,
+         HalfPacketSize = unpacket_traits<HalfPacket>::size,
+         QuarterPacketSize = unpacket_traits<QuarterPacket>::size,
+         HasHalf = (int)HalfPacketSize < (int)PacketSize,
+         HasQuarter = (int)QuarterPacketSize < (int)HalfPacketSize };
   EIGEN_DONT_INLINE void operator()(Scalar* blockB, const DataMapper& rhs, Index depth, Index cols, Index stride=0, Index offset=0);
 };
 
@@ -2712,6 +2743,14 @@ EIGEN_DONT_INLINE void gemm_pack_rhs<Scalar, Index, DataMapper, nr, RowMajor, Co
           Packet A = rhs.template loadPacket<Packet>(k, j2);
           pstoreu(blockB+count, cj.pconj(A));
           count += PacketSize;
+        } else if (HasHalf && HalfPacketSize==4) {
+          HalfPacket A = rhs.template loadPacket<HalfPacket>(k, j2);
+          pstoreu(blockB+count, cj.pconj(A));
+          count += HalfPacketSize;
+        } else if (HasQuarter && QuarterPacketSize==4) {
+          QuarterPacket A = rhs.template loadPacket<QuarterPacket>(k, j2);
+          pstoreu(blockB+count, cj.pconj(A));
+          count += QuarterPacketSize;
         } else {
           const LinearMapper dm0 = rhs.getLinearMapper(k, j2);
           blockB[count+0] = cj(dm0(0));

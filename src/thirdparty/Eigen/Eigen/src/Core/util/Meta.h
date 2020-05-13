@@ -359,6 +359,15 @@ template<> struct numeric_limits<unsigned long long>
   EIGEN_DEVICE_FUNC
   static unsigned long long (min)() { return 0; }
 };
+template<> struct numeric_limits<bool>
+{
+  EIGEN_DEVICE_FUNC
+  static bool epsilon() { return false; }
+  EIGEN_DEVICE_FUNC
+  static bool (max)() { return true; }
+  EIGEN_DEVICE_FUNC
+  static bool (min)() { return false; }
+};
 
 }
 
@@ -612,6 +621,16 @@ template<typename T, typename U> struct scalar_product_traits
 // typedef typename scalar_product_traits<typename remove_all<ArgType0>::type, typename remove_all<ArgType1>::type>::ReturnType type;
 // };
 
+/** \internal Obtains a POD type suitable to use as storage for an object of a size
+  * of at most Len bytes, aligned as specified by \c Align.
+  */
+template<unsigned Len, unsigned Align>
+struct aligned_storage {
+  struct type {
+    EIGEN_ALIGN_TO_BOUNDARY(Align) unsigned char data[Len];
+  };
+};
+
 } // end namespace internal
 
 namespace numext {
@@ -678,6 +697,10 @@ inline unsigned int as_uint(float x)
 #include <cstdint>
 namespace Eigen {
 namespace numext {
+typedef std::uint8_t  uint8_t;
+typedef std::int8_t   int8_t;
+typedef std::uint16_t uint16_t;
+typedef std::int16_t  int16_t;
 typedef std::uint32_t uint32_t;
 typedef std::int32_t  int32_t;
 typedef std::uint64_t uint64_t;
@@ -690,6 +713,10 @@ typedef std::int64_t  int64_t;
 #include <stdint.h>
 namespace Eigen {
 namespace numext {
+typedef ::uint8_t  uint8_t;
+typedef ::int8_t   int8_t;
+typedef ::uint16_t uint16_t;
+typedef ::int16_t  int16_t;
 typedef ::uint32_t uint32_t;
 typedef ::int32_t  int32_t;
 typedef ::uint64_t uint64_t;

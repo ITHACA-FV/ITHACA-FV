@@ -134,7 +134,6 @@ struct TensorEvaluator<const TensorFFTOp<FFT, ArgType, FFTResultType, FFTDir>, D
     IsAligned = false,
     PacketAccess = true,
     BlockAccess = false,
-    BlockAccessV2 = false,
     PreferBlockAccess = false,
     Layout = TensorEvaluator<ArgType, Device>::Layout,
     CoordAccess = false,
@@ -142,7 +141,7 @@ struct TensorEvaluator<const TensorFFTOp<FFT, ArgType, FFTResultType, FFTDir>, D
   };
 
   //===- Tensor block evaluation strategy (see TensorBlock.h) -------------===//
-  typedef internal::TensorBlockNotImplemented TensorBlockV2;
+  typedef internal::TensorBlockNotImplemented TensorBlock;
   //===--------------------------------------------------------------------===//
 
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE TensorEvaluator(const XprType& op, const Device& device) : m_fft(op.fft()), m_impl(op.expression(), device), m_data(NULL), m_device(device) {

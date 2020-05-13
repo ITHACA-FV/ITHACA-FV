@@ -115,8 +115,7 @@ struct TensorEvaluator<const TensorReverseOp<ReverseDimensions, ArgType>, Device
   enum {
     IsAligned         = false,
     PacketAccess      = TensorEvaluator<ArgType, Device>::PacketAccess,
-    BlockAccess       = true,
-    BlockAccessV2     = NumDims > 0,
+    BlockAccess       = NumDims > 0,
     PreferBlockAccess = true,
     Layout            = TensorEvaluator<ArgType, Device>::Layout,
     CoordAccess       = false,  // to be implemented
@@ -125,20 +124,16 @@ struct TensorEvaluator<const TensorReverseOp<ReverseDimensions, ArgType>, Device
 
   typedef internal::TensorIntDivisor<Index> IndexDivisor;
 
-  typedef typename internal::remove_const<Scalar>::type ScalarNoConst;
-  typedef internal::TensorBlock<ScalarNoConst, Index, NumDims, Layout>
-      OutputTensorBlock;
-
   //===- Tensor block evaluation strategy (see TensorBlock.h) -------------===//
   typedef internal::TensorBlockDescriptor<NumDims, Index> TensorBlockDesc;
   typedef internal::TensorBlockScratchAllocator<Device> TensorBlockScratch;
 
-  typedef typename TensorEvaluator<const ArgType, Device>::TensorBlockV2
+  typedef typename TensorEvaluator<const ArgType, Device>::TensorBlock
       ArgTensorBlock;
 
   typedef typename internal::TensorMaterializedBlock<CoeffReturnType, NumDims,
                                                      Layout, Index>
-      TensorBlockV2;
+      TensorBlock;
   //===--------------------------------------------------------------------===//
 
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE TensorEvaluator(const XprType& op,
@@ -174,6 +169,15 @@ struct TensorEvaluator<const TensorReverseOp<ReverseDimensions, ArgType>, Device
     m_impl.evalSubExprsIfNeeded(NULL);
     return true;
   }
+
+#ifdef EIGEN_USE_THREADS
+  template <typename EvalSubExprsCallback>
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void evalSubExprsIfNeededAsync(
+      EvaluatorPointerType, EvalSubExprsCallback done) {
+    m_impl.evalSubExprsIfNeededAsync(nullptr, [done](bool) { done(true); });
+  }
+#endif  // EIGEN_USE_THREADS
+
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void cleanup() {
     m_impl.cleanup();
   }
@@ -240,122 +244,18 @@ struct TensorEvaluator<const TensorReverseOp<ReverseDimensions, ArgType>, Device
     return rslt;
   }
 
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void getResourceRequirements(
-      std::vector<internal::TensorOpResourceRequirements>* resources) const {
-    Eigen::Index block_total_size_max = numext::maxi<Eigen::Index>(
-        1, m_device.lastLevelCacheSize() / sizeof(Scalar));
-    resources->push_back(internal::TensorOpResourceRequirements(
-        internal::kSkewedInnerDims, block_total_size_max));
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
+  internal::TensorBlockResourceRequirements getResourceRequirements() const {
+    const size_t target_size = m_device.lastLevelCacheSize();
+    // Block evaluation reads underlying memory in reverse order, and default
+    // cost model does not properly catch this in bytes stored/loaded.
+    return internal::TensorBlockResourceRequirements::skewed<Scalar>(
+               target_size)
+        .addCostPerCoeff({0, 0, 24});
   }
 
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void block(
-      OutputTensorBlock* output_block) const {
-    if (NumDims <= 0) return;
-
-    // TODO(ezhulenev): If underlying tensor expression supports and prefers
-    // block evaluation we must use it. Currently we use coeff and packet
-    // access into the underlying tensor expression.
-    // static const bool useBlockAccessForArgType =
-    //     TensorEvaluator<ArgType, Device>::BlockAccess &&
-    //     TensorEvaluator<ArgType, Device>::PreferBlockAccess;
-
-    static const bool isColMajor =
-        static_cast<int>(Layout) == static_cast<int>(ColMajor);
-
-    static const Index inner_dim_idx = isColMajor ? 0 : NumDims - 1;
-    const bool inner_dim_reversed = m_reverse[inner_dim_idx];
-
-    CoeffReturnType* data = output_block->data();
-    Index block_offset = 0;
-
-    Index input_offset = reverseIndex(output_block->first_coeff_index());
-
-    // Initialize output block iterator state. Dimension in this array are
-    // always in inner_most -> outer_most order (col major layout).
-    array<BlockIteratorState, NumDims> it;
-    for (Index i = 0; i < NumDims; ++i) {
-      const Index dim = isColMajor ? i : NumDims - 1 - i;
-      it[i].size = output_block->block_sizes()[dim];
-      it[i].count = 0;
-      it[i].reverse = m_reverse[dim];
-
-      it[i].block_stride = output_block->block_strides()[dim];
-      it[i].block_span = it[i].block_stride * (it[i].size - 1);
-
-      it[i].input_stride = m_strides[dim];
-      it[i].input_span = it[i].input_stride * (it[i].size - 1);
-
-      if (it[i].reverse) {
-        it[i].input_stride = -1 * it[i].input_stride;
-        it[i].input_span = -1 * it[i].input_span;
-      }
-    }
-
-    // If multiple inner dimensions have the same reverse flag, check if we can
-    // merge them into a single virtual inner dimension.
-    int effective_inner_dim = 0;
-    for (int i = 1; i < NumDims; ++i) {
-      if (it[i].reverse != it[effective_inner_dim].reverse) break;
-      if (it[i].block_stride != it[effective_inner_dim].size) break;
-      if (it[i].block_stride != numext::abs(it[i].input_stride)) break;
-
-      it[i].size = it[effective_inner_dim].size * it[i].size;
-
-      it[i].block_stride = 1;
-      it[i].input_stride = (inner_dim_reversed ? -1 : 1);
-
-      it[i].block_span = it[i].block_stride * (it[i].size - 1);
-      it[i].input_span = it[i].input_stride * (it[i].size - 1);
-
-      effective_inner_dim = i;
-    }
-
-    eigen_assert(it[effective_inner_dim].block_stride == 1);
-    eigen_assert(it[effective_inner_dim].input_stride ==
-                 (inner_dim_reversed ? -1 : 1));
-
-    const Index inner_dim_size = it[effective_inner_dim].size;
-
-    while (it[NumDims - 1].count < it[NumDims - 1].size) {
-      // Copy inner-most dimension data from reversed location in input.
-      Index dst = block_offset;
-      Index src = input_offset;
-
-      // NOTE(ezhulenev): Adding vectorized path with internal::preverse showed
-      // worse results in benchmarks than a simple coefficient loop.
-      if (inner_dim_reversed) {
-        for (Index i = 0; i < inner_dim_size; ++i) {
-          data[dst] = m_impl.coeff(src);
-          ++dst;
-          --src;
-        }
-      } else {
-        for (Index i = 0; i < inner_dim_size; ++i) {
-          data[dst] = m_impl.coeff(src);
-          ++dst;
-          ++src;
-        }
-      }
-
-      // For the 1d tensor we need to generate only one inner-most dimension.
-      if ((NumDims - effective_inner_dim) == 1) break;
-
-      // Update offset.
-      for (Index i = effective_inner_dim + 1; i < NumDims; ++i) {
-        if (++it[i].count < it[i].size) {
-          block_offset += it[i].block_stride;
-          input_offset += it[i].input_stride;
-          break;
-        }
-        if (i != NumDims - 1) it[i].count = 0;
-        block_offset -= it[i].block_span;
-        input_offset -= it[i].input_span;
-      }
-    }
-  }
-
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE TensorBlockV2
-  blockV2(TensorBlockDesc& desc, TensorBlockScratch& scratch,
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE TensorBlock
+  block(TensorBlockDesc& desc, TensorBlockScratch& scratch,
           bool /*root_of_expr_ast*/ = false) const {
     // TODO(ezhulenev): If underlying tensor expression supports and prefers
     // block evaluation we must use it. Currently we use coeff and packet
@@ -424,8 +324,8 @@ struct TensorEvaluator<const TensorReverseOp<ReverseDimensions, ArgType>, Device
     const Index inner_dim_size = it[effective_inner_dim].size;
 
     // Prepare storage for the materialized reverse result.
-    const typename TensorBlockV2::Storage block_storage =
-        TensorBlockV2::prepareStorage(desc, scratch);
+    const typename TensorBlock::Storage block_storage =
+        TensorBlock::prepareStorage(desc, scratch);
     CoeffReturnType* block_buffer = block_storage.data();
 
     while (it[NumDims - 1].count < it[NumDims - 1].size) {
@@ -536,7 +436,6 @@ struct TensorEvaluator<TensorReverseOp<ReverseDimensions, ArgType>, Device>
     IsAligned = false,
     PacketAccess = TensorEvaluator<ArgType, Device>::PacketAccess,
     BlockAccess = false,
-    BlockAccessV2 = false,
     PreferBlockAccess = false,
     Layout = TensorEvaluator<ArgType, Device>::Layout,
     CoordAccess = false,  // to be implemented
@@ -552,7 +451,7 @@ struct TensorEvaluator<TensorReverseOp<ReverseDimensions, ArgType>, Device>
   static const int PacketSize = PacketType<CoeffReturnType, Device>::size;
 
   //===- Tensor block evaluation strategy (see TensorBlock.h) -------------===//
-  typedef internal::TensorBlockNotImplemented TensorBlockV2;
+  typedef internal::TensorBlockNotImplemented TensorBlock;
   //===--------------------------------------------------------------------===//
   
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
