@@ -19,6 +19,7 @@ EXE_INC = \
     -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/reductionProblem \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/laplacianProblem \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/inverseLaplacianProblem \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNS \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/SteadyNSTurb \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/SteadyNSTurbIntrusive \
@@ -44,6 +45,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedSteadyNSTurbIntrusive \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSTurbIntrusive \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedLaplacian \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/reducedInverseLaplacian \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/NonLinearSolvers \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedSimpleSteadyNS \
     -I$(LIB_ITHACA_SRC)/ITHACA_DEIM/DEIM \
@@ -66,7 +68,7 @@ EXE_INC = \
     -fopenmp \
     -pthread \
     -ldl \
-    -O3 \
+    -O1 \
     -msse4 \
     -mavx 
 
