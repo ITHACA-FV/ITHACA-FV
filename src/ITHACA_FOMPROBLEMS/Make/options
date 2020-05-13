@@ -20,7 +20,6 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
-    -I$(LIB_ITHACA_SRC)/thirdparty/MiniInverseProblems/include \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAPOD \

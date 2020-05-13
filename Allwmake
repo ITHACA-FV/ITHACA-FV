@@ -8,12 +8,12 @@ muq_flag=''
 applications_flag=''
 unit_tests_flag=''
 
-while getopts 'htmMj:au' flag; do
+while getopts 'htmqj:au' flag; do
   case "${flag}" in
     h) help_flag='true' ;;
     t) tutorial_flag='true' ;;
     m) torch_flag="true" ;;
-    M) muq_flag="true" ;;
+    q) muq_flag="true" ;;
     a) applications_flag="true" ;;
     u) unit_tests_flag="true" ;;
     j) parallel_flag="-j ${OPTARG}" ;;
