@@ -349,6 +349,25 @@ PtrList<TypeField> ITHACAutilities::reconstruct_from_coeff(
 }
 
 template<class TypeField>
+double ITHACAutilities::errorFieldsFrob(TypeField& field1,
+                                        TypeField& field2)
+{
+    double err;
+    TypeField errField = field1-field2;
+
+    if (frobNorm(field1) <= 1e-6)
+    {
+        err = 0;
+    }
+    else
+    {
+        err = frobNorm(errField) / frobNorm(field1);
+    }
+
+    return err;
+}
+
+template<class TypeField>
 double ITHACAutilities::error_fields(TypeField& field1,
                                      TypeField& field2)
 {
@@ -413,6 +432,29 @@ Eigen::MatrixXd ITHACAutilities::error_listfields(PtrList<TypeField>&
     for (label k = 0; k < fields1.size(); k++)
     {
         err(k, 0) = error_fields(fields1[k], fields2[k]);
+        Info << " Error is " << err[k] << endl;
+    }
+
+    return err;
+}
+
+template<class TypeField>
+Eigen::MatrixXd ITHACAutilities::errorListFieldsFrob(PtrList<TypeField>&
+        fields1, PtrList<TypeField>& fields2)
+{
+    Eigen::VectorXd err;
+
+    if (fields1.size() != fields2.size())
+    {
+        Info << "The two fields do not have the same size, code will abort" << endl;
+        exit(0);
+    }
+
+    err.resize(fields1.size(), 1);
+
+    for (label k = 0; k < fields1.size(); k++)
+    {
+        err(k, 0) = errorFieldsFrob(fields1[k], fields2[k]);
         Info << " Error is " << err[k] << endl;
     }
 
@@ -763,7 +805,7 @@ double ITHACAutilities::H1seminorm(volVectorField field)
 }
 
 template<class TypeField>
-double frobNorm(TypeField field)
+double ITHACAutilities::frobNorm(TypeField& field)
 {
     double norm(0);
     Eigen::VectorXd vF = Foam2Eigen::field2Eigen(field);
@@ -1631,6 +1673,14 @@ template volVectorField ITHACAutilities::computeAverage(
 template volScalarField ITHACAutilities::computeAverage(
     PtrList<volScalarField>& fields);
 
+template double ITHACAutilities::frobNorm(volScalarField& field);
+template double ITHACAutilities::frobNorm(volVectorField& field);
+
+template double ITHACAutilities::errorFieldsFrob(volScalarField& field1,
+        volScalarField& field2);
+template double ITHACAutilities::errorFieldsFrob(volVectorField& field1,
+        volVectorField& field2);
+
 template double ITHACAutilities::error_fields(volScalarField& field1,
         volScalarField& field2);
 template double ITHACAutilities::error_fields(volVectorField& field1,
@@ -1655,6 +1705,13 @@ template Eigen::MatrixXd ITHACAutilities::error_listfields(
     PtrList<volScalarField>& fields1,
     PtrList<volScalarField>& fields2);
 template Eigen::MatrixXd ITHACAutilities::error_listfields(
+    PtrList<volVectorField>& fields1,
+    PtrList<volVectorField>& fields2);
+
+template Eigen::MatrixXd ITHACAutilities::errorListFieldsFrob(
+    PtrList<volScalarField>& fields1,
+    PtrList<volScalarField>& fields2);
+template Eigen::MatrixXd ITHACAutilities::errorListFieldsFrob(
     PtrList<volVectorField>& fields1,
     PtrList<volVectorField>& fields2);
 
