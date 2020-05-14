@@ -14,13 +14,7 @@ EXE_INC = \
     -Wno-sign-compare \
     -Wno-unknown-pragmas \
     -Wno-unused-variable \
-    -Wno-unused-local-typedefs \
-    -fopenmp \
-    -pthread \
-    -ldl \
-    -O1 \
-    -msse4 \
-    -mavx 
+    -Wno-unused-local-typedefs 
 
 EXE_LIBS = \
     -L$(MUQ_LIBRARIES)/lib \
