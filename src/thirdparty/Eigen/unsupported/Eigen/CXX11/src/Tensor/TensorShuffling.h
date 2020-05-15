@@ -115,8 +115,7 @@ struct TensorEvaluator<const TensorShufflingOp<Shuffle, ArgType>, Device>
   enum {
     IsAligned         = false,
     PacketAccess      = (PacketType<CoeffReturnType, Device>::size > 1),
-    BlockAccess       = TensorEvaluator<ArgType, Device>::BlockAccess,
-    BlockAccessV2     = TensorEvaluator<ArgType, Device>::RawAccess,
+    BlockAccess       = TensorEvaluator<ArgType, Device>::RawAccess,
     PreferBlockAccess = true,
     Layout            = TensorEvaluator<ArgType, Device>::Layout,
     CoordAccess       = false,  // to be implemented
@@ -125,18 +124,13 @@ struct TensorEvaluator<const TensorShufflingOp<Shuffle, ArgType>, Device>
 
   typedef typename internal::remove_const<Scalar>::type ScalarNoConst;
 
-  typedef internal::TensorBlock<ScalarNoConst, Index, NumDims, Layout>
-      TensorBlock;
-  typedef internal::TensorBlockReader<ScalarNoConst, Index, NumDims, Layout>
-      TensorBlockReader;
-
   //===- Tensor block evaluation strategy (see TensorBlock.h) -------------===//
   typedef internal::TensorBlockDescriptor<NumDims, Index> TensorBlockDesc;
   typedef internal::TensorBlockScratchAllocator<Device> TensorBlockScratch;
 
   typedef typename internal::TensorMaterializedBlock<ScalarNoConst, NumDims,
                                                      Layout, Index>
-      TensorBlockV2;
+      TensorBlock;
   //===--------------------------------------------------------------------===//
 
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE TensorEvaluator(const XprType& op,
@@ -188,6 +182,15 @@ struct TensorEvaluator<const TensorShufflingOp<Shuffle, ArgType>, Device>
     m_impl.evalSubExprsIfNeeded(NULL);
     return true;
   }
+
+#ifdef EIGEN_USE_THREADS
+  template <typename EvalSubExprsCallback>
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void evalSubExprsIfNeededAsync(
+      EvaluatorPointerType, EvalSubExprsCallback done) {
+    m_impl.evalSubExprsIfNeededAsync(nullptr, [done](bool) { done(true); });
+  }
+#endif  // EIGEN_USE_THREADS
+
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void cleanup() {
     m_impl.cleanup();
   }
@@ -241,118 +244,40 @@ struct TensorEvaluator<const TensorShufflingOp<Shuffle, ArgType>, Device>
     return PacketLoader<LoadMode, Self, TensorEvaluator<ArgType, Device>::PacketAccess>::Run(*this, index);
   }
 
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void getResourceRequirements(
-      std::vector<internal::TensorOpResourceRequirements>* resources) const {
-    Eigen::Index block_total_size_max = numext::maxi<Eigen::Index>(
-        1, m_device.firstLevelCacheSize() / sizeof(Scalar));
-    resources->push_back(internal::TensorOpResourceRequirements(
-        internal::kUniformAllDims, block_total_size_max));
-  }
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
+  internal::TensorBlockResourceRequirements getResourceRequirements() const {
+    static const int inner_dim =
+        Layout == static_cast<int>(ColMajor) ? 0 : NumDims - 1;
 
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void block(
-      TensorBlock* output_block) const {
-    if (m_impl.data() != NULL) {
-      // Fast path: we have direct access to the data, so shuffle as we read.
-      TensorBlockReader::Run(output_block,
-                             srcCoeff(output_block->first_coeff_index()),
-                             m_inverseShuffle,
-                             m_unshuffledInputStrides,
-                             m_impl.data());
-      return;
-    }
+    const size_t target_size = m_device.firstLevelCacheSize();
+    const bool inner_dim_shuffled = m_shuffle[inner_dim] != inner_dim;
 
-    // Slow path: read unshuffled block from the input and shuffle in-place.
-    // Initialize input block sizes using input-to-output shuffle map.
-    DSizes<Index, NumDims> input_block_sizes;
-    for (Index i = 0; i < NumDims; ++i) {
-      input_block_sizes[i] = output_block->block_sizes()[m_inverseShuffle[i]];
-    }
-
-    // Calculate input block strides.
-    DSizes<Index, NumDims> input_block_strides;
-    if (static_cast<int>(Layout) == static_cast<int>(ColMajor)) {
-      input_block_strides[0] = 1;
-      for (int i = 1; i < NumDims; ++i) {
-        input_block_strides[i] =
-            input_block_strides[i - 1] * input_block_sizes[i - 1];
-      }
+    // Shuffled inner dimensions leads to a random memory access, which is not
+    // captured by default cost model bytes loaded/stored. We add this cost
+    // explicitly. The number of cycles picked based on the benchmarks.
+    // TODO(ezhulenev): This number was picked based on a very questionable
+    // benchmarks, add benchmarks that are representative of real workloads.
+    using BlockRequirements = internal::TensorBlockResourceRequirements;
+    if (inner_dim_shuffled) {
+      return BlockRequirements::uniform<Scalar>(target_size)
+          .addCostPerCoeff({0, 0, NumDims * 28});
     } else {
-      input_block_strides[NumDims - 1] = 1;
-      for (int i = NumDims - 2; i >= 0; --i) {
-        input_block_strides[i] =
-            input_block_strides[i + 1] * input_block_sizes[i + 1];
-      }
-    }
-    DSizes<internal::TensorIntDivisor<Index>, NumDims> fast_input_block_strides;
-    for (int i = 0; i < NumDims; ++i) {
-      fast_input_block_strides[i] =
-          internal::TensorIntDivisor<Index>(input_block_strides[i]);
-    }
-
-    // Read input block.
-    TensorBlock input_block(srcCoeff(output_block->first_coeff_index()),
-                            input_block_sizes,
-                            input_block_strides,
-                            Dimensions(m_unshuffledInputStrides),
-                            output_block->data());
-
-    m_impl.block(&input_block);
-
-    // Naive In-place shuffle: random IO but block size is O(L1 cache size).
-    // TODO(andydavis) Improve the performance of this in-place shuffle.
-    const Index total_size = input_block_sizes.TotalSize();
-    std::vector<bool> bitmap(total_size, false);
-    ScalarNoConst* data = const_cast<ScalarNoConst*>(output_block->data());
-    const DSizes<Index, NumDims>& output_block_strides =
-        output_block->block_strides();
-    for (Index input_index = 0; input_index < total_size; ++input_index) {
-      if (bitmap[input_index]) {
-        // Coefficient at this index has already been shuffled.
-        continue;
-      }
-
-      Index output_index =
-          GetBlockOutputIndex(input_index, input_block_strides,
-                              output_block_strides, fast_input_block_strides);
-      if (output_index == input_index) {
-        // Coefficient already in place.
-        bitmap[output_index] = true;
-        continue;
-      }
-
-      // The following loop starts at 'input_index', and shuffles
-      // coefficients into their shuffled location at 'output_index'.
-      // It skips through the array shuffling coefficients by following
-      // the shuffle cycle starting and ending a 'start_index'.
-      ScalarNoConst evicted_value;
-      ScalarNoConst shuffled_value = data[input_index];
-      do {
-        evicted_value = data[output_index];
-        data[output_index] = shuffled_value;
-        shuffled_value = evicted_value;
-        bitmap[output_index] = true;
-        output_index =
-            GetBlockOutputIndex(output_index, input_block_strides,
-                                output_block_strides, fast_input_block_strides);
-      } while (output_index != input_index);
-
-      data[output_index] = shuffled_value;
-      bitmap[output_index] = true;
+      return BlockRequirements::skewed<Scalar>(target_size);
     }
   }
 
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE TensorBlockV2
-  blockV2(TensorBlockDesc& desc, TensorBlockScratch& scratch,
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE TensorBlock
+  block(TensorBlockDesc& desc, TensorBlockScratch& scratch,
           bool root_of_expr_ast = false) const {
     assert(m_impl.data() != NULL);
 
-    typedef internal::TensorBlockIOV2<ScalarNoConst, Index, NumDims, Layout>
+    typedef internal::TensorBlockIO<ScalarNoConst, Index, NumDims, Layout>
         TensorBlockIO;
     typedef typename TensorBlockIO::Dst TensorBlockIODst;
     typedef typename TensorBlockIO::Src TensorBlockIOSrc;
 
-    const typename TensorBlockV2::Storage block_storage =
-        TensorBlockV2::prepareStorage(
+    const typename TensorBlock::Storage block_storage =
+        TensorBlock::prepareStorage(
             desc, scratch, /*allow_strided_storage=*/root_of_expr_ast);
 
     typename TensorBlockIO::Dimensions input_strides(m_unshuffledInputStrides);
@@ -462,19 +387,13 @@ struct TensorEvaluator<TensorShufflingOp<Shuffle, ArgType>, Device>
   enum {
     IsAligned         = false,
     PacketAccess      = (PacketType<CoeffReturnType, Device>::size > 1),
-    BlockAccess       = TensorEvaluator<ArgType, Device>::BlockAccess,
-    BlockAccessV2     = TensorEvaluator<ArgType, Device>::RawAccess,
+    BlockAccess       = TensorEvaluator<ArgType, Device>::RawAccess,
     PreferBlockAccess = true,
     Layout            = TensorEvaluator<ArgType, Device>::Layout,
     RawAccess         = false
   };
 
   typedef typename internal::remove_const<Scalar>::type ScalarNoConst;
-
-  typedef internal::TensorBlock<ScalarNoConst, Index, NumDims, Layout>
-      TensorBlock;
-  typedef internal::TensorBlockWriter<ScalarNoConst, Index, NumDims, Layout>
-      TensorBlockWriter;
 
   //===- Tensor block evaluation strategy (see TensorBlock.h) -------------===//
   typedef internal::TensorBlockDescriptor<NumDims, Index> TensorBlockDesc;
@@ -502,20 +421,12 @@ struct TensorEvaluator<TensorShufflingOp<Shuffle, ArgType>, Device>
     }
   }
 
+  template <typename TensorBlock>
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void writeBlock(
-      const TensorBlock& block) {
-    eigen_assert(this->m_impl.data() != NULL);
-    TensorBlockWriter::Run(block, this->srcCoeff(block.first_coeff_index()),
-                           this->m_inverseShuffle,
-                           this->m_unshuffledInputStrides, this->m_impl.data());
-  }
-
-template <typename TensorBlockV2>
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void writeBlockV2(
-      const TensorBlockDesc& desc, const TensorBlockV2& block) {
+      const TensorBlockDesc& desc, const TensorBlock& block) {
     eigen_assert(this->m_impl.data() != NULL);
 
-    typedef internal::TensorBlockIOV2<ScalarNoConst, Index, NumDims, Layout>
+    typedef internal::TensorBlockIO<ScalarNoConst, Index, NumDims, Layout>
         TensorBlockIO;
     typedef typename TensorBlockIO::Dst TensorBlockIODst;
     typedef typename TensorBlockIO::Src TensorBlockIOSrc;
@@ -530,7 +441,7 @@ template <typename TensorBlockV2>
       ScalarNoConst* buf = static_cast<ScalarNoConst*>(mem);
 
       typedef internal::TensorBlockAssignment<
-          ScalarNoConst, NumDims, typename TensorBlockV2::XprType, Index>
+          ScalarNoConst, NumDims, typename TensorBlock::XprType, Index>
           TensorBlockAssignment;
 
       TensorBlockAssignment::Run(

@@ -156,24 +156,10 @@ template<> EIGEN_STRONG_INLINE std::complex<double> predux<Packet1cd>(const Pack
 {
   return pfirst(a);
 }
-template<> EIGEN_STRONG_INLINE Packet1cd preduxp<Packet1cd>(const Packet1cd* vecs)
-{
-  return vecs[0];
-}
 template<> EIGEN_STRONG_INLINE std::complex<double> predux_mul<Packet1cd>(const Packet1cd& a)
 {
   return pfirst(a);
 }
-template<int Offset>
-struct palign_impl<Offset,Packet1cd>
-{
-  static EIGEN_STRONG_INLINE void run(Packet1cd& /*first*/, const Packet1cd& /*second*/)
-  {
-    // FIXME is it sure we never have to align a Packet1cd?
-    // Even though a std::complex<double> has 16 bytes, it is not necessarily aligned on a 16 bytes boundary...
-  }
-};
-
 template<> struct conj_helper<Packet1cd, Packet1cd, false,true>
 {
   EIGEN_STRONG_INLINE Packet1cd pmadd(const Packet1cd& x, const Packet1cd& y, const Packet1cd& c) const
@@ -327,16 +313,6 @@ template<> EIGEN_STRONG_INLINE std::complex<float> predux<Packet2cf>(const Packe
   return res;
 }
 
-template<> EIGEN_STRONG_INLINE Packet2cf preduxp<Packet2cf>(const Packet2cf* vecs)
-{
-  PacketBlock<Packet2cf,2> transpose;
-  transpose.packet[0] = vecs[0];
-  transpose.packet[1] = vecs[1];
-  ptranspose(transpose);
-
-  return padd<Packet2cf>(transpose.packet[0], transpose.packet[1]);
-} 
-
 template<> EIGEN_STRONG_INLINE std::complex<float> predux_mul<Packet2cf>(const Packet2cf& a)
 {
   std::complex<float> res;
@@ -344,18 +320,6 @@ template<> EIGEN_STRONG_INLINE std::complex<float> predux_mul<Packet2cf>(const P
   vec_st2f(b.v, (float*)&res);
   return res;
 }
-
-template<int Offset>
-struct palign_impl<Offset,Packet2cf>
-{
-  static EIGEN_STRONG_INLINE void run(Packet2cf& first, const Packet2cf& second)
-  {
-    if (Offset == 1) {
-      first.cd[0] = first.cd[1];
-      first.cd[1] = second.cd[0];
-    }
-  }
-};
 
 template<> struct conj_helper<Packet2cf, Packet2cf, false,true>
 {
@@ -461,17 +425,6 @@ template<> EIGEN_STRONG_INLINE std::complex<float> predux<Packet2cf>(const Packe
   return pfirst<Packet2cf>(Packet2cf(b));
 }
 
-template<> EIGEN_STRONG_INLINE Packet2cf preduxp<Packet2cf>(const Packet2cf* vecs)
-{
-  Packet4f b1, b2;
-  b1 = vec_sld(vecs[0].v, vecs[1].v, 8);
-  b2 = vec_sld(vecs[1].v, vecs[0].v, 8);
-  b2 = vec_sld(b2, b2, 8);
-  b2 = padd<Packet4f>(b1, b2);
-
-  return Packet2cf(b2);
-}
-
 template<> EIGEN_STRONG_INLINE std::complex<float> predux_mul<Packet2cf>(const Packet2cf& a)
 {
   Packet4f b;
@@ -481,18 +434,6 @@ template<> EIGEN_STRONG_INLINE std::complex<float> predux_mul<Packet2cf>(const P
 
   return pfirst<Packet2cf>(prod);
 }
-
-template<int Offset>
-struct palign_impl<Offset,Packet2cf>
-{
-  static EIGEN_STRONG_INLINE void run(Packet2cf& first, const Packet2cf& second)
-  {
-    if (Offset==1)
-    {
-      first.v = vec_sld(first.v, second.v, 8);
-    }
-  }
-};
 
 template<> struct conj_helper<Packet2cf, Packet2cf, false,true>
 {

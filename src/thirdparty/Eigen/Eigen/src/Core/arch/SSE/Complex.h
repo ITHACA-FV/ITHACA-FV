@@ -45,7 +45,8 @@ template<> struct packet_traits<std::complex<float> >  : default_packet_traits
     HasMin    = 0,
     HasMax    = 0,
     HasSetLinear = 0,
-    HasBlend = 1
+    HasBlend  = 1,
+    HasInsert = 1
   };
 };
 #endif
@@ -155,28 +156,10 @@ template<> EIGEN_STRONG_INLINE std::complex<float> predux<Packet2cf>(const Packe
   return pfirst(Packet2cf(_mm_add_ps(a.v, _mm_movehl_ps(a.v,a.v))));
 }
 
-template<> EIGEN_STRONG_INLINE Packet2cf preduxp<Packet2cf>(const Packet2cf* vecs)
-{
-  return Packet2cf(_mm_add_ps(_mm_movelh_ps(vecs[0].v,vecs[1].v), _mm_movehl_ps(vecs[1].v,vecs[0].v)));
-}
-
 template<> EIGEN_STRONG_INLINE std::complex<float> predux_mul<Packet2cf>(const Packet2cf& a)
 {
   return pfirst(pmul(a, Packet2cf(_mm_movehl_ps(a.v,a.v))));
 }
-
-template<int Offset>
-struct palign_impl<Offset,Packet2cf>
-{
-  static EIGEN_STRONG_INLINE void run(Packet2cf& first, const Packet2cf& second)
-  {
-    if (Offset==1)
-    {
-      first.v = _mm_movehl_ps(first.v, first.v);
-      first.v = _mm_movelh_ps(first.v, second.v);
-    }
-  }
-};
 
 template<> struct conj_helper<Packet2cf, Packet2cf, false,true>
 {
@@ -345,25 +328,10 @@ template<> EIGEN_STRONG_INLINE std::complex<double> predux<Packet1cd>(const Pack
   return pfirst(a);
 }
 
-template<> EIGEN_STRONG_INLINE Packet1cd preduxp<Packet1cd>(const Packet1cd* vecs)
-{
-  return vecs[0];
-}
-
 template<> EIGEN_STRONG_INLINE std::complex<double> predux_mul<Packet1cd>(const Packet1cd& a)
 {
   return pfirst(a);
 }
-
-template<int Offset>
-struct palign_impl<Offset,Packet1cd>
-{
-  static EIGEN_STRONG_INLINE void run(Packet1cd& /*first*/, const Packet1cd& /*second*/)
-  {
-    // FIXME is it sure we never have to align a Packet1cd?
-    // Even though a std::complex<double> has 16 bytes, it is not necessarily aligned on a 16 bytes boundary...
-  }
-};
 
 template<> struct conj_helper<Packet1cd, Packet1cd, false,true>
 {
@@ -459,26 +427,6 @@ template<> EIGEN_STRONG_INLINE Packet1cd pcmp_eq(const Packet1cd& a, const Packe
 template<>  EIGEN_STRONG_INLINE Packet2cf pblend(const Selector<2>& ifPacket, const Packet2cf& thenPacket, const Packet2cf& elsePacket) {
   __m128d result = pblend<Packet2d>(ifPacket, _mm_castps_pd(thenPacket.v), _mm_castps_pd(elsePacket.v));
   return Packet2cf(_mm_castpd_ps(result));
-}
-
-template<> EIGEN_STRONG_INLINE Packet2cf pinsertfirst(const Packet2cf& a, std::complex<float> b)
-{
-  return Packet2cf(_mm_loadl_pi(a.v, reinterpret_cast<const __m64*>(&b)));
-}
-
-template<> EIGEN_STRONG_INLINE Packet1cd pinsertfirst(const Packet1cd&, std::complex<double> b)
-{
-  return pset1<Packet1cd>(b);
-}
-
-template<> EIGEN_STRONG_INLINE Packet2cf pinsertlast(const Packet2cf& a, std::complex<float> b)
-{
-  return Packet2cf(_mm_loadh_pi(a.v, reinterpret_cast<const __m64*>(&b)));
-}
-
-template<> EIGEN_STRONG_INLINE Packet1cd pinsertlast(const Packet1cd&, std::complex<double> b)
-{
-  return pset1<Packet1cd>(b);
 }
 
 } // end namespace internal
