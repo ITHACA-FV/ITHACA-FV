@@ -249,6 +249,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     problem->Pmodes.reconstruct(P, b, "Paux");
     ITHACAstream::exportSolution(U, name(counter), Folder);
     ITHACAstream::exportSolution(P, name(counter), Folder);
+    runTime.setTime(runTime.startTime(), 0);
 }
 
 

@@ -24,7 +24,7 @@ License
 Description
     Example of steady NS Reduction Problem solved by the use of the SIMPLE algorithm
 SourceFiles
-    03steadyNS.C
+    12simpleSteadyNS.C
 \*---------------------------------------------------------------------------*/
 
 #include "SteadyNSSimple.H"

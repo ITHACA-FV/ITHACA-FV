@@ -24,7 +24,7 @@ License
 Description
     Example of turbulent steady NS Reduction Problem solved by the use of the SIMPLE algorithm
 SourceFiles
-    18simpleTurbNS.C
+    019simpleTurbGeom.C
 \*---------------------------------------------------------------------------*/
 
 #include "SteadyNSSimple.H"
@@ -33,29 +33,39 @@ SourceFiles
 #include "ReducedSimpleSteadyNS.H"
 #include "forces.H"
 #include "IOmanip.H"
+#include "RBFMotionSolver.H"
 
 
-class tutorial18 : public SteadyNSSimple
+class tutorial19 : public SteadyNSSimple
 {
     public:
         /// Constructor
-        explicit tutorial18(int argc, char* argv[])
+        explicit tutorial19(int argc, char* argv[])
             :
             SteadyNSSimple(argc, argv),
             U(_U()),
             p(_p()),
-            phi(_phi())
+            phi(_phi()),
+            mesh(_mesh()),
+            curX(mesh.points()),
+            point0(mesh.points())
         {}
 
         /// Velocity field
         volVectorField& U;
         /// Pressure field
         volScalarField& p;
-        ///
+        /// Flux field
         surfaceScalarField& phi;
+        /// The mesh
+        fvMesh& mesh;
+        /// Initial coordinates of the grid points
+        vectorField point0;
+        /// List to store the moved coordinates
+        List<vector> curX;
 
         /// Perform an Offline solve
-        void offlineSolve()
+        void offlineSolve(Eigen::MatrixXd Box, List<label> patches)
         {
             Vector<double> inl(0, 0, 0);
             List<scalar> mu_now(1);
@@ -67,74 +77,129 @@ class tutorial18 : public SteadyNSSimple
                 ITHACAstream::readMiddleFields(Pfield, p, "./ITHACAoutput/Offline/");
                 auto nut = _mesh().lookupObject<volScalarField>("nut");
                 ITHACAstream::readConvergedFields(nutFields, nut, "./ITHACAoutput/Offline/");
-                mu_samples =
-                    ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }
             else if (offline)
             {
                 ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-                mu_samples =
-                    ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }
             else
             {
                 Vector<double> Uinl(1, 0, 0);
-                label BCind = 0;
 
                 for (label i = 0; i < mu.rows(); i++)
                 {
+                    _mesh().movePoints(point0);
+                    List<vector> points2Move;
+                    labelList boxIndices = ITHACAutilities::getIndicesFromBox(_mesh(), patches, Box,
+                                           points2Move);
                     mu_now[0] = mu(i, 0);
-                    change_viscosity(mu_now[0]);
+                    linearMovePts(mu_now[0], points2Move);
+
+                    for (int j = 0; j < boxIndices.size(); j++)
+                    {
+                        curX[boxIndices[j]] = points2Move[j];
+                    }
+
+                    Field<vector> curXV(curX);
+                    _mesh().movePoints(curXV);
+                    ITHACAstream::writePoints(_mesh().points(), "./ITHACAoutput/Offline/",
+                                              name(i + 1) + "/polyMesh/");
                     assignIF(U, Uinl);
                     truthSolve2(mu_now);
+                    int middleF = 1;
+
+                    while (ITHACAutilities::check_folder("./ITHACAoutput/Offline/" + name(
+                            i + 1) + "/" + name(middleF)))
+                    {
+                        word command("ln -s  $(readlink -f ./ITHACAoutput/Offline/" + name(
+                                         i + 1) + "/polyMesh/) ./ITHACAoutput/Offline/" + name(i + 1) + "/" + name(
+                                         middleF) + "/" + " >/dev/null 2>&1");
+                        std::cout.setstate(std::ios_base::failbit);
+                        system(command);
+                        std::cout.clear();
+                        middleF++;
+                    }
                 }
             }
         }
 
+        void linearMovePts(double angle, List<vector>& points2Move)
+        {
+            double sMax;
+            scalarList x;
+            scalarList y;
+
+            for (label i = 0; i < points2Move.size(); i++)
+            {
+                x.append(points2Move[i].component(0));
+                y.append(points2Move[i].component(1));
+            }
+
+            double xMin = min(x);
+            double xMax = max(x);
+            double yMin = min(y);
+            double yMax = max(y);
+            sMax = (yMax - yMin) * std::tan(M_PI * angle / 180);
+
+            for (label i = 0; i < points2Move.size(); i++)
+            {
+                points2Move[i].component(0) = points2Move[i].component(0) +
+                                              (yMax - points2Move[i].component(1)) / (yMax - yMin) * (xMax -
+                                                      points2Move[i].component(0)) / (xMax - xMin) * sMax;
+            }
+        }
 };
 
 int main(int argc, char* argv[])
 {
     // Construct the tutorial object
-    tutorial18 example(argc, argv);
+    tutorial19 example(argc, argv);
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
-    // Read the par file where the parameters are stored
-    std::ifstream exFileOff("./parsOff_mat.txt");
+    // Read the files where the parameters are stored
+    std::ifstream exFileOff("./angOff_mat.txt");
 
     if (exFileOff)
     {
-        example.mu  = ITHACAstream::readMatrix("./parsOff_mat.txt");
+        example.mu  = ITHACAstream::readMatrix("./angOff_mat.txt");
     }
     else
     {
-        example.mu  = Eigen::VectorXd::LinSpaced(50, 1.00e-04, 1.00e-05);
-        ITHACAstream::exportMatrix(example.mu, "parsOff", "eigen", "./");
+        example.mu  = Eigen::VectorXd::LinSpaced(50, 0, 60);
+        ITHACAstream::exportMatrix(example.mu, "angOff", "eigen", "./");
     }
 
-    Eigen::MatrixXd parOn;
-    std::ifstream exFileOn("./parsOn_mat.txt");
+    Eigen::MatrixXd angOn;
+    std::ifstream exFileOn("./angOn_mat.txt");
 
     if (exFileOn)
     {
-        parOn = ITHACAstream::readMatrix("./parsOn_mat.txt");
+        angOn = ITHACAstream::readMatrix("./angOn_mat.txt");
     }
     else
     {
-        parOn = ITHACAutilities::rand(20, 1, 1.00e-04, 1.00e-05);
-        ITHACAstream::exportMatrix(parOn, "parsOn", "eigen", "./");
+        angOn = ITHACAutilities::rand(20, 1, 2, 58);
+        ITHACAstream::exportMatrix(angOn, "angOn", "eigen", "./");
     }
 
     // Set the inlet boundaries patch 0 directions x and y
     example.inletIndex.resize(1, 2);
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
+    //Set the box including the step
+    Eigen::MatrixXd Box(2, 3);
+    Box << 1.98, 0.01, 0.11,
+        7.02, -0.666669, -0.01;
+    //Select the patches to be moved
+    List<label> movPat;
+    movPat.append(3);
+    movPat.append(5);
     // Set the maximum iterations number for the offline phase
     example.maxIter = para->ITHACAdict->lookupOrDefault<int>("maxIter", 2000);
     // Perform the offline solve
-    example.offlineSolve();
+    example.offlineSolve(Box, movPat);
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // Homogenize the snapshots
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
@@ -165,20 +230,49 @@ int main(int argc, char* argv[])
     reduced.maxIterOn = para->ITHACAdict->lookupOrDefault<int>("maxIterOn", 2000);
 
     //Perform the online solutions
-    for (label k = 0; k < parOn.size(); k++)
+    for (label k = 0; k < angOn.size(); k++)
     {
-        scalar mu_now = parOn(k, 0);
+        scalar mu_now = angOn(k, 0);
         example.restart();
-        example.change_viscosity(mu_now);
         reduced.setOnlineVelocity(vel);
 
         if (ITHACAutilities::isTurbulent())
         {
+            example._mesh().movePoints(example.point0);
+            List<vector> points2Move;
+            labelList boxIndices = ITHACAutilities::getIndicesFromBox(example._mesh(),
+                                   movPat, Box, points2Move);
+            example.linearMovePts(mu_now, points2Move);
+
+            for (int j = 0; j < boxIndices.size(); j++)
+            {
+                example.curX[boxIndices[j]] = points2Move[j];
+            }
+
+            Field<vector> curXV(example.curX);
+            example._mesh().movePoints(curXV);
+            ITHACAstream::writePoints(example._mesh().points(),
+                                      "./ITHACAoutput/Reconstruct/", name(k + 1) + "/polyMesh/");
             reduced.solveOnline_Simple(mu_now, example.NUmodes, example.NPmodes,
                                        example.NNutModes);
         }
         else
         {
+            example._mesh().movePoints(example.point0);
+            List<vector> points2Move;
+            labelList boxIndices = ITHACAutilities::getIndicesFromBox(example._mesh(),
+                                   movPat, Box, points2Move);
+            example.linearMovePts(mu_now, points2Move);
+
+            for (int j = 0; j < boxIndices.size(); j++)
+            {
+                example.curX[boxIndices[j]] = points2Move[j];
+            }
+
+            Field<vector> curXV(example.curX);
+            example._mesh().movePoints(curXV);
+            ITHACAstream::writePoints(example._mesh().points(),
+                                      "./ITHACAoutput/Reconstruct/", name(k + 1) + "/polyMesh/");
             reduced.solveOnline_Simple(mu_now, example.NUmodes, example.NPmodes,
                                        example.NNutModes);
         }

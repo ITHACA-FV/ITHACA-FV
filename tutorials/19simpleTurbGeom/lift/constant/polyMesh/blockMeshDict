@@ -1,0 +1,104 @@
+// generated using Lx1=2, Lx2=5, Ly1=.66666666666666666666, Ly2=1, Lz=0.1, Nx1=20, Nx2=50, Ny1=20, Ny2=20 
+ 
+ 
+// generated using H0/H=1 
+
+
+FoamFile
+{
+version 2.0;
+format ascii;
+class dictionary;
+object blockMeshDict;
+}
+convertToMeters 1;
+vertices
+(
+    (0 0 0)
+    (2 0 0)
+    (2 -.66666666666666666666 0)
+    (7 -.66666666666666666666 0)
+    (7 0 0)
+    (7 1 0)
+    (2 1 0)
+    (0 1 0)
+    (0 0 0.1)
+    (2 0 0.1)
+    (2 -.66666666666666666666 0.1)
+    (7 -.66666666666666666666 0.1)
+    (7 0 0.1)
+    (7 1 0.1)
+    (2 1 0.1)
+    (0 1 0.1)
+);
+blocks
+(
+    hex (0 1 6 7 8 9 14 15) (50 40 1) simpleGrading (1 1 1)
+    hex (1 4 5 6 9 12 13 14) (100 40 1) simpleGrading (1 1 1)
+    hex (2 3 4 1 10 11 12 9) (100 30 1) simpleGrading (1 1 1)
+);
+edges
+(
+);
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 8 15 7)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (3 11 12 4)
+            (4 12 13 5)
+        );
+    }
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (0 1 6 7)
+            (8 9 14 15)
+            (1 4 5 6)
+	    (9 12 13 14)
+        );
+    }
+    frontAndBackLow
+    {
+        type empty;
+        faces
+        (
+            (2 3 4 1)
+            (10 11 12 9)
+        );
+    }
+    walls
+    {
+        type wall;
+        faces
+        (
+	(0 1 9 8)
+	(7 6 14 15)
+	(6 5 13 14)
+        );
+     }
+    step
+    {
+        type wall;
+        faces
+        (
+    (2 10 9 1)
+    (2 3 11 10)
+        );
+     }
+);
+mergePatchPairs
+(
+);

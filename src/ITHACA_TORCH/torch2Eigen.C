@@ -44,7 +44,6 @@ Eigen::Matrix<type, Eigen::Dynamic, Eigen::Dynamic> torchTensor2eigenMatrix(
         rows = torchTensor.size(0);
         cols = 1;
     }
-
     else
     {
         rows = torchTensor.size(0);
@@ -60,7 +59,7 @@ Eigen::Matrix<type, Eigen::Dynamic, Eigen::Dynamic> torchTensor2eigenMatrix(
     {
         float d(*(data_p + i));
         type a = static_cast <type>(d);
-        raw[i]=a;
+        raw[i] = a;
     }
 
     Eigen::Map<MatrixXf_rm> eigenMatrix(&raw[0], rows,
