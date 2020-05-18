@@ -210,7 +210,6 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     turbulence->read();
     std::ofstream res_os;
     res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
-#if OFVER == 6
 
     if (ITHACAutilities::isTurbulent())
     {
@@ -219,6 +218,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         middleStep = para->ITHACAdict->lookupOrDefault<int>("middleStep", 20);
     }
 
+#if OFVER == 6
     while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
 #else
     while (simple.loop() && residual > tolerance && csolve < maxIter )
