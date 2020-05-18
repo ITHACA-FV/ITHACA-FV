@@ -167,7 +167,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-        example.mu  = Eigen::VectorXd::LinSpaced(50, 0, 60);
+        example.mu  = Eigen::VectorXd::LinSpaced(50, 0, 75);
         ITHACAstream::exportMatrix(example.mu, "angOff", "eigen", "./");
     }
 
@@ -180,7 +180,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-        angOn = ITHACAutilities::rand(20, 1, 2, 58);
+        angOn = Eigen::VectorXd::LinSpaced(20, 2, 73);
         ITHACAstream::exportMatrix(angOn, "angOn", "eigen", "./");
     }
 
