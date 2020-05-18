@@ -203,6 +203,19 @@ int main(int argc, char* argv[])
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // Homogenize the snapshots
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
+    // Move the mesh to a middle configuration
+    List<vector> points2Move;
+    labelList boxIndices = ITHACAutilities::getIndicesFromBox(example._mesh(), movPat, Box,
+                           points2Move);
+    example.linearMovePts((example.mu.maxCoeff()+example.mu.minCoeff())/2, points2Move);
+
+    for (int j = 0; j < boxIndices.size(); j++)
+    {
+        example.curX[boxIndices[j]] = points2Move[j];
+    }
+
+    Field<vector> curXV(example.curX);
+    example._mesh().movePoints(curXV);
     // Perform POD on velocity and pressure and store the first 10 modes
     ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
                         example.podex, 0, 0,
@@ -218,6 +231,7 @@ int main(int argc, char* argv[])
         // Create the RBF for turbulence
         example.getTurbRBF(example.NNutModes);
     }
+    example._mesh().movePoints(example.point0);
 
     // Create the reduced object
     reducedSimpleSteadyNS reduced(example);
