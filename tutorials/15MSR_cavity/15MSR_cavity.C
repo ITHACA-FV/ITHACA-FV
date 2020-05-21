@@ -320,24 +320,24 @@ int main(int argc, char* argv[])
 
     for (int i = ref_start; i < ref_start + tf; i++)
     {
-        err(0, c) = ITHACAutilities::error_fields(prova.Ufield[i], ridotto.UREC[c]);
-        err(1, c) = ITHACAutilities::error_fields(prova.Fluxfield[i],
-                    ridotto.FLUXREC[c]);
-        err(2, c) = ITHACAutilities::error_fields(prova.Prec1field[i],
-                    ridotto.PREC1REC[c]);
-        err(3, c) = ITHACAutilities::error_fields(prova.Prec4field[i],
-                    ridotto.PREC4REC[c]);
-        err(4, c) = ITHACAutilities::error_fields(prova.Prec8field[i],
-                    ridotto.PREC8REC[c]);
-        err(5, c) = ITHACAutilities::error_fields(prova.Tfield[i], ridotto.TREC[c]);
-        err(6, c) = ITHACAutilities::error_fields(prova.Dec1field[i],
-                    ridotto.DEC1REC[c]);
-        err(7, c) = ITHACAutilities::error_fields(prova.Dec3field[i],
-                    ridotto.DEC3REC[c]);
-        err(8, c) = ITHACAutilities::error_fields(prova.PowerDensfield[i],
-                    ridotto.POWERDENSREC[c]);
-        err(9, c) = ITHACAutilities::error_fields(prova.TXSFields[i],
-                    ridotto.TXSREC[c]);
+        err(0, c) = ITHACAutilities::errorL2Rel(prova.Ufield[i], ridotto.UREC[c]);
+        err(1, c) = ITHACAutilities::errorL2Rel(prova.Fluxfield[i],
+                                                ridotto.FLUXREC[c]);
+        err(2, c) = ITHACAutilities::errorL2Rel(prova.Prec1field[i],
+                                                ridotto.PREC1REC[c]);
+        err(3, c) = ITHACAutilities::errorL2Rel(prova.Prec4field[i],
+                                                ridotto.PREC4REC[c]);
+        err(4, c) = ITHACAutilities::errorL2Rel(prova.Prec8field[i],
+                                                ridotto.PREC8REC[c]);
+        err(5, c) = ITHACAutilities::errorL2Rel(prova.Tfield[i], ridotto.TREC[c]);
+        err(6, c) = ITHACAutilities::errorL2Rel(prova.Dec1field[i],
+                                                ridotto.DEC1REC[c]);
+        err(7, c) = ITHACAutilities::errorL2Rel(prova.Dec3field[i],
+                                                ridotto.DEC3REC[c]);
+        err(8, c) = ITHACAutilities::errorL2Rel(prova.PowerDensfield[i],
+                                                ridotto.POWERDENSREC[c]);
+        err(9, c) = ITHACAutilities::errorL2Rel(prova.TXSFields[i],
+                                                ridotto.TXSREC[c]);
         c++;
     }
 

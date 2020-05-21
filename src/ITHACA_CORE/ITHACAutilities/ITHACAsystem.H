@@ -21,43 +21,88 @@ License
     GNU Lesser General Public License for more details.
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
-Class
-    geometry
+Namespace
+    ITHACAutilites
 Description
-    Reduction class for a Stationary Navier-Stokes problem.
+    Utilities to manage files and check existence of folders (system operations)
 SourceFiles
-    geometry.C
+    ITHACAsystem.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the geometry namespace. It contains functions to
+/// Header file of the ITHACAsystem file.
 /// \dir
-/// Directory containing the header and source files for the geometry namespace.
+/// Directory containing the header and source files for the ITHACAsystem files.
 
-#ifndef geometry_H
-#define geometry_H
+#ifndef ITHACAsystem_H
+#define ITHACAsystem_H
 
 #include "fvCFD.H"
-#include <iostream>
+#include "IOmanip.H"
+#include "freestreamFvPatchField.H"
+#include <sys/stat.h>
+#include <unistd.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 #include <Eigen/Eigen>
+#pragma GCC diagnostic pop
+#include <functional>
+#include "./colormod.H"
+#include "polyMeshTools.H"
+#include <chrono>
+#include "mixedFvPatchFields.H"
+#include "fvMeshSubset.H"
+using namespace std::placeholders;
+#include "Foam2Eigen.H"
 
+/// Namespace to implement some useful system calls inside ITHACA-FV
 namespace ITHACAutilities
 {
+//--------------------------------------------------------------------------
+/// @brief      Creates a symbolic links to 0, system and constant
 ///
-/// @brief      Gives the indices conteined into a defined box
+/// @param[in]  folder  The folder where to create the symbolic links
 ///
-/// @param[in]  mesh  The mesh
+void createSymLink(word folder);
+
+//--------------------------------------------------------------------------
+/// Checks if a folder exists
 ///
-/// @param[in]  indices  The list where indices have to be stored
+/// @param[in]  folder  The folder you want to check.
 ///
-/// @param[in]  Box  The box defined by two opposite points
+/// @return     1 if the folder exists 0 elsewhere.
 ///
-/// @param[in]  points2Move  The list containing the coordines of the points into the box
+bool check_folder(word folder);
+
+//--------------------------------------------------------------------------
+/// Check if the offline data folder "./ITHACAoutput/Offline" exists
 ///
-/// @return     the labels list of the points
+/// @return     1 if the folder exists 0 elsewhere.
 ///
-labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
-                            Eigen::MatrixXd Box, List<vector>& points2Move);
+bool check_off();
+
+//--------------------------------------------------------------------------
+/// Function that returns true if a file exists
+///
+/// @param[in]  fileName  The name of the file
+///
+/// @return     1 if the file exists 0 elsewhere.
+///
+bool check_file(std::string fileName);
+
+//--------------------------------------------------------------------------
+/// Check if the POD data folder "./ITHACAoutput/POD" exists
+///
+/// @return     1 if the folder exists 0 elsewhere.
+///
+bool check_pod();
+
+//--------------------------------------------------------------------------
+/// Check if the supremizer folder exists
+///
+/// @return     1 if the folder exists 0 elsewhere.
+///
+bool check_sup();
 
 }
 

@@ -287,7 +287,7 @@ double reducedSteadyNS::inf_sup_constant()
         for (int j = 0; j < Nphi_u; j++)
         {
             sup(j) = fvc::domainIntegrate(fvc::div(Umodes[j]) * Pmodes[i]).value() /
-                     ITHACAutilities::H1seminorm(Umodes[j]) / ITHACAutilities::L2norm(Pmodes[i]);
+                     ITHACAutilities::H1Seminorm(Umodes[j]) / ITHACAutilities::L2Norm(Pmodes[i]);
         }
 
         inf(i) = sup.maxCoeff();

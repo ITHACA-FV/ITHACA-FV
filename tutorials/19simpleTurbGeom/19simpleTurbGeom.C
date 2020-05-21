@@ -205,9 +205,11 @@ int main(int argc, char* argv[])
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     // Move the mesh to a middle configuration
     List<vector> points2Move;
-    labelList boxIndices = ITHACAutilities::getIndicesFromBox(example._mesh(), movPat, Box,
+    labelList boxIndices = ITHACAutilities::getIndicesFromBox(example._mesh(),
+                           movPat, Box,
                            points2Move);
-    example.linearMovePts((example.mu.maxCoeff()+example.mu.minCoeff())/2, points2Move);
+    example.linearMovePts((example.mu.maxCoeff() + example.mu.minCoeff()) / 2,
+                          points2Move);
 
     for (int j = 0; j < boxIndices.size(); j++)
     {
@@ -231,8 +233,8 @@ int main(int argc, char* argv[])
         // Create the RBF for turbulence
         example.getTurbRBF(example.NNutModes);
     }
-    example._mesh().movePoints(example.point0);
 
+    example._mesh().movePoints(example.point0);
     // Create the reduced object
     reducedSimpleSteadyNS reduced(example);
     PtrList<volVectorField> U_rec_list;
