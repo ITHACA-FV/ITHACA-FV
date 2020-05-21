@@ -264,9 +264,9 @@ int main(int argc, char* argv[])
                 example.Umodes, coeffU, List_of_modes(i, 0));
         PtrList<volScalarField> rec_fieldT = ITHACAutilities::reconstruct_from_coeff(
                 TLmodes, coeffT, List_of_modes(i, 0) + example.liftfieldT.size());
-        Eigen::MatrixXd L2errorProjU = ITHACAutilities::error_listfields(example.Ufield,
+        Eigen::MatrixXd L2errorProjU = ITHACAutilities::errorL2Rel(example.Ufield,
                                        rec_fieldU);
-        Eigen::MatrixXd L2errorProjT = ITHACAutilities::error_listfields(example.Tfield,
+        Eigen::MatrixXd L2errorProjT = ITHACAutilities::errorL2Rel(example.Tfield,
                                        rec_fieldT);
         L2errorProjMatrixU.col(i) = L2errorProjU;
         L2errorProjMatrixT.col(i) = L2errorProjT;
@@ -346,9 +346,9 @@ int main(int argc, char* argv[])
     // Reading in the high-fidelity solutions for the second parameter set
     example.onlineSolveRead("./ITHACAoutput/HFonline3/");
     // Calculate error between online- and corresponding full order solution
-    Eigen::MatrixXd L2errorMatrixU = ITHACAutilities::error_listfields(
+    Eigen::MatrixXd L2errorMatrixU = ITHACAutilities::errorL2Rel(
                                          example.Ufield_on, reduced.UREC);
-    Eigen::MatrixXd L2errorMatrixT = ITHACAutilities::error_listfields(
+    Eigen::MatrixXd L2errorMatrixT = ITHACAutilities::errorL2Rel(
                                          example.Tfield_on, reduced.TREC);
     //Export the matrix containing the error
     ITHACAstream::exportMatrix(L2errorMatrixU, "L2errorMatrixU", "eigen",

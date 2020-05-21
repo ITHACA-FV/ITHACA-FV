@@ -4,6 +4,7 @@ ITHACAstream/cnpy.C
 ITHACAutilities/ITHACAutilities.C
 ITHACAutilities/ITHACAgeometry.C
 ITHACAutilities/ITHACAsystem.C
+ITHACAutilities/ITHACAerror.C
 ITHACAparallel/ITHACAparallel.C
 ITHACAutilities/ITHACAforces.C
 ITHACAPOD/ITHACAPOD.C

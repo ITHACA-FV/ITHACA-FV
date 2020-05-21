@@ -30,7 +30,7 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the ITHACAutilities class.
+/// Header file of the ITHACAutilities namespace.
 /// \dir
 /// Directory containing the header and source files for the ITHACAutilities class.
 
@@ -56,6 +56,7 @@ using namespace std::placeholders;
 #include "Foam2Eigen.H"
 #include "ITHACAgeometry.H"
 #include "ITHACAsystem.H"
+#include "ITHACAerror.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -68,9 +69,6 @@ using namespace std::placeholders;
 /// Namespace to implement some useful functions inside ITHACA-FV
 namespace ITHACAutilities
 {
-
-
-
 
 //--------------------------------------------------------------------------
 /// @brief      Generates random matrix with random values in an interval
@@ -128,120 +126,7 @@ template<class TypeField>
 PtrList<TypeField> reconstruct_from_coeff(PtrList<TypeField>& modes,
         Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
-//--------------------------------------------------------------------------
-/// Computes the relative error between two Fields in the Frobenius norm
-///
-/// @param      field1     The reference field to which the norm is computed
-/// @param      field2     The field for which the error is computed
-///
-/// @tparam     TypeField  type of field
-///
-/// @return     The Frobenius norm of the relative error.
-///
-template<class TypeField>
-double errorFieldsFrob(TypeField& field1, TypeField& field2);
 
-//--------------------------------------------------------------------------
-/// Computes the relative error between two Fields in L2 norm
-///
-/// @param[in]  field1  The field 1
-/// @param[in]  field2  The field 2
-///
-/// @tparam     TypeField   type of field
-///
-/// @return     L2 norm of the relative error.
-///
-template<class TypeField>
-double error_fields(TypeField& field1, TypeField& field2);
-
-//--------------------------------------------------------------------------
-/// Computes the relative error between two volVectorFields in
-/// L2 norm, given the mesh volumes field
-///
-/// @param[in]  field1  The field 1
-/// @param[in]  field2  The field 2
-/// @param[in]  Volumes  The field containing the volumes of the mesh cells
-///
-/// @tparam     T   type of field
-///
-/// @return     L2 norm of the relative error.
-///
-template<typename T>
-double error_fields(GeometricField<T, fvPatchField, volMesh>& field1,
-                    GeometricField<T, fvPatchField, volMesh>& field2, volScalarField& Volumes);
-
-//--------------------------------------------------------------------------
-/// Computes the absolute error between two Fields in L2 norm
-///
-/// @param[in]  field1  The field 1
-/// @param[in]  field2  The field 2
-///
-/// @tparam     TypeField   type of field
-///
-/// @return     L2 norm of the absolute error.
-///
-template<class TypeField>
-double error_fields_abs(TypeField& field1, TypeField& field2);
-
-//--------------------------------------------------------------------------
-/// Computes the relative error in L2 norm between two lists of fields
-///
-/// @param      fields1  The reference fields to which the norm is computed
-/// @param      fields2  The fields for which the error is computed
-///
-/// @tparam     TypeField   type of field
-///
-/// @return     Column vector, in each row the L2 norm of the relative error.
-///
-template<class TypeField>
-Eigen::MatrixXd error_listfields(PtrList<TypeField>& fields1,
-                                 PtrList<TypeField>& fields2);
-
-//--------------------------------------------------------------------------
-/// Computes the relative error in the Frobenius norm between two lists of fields
-///
-/// @param      fields1  The reference fields to which the norm is computed
-/// @param      fields2  The fields for which the error is computed
-///
-/// @tparam     TypeField   type of field
-///
-/// @return     Column vector, in each row the Frobenius norm of the relative error.
-///
-template<class TypeField>
-Eigen::MatrixXd errorListFieldsFrob(PtrList<TypeField>& fields1,
-                                    PtrList<TypeField>& fields2);
-
-//--------------------------------------------------------------------------
-/// Computes the relative error in L2 norm between two lists of Fields
-/// given the list of mesh volumes fields
-///
-/// @param[in]  fields1  The fields 1, scalar or vector
-/// @param[in]  fields2  The fields 2, scalar or vector
-/// @param[in]  Volumes  The list of the mesh volumes fields
-///
-/// @tparam     TypeField   type of field
-///
-/// @return     Column vector, in each row the L2 norm of the error.
-///
-template<class TypeField>
-Eigen::MatrixXd error_listfields(
-    PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& fields1,
-    PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& fields2,
-    PtrList<volScalarField>& Volumes);
-
-//--------------------------------------------------------------------------
-/// Computes the absolute error in L2 norm between two lists of Fields
-///
-/// @param[in]  fields1  The fields 1, scalar or vector
-/// @param[in]  fields2  The fields 2, scalar or vector
-///
-/// @tparam     TypeField   type of field
-///
-/// @return     olumn vector, in each row the L2 norm of the absolute error.
-///
-template<class TypeField>
-Eigen::MatrixXd error_listfields_abs(PtrList<TypeField>& fields1,
-                                     PtrList<TypeField>& fields2);
 
 //-----------------------------------------------------------------------------
 /// @brief      A function to compute time-averaged fields for a set of different parameter samples
@@ -511,51 +396,6 @@ void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd valueVec);
 Eigen::MatrixXd parTimeCombMat(List<Eigen::VectorXd>
                                acquiredSnapshotsTimes, Eigen::MatrixXd parameters);
 
-//--------------------------------------------------------------------------
-/// Evaluate the L2 norm of a volScalarField
-///
-/// @param[in]  field  The field.
-///
-/// @return     L2 norm of the volScalarField.
-///
-double L2norm(volScalarField field);
-
-//--------------------------------------------------------------------------
-/// Evaluate the L2 norm of a volVectorField
-///
-/// @param[in]  field  The field.
-///
-/// @return     L2 norm of the volVectorField.
-///
-double L2norm(volVectorField field);
-
-//--------------------------------------------------------------------------
-/// Evaluate the H1 seminorm of a volScalarField
-///
-/// @param[in]  field  The field.
-///
-/// @return     H1 seminorm of the volScalarField.
-///
-double H1seminorm(volScalarField field);
-
-//--------------------------------------------------------------------------
-/// Evaluate the H1 seminorm of a volVectorField
-///
-/// @param[in]  field  The field.
-///
-/// @return     H1 seminorm of the volVectorField.
-///
-double H1seminorm(volVectorField field);
-
-//--------------------------------------------------------------------------
-/// Evaluate the Frobenius norm of a field
-///
-/// @param[in]  field  The field.
-///
-/// @return     Frobenius norm of the field.
-///
-template<class TypeField>
-double frobNorm(TypeField& field);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
@@ -596,7 +436,6 @@ void changeBCtype(GeometricField<TypeField, fvPatchField, volMesh>&
                   word BCtype, label BC_ind);
 
 
-
 //--------------------------------------------------------------------------
 /// @brief      Sets some given Indices of a list of objects to given values
 ///
@@ -632,8 +471,6 @@ volScalarField meshNonOrtho(fvMesh& mesh, volScalarField& NonOrtho);
 ///
 List<vector> rotatePoints(const List<vector>& originalPoints,
                           vector AxisOfRotation, double AngleOfRotation);
-
-
 
 
 //--------------------------------------------------------------------------

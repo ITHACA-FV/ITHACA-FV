@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
     DEIM_function::evaluate_expression(S, par_new);
     ITHACAstream::exportSolution(S, name(1), "./ITHACAoutput/Online/");
     // Compute the L2 error and print it
-    Info << ITHACAutilities::error_fields(S2, S) << endl;
+    Info << ITHACAutilities::errorL2Rel(S2, S) << endl;
     return 0;
 }
 

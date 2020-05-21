@@ -219,6 +219,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     }
 
 #if OFVER == 6
+
     while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
 #else
     while (simple.loop() && residual > tolerance && csolve < maxIter )

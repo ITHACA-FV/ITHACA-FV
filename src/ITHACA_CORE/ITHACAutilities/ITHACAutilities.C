@@ -41,41 +41,6 @@ License
 namespace ITHACAutilities
 {
 
-double L2norm(volScalarField field)
-{
-    double a;
-    a = Foam::sqrt(fvc::domainIntegrate(field * field).value());
-    return a;
-}
-
-double L2norm(volVectorField field)
-{
-    double a;
-    a = Foam::sqrt(fvc::domainIntegrate(field & field).value());
-    return a;
-}
-
-
-
-template<class TypeField>
-double frobNorm(TypeField& field)
-{
-    double norm(0);
-    Eigen::VectorXd vF = Foam2Eigen::field2Eigen(field);
-    norm = vF.norm();
-    return norm;
-}
-
-template double frobNorm(volScalarField& field);
-template double frobNorm(volVectorField& field);
-
-
-
-
-
-
-
-
 Eigen::MatrixXd rand(int rows, int cols, double min,
                      double max)
 {
@@ -167,167 +132,7 @@ PtrList<TypeField> reconstruct_from_coeff(
     return rec_field;
 }
 
-template<class TypeField>
-double errorFieldsFrob(TypeField& field1,
-                       TypeField& field2)
-{
-    double err;
-    TypeField errField = field1 - field2;
 
-    if (frobNorm(field1) <= 1e-6)
-    {
-        err = 0;
-    }
-    else
-    {
-        err = frobNorm(errField) / frobNorm(field1);
-    }
-
-    return err;
-}
-
-template<class TypeField>
-double error_fields(TypeField& field1,
-                    TypeField& field2)
-{
-    double err;
-
-    if (L2norm(field1) <= 1e-6)
-    {
-        err = 0;
-    }
-    else
-    {
-        err = L2norm(field1 - field2) / L2norm(
-                  field1);
-    }
-
-    return err;
-}
-
-template double error_fields(volScalarField& field1, volScalarField& field2);
-template double error_fields(volVectorField& field1, volVectorField& field2);
-
-template<>
-double error_fields(
-    GeometricField<vector, fvPatchField, volMesh>& field1,
-    GeometricField<vector, fvPatchField, volMesh>& field2, volScalarField& Volumes)
-
-{
-    volScalarField diffFields2 = ((field1 - field2) & (field1 - field2)) * Volumes;
-    double err = Foam::sqrt(gSum(diffFields2));
-    return err;
-}
-
-template<>
-double error_fields(
-    GeometricField<scalar, fvPatchField, volMesh>& field1,
-    GeometricField<scalar, fvPatchField, volMesh>& field2, volScalarField& Volumes)
-
-{
-    volScalarField diffFields2 = ((field1 - field2) * (field1 - field2)) * Volumes;
-    double err = Foam::sqrt(gSum(diffFields2));
-    return err;
-}
-
-template<class TypeField>
-double error_fields_abs(TypeField& field1,
-                        TypeField& field2)
-{
-    double err = L2norm(field1 - field2);
-    return err;
-}
-
-template<class TypeField>
-Eigen::MatrixXd error_listfields(PtrList<TypeField>&
-                                 fields1, PtrList<TypeField>& fields2)
-{
-    Eigen::VectorXd err;
-
-    if (fields1.size() != fields2.size())
-    {
-        Info << "The two fields do not have the same size, code will abort" << endl;
-        exit(0);
-    }
-
-    err.resize(fields1.size(), 1);
-
-    for (label k = 0; k < fields1.size(); k++)
-    {
-        err(k, 0) = error_fields(fields1[k], fields2[k]);
-        Info << " Error is " << err[k] << endl;
-    }
-
-    return err;
-}
-
-template<class TypeField>
-Eigen::MatrixXd errorListFieldsFrob(PtrList<TypeField>&
-                                    fields1, PtrList<TypeField>& fields2)
-{
-    Eigen::VectorXd err;
-
-    if (fields1.size() != fields2.size())
-    {
-        Info << "The two fields do not have the same size, code will abort" << endl;
-        exit(0);
-    }
-
-    err.resize(fields1.size(), 1);
-
-    for (label k = 0; k < fields1.size(); k++)
-    {
-        err(k, 0) = errorFieldsFrob(fields1[k], fields2[k]);
-        Info << " Error is " << err[k] << endl;
-    }
-
-    return err;
-}
-
-template<class TypeField>
-Eigen::MatrixXd error_listfields(
-    PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& fields1,
-    PtrList<GeometricField<TypeField, fvPatchField, volMesh>>& fields2,
-    PtrList<volScalarField>& Volumes)
-{
-    M_Assert(fields1.size() == fields2.size(),
-             "The two fields do not have the same size, code will abort");
-    M_Assert(fields1.size() == Volumes.size(),
-             "The volumes field and the two solution fields do not have the same size, code will abort");
-    Eigen::VectorXd err;
-    err.resize(fields1.size(), 1);
-
-    for (label k = 0; k < fields1.size(); k++)
-    {
-        err(k, 0) = error_fields(fields1[k], fields2[k], Volumes[k]);
-        Info << " Error is " << err[k] << endl;
-    }
-
-    return err;
-}
-
-template<class TypeField>
-Eigen::MatrixXd error_listfields_abs(PtrList<TypeField>&
-                                     fields1, PtrList<TypeField>& fields2)
-{
-    Eigen::VectorXd err;
-
-    if (fields1.size() != fields2.size())
-    {
-        Info << "The two fields do not have the same size, code will abort" << endl;
-        exit(0);
-    }
-
-    err.resize(fields1.size(), 1);
-
-    for (label k = 0; k < fields1.size(); k++)
-    {
-        err(k, 0) = error_fields_abs(fields1[k], fields2[k]);
-        Info << " Error is " << err[k] << endl;
-    }
-
-    return err;
-}
 
 Eigen::MatrixXd get_mass_matrix(PtrList<volVectorField> modes,
                                 int Nmodes)
@@ -595,22 +400,6 @@ Eigen::MatrixXd getCoeffsFrobenius(PtrList<TypeField>
     }
 
     return coeffs;
-}
-
-double H1seminorm(volScalarField field)
-{
-    double a;
-    a = Foam::sqrt(fvc::domainIntegrate(fvc::grad(field) & fvc::grad(
-                                            field)).value());
-    return a;
-}
-
-double H1seminorm(volVectorField field)
-{
-    double a;
-    a = Foam::sqrt(fvc::domainIntegrate(fvc::grad(field)
-                                        && fvc::grad(field)).value());
-    return a;
 }
 
 void setBoxToValue(volScalarField& field, Eigen::MatrixXd Box,
@@ -966,8 +755,6 @@ void changeBCtype(
                                  field.mesh().boundary()[BC_ind], field));
 }
 
-
-
 void setIndices2Value(labelList& ind2set,
                       List<vector>& value2set, labelList& movingIDS, List<vector>& originalList)
 {
@@ -1203,7 +990,7 @@ void normalizeFields(
 
     for (label i = 0; i < fields.size(); i++)
     {
-        double norm = L2norm(fields[i]);
+        double norm = L2Norm(fields[i]);
         GeometricField<type_f, fvPatchField, volMesh> tmp(fields[0].name(),
                 fields[0] * 0);
         Eigen::VectorXd vec = eigenFields.col(i) / norm;
@@ -1248,47 +1035,6 @@ template volVectorField computeAverage(
     PtrList<volVectorField>& fields);
 template volScalarField computeAverage(
     PtrList<volScalarField>& fields);
-
-template double errorFieldsFrob(volScalarField& field1,
-                                volScalarField& field2);
-template double errorFieldsFrob(volVectorField& field1,
-                                volVectorField& field2);
-
-template double error_fields_abs(volScalarField& field1,
-                                 volScalarField& field2);
-template double error_fields_abs(volVectorField& field1,
-                                 volVectorField& field2);
-
-template Eigen::MatrixXd error_listfields(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields1,
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields2,
-    PtrList<volScalarField>& Volumes);
-template Eigen::MatrixXd error_listfields(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields1,
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields2,
-    PtrList<volScalarField>& Volumes);
-
-
-template Eigen::MatrixXd error_listfields(
-    PtrList<volScalarField>& fields1,
-    PtrList<volScalarField>& fields2);
-template Eigen::MatrixXd error_listfields(
-    PtrList<volVectorField>& fields1,
-    PtrList<volVectorField>& fields2);
-
-template Eigen::MatrixXd errorListFieldsFrob(
-    PtrList<volScalarField>& fields1,
-    PtrList<volScalarField>& fields2);
-template Eigen::MatrixXd errorListFieldsFrob(
-    PtrList<volVectorField>& fields1,
-    PtrList<volVectorField>& fields2);
-
-template Eigen::MatrixXd error_listfields_abs(
-    PtrList<volScalarField>& fields1,
-    PtrList<volScalarField>& fields2);
-template Eigen::MatrixXd error_listfields_abs(
-    PtrList<volVectorField>& fields1,
-    PtrList<volVectorField>& fields2);
 
 template Eigen::VectorXd get_mass_matrix_FV(
     GeometricField<scalar, fvPatchField, volMesh>& snapshot);

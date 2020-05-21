@@ -286,7 +286,7 @@ int main(int argc, char* argv[])
               " seconds." << std::endl;
     std::cout << std::endl << "The Speed-up is: " << example_new.time_full /
               example.time_rom  << std::endl << std::endl;
-    Eigen::MatrixXd error = ITHACAutilities::error_listfields(example_new.Tfield,
+    Eigen::MatrixXd error = ITHACAutilities::errorL2Abs(example_new.Tfield,
                             example.Tonline);
     std::cout << "The mean L2 error is: " << error.mean() << std::endl;
     exit(0);
