@@ -96,7 +96,7 @@ Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
                                   field, int numberOfModes)
 {
     Eigen::MatrixXd fieldEig = Foam2Eigen::field2Eigen(field);
-    auto vol = ITHACAutilities::get_mass_matrix_FV(field);
+    auto vol = ITHACAutilities::getMassMatrixFV(field);
     Eigen::MatrixXd projField;
 
     if (EigenModes.size() == 0)
@@ -126,7 +126,7 @@ Eigen::MatrixXd Modes<T>::project(
     int numberOfModes)
 {
     Eigen::MatrixXd fieldEig = Foam2Eigen::PtrList2Eigen(fields);
-    auto vol = ITHACAutilities::get_mass_matrix_FV(fields[0]);
+    auto vol = ITHACAutilities::getMassMatrixFV(fields[0]);
     Eigen::MatrixXd projField;
 
     if (EigenModes.size() == 0)
@@ -318,7 +318,7 @@ PtrList<GeometricField<T, fvPatchField, volMesh>>
 
         if (innerProduct == "L2")
         {
-            M_vol = ITHACAutilities::get_mass_matrix_FV(snapshots[i]);
+            M_vol = ITHACAutilities::getMassMatrixFV(snapshots[i]);
         }
         else if (innerProduct == "Frobenius")
         {

@@ -6,6 +6,7 @@ ITHACAutilities/ITHACAgeometry.C
 ITHACAutilities/ITHACAsystem.C
 ITHACAutilities/ITHACAerror.C
 ITHACAutilities/ITHACAassign.C
+ITHACAutilities/ITHACAcoeffsMass.C
 ITHACAparallel/ITHACAparallel.C
 ITHACAutilities/ITHACAforces.C
 ITHACAPOD/ITHACAPOD.C

@@ -1794,7 +1794,7 @@ void msrProblem::change_viscosity(double mu)
 void msrProblem::msrcoeff(int& NC)
 {
     NCmodes = NC;
-    Eigen::MatrixXd Ncoeff_v = ITHACAutilities::get_coeffs_ortho(vFields, vmodes);
+    Eigen::MatrixXd Ncoeff_v = ITHACAutilities::getCoeffs(vFields, vmodes);
     ITHACAstream::exportMatrix(Ncoeff_v, "Ncoeff_v", "matlab",
                                "./ITHACAoutput/Matrices/");
     int Ncol = Ncoeff_v.cols();
@@ -1816,7 +1816,7 @@ void msrProblem::msrcoeff(int& NC)
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
-    Eigen::MatrixXd Ncoeff_D = ITHACAutilities::get_coeffs_ortho(DFields, Dmodes);
+    Eigen::MatrixXd Ncoeff_D = ITHACAutilities::getCoeffs(DFields, Dmodes);
     ITHACAstream::exportMatrix(Ncoeff_D, "Ncoeff_D", "matlab",
                                "./ITHACAoutput/Matrices/");
     SAMPLES_D.resize(NCmodes);
@@ -1837,7 +1837,7 @@ void msrProblem::msrcoeff(int& NC)
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
-    Eigen::MatrixXd Ncoeff_NSF = ITHACAutilities::get_coeffs_ortho(NSFFields,
+    Eigen::MatrixXd Ncoeff_NSF = ITHACAutilities::getCoeffs(NSFFields,
                                  NSFmodes);
     ITHACAstream::exportMatrix(Ncoeff_NSF, "Ncoeff_NSF", "matlab",
                                "./ITHACAoutput/Matrices/");
@@ -1859,7 +1859,7 @@ void msrProblem::msrcoeff(int& NC)
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
-    Eigen::MatrixXd Ncoeff_A = ITHACAutilities::get_coeffs_ortho(AFields, Amodes);
+    Eigen::MatrixXd Ncoeff_A = ITHACAutilities::getCoeffs(AFields, Amodes);
     ITHACAstream::exportMatrix(Ncoeff_A, "Ncoeff_A", "matlab",
                                "./ITHACAoutput/Matrices/");
     SAMPLES_A.resize(NCmodes);
@@ -1880,7 +1880,7 @@ void msrProblem::msrcoeff(int& NC)
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
-    Eigen::MatrixXd Ncoeff_SP = ITHACAutilities::get_coeffs_ortho(SPFields,
+    Eigen::MatrixXd Ncoeff_SP = ITHACAutilities::getCoeffs(SPFields,
                                 SPmodes);
     ITHACAstream::exportMatrix(Ncoeff_SP, "Ncoeff_SP", "matlab",
                                "./ITHACAoutput/Matrices/");
@@ -1902,7 +1902,7 @@ void msrProblem::msrcoeff(int& NC)
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
-    Eigen::MatrixXd Ncoeff_TXS = ITHACAutilities::get_coeffs_ortho(TXSFields,
+    Eigen::MatrixXd Ncoeff_TXS = ITHACAutilities::getCoeffs(TXSFields,
                                  TXSmodes);
     ITHACAstream::exportMatrix(Ncoeff_TXS, "Ncoeff_TXS", "matlab",
                                "./ITHACAoutput/Matrices/");

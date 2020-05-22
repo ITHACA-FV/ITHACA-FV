@@ -285,17 +285,17 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
     y.resize(Nphi_u + Nphi_prgh + Nphi_t, 1);
     y.setZero();
     // Calculate the time-dependent coefficients
-    y.head(Nphi_u) = ITHACAutilities::get_coeffs(problem->Ufield[startSnap],
+    y.head(Nphi_u) = ITHACAutilities::getCoeffs(problem->Ufield[startSnap],
                      LUmodes);
 
     if  (Nphi_prgh != 0)
     {
-        y.segment(Nphi_u, Nphi_prgh) =  ITHACAutilities::get_coeffs_ortho(
+        y.segment(Nphi_u, Nphi_prgh) =  ITHACAutilities::getCoeffs(
                                             problem->Prghfield[2],
                                             problem->Prghmodes);
     }
 
-    y.tail(Nphi_t) = ITHACAutilities::get_coeffs(T_IC, LTmodes);
+    y.tail(Nphi_t) = ITHACAutilities::getCoeffs(T_IC, LTmodes);
     // Set some properties of the newton object
     newton_object_sup.nu = nu;
     newton_object_sup.y_old = y;
@@ -439,16 +439,16 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     y.resize(Nphi_u + Nphi_prgh + Nphi_t, 1);
     y.setZero();
     // Calculate the time-dependent coefficients
-    y.head(Nphi_u) = ITHACAutilities::get_coeffs(problem->Ufield[startSnap],
+    y.head(Nphi_u) = ITHACAutilities::getCoeffs(problem->Ufield[startSnap],
                      LUmodes);
 
     if  (Nphi_prgh != 0)
     {
-        y.segment(Nphi_u, Nphi_prgh) =  ITHACAutilities::get_coeffs_ortho(
+        y.segment(Nphi_u, Nphi_prgh) =  ITHACAutilities::getCoeffs(
                                             problem->Prghfield[2], problem->Prghmodes);
     }
 
-    y.tail(Nphi_t) = ITHACAutilities::get_coeffs(T_IC, LTmodes);
+    y.tail(Nphi_t) = ITHACAutilities::getCoeffs(T_IC, LTmodes);
     // Set some properties of the newton object
     newton_object_PPE.nu = nu;
     newton_object_PPE.y_old = y;
@@ -457,7 +457,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     newton_object_PPE.BC_t.resize(N_BC_t);
     newton_object_PPE.BC.resize(N_BC);
 
-    //Eigen::MatrixXd Ncoeff = ITHACAutilities::get_coeffs_ortho(problem->nutFields
+    //Eigen::MatrixXd Ncoeff = ITHACAutilities::getCoeffs(problem->nutFields
     //        , problem->nuTmodes);
     // std::vector<double> tv;
     //    tv.resize(1);

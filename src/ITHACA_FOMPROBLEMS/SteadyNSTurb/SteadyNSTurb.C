@@ -533,8 +533,8 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     cTotalTensor.resize(cSize, nNutModes, cSize);
     cTotalTensor = ct1Tensor + ct2Tensor;
     // Get the coeffs for interpolation (the orthonormal one is used because basis are orthogonal)
-    coeffL2 = ITHACAutilities::get_coeffs_ortho(nutFields,
-              nutModes, nNutModes);
+    coeffL2 = ITHACAutilities::getCoeffs(nutFields,
+                                         nutModes, nNutModes);
     ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
                                "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",

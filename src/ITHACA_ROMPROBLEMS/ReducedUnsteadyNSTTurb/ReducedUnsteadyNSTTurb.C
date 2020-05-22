@@ -224,9 +224,9 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
         }
     }
 
-    y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
-    y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
-    z.head(Nphi_t) = ITHACAutilities::get_coeffs(T_IC, Tmodes);
+    y.head(Nphi_u) = ITHACAutilities::getCoeffs(Usnapshots[startSnap], Umodes);
+    y.tail(Nphi_p) = ITHACAutilities::getCoeffs(Psnapshots[startSnap], Pmodes);
+    z.head(Nphi_t) = ITHACAutilities::getCoeffs(T_IC, Tmodes);
 
     // Change initial condition for the lifting function
     for (label j = 0; j < N_BC; j++)

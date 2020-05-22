@@ -371,6 +371,11 @@ List<int> getIndicesFromBox(
     return indices;
 }
 
+template List<int> getIndicesFromBox(
+    GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+template List<int> getIndicesFromBox(
+    GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+
 template<typename type_f>
 fvMeshSubset* getSubMeshFromBox(
     GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
@@ -387,14 +392,59 @@ fvMeshSubset* getSubMeshFromBox(
     return sub;
 }
 
-template List<int> getIndicesFromBox(
-    GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
-template List<int> getIndicesFromBox(
-    GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
-
 template fvMeshSubset* getSubMeshFromBox(
     GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 template fvMeshSubset* getSubMeshFromBox(
     GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 
+volScalarField meshNonOrtho(fvMesh& mesh,
+                            volScalarField& NonOrtho)
+{
+    scalarField sno = (polyMeshTools::faceOrthogonality(mesh, mesh.Sf(), mesh.C()));
+
+    for (int i = 0; i < sno.size(); i++)
+    {
+        sno[i] = Foam::acos(min(1, sno[i])) * 180 / constant::mathematical::pi;
+    }
+
+    surfaceScalarField pippo = mesh.magSf();
+    const fvPatchList& patches = mesh.boundary();
+
+    for (int i = 0; i < pippo.internalField().size(); i++)
+    {
+        pippo.ref()[i] = sno[i];
+    }
+
+    for (int i = 0; i < patches.size(); i++)
+    {
+        if ( patches[i].type() != "empty" )
+        {
+            label start = patches[i].patch().start();
+            label n = patches[i].patch().size();
+
+            for (int k = 0; k < n; k++)
+            {
+                pippo.boundaryFieldRef()[i][k] = sno[start + k];
+            }
+        }
+    }
+
+    NonOrtho = fvc::average(pippo);
+    return NonOrtho;
+}
+
+List<vector> rotatePoints(const List<vector>& originalPoints,
+                          vector AxisOfRotation, double AngleOfRotation)
+{
+    double theta = AngleOfRotation / 180 *  constant::mathematical::pi;
+    quaternion q(AxisOfRotation, theta);
+    List<vector> rotatedPoints(originalPoints);
+
+    for (int i = 0; i < rotatedPoints.size(); i++)
+    {
+        rotatedPoints[i] = q.transform(rotatedPoints[i]);
+    }
+
+    return rotatedPoints;
+}
 }
