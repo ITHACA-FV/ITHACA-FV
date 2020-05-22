@@ -225,6 +225,29 @@ template<typename type_f>
 fvMeshSubset* getSubMeshFromBox(
     GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 
+//--------------------------------------------------------------------------
+/// @brief      Returns a scalarField that containes the non-orthogonality value of a given mesh
+///
+/// @param      mesh      The mesh for which you want to compute the non-orthogonality value
+/// @param      NonOrtho  The scalarField containing the non-orthogonality
+///
+/// @return     The scalarField containing the non-orthogonality
+///
+volScalarField meshNonOrtho(fvMesh& mesh, volScalarField& NonOrtho);
+
+
+//--------------------------------------------------------------------------
+/// @brief      Rotate a list of points in clockwise direction given an axis of rotation and an angle in degrees.
+///
+/// @param[in]  originalPoints    The original points
+/// @param[in]  CentreOfRotation  The Axis Of Rotation
+/// @param[in]  AngleOfRotation   The angle of rotation in degrees
+///
+/// @return     The Rotated Points
+///
+List<vector> rotatePoints(const List<vector>& originalPoints,
+                          vector AxisOfRotation, double AngleOfRotation);
+
 }
 
 #endif

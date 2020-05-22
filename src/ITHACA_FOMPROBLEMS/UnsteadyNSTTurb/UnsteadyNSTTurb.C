@@ -524,7 +524,7 @@ void UnsteadyNSTTurb::projectSUP(fileName folder, label NU, label NP,
     NSUPmodes = NSUP;
     Nnutmodes = Nnut;
     // Get the coeffs for interpolation (the orthonormal one is used because basis are orthogonal)
-    Eigen::MatrixXd Ncoeff = ITHACAutilities::get_coeffs_ortho(nutFields, nuTmodes);
+    Eigen::MatrixXd Ncoeff = ITHACAutilities::getCoeffs(nutFields, nuTmodes);
     ITHACAstream::exportMatrix(Ncoeff, "Ncoeff", "python",
                                "./ITHACAoutput/Matrices/");
     SAMPLES.resize(Nnutmodes);

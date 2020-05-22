@@ -38,6 +38,10 @@ done
 echo $tutorial_files
 echo $src_files
 
+for f in $(find . -name "*.H" -o -name "*.C"); do
+    sed -i -e '$a\' $f
+done
+
 # Here the important part: astyle formats the src files.
 astyle --style=bsd\
        --indent=spaces=4\

@@ -590,49 +590,49 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
     z.setZero();
     int pos_w = 0;
     int pos_z = 0;
-    y.head(Nphi_u) = ITHACAutilities::get_coeffs(Usnapshots[startSnap], Umodes);
-    y.tail(Nphi_p) = ITHACAutilities::get_coeffs(Psnapshots[startSnap], Pmodes);
+    y.head(Nphi_u) = ITHACAutilities::getCoeffs(Usnapshots[startSnap], Umodes);
+    y.tail(Nphi_p) = ITHACAutilities::getCoeffs(Psnapshots[startSnap], Pmodes);
 
     for (label j = 0; j < N_BC; j++)
     {
         y(j) = vel_now(j, 0);
     }
 
-    w.head(Nphi_flux) = ITHACAutilities::get_coeffs(Fluxsnapshots[startSnap],
+    w.head(Nphi_flux) = ITHACAutilities::getCoeffs(Fluxsnapshots[startSnap],
                         Fluxmodes);
     pos_w += Nphi_flux;
-    w.segment(pos_w, Nphi_prec1) = ITHACAutilities::get_coeffs(
+    w.segment(pos_w, Nphi_prec1) = ITHACAutilities::getCoeffs(
                                        Prec1snapshots[startSnap], Prec1modes);
     pos_w += Nphi_prec1;
-    w.segment(pos_w, Nphi_prec2) = ITHACAutilities::get_coeffs(
+    w.segment(pos_w, Nphi_prec2) = ITHACAutilities::getCoeffs(
                                        Prec2snapshots[startSnap], Prec2modes);
     pos_w += Nphi_prec2;
-    w.segment(pos_w, Nphi_prec3) = ITHACAutilities::get_coeffs(
+    w.segment(pos_w, Nphi_prec3) = ITHACAutilities::getCoeffs(
                                        Prec3snapshots[startSnap], Prec3modes);
     pos_w += Nphi_prec3;
-    w.segment(pos_w, Nphi_prec4) = ITHACAutilities::get_coeffs(
+    w.segment(pos_w, Nphi_prec4) = ITHACAutilities::getCoeffs(
                                        Prec4snapshots[startSnap], Prec4modes);
     pos_w += Nphi_prec4;
-    w.segment(pos_w, Nphi_prec5) = ITHACAutilities::get_coeffs(
+    w.segment(pos_w, Nphi_prec5) = ITHACAutilities::getCoeffs(
                                        Prec5snapshots[startSnap], Prec5modes);
     pos_w += Nphi_prec5;
-    w.segment(pos_w, Nphi_prec6) = ITHACAutilities::get_coeffs(
+    w.segment(pos_w, Nphi_prec6) = ITHACAutilities::getCoeffs(
                                        Prec6snapshots[startSnap], Prec6modes);
     pos_w += Nphi_prec6;
-    w.segment(pos_w, Nphi_prec7) = ITHACAutilities::get_coeffs(
+    w.segment(pos_w, Nphi_prec7) = ITHACAutilities::getCoeffs(
                                        Prec7snapshots[startSnap], Prec7modes);
     pos_w += Nphi_prec7;
-    w.segment(pos_w, Nphi_prec8) = ITHACAutilities::get_coeffs(
+    w.segment(pos_w, Nphi_prec8) = ITHACAutilities::getCoeffs(
                                        Prec8snapshots[startSnap], Prec8modes);
-    z.head(Nphi_T) = ITHACAutilities::get_coeffs(Tsnapshots[startSnap], Tmodes);
+    z.head(Nphi_T) = ITHACAutilities::getCoeffs(Tsnapshots[startSnap], Tmodes);
     pos_z += Nphi_T;
-    z.segment(pos_z, Nphi_dec1) = ITHACAutilities::get_coeffs(
+    z.segment(pos_z, Nphi_dec1) = ITHACAutilities::getCoeffs(
                                       Dec1snapshots[startSnap], Dec1modes);
     pos_z += Nphi_dec1;
-    z.segment(pos_z, Nphi_dec2) = ITHACAutilities::get_coeffs(
+    z.segment(pos_z, Nphi_dec2) = ITHACAutilities::getCoeffs(
                                       Dec2snapshots[startSnap], Dec2modes);
     pos_z += Nphi_dec2;
-    z.segment(pos_z, Nphi_dec3) = ITHACAutilities::get_coeffs(
+    z.segment(pos_z, Nphi_dec3) = ITHACAutilities::getCoeffs(
                                       Dec3snapshots[startSnap], Dec3modes);
 
     for (label j = 0; j < N_BCt; j++)

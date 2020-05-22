@@ -271,7 +271,7 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
     PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes,
     word rbfBasis)
 {
-    Eigen::MatrixXd coeff = ITHACAutilities::get_coeffs_ortho(snapshots, modes);
+    Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
     M_Assert(mu_samples.rows() == coeff.cols() * mu.rows(),
              "The dimension of the coefficient matrix must correspond to the constructed parameter matrix 'mu_samples'");
     std::vector<SPLINTER::RBFSpline> rbfsplines;
@@ -355,7 +355,7 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
     PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes,
     word rbfBasis)
 {
-    Eigen::MatrixXd coeff = ITHACAutilities::get_coeffs_ortho(snapshots, modes);
+    Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
     M_Assert(mu_samples.rows() == coeff.cols() * mu.rows(),
              "The dimension of the coefficient matrix must correspond to the constructed parameter matrix 'mu_samples'");
     std::vector<SPLINTER::RBFSpline> rbfsplines;
@@ -438,7 +438,7 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
 std::vector<SPLINTER::BSpline> reductionProblem::getCoeffManifoldSPL(
     PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes, label splDeg)
 {
-    Eigen::MatrixXd coeff = ITHACAutilities::get_coeffs_ortho(snapshots, modes);
+    Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
     M_Assert(mu_samples.rows() == coeff.cols() * mu.rows(),
              "The dimension of the coefficient matrix must correspond to the constructed parameter matrix 'mu_samples'");
     std::vector<SPLINTER::BSpline> bsplines;
@@ -492,7 +492,7 @@ std::vector<SPLINTER::BSpline> reductionProblem::getCoeffManifoldSPL(
 std::vector<SPLINTER::BSpline> reductionProblem::getCoeffManifoldSPL(
     PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes, label splDeg)
 {
-    Eigen::MatrixXd coeff = ITHACAutilities::get_coeffs_ortho(snapshots, modes);
+    Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
     M_Assert(mu_samples.rows() == coeff.cols() * mu.rows(),
              "The dimension of the coefficient matrix must correspond to the constructed parameter matrix 'mu_samples'");
     std::vector<SPLINTER::BSpline> bsplines;

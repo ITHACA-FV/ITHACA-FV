@@ -255,14 +255,14 @@ int main(int argc, char* argv[])
     // Calculate the coefficients and L2 error and store the error in a matrix for each number of modes
     for (int i = 0; i < List_of_modes.rows(); i++)
     {
-        Eigen::MatrixXd coeffU = ITHACAutilities::get_coeffs(example.Ufield,
+        Eigen::MatrixXd coeffU = ITHACAutilities::getCoeffs(example.Ufield,
                                  example.Umodes,
                                  List_of_modes(i, 0) + example.liftfield.size() + NmodesSUPproj);
-        Eigen::MatrixXd coeffT = ITHACAutilities::get_coeffs(example.Tfield, TLmodes,
+        Eigen::MatrixXd coeffT = ITHACAutilities::getCoeffs(example.Tfield, TLmodes,
                                  List_of_modes(i, 0) + example.liftfieldT.size());
-        PtrList<volVectorField> rec_fieldU = ITHACAutilities::reconstruct_from_coeff(
+        PtrList<volVectorField> rec_fieldU = ITHACAutilities::reconstructFromCoeff(
                 example.Umodes, coeffU, List_of_modes(i, 0));
-        PtrList<volScalarField> rec_fieldT = ITHACAutilities::reconstruct_from_coeff(
+        PtrList<volScalarField> rec_fieldT = ITHACAutilities::reconstructFromCoeff(
                 TLmodes, coeffT, List_of_modes(i, 0) + example.liftfieldT.size());
         Eigen::MatrixXd L2errorProjU = ITHACAutilities::errorL2Rel(example.Ufield,
                                        rec_fieldU);

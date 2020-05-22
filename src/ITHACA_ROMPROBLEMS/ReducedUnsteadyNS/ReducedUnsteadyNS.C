@@ -296,9 +296,9 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
-    y.head(Nphi_u) = ITHACAutilities::get_coeffs(problem->Ufield[startSnap],
+    y.head(Nphi_u) = ITHACAutilities::getCoeffs(problem->Ufield[startSnap],
                      Umodes);
-    y.tail(Nphi_p) = ITHACAutilities::get_coeffs(problem->Pfield[startSnap],
+    y.tail(Nphi_p) = ITHACAutilities::getCoeffs(problem->Pfield[startSnap],
                      Pmodes);
     int nextStore = 0;
     int counter2 = 0;
@@ -456,9 +456,9 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
     // Set Initial Conditions
-    y.head(Nphi_u) = ITHACAutilities::get_coeffs(problem->Ufield[startSnap],
+    y.head(Nphi_u) = ITHACAutilities::getCoeffs(problem->Ufield[startSnap],
                      Umodes);
-    y.tail(Nphi_p) = ITHACAutilities::get_coeffs(problem->Pfield[startSnap],
+    y.tail(Nphi_p) = ITHACAutilities::getCoeffs(problem->Pfield[startSnap],
                      Pmodes);
     int nextStore = 0;
     int counter2 = 0;
@@ -617,9 +617,9 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_sup(Eigen::MatrixXd& vel_now,
         valBC0  = valBC;
         y.resize(Nphi_u + Nphi_p, 1);
         y.setZero();
-        y.head(Nphi_u) = ITHACAutilities::get_coeffs(problem->Ufield[startSnap],
+        y.head(Nphi_u) = ITHACAutilities::getCoeffs(problem->Ufield[startSnap],
                          Umodes);
-        y.tail(Nphi_p) = ITHACAutilities::get_coeffs(problem->Pfield[startSnap],
+        y.tail(Nphi_p) = ITHACAutilities::getCoeffs(problem->Pfield[startSnap],
                          Pmodes);
         // Set some properties of the newton object
         newton_object_sup.nu = nu;
@@ -738,9 +738,9 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_PPE(Eigen::MatrixXd& vel_now,
         valBC0  = valBC;
         y.resize(Nphi_u + Nphi_p, 1);
         y.setZero();
-        y.head(Nphi_u) = ITHACAutilities::get_coeffs(problem->Ufield[startSnap],
+        y.head(Nphi_u) = ITHACAutilities::getCoeffs(problem->Ufield[startSnap],
                          Umodes);
-        y.tail(Nphi_p) = ITHACAutilities::get_coeffs(problem->Pfield[startSnap],
+        y.tail(Nphi_p) = ITHACAutilities::getCoeffs(problem->Pfield[startSnap],
                          Pmodes);
         // Set some properties of the newton object
         newton_object_PPE.nu = nu;

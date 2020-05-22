@@ -119,7 +119,7 @@ void ITHACAPOD::getModes(
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshots);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshots);
         int NBC = snapshots[0].boundaryField().size();
-        auto VM = ITHACAutilities::get_mass_matrix_FV(snapshots[0]);
+        auto VM = ITHACAutilities::getMassMatrixFV(snapshots[0]);
         Eigen::MatrixXd _corMatrix = SnapMatrix.transpose() * VM.asDiagonal() *
                                      SnapMatrix;
 
@@ -265,7 +265,7 @@ void ITHACAPOD::getWeightedModes(
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshots);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshots);
         int NBC = snapshots[0].boundaryField().size();
-        auto VM = ITHACAutilities::get_mass_matrix_FV(snapshots[0]);
+        auto VM = ITHACAutilities::getMassMatrixFV(snapshots[0]);
         Eigen::MatrixXd _corMatrix = SnapMatrix.transpose() * VM.asDiagonal() *
                                      SnapMatrix;
         Eigen::VectorXd eigenValueseig;
@@ -409,7 +409,7 @@ void ITHACAPOD::getModesSVD(
         Info << "####### Performing POD using Singular Value Decomposition for " <<
              snapshots[0].name() << " #######" << endl;
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshots);
-        Eigen::VectorXd V = ITHACAutilities::get_mass_matrix_FV(snapshots[0]);
+        Eigen::VectorXd V = ITHACAutilities::getMassMatrixFV(snapshots[0]);
         Eigen::VectorXd V3dSqrt = V.array().sqrt();
         Eigen::VectorXd V3dInv = V3dSqrt.array().cwiseInverse();
         auto VMsqr = V3dSqrt.asDiagonal();
@@ -1588,7 +1588,7 @@ void ITHACAPOD::getModes(PtrList<Field_type>& snapshots,
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(fields2);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(fields2);
         int NBC = fields2[0].boundaryField().size();
-        auto VM = ITHACAutilities::get_mass_matrix_FV(fields2[0]);
+        auto VM = ITHACAutilities::getMassMatrixFV(fields2[0]);
         Eigen::MatrixXd _corMatrix = SnapMatrix.transpose() * VM.asDiagonal() *
                                      SnapMatrix;
 
