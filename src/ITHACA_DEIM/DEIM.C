@@ -57,7 +57,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModes, word FunctionName)
     {
         A = P.transpose() * U;
         b = P.transpose() * MatrixModes.col(i);
-        c = A.lu().solve(b);
+        c = A.fullPivLu().solve(b);
         r = MatrixModes.col(i) - U * c;
         max = r.cwiseAbs().maxCoeff(&ind_max, &c1);
         P.conservativeResize(MatrixModes.rows(), i + 1);
@@ -115,7 +115,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     {
         AA = EigenFunctions::innerProduct(PA, UA);
         bA = EigenFunctions::innerProduct(PA, std::get<0>(Matrix_Modes)[i]);
-        cA = AA.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(bA);
+        cA = AA.fullPivLu().solve(bA);
         rA = std::get<0>(Matrix_Modes)[i] - EigenFunctions::MVproduct(UA, cA);
         double maxA = EigenFunctions::max(rA, ind_rowA, ind_colA);
         rhoA.conservativeResize(i + 1);
@@ -143,7 +143,8 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     Eigen::VectorXd rB;
     Eigen::VectorXd rhoB(1);
     int ind_rowB, xyz_rowB, c1;
-    double maxB = std::get<1>(Matrix_Modes)[0].maxCoeff(&ind_rowB, &c1);
+    double maxB = std::get<1>(Matrix_Modes)[0].cwiseAbs().maxCoeff(&ind_rowB,
+                  &c1);
     int ind_rowBOF = ind_rowB;
     check3DIndices(ind_rowBOF, xyz_rowB);
     rhoB(0) = maxB;
@@ -157,7 +158,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     {
         AB = PB.transpose() * UB;
         bB = PB.transpose() * std::get<1>(Matrix_Modes)[i];
-        cB = AB.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(bB);
+        cB = AB.fullPivLu().solve(bB);
         rB = std::get<1>(Matrix_Modes)[i] - UB * cB;
         maxB = rB.cwiseAbs().maxCoeff(&ind_rowB, &c1);
         ind_rowBOF = ind_rowB;
@@ -176,10 +177,12 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     {
         MatrixOnlineB = Eigen::MatrixXd::Zero(std::get<1>(Matrix_Modes)[0].rows(), 1);
     }
+
     else if (MaxModesB != 1)
     {
         MatrixOnlineB = UB * ((PB.transpose() * UB).fullPivLu().inverse());
     }
+
     else
     {
         Eigen::MatrixXd aux = PB.transpose() * UB;
@@ -477,11 +480,13 @@ void DEIM<T>::check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
     {
         xyz_rowA = 0;
     }
+
     else if (ind_rowA < Ncells * 2)
     {
         xyz_rowA = 1;
         ind_rowA = ind_rowA - Ncells;
     }
+
     else
     {
         xyz_rowA = 2;
@@ -492,11 +497,13 @@ void DEIM<T>::check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
     {
         xyz_colA = 0;
     }
+
     else if (ind_colA < Ncells * 2)
     {
         xyz_colA = 1;
         ind_colA = ind_colA - 2 * Ncells;
     }
+
     else
     {
         xyz_colA = 2;
@@ -511,11 +518,13 @@ void DEIM<T>::check3DIndices(int& ind_rowA, int& xyz_rowA)
     {
         xyz_rowA = 0;
     }
+
     else if (ind_rowA < Ncells * 2)
     {
         xyz_rowA = 1;
         ind_rowA = ind_rowA - Ncells;
     }
+
     else
     {
         xyz_rowA = 2;

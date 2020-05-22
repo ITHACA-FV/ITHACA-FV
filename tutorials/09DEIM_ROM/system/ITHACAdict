@@ -16,7 +16,7 @@ FoamFile
 
 N_modes_T 15;
 
-N_modes_DEIM_A 15;
+N_modes_DEIM_A 10;
 N_modes_DEIM_B 1;
 
 
