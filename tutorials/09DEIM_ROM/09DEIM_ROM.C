@@ -166,6 +166,7 @@ class DEIMLaplacian: public laplacianProblem
             {
                 ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
             }
+
             else
             {
                 for (int i = 0; i < par.rows(); i++)
@@ -245,7 +246,8 @@ class DEIMLaplacian: public laplacianProblem
                 Eigen::MatrixXd thetaonA = DEIMmatrice->onlineCoeffsA(par_new.row(i));
                 Eigen::MatrixXd A = EigenFunctions::MVproduct(ReducedMatricesA, thetaonA);
                 Eigen::VectorXd B = ReducedVectorsB[0];
-                Eigen::VectorXd x = A.ldlt().solve(B);
+                std::cout << B << std::endl;
+                Eigen::VectorXd x = A.fullPivLu().solve(B);
                 Eigen::VectorXd full = ModesTEig * x;
                 t2 = std::chrono::high_resolution_clock::now();
                 time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
@@ -263,6 +265,9 @@ int main(int argc, char* argv[])
 {
     // Construct the case
     DEIMLaplacian example(argc, argv);
+    // Read some parameters from file
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
     // Create the offline parameters for the solve
     example.mu = ITHACAutilities::rand(100, 2, -0.5, 0.5);
     // Solve the offline problem to compute the snapshots for the projections
