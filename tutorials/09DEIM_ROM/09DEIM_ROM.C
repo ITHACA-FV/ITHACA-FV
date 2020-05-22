@@ -61,12 +61,6 @@ class DEIM_function : public DEIM<fvScalarMatrix>
             }
 
             nu.correctBoundaryConditions();
-            dimensionedScalar correct
-            (
-                "correct",
-                dimensionSet(0, 1, 0, 0, 0, 0, 0),
-                scalar(3.0)
-            );
             fvScalarMatrix TiEqn22
             (
                 fvm::laplacian(nu, T, "Gauss linear")
@@ -166,7 +160,6 @@ class DEIMLaplacian: public laplacianProblem
             {
                 ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
             }
-
             else
             {
                 for (int i = 0; i < par.rows(); i++)
@@ -244,9 +237,9 @@ class DEIMLaplacian: public laplacianProblem
                 // solve
                 t1 = std::chrono::high_resolution_clock::now();
                 Eigen::MatrixXd thetaonA = DEIMmatrice->onlineCoeffsA(par_new.row(i));
+                Eigen::MatrixXd thetaonB = DEIMmatrice->onlineCoeffsB(par_new.row(i));
                 Eigen::MatrixXd A = EigenFunctions::MVproduct(ReducedMatricesA, thetaonA);
-                Eigen::VectorXd B = ReducedVectorsB[0];
-                std::cout << B << std::endl;
+                Eigen::VectorXd B = EigenFunctions::MVproduct(ReducedVectorsB, thetaonB);
                 Eigen::VectorXd x = A.fullPivLu().solve(B);
                 Eigen::VectorXd full = ModesTEig * x;
                 t2 = std::chrono::high_resolution_clock::now();
