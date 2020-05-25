@@ -65,7 +65,7 @@ class tutorial02: public laplacianProblem
         {
             if (offline)
             {
-                ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
+                ITHACAstream::read_fields(Tfield, "T", "./ITHACAoutput/Offline/");
                 mu_samples =
                     ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }

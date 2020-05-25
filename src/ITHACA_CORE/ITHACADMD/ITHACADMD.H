@@ -66,7 +66,7 @@ SourceFiles
 /// @tparam     Field_type  It can be scalar or vector
 ///
 template<class Field_type>
-class ITHACADMD : public ITHACAPOD
+class ITHACADMD
 {
     public:
 
