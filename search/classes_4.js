@@ -6,6 +6,6 @@ var searchData=
   ['ithacaparallel',['ITHACAparallel',['../classITHACAparallel.html',1,'']]],
   ['ithacaparameters',['ITHACAparameters',['../classITHACAparameters.html',1,'']]],
   ['ithacapod',['ITHACAPOD',['../classITHACAPOD.html',1,'']]],
-  ['ithacastream',['ITHACAstream',['../classITHACAstream.html',1,'']]],
-  ['ithacautilities',['ITHACAutilities',['../classITHACAutilities.html',1,'']]]
+  ['ithacasampling',['ITHACAsampling',['../classITHACAsampling.html',1,'']]],
+  ['ithacastream',['ITHACAstream',['../classITHACAstream.html',1,'']]]
 ];

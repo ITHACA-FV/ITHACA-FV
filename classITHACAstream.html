@@ -91,98 +91,100 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a28c64da4204461d3bdc0623b9a869bb8"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a28c64da4204461d3bdc0623b9a869bb8">exportFvMatrix</a> (fvMatrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;Matrix, word folder, word MatrixName)</td></tr>
 <tr class="memdesc:a28c64da4204461d3bdc0623b9a869bb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export an Fv Matrix to folder together with its source term.  <a href="#a28c64da4204461d3bdc0623b9a869bb8">More...</a><br /></td></tr>
 <tr class="separator:a28c64da4204461d3bdc0623b9a869bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ce193c3ebbec121dc5e2d6b4e039732"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a4ce193c3ebbec121dc5e2d6b4e039732"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a4ce193c3ebbec121dc5e2d6b4e039732">exportMatrix</a> (Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;matrix, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
-<tr class="memdesc:a4ce193c3ebbec121dc5e2d6b4e039732"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format.  <a href="#a4ce193c3ebbec121dc5e2d6b4e039732">More...</a><br /></td></tr>
-<tr class="separator:a4ce193c3ebbec121dc5e2d6b4e039732"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bb6dfc6894a8831762ae6340ef9f21c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a2bb6dfc6894a8831762ae6340ef9f21c">exportMatrix</a> (List&lt; Eigen::MatrixXd &gt; &amp;matrix, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
-<tr class="memdesc:a2bb6dfc6894a8831762ae6340ef9f21c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format.  <a href="#a2bb6dfc6894a8831762ae6340ef9f21c">More...</a><br /></td></tr>
-<tr class="separator:a2bb6dfc6894a8831762ae6340ef9f21c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaad42e6bbec71b055121738d43f7ad81"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aaad42e6bbec71b055121738d43f7ad81"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#aaad42e6bbec71b055121738d43f7ad81">exportTensor</a> (Eigen::Tensor&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, 3 &gt; tensor, word Name, word tipo=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
-<tr class="memdesc:aaad42e6bbec71b055121738d43f7ad81"><td class="mdescLeft">&#160;</td><td class="mdescRight">{ Export the reduced tensors in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format }  <a href="#aaad42e6bbec71b055121738d43f7ad81">More...</a><br /></td></tr>
-<tr class="separator:aaad42e6bbec71b055121738d43f7ad81"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbe538c82e760d503e3232a52fdd57bb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#afbe538c82e760d503e3232a52fdd57bb">read_fields</a> (PtrList&lt; volVectorField &gt; &amp;Lfield, word Name, fileName casename, label first_snap=0, label n_snap=0)</td></tr>
-<tr class="memdesc:afbe538c82e760d503e3232a52fdd57bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funtion to read a list of volVectorField from name of the field and casename.  <a href="#afbe538c82e760d503e3232a52fdd57bb">More...</a><br /></td></tr>
-<tr class="separator:afbe538c82e760d503e3232a52fdd57bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2740cf877773f8453e50395ec6a8a989"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a2740cf877773f8453e50395ec6a8a989">read_fields</a> (PtrList&lt; volScalarField &gt; &amp;Lfield, word Name, fileName casename, label first_snap=0, label n_snap=0)</td></tr>
-<tr class="memdesc:a2740cf877773f8453e50395ec6a8a989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funtion to read a list of volScalarField from name of the field and folder name.  <a href="#a2740cf877773f8453e50395ec6a8a989">More...</a><br /></td></tr>
-<tr class="separator:a2740cf877773f8453e50395ec6a8a989"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a976d90f8a71c41706e6adc3a67902317"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a976d90f8a71c41706e6adc3a67902317">read_fields</a> (PtrList&lt; volVectorField &gt; &amp;Lfield, volVectorField &amp;field, fileName casename, label first_snap=0, label n_snap=0)</td></tr>
-<tr class="memdesc:a976d90f8a71c41706e6adc3a67902317"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funtion to read a list of volVectorField from name of the field a volVectorField if it is already existing.  <a href="#a976d90f8a71c41706e6adc3a67902317">More...</a><br /></td></tr>
-<tr class="separator:a976d90f8a71c41706e6adc3a67902317"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e63c81f409eb84745d386b98b14db64"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a6e63c81f409eb84745d386b98b14db64">read_fields</a> (PtrList&lt; volScalarField &gt; &amp;Lfield, volScalarField &amp;field, fileName casename, label first_snap=0, label n_snap=0)</td></tr>
-<tr class="memdesc:a6e63c81f409eb84745d386b98b14db64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funtion to read a list of volScalarField from casename and a list of volScalarField with the same name.  <a href="#a6e63c81f409eb84745d386b98b14db64">More...</a><br /></td></tr>
-<tr class="separator:a6e63c81f409eb84745d386b98b14db64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa48661ca1387b8fc43262c05fedee5f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#afa48661ca1387b8fc43262c05fedee5f">exportFields</a> (PtrList&lt; volVectorField &gt; &amp;field, word folder, word fieldname)</td></tr>
-<tr class="memdesc:afa48661ca1387b8fc43262c05fedee5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to export volVectorFields.  <a href="#afa48661ca1387b8fc43262c05fedee5f">More...</a><br /></td></tr>
-<tr class="separator:afa48661ca1387b8fc43262c05fedee5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7606fce68416084050b74da0424fafb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#af7606fce68416084050b74da0424fafb">exportFields</a> (PtrList&lt; volScalarField &gt; &amp;field, word folder, word fieldname)</td></tr>
-<tr class="memdesc:af7606fce68416084050b74da0424fafb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to export volScalarFields.  <a href="#af7606fce68416084050b74da0424fafb">More...</a><br /></td></tr>
-<tr class="separator:af7606fce68416084050b74da0424fafb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a423115cc4a520ea21906898cdc879df2"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a423115cc4a520ea21906898cdc879df2"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a423115cc4a520ea21906898cdc879df2">exportMatrix</a> (Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;matrix, word Name, word type=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
+<tr class="memdesc:a423115cc4a520ea21906898cdc879df2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format The function is implemented for a second order matrix.  <a href="#a423115cc4a520ea21906898cdc879df2">More...</a><br /></td></tr>
+<tr class="separator:a423115cc4a520ea21906898cdc879df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af348b1639dd0a3de993925877246e072"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#af348b1639dd0a3de993925877246e072">exportMatrix</a> (List&lt; Eigen::MatrixXd &gt; &amp;matrix, word Name, word type=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
+<tr class="memdesc:af348b1639dd0a3de993925877246e072"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format The function is implemented for a third order matrix The eigen matrix is stored as a set of two dimensional matrices where each matrix is in a different file.  <a href="#af348b1639dd0a3de993925877246e072">More...</a><br /></td></tr>
+<tr class="separator:af348b1639dd0a3de993925877246e072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35d90e095fdf6f3111475b03e1e467a1"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a35d90e095fdf6f3111475b03e1e467a1"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a35d90e095fdf6f3111475b03e1e467a1">exportTensor</a> (Eigen::Tensor&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, 3 &gt; tensor, word Name, word type=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
+<tr class="memdesc:a35d90e095fdf6f3111475b03e1e467a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced tensor in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format.  <a href="#a35d90e095fdf6f3111475b03e1e467a1">More...</a><br /></td></tr>
+<tr class="separator:a35d90e095fdf6f3111475b03e1e467a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86af70f3c18b16d64e246da354d88ea8"><td class="memTemplParams" colspan="2">template&lt;typename fieldType &gt; </td></tr>
+<tr class="memitem:a86af70f3c18b16d64e246da354d88ea8"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a86af70f3c18b16d64e246da354d88ea8">read_fields</a> (PtrList&lt; fieldType &gt; &amp;Lfield, word Name, fileName casename, label first_snap=0, label n_snap=0)</td></tr>
+<tr class="memdesc:a86af70f3c18b16d64e246da354d88ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read a list of volVectorField from name of the field and casename.  <a href="#a86af70f3c18b16d64e246da354d88ea8">More...</a><br /></td></tr>
+<tr class="separator:a86af70f3c18b16d64e246da354d88ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70f4272c2fc895e308e3ac381e380834"><td class="memTemplParams" colspan="2">template&lt;typename fieldType &gt; </td></tr>
+<tr class="memitem:a70f4272c2fc895e308e3ac381e380834"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a70f4272c2fc895e308e3ac381e380834">read_fields</a> (PtrList&lt; fieldType &gt; &amp;Lfield, fieldType &amp;field, fileName casename, label first_snap=0, label n_snap=0)</td></tr>
+<tr class="memdesc:a70f4272c2fc895e308e3ac381e380834"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read a list of volVectorField from name of the field if it is already existing.  <a href="#a70f4272c2fc895e308e3ac381e380834">More...</a><br /></td></tr>
+<tr class="separator:a70f4272c2fc895e308e3ac381e380834"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5fcb00e08e47ab7e214aeceb3dc671c"><td class="memTemplParams" colspan="2">template&lt;typename fieldType &gt; </td></tr>
+<tr class="memitem:ae5fcb00e08e47ab7e214aeceb3dc671c"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#ae5fcb00e08e47ab7e214aeceb3dc671c">readMiddleFields</a> (PtrList&lt; fieldType &gt; &amp;Lfield, fieldType &amp;field, fileName casename)</td></tr>
+<tr class="memdesc:ae5fcb00e08e47ab7e214aeceb3dc671c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funtion to read a list of volVectorField from name of the field including all the intermediate snapshots.  <a href="#ae5fcb00e08e47ab7e214aeceb3dc671c">More...</a><br /></td></tr>
+<tr class="separator:ae5fcb00e08e47ab7e214aeceb3dc671c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa008b11d119833dbf33b87ca76df251c"><td class="memTemplParams" colspan="2">template&lt;typename fieldType &gt; </td></tr>
+<tr class="memitem:aa008b11d119833dbf33b87ca76df251c"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#aa008b11d119833dbf33b87ca76df251c">readConvergedFields</a> (PtrList&lt; fieldType &gt; &amp;Lfield, fieldType &amp;field, fileName casename)</td></tr>
+<tr class="memdesc:aa008b11d119833dbf33b87ca76df251c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read a list of volVectorField from name of the field including only converged snapshots.  <a href="#aa008b11d119833dbf33b87ca76df251c">More...</a><br /></td></tr>
+<tr class="separator:aa008b11d119833dbf33b87ca76df251c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac42ba3ac23a36e5360744ada9439ea26"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ac42ba3ac23a36e5360744ada9439ea26"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#ac42ba3ac23a36e5360744ada9439ea26">exportFields</a> (PtrList&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;field, word folder, word fieldname)</td></tr>
+<tr class="memdesc:ac42ba3ac23a36e5360744ada9439ea26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to export a scalar of vector field.  <a href="#ac42ba3ac23a36e5360744ada9439ea26">More...</a><br /></td></tr>
+<tr class="separator:ac42ba3ac23a36e5360744ada9439ea26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b1605dfbed6b82596cbf7749dd6b182"><td class="memItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a1b1605dfbed6b82596cbf7749dd6b182">readMatrix</a> (word filename)</td></tr>
-<tr class="memdesc:a1b1605dfbed6b82596cbf7749dd6b182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a two dimensional matrix from e a txt fle in <a class="el" href="namespaceEigen.html">Eigen</a> format.  <a href="#a1b1605dfbed6b82596cbf7749dd6b182">More...</a><br /></td></tr>
+<tr class="memdesc:a1b1605dfbed6b82596cbf7749dd6b182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a two dimensional matrix from a txt file in <a class="el" href="namespaceEigen.html">Eigen</a> format.  <a href="#a1b1605dfbed6b82596cbf7749dd6b182">More...</a><br /></td></tr>
 <tr class="separator:a1b1605dfbed6b82596cbf7749dd6b182"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa259fffbddd2f4a42cc3a4a76f839ef6"><td class="memItemLeft" align="right" valign="top">static List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#aa259fffbddd2f4a42cc3a4a76f839ef6">readMatrix</a> (word folder, word mat_name)</td></tr>
 <tr class="memdesc:aa259fffbddd2f4a42cc3a4a76f839ef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a three dimensional matrix from a txt file in <a class="el" href="namespaceEigen.html">Eigen</a> format.  <a href="#aa259fffbddd2f4a42cc3a4a76f839ef6">More...</a><br /></td></tr>
 <tr class="separator:aa259fffbddd2f4a42cc3a4a76f839ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77447bb623ea2510f255437b827e7700"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a77447bb623ea2510f255437b827e7700"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a77447bb623ea2510f255437b827e7700">exportSolution</a> (<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;s, fileName subfolder, fileName folder, word fieldName)</td></tr>
-<tr class="memdesc:a77447bb623ea2510f255437b827e7700"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export a generic field to file in a certain folder and subfolder.  <a href="#a77447bb623ea2510f255437b827e7700">More...</a><br /></td></tr>
+<tr class="memdesc:a77447bb623ea2510f255437b827e7700"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export a field to file in a certain folder and subfolder.  <a href="#a77447bb623ea2510f255437b827e7700">More...</a><br /></td></tr>
 <tr class="separator:a77447bb623ea2510f255437b827e7700"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa28d629f1c5acc480a8a098677869afc"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa28d629f1c5acc480a8a098677869afc"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#aa28d629f1c5acc480a8a098677869afc">exportSolution</a> (<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;s, fileName subfolder, fileName folder)</td></tr>
-<tr class="memdesc:aa28d629f1c5acc480a8a098677869afc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export a generic field to file in a certain folder and subfolder.  <a href="#aa28d629f1c5acc480a8a098677869afc">More...</a><br /></td></tr>
+<tr class="memdesc:aa28d629f1c5acc480a8a098677869afc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export a field to file in a certain folder and subfolder.  <a href="#aa28d629f1c5acc480a8a098677869afc">More...</a><br /></td></tr>
 <tr class="separator:aa28d629f1c5acc480a8a098677869afc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d09ae79be293199609de1101e828fc3"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a5d09ae79be293199609de1101e828fc3"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a5d09ae79be293199609de1101e828fc3">exportList</a> (<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;list, word folder, word filename)</td></tr>
-<tr class="memdesc:a5d09ae79be293199609de1101e828fc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export a list type object to file.  <a href="#a5d09ae79be293199609de1101e828fc3">More...</a><br /></td></tr>
+<tr class="memdesc:a5d09ae79be293199609de1101e828fc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export a list to file.  <a href="#a5d09ae79be293199609de1101e828fc3">More...</a><br /></td></tr>
 <tr class="separator:a5d09ae79be293199609de1101e828fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3662e39b9b10d11bc391ca00ec7cc5c"><td class="memTemplParams" colspan="2">template&lt;typename T , int whatever, typename IND &gt; </td></tr>
 <tr class="memitem:ab3662e39b9b10d11bc391ca00ec7cc5c"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#ab3662e39b9b10d11bc391ca00ec7cc5c">SaveSparseMatrix</a> (Eigen::SparseMatrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, whatever, IND &gt; &amp;m, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:ab3662e39b9b10d11bc391ca00ec7cc5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix into bynary format file.  <a href="#ab3662e39b9b10d11bc391ca00ec7cc5c">More...</a><br /></td></tr>
+<tr class="memdesc:ab3662e39b9b10d11bc391ca00ec7cc5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix into bynary format file.  <a href="#ab3662e39b9b10d11bc391ca00ec7cc5c">More...</a><br /></td></tr>
 <tr class="separator:ab3662e39b9b10d11bc391ca00ec7cc5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfd305d55760cc15eb90766890d5db5d"><td class="memTemplParams" colspan="2">template&lt;typename T , int whatever, typename IND &gt; </td></tr>
 <tr class="memitem:adfd305d55760cc15eb90766890d5db5d"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#adfd305d55760cc15eb90766890d5db5d">ReadSparseMatrix</a> (Eigen::SparseMatrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, whatever, IND &gt; &amp;m, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:adfd305d55760cc15eb90766890d5db5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix from a bynary format file.  <a href="#adfd305d55760cc15eb90766890d5db5d">More...</a><br /></td></tr>
+<tr class="memdesc:adfd305d55760cc15eb90766890d5db5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix from a bynary format file.  <a href="#adfd305d55760cc15eb90766890d5db5d">More...</a><br /></td></tr>
 <tr class="separator:adfd305d55760cc15eb90766890d5db5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7010b247c96ae01fce8a8ef01d12fa4a"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
 <tr class="memitem:a7010b247c96ae01fce8a8ef01d12fa4a"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a7010b247c96ae01fce8a8ef01d12fa4a">SaveDenseMatrix</a> (MatrixType &amp;Matrix, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:a7010b247c96ae01fce8a8ef01d12fa4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a dense matrix to a binary format file.  <a href="#a7010b247c96ae01fce8a8ef01d12fa4a">More...</a><br /></td></tr>
+<tr class="memdesc:a7010b247c96ae01fce8a8ef01d12fa4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a dense matrix to a binary format file.  <a href="#a7010b247c96ae01fce8a8ef01d12fa4a">More...</a><br /></td></tr>
 <tr class="separator:a7010b247c96ae01fce8a8ef01d12fa4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1775bc70066cbb3f73a8f013afd12e7d"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
 <tr class="memitem:a1775bc70066cbb3f73a8f013afd12e7d"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a1775bc70066cbb3f73a8f013afd12e7d">ReadDenseMatrix</a> (MatrixType &amp;Matrix, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:a1775bc70066cbb3f73a8f013afd12e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a dense matrix from a binary format file.  <a href="#a1775bc70066cbb3f73a8f013afd12e7d">More...</a><br /></td></tr>
+<tr class="memdesc:a1775bc70066cbb3f73a8f013afd12e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a dense matrix from a binary format file.  <a href="#a1775bc70066cbb3f73a8f013afd12e7d">More...</a><br /></td></tr>
 <tr class="separator:a1775bc70066cbb3f73a8f013afd12e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad91f47911a1d72753c73cfc224f25998"><td class="memTemplParams" colspan="2">template&lt;typename TensorType &gt; </td></tr>
 <tr class="memitem:ad91f47911a1d72753c73cfc224f25998"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#ad91f47911a1d72753c73cfc224f25998">SaveDenseTensor</a> (TensorType &amp;Tensor, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:ad91f47911a1d72753c73cfc224f25998"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a dense tensor.  <a href="#ad91f47911a1d72753c73cfc224f25998">More...</a><br /></td></tr>
+<tr class="memdesc:ad91f47911a1d72753c73cfc224f25998"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a dense tensor to file.  <a href="#ad91f47911a1d72753c73cfc224f25998">More...</a><br /></td></tr>
 <tr class="separator:ad91f47911a1d72753c73cfc224f25998"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76412c34b95d0b5ad46024dab3f60554"><td class="memTemplParams" colspan="2">template&lt;typename TensorType &gt; </td></tr>
 <tr class="memitem:a76412c34b95d0b5ad46024dab3f60554"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a76412c34b95d0b5ad46024dab3f60554">ReadDenseTensor</a> (TensorType &amp;Tensor, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:a76412c34b95d0b5ad46024dab3f60554"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a dense tensor.  <a href="#a76412c34b95d0b5ad46024dab3f60554">More...</a><br /></td></tr>
+<tr class="memdesc:a76412c34b95d0b5ad46024dab3f60554"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a dense tensor from file.  <a href="#a76412c34b95d0b5ad46024dab3f60554">More...</a><br /></td></tr>
 <tr class="separator:a76412c34b95d0b5ad46024dab3f60554"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa37598c28aca085f3d66c51f0cd5785c"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
 <tr class="memitem:aa37598c28aca085f3d66c51f0cd5785c"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#aa37598c28aca085f3d66c51f0cd5785c">SaveSparseMatrixList</a> (List&lt; MatrixType &gt; &amp;MatrixList, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:aa37598c28aca085f3d66c51f0cd5785c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a sparse matrix list to bynary files.  <a href="#aa37598c28aca085f3d66c51f0cd5785c">More...</a><br /></td></tr>
+<tr class="memdesc:aa37598c28aca085f3d66c51f0cd5785c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a sparse matrix list to bynary files.  <a href="#aa37598c28aca085f3d66c51f0cd5785c">More...</a><br /></td></tr>
 <tr class="separator:aa37598c28aca085f3d66c51f0cd5785c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc3e6122d4b3086e99706fc568dab56f"><td class="memTemplParams" colspan="2">template&lt;typename T , int whatever, typename IND &gt; </td></tr>
 <tr class="memitem:acc3e6122d4b3086e99706fc568dab56f"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#acc3e6122d4b3086e99706fc568dab56f">ReadSparseMatrixList</a> (List&lt; Eigen::SparseMatrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, whatever, IND &gt;&gt; &amp;m, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:acc3e6122d4b3086e99706fc568dab56f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a sparse matrix list to bynary files.  <a href="#acc3e6122d4b3086e99706fc568dab56f">More...</a><br /></td></tr>
+<tr class="memdesc:acc3e6122d4b3086e99706fc568dab56f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a sparse matrix list to bynary files.  <a href="#acc3e6122d4b3086e99706fc568dab56f">More...</a><br /></td></tr>
 <tr class="separator:acc3e6122d4b3086e99706fc568dab56f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95309779e7aae89700ca8ba460628cf8"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
 <tr class="memitem:a95309779e7aae89700ca8ba460628cf8"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a95309779e7aae89700ca8ba460628cf8">SaveDenseMatrixList</a> (List&lt; MatrixType &gt; &amp;MatrixList, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:a95309779e7aae89700ca8ba460628cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a dense matrix list to bynary files.  <a href="#a95309779e7aae89700ca8ba460628cf8">More...</a><br /></td></tr>
+<tr class="memdesc:a95309779e7aae89700ca8ba460628cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a dense matrix list to bynary files.  <a href="#a95309779e7aae89700ca8ba460628cf8">More...</a><br /></td></tr>
 <tr class="separator:a95309779e7aae89700ca8ba460628cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b8ce677121762a0d9799ff5e196d25b"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
 <tr class="memitem:a0b8ce677121762a0d9799ff5e196d25b"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a0b8ce677121762a0d9799ff5e196d25b">ReadDenseMatrixList</a> (List&lt; MatrixType &gt; &amp;m, word folder, word MatrixName)</td></tr>
-<tr class="memdesc:a0b8ce677121762a0d9799ff5e196d25b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a sparse matrix list to bynary files.  <a href="#a0b8ce677121762a0d9799ff5e196d25b">More...</a><br /></td></tr>
+<tr class="memdesc:a0b8ce677121762a0d9799ff5e196d25b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a sparse matrix list to bynary files.  <a href="#a0b8ce677121762a0d9799ff5e196d25b">More...</a><br /></td></tr>
 <tr class="separator:a0b8ce677121762a0d9799ff5e196d25b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcededcbc11763c5849ae2e5aaee89ee"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#afcededcbc11763c5849ae2e5aaee89ee">numberOfFiles</a> (word folder, word MatrixName)</td></tr>
 <tr class="memdesc:afcededcbc11763c5849ae2e5aaee89ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of files with a certain name prefix, used by reading functions of list of matrices.  <a href="#afcededcbc11763c5849ae2e5aaee89ee">More...</a><br /></td></tr>
 <tr class="separator:afcededcbc11763c5849ae2e5aaee89ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0519dc8f17b2d0f7a524518f717a446b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#a0519dc8f17b2d0f7a524518f717a446b">writePoints</a> (pointField points, fileName folder, fileName subfolder)</td></tr>
-<tr class="memdesc:a0519dc8f17b2d0f7a524518f717a446b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes points of a mesh to a file.  <a href="#a0519dc8f17b2d0f7a524518f717a446b">More...</a><br /></td></tr>
+<tr class="memdesc:a0519dc8f17b2d0f7a524518f717a446b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write points of a mesh to a file.  <a href="#a0519dc8f17b2d0f7a524518f717a446b">More...</a><br /></td></tr>
 <tr class="separator:a0519dc8f17b2d0f7a524518f717a446b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefe7ea63b16d0eec5850bd43570ac7ee"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html#aefe7ea63b16d0eec5850bd43570ac7ee">printProgress</a> (double percentage)</td></tr>
 <tr class="memdesc:aefe7ea63b16d0eec5850bd43570ac7ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print progress bar given the percentage.  <a href="#aefe7ea63b16d0eec5850bd43570ac7ee">More...</a><br /></td></tr>
@@ -193,11 +195,13 @@ Static Public Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00087">87</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="afa48661ca1387b8fc43262c05fedee5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa48661ca1387b8fc43262c05fedee5f">&#9670;&nbsp;</a></span>exportFields() <span class="overload">[1/2]</span></h2>
+<a id="ac42ba3ac23a36e5360744ada9439ea26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac42ba3ac23a36e5360744ada9439ea26">&#9670;&nbsp;</a></span>exportFields()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -205,7 +209,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void ITHACAstream::exportFields </td>
           <td>(</td>
-          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
+          <td class="paramtype">PtrList&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>field</em>, </td>
         </tr>
         <tr>
@@ -233,72 +237,24 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Function to export volVectorFields. </p>
+<p>Function to export a scalar of vector field. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">field</td><td>The field you want to export. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder where you want to save the field. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">fieldname</td><td>The name you want to give to the file. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fieldname</td><td>The name you want to give to the file.</td></tr>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a38">06POD_RBF.C</a>.</dd>
-</dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00044">44</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
-
-</div>
-</div>
-<a id="af7606fce68416084050b74da0424fafb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af7606fce68416084050b74da0424fafb">&#9670;&nbsp;</a></span>exportFields() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ITHACAstream::exportFields </td>
-          <td>(</td>
-          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
-          <td class="paramname"><em>field</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">word&#160;</td>
-          <td class="paramname"><em>folder</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">word&#160;</td>
-          <td class="paramname"><em>fieldname</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Function to export volScalarFields. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">field</td><td>The field you want to export. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder where you want to save the field. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">fieldname</td><td>The name you want to give to the file. </td></tr>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of field: scalar of vector </td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00060">60</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a39">06POD_RBF.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00516">516</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -360,7 +316,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00500">500</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00534">534</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -406,12 +362,12 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Export a list type object to file. </p>
+<p>Export a list to file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">list</td><td>The list </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">filename</td><td>The filename </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">filename</td><td>Name of saved file </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Folder where the field is stored</td></tr>
   </table>
   </dd>
 </dl>
@@ -422,12 +378,12 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00564">564</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00599">599</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
-<a id="a4ce193c3ebbec121dc5e2d6b4e039732"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ce193c3ebbec121dc5e2d6b4e039732">&#9670;&nbsp;</a></span>exportMatrix() <span class="overload">[1/2]</span></h2>
+<a id="a423115cc4a520ea21906898cdc879df2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a423115cc4a520ea21906898cdc879df2">&#9670;&nbsp;</a></span>exportMatrix() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -453,7 +409,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">word&#160;</td>
-          <td class="paramname"><em>tipo</em> = <code>&quot;python&quot;</code>, </td>
+          <td class="paramname"><em>type</em> = <code>&quot;python&quot;</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -474,24 +430,24 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format. </p>
+<p>Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format The function is implemented for a second order matrix. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">matrice</td><td>Eigen::MatrixXd that you want to export. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">Name</td><td>string to identify the name you want to use to save the file. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">tipo</td><td>string to identify format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen"). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>string to identify the folder where you want to save the file. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">matrix</td><td>Eigen::MatrixXd that you want to export. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Name</td><td>Name of saved file. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen"). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Directory in which the fali is saved. </td></tr>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#a25">03steadyNS.C</a>, <a class="el" href="06POD_RBF_8C-example.html#a40">06POD_RBF.C</a>, <a class="el" href="10unsteadyBB_enclosed_8C-example.html#a49">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a53">11unsteadyBB_open.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#a28">03steadyNS.C</a>, <a class="el" href="06POD_RBF_8C-example.html#a41">06POD_RBF.C</a>, <a class="el" href="10UnsteadyBBEnclosed_8C-example.html#a50">10UnsteadyBBEnclosed.C</a>, and <a class="el" href="11UnsteadyBBOpen_8C-example.html#a54">11UnsteadyBBOpen.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00076">76</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00045">45</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
-<a id="a2bb6dfc6894a8831762ae6340ef9f21c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2bb6dfc6894a8831762ae6340ef9f21c">&#9670;&nbsp;</a></span>exportMatrix() <span class="overload">[2/2]</span></h2>
+<a id="af348b1639dd0a3de993925877246e072"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af348b1639dd0a3de993925877246e072">&#9670;&nbsp;</a></span>exportMatrix() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -515,7 +471,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">word&#160;</td>
-          <td class="paramname"><em>tipo</em> = <code>&quot;python&quot;</code>, </td>
+          <td class="paramname"><em>type</em> = <code>&quot;python&quot;</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -536,18 +492,18 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format. </p>
+<p>Export the reduced matrices in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format The function is implemented for a third order matrix The eigen matrix is stored as a set of two dimensional matrices where each matrix is in a different file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">matrice</td><td>List &lt; Eigen::MatrixXd &gt; that you want to export. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">Name</td><td>string to identify the name you want to use to save the file. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">tipo</td><td>format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen"). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>string to identify the folder where you want to save the file. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">matrix</td><td>Eigen::MatrixXd that you want to export. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Name</td><td>Name of saved file. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen"). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Directory in which the file is saved. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00161">161</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00130">130</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -599,19 +555,25 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Export a generic field to file in a certain folder and subfolder. </p>
+<p>Export a field to file in a certain folder and subfolder. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td>volVectorField or volScalarField. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">subfolder</td><td>string to indicated the subfolder where the field is stored. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>string to indicated the folder where the field is stored. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">fieldName</td><td>string to indicate the name of the field/file. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td>Field </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">subfolder</td><td>Subfolder where the field is stored </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Folder where the field is stored </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fieldName</td><td>Name of the field/file</td></tr>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a32">06POD_RBF.C</a>, <a class="el" href="08DEIM_8C-example.html#a11">08DEIM.C</a>, and <a class="el" href="09DEIM_ROM_8C-example.html#a46">09DEIM_ROM.C</a>.</dd>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>volVectorField or volScalarField </td></tr>
+  </table>
+  </dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00511">511</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#a32">06POD_RBF.C</a>, <a class="el" href="08DEIM_8C-example.html#a14">08DEIM.C</a>, and <a class="el" href="09DEIM_ROM_8C-example.html#a45">09DEIM_ROM.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00545">545</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -657,22 +619,28 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Export a generic field to file in a certain folder and subfolder. </p>
+<p>Export a field to file in a certain folder and subfolder. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td>volVectorField or volScalarField. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">subfolder</td><td>string to indicated the subfolder where the field is stored. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>string to indicated the folder where the field is stored. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td>Field </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">subfolder</td><td>Subfolder where the field is stored </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Folder where the field is stored</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>volVectorField or volScalarField </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00539">539</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00574">574</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
-<a id="aaad42e6bbec71b055121738d43f7ad81"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaad42e6bbec71b055121738d43f7ad81">&#9670;&nbsp;</a></span>exportTensor()</h2>
+<a id="a35d90e095fdf6f3111475b03e1e467a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35d90e095fdf6f3111475b03e1e467a1">&#9670;&nbsp;</a></span>exportTensor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -698,7 +666,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">word&#160;</td>
-          <td class="paramname"><em>tipo</em> = <code>&quot;python&quot;</code>, </td>
+          <td class="paramname"><em>type</em> = <code>&quot;python&quot;</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -719,24 +687,25 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>{ Export the reduced tensors in numpy (tipo=python), matlab (tipo=matlab) format and txt (tipo=eigen) format } </p>
+<p>Export the reduced tensor in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">tensor</td><td>The tensor that you want to export. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">Name</td><td>The Name string to identify the name you want to use to save the file. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">tipo</td><td>The tipo format to export the matrix if numpy (tipo="python"), if matlab (tipo="matlab") if txt (tipo="eigen"). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Name</td><td>Name of saved file. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen"). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Directory in which the fali is saved. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>folder string to identify the folder where you want to save the file.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td>{ description } </td></tr>
+    <tr><td class="paramname">T</td><td>The tensor can be of integers, double or float </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00244">244</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00213">213</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -782,9 +751,9 @@ template&lt;typename T &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the number of files matching the request </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of files matching the request </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00739">739</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00608">608</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -820,15 +789,17 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00769">769</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00652">652</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
-<a id="afbe538c82e760d503e3232a52fdd57bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afbe538c82e760d503e3232a52fdd57bb">&#9670;&nbsp;</a></span>read_fields() <span class="overload">[1/4]</span></h2>
+<a id="a86af70f3c18b16d64e246da354d88ea8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86af70f3c18b16d64e246da354d88ea8">&#9670;&nbsp;</a></span>read_fields() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename fieldType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -836,7 +807,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">void ITHACAstream::read_fields </td>
           <td>(</td>
-          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
+          <td class="paramtype">PtrList&lt; fieldType &gt; &amp;&#160;</td>
           <td class="paramname"><em>Lfield</em>, </td>
         </tr>
         <tr>
@@ -876,28 +847,36 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Funtion to read a list of volVectorField from name of the field and casename. </p>
+<p>Function to read a list of volVectorField from name of the field and casename. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">Lfield</td><td>a PtrList of volVectorField where you want to store the field. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Lfield</td><td>a PtrList of OpenFOAM fields where you want to store the field. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">Name</td><td>The name of the field you want to read. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">casename</td><td>The folder where the field is stored. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">first_snap</td><td>The first snapshots from which you want to start reading the field. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">n_snap</td><td>The number of snapshots you want to read. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">n_snap</td><td>The number of snapshots you want to read.</td></tr>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a12">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a12">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a10">04unsteadyNS.C</a>, <a class="el" href="06POD_RBF_8C-example.html#a12">06POD_RBF.C</a>, <a class="el" href="09DEIM_ROM_8C-example.html#a44">09DEIM_ROM.C</a>, <a class="el" href="10unsteadyBB_enclosed_8C-example.html#a14">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a14">11unsteadyBB_open.C</a>.</dd>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">fieldType</td><td>Type of field can be volVectorField, volScalarField, surfaceScalarField </td></tr>
+  </table>
+  </dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00431">431</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a12">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a12">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a10">04unsteadyNS.C</a>, <a class="el" href="06POD_RBF_8C-example.html#a12">06POD_RBF.C</a>, <a class="el" href="09DEIM_ROM_8C-example.html#a43">09DEIM_ROM.C</a>, <a class="el" href="10UnsteadyBBEnclosed_8C-example.html#a14">10UnsteadyBBEnclosed.C</a>, and <a class="el" href="11UnsteadyBBOpen_8C-example.html#a14">11UnsteadyBBOpen.C</a>.</dd>
+</dl>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00403">403</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
-<a id="a2740cf877773f8453e50395ec6a8a989"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2740cf877773f8453e50395ec6a8a989">&#9670;&nbsp;</a></span>read_fields() <span class="overload">[2/4]</span></h2>
+<a id="a70f4272c2fc895e308e3ac381e380834"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70f4272c2fc895e308e3ac381e380834">&#9670;&nbsp;</a></span>read_fields() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename fieldType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -905,81 +884,13 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">void ITHACAstream::read_fields </td>
           <td>(</td>
-          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramtype">PtrList&lt; fieldType &gt; &amp;&#160;</td>
           <td class="paramname"><em>Lfield</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">word&#160;</td>
-          <td class="paramname"><em>Name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">fileName&#160;</td>
-          <td class="paramname"><em>casename</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">label&#160;</td>
-          <td class="paramname"><em>first_snap</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">label&#160;</td>
-          <td class="paramname"><em>n_snap</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Funtion to read a list of volScalarField from name of the field and folder name. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">Lfield</td><td>a PtrList of volScalarField where you want to store the field. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">Name</td><td>The name of the field you want to read. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">casename</td><td>The folder where the field is stored. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">first_snap</td><td>The first snapshots from which you want to start reading the field. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">n_snap</td><td>The number of snapshots you want to read. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00492">492</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
-
-</div>
-</div>
-<a id="a976d90f8a71c41706e6adc3a67902317"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a976d90f8a71c41706e6adc3a67902317">&#9670;&nbsp;</a></span>read_fields() <span class="overload">[3/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ITHACAstream::read_fields </td>
-          <td>(</td>
-          <td class="paramtype">PtrList&lt; volVectorField &gt; &amp;&#160;</td>
-          <td class="paramname"><em>Lfield</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">volVectorField &amp;&#160;</td>
+          <td class="paramtype">fieldType &amp;&#160;</td>
           <td class="paramname"><em>field</em>, </td>
         </tr>
         <tr>
@@ -1013,60 +924,56 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Funtion to read a list of volVectorField from name of the field a volVectorField if it is already existing. </p>
+<p>Function to read a list of volVectorField from name of the field if it is already existing. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">Lfield</td><td>a PtrList of volVectorField where you want to store the field. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Lfield</td><td>a PtrList of OpenFOAM fields where you want to store the field. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">field</td><td>The field used as template to read other fields. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">casename</td><td>The folder where the field is stored. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">first_snap</td><td>The first snapshots from which you want to start reading the field. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">n_snap</td><td>The number of snapshots you want to read. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">n_snap</td><td>The number of snapshots you want to read.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">fieldType</td><td>Type of field can be volVectorField, volScalarField, surfaceScalarField </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00646">646</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00465">465</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
-<a id="a6e63c81f409eb84745d386b98b14db64"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e63c81f409eb84745d386b98b14db64">&#9670;&nbsp;</a></span>read_fields() <span class="overload">[4/4]</span></h2>
+<a id="aa008b11d119833dbf33b87ca76df251c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa008b11d119833dbf33b87ca76df251c">&#9670;&nbsp;</a></span>readConvergedFields()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename fieldType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void ITHACAstream::read_fields </td>
+          <td class="memname">template void ITHACAstream::readConvergedFields </td>
           <td>(</td>
-          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramtype">PtrList&lt; fieldType &gt; &amp;&#160;</td>
           <td class="paramname"><em>Lfield</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">volScalarField &amp;&#160;</td>
+          <td class="paramtype">fieldType &amp;&#160;</td>
           <td class="paramname"><em>field</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">fileName&#160;</td>
-          <td class="paramname"><em>casename</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">label&#160;</td>
-          <td class="paramname"><em>first_snap</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">label&#160;</td>
-          <td class="paramname"><em>n_snap</em> = <code>0</code>&#160;</td>
+          <td class="paramname"><em>casename</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1081,19 +988,23 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Funtion to read a list of volScalarField from casename and a list of volScalarField with the same name. </p>
+<p>Function to read a list of volVectorField from name of the field including only converged snapshots. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">Lfield</td><td>a PtrList of volScalarField where you want to store the field. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Lfield</td><td>a PtrList of OpenFOAM fields where you want to store the field. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">field</td><td>The field used as template to read other fields. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">casename</td><td>The folder where the field is stored. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">first_snap</td><td>The first snapshots from which you want to start reading the field. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">n_snap</td><td>The number of snapshots you want to read. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">casename</td><td>The folder where the field is stored.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">fieldType</td><td>Type of field can be volVectorField, volScalarField, surfaceScalarField </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00553">553</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00574">574</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -1139,12 +1050,12 @@ template&lt;typename MatrixType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Reads a dense matrix from a binary format file. </p>
+<p>Read a dense matrix from a binary format file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">Matrix</td><td>The <a class="el" href="namespaceEigen.html">Eigen</a> dense matrix </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder from where you want to read the matrix </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">MatrixName</td><td>The matrix name of the input file</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">Matrix</td><td><a class="el" href="namespaceEigen.html">Eigen</a> dense matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Folder from where you want to read the matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">MatrixName</td><td>Name of the input file</td></tr>
   </table>
   </dd>
 </dl>
@@ -1155,7 +1066,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00658">658</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00693">693</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1201,7 +1112,7 @@ template&lt;typename MatrixType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Reads a sparse matrix list to bynary files. </p>
+<p>Read a sparse matrix list to bynary files. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">MatrixList</td><td>The matrix list </td></tr>
@@ -1217,7 +1128,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00768">768</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00803">803</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1263,11 +1174,11 @@ template&lt;typename TensorType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Reads a dense tensor. </p>
+<p>Read a dense tensor from file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">Tensor</td><td>The tensor </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">[in/out]</td><td>Tensor The tensor </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Folder where you want to read the tensor </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">MatrixName</td><td>The matrix name</td></tr>
   </table>
   </dd>
@@ -1279,7 +1190,7 @@ template&lt;typename TensorType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00705">705</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00740">740</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1307,7 +1218,7 @@ template&lt;typename TensorType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Read a two dimensional matrix from e a txt fle in <a class="el" href="namespaceEigen.html">Eigen</a> format. </p>
+<p>Read a two dimensional matrix from a txt file in <a class="el" href="namespaceEigen.html">Eigen</a> format. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">filename</td><td>The filename of the matrix.</td></tr>
@@ -1315,9 +1226,9 @@ template&lt;typename TensorType &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The Eigen::MatrixXd that contains the imported matrix. </dd></dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a15">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a16">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a14">04unsteadyNS.C</a>, <a class="el" href="06POD_RBF_8C-example.html#a34">06POD_RBF.C</a>, <a class="el" href="10unsteadyBB_enclosed_8C-example.html#a44">10unsteadyBB_enclosed.C</a>, and <a class="el" href="11unsteadyBB_open_8C-example.html#a48">11unsteadyBB_open.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="02thermalBlock_8C-example.html#a15">02thermalBlock.C</a>, <a class="el" href="03steadyNS_8C-example.html#a16">03steadyNS.C</a>, <a class="el" href="04unsteadyNS_8C-example.html#a14">04unsteadyNS.C</a>, <a class="el" href="06POD_RBF_8C-example.html#a34">06POD_RBF.C</a>, <a class="el" href="10UnsteadyBBEnclosed_8C-example.html#a44">10UnsteadyBBEnclosed.C</a>, and <a class="el" href="11UnsteadyBBOpen_8C-example.html#a48">11UnsteadyBBOpen.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00378">378</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00349">349</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -1365,7 +1276,69 @@ template&lt;typename TensorType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>List &lt;Eigen::MatrixXd&gt; that contains the imported matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00350">350</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00321">321</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+
+</div>
+</div>
+<a id="ae5fcb00e08e47ab7e214aeceb3dc671c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5fcb00e08e47ab7e214aeceb3dc671c">&#9670;&nbsp;</a></span>readMiddleFields()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename fieldType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">template void ITHACAstream::readMiddleFields </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; fieldType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Lfield</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">fieldType &amp;&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">fileName&#160;</td>
+          <td class="paramname"><em>casename</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Funtion to read a list of volVectorField from name of the field including all the intermediate snapshots. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Lfield</td><td>a PtrList of OpenFOAM fields where you want to store the field. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">field</td><td>The field used as template to read other fields. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">casename</td><td>The folder where the field is stored.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">fieldType</td><td>Type of field can be volVectorField, volScalarField, surfaceScalarField </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00559">559</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
@@ -1411,7 +1384,7 @@ template&lt;typename T , int whatever, typename IND &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Reads an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix from a bynary format file. </p>
+<p>Read an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix from a bynary format file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">m</td><td>Eigen::SparseMatrix m </td></tr>
@@ -1429,7 +1402,7 @@ template&lt;typename T , int whatever, typename IND &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00611">611</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00646">646</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1475,7 +1448,7 @@ template&lt;typename T , int whatever, typename IND &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Reads a sparse matrix list to bynary files. </p>
+<p>Read a sparse matrix list to bynary files. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">MatrixList</td><td>The matrix list </td></tr>
@@ -1491,7 +1464,7 @@ template&lt;typename T , int whatever, typename IND &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00750">750</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00785">785</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1537,12 +1510,12 @@ template&lt;typename MatrixType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Saves a dense matrix to a binary format file. </p>
+<p>Save a dense matrix to a binary format file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">Matrix</td><td>The <a class="el" href="namespaceEigen.html">Eigen</a> dense matrix </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>he folder where you want to save the matrix </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">MatrixName</td><td>The matrix name for the output file</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Matrix</td><td><a class="el" href="namespaceEigen.html">Eigen</a> dense matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Folder where you want to save the matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">MatrixName</td><td>Name of the output file</td></tr>
   </table>
   </dd>
 </dl>
@@ -1553,7 +1526,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00643">643</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00678">678</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1599,7 +1572,7 @@ template&lt;typename MatrixType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Saves a dense matrix list to bynary files. </p>
+<p>Save a dense matrix list to bynary files. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">MatrixList</td><td>The matrix list </td></tr>
@@ -1615,7 +1588,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00740">740</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00775">775</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1661,11 +1634,11 @@ template&lt;typename TensorType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Saves a dense tensor. </p>
+<p>Save a dense tensor to file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">Tensor</td><td>The tensor </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Tensor</td><td>The tensor </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>Folder where you want to save the tensor </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">MatrixName</td><td>The matrix name</td></tr>
   </table>
   </dd>
@@ -1677,7 +1650,7 @@ template&lt;typename TensorType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00684">684</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00719">719</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1723,10 +1696,10 @@ template&lt;typename T , int whatever, typename IND &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Saves an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix into bynary format file. </p>
+<p>Export an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix into bynary format file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">m</td><td>Eigen::SparseMatrix m </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">m</td><td>Eigen::SparseMatrix </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder where you want to save the matrix </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">MatrixName</td><td>The matrix name for the output file</td></tr>
   </table>
@@ -1741,7 +1714,7 @@ template&lt;typename T , int whatever, typename IND &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00577">577</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00612">612</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1787,7 +1760,7 @@ template&lt;typename MatrixType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Saves a sparse matrix list to bynary files. </p>
+<p>Save a sparse matrix list to bynary files. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">MatrixList</td><td>The matrix list </td></tr>
@@ -1803,7 +1776,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00730">730</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00765">765</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -1847,7 +1820,7 @@ template&lt;typename MatrixType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Writes points of a mesh to a file. </p>
+<p>Write points of a mesh to a file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">points</td><td>The points you want to write </td></tr>
@@ -1857,7 +1830,7 @@ template&lt;typename MatrixType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00757">757</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8C_source.html#l00626">626</a> of file <a class="el" href="ITHACAstream_8C_source.html">ITHACAstream.C</a>.</p>
 
 </div>
 </div>
