@@ -107,18 +107,27 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac835e12c384ee5e665d46212363282b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80d675812291d1ff754c6e762abc21d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a80d675812291d1ff754c6e762abc21d7">~ReducedUnsteadyNSTurb</a> ()</td></tr>
 <tr class="separator:a80d675812291d1ff754c6e762abc21d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad12f931d39386d108c55f5ee3630ba74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#ad12f931d39386d108c55f5ee3630ba74">solveOnlinePPE</a> (Eigen::MatrixXd &amp;velNow, label startSnap=0)</td></tr>
-<tr class="memdesc:ad12f931d39386d108c55f5ee3630ba74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a PPE stabilisation method.  <a href="#ad12f931d39386d108c55f5ee3630ba74">More...</a><br /></td></tr>
-<tr class="separator:ad12f931d39386d108c55f5ee3630ba74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acfb2df60fce6c8890af5353877f40d44"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#acfb2df60fce6c8890af5353877f40d44">solveOnlineSUP</a> (Eigen::MatrixXd &amp;velNow, label startSnap=0)</td></tr>
-<tr class="memdesc:acfb2df60fce6c8890af5353877f40d44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a supremizer stabilisation method.  <a href="#acfb2df60fce6c8890af5353877f40d44">More...</a><br /></td></tr>
-<tr class="separator:acfb2df60fce6c8890af5353877f40d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25b2d4e603bfa3fe4b1a6476e5df0e79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a25b2d4e603bfa3fe4b1a6476e5df0e79">reconstructPPE</a> (fileName folder=&quot;./online_rec&quot;, int printEvery=1)</td></tr>
-<tr class="memdesc:a25b2d4e603bfa3fe4b1a6476e5df0e79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct a solution from an online solve with a PPE stabilisation technique.  <a href="#a25b2d4e603bfa3fe4b1a6476e5df0e79">More...</a><br /></td></tr>
-<tr class="separator:a25b2d4e603bfa3fe4b1a6476e5df0e79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a1cc809cbb4a6aeac18b34f4d8d5856"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a8a1cc809cbb4a6aeac18b34f4d8d5856">reconstructSUP</a> (fileName folder=&quot;./online_rec&quot;, int printEvery=1)</td></tr>
-<tr class="memdesc:a8a1cc809cbb4a6aeac18b34f4d8d5856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.  <a href="#a8a1cc809cbb4a6aeac18b34f4d8d5856">More...</a><br /></td></tr>
-<tr class="separator:a8a1cc809cbb4a6aeac18b34f4d8d5856"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfb64dee401b72457d743db34dcce43a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#adfb64dee401b72457d743db34dcce43a">solveOnlinePPE</a> (Eigen::MatrixXd velNow)</td></tr>
+<tr class="memdesc:adfb64dee401b72457d743db34dcce43a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a PPE stabilisation method.  <a href="#adfb64dee401b72457d743db34dcce43a">More...</a><br /></td></tr>
+<tr class="separator:adfb64dee401b72457d743db34dcce43a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4e9455a665636441a28cc4dca9d0a8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#aa4e9455a665636441a28cc4dca9d0a8d">solveOnlineSUP</a> (Eigen::MatrixXd velNow)</td></tr>
+<tr class="memdesc:aa4e9455a665636441a28cc4dca9d0a8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a supremizer stabilisation method.  <a href="#aa4e9455a665636441a28cc4dca9d0a8d">More...</a><br /></td></tr>
+<tr class="separator:aa4e9455a665636441a28cc4dca9d0a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a317c2da17c98a378c655093df0f33a6c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a317c2da17c98a378c655093df0f33a6c">solveOnlineSUPAve</a> (Eigen::MatrixXd velNow)</td></tr>
+<tr class="memdesc:a317c2da17c98a378c655093df0f33a6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a supremizer stabilisation method with the use of the average splitting approach for the eddy viscosity.  <a href="#a317c2da17c98a378c655093df0f33a6c">More...</a><br /></td></tr>
+<tr class="separator:a317c2da17c98a378c655093df0f33a6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01adf822e77dd76d6e51831e5a421b5b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a01adf822e77dd76d6e51831e5a421b5b">solveOnlinePPEAve</a> (Eigen::MatrixXd velNow)</td></tr>
+<tr class="memdesc:a01adf822e77dd76d6e51831e5a421b5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a PPE stabilisation method with the use of the average splitting approach for the eddy viscosity.  <a href="#a01adf822e77dd76d6e51831e5a421b5b">More...</a><br /></td></tr>
+<tr class="separator:a01adf822e77dd76d6e51831e5a421b5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8433a71184817d95953c4c085bec7e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#ad8433a71184817d95953c4c085bec7e2">reconstructPPE</a> (fileName folder=&quot;./online_rec&quot;)</td></tr>
+<tr class="memdesc:ad8433a71184817d95953c4c085bec7e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct a solution from an online solve with a PPE stabilisation technique.  <a href="#ad8433a71184817d95953c4c085bec7e2">More...</a><br /></td></tr>
+<tr class="separator:ad8433a71184817d95953c4c085bec7e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a0c21b6c3ced05c5449957129f60365"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a0a0c21b6c3ced05c5449957129f60365">reconstructSUP</a> (fileName folder=&quot;./online_rec&quot;)</td></tr>
+<tr class="memdesc:a0a0c21b6c3ced05c5449957129f60365"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.  <a href="#a0a0c21b6c3ced05c5449957129f60365">More...</a><br /></td></tr>
+<tr class="separator:a0a0c21b6c3ced05c5449957129f60365"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeec808ed3585f4133ab89286493b9c5b"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#aeec808ed3585f4133ab89286493b9c5b">setOnlineVelocity</a> (Eigen::MatrixXd vel)</td></tr>
+<tr class="memdesc:aeec808ed3585f4133ab89286493b9c5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the online velocity.  <a href="#aeec808ed3585f4133ab89286493b9c5b">More...</a><br /></td></tr>
+<tr class="separator:aeec808ed3585f4133ab89286493b9c5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreducedUnsteadyNS"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreducedUnsteadyNS')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreducedUnsteadyNS.html">reducedUnsteadyNS</a></td></tr>
 <tr class="memitem:a24e955895ce354103b7a72dd66d3ec99 inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a24e955895ce354103b7a72dd66d3ec99">reducedUnsteadyNS</a> ()</td></tr>
 <tr class="memdesc:a24e955895ce354103b7a72dd66d3ec99 inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct Null.  <a href="classreducedUnsteadyNS.html#a24e955895ce354103b7a72dd66d3ec99">More...</a><br /></td></tr>
@@ -128,18 +137,27 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ade283f8582cffb205c7b0e5ca9651406 inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff7c6864f4c78cf5b66cea3e3c666d00 inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#aff7c6864f4c78cf5b66cea3e3c666d00">~reducedUnsteadyNS</a> ()</td></tr>
 <tr class="separator:aff7c6864f4c78cf5b66cea3e3c666d00 inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f9d974d8c3c36d67d59d0352499d656 inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a7f9d974d8c3c36d67d59d0352499d656">solveOnline_PPE</a> (Eigen::MatrixXd &amp;vel_now, label startSnap=0)</td></tr>
-<tr class="memdesc:a7f9d974d8c3c36d67d59d0352499d656 inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a PPE stabilisation method.  <a href="classreducedUnsteadyNS.html#a7f9d974d8c3c36d67d59d0352499d656">More...</a><br /></td></tr>
-<tr class="separator:a7f9d974d8c3c36d67d59d0352499d656 inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a968fee21812af67cb1a353aee62e5f1f inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a968fee21812af67cb1a353aee62e5f1f">solveOnline_sup</a> (Eigen::MatrixXd &amp;vel_now, label startSnap=0)</td></tr>
-<tr class="memdesc:a968fee21812af67cb1a353aee62e5f1f inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a supremizer stabilisation method.  <a href="classreducedUnsteadyNS.html#a968fee21812af67cb1a353aee62e5f1f">More...</a><br /></td></tr>
-<tr class="separator:a968fee21812af67cb1a353aee62e5f1f inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03e806a47257eee6c41b8acec32b0fc8 inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a03e806a47257eee6c41b8acec32b0fc8">reconstruct_PPE</a> (fileName folder=&quot;./online_rec&quot;, int printevery=1)</td></tr>
-<tr class="memdesc:a03e806a47257eee6c41b8acec32b0fc8 inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct a solution from an online solve with a PPE stabilisation technique.  <a href="classreducedUnsteadyNS.html#a03e806a47257eee6c41b8acec32b0fc8">More...</a><br /></td></tr>
-<tr class="separator:a03e806a47257eee6c41b8acec32b0fc8 inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3934ba95d1bdb996cea0aa715f7f617 inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#ae3934ba95d1bdb996cea0aa715f7f617">reconstruct_sup</a> (fileName folder=&quot;./online_rec&quot;, int printevery=1)</td></tr>
-<tr class="memdesc:ae3934ba95d1bdb996cea0aa715f7f617 inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.  <a href="classreducedUnsteadyNS.html#ae3934ba95d1bdb996cea0aa715f7f617">More...</a><br /></td></tr>
-<tr class="separator:ae3934ba95d1bdb996cea0aa715f7f617 inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa5db275b534856d2f11a9701ff69e63 inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#afa5db275b534856d2f11a9701ff69e63">penalty_PPE</a> (Eigen::MatrixXd &amp;<a class="el" href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">vel_now</a>, Eigen::MatrixXd &amp;<a class="el" href="classreducedUnsteadyNS.html#ac9655b6f5c3c7c6b70e078d2de61af71">tauIter</a>, label startSnap=0)</td></tr>
+<tr class="memdesc:afa5db275b534856d2f11a9701ff69e63 inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to determine the penalty factors iteratively.  <a href="classreducedUnsteadyNS.html#afa5db275b534856d2f11a9701ff69e63">More...</a><br /></td></tr>
+<tr class="separator:afa5db275b534856d2f11a9701ff69e63 inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb5a6fd9b013f8f49a3f27d864993bdb inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#afb5a6fd9b013f8f49a3f27d864993bdb">penalty_sup</a> (Eigen::MatrixXd &amp;<a class="el" href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">vel_now</a>, Eigen::MatrixXd &amp;<a class="el" href="classreducedUnsteadyNS.html#ac9655b6f5c3c7c6b70e078d2de61af71">tauIter</a>, label startSnap=0)</td></tr>
+<tr class="memdesc:afb5a6fd9b013f8f49a3f27d864993bdb inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to determine the penalty factors iteratively.  <a href="classreducedUnsteadyNS.html#afb5a6fd9b013f8f49a3f27d864993bdb">More...</a><br /></td></tr>
+<tr class="separator:afb5a6fd9b013f8f49a3f27d864993bdb inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb5029b16f265b9c5618b45b47b3a060 inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#adb5029b16f265b9c5618b45b47b3a060">solveOnline_PPE</a> (Eigen::MatrixXd <a class="el" href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">vel_now</a>, label startSnap=0)</td></tr>
+<tr class="memdesc:adb5029b16f265b9c5618b45b47b3a060 inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a PPE stabilisation method.  <a href="classreducedUnsteadyNS.html#adb5029b16f265b9c5618b45b47b3a060">More...</a><br /></td></tr>
+<tr class="separator:adb5029b16f265b9c5618b45b47b3a060 inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17b449c90ea8023b836d48663e12b4eb inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a17b449c90ea8023b836d48663e12b4eb">solveOnline_sup</a> (Eigen::MatrixXd <a class="el" href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">vel_now</a>, label startSnap=0)</td></tr>
+<tr class="memdesc:a17b449c90ea8023b836d48663e12b4eb inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a supremizer stabilisation method.  <a href="classreducedUnsteadyNS.html#a17b449c90ea8023b836d48663e12b4eb">More...</a><br /></td></tr>
+<tr class="separator:a17b449c90ea8023b836d48663e12b4eb inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d68b043807f349665e9f2a4710826a1 inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a6d68b043807f349665e9f2a4710826a1">reconstruct_PPE</a> (fileName folder=&quot;./online_rec&quot;)</td></tr>
+<tr class="memdesc:a6d68b043807f349665e9f2a4710826a1 inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct a solution from an online solve with a PPE stabilisation technique.  <a href="classreducedUnsteadyNS.html#a6d68b043807f349665e9f2a4710826a1">More...</a><br /></td></tr>
+<tr class="separator:a6d68b043807f349665e9f2a4710826a1 inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a6b832caf9ace83dd26c40cce6a6b3d inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a6a6b832caf9ace83dd26c40cce6a6b3d">reconstruct_sup</a> (fileName folder=&quot;./online_rec&quot;)</td></tr>
+<tr class="memdesc:a6a6b832caf9ace83dd26c40cce6a6b3d inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.  <a href="classreducedUnsteadyNS.html#a6a6b832caf9ace83dd26c40cce6a6b3d">More...</a><br /></td></tr>
+<tr class="separator:a6a6b832caf9ace83dd26c40cce6a6b3d inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16814dad6795fda8d3144786d36af6bd inherit pub_methods_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a16814dad6795fda8d3144786d36af6bd">setOnlineVelocity</a> (Eigen::MatrixXd vel)</td></tr>
+<tr class="memdesc:a16814dad6795fda8d3144786d36af6bd inherit pub_methods_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the online velocity.  <a href="classreducedUnsteadyNS.html#a16814dad6795fda8d3144786d36af6bd">More...</a><br /></td></tr>
+<tr class="separator:a16814dad6795fda8d3144786d36af6bd inherit pub_methods_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreducedSteadyNS"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreducedSteadyNS')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreducedSteadyNS.html">reducedSteadyNS</a></td></tr>
 <tr class="memitem:a9d1552e4e26f805478e1076c6a23eef3 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a9d1552e4e26f805478e1076c6a23eef3">reducedSteadyNS</a> ()</td></tr>
 <tr class="memdesc:a9d1552e4e26f805478e1076c6a23eef3 inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct Null.  <a href="classreducedSteadyNS.html#a9d1552e4e26f805478e1076c6a23eef3">More...</a><br /></td></tr>
@@ -149,10 +167,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a73da28b010f7c15f069011f0a82f02e1 inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1ce98fbe4b40644427676bb2ce6342a inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#af1ce98fbe4b40644427676bb2ce6342a">~reducedSteadyNS</a> ()</td></tr>
 <tr class="separator:af1ce98fbe4b40644427676bb2ce6342a inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f53233c8bb15c601df7ab7a4f6feb60 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a6f53233c8bb15c601df7ab7a4f6feb60">solveOnline_PPE</a> (Eigen::MatrixXd vel_now)</td></tr>
+<tr class="memitem:a6f53233c8bb15c601df7ab7a4f6feb60 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a6f53233c8bb15c601df7ab7a4f6feb60">solveOnline_PPE</a> (Eigen::MatrixXd <a class="el" href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">vel_now</a>)</td></tr>
 <tr class="memdesc:a6f53233c8bb15c601df7ab7a4f6feb60 inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a PPE stabilisation method.  <a href="classreducedSteadyNS.html#a6f53233c8bb15c601df7ab7a4f6feb60">More...</a><br /></td></tr>
 <tr class="separator:a6f53233c8bb15c601df7ab7a4f6feb60 inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e9605d7acfcca9a66339fdbf930a256 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a2e9605d7acfcca9a66339fdbf930a256">solveOnline_sup</a> (Eigen::MatrixXd vel_now)</td></tr>
+<tr class="memitem:a2e9605d7acfcca9a66339fdbf930a256 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a2e9605d7acfcca9a66339fdbf930a256">solveOnline_sup</a> (Eigen::MatrixXd <a class="el" href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">vel_now</a>)</td></tr>
 <tr class="memdesc:a2e9605d7acfcca9a66339fdbf930a256 inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a supremizer stabilisation method.  <a href="classreducedSteadyNS.html#a2e9605d7acfcca9a66339fdbf930a256">More...</a><br /></td></tr>
 <tr class="separator:a2e9605d7acfcca9a66339fdbf930a256 inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84023acdb22cdef6fc84de1240979f96 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a84023acdb22cdef6fc84de1240979f96">reconstruct_PPE</a> (fileName folder=&quot;./ITHACAOutput/online_rec&quot;, int printevery=1)</td></tr>
@@ -167,6 +185,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aec82f8c3613a7f4028d4c5e4dfda2288 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#aec82f8c3613a7f4028d4c5e4dfda2288">inf_sup_constant</a> ()</td></tr>
 <tr class="memdesc:aec82f8c3613a7f4028d4c5e4dfda2288 inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to evaluate the online inf-sup constant.  <a href="classreducedSteadyNS.html#aec82f8c3613a7f4028d4c5e4dfda2288">More...</a><br /></td></tr>
 <tr class="separator:aec82f8c3613a7f4028d4c5e4dfda2288 inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a274758beff24682db5f67b2a23da1eaa inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a274758beff24682db5f67b2a23da1eaa">setOnlineVelocity</a> (Eigen::MatrixXd vel)</td></tr>
+<tr class="memdesc:a274758beff24682db5f67b2a23da1eaa inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the online velocity.  <a href="classreducedSteadyNS.html#a274758beff24682db5f67b2a23da1eaa">More...</a><br /></td></tr>
+<tr class="separator:a274758beff24682db5f67b2a23da1eaa inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classreducedProblem"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classreducedProblem')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classreducedProblem.html">reducedProblem</a></td></tr>
 <tr class="memitem:ae576badd6fdb3f709ade763c14ab91bc inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#ae576badd6fdb3f709ade763c14ab91bc">reducedProblem</a> ()</td></tr>
 <tr class="memdesc:ae576badd6fdb3f709ade763c14ab91bc inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct Null.  <a href="classreducedProblem.html#ae576badd6fdb3f709ade763c14ab91bc">More...</a><br /></td></tr>
@@ -179,39 +200,57 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a2bf35778f70fe3541990026bc6403a56">solveOnline</a> ()</td></tr>
 <tr class="memdesc:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual Method to perform and online Solve.  <a href="classreducedProblem.html#a2bf35778f70fe3541990026bc6403a56">More...</a><br /></td></tr>
 <tr class="separator:a2bf35778f70fe3541990026bc6403a56 inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">solveLinearSys</a> (List&lt; Eigen::MatrixXd &gt; LinSys, Eigen::MatrixXd x, Eigen::VectorXd &amp;<a class="el" href="SteadyNSTurb_2NLsolve_8H.html#af4cd48a0192c75c3d6f1bbe7557cc02c">residual</a>, const Eigen::MatrixXd &amp;bc=Eigen::MatrixXd::Zero(0, 0), const std::string solverType=&quot;fullPivLu&quot;)</td></tr>
+<tr class="memitem:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">solveLinearSys</a> (List&lt; Eigen::MatrixXd &gt; LinSys, Eigen::MatrixXd x, Eigen::VectorXd &amp;<a class="el" href="SteadyNSTurbIntrusive_2NLsolve_8H.html#af4cd48a0192c75c3d6f1bbe7557cc02c">residual</a>, const Eigen::MatrixXd &amp;bc=Eigen::MatrixXd::Zero(0, 0), const std::string solverType=&quot;fullPivLu&quot;)</td></tr>
 <tr class="memdesc:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linear system solver for the online problem.  <a href="classreducedProblem.html#a630c2d12489a0d16a9768c07d1a6d2be">More...</a><br /></td></tr>
 <tr class="separator:a630c2d12489a0d16a9768c07d1a6d2be inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c0a53841e72c53c20861f286763310e inherit pub_methods_classreducedProblem"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a2c0a53841e72c53c20861f286763310e">solveLinearSys</a> (List&lt; Eigen::MatrixXd &gt; LinSys, Eigen::MatrixXd x, Eigen::VectorXd &amp;<a class="el" href="SteadyNSTurbIntrusive_2NLsolve_8H.html#af4cd48a0192c75c3d6f1bbe7557cc02c">residual</a>, const std::string solverType)</td></tr>
+<tr class="memdesc:a2c0a53841e72c53c20861f286763310e inherit pub_methods_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Linear system solver for the online problem.  <a href="classreducedProblem.html#a2c0a53841e72c53c20861f286763310e">More...</a><br /></td></tr>
+<tr class="separator:a2c0a53841e72c53c20861f286763310e inherit pub_methods_classreducedProblem"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ae96b7ffcde67d8603264ac00a98c94ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classUnsteadyNSTurb.html">UnsteadyNSTurb</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#ae96b7ffcde67d8603264ac00a98c94ab">problem</a></td></tr>
 <tr class="memdesc:ae96b7ffcde67d8603264ac00a98c94ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the FOM problem.  <a href="#ae96b7ffcde67d8603264ac00a98c94ab">More...</a><br /></td></tr>
 <tr class="separator:ae96b7ffcde67d8603264ac00a98c94ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e8a7c4c547f9b015ed1dfaa6336918f"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a0e8a7c4c547f9b015ed1dfaa6336918f">nutRec</a></td></tr>
-<tr class="memdesc:a0e8a7c4c547f9b015ed1dfaa6336918f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstructed eddy viscosity field.  <a href="#a0e8a7c4c547f9b015ed1dfaa6336918f">More...</a><br /></td></tr>
-<tr class="separator:a0e8a7c4c547f9b015ed1dfaa6336918f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a95cd27e4098354161b921176bc65f1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a0a95cd27e4098354161b921176bc65f1">nphiNut</a></td></tr>
 <tr class="memdesc:a0a95cd27e4098354161b921176bc65f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of viscosity modes.  <a href="#a0a95cd27e4098354161b921176bc65f1">More...</a><br /></td></tr>
 <tr class="separator:a0a95cd27e4098354161b921176bc65f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e73fe152827dcdd921fd7589431cab3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a5e73fe152827dcdd921fd7589431cab3">dimA</a></td></tr>
+<tr class="memdesc:a5e73fe152827dcdd921fd7589431cab3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dimension of the interpolation independent variable.  <a href="#a5e73fe152827dcdd921fd7589431cab3">More...</a><br /></td></tr>
+<tr class="separator:a5e73fe152827dcdd921fd7589431cab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac934c859af103b00990aa6f275a51155"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#ac934c859af103b00990aa6f275a51155">nutModes</a></td></tr>
+<tr class="memdesc:ac934c859af103b00990aa6f275a51155"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of pointers to store the modes for the eddy viscosity.  <a href="#ac934c859af103b00990aa6f275a51155">More...</a><br /></td></tr>
+<tr class="separator:ac934c859af103b00990aa6f275a51155"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32adf48a214b2c45c5a9dd85763ee486"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a32adf48a214b2c45c5a9dd85763ee486">rbfCoeffMat</a></td></tr>
+<tr class="memdesc:a32adf48a214b2c45c5a9dd85763ee486"><td class="mdescLeft">&#160;</td><td class="mdescRight">The matrix of the eddy viscosity RBF interoplated coefficients.  <a href="#a32adf48a214b2c45c5a9dd85763ee486">More...</a><br /></td></tr>
+<tr class="separator:a32adf48a214b2c45c5a9dd85763ee486"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bb8a54f346d753bf678b6a4bcad0942"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a8bb8a54f346d753bf678b6a4bcad0942">initCond</a></td></tr>
+<tr class="memdesc:a8bb8a54f346d753bf678b6a4bcad0942"><td class="mdescLeft">&#160;</td><td class="mdescRight">The matrix of the initial velocity and pressure reduced coefficients.  <a href="#a8bb8a54f346d753bf678b6a4bcad0942">More...</a><br /></td></tr>
+<tr class="separator:a8bb8a54f346d753bf678b6a4bcad0942"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd3d5ccd245b880b8f5432cee4c50165"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#afd3d5ccd245b880b8f5432cee4c50165">nut0</a></td></tr>
+<tr class="memdesc:afd3d5ccd245b880b8f5432cee4c50165"><td class="mdescLeft">&#160;</td><td class="mdescRight">The initial eddy viscosity reduced coefficients.  <a href="#afd3d5ccd245b880b8f5432cee4c50165">More...</a><br /></td></tr>
+<tr class="separator:afd3d5ccd245b880b8f5432cee4c50165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b91a88bd3fe3cfeeb9a1950acbc9bfe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structnewtonUnsteadyNSTurbSUP.html">newtonUnsteadyNSTurbSUP</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a0b91a88bd3fe3cfeeb9a1950acbc9bfe">newtonObjectSUP</a></td></tr>
 <tr class="memdesc:a0b91a88bd3fe3cfeeb9a1950acbc9bfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object to call the non linear solver sup approach.  <a href="#a0b91a88bd3fe3cfeeb9a1950acbc9bfe">More...</a><br /></td></tr>
 <tr class="separator:a0b91a88bd3fe3cfeeb9a1950acbc9bfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacc03773582772b4247e59fd0ec2051a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structnewton__UnsteadyNSTurb__PPE.html">newton_UnsteadyNSTurb_PPE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#aacc03773582772b4247e59fd0ec2051a">newtonObjectPPE</a></td></tr>
-<tr class="memdesc:aacc03773582772b4247e59fd0ec2051a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object to call the non linear solver PPE approach.  <a href="#aacc03773582772b4247e59fd0ec2051a">More...</a><br /></td></tr>
-<tr class="separator:aacc03773582772b4247e59fd0ec2051a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a523055039ac8d806e4f062adca972748"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a523055039ac8d806e4f062adca972748">time</a></td></tr>
-<tr class="memdesc:a523055039ac8d806e4f062adca972748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scalar to store the current time.  <a href="#a523055039ac8d806e4f062adca972748">More...</a><br /></td></tr>
-<tr class="separator:a523055039ac8d806e4f062adca972748"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6b9bebdeb578b620baf256bbb6c8643"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#af6b9bebdeb578b620baf256bbb6c8643">dt</a></td></tr>
-<tr class="memdesc:af6b9bebdeb578b620baf256bbb6c8643"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scalar to store the time increment.  <a href="#af6b9bebdeb578b620baf256bbb6c8643">More...</a><br /></td></tr>
-<tr class="separator:af6b9bebdeb578b620baf256bbb6c8643"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad68d3d0647e8722d8be8cf5997b6c6b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#aad68d3d0647e8722d8be8cf5997b6c6b">finalTime</a></td></tr>
-<tr class="memdesc:aad68d3d0647e8722d8be8cf5997b6c6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scalar to store the final time if the online simulation.  <a href="#aad68d3d0647e8722d8be8cf5997b6c6b">More...</a><br /></td></tr>
-<tr class="separator:aad68d3d0647e8722d8be8cf5997b6c6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a116435e457f8789a7226f88049e769c3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a116435e457f8789a7226f88049e769c3">tstart</a></td></tr>
-<tr class="memdesc:a116435e457f8789a7226f88049e769c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scalar to store the final time if the online simulation.  <a href="#a116435e457f8789a7226f88049e769c3">More...</a><br /></td></tr>
-<tr class="separator:a116435e457f8789a7226f88049e769c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a117e0c951f405785056d6e044644dd6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structnewtonUnsteadyNSTurbSUPAve.html">newtonUnsteadyNSTurbSUPAve</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a117e0c951f405785056d6e044644dd6a">newtonObjectSUPAve</a></td></tr>
+<tr class="memdesc:a117e0c951f405785056d6e044644dd6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object to call the non linear solver sup approach with the splitting of the eddy viscosity.  <a href="#a117e0c951f405785056d6e044644dd6a">More...</a><br /></td></tr>
+<tr class="separator:a117e0c951f405785056d6e044644dd6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab82441cd889b2ee76d9521eb3e03b72f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structnewtonUnsteadyNSTurbPPE.html">newtonUnsteadyNSTurbPPE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#ab82441cd889b2ee76d9521eb3e03b72f">newtonObjectPPE</a></td></tr>
+<tr class="memdesc:ab82441cd889b2ee76d9521eb3e03b72f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object to call the non linear solver PPE approach.  <a href="#ab82441cd889b2ee76d9521eb3e03b72f">More...</a><br /></td></tr>
+<tr class="separator:ab82441cd889b2ee76d9521eb3e03b72f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee38606eb530b5cd21f9202910c9c1c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structnewtonUnsteadyNSTurbPPEAve.html">newtonUnsteadyNSTurbPPEAve</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#aee38606eb530b5cd21f9202910c9c1c1">newtonObjectPPEAve</a></td></tr>
+<tr class="memdesc:aee38606eb530b5cd21f9202910c9c1c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object to call the non linear solver PPE approach with the splitting of the eddy viscosity.  <a href="#aee38606eb530b5cd21f9202910c9c1c1">More...</a><br /></td></tr>
+<tr class="separator:aee38606eb530b5cd21f9202910c9c1c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a780b9266188c238dd726498d2cd29803"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a780b9266188c238dd726498d2cd29803">muStar</a></td></tr>
+<tr class="memdesc:a780b9266188c238dd726498d2cd29803"><td class="mdescLeft">&#160;</td><td class="mdescRight">Online parameter value.  <a href="#a780b9266188c238dd726498d2cd29803">More...</a><br /></td></tr>
+<tr class="separator:a780b9266188c238dd726498d2cd29803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ee24f27aa2527adc543fee1a094b127"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#a9ee24f27aa2527adc543fee1a094b127">gNutAve</a></td></tr>
+<tr class="memdesc:a9ee24f27aa2527adc543fee1a094b127"><td class="mdescLeft">&#160;</td><td class="mdescRight">The reduced average vector for viscosity coefficients.  <a href="#a9ee24f27aa2527adc543fee1a094b127">More...</a><br /></td></tr>
+<tr class="separator:a9ee24f27aa2527adc543fee1a094b127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2eb2bfe8c99e793f1620e682730cc36"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedUnsteadyNSTurb.html#ab2eb2bfe8c99e793f1620e682730cc36">interChoice</a> = 1</td></tr>
+<tr class="memdesc:ab2eb2bfe8c99e793f1620e682730cc36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolation independent variable choice.  <a href="#ab2eb2bfe8c99e793f1620e682730cc36">More...</a><br /></td></tr>
+<tr class="separator:ab2eb2bfe8c99e793f1620e682730cc36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classreducedUnsteadyNS"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classreducedUnsteadyNS')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classreducedUnsteadyNS.html">reducedUnsteadyNS</a></td></tr>
 <tr class="memitem:a50e9b9836dbaf6400a72c3d57e263ab1 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structnewton__unsteadyNS__sup.html">newton_unsteadyNS_sup</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a50e9b9836dbaf6400a72c3d57e263ab1">newton_object_sup</a></td></tr>
 <tr class="memdesc:a50e9b9836dbaf6400a72c3d57e263ab1 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object to call the non linear solver sup approach.  <a href="classreducedUnsteadyNS.html#a50e9b9836dbaf6400a72c3d57e263ab1">More...</a><br /></td></tr>
@@ -222,15 +261,36 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ad69b7399b933c4b2a19fe03736c087f0 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#ad69b7399b933c4b2a19fe03736c087f0">time</a></td></tr>
 <tr class="memdesc:ad69b7399b933c4b2a19fe03736c087f0 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scalar to store the current time.  <a href="classreducedUnsteadyNS.html#ad69b7399b933c4b2a19fe03736c087f0">More...</a><br /></td></tr>
 <tr class="separator:ad69b7399b933c4b2a19fe03736c087f0 inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39657b75f12e39c65f4c7f235b770d1c inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a39657b75f12e39c65f4c7f235b770d1c">dt</a></td></tr>
-<tr class="memdesc:a39657b75f12e39c65f4c7f235b770d1c inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scalar to store the time increment.  <a href="classreducedUnsteadyNS.html#a39657b75f12e39c65f4c7f235b770d1c">More...</a><br /></td></tr>
-<tr class="separator:a39657b75f12e39c65f4c7f235b770d1c inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae45fef68d6b4d5fed927710bcc2af537 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#ae45fef68d6b4d5fed927710bcc2af537">dt</a></td></tr>
+<tr class="memdesc:ae45fef68d6b4d5fed927710bcc2af537 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scalar to store the time increment.  <a href="classreducedUnsteadyNS.html#ae45fef68d6b4d5fed927710bcc2af537">More...</a><br /></td></tr>
+<tr class="separator:ae45fef68d6b4d5fed927710bcc2af537 inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40ea61565983b054793847deec5d14ca inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a40ea61565983b054793847deec5d14ca">finalTime</a></td></tr>
 <tr class="memdesc:a40ea61565983b054793847deec5d14ca inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scalar to store the final time if the online simulation.  <a href="classreducedUnsteadyNS.html#a40ea61565983b054793847deec5d14ca">More...</a><br /></td></tr>
 <tr class="separator:a40ea61565983b054793847deec5d14ca inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa15bd6d26ec6a9ebbe9016bc23ffe92 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#aaa15bd6d26ec6a9ebbe9016bc23ffe92">tstart</a></td></tr>
 <tr class="memdesc:aaa15bd6d26ec6a9ebbe9016bc23ffe92 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scalar to store the initial time if the online simulation.  <a href="classreducedUnsteadyNS.html#aaa15bd6d26ec6a9ebbe9016bc23ffe92">More...</a><br /></td></tr>
 <tr class="separator:aaa15bd6d26ec6a9ebbe9016bc23ffe92 inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af63ca8bf9c3e0163ee95040078ca8d8f inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#af63ca8bf9c3e0163ee95040078ca8d8f">storeEvery</a></td></tr>
+<tr class="memdesc:af63ca8bf9c3e0163ee95040078ca8d8f inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">A variable for storing the reduced coefficients.  <a href="classreducedUnsteadyNS.html#af63ca8bf9c3e0163ee95040078ca8d8f">More...</a><br /></td></tr>
+<tr class="separator:af63ca8bf9c3e0163ee95040078ca8d8f inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21df4d12ee1c54827a9a0260f5c5bd81 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a21df4d12ee1c54827a9a0260f5c5bd81">exportEvery</a></td></tr>
+<tr class="memdesc:a21df4d12ee1c54827a9a0260f5c5bd81 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">A variable for exporting the fields.  <a href="classreducedUnsteadyNS.html#a21df4d12ee1c54827a9a0260f5c5bd81">More...</a><br /></td></tr>
+<tr class="separator:a21df4d12ee1c54827a9a0260f5c5bd81 inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e5d6fc61880724a24075a39db124f08 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a1e5d6fc61880724a24075a39db124f08">startFromZero</a> = false</td></tr>
+<tr class="memdesc:a1e5d6fc61880724a24075a39db124f08 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">A variable for starting solving the reduced system from zero or not.  <a href="classreducedUnsteadyNS.html#a1e5d6fc61880724a24075a39db124f08">More...</a><br /></td></tr>
+<tr class="separator:a1e5d6fc61880724a24075a39db124f08 inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7be0f7fa13d0b701f8b4ac2c6719e211 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a7be0f7fa13d0b701f8b4ac2c6719e211">timeStepPenalty</a> = 1</td></tr>
+<tr class="memdesc:a7be0f7fa13d0b701f8b4ac2c6719e211 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of timesteps calculated for the iterative penalty method.  <a href="classreducedUnsteadyNS.html#a7be0f7fa13d0b701f8b4ac2c6719e211">More...</a><br /></td></tr>
+<tr class="separator:a7be0f7fa13d0b701f8b4ac2c6719e211 inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9655b6f5c3c7c6b70e078d2de61af71 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#ac9655b6f5c3c7c6b70e078d2de61af71">tauIter</a></td></tr>
+<tr class="memdesc:ac9655b6f5c3c7c6b70e078d2de61af71 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Penalty Factor determined with iterative solver.  <a href="classreducedUnsteadyNS.html#ac9655b6f5c3c7c6b70e078d2de61af71">More...</a><br /></td></tr>
+<tr class="separator:ac9655b6f5c3c7c6b70e078d2de61af71 inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad703f585a6eabf2a68f3801540adb2dc inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#ad703f585a6eabf2a68f3801540adb2dc">maxIterPenalty</a></td></tr>
+<tr class="memdesc:ad703f585a6eabf2a68f3801540adb2dc inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of iterations to be done for the computation of the penalty factor.  <a href="classreducedUnsteadyNS.html#ad703f585a6eabf2a68f3801540adb2dc">More...</a><br /></td></tr>
+<tr class="separator:ad703f585a6eabf2a68f3801540adb2dc inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a364ca4a8d46fc660b63e6805502397c4 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#a364ca4a8d46fc660b63e6805502397c4">tolerancePenalty</a></td></tr>
+<tr class="memdesc:a364ca4a8d46fc660b63e6805502397c4 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tolerance for the residual of the boundary values, there is the same tolerance for velocity and temperature.  <a href="classreducedUnsteadyNS.html#a364ca4a8d46fc660b63e6805502397c4">More...</a><br /></td></tr>
+<tr class="separator:a364ca4a8d46fc660b63e6805502397c4 inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab09c30472e9056e2c8ad8fd4c15eaaf7 inherit pub_attribs_classreducedUnsteadyNS"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classunsteadyNS.html">unsteadyNS</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedUnsteadyNS.html#ab09c30472e9056e2c8ad8fd4c15eaaf7">problem</a></td></tr>
 <tr class="memdesc:ab09c30472e9056e2c8ad8fd4c15eaaf7 inherit pub_attribs_classreducedUnsteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the FOM problem.  <a href="classreducedUnsteadyNS.html#ab09c30472e9056e2c8ad8fd4c15eaaf7">More...</a><br /></td></tr>
 <tr class="separator:ab09c30472e9056e2c8ad8fd4c15eaaf7 inherit pub_attribs_classreducedUnsteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -238,6 +298,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a1ef2bf9d83564fbc315d66c577f5a1e4 inherit pub_attribs_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classITHACAparameters.html">ITHACAparameters</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a1ef2bf9d83564fbc315d66c577f5a1e4">para</a></td></tr>
 <tr class="memdesc:a1ef2bf9d83564fbc315d66c577f5a1e4 inherit pub_attribs_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">parameters to be read from the ITHACAdict file  <a href="classreducedSteadyNS.html#a1ef2bf9d83564fbc315d66c577f5a1e4">More...</a><br /></td></tr>
 <tr class="separator:a1ef2bf9d83564fbc315d66c577f5a1e4 inherit pub_attribs_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae9f458b646baf5c1760047e9b08eed6 inherit pub_attribs_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">vel_now</a></td></tr>
+<tr class="memdesc:aae9f458b646baf5c1760047e9b08eed6 inherit pub_attribs_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Online inlet velocity vector.  <a href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">More...</a><br /></td></tr>
+<tr class="separator:aae9f458b646baf5c1760047e9b08eed6 inherit pub_attribs_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3058ca7349fcd18a7379df91c1b563c9 inherit pub_attribs_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a3058ca7349fcd18a7379df91c1b563c9">fTau</a></td></tr>
 <tr class="memdesc:a3058ca7349fcd18a7379df91c1b563c9 inherit pub_attribs_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduced matrix for tangent forces.  <a href="classreducedSteadyNS.html#a3058ca7349fcd18a7379df91c1b563c9">More...</a><br /></td></tr>
 <tr class="separator:a3058ca7349fcd18a7379df91c1b563c9 inherit pub_attribs_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -310,7 +373,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p class="">Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem. </p>
 <p class="">In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes equations. This class must be used together with the <a class="el" href="classsteadyNS.html" title="Implementation of a parametrized full order  steady NS problem  and preparation of the the reduced ma...">steadyNS</a> class </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00121">121</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00194">194</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a06886e3793c0e887336c6cc8bc74bffd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a06886e3793c0e887336c6cc8bc74bffd">&#9670;&nbsp;</a></span>ReducedUnsteadyNSTurb() <span class="overload">[1/2]</span></h2>
@@ -392,13 +455,13 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00135">135</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00208">208</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a25b2d4e603bfa3fe4b1a6476e5df0e79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25b2d4e603bfa3fe4b1a6476e5df0e79">&#9670;&nbsp;</a></span>reconstructPPE()</h2>
+<a id="ad8433a71184817d95953c4c085bec7e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8433a71184817d95953c4c085bec7e2">&#9670;&nbsp;</a></span>reconstructPPE()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -407,18 +470,8 @@ Public Attributes</h2></td></tr>
           <td class="memname">void ReducedUnsteadyNSTurb::reconstructPPE </td>
           <td>(</td>
           <td class="paramtype">fileName&#160;</td>
-          <td class="paramname"><em>folder</em> = <code>&quot;./online_rec&quot;</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>folder</em> = <code>&quot;./online_rec&quot;</code></td><td>)</td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>printEvery</em> = <code>1</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -428,17 +481,16 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder where to output the solutions </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">printEvery</td><td>The printEvery </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l00504">504</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l01217">1217</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
 
 </div>
 </div>
-<a id="a8a1cc809cbb4a6aeac18b34f4d8d5856"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a1cc809cbb4a6aeac18b34f4d8d5856">&#9670;&nbsp;</a></span>reconstructSUP()</h2>
+<a id="a0a0c21b6c3ced05c5449957129f60365"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a0c21b6c3ced05c5449957129f60365">&#9670;&nbsp;</a></span>reconstructSUP()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -447,18 +499,8 @@ Public Attributes</h2></td></tr>
           <td class="memname">void ReducedUnsteadyNSTurb::reconstructSUP </td>
           <td>(</td>
           <td class="paramtype">fileName&#160;</td>
-          <td class="paramname"><em>folder</em> = <code>&quot;./online_rec&quot;</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>folder</em> = <code>&quot;./online_rec&quot;</code></td><td>)</td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>printEvery</em> = <code>1</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -468,17 +510,45 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder where to output the solutions </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">printEvery</td><td>The printEvery </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l00543">543</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l01266">1266</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
 
 </div>
 </div>
-<a id="ad12f931d39386d108c55f5ee3630ba74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad12f931d39386d108c55f5ee3630ba74">&#9670;&nbsp;</a></span>solveOnlinePPE()</h2>
+<a id="aeec808ed3585f4133ab89286493b9c5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeec808ed3585f4133ab89286493b9c5b">&#9670;&nbsp;</a></span>setOnlineVelocity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXd ReducedUnsteadyNSTurb::setOnlineVelocity </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>vel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the online velocity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">vel</td><td>The velocity</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The rescaled velocity vector </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l01315">1315</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
+
+</div>
+</div>
+<a id="adfb64dee401b72457d743db34dcce43a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfb64dee401b72457d743db34dcce43a">&#9670;&nbsp;</a></span>solveOnlinePPE()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -486,19 +556,9 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void ReducedUnsteadyNSTurb::solveOnlinePPE </td>
           <td>(</td>
-          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
-          <td class="paramname"><em>velNow</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>velNow</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">label&#160;</td>
-          <td class="paramname"><em>startSnap</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -507,17 +567,44 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">velNow</td><td>The vector of online velocity. It is defined in with an Eigen::MatrixXd and must have one col and as many rows as the number of parametrized boundary conditions. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">startSnap</td><td>The first snapshot taken from the offline snahpshots and used to get the reduced initial condition. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l00356">356</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l00847">847</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
 
 </div>
 </div>
-<a id="acfb2df60fce6c8890af5353877f40d44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acfb2df60fce6c8890af5353877f40d44">&#9670;&nbsp;</a></span>solveOnlineSUP()</h2>
+<a id="a01adf822e77dd76d6e51831e5a421b5b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01adf822e77dd76d6e51831e5a421b5b">&#9670;&nbsp;</a></span>solveOnlinePPEAve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReducedUnsteadyNSTurb::solveOnlinePPEAve </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>velNow</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Method to perform an online solve using a PPE stabilisation method with the use of the average splitting approach for the eddy viscosity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">velNow</td><td>The velocity now </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l01027">1027</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
+
+</div>
+</div>
+<a id="aa4e9455a665636441a28cc4dca9d0a8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4e9455a665636441a28cc4dca9d0a8d">&#9670;&nbsp;</a></span>solveOnlineSUP()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -525,19 +612,9 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void ReducedUnsteadyNSTurb::solveOnlineSUP </td>
           <td>(</td>
-          <td class="paramtype">Eigen::MatrixXd &amp;&#160;</td>
-          <td class="paramname"><em>velNow</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>velNow</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">label&#160;</td>
-          <td class="paramname"><em>startSnap</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -546,67 +623,166 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">velNow</td><td>The vector of online velocity. It is defined in with an Eigen::MatrixXd and must have one col and as many rows as the number of parametrized boundary conditions. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">startSnap</td><td>The first snapshot taken from the offline snahpshots and used to get the reduced initial condition. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l00208">208</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l00467">467</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
+
+</div>
+</div>
+<a id="a317c2da17c98a378c655093df0f33a6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a317c2da17c98a378c655093df0f33a6c">&#9670;&nbsp;</a></span>solveOnlineSUPAve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ReducedUnsteadyNSTurb::solveOnlineSUPAve </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>velNow</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Method to perform an online solve using a supremizer stabilisation method with the use of the average splitting approach for the eddy viscosity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">velNow</td><td>The velocity now </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html#l00656">656</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8C_source.html">ReducedUnsteadyNSTurb.C</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="af6b9bebdeb578b620baf256bbb6c8643"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6b9bebdeb578b620baf256bbb6c8643">&#9670;&nbsp;</a></span>dt</h2>
+<a id="a5e73fe152827dcdd921fd7589431cab3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e73fe152827dcdd921fd7589431cab3">&#9670;&nbsp;</a></span>dimA</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double ReducedUnsteadyNSTurb::dt</td>
+          <td class="memname">int ReducedUnsteadyNSTurb::dimA</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Scalar to store the time increment. </p>
+<p>Dimension of the interpolation independent variable. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00156">156</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00217">217</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 
 </div>
 </div>
-<a id="aad68d3d0647e8722d8be8cf5997b6c6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad68d3d0647e8722d8be8cf5997b6c6b">&#9670;&nbsp;</a></span>finalTime</h2>
+<a id="a9ee24f27aa2527adc543fee1a094b127"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ee24f27aa2527adc543fee1a094b127">&#9670;&nbsp;</a></span>gNutAve</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double ReducedUnsteadyNSTurb::finalTime</td>
+          <td class="memname">Eigen::VectorXd ReducedUnsteadyNSTurb::gNutAve</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Scalar to store the final time if the online simulation. </p>
+<p>The reduced average vector for viscosity coefficients. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00159">159</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00247">247</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 
 </div>
 </div>
-<a id="aacc03773582772b4247e59fd0ec2051a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aacc03773582772b4247e59fd0ec2051a">&#9670;&nbsp;</a></span>newtonObjectPPE</h2>
+<a id="a8bb8a54f346d753bf678b6a4bcad0942"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bb8a54f346d753bf678b6a4bcad0942">&#9670;&nbsp;</a></span>initCond</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structnewton__UnsteadyNSTurb__PPE.html">newton_UnsteadyNSTurb_PPE</a> ReducedUnsteadyNSTurb::newtonObjectPPE</td>
+          <td class="memname">Eigen::MatrixXd ReducedUnsteadyNSTurb::initCond</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The matrix of the initial velocity and pressure reduced coefficients. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00226">226</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+
+</div>
+</div>
+<a id="ab2eb2bfe8c99e793f1620e682730cc36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2eb2bfe8c99e793f1620e682730cc36">&#9670;&nbsp;</a></span>interChoice</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ReducedUnsteadyNSTurb::interChoice = 1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Interpolation independent variable choice. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00250">250</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+
+</div>
+</div>
+<a id="a780b9266188c238dd726498d2cd29803"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a780b9266188c238dd726498d2cd29803">&#9670;&nbsp;</a></span>muStar</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorXd ReducedUnsteadyNSTurb::muStar</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Online parameter value. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00244">244</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+
+</div>
+</div>
+<a id="ab82441cd889b2ee76d9521eb3e03b72f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab82441cd889b2ee76d9521eb3e03b72f">&#9670;&nbsp;</a></span>newtonObjectPPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structnewtonUnsteadyNSTurbPPE.html">newtonUnsteadyNSTurbPPE</a> ReducedUnsteadyNSTurb::newtonObjectPPE</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Function object to call the non linear solver PPE approach. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00150">150</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00238">238</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+
+</div>
+</div>
+<a id="aee38606eb530b5cd21f9202910c9c1c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee38606eb530b5cd21f9202910c9c1c1">&#9670;&nbsp;</a></span>newtonObjectPPEAve</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structnewtonUnsteadyNSTurbPPEAve.html">newtonUnsteadyNSTurbPPEAve</a> ReducedUnsteadyNSTurb::newtonObjectPPEAve</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function object to call the non linear solver PPE approach with the splitting of the eddy viscosity. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00241">241</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 
 </div>
 </div>
@@ -624,7 +800,25 @@ Public Attributes</h2></td></tr>
 
 <p>Function object to call the non linear solver sup approach. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00147">147</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00232">232</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+
+</div>
+</div>
+<a id="a117e0c951f405785056d6e044644dd6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a117e0c951f405785056d6e044644dd6a">&#9670;&nbsp;</a></span>newtonObjectSUPAve</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structnewtonUnsteadyNSTurbSUPAve.html">newtonUnsteadyNSTurbSUPAve</a> ReducedUnsteadyNSTurb::newtonObjectSUPAve</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function object to call the non linear solver sup approach with the splitting of the eddy viscosity. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00235">235</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 
 </div>
 </div>
@@ -642,25 +836,43 @@ Public Attributes</h2></td></tr>
 
 <p>Number of viscosity modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00144">144</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00214">214</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 
 </div>
 </div>
-<a id="a0e8a7c4c547f9b015ed1dfaa6336918f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e8a7c4c547f9b015ed1dfaa6336918f">&#9670;&nbsp;</a></span>nutRec</h2>
+<a id="afd3d5ccd245b880b8f5432cee4c50165"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd3d5ccd245b880b8f5432cee4c50165">&#9670;&nbsp;</a></span>nut0</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">PtrList&lt;volScalarField&gt; ReducedUnsteadyNSTurb::nutRec</td>
+          <td class="memname">Eigen::VectorXd ReducedUnsteadyNSTurb::nut0</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Reconstructed eddy viscosity field. </p>
+<p>The initial eddy viscosity reduced coefficients. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00141">141</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00229">229</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+
+</div>
+</div>
+<a id="ac934c859af103b00990aa6f275a51155"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac934c859af103b00990aa6f275a51155">&#9670;&nbsp;</a></span>nutModes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt;volScalarField&gt; ReducedUnsteadyNSTurb::nutModes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>List of pointers to store the modes for the eddy viscosity. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00220">220</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 
 </div>
 </div>
@@ -678,43 +890,25 @@ Public Attributes</h2></td></tr>
 
 <p>Pointer to the FOM problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00135">135</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00208">208</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 
 </div>
 </div>
-<a id="a523055039ac8d806e4f062adca972748"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a523055039ac8d806e4f062adca972748">&#9670;&nbsp;</a></span>time</h2>
+<a id="a32adf48a214b2c45c5a9dd85763ee486"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32adf48a214b2c45c5a9dd85763ee486">&#9670;&nbsp;</a></span>rbfCoeffMat</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double ReducedUnsteadyNSTurb::time</td>
+          <td class="memname">Eigen::MatrixXd ReducedUnsteadyNSTurb::rbfCoeffMat</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Scalar to store the current time. </p>
+<p>The matrix of the eddy viscosity RBF interoplated coefficients. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00153">153</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
-
-</div>
-</div>
-<a id="a116435e457f8789a7226f88049e769c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a116435e457f8789a7226f88049e769c3">&#9670;&nbsp;</a></span>tstart</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double ReducedUnsteadyNSTurb::tstart</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Scalar to store the final time if the online simulation. </p>
-
-<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00162">162</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html#l00223">223</a> of file <a class="el" href="ReducedUnsteadyNSTurb_8H_source.html">ReducedUnsteadyNSTurb.H</a>.</p>
 
 </div>
 </div>

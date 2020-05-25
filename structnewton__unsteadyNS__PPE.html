@@ -84,7 +84,7 @@ $(function() {
 <p>Newton object for the resolution of the reduced problem using a PPE approach.  
  <a href="structnewton__unsteadyNS__PPE.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for newton_unsteadyNS_PPE:</div>
 <div class="dyncontent">
@@ -141,8 +141,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a96428e28f88f0ec9f88bf1c7bc487f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1f469eeb186bbfacc0584a38ddc5984"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__unsteadyNS__PPE.html#ae1f469eeb186bbfacc0584a38ddc5984">y_old</a></td></tr>
 <tr class="separator:ae1f469eeb186bbfacc0584a38ddc5984"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8984f2408cc265e6a6154fde5649d45c"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__unsteadyNS__PPE.html#a8984f2408cc265e6a6154fde5649d45c">yOldOld</a></td></tr>
+<tr class="separator:a8984f2408cc265e6a6154fde5649d45c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aceb0843fbf2c6629d942c67c63a5f468"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__unsteadyNS__PPE.html#aceb0843fbf2c6629d942c67c63a5f468">BC</a></td></tr>
 <tr class="separator:aceb0843fbf2c6629d942c67c63a5f468"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab01a202a584aaef7a026d67ac0710363"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnewton__unsteadyNS__PPE.html#ab01a202a584aaef7a026d67ac0710363">tauU</a></td></tr>
+<tr class="separator:ab01a202a584aaef7a026d67ac0710363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classnewton__argument"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classnewton__argument')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classnewton__argument.html">newton_argument&lt; double &gt;</a></td></tr>
 <tr class="memitem:a907200b6b8d627bb82bf8055107a3419 inherit pub_attribs_classnewton__argument"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classnewton__argument.html#a907200b6b8d627bb82bf8055107a3419">m_inputs</a></td></tr>
 <tr class="separator:a907200b6b8d627bb82bf8055107a3419 inherit pub_attribs_classnewton__argument"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,7 +170,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Newton object for the resolution of the reduced problem using a PPE approach. </p>
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00076">76</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00078">78</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5b4717728e7e677d2d9be3ea30a4db23"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5b4717728e7e677d2d9be3ea30a4db23">&#9670;&nbsp;</a></span>newton_unsteadyNS_PPE() <span class="overload">[1/2]</span></h2>
@@ -191,7 +195,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00079">79</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00081">81</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -235,7 +239,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00080">80</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00082">82</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -266,7 +270,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8C_source.html#l00194">194</a> of file <a class="el" href="reducedUnsteadyNS_8C_source.html">reducedUnsteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8C_source.html#l00261">261</a> of file <a class="el" href="ReducedUnsteadyNS_8C_source.html">ReducedUnsteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -296,7 +300,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8C_source.html#l00143">143</a> of file <a class="el" href="reducedUnsteadyNS_8C_source.html">reducedUnsteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8C_source.html#l00172">172</a> of file <a class="el" href="ReducedUnsteadyNS_8C_source.html">ReducedUnsteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -313,7 +317,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00098">98</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00101">101</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -329,7 +333,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00096">96</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00098">98</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -345,7 +349,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00094">94</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00096">96</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -361,7 +365,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00093">93</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00095">95</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -377,7 +381,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00092">92</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00094">94</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -393,7 +397,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00095">95</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00097">97</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -409,7 +413,23 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00091">91</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00093">93</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
+
+</div>
+</div>
+<a id="ab01a202a584aaef7a026d67ac0710363"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab01a202a584aaef7a026d67ac0710363">&#9670;&nbsp;</a></span>tauU</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXd newton_unsteadyNS_PPE::tauU</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00102">102</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -425,13 +445,29 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="reducedUnsteadyNS_8H_source.html#l00097">97</a> of file <a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00099">99</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
+
+</div>
+</div>
+<a id="a8984f2408cc265e6a6154fde5649d45c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8984f2408cc265e6a6154fde5649d45c">&#9670;&nbsp;</a></span>yOldOld</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorXd newton_unsteadyNS_PPE::yOldOld</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ReducedUnsteadyNS_8H_source.html#l00100">100</a> of file <a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_ROMPROBLEMS/reducedUnsteadyNS/<a class="el" href="reducedUnsteadyNS_8H_source.html">reducedUnsteadyNS.H</a></li>
-<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_ROMPROBLEMS/reducedUnsteadyNS/<a class="el" href="reducedUnsteadyNS_8C_source.html">reducedUnsteadyNS.C</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNS/<a class="el" href="ReducedUnsteadyNS_8H_source.html">ReducedUnsteadyNS.H</a></li>
+<li>/scratch/gstabile/OpenFOAM/ITHACA-FV_public/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNS/<a class="el" href="ReducedUnsteadyNS_8C_source.html">ReducedUnsteadyNS.C</a></li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.14-->

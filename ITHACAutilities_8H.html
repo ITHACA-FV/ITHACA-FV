@@ -77,13 +77,14 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">ITHACAutilities.H File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Header file of the <a class="el" href="classITHACAutilities.html" title="Class to implement some useful functions inside ITHACA-FV.">ITHACAutilities</a> class.  
+<p>Header file of the <a class="el" href="namespaceITHACAutilities.html" title="Namespace to implement some useful assign operation of OF fields.">ITHACAutilities</a> namespace.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;fvCFD.H&quot;</code><br />
 <code>#include &quot;IOmanip.H&quot;</code><br />
@@ -98,17 +99,37 @@ $(function() {
 <code>#include &quot;mixedFvPatchFields.H&quot;</code><br />
 <code>#include &quot;fvMeshSubset.H&quot;</code><br />
 <code>#include &quot;<a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ITHACAgeometry_8H_source.html">ITHACAgeometry.H</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ITHACAsystem_8H_source.html">ITHACAsystem.H</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ITHACAerror_8H_source.html">ITHACAerror.H</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ITHACAassign_8H_source.html">ITHACAassign.H</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ITHACAcoeffsMass_8H_source.html">ITHACAcoeffsMass.H</a>&quot;</code><br />
 </div>
 <p><a href="ITHACAutilities_8H_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAutilities.html">ITHACAutilities</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to implement some useful functions inside ITHACA-FV.  <a href="classITHACAutilities.html#details">More...</a><br /></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceITHACAutilities"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAutilities.html">ITHACAutilities</a></td></tr>
+<tr class="memdesc:namespaceITHACAutilities"><td class="mdescLeft">&#160;</td><td class="mdescRight">Namespace to implement some useful assign operation of OF fields. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ab460a968d39e2814658893a6fe573a25"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAutilities.html#ab460a968d39e2814658893a6fe573a25">ITHACAutilities::rand</a> (int rows, int cols, double min, double max)</td></tr>
+<tr class="memdesc:ab460a968d39e2814658893a6fe573a25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates random matrix with random values in an interval.  <a href="namespaceITHACAutilities.html#ab460a968d39e2814658893a6fe573a25">More...</a><br /></td></tr>
+<tr class="separator:ab460a968d39e2814658893a6fe573a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58f9697be975f372cca6ae1bdd627156"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAutilities.html#a58f9697be975f372cca6ae1bdd627156">ITHACAutilities::rand</a> (int rows, Eigen::MatrixXd minMax)</td></tr>
+<tr class="memdesc:a58f9697be975f372cca6ae1bdd627156"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates random matrix with random values in an interval.  <a href="namespaceITHACAutilities.html#a58f9697be975f372cca6ae1bdd627156">More...</a><br /></td></tr>
+<tr class="separator:a58f9697be975f372cca6ae1bdd627156"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a14f554114a042546cdc45a91f2e78e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAutilities.html#a1a14f554114a042546cdc45a91f2e78e">ITHACAutilities::isInteger</a> (double ratio)</td></tr>
+<tr class="memdesc:a1a14f554114a042546cdc45a91f2e78e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function checks if ratio is an integer.  <a href="namespaceITHACAutilities.html#a1a14f554114a042546cdc45a91f2e78e">More...</a><br /></td></tr>
+<tr class="separator:a1a14f554114a042546cdc45a91f2e78e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaad4e74fc7646f1171b9671cc0227b91"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAutilities.html#aaad4e74fc7646f1171b9671cc0227b91">ITHACAutilities::isTurbulent</a> ()</td></tr>
+<tr class="memdesc:aaad4e74fc7646f1171b9671cc0227b91"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function checks if the case is turbulent.  <a href="namespaceITHACAutilities.html#aaad4e74fc7646f1171b9671cc0227b91">More...</a><br /></td></tr>
+<tr class="separator:aaad4e74fc7646f1171b9671cc0227b91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p class="">Header file of the <a class="el" href="classITHACAutilities.html" title="Class to implement some useful functions inside ITHACA-FV.">ITHACAutilities</a> class. </p>
+<div class="textblock"><p class="">Header file of the <a class="el" href="namespaceITHACAutilities.html" title="Namespace to implement some useful assign operation of OF fields.">ITHACAutilities</a> namespace. </p>
 
 <p class="definition">Definition in file <a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>.</p>
 </div></div><!-- contents -->
