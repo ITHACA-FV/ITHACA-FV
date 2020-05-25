@@ -210,7 +210,7 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
 }
 
 template<typename T>
-void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
+void ITHACAstream::exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
                                 word type, word folder)
 {
     std::string message = "The extension \"" +  type +
@@ -306,15 +306,15 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
 
 
 
-template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3 > tensor,
+template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3> tensor,
         word Name,
         word type, word folder);
 
-template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3 > tensor,
+template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3> tensor,
         word Name,
         word type, word folder);
 
-template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3 > tensor,
+template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3> tensor,
         word Name,
         word type, word folder);
 
@@ -403,22 +403,15 @@ template<typename fieldType>
 void ITHACAstream::read_fields(PtrList<fieldType>& Lfield, word Name,
                                fileName casename, label first_snap, label n_snap)
 {
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+    fvMesh& mesh = para->mesh;
+
     if (!Pstream::parRun())
     {
         Info << "######### Reading the Data for " << Name << " #########" << endl;
         fileName rootpath(".");
         label last_s;
         Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        fvMesh mesh
-        (
-            Foam::IOobject
-            (
-                Foam::fvMesh::defaultRegion,
-                casename + runTime2.timeName(),
-                runTime2,
-                Foam::IOobject::MUST_READ
-            )
-        );
 
         if (first_snap >= runTime2.times().size())
         {
@@ -443,7 +436,7 @@ void ITHACAstream::read_fields(PtrList<fieldType>& Lfield, word Name,
                 IOobject
                 (
                     Name,
-                    runTime2.times()[i].name(),
+                    casename + runTime2.times()[i].name(),
                     mesh,
                     IOobject::MUST_READ
                 ),

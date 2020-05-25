@@ -57,6 +57,7 @@ SourceFiles
 #include <zlib.h>
 #include <map>
 #include "ITHACAassert.H"
+#include "ITHACAparameters.H"
 #include "ITHACAutilities.H"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
