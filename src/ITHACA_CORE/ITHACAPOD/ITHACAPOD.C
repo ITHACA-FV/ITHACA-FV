@@ -67,7 +67,7 @@ void getNestedSnapshotMatrix(
     for (int i = 0; i < Npar; i++)
     {
         getWeightedModes(SnapMatrixNested[i], UModesNested[i], 0, 0, 0,
-                                    NnestedOut);
+                         NnestedOut);
     }
 
     for (int i = 0; i < Npar; i++)
@@ -82,11 +82,11 @@ void getNestedSnapshotMatrix(
 }
 
 template void getNestedSnapshotMatrix(PtrList<volScalarField>&
-        snapshots, PtrList<volScalarField>& ModesGlobal, word fieldName, int Npar,
-        int NnestedOut);
+                                      snapshots, PtrList<volScalarField>& ModesGlobal, word fieldName, int Npar,
+                                      int NnestedOut);
 template void getNestedSnapshotMatrix(PtrList<volVectorField>&
-        snapshots, PtrList<volVectorField>& ModesGlobal, word fieldName, int Npar,
-        int NnestedOut);
+                                      snapshots, PtrList<volVectorField>& ModesGlobal, word fieldName, int Npar,
+                                      int NnestedOut);
 
 template<class Field_type>
 void getModes(
@@ -238,11 +238,11 @@ void getModes(
 }
 
 template void getModes(PtrList<volVectorField>& snapshots,
-                                  PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
-                                  bool sup, int nmodes);
+                       PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
+                       bool sup, int nmodes);
 template void getModes(PtrList<volScalarField>& snapshots,
-                                  PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
-                                  bool sup, int nmodes);
+                       PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
+                       bool sup, int nmodes);
 
 
 template<class Field_type>
@@ -379,12 +379,12 @@ void getWeightedModes(
 }
 
 template void getWeightedModes(PtrList<volScalarField>& snapshots,
-        PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
-        bool sup, int nmodes);
+                               PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
+                               bool sup, int nmodes);
 
 template void getWeightedModes(PtrList<volVectorField>& snapshots,
-        PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
-        bool sup, int nmodes);
+                               PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
+                               bool sup, int nmodes);
 
 template<class Field_type>
 void getModesSVD(
@@ -473,12 +473,12 @@ void getModesSVD(
 }
 
 template void getModesSVD(PtrList<volScalarField>& snapshots,
-                                     PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
-                                     bool sup, int nmodes);
+                          PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
+                          bool sup, int nmodes);
 
 template void getModesSVD(PtrList<volVectorField>& snapshots,
-                                     PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
-                                     bool sup, int nmodes);
+                          PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
+                          bool sup, int nmodes);
 
 
 
@@ -540,7 +540,7 @@ Eigen::MatrixXd corMatrix(PtrList<volVectorField>& snapshots)
 /// Construct the Correlation Matrix for Vector Field
 template<>
 Eigen::MatrixXd corMatrix(List<Eigen::SparseMatrix<double>>&
-                                     snapshots)
+                          snapshots)
 {
     Info << "########## Filling the correlation matrix for the matrix list ##########"
          << endl;
@@ -605,7 +605,7 @@ Eigen::MatrixXd corMatrix(List<Eigen::VectorXd>& snapshots)
 /// Export the Bases
 template<>
 void exportBases(PtrList<volVectorField>& s,
-                            PtrList<volVectorField>& bases, word fieldName, bool sup)
+                 PtrList<volVectorField>& bases, word fieldName, bool sup)
 {
     if (sup)
     {
@@ -640,7 +640,7 @@ void exportBases(PtrList<volVectorField>& s,
 /// Export the Bases
 template<>
 void exportBases(PtrList<volScalarField>& s,
-                            PtrList<volScalarField>& bases, word fieldName, bool sup)
+                 PtrList<volScalarField>& bases, word fieldName, bool sup)
 {
     if (sup)
     {
@@ -672,7 +672,7 @@ void exportBases(PtrList<volScalarField>& s,
 }
 
 void exportEigenvalues(scalarField Eigenvalues, fileName name,
-                                  bool sup)
+                       bool sup)
 {
     if (sup)
     {
@@ -701,7 +701,7 @@ void exportEigenvalues(scalarField Eigenvalues, fileName name,
 }
 
 void exportcumEigenvalues(scalarField cumEigenvalues, fileName name,
-                                     bool sup)
+                          bool sup)
 {
     if (sup)
     {
@@ -732,7 +732,7 @@ void exportcumEigenvalues(scalarField cumEigenvalues, fileName name,
 
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
         DEIMmodes(List<Eigen::SparseMatrix<double>>& A,
-                             List<Eigen::VectorXd>& b, int nmodesA, int nmodesB, word MatrixName)
+                  List<Eigen::VectorXd>& b, int nmodesA, int nmodesB, word MatrixName)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     List<Eigen::SparseMatrix<double>> ModesA(nmodesA);
@@ -951,9 +951,9 @@ void GrammSchmidt(Eigen::MatrixXd& Matrix)
 
 template<>
 void getModes(PtrList<volScalarField>& snapshots,
-                         PtrList<volScalarField>& modes, PtrList<volScalarField>& Volumes,
-                         word fieldName, bool podex,
-                         bool supex, bool sup, int nmodes)
+              PtrList<volScalarField>& modes, PtrList<volScalarField>& Volumes,
+              word fieldName, bool podex,
+              bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
 
@@ -1101,9 +1101,9 @@ void getModes(PtrList<volScalarField>& snapshots,
 
 template<>
 void getModes(PtrList<volVectorField>& snapshots,
-                         PtrList<volVectorField>& modes, PtrList<volScalarField>& Volumes,
-                         word fieldName, bool podex,
-                         bool supex, bool sup, int nmodes)
+              PtrList<volVectorField>& modes, PtrList<volScalarField>& Volumes,
+              word fieldName, bool podex,
+              bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
 
@@ -1251,7 +1251,7 @@ void getModes(PtrList<volVectorField>& snapshots,
 template<typename type_matrix>
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
         DEIMmodes(PtrList<type_matrix>& MatrixList, int nmodesA, int nmodesB,
-                             word MatrixName)
+                  word MatrixName)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     List<Eigen::SparseMatrix<double>> ModesA(nmodesA);
@@ -1424,13 +1424,13 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 
 template std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 DEIMmodes(PtrList<fvScalarMatrix>& MatrixList, int nmodesA,
-                     int nmodesB,
-                     word MatrixName);
+          int nmodesB,
+          word MatrixName);
 
 template std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 DEIMmodes(PtrList<fvVectorMatrix>& MatrixList, int nmodesA,
-                     int nmodesB,
-                     word MatrixName);
+          int nmodesB,
+          word MatrixName);
 
 template<typename T>
 PtrList<GeometricField<T, fvPatchField, volMesh>> DEIMmodes(
@@ -1550,9 +1550,9 @@ PtrList<GeometricField<T, fvPatchField, volMesh>> DEIMmodes(
 
 template<class Field_type, class Field_type_2>
 void getModes(PtrList<Field_type>& snapshots,
-                         PtrList<Field_type>& modes, PtrList<Field_type_2>& fields2, word fieldName,
-                         bool podex,
-                         bool supex, bool sup, int nmodes)
+              PtrList<Field_type>& modes, PtrList<Field_type_2>& fields2, word fieldName,
+              bool podex,
+              bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
 
@@ -1690,16 +1690,16 @@ void getModes(PtrList<Field_type>& snapshots,
 }
 
 template void getModes(PtrList<surfaceScalarField>& snapshots,
-                                  PtrList<surfaceScalarField>& modes,
-                                  PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
-                                  bool sup,
-                                  int nmodes);
+                       PtrList<surfaceScalarField>& modes,
+                       PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
+                       bool sup,
+                       int nmodes);
 
 template void getModes(PtrList<volScalarField>& snapshots,
-                                  PtrList<volScalarField>& modes,
-                                  PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
-                                  bool sup,
-                                  int nmodes);
+                       PtrList<volScalarField>& modes,
+                       PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
+                       bool sup,
+                       int nmodes);
 
 template PtrList<GeometricField<scalar, fvPatchField, volMesh>>
 DEIMmodes(
