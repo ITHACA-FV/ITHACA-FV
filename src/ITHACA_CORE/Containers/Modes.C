@@ -161,7 +161,7 @@ GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
     }
 
     GeometricField<T, fvPatchField, volMesh> field(Name,
-            (this->toPtrList())[0] * 0);
+            (this->toPtrList())[0]);
     int Nmodes = Coeff.rows();
     Eigen::VectorXd InField = EigenModes[0].leftCols(Nmodes) * Coeff;
     field = Foam2Eigen::Eigen2field(field, InField);

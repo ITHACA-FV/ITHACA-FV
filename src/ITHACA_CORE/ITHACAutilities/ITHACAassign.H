@@ -134,14 +134,6 @@ void assignIF(GeometricField<T, fvPatchField, volMesh>& field, T& value,
 ///
 void assignONE(volScalarField& s, List<int>& L);
 
-//--------------------------------------------------------------------------
-/// Assign Boundary Condition to a volVectorField
-///
-/// @param[in]  s       field where you want to assign the BC.
-/// @param[in]  BC_ind  The BC index.
-/// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
-///
-void assignBC(volVectorField& s, label BC_ind, Vector<double>& value);
 
 //--------------------------------------------------------------------------
 /// Assign uniform Boundary Condition to a volScalarField
@@ -150,34 +142,52 @@ void assignBC(volVectorField& s, label BC_ind, Vector<double>& value);
 /// @param[in]  BC_ind  The BC index.
 /// @param[in]  value   The value you want to assign (it must be a double).
 ///
-void assignBC(volScalarField& s, label BC_ind, double& value);
+void assignBC(volScalarField& s, label BC_ind, double value);
 
 //--------------------------------------------------------------------------
 /// Assign Boundary Condition to a volScalarField
 ///
 /// @param[in]  s       field where you want to assign the BC.
 /// @param[in]  BC_ind  The BC index.
-/// @param[in]  value   The value you want to assign (it must be a List<double>).
+/// @param[in]  valueVec   The value you want to assign (it must be an Eigen MatrixXd).
 ///
-void assignBC(volScalarField& s, label BC_ind, List<double> value);
+void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd valueVec);
+
+//--------------------------------------------------------------------------
+/// Assign Boundary Condition to a volScalarField
+///
+/// @param[in]  s       field where you want to assign the BC.
+/// @param[in]  BC_ind  The BC index.
+/// @param[in]  valueList   The value you want to assign (it must be a list of doubles).
+///
+void assignBC(volScalarField& s, label BC_ind, List<double> valueList);
 
 //--------------------------------------------------------------------------
 /// Assign Boundary Condition to a volVectorField
 ///
 /// @param[in]  s       field where you want to assign the BC.
 /// @param[in]  BC_ind  The BC index.
-/// @param[in]  valueVec   The value you want to assign (it must be an OpenFOAM vector).
+/// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
+///
+void assignBC(volVectorField& s, label BC_ind, vector value);
+
+//--------------------------------------------------------------------------
+/// Assign Boundary Condition to a volVectorField
+///
+/// @param[in]  s       field where you want to assign the BC.
+/// @param[in]  BC_ind  The BC index.
+/// @param[in]  valueVec   The value you want to assign (it must be an Eigen MatrixXd).
 ///
 void assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd valueVec);
 
 //--------------------------------------------------------------------------
-/// Assign Boundary Condition to a volScalarField
+/// Assign Boundary Condition to a volVectorField
 ///
 /// @param[in]  s       field where you want to assign the BC.
 /// @param[in]  BC_ind  The BC index.
-/// @param[in]  valueVec   The value you want to assign (it must be a double).
+/// @param[in]  valueList   The value you want to assign (it must be a list of doubles).
 ///
-void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd valueVec);
+void assignBC(volVectorField& s, label BC_ind, List<vector> valueList);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
