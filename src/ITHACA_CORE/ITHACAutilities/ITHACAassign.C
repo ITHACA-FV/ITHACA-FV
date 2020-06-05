@@ -260,8 +260,6 @@ void assignBC(volVectorField& s, label BC_ind,
 {
     word typeBC = s.boundaryField()[BC_ind].type();
     int sizeBC = s.boundaryField()[BC_ind].size();
-    std::cout << sizeBC << std::endl;
-    std::cout << valueList.size() << std::endl;
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
 
