@@ -135,19 +135,6 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
 
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
-        ///             coefficients
-        ///
-        /// @param[in]  Coeff  The coefficients of the POD expansion
-        /// @param[in]  Name   The name of the field you want to return
-        ///
-        /// @return     A volScalarField or volScalarField given by the reconstruction.
-        ///
-        GeometricField<T, fvPatchField, volMesh> reconstruct(Eigen::MatrixXd& Coeff,
-                word Name);
-
-
-        //----------------------------------------------------------------------
-        /// @brief      Function to reconstruct the solution starting from the
         ///             coefficients, in this case the field is passed as
         ///             input/output
         ///
@@ -162,23 +149,51 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
             GeometricField<T, fvPatchField, volMesh>& inputField, Eigen::MatrixXd Coeff,
             word Name);
 
-        PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
-                    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
-                    int numberOfModes = 0, word innerProduct = "L2");
+        //----------------------------------------------------------------------
+        /// @brief      Function to project a list of fields into the modes manifold
+        ///
+        /// @param[in]  snapshots  The list of snapshots to be projected
+        /// @param[in]  numberOfModes       The number of modes you want to use
+        /// @param[in]  innerProduct        The inner product to be applied
+        ///
+        void projectSnapshots(PtrList<GeometricField<T, fvPatchField, volMesh>>
+                              snapshots, PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+                              int numberOfModes = 0, word innerProduct = "L2");
 
-        PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
-                    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
-                    word innerProduct = "L2");
+        //----------------------------------------------------------------------
+        /// @brief      Function to project a list of fields into the modes manifold by the use of all the modes
+        ///
+        /// @param[in]  snapshots  The list of snapshots to be projected
+        /// @param[in]  innerProduct        The inner product to be applied
+        ///
+        void projectSnapshots(PtrList<GeometricField<T, fvPatchField, volMesh>>
+                              snapshots, PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+                              word innerProduct = "L2");
 
-        PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
-                    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
-                    PtrList<volScalarField> Volumes,
-                    int numberOfModes = 0, word innerProduct = "L2");
+        //----------------------------------------------------------------------
+        /// @brief      Function to project a list of fields into the modes manifold
+        ///
+        /// @param[in]  snapshots  The list of snapshots to be projected
+        /// @param[in]  Volumes       The mesh volumes for the inner product
+        /// @param[in]  numberOfModes       The number of modes you want to use
+        /// @param[in]  innerProduct        The inner product to be applied
+        ///
+        void projectSnapshots(PtrList<GeometricField<T, fvPatchField, volMesh>>
+                              snapshots, PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+                              PtrList<volScalarField> Volumes,
+                              int numberOfModes = 0, word innerProduct = "L2");
 
-        PtrList<GeometricField<T, fvPatchField, volMesh>> projectSnapshots(
-                    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
-                    PtrList<volScalarField> Volumes,
-                    word innerProduct);
+        //----------------------------------------------------------------------
+        /// @brief      Function to project a list of fields into the modes manifold by the use of all the modes
+        ///
+        /// @param[in]  snapshots  The list of snapshots to be projected
+        /// @param[in]  Volumes       The mesh volumes for the inner product
+        /// @param[in]  innerProduct        The inner product to be applied
+        ///
+        void projectSnapshots(PtrList<GeometricField<T, fvPatchField, volMesh>>
+                              snapshots, PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+                              PtrList<volScalarField> Volumes,
+                              word innerProduct);
 };
 
 #endif

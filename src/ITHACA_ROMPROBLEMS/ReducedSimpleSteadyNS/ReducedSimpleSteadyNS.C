@@ -149,7 +149,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
 
         volScalarField& nut = const_cast<volScalarField&>
                               (problem->_mesh().lookupObject<volScalarField>("nut"));
-        nut = problem->nutModes.reconstruct(nutCoeff, "nut");
+        problem->nutModes.reconstruct(nut, nutCoeff, "nut");
         ITHACAstream::exportSolution(nut, name(counter), Folder);
     }
 
