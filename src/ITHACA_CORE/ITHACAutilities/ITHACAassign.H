@@ -189,6 +189,48 @@ void assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd valueVec);
 ///
 void assignBC(volVectorField& s, label BC_ind, List<vector> valueList);
 
+//------------------------------------------------------------------------------
+/// @brief      Assign Boundary Condition to a surfaceField
+///
+/// @param      field   field where you want to assign the BC.
+/// @param[in]  BC_ind  The bc ind
+/// @param      value   you want to assign (it must be a list of double or vector).
+///
+/// @tparam     T type of field (surfaceVectorField or surfaceScalarField)
+///
+template<typename T>
+void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& field,
+              label BC_ind,
+              List<T>& value);
+
+//------------------------------------------------------------------------------
+/// @brief      Assign Boundary Condition to a surfaceField
+///
+/// @param      field   field where you want to assign the BC.
+/// @param[in]  BC_ind  The bc ind
+/// @param      value   you want to assign (it must be column matrix).
+///
+/// @tparam     T type of field (surfaceVectorField or surfaceScalarField)
+///
+template<typename T>
+void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& field,
+              label BC_ind,
+              Eigen::MatrixXd& value);
+
+//------------------------------------------------------------------------------
+/// @brief      Assign Boundary Condition to a surfaceField
+///
+/// @param      field   field where you want to assign the BC.
+/// @param[in]  BC_ind  The bc ind
+/// @param      value   you want to assign (it must be a double or vector).
+///
+/// @tparam     T type of field (surfaceVectorField or surfaceScalarField)
+///
+template<typename T>
+void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& field,
+              label BC_ind,
+              T& value);
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
 //------------------------------------------------------------------------------

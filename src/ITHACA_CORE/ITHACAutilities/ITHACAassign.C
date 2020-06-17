@@ -292,6 +292,115 @@ void assignBC(volVectorField& s, label BC_ind,
     }
 }
 
+template<typename T>
+void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& s, label BC_ind,
+              List<T>& valueList)
+{
+    word typeBC = s.boundaryField()[BC_ind].type();
+    int sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC == valueList.size(),
+             "The size of the given values list has to be equal to the dimension of the boundaryField");
+
+    if (typeBC == "fixedValue" || typeBC == "calculated"
+            || typeBC == "fixedFluxPressure" ||  typeBC == "processor")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        fixedGradientFvPatchField<T>& Tpatch =
+            refCast<fixedGradientFvPatchField<T>>(s.boundaryFieldRef()[BC_ind]);
+        Field<T>& gradTpatch = Tpatch.gradient();
+        forAll(gradTpatch, faceI)
+        {
+            gradTpatch[faceI] = valueList[faceI];
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "freestream")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
+        }
+
+        freestreamFvPatchField<T>& Tpatch =
+            refCast<freestreamFvPatchField<T>>(s.boundaryFieldRef()[BC_ind]);
+        Field<T>& gradTpatch = Tpatch.freestreamValue();
+        forAll(gradTpatch, faceI)
+        {
+            gradTpatch[faceI] = valueList[faceI];
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "empty")
+    {
+    }
+}
+
+template void assignBC(
+    GeometricField<scalar, fvsPatchField, surfaceMesh>& s, label BC_ind,
+    List<scalar>& valueList);
+template void assignBC(
+    GeometricField<vector, fvsPatchField, surfaceMesh>& s, label BC_ind,
+    List<vector>& valueList);
+
+template<typename T>
+void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& s, label BC_ind,
+              T& value)
+{
+    int sizeBC = s.boundaryField()[BC_ind].size();
+    List<T> valueList(sizeBC);
+
+    for (label i = 0; i < sizeBC; i++)
+    {
+        valueList[i] = value;
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
+
+template void assignBC(
+    GeometricField<scalar, fvsPatchField, surfaceMesh>& s, label BC_ind,
+    scalar& valueList);
+template void assignBC(
+    GeometricField<vector, fvsPatchField, surfaceMesh>& s, label BC_ind,
+    vector& valueList);
+
+void assignBC(GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
+              label BC_ind, Eigen::MatrixXd& valueVec)
+{
+    int sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC  == valueVec.rows() && valueVec.cols() == 1,
+             "The given matrix must be a column one with the size equal to 3 times the dimension of the boundaryField");
+    List<scalar> valueList(sizeBC);
+
+    for (label i = 0; i < sizeBC; i++)
+    {
+        valueList[i] = valueVec(i);
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
+
+void assignBC(GeometricField<vector, fvsPatchField, surfaceMesh>& s,
+              label BC_ind, Eigen::MatrixXd& valueVec)
+{
+    int sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC * 3  == valueVec.rows() && valueVec.cols() == 1,
+             "The given matrix must be a column one with the size equal to the dimension of the boundaryField");
+    List<vector> valueList(sizeBC);
+
+    for (label i = 0; i < sizeBC; i++)
+    {
+        valueList[i].component(0) = valueVec(i);
+        valueList[i].component(1) = valueVec(i + sizeBC);
+        valueList[i].component(2) = valueVec(i + sizeBC * 2);
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
 
 template<typename T>
 void setBoxToValue(GeometricField<T, fvPatchField, volMesh>& field,
