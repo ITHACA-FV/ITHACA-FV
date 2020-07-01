@@ -100,8 +100,17 @@ class UnsteadyNSTurbIntrusive: public unsteadyNS
         /// Turbulent viscosity tensor
         Eigen::Tensor<double, 3 > ct1Tensor;
 
+        /// Turbulent viscosity tensor PPE approach
+        Eigen::Tensor<double, 3 > ct1PPETensor;
+
+        /// Turbulent viscosity tensor PPE approach
+        Eigen::Tensor<double, 3 > ct2PPETensor;
+
         /// Total Turbulent tensor
         Eigen::Tensor<double, 3 > cTotalTensor;
+
+        /// Total Turbulent tensor PPE approach
+        Eigen::Tensor<double, 3 > cTotalPPETensor;
 
         /// Total B Matrix
         Eigen::MatrixXd bTotalMatrix;
@@ -157,7 +166,6 @@ class UnsteadyNSTurbIntrusive: public unsteadyNS
         ///
         Eigen::Tensor<double, 3 > turbulenceTensor1(label nModes);
 
-
         //--------------------------------------------------------------------------
         /// @brief      Method to compute one of the turbulence tensors
         ///
@@ -166,6 +174,26 @@ class UnsteadyNSTurbIntrusive: public unsteadyNS
         /// @return     ct2 tensor for the turbulence treatement
         ///
         Eigen::Tensor<double, 3 > turbulenceTensor2(label nModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Method to compute one of the turbulence eddy viscosity tensors in the PPE approach
+        ///
+        /// @param[in]  nUModes  The number of modes used in the online stage for the velocity and eddy viscosity fields
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
+        ///
+        /// @return     ct1PPE tensor for the turbulence treatement in the PPE approach
+        ///
+        Eigen::Tensor<double, 3 > turbulencePPETensor1(label nUModes, label nPModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Method to compute one of the turbulence eddy viscosity tensors in the PPE approach
+        ///
+        /// @param[in]  nUModes  The number of modes used in the online stage for the velocity and eddy viscosity fields
+        /// @param[in]  nPModes  The number of modes used in the online stage for the pressure field
+        ///
+        /// @return     ct2PPE tensor for the turbulence treatement in the PPE approach
+        ///
+        Eigen::Tensor<double, 3 > turbulencePPETensor2(label nUModes, label nPModes);
 
         //--------------------------------------------------------------------------
         /// @brief      Diffusive Term
