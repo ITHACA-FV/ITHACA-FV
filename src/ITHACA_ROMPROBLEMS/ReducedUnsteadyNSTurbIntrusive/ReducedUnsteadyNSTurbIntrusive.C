@@ -313,7 +313,7 @@ void ReducedUnsteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
     tmp_sol(0) = time;
     tmp_sol.col(0).tail(y.rows()) = y;
 
-    if (time != 0)
+    if ((time != 0) || (startFromZero == true))
     {
         online_solution[counter] = tmp_sol;
         counter ++;
@@ -321,10 +321,6 @@ void ReducedUnsteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
         nextStore += numberOfStores;
     }
 
-    online_solution[counter] = tmp_sol;
-    counter ++;
-    counter2++;
-    nextStore += numberOfStores;
     // Create nonlinear solver object
     Eigen::HybridNonLinearSolver<newtonUnsteadyNSTurbIntrusive> hnls(
         newtonObject);
