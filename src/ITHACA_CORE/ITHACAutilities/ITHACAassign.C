@@ -131,21 +131,6 @@ template void assignIF(GeometricField<scalar, fvPatchField, volMesh>& field,
 template void assignIF(GeometricField<vector, fvPatchField, volMesh>& field,
                        vector& value, int index);
 
-template<typename T>
-void assignIF(GeometricField<T, fvPatchField, volMesh>& s,
-              GeometricField<T, fvPatchField, volMesh>& value)
-{
-    for (label i = 0; i < s.internalField().size(); i++)
-    {
-        s.ref()[i] = value.internalField()[i];
-    }
-}
-
-template void assignIF(
-    GeometricField<scalar, fvPatchField, volMesh>& field, GeometricField<scalar, fvPatchField, volMesh>& value);
-template void assignIF(
-    GeometricField<vector, fvPatchField, volMesh>& field, GeometricField<vector, fvPatchField, volMesh>& value);
-
 void assignONE(volScalarField& s, List<int>& L)
 {
     for (label i = 0; i < L.size(); i++)
