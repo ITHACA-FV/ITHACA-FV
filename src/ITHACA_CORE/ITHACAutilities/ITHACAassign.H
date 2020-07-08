@@ -126,6 +126,18 @@ void assignIF(GeometricField<T, fvPatchField, volMesh>& field, T& value,
               int index);
 
 //--------------------------------------------------------------------------
+/// Assign internal field
+///
+/// @param[in,out]  field  Field to which assign the internal field
+/// @param          value  The value you want to assign
+/// @param          index  The index where you want assign
+///
+/// @tparam         T      type of field (volVectorField or volScalarField)
+///
+template<typename T>
+void assignIF(GeometricField<T, fvPatchField, volMesh>& field, GeometricField<T, fvPatchField, volMesh>& value);
+
+//--------------------------------------------------------------------------
 /// Assign one to volScalarField
 ///
 /// @param[in,out] s     field where you want to assign the internal field

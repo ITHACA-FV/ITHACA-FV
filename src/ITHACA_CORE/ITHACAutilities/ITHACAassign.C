@@ -131,6 +131,21 @@ template void assignIF(GeometricField<scalar, fvPatchField, volMesh>& field,
 template void assignIF(GeometricField<vector, fvPatchField, volMesh>& field,
                        vector& value, int index);
 
+template<typename T>
+void assignIF(GeometricField<T, fvPatchField, volMesh>& s,
+              GeometricField<T, fvPatchField, volMesh>& value)
+{
+    for (label i = 0; i < s.internalField().size(); i++)
+    {
+        s.ref()[i] = value.internalField()[i];
+    }
+}
+
+template void assignIF(
+    GeometricField<scalar, fvPatchField, volMesh>& field, GeometricField<scalar, fvPatchField, volMesh>& value);
+template void assignIF(
+    GeometricField<vector, fvPatchField, volMesh>& field, GeometricField<vector, fvPatchField, volMesh>& value);
+
 void assignONE(volScalarField& s, List<int>& L)
 {
     for (label i = 0; i < L.size(); i++)
@@ -498,9 +513,10 @@ template void changeBCtype<vector>
 (GeometricField<vector, fvPatchField, volMesh>& field, word BCtype,
  label BC_ind);
 
+template<typename type_f>
 void assignMixedBC(
-    GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
-    Eigen::MatrixXd& value, Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac)
+    GeometricField<type_f, fvPatchField, volMesh>& field, label BC_ind,
+    List<type_f>& value, List<type_f>& grad, List<scalar>& valueFrac)
 {
     std::string message = "Patch is NOT mixed. It is of type: " +
                           field.boundaryField()[BC_ind].type();
@@ -508,78 +524,23 @@ void assignMixedBC(
 
     if (field.boundaryField()[BC_ind].type() == "mixed")
     {
-        mixedFvPatchScalarField& Tpatch =
-            refCast<mixedFvPatchScalarField>(field.boundaryFieldRef()[BC_ind]);
-        scalarField& valueTpatch = Tpatch.refValue();
-        scalarField& gradTpatch = Tpatch.refGrad();
-        scalarField& valueFracTpatch = Tpatch.valueFraction();
-        Foam2Eigen::Eigen2field(valueTpatch, value);
-        Foam2Eigen::Eigen2field(gradTpatch, grad);
-        Foam2Eigen::Eigen2field(valueFracTpatch, valueFrac);
-    }
-}
-
-void assignMixedBC(
-    GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
-    Eigen::MatrixXd& value, Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac)
-{
-    std::string message = "Patch is NOT mixed. It is of type: " +
-                          field.boundaryField()[BC_ind].type();
-    M_Assert(field.boundaryField()[BC_ind].type() == "mixed", message.c_str());
-
-    if (field.boundaryField()[BC_ind].type() == "mixed")
-    {
-        mixedFvPatchVectorField& Tpatch =
-            refCast<mixedFvPatchVectorField>(field.boundaryFieldRef()[BC_ind]);
-        vectorField& valueTpatch = Tpatch.refValue();
-        vectorField& gradTpatch = Tpatch.refGrad();
-        scalarField& valueFracTpatch = Tpatch.valueFraction();
-        Foam2Eigen::Eigen2field(valueTpatch, value);
-        Foam2Eigen::Eigen2field(gradTpatch, grad);
-        Foam2Eigen::Eigen2field(valueFracTpatch, valueFrac);
-    }
-}
-
-void assignMixedBC(
-    GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
-    List<scalar>& value, List<scalar>& grad, List<scalar>& valueFrac)
-{
-    std::string message = "Patch is NOT mixed. It is of type: " +
-                          field.boundaryField()[BC_ind].type();
-    M_Assert(field.boundaryField()[BC_ind].type() == "mixed", message.c_str());
-
-    if (field.boundaryField()[BC_ind].type() == "mixed")
-    {
-        mixedFvPatchScalarField& Tpatch =
-            refCast<mixedFvPatchScalarField>(field.boundaryFieldRef()[BC_ind]);
-        scalarField& valueTpatch = Tpatch.refValue();
-        scalarField& gradTpatch = Tpatch.refGrad();
-        scalarField& valueFracTpatch = Tpatch.valueFraction();
+        mixedFvPatchField<type_f>& Tpatch =
+            refCast<mixedFvPatchField<type_f>>(field.boundaryFieldRef()[BC_ind]);
+        Field<type_f>& valueTpatch = Tpatch.refValue();
+        Field<type_f>& gradTpatch = Tpatch.refGrad();
+        Field<scalar>& valueFracTpatch = Tpatch.valueFraction();
         valueTpatch = value;
         gradTpatch = grad;
         valueFracTpatch = valueFrac;
     }
 }
 
-void assignMixedBC(
-    GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
-    List<vector>& value, List<vector>& grad, List<scalar>& valueFrac)
-{
-    std::string message = "Patch is NOT mixed. It is of type: " +
-                          field.boundaryField()[BC_ind].type();
-    M_Assert(field.boundaryField()[BC_ind].type() == "mixed", message.c_str());
+template void assignMixedBC<scalar>(
+    GeometricField<scalar, fvPatchField, volMesh>& field, label BC_ind,
+    List<scalar>& value, List<scalar>& grad, List<scalar>& valueFrac);
 
-    if (field.boundaryField()[BC_ind].type() == "mixed")
-    {
-        mixedFvPatchVectorField& Tpatch =
-            refCast<mixedFvPatchVectorField>(field.boundaryFieldRef()[BC_ind]);
-        vectorField& valueTpatch = Tpatch.refValue();
-        vectorField& gradTpatch = Tpatch.refGrad();
-        scalarField& valueFracTpatch = Tpatch.valueFraction();
-        valueTpatch = value;
-        gradTpatch = grad;
-        valueFracTpatch = valueFrac;
-    }
-}
+template void assignMixedBC<vector>(
+    GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
+    List<vector>& value, List<vector>& grad, List<scalar>& valueFrac);
 
 }
