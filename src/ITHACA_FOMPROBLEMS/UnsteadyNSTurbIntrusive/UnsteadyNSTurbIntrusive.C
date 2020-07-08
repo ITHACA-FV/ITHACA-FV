@@ -543,6 +543,30 @@ void UnsteadyNSTurbIntrusive::projectPPE(fileName folder, label nUModes,
             ct2Tensor = turbulenceTensor2(nUModes);
         }
 
+        word ct1PPEStr = "ct1PPE_" + name(nUModes) + "_" + name(nPModes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct1PPEStr))
+        {
+            ITHACAstream::ReadDenseTensor(ct1PPETensor, "./ITHACAoutput/Matrices/",
+                                          ct1PPEStr);
+        }
+        else
+        {
+            ct1PPETensor = turbulencePPETensor1(nUModes, nPModes);
+        }
+
+        word ct2PPEStr = "ct2PPE_" + name(nUModes) + "_" + name(nPModes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct2PPEStr))
+        {
+            ITHACAstream::ReadDenseTensor(ct2PPETensor, "./ITHACAoutput/Matrices/",
+                                          ct2PPEStr);
+        }
+        else
+        {
+            ct2PPETensor = turbulencePPETensor2(nUModes, nPModes);
+        }
+
         word G_str = "G_" + name(nUModes) + "_" + name(nPModes) + "_t";
 
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + G_str))
@@ -569,6 +593,8 @@ void UnsteadyNSTurbIntrusive::projectPPE(fileName folder, label nUModes,
         ct1Tensor = turbulenceTensor1(nUModes);
         ct2Tensor = turbulenceTensor2(nUModes);
         D_matrix = laplacianPressure(nPModes);
+        ct1PPETensor = turbulencePPETensor1(nUModes, nPModes);
+        ct2PPETensor = turbulencePPETensor2(nUModes, nPModes);
         gTensor = divMomentum(nUModes, nPModes);
         BC1_matrix = pressureBC1(nUModes, nPModes);
         bc2Tensor = pressureBC2(nUModes, nPModes);
@@ -593,6 +619,10 @@ void UnsteadyNSTurbIntrusive::projectPPE(fileName folder, label nUModes,
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(BC3_matrix, "BC3", "python",
                                    "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct1PPETensor, "ct1PPE", "python",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct2PPETensor, "ct2PPE", "python",
+                                   "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(gTensor, "G", "python", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(bc2Tensor, "BC2", "python",
                                    "./ITHACAoutput/Matrices/");
@@ -615,6 +645,10 @@ void UnsteadyNSTurbIntrusive::projectPPE(fileName folder, label nUModes,
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(BC3_matrix, "BC3", "matlab",
                                    "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct1PPETensor, "ct1PPE", "matlab",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct2PPETensor, "ct2PPE", "matlab",
+                                   "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(gTensor, "G", "matlab", "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(bc2Tensor, "BC2", "matlab",
                                    "./ITHACAoutput/Matrices/");
@@ -636,6 +670,10 @@ void UnsteadyNSTurbIntrusive::projectPPE(fileName folder, label nUModes,
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportMatrix(BC3_matrix, "BC3", "eigen",
                                    "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct1PPETensor, "ct1PPE_", "eigen",
+                                   "./ITHACAoutput/Matrices/ct1PPE");
+        ITHACAstream::exportTensor(ct2PPETensor, "ct2PPE_", "eigen",
+                                   "./ITHACAoutput/Matrices/ct2PPE");
         ITHACAstream::exportTensor(gTensor, "G", "eigen",
                                    "./ITHACAoutput/Matrices/G");
         ITHACAstream::exportTensor(bc2Tensor, "BC2_", "eigen",
@@ -651,6 +689,8 @@ void UnsteadyNSTurbIntrusive::projectPPE(fileName folder, label nUModes,
     bTotalMatrix = bMatrix + btMatrix;
     cTotalTensor.resize(nUModes, nUModes, nUModes);
     cTotalTensor = convTensor - ct1Tensor - ct2Tensor;
+    cTotalPPETensor.resize(nPModes, nUModes, nUModes);
+    cTotalPPETensor = ct1PPETensor + ct2PPETensor;
 }
 
 Eigen::MatrixXd UnsteadyNSTurbIntrusive::diffusiveTerm(label nModes)
@@ -1018,4 +1058,63 @@ List< Eigen::MatrixXd > UnsteadyNSTurbIntrusive::bcVelocityMat(label nModes)
     ITHACAstream::exportMatrix(bcVelMat, "bcVelMat", "eigen",
                                "./ITHACAoutput/Matrices/bcVelMat");
     return bcVelMat;
+}
+
+Eigen::Tensor<double, 3> UnsteadyNSTurbIntrusive::turbulencePPETensor1(
+    label nUModes, label nPModes)
+{
+    Eigen::Tensor<double, 3> ct1PPETensor;
+    ct1PPETensor.resize(nPModes, nUModes, nUModes);
+
+    for (label i = 0; i < nPModes; i++)
+    {
+        for (label j = 0; j < nUModes; j++)
+        {
+            for (label k = 0; k < nUModes; k++)
+            {
+                ct1PPETensor(i, j, k) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & (
+                                            fvc::laplacian(
+                                                nutModes[j], Umodes[k]))).value();
+            }
+        }
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(ct1PPETensor, sumOp<Eigen::Tensor<double, 3>>());
+    }
+
+    // Export the tensor
+    ITHACAstream::SaveDenseTensor(ct1PPETensor, "./ITHACAoutput/Matrices/",
+                                  "ct1PPE_" + name(nUModes) + "_" + name(nPModes) + "_t");
+    return ct1PPETensor;
+}
+
+Eigen::Tensor<double, 3> UnsteadyNSTurbIntrusive::turbulencePPETensor2(
+    label nUModes, label nPModes)
+{
+    Eigen::Tensor<double, 3> ct2PPETensor;
+    ct2PPETensor.resize(nPModes, nUModes, nUModes);
+
+    for (label i = 0; i < nPModes; i++)
+    {
+        for (label j = 0; j < nUModes; j++)
+        {
+            for (label k = 0; k < nUModes; k++)
+            {
+                ct2PPETensor(i, j, k) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & ((fvc::div(
+                                            nutModes[j] * dev2((fvc::grad(Umodes[k]))().T()))))).value();
+            }
+        }
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(ct2PPETensor, sumOp<Eigen::Tensor<double, 3>>());
+    }
+
+    // Export the tensor
+    ITHACAstream::SaveDenseTensor(ct2PPETensor, "./ITHACAoutput/Matrices/",
+                                  "ct2PPE_" + name(nUModes) + "_" + name(nPModes) + "_t");
+    return ct2PPETensor;
 }

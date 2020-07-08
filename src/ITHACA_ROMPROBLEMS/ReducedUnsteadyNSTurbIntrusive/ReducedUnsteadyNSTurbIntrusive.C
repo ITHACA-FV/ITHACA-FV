@@ -179,6 +179,7 @@ int newtonUnsteadyNSTurbIntrusivePPE::operator()(const Eigen::VectorXd& x,
     Eigen::MatrixXd cc(1, 1);
     Eigen::MatrixXd gg(1, 1);
     Eigen::MatrixXd bb(1, 1);
+    Eigen::MatrixXd nn(1, 1);
     // Mom Term
     Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
     // Gradient of pressure
@@ -221,8 +222,9 @@ int newtonUnsteadyNSTurbIntrusivePPE::operator()(const Eigen::VectorXd& x,
                 j) * aTmp;
         bb = aTmp.transpose() * Eigen::SliceFromTensor(problem->bc2Tensor, 0,
                 j) * aTmp;
-        //fvec(k) = m3(j, 0) - gg(0, 0) - m6(j, 0) + bb(0, 0);
-        fvec(k) = m3(j, 0) + gg(0, 0) - m7(j, 0);
+        nn = aTmp.transpose() * Eigen::SliceFromTensor(problem->cTotalPPETensor, 0,
+                j) * aTmp;
+        fvec(k) = m3(j, 0) + gg(0, 0) - m7(j, 0) - nn(0, 0);
     }
 
     if (problem->bcMethod == "lift")
