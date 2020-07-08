@@ -1224,6 +1224,11 @@ void ReducedUnsteadyNSTurb::reconstructPPE(fileName folder)
     int exportEveryIndex = round(exportEvery / storeEvery);
     volScalarField nutAveNow("nutAveNow", nutModes[0] * 0);
 
+    for (label k = 0; k < problem->nutAve.size(); k++)
+    {
+        nutAveNow += gNutAve(k) * problem->nutAve[k];
+    }
+
     for (label i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextWrite)
@@ -1272,6 +1277,11 @@ void ReducedUnsteadyNSTurb::reconstructSUP(fileName folder)
     int counter2 = 1;
     int exportEveryIndex = round(exportEvery / storeEvery);
     volScalarField nutAveNow("nutAveNow", nutModes[0] * 0);
+
+    for (label k = 0; k < problem->nutAve.size(); k++)
+    {
+        nutAveNow += gNutAve(k) * problem->nutAve[k];
+    }
 
     for (label i = 0; i < online_solution.size(); i++)
     {
