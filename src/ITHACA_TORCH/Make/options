@@ -1,4 +1,6 @@
 EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/cnpy \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
@@ -13,6 +15,7 @@ EXE_INC = \
     -Wno-sign-compare 
 
 EXE_LIBS = \
+    -lfiniteVolume \
     -Wl,-rpath,$(TORCH_LIBRARIES)/lib $(TORCH_LIBRARIES)/lib/libtorch.so $(TORCH_LIBRARIES)/lib/libc10.so $(TORCH_LIBRARIES)/lib/libc10d.a \
     -Wl,--no-as-needed,$(TORCH_LIBRARIES)/lib/libcaffe2_detectron_ops.so \
     -Wl,--as-needed $(TORCH_LIBRARIES)/lib/libc10.so
