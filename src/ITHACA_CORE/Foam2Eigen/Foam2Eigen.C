@@ -790,26 +790,27 @@ Field<vector> Foam2Eigen::Eigen2field(Field<vector>& field,
                                       Eigen::MatrixXd& matrix)
 {
     int sizeBC = field.size();
-    M_Assert(matrix.cols() == 3,
+    M_Assert(matrix.cols() == 1,
              "The number of columns of the Input members is not correct, it should be 1");
 
     if (matrix.rows() == 1)
     {
-        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC, 1);
-        matrix.conservativeResize(sizeBC, 3);
+        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC * 3, 1);
+        matrix.conservativeResize(sizeBC * 3, 1);
         matrix = new_matrix;
     }
 
-    // std::string message = "The size of the input Matrices " + name(
-    //                           valueFrac.rows()) +
-    //                       " must be equal to the dimension of the boundary condition you want to set.";
-    M_Assert(matrix.rows() == sizeBC, "message.c_str()");
+    std::string message = "The input Eigen::MatrixXd has size " + name(
+                              matrix.rows()) +
+                          ". It should have the same size of the Field, i.e. " +
+                          name(sizeBC * 3);
+    M_Assert(matrix.rows() == sizeBC * 3, "message.c_str()");
 
-    for (auto i = 0; i < sizeBC; i++)
+    for (auto i = 0; i < field.size(); i++)
     {
-        field[i][0] = matrix(i, 0);
-        field[i][1] = matrix(i, 1);
-        field[i][2] = matrix(i, 2);
+        field[i][0] = matrix(i);
+        field[i][1] = matrix(i + field.size());
+        field[i][2] = matrix(i + field.size() * 2);
     }
 
     return field;
