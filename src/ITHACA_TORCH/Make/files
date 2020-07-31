@@ -1,4 +1,5 @@
 torch2Eigen.C
 torch2Foam.C
+torchUTILITIES.C
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_TORCH

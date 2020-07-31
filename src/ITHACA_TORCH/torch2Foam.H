@@ -9,24 +9,23 @@
  * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
-License
-    This file is part of ITHACA-FV
-    ITHACA-FV is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-    ITHACA-FV is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Lesser General Public License for more details.
-    You should have received a copy of the GNU Lesser General Public License
-    along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
-Class
-    torch2Foam
-Description
-    set of functions to convert Foam object to Torch objects and viceversa
-SourceFiles
-    torch2Foam.C
+
+  License
+  This file is part of ITHACA-FV
+
+  ITHACA-FV is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  ITHACA-FV is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
+
 \*---------------------------------------------------------------------------*/
 
 /// \file
@@ -72,6 +71,12 @@ torch::Tensor field2Torch(Field<type_f>& field);
 ///
 template <class type_f>
 Field<type_f> torch2Field(torch::Tensor& tTensor);
+
+template <class type_f>
+torch::Tensor ptrList2Torch(PtrList<type_f>& ptrList);
+
+template <class type_f>
+PtrList<Field<type_f>> torch2PtrList(torch::Tensor& tTensor);
 }
 
 }
