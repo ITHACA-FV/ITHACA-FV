@@ -62,7 +62,7 @@ SourceFiles
 /// @details This a child class of the PtrList class, it is meant to store modes and contains
 /// some additional operations to project the modes and to reconstruct a solution from the coefficients.
 ///
-/// @tparam     T    Type of the Geometric Field used inside the List, it can be vector or scalar
+/// @tparam     T    Type of the Geometric Field used inside the List pappo, it can be vector or scalar
 ///
 template<class T>
 class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
