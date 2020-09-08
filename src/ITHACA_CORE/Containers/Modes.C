@@ -60,8 +60,11 @@ List<Eigen::MatrixXd> Modes<T>::toEigen()
 }
 
 template<class T>
-List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes)
+List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes,
+                                        word projType)
 {
+    M_Assert(projType == "G" || projType == "PG" ,
+             "Projection type can be G for Galerking or PG for Petrov-Galerkin");
     List<Eigen::MatrixXd> LinSys;
     LinSys.resize(2);
 
@@ -76,16 +79,36 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes)
 
     if (numberOfModes == 0)
     {
-        LinSys[0] = EigenModes[0].transpose() * Ae * EigenModes[0];
-        LinSys[1] = EigenModes[0].transpose() * be;
+        if (projType == "G")
+        {
+            LinSys[0] = EigenModes[0].transpose() * Ae * EigenModes[0];
+            LinSys[1] = EigenModes[0].transpose() * be;
+        }
+
+        if (projType == "PG")
+        {
+            LinSys[0] = (Ae * EigenModes[0]).transpose() * Ae * EigenModes[0];
+            LinSys[1] = (Ae * EigenModes[0]).transpose() * be;
+        }
     }
+
     else
     {
         M_Assert(numberOfModes <= EigenModes[0].cols(),
                  "Number of required modes for projection is higher then the number of available ones");
-        LinSys[0] = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * Ae *
-                    (EigenModes[0]).leftCols(numberOfModes);
-        LinSys[1] = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * be;
+
+        if (projType == "G")
+        {
+            LinSys[0] = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * Ae *
+                        (EigenModes[0]).leftCols(numberOfModes);
+            LinSys[1] = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * be;
+        }
+        if (projType == "PG")
+        {
+            LinSys[0] = (Ae * ((EigenModes[0]).leftCols(numberOfModes))).transpose() * Ae *
+                        (EigenModes[0]).leftCols(numberOfModes);
+            LinSys[1] = (Ae * ((EigenModes[0]).leftCols(numberOfModes))).transpose() * be;
+        }
     }
 
     return LinSys;
@@ -93,7 +116,7 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes)
 
 template<class T>
 Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
-                                  field, int numberOfModes)
+                                  field, int numberOfModes, word projType, fvMatrix<T>* Af)
 {
     Eigen::MatrixXd fieldEig = Foam2Eigen::field2Eigen(field);
     auto vol = ITHACAutilities::getMassMatrixFV(field);
@@ -106,14 +129,43 @@ Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
 
     if (numberOfModes == 0)
     {
-        projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
+        if (projType == "G")
+        {
+            projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
+        }
+
+        else if (projType == "PG")
+        {
+            M_Assert(Af != NULL,
+                     "Using a Petrov-Galerkin projection you have to provide also the system matrix");
+            Eigen::SparseMatrix<double> Ae;
+            Eigen::VectorXd be;
+            Foam2Eigen::fvMatrix2Eigen(*Af, Ae, be);
+            projField = (Ae * EigenModes[0]).transpose() * vol.asDiagonal() * fieldEig;
+        }
     }
+
     else
     {
         M_Assert(numberOfModes <= EigenModes[0].cols(),
                  "Number of required modes for projection is higher then the number of available ones");
-        projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
-                    vol.asDiagonal() * fieldEig;
+
+        if (projType == "G")
+        {
+            projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
+                        vol.asDiagonal() * fieldEig;
+        }
+
+        else if (projType == "PG")
+        {
+            M_Assert(Af != NULL,
+                     "Using a Petrov-Galerkin projection you have to provide also the system matrix");
+            Eigen::SparseMatrix<double> Ae;
+            Eigen::VectorXd be;
+            Foam2Eigen::fvMatrix2Eigen(*Af, Ae, be);
+            projField = (Ae*((EigenModes[0]).leftCols(numberOfModes))).transpose() *
+                        vol.asDiagonal() * fieldEig;
+        }
     }
 
     return projField;
@@ -123,7 +175,7 @@ template<class T>
 Eigen::MatrixXd Modes<T>::project(
     PtrList<GeometricField<T, fvPatchField, volMesh>>&
     fields,
-    int numberOfModes)
+    int numberOfModes, word projType, fvMatrix<T>* Af)
 {
     Eigen::MatrixXd fieldEig = Foam2Eigen::PtrList2Eigen(fields);
     auto vol = ITHACAutilities::getMassMatrixFV(fields[0]);
@@ -136,19 +188,47 @@ Eigen::MatrixXd Modes<T>::project(
 
     if (numberOfModes == 0)
     {
-        projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
+        if (projType == "G")
+        {
+            projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
+        }
+
+        else if (projType == "PG")
+        {
+            M_Assert(Af != NULL,
+                     "Using a Petrov-Galerkin projection you have to provide also the system matrix");
+            Eigen::SparseMatrix<double> Ae;
+            Eigen::VectorXd be;
+            Foam2Eigen::fvMatrix2Eigen(*Af, Ae, be);
+            projField = (Ae * EigenModes[0]).transpose() * vol.asDiagonal() * fieldEig;
+        }
     }
+
     else
     {
         M_Assert(numberOfModes <= EigenModes[0].cols(),
                  "Number of required modes for projection is higher then the number of available ones");
-        projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
-                    vol.asDiagonal() * fieldEig;
+
+        if (projType == "G")
+        {
+            projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
+                        vol.asDiagonal() * fieldEig;
+        }
+
+        else if (projType == "PG")
+        {
+            M_Assert(Af != NULL,
+                     "Using a Petrov-Galerkin projection you have to provide also the system matrix");
+            Eigen::SparseMatrix<double> Ae;
+            Eigen::VectorXd be;
+            Foam2Eigen::fvMatrix2Eigen(*Af, Ae, be);
+            projField = (Ae * ((EigenModes[0]).leftCols(numberOfModes))).transpose() *
+                        vol.asDiagonal() * fieldEig;
+        }
     }
 
     return projField;
 }
-
 template<class T>
 GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
     GeometricField<T, fvPatchField, volMesh>& inputField,
@@ -173,7 +253,6 @@ GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
 
     return inputField;
 }
-
 template<class T>
 void Modes<T>::projectSnapshots(
     PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
@@ -211,6 +290,7 @@ void Modes<T>::projectSnapshots(
     {
         Modes = EigenModes[0];
     }
+
     else
     {
         Modes = EigenModes[0].leftCols(numberOfModes);
@@ -229,6 +309,7 @@ void Modes<T>::projectSnapshots(
             M = Modes.transpose() * (totVolumes.col(i)).asDiagonal() * Modes;
             projSnapI = Modes.transpose() * (totVolumes.col(i)).asDiagonal() * F_eigen;
         }
+
         else //Frobenius
         {
             M = Modes.transpose() * Modes;
@@ -239,7 +320,6 @@ void Modes<T>::projectSnapshots(
         reconstruct(projSnapshots[i], projSnapCoeff, "projSnap");
     }
 }
-
 template<class T>
 void Modes<T>::projectSnapshots(
     PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
@@ -250,7 +330,6 @@ void Modes<T>::projectSnapshots(
     projectSnapshots(snapshots, projSnapshots, Volumes, numberOfModes,
                      innerProduct);
 }
-
 template<class T>
 void Modes<T>::projectSnapshots(
     PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
@@ -270,6 +349,7 @@ void Modes<T>::projectSnapshots(
     {
         Modes = EigenModes[0];
     }
+
     else
     {
         Modes = EigenModes[0].leftCols(numberOfModes);
@@ -293,10 +373,12 @@ void Modes<T>::projectSnapshots(
         {
             M_vol = ITHACAutilities::getMassMatrixFV(snapshots[i]);
         }
+
         else if (innerProduct == "Frobenius")
         {
             M_vol =  Eigen::VectorXd::Identity(F_eigen.rows(), 1);
         }
+
         else
         {
             std::cout << "Inner product not defined" << endl;
@@ -309,7 +391,6 @@ void Modes<T>::projectSnapshots(
         reconstruct(projSnapshots[i], projSnapCoeff, "projSnap");
     }
 }
-
 template<class T>
 void Modes<T>::projectSnapshots(
     PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
@@ -319,8 +400,5 @@ void Modes<T>::projectSnapshots(
     int numberOfModes = 0;
     projectSnapshots(snapshots, projSnapshots, numberOfModes, innerProduct);
 }
-
 template class Modes<scalar>;
 template class Modes<vector>;
-
-
