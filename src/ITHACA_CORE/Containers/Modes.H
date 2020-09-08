@@ -88,50 +88,70 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
             return static_cast<PtrList<GeometricField<T, fvPatchField, volMesh>>&>(*this);
         }
 
-        //--------------------------------------------------------------------------
-        /// @brief     A function that project an FvMatrix (OpenFoam linear System) on the modes
+        //----------------------------------------------------------------------
+        /// @brief      A function that project an FvMatrix (OpenFoam linear
+        ///             System) on the modes
         ///
-        /// @details   Used to project an FvMatrix that is a standard linear system of OpenFoam
-        /// onto the modes defined inside the Modes container. The output is a list of matrices that
-        /// contains in the first element the reduced matrix and in the second element the source term.
+        /// @details    Used to project an FvMatrix that is a standard linear
+        ///             system of OpenFoam onto the modes defined inside the
+        ///             Modes container. The output is a list of matrices that
+        ///             contains in the first element the reduced matrix and in
+        ///             the second element the source term.
         ///
-        /// @param[in]      Af   The OpenFOAM fvMatrix linear system, it can be vector or scalar matrix
-        /// @param[in]      numberOfModes   The number of modes used to project. If not given it will use all the available ones.
+        /// @param[in]  Af             The OpenFOAM fvMatrix linear system, it
+        ///                            can be vector or scalar matrix
+        /// @param[in]  numberOfModes  The number of modes used to project. If
+        ///                            not given it will use all the available
+        ///                            ones.
+        /// @param[in]  projType       The projection type, it can be Galerkin "G" or Petrov-Galerkin "PG"
         ///
-        /// @return     A list of Eigen Matrices of dimension 2. The first element of the list is the
-        /// reduced matrix of the linear system, the second element is the reduced source term of the linear
-        /// system.
+        /// @return     A list of Eigen Matrices of dimension 2. The first
+        ///             element of the list is the reduced matrix of the linear
+        ///             system, the second element is the reduced source term of
+        ///             the linear system.
         ///
-        List<Eigen::MatrixXd> project(fvMatrix<T>& Af, int numberOfModes = 0);
+        List<Eigen::MatrixXd> project(fvMatrix<T>& Af, int numberOfModes = 0, word projType = "G");
 
-        //--------------------------------------------------------------------------
-        /// @brief     A function that project a field on the modes
+        //----------------------------------------------------------------------
+        /// @brief      A function that project a field on the modes
         ///
-        /// @details   Used to project a field onto the modes defined inside the Modes container. The output is matrix
-        /// containing the projected field.
+        /// @details    Used to project a field onto the modes defined inside
+        ///             the Modes container. The output is matrix containing the
+        ///             projected field.
         ///
-        /// @param[in]      field   The field to be projected, it can be vector or scalar.
-        /// @param[in]      numberOfModes   The number of modes used to project. If not given it will use all the available ones.
+        /// @param[in]  field          The field to be projected, it can be
+        ///                            vector or scalar.
+        /// @param[in]  numberOfModes  The number of modes used to project. If
+        ///                            not given it will use all the available
+        ///                            ones.
+        /// @param[in]  projType       The projection type, it can be Galerkin "G" or Petrov-Galerkin "PG"
+        /// @param      Af             The system matrix used in case of Petrov-Galerkin projection
         ///
         /// @return     An Eigen MatrixXd.
         ///
         Eigen::MatrixXd project(GeometricField<T, fvPatchField, volMesh>& field,
-                                int numberOfModes = 0);
+                                int numberOfModes = 0, word projType = "G", fvMatrix<T>* Af = NULL);
 
-        //--------------------------------------------------------------------------
-        /// @brief     A function that project a list of fields on the modes
+        //----------------------------------------------------------------------
+        /// @brief      A function that project a list of fields on the modes
         ///
-        /// @details   Used to project a list of fields onto the modes defined inside the Modes container. The output is a list of matrices
-        /// containing the projected field.
+        /// @details    Used to project a list of fields onto the modes defined
+        ///             inside the Modes container. The output is a list of
+        ///             matrices containing the projected field.
         ///
-        /// @param[in]      fields   The fields list to be projected, it can be vector or scalar.
-        /// @param[in]      numberOfModes   The number of modes used to project. If not given it will use all the available ones.
+        /// @param[in]  fields         The fields list to be projected, it can
+        ///                            be vector or scalar.
+        /// @param[in]  numberOfModes  The number of modes used to project. If
+        ///                            not given it will use all the available
+        ///                            ones.
+        /// @param[in]  projType       The projection type, it can be Galerkin "G" or Petrov-Galerkin "PG"
+        /// @param[in]  Af             The system matrix used in case of Petrov-Galerkin projection
         ///
         /// @return     An Eigen MatricxXd list.
         ///
         Eigen::MatrixXd project(PtrList<GeometricField<T, fvPatchField, volMesh>>&
                                 fields,
-                                int numberOfModes = 0);
+                                int numberOfModes = 0, word projType = "G", fvMatrix<T>* Af = NULL);
 
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
