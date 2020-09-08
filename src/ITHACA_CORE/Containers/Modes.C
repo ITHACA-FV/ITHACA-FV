@@ -103,6 +103,7 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes,
                         (EigenModes[0]).leftCols(numberOfModes);
             LinSys[1] = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * be;
         }
+
         if (projType == "PG")
         {
             LinSys[0] = (Ae * ((EigenModes[0]).leftCols(numberOfModes))).transpose() * Ae *
@@ -118,6 +119,8 @@ template<class T>
 Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
                                   field, int numberOfModes, word projType, fvMatrix<T>* Af)
 {
+    M_Assert(projType == "G" || projType == "PG" ,
+             "Projection type can be G for Galerking or PG for Petrov-Galerkin");
     Eigen::MatrixXd fieldEig = Foam2Eigen::field2Eigen(field);
     auto vol = ITHACAutilities::getMassMatrixFV(field);
     Eigen::MatrixXd projField;
@@ -163,7 +166,7 @@ Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
             Eigen::SparseMatrix<double> Ae;
             Eigen::VectorXd be;
             Foam2Eigen::fvMatrix2Eigen(*Af, Ae, be);
-            projField = (Ae*((EigenModes[0]).leftCols(numberOfModes))).transpose() *
+            projField = (Ae * ((EigenModes[0]).leftCols(numberOfModes))).transpose() *
                         vol.asDiagonal() * fieldEig;
         }
     }
@@ -177,6 +180,8 @@ Eigen::MatrixXd Modes<T>::project(
     fields,
     int numberOfModes, word projType, fvMatrix<T>* Af)
 {
+    M_Assert(projType == "G" || projType == "PG" ,
+             "Projection type can be G for Galerking or PG for Petrov-Galerkin");
     Eigen::MatrixXd fieldEig = Foam2Eigen::PtrList2Eigen(fields);
     auto vol = ITHACAutilities::getMassMatrixFV(fields[0]);
     Eigen::MatrixXd projField;
