@@ -162,12 +162,29 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @param[in]  Coeff       The coefficients of the POD expansion
         /// @param[in]  Name        The name of the field you want to return
         ///
-        /// @return     A volScalarField or volScalarField given by the
+        /// @return     A volVectorField or volScalarField given by the
         ///             reconstruction.
         ///
         GeometricField<T, fvPatchField, volMesh> reconstruct(
             GeometricField<T, fvPatchField, volMesh>& inputField, Eigen::MatrixXd Coeff,
             word Name);
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to reconstruct a list of fields starting from a list of
+        ///             coefficients, in this case the list of fields is filled by reconstructing
+        ///             each field from a coefficients matrix inside the list passed
+        ///
+        /// @param      inputField  The input field
+        /// @param[in]  Coeff       The list of coefficients of the POD expansion
+        /// @param[in]  Name        The name
+        ///
+        /// @return     A list of volVectorFields or volScalarFields given by the
+        ///             reconstruction.
+        ///
+        PtrList<GeometricField<T, fvPatchField, volMesh>> reconstruct(
+                    GeometricField<T, fvPatchField, volMesh>& inputField,
+                    List < Eigen::MatrixXd> Coeff,
+                    word Name);
 
         //----------------------------------------------------------------------
         /// @brief      Function to project a list of fields into the modes manifold
