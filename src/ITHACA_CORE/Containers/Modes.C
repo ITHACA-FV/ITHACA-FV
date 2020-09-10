@@ -259,6 +259,25 @@ GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
     return inputField;
 }
 template<class T>
+PtrList<GeometricField<T, fvPatchField, volMesh>> Modes<T>::reconstruct(
+            GeometricField<T, fvPatchField, volMesh>& inputField,
+            List < Eigen::MatrixXd> Coeff,
+            word Name)
+{
+    PtrList<GeometricField<T, fvPatchField, volMesh>> inputFields;
+    inputFields.resize(0);
+
+    for (int i = 0; i < Coeff.size(); i++)
+    {
+        inputField = reconstruct(inputField, Coeff[i], Name);
+        inputFields.append(inputField);
+    }
+
+    return inputFields;
+}
+
+
+template<class T>
 void Modes<T>::projectSnapshots(
     PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
     PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
