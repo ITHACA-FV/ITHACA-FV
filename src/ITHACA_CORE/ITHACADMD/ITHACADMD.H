@@ -65,7 +65,7 @@ SourceFiles
 ///
 /// @tparam     Field_type  It can be scalar or vector
 ///
-template<class Field_type>
+template<class Type, template<class> class PatchField, class GeoMesh>
 class ITHACADMD
 {
     public:
@@ -76,17 +76,17 @@ class ITHACADMD
         /// @param[in]  snapshots  The snapshots on which you want to perform DMD
         /// @param[in]  dt         The Time Step used to acquire the snapshots
         ///
-        ITHACADMD(PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
+        ITHACADMD(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
                   double dt);
 
         /// PtrList of OpenFOAM GeoometricFields where the snapshots are stored
-        PtrList<GeometricField<Field_type, fvPatchField, volMesh>> snapshotsDMD;
+        PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshotsDMD;
 
         /// Modes object used to store the Real part of the DMD modes
-        Modes<Field_type> DMDmodesReal;
+        Modes<Type, PatchField, GeoMesh> DMDmodesReal;
 
         /// Modes object used to store the Imaginary part of the DMD modes
-        Modes<Field_type> DMDmodesImag;
+        Modes<Type, PatchField, GeoMesh> DMDmodesImag;
 
         /// Eigenvalues of the dynamics mode decomposition
         Eigen::VectorXcd eigenValues;
@@ -157,4 +157,8 @@ class ITHACADMD
         ///
         void reconstruct(word exportFolder, word fieldName);
 };
+
+typedef ITHACADMD<scalar, fvPatchField, volMesh> ITHACADMDvolScalar;
+typedef ITHACADMD<vector, fvPatchField, volMesh> ITHACADMDvolVector;
+
 #endif

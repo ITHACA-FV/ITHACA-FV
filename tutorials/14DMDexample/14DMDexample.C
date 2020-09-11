@@ -110,13 +110,13 @@ int main(int argc, char* argv[])
     example.offlineSolve();
     // Create The DMD class for the velocity field
     word exportFieldNameU = example.Ufield[0].name() + "_" + name(numberOfModesDMD);
-    ITHACADMD<vector> DMDv(example.Ufield, example.writeEvery);
+    ITHACADMDvolVector DMDv(example.Ufield, example.writeEvery);
     DMDv.getModes(numberOfModesDMD, exactDMD, exportDMDModes);
     DMDv.getDynamics(startTimeDMD, finalTimeDMD, dtDMD);
     DMDv.reconstruct(exportFolder, exportFieldNameU);
     // Create The DMD class for the pressure field
     word exportFieldNameP = example.Pfield[0].name() + "_" + name(numberOfModesDMD);
-    ITHACADMD<scalar> DMDp(example.Pfield, example.writeEvery);
+    ITHACADMDvolScalar DMDp(example.Pfield, example.writeEvery);
     DMDp.getModes(numberOfModesDMD, exactDMD, exportDMDModes);
     DMDp.getDynamics(startTimeDMD, finalTimeDMD, dtDMD);
     DMDp.reconstruct(exportFolder, exportFieldNameP);

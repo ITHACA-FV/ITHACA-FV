@@ -64,8 +64,8 @@ SourceFiles
 ///
 /// @tparam     T    Type of the Geometric Field used inside the List, it can be vector or scalar
 ///
-template<class T>
-class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
+template<class Type, template<class> class PatchField, class GeoMesh>
+class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
 {
     public:
 
@@ -83,9 +83,9 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         ///
         /// @return     The PtrList containing the modes
         ///
-        PtrList<GeometricField<T, fvPatchField, volMesh>>& toPtrList()
+        PtrList<GeometricField<Type, PatchField, GeoMesh>>& toPtrList()
         {
-            return static_cast<PtrList<GeometricField<T, fvPatchField, volMesh>>&>(*this);
+            return static_cast<PtrList<GeometricField<Type, PatchField, GeoMesh>>&>(*this);
         }
 
         //----------------------------------------------------------------------
@@ -110,7 +110,8 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         ///             system, the second element is the reduced source term of
         ///             the linear system.
         ///
-        List<Eigen::MatrixXd> project(fvMatrix<T>& Af, int numberOfModes = 0, word projType = "G");
+        List<Eigen::MatrixXd> project(fvMatrix<Type>& Af, int numberOfModes = 0,
+                                      word projType = "G");
 
         //----------------------------------------------------------------------
         /// @brief      A function that project a field on the modes
@@ -129,8 +130,8 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         ///
         /// @return     An Eigen MatrixXd.
         ///
-        Eigen::MatrixXd project(GeometricField<T, fvPatchField, volMesh>& field,
-                                int numberOfModes = 0, word projType = "G", fvMatrix<T>* Af = NULL);
+        Eigen::MatrixXd project(GeometricField<Type, PatchField, GeoMesh>& field,
+                                int numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
 
         //----------------------------------------------------------------------
         /// @brief      A function that project a list of fields on the modes
@@ -149,9 +150,9 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         ///
         /// @return     An Eigen MatricxXd list.
         ///
-        Eigen::MatrixXd project(PtrList<GeometricField<T, fvPatchField, volMesh>>&
+        Eigen::MatrixXd project(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
                                 fields,
-                                int numberOfModes = 0, word projType = "G", fvMatrix<T>* Af = NULL);
+                                int numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
 
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
@@ -165,8 +166,8 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @return     A volVectorField or volScalarField given by the
         ///             reconstruction.
         ///
-        GeometricField<T, fvPatchField, volMesh> reconstruct(
-            GeometricField<T, fvPatchField, volMesh>& inputField, Eigen::MatrixXd Coeff,
+        GeometricField<Type, PatchField, GeoMesh> reconstruct(
+            GeometricField<Type, PatchField, GeoMesh>& inputField, Eigen::MatrixXd Coeff,
             word Name);
 
         //----------------------------------------------------------------------
@@ -181,8 +182,8 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @return     A list of volVectorFields or volScalarFields given by the
         ///             reconstruction.
         ///
-        PtrList<GeometricField<T, fvPatchField, volMesh>> reconstruct(
-                    GeometricField<T, fvPatchField, volMesh>& inputField,
+        PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstruct(
+                    GeometricField<Type, PatchField, GeoMesh>& inputField,
                     List < Eigen::MatrixXd> Coeff,
                     word Name);
 
@@ -193,8 +194,8 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @param[in]  numberOfModes       The number of modes you want to use
         /// @param[in]  innerProduct        The inner product to be applied
         ///
-        void projectSnapshots(PtrList<GeometricField<T, fvPatchField, volMesh>>
-                              snapshots, PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+        void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh>>
+                              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
                               int numberOfModes = 0, word innerProduct = "L2");
 
         //----------------------------------------------------------------------
@@ -203,8 +204,8 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @param[in]  snapshots  The list of snapshots to be projected
         /// @param[in]  innerProduct        The inner product to be applied
         ///
-        void projectSnapshots(PtrList<GeometricField<T, fvPatchField, volMesh>>
-                              snapshots, PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+        void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh>>
+                              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
                               word innerProduct = "L2");
 
         //----------------------------------------------------------------------
@@ -215,8 +216,8 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @param[in]  numberOfModes       The number of modes you want to use
         /// @param[in]  innerProduct        The inner product to be applied
         ///
-        void projectSnapshots(PtrList<GeometricField<T, fvPatchField, volMesh>>
-                              snapshots, PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+        void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh>>
+                              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
                               PtrList<volScalarField> Volumes,
                               int numberOfModes = 0, word innerProduct = "L2");
 
@@ -227,11 +228,14 @@ class Modes : public PtrList<GeometricField<T, fvPatchField, volMesh>>
         /// @param[in]  Volumes       The mesh volumes for the inner product
         /// @param[in]  innerProduct        The inner product to be applied
         ///
-        void projectSnapshots(PtrList<GeometricField<T, fvPatchField, volMesh>>
-                              snapshots, PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+        void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh>>
+                              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
                               PtrList<volScalarField> Volumes,
                               word innerProduct);
 };
+
+typedef Modes<scalar, fvPatchField, volMesh> volScalarModes;
+typedef Modes<vector, fvPatchField, volMesh> volVectorModes;
 
 #endif
 

@@ -34,8 +34,8 @@ License
 
 #include "Modes.H"
 
-template<class T>
-List<Eigen::MatrixXd> Modes<T>::toEigen()
+template<class Type, template<class> class PatchField, class GeoMesh>
+List<Eigen::MatrixXd> Modes<Type, PatchField, GeoMesh>::toEigen()
 {
     NBC = 0;
 
@@ -59,11 +59,12 @@ List<Eigen::MatrixXd> Modes<T>::toEigen()
     return EigenModes;
 }
 
-template<class T>
-List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes,
-                                        word projType)
+template<class Type, template<class> class PatchField, class GeoMesh>
+List<Eigen::MatrixXd> Modes<Type, PatchField, GeoMesh>::project(
+    fvMatrix<Type>& Af, int numberOfModes,
+    word projType)
 {
-    M_Assert(projType == "G" || projType == "PG" ,
+    M_Assert(projType == "G" || projType == "PG",
              "Projection type can be G for Galerking or PG for Petrov-Galerkin");
     List<Eigen::MatrixXd> LinSys;
     LinSys.resize(2);
@@ -91,7 +92,6 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes,
             LinSys[1] = (Ae * EigenModes[0]).transpose() * be;
         }
     }
-
     else
     {
         M_Assert(numberOfModes <= EigenModes[0].cols(),
@@ -115,11 +115,12 @@ List<Eigen::MatrixXd> Modes<T>::project(fvMatrix<T>& Af, int numberOfModes,
     return LinSys;
 }
 
-template<class T>
-Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
-                                  field, int numberOfModes, word projType, fvMatrix<T>* Af)
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
+    GeometricField<Type, PatchField, GeoMesh>&
+    field, int numberOfModes, word projType, fvMatrix<Type>* Af)
 {
-    M_Assert(projType == "G" || projType == "PG" ,
+    M_Assert(projType == "G" || projType == "PG",
              "Projection type can be G for Galerking or PG for Petrov-Galerkin");
     Eigen::MatrixXd fieldEig = Foam2Eigen::field2Eigen(field);
     auto vol = ITHACAutilities::getMassMatrixFV(field);
@@ -136,7 +137,6 @@ Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
         {
             projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
         }
-
         else if (projType == "PG")
         {
             M_Assert(Af != NULL,
@@ -147,7 +147,6 @@ Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
             projField = (Ae * EigenModes[0]).transpose() * vol.asDiagonal() * fieldEig;
         }
     }
-
     else
     {
         M_Assert(numberOfModes <= EigenModes[0].cols(),
@@ -158,7 +157,6 @@ Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
             projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
                         vol.asDiagonal() * fieldEig;
         }
-
         else if (projType == "PG")
         {
             M_Assert(Af != NULL,
@@ -174,13 +172,13 @@ Eigen::MatrixXd Modes<T>::project(GeometricField<T, fvPatchField, volMesh>&
     return projField;
 }
 
-template<class T>
-Eigen::MatrixXd Modes<T>::project(
-    PtrList<GeometricField<T, fvPatchField, volMesh>>&
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>&
     fields,
-    int numberOfModes, word projType, fvMatrix<T>* Af)
+    int numberOfModes, word projType, fvMatrix<Type>* Af)
 {
-    M_Assert(projType == "G" || projType == "PG" ,
+    M_Assert(projType == "G" || projType == "PG",
              "Projection type can be G for Galerking or PG for Petrov-Galerkin");
     Eigen::MatrixXd fieldEig = Foam2Eigen::PtrList2Eigen(fields);
     auto vol = ITHACAutilities::getMassMatrixFV(fields[0]);
@@ -197,7 +195,6 @@ Eigen::MatrixXd Modes<T>::project(
         {
             projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
         }
-
         else if (projType == "PG")
         {
             M_Assert(Af != NULL,
@@ -208,7 +205,6 @@ Eigen::MatrixXd Modes<T>::project(
             projField = (Ae * EigenModes[0]).transpose() * vol.asDiagonal() * fieldEig;
         }
     }
-
     else
     {
         M_Assert(numberOfModes <= EigenModes[0].cols(),
@@ -219,7 +215,6 @@ Eigen::MatrixXd Modes<T>::project(
             projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
                         vol.asDiagonal() * fieldEig;
         }
-
         else if (projType == "PG")
         {
             M_Assert(Af != NULL,
@@ -234,9 +229,10 @@ Eigen::MatrixXd Modes<T>::project(
 
     return projField;
 }
-template<class T>
-GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
-    GeometricField<T, fvPatchField, volMesh>& inputField,
+template<class Type, template<class> class PatchField, class GeoMesh>
+GeometricField<Type, PatchField, GeoMesh>
+Modes<Type, PatchField, GeoMesh>::reconstruct(
+    GeometricField<Type, PatchField, GeoMesh>& inputField,
     Eigen::MatrixXd Coeff,
     word Name)
 {
@@ -258,13 +254,14 @@ GeometricField<T, fvPatchField, volMesh> Modes<T>::reconstruct(
 
     return inputField;
 }
-template<class T>
-PtrList<GeometricField<T, fvPatchField, volMesh>> Modes<T>::reconstruct(
-            GeometricField<T, fvPatchField, volMesh>& inputField,
+template<class Type, template<class> class PatchField, class GeoMesh>
+PtrList<GeometricField<Type, PatchField, GeoMesh>>
+        Modes<Type, PatchField, GeoMesh>::reconstruct(
+            GeometricField<Type, PatchField, GeoMesh>& inputField,
             List < Eigen::MatrixXd> Coeff,
             word Name)
 {
-    PtrList<GeometricField<T, fvPatchField, volMesh>> inputFields;
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> inputFields;
     inputFields.resize(0);
 
     for (int i = 0; i < Coeff.size(); i++)
@@ -277,10 +274,10 @@ PtrList<GeometricField<T, fvPatchField, volMesh>> Modes<T>::reconstruct(
 }
 
 
-template<class T>
-void Modes<T>::projectSnapshots(
-    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
-    PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
     PtrList<volScalarField> Volumes,
     int numberOfModes,
     word innerProduct)
@@ -314,7 +311,6 @@ void Modes<T>::projectSnapshots(
     {
         Modes = EigenModes[0];
     }
-
     else
     {
         Modes = EigenModes[0].leftCols(numberOfModes);
@@ -333,7 +329,6 @@ void Modes<T>::projectSnapshots(
             M = Modes.transpose() * (totVolumes.col(i)).asDiagonal() * Modes;
             projSnapI = Modes.transpose() * (totVolumes.col(i)).asDiagonal() * F_eigen;
         }
-
         else //Frobenius
         {
             M = Modes.transpose() * Modes;
@@ -344,20 +339,21 @@ void Modes<T>::projectSnapshots(
         reconstruct(projSnapshots[i], projSnapCoeff, "projSnap");
     }
 }
-template<class T>
-void Modes<T>::projectSnapshots(
-    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
-    PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
     PtrList<volScalarField> Volumes, word innerProduct)
 {
     int numberOfModes = 0;
     projectSnapshots(snapshots, projSnapshots, Volumes, numberOfModes,
                      innerProduct);
 }
-template<class T>
-void Modes<T>::projectSnapshots(
-    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
-    PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
     int numberOfModes,
     word innerProduct)
 {
@@ -373,7 +369,6 @@ void Modes<T>::projectSnapshots(
     {
         Modes = EigenModes[0];
     }
-
     else
     {
         Modes = EigenModes[0].leftCols(numberOfModes);
@@ -397,12 +392,10 @@ void Modes<T>::projectSnapshots(
         {
             M_vol = ITHACAutilities::getMassMatrixFV(snapshots[i]);
         }
-
         else if (innerProduct == "Frobenius")
         {
             M_vol =  Eigen::VectorXd::Identity(F_eigen.rows(), 1);
         }
-
         else
         {
             std::cout << "Inner product not defined" << endl;
@@ -415,14 +408,14 @@ void Modes<T>::projectSnapshots(
         reconstruct(projSnapshots[i], projSnapCoeff, "projSnap");
     }
 }
-template<class T>
-void Modes<T>::projectSnapshots(
-    PtrList<GeometricField<T, fvPatchField, volMesh>> snapshots,
-    PtrList<GeometricField<T, fvPatchField, volMesh>>& projSnapshots,
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
     word innerProduct)
 {
     int numberOfModes = 0;
     projectSnapshots(snapshots, projSnapshots, numberOfModes, innerProduct);
 }
-template class Modes<scalar>;
-template class Modes<vector>;
+template class Modes<scalar, fvPatchField, volMesh>;
+template class Modes<vector, fvPatchField, volMesh>;

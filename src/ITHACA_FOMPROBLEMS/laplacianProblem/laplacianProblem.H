@@ -65,7 +65,7 @@ class laplacianProblem: public reductionProblem
         PtrList<volScalarField> Tonline;
 
         /// List of POD modes
-        Modes<scalar> Tmodes;
+        volScalarModes Tmodes;
 
         /// List of operators
         PtrList<fvScalarMatrix> operator_list;

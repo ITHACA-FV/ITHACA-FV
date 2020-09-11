@@ -124,7 +124,7 @@ class reducedSimpleSteadyNS: public reducedProblem
         // Variables
 
         /// Lifted velocity modes.
-        Modes<vector> ULmodes;
+        volVectorModes ULmodes;
 
         /// Full problem.
         SteadyNSSimple* problem;
