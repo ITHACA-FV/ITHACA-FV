@@ -33,9 +33,9 @@
 
 #include "ITHACADMD.H"
 
-template<class FieldType>
-ITHACADMD<FieldType>::ITHACADMD(
-    PtrList<GeometricField<FieldType, fvPatchField, volMesh>>& snapshots, double dt)
+template<class Type, template<class> class PatchField, class GeoMesh>
+ITHACADMD<Type, PatchField, GeoMesh>::ITHACADMD(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots, double dt)
     :
     snapshotsDMD(snapshots),
     NSnaps(snapshots.size()),
@@ -46,9 +46,9 @@ ITHACADMD<FieldType>::ITHACADMD(
 }
 
 
-template<class FieldType>
-void ITHACADMD<FieldType>::getModes(int SVD_rank, bool exact,
-                                    bool exportDMDmodes)
+template<class Type, template<class> class PatchField, class GeoMesh>
+void ITHACADMD<Type, PatchField, GeoMesh>::getModes(int SVD_rank, bool exact,
+        bool exportDMDmodes)
 {
     // Check the rank if rank < 0, full rank.
     if (SVD_rank < 0)
@@ -162,8 +162,9 @@ void ITHACADMD<FieldType>::getModes(int SVD_rank, bool exact,
     }
 }
 
-template<class FieldType>
-void ITHACADMD<FieldType>::getDynamics(double tStart, double tFinal, double dt)
+template<class Type, template<class> class PatchField, class GeoMesh>
+void ITHACADMD<Type, PatchField, GeoMesh>::getDynamics(double tStart,
+        double tFinal, double dt)
 {
     Eigen::VectorXcd omega = eigenValues.array().log() / originalDT;
     int ncols = static_cast<int>((tFinal - tStart) / dt ) + 1;
@@ -179,8 +180,8 @@ void ITHACADMD<FieldType>::getDynamics(double tStart, double tFinal, double dt)
 }
 
 
-template<class FieldType>
-void ITHACADMD<FieldType>::exportEigs(word exportFolder)
+template<class Type, template<class> class PatchField, class GeoMesh>
+void ITHACADMD<Type, PatchField, GeoMesh>::exportEigs(word exportFolder)
 {
     Eigen::MatrixXcd eigs = eigenValues;
     mkDir(exportFolder);
@@ -190,16 +191,17 @@ void ITHACADMD<FieldType>::exportEigs(word exportFolder)
 }
 
 
-template<class FieldType>
-void ITHACADMD<FieldType>::reconstruct(word exportFolder, word fieldName)
+template<class Type, template<class> class PatchField, class GeoMesh>
+void ITHACADMD<Type, PatchField, GeoMesh>::reconstruct(word exportFolder,
+        word fieldName)
 {
-    PtrList<GeometricField<FieldType, fvPatchField, volMesh>> snapshotsrec;
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshotsrec;
 
     for (int i = 0; i < dynamics.cols(); i++)
     {
         Eigen::MatrixXcd col = DMDEigenModes * dynamics.col(i);
         Eigen::VectorXd vec = col.real();
-        GeometricField<FieldType, fvPatchField, volMesh> tmp("TMP",
+        GeometricField<Type, PatchField, GeoMesh> tmp("TMP",
                 snapshotsDMD[0] * 0);
         tmp = Foam2Eigen::Eigen2field(tmp, vec);
 
@@ -214,14 +216,14 @@ void ITHACADMD<FieldType>::reconstruct(word exportFolder, word fieldName)
 
     ITHACAstream::exportFields(snapshotsrec, exportFolder, fieldName);
 }
-template<class FieldType>
-void ITHACADMD<FieldType>::convert2Foam()
+template<class Type, template<class> class PatchField, class GeoMesh>
+void ITHACADMD<Type, PatchField, GeoMesh>::convert2Foam()
 {
     DMDmodesReal.resize(DMDEigenModes.cols());
     DMDmodesImag.resize(DMDEigenModes.cols());
-    GeometricField<FieldType, fvPatchField, volMesh> tmpReal(
+    GeometricField<Type, PatchField, GeoMesh> tmpReal(
         snapshotsDMD[0].name(), snapshotsDMD[0] * 0);
-    GeometricField<FieldType, fvPatchField, volMesh> tmpImag(
+    GeometricField<Type, PatchField, GeoMesh> tmpImag(
         snapshotsDMD[0].name(), snapshotsDMD[0] * 0);
 
     for (label i = 0; i < DMDmodesReal.size(); i++)
@@ -242,5 +244,5 @@ void ITHACADMD<FieldType>::convert2Foam()
         DMDmodesImag.set(i, tmpImag);
     }
 }
-template class ITHACADMD<scalar>;
-template class ITHACADMD<vector>;
+template class ITHACADMD<scalar, fvPatchField, volMesh>;
+template class ITHACADMD<vector, fvPatchField, volMesh>;

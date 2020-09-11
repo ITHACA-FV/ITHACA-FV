@@ -82,7 +82,7 @@ class SteadyNSSimple: public steadyNS
         PtrList<volScalarField> nutFields;
 
         /// List of POD modes for eddy viscosity
-        Modes<scalar> nutModes;
+        volScalarModes nutModes;
 
         /// Create a samples for interpolation
         std::vector<SPLINTER::DataTable*> samples;
