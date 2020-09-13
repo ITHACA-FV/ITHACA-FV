@@ -240,39 +240,49 @@ void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
     }
 }
 
-void reducedSteadyNS::reconstruct_sup(fileName folder, int printevery)
+void reducedSteadyNS::reconstruct_sup(bool exportFields, fileName folder,
+                                      int printevery)
 {
-    mkDir(folder);
-    ITHACAutilities::createSymLink(folder);
+    if (exportFields)
+    {
+        mkDir(folder);
+        ITHACAutilities::createSymLink(folder);
+    }
+
     int counter = 0;
     int nextwrite = 0;
+    List < Eigen::MatrixXd> CoeffU;
+    List < Eigen::MatrixXd> CoeffP;
+    CoeffU.resize(0);
+    CoeffP.resize(0);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextwrite)
         {
-            volVectorField U_rec("U_rec", Umodes[0] * 0);
-
-            for (label j = 0; j < Nphi_u; j++)
-            {
-                U_rec += Umodes[j] * online_solution[i](j + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
-            volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
-
-            for (label j = 0; j < Nphi_p; j++)
-            {
-                P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(P_rec, name(online_solution[i](0, 0)), folder);
+            Eigen::MatrixXd currentUCoeff;
+            Eigen::MatrixXd currentPCoeff;
+            currentUCoeff = online_solution[i].block(1, 0, Nphi_u, 1);
+            currentPCoeff = online_solution[i].bottomRows(Nphi_p);
+            CoeffU.append(currentUCoeff);
+            CoeffP.append(currentPCoeff);
             nextwrite += printevery;
-            UREC.append(U_rec);
-            PREC.append(P_rec);
         }
 
         counter++;
+    }
+
+    volVectorField uRec("uRec", Umodes[0] * 0);
+    volScalarField pRec("pRec", problem->Pmodes[0] * 0);
+    uRecFields = problem->L_U_SUPmodes.reconstruct(uRec, CoeffU, "uRec");
+    pRecFields = problem->Pmodes.reconstruct(pRec, CoeffP, "pRec");
+
+    if (exportFields)
+    {
+        ITHACAstream::exportFields(uRecFields, folder,
+                                   "uRec");
+        ITHACAstream::exportFields(pRecFields, folder,
+                                   "pRec");
     }
 }
 
