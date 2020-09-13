@@ -80,7 +80,7 @@ class UnsteadyNSTurb: public unsteadyNS
         PtrList<volScalarField> nutFields;
 
         /// List of POD modes for eddy viscosity
-        PtrList<volScalarField> nutModes;
+        volScalarModes nutModes;
 
         /// List of for eddy viscosity time-averaged fields
         PtrList<volScalarField> nutAve;
