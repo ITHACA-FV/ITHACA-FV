@@ -140,6 +140,12 @@ class reducedSteadyNS: public reducedProblem
         /// Recontructed velocity field
         PtrList<volVectorField> UREC;
 
+        /// Reconstructed pressure fields list
+        PtrList<volScalarField> pRecFields;
+
+        /// Recontructed velocity fields list
+        PtrList<volVectorField> uRecFields;
+
         /// Newton object used to solve the non linear problem
         newton_steadyNS newton_object;
 
@@ -189,7 +195,7 @@ class reducedSteadyNS: public reducedProblem
         /// @param[in]  folder      The folder where to output the solutions
         /// @param[in]  printevery  The printevery
         ///
-        void reconstruct_PPE(fileName folder = "./ITHACAOutput/online_rec",
+        void reconstruct_PPE(fileName folder = "./ITHACAoutput/online_rec",
                              int printevery = 1);
 
         /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
@@ -198,7 +204,8 @@ class reducedSteadyNS: public reducedProblem
         /// @param[in]  folder      The folder where to output the solutions
         /// @param[in]  printevery  The printevery
         ///
-        void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec",
+        void reconstruct_sup(bool exportFields = false,
+                             fileName folder = "./ITHACAoutput/online_rec",
                              int printevery = 1);
 
         /// Method to compute the reduced order forces
