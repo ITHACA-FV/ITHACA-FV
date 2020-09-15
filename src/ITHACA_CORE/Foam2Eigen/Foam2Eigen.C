@@ -217,6 +217,8 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
 
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     PtrList<volScalarField>& fields, int Nfields);
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<surfaceScalarField>& fields, int Nfields);
 
 
 template<template<class> class PatchField, class GeoMesh>
@@ -928,4 +930,9 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
     tupla = std::make_tuple(SM_list, V_list);
     return tupla;
 }
+
+template std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
+        Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<scalar>>& MatrixList);
+template std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
+        Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<vector>>& MatrixList);
 

@@ -536,6 +536,214 @@ namespace Foam
 
 }
 
+template <typename T, int whatever, typename IND>
+void ITHACAstream::SaveSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m,
+                                    word folder, word MatrixName)
+{
+    typedef Eigen::Triplet<int> Trip;
+    std::vector<Trip> res;
+    m.makeCompressed();
+    mkDir(folder);
+    std::fstream writeFile;
+    writeFile.open(folder + MatrixName, std::ios::binary | std::ios::out);
+
+    if (writeFile.is_open())
+    {
+        IND rows, cols, nnzs, outS, innS;
+        rows = m.rows()     ;
+        cols = m.cols()     ;
+        nnzs = m.nonZeros() ;
+        outS = m.outerSize();
+        innS = m.innerSize();
+        writeFile.write(reinterpret_cast<const char*> (&rows), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*> (&cols), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*> (&nnzs), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*> (&outS), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*> (&innS), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*>(m.valuePtr()),
+                        sizeof(T  ) * m.nonZeros());
+        writeFile.write(reinterpret_cast<const char*>(m.outerIndexPtr()),
+                        sizeof(IND) * m.outerSize());
+        writeFile.write(reinterpret_cast<const char*>(m.innerIndexPtr()),
+                        sizeof(IND) * m.nonZeros());
+        writeFile.close();
+    }
+}
+
+template <typename T, int whatever, typename IND>
+void ITHACAstream::ReadSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m,
+                                    word folder, word MatrixName)
+{
+    std::fstream readFile;
+    readFile.open(folder + MatrixName, std::ios::binary | std::ios::in);
+
+    if (!readFile.good())
+    {
+        std::cout << folder + MatrixName <<
+                  " file does not exist, try to rerun the Offline Stage!" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    else if (readFile.is_open())
+    {
+        IND rows, cols, nnz, inSz, outSz;
+        readFile.read(reinterpret_cast<char*>(&rows ), sizeof(IND));
+        readFile.read(reinterpret_cast<char*>(&cols ), sizeof(IND));
+        readFile.read(reinterpret_cast<char*>(&nnz  ), sizeof(IND));
+        readFile.read(reinterpret_cast<char*>(&inSz ), sizeof(IND));
+        readFile.read(reinterpret_cast<char*>(&outSz), sizeof(IND));
+        m.resize(rows, cols);
+        m.makeCompressed();
+        m.resizeNonZeros(nnz);
+        readFile.read(reinterpret_cast<char*>(m.valuePtr()), sizeof(T  ) * nnz  );
+        readFile.read(reinterpret_cast<char*>(m.outerIndexPtr()), sizeof(IND) * outSz);
+        readFile.read(reinterpret_cast<char*>(m.innerIndexPtr()), sizeof(IND) * nnz );
+        m.finalize();
+        readFile.close();
+    }
+}
+
+template <typename MatrixType>
+void ITHACAstream::SaveDenseMatrix(MatrixType& Matrix, word folder,
+                                   word MatrixName)
+{
+    mkDir(folder);
+    std::ofstream out(folder + MatrixName,
+                      std::ios::out | std::ios::binary | std::ios::trunc);
+    typename MatrixType::Index rows = Matrix.rows(), cols = Matrix.cols();
+    out.write(reinterpret_cast<char*> (&rows), sizeof(typename MatrixType::Index));
+    out.write(reinterpret_cast<char*> (&cols), sizeof(typename MatrixType::Index));
+    out.write(reinterpret_cast<char*> (Matrix.data()),
+              rows * cols * sizeof(typename MatrixType::Scalar) );
+    out.close();
+}
+
+template <typename MatrixType>
+void ITHACAstream::ReadDenseMatrix(MatrixType& Matrix, word folder,
+                                   word MatrixName)
+{
+    std::ifstream in;
+    in.open(folder + MatrixName, std::ios::in | std::ios::binary);
+
+    if (!in.good())
+    {
+        std::cout << folder + MatrixName <<
+                  " file does not exist, try to rerun the Offline Stage!" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    else if (in.is_open())
+    {
+        typename MatrixType::Index rows = 0, cols = 0;
+        in.read(reinterpret_cast<char*> (&rows), sizeof(typename MatrixType::Index));
+        in.read(reinterpret_cast<char*> (&cols), sizeof(typename MatrixType::Index));
+        Matrix.resize(rows, cols);
+        in.read( reinterpret_cast<char*>(Matrix.data()),
+                 rows * cols * sizeof(typename MatrixType::Scalar) );
+        in.close();
+    }
+}
+
+
+template <typename TensorType>
+void ITHACAstream::SaveDenseTensor(TensorType& Tensor, word folder,
+                                   word MatrixName)
+{
+    std::ofstream out(folder + MatrixName,
+                      std::ios::out | std::ios::binary | std::ios::trunc);
+    typename TensorType::Dimensions dim = Tensor.dimensions();
+    int tot = 1;
+
+    for (unsigned int k = 0; k < dim.size(); k++)
+    {
+        tot *= dim[k];
+    }
+
+    out.write(reinterpret_cast<char*> (&dim),
+              sizeof(typename TensorType::Dimensions));
+    out.write(reinterpret_cast<char*> (Tensor.data()),
+              tot * sizeof(typename TensorType::Scalar) );
+    out.close();
+}
+
+template <typename TensorType>
+void ITHACAstream::ReadDenseTensor(TensorType& Tensor, word folder,
+                                   word MatrixName)
+{
+    std::ifstream in;
+    in.open(folder + MatrixName, std::ios::in | std::ios::binary);
+    typename TensorType::Dimensions dim;
+    in.read(reinterpret_cast<char*> (&dim),
+            sizeof(typename TensorType::Dimensions));
+    auto dims = Tensor.dimensions();
+    M_Assert(dims.size() == dim.size(),
+             "The rank of the tensor you want to fill does not coincide with the rank of the tensor you are reading");
+    int tot = 1;
+
+    for (unsigned int k = 0; k < dim.size(); k++)
+    {
+        tot *= dim[k];
+    }
+
+    Tensor.resize(dim);
+    in.read( reinterpret_cast<char*>(Tensor.data()),
+             tot * sizeof(typename TensorType::Scalar) );
+    in.close();
+}
+
+template <typename MatrixType>
+void ITHACAstream::SaveSparseMatrixList(List<MatrixType>& MatrixList,
+                                        word folder, word MatrixName)
+{
+    for (int i = 0; i < MatrixList.size(); i++)
+    {
+        SaveSparseMatrix(MatrixList[i], folder, MatrixName + name(i));
+    }
+}
+
+template <typename MatrixType>
+void ITHACAstream::SaveDenseMatrixList(List<MatrixType>& MatrixList,
+                                       word folder, word MatrixName)
+{
+    for (int i = 0; i < MatrixList.size(); i++)
+    {
+        SaveDenseMatrix(MatrixList[i], folder, MatrixName + name(i));
+    }
+}
+
+template <typename T, int whatever, typename IND>
+void ITHACAstream::ReadSparseMatrixList(
+    List<Eigen::SparseMatrix<T, whatever, IND>>& m, word folder, word MatrixName)
+{
+    int number_of_files = numberOfFiles(folder, MatrixName);
+    std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
+    M_Assert(number_of_files != 0,
+             "Check if the file you are trying to read exists" );
+    Eigen::SparseMatrix<T, whatever, IND> A;
+
+    for (int i = 0; i < number_of_files; i++)
+    {
+        ReadSparseMatrix(A, folder, MatrixName + name(i));
+        m.append(A);
+    }
+}
+
+
+template <typename MatrixType>
+void ITHACAstream::ReadDenseMatrixList(List<MatrixType>& m, word folder,
+                                       word MatrixName)
+{
+    int number_of_files = numberOfFiles(folder, MatrixName);
+    std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
+    M_Assert(number_of_files != 0,
+             "Check if the file you are trying to read exists" );
+    MatrixType A;
+
+    for (int i = 0; i < number_of_files; i++)
+    {
+        ReadDenseMatrix(A, folder, MatrixName + name(i));
+        m.append(A);
+    }
+}
+
 
 
 

@@ -31,7 +31,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstructFromCoeff(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes)
 {
-    PtrList<TypeField> rec_field;
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> rec_field;
     rec_field.resize(0);
 
     for (label k = 0; k < coeff_matrix.cols(); k++)
