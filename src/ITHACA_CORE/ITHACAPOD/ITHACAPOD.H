@@ -63,7 +63,7 @@ namespace ITHACAPOD
 // Public Members
 
 //----------------------------------------------------------------------
-/// Computes the bases or reads them for a vector field
+/// Computes the bases or reads them for a field
 ///
 /// @param[in]  snapshots   List of snapshots.
 /// @param[out] modes       A PtrList where modes are stored (it must be
@@ -81,9 +81,9 @@ namespace ITHACAPOD
 ///
 /// @tparam     Field_type  volVectorField or volScalarField.
 ///
-template<class Field_type>
-void getModes(PtrList<GeometricField<Field_type, fvPatchField, volMesh>>&
-              snapshots, PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+template<class Type, template<class> class PatchField, class GeoMesh>
+void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
               word fieldName,
               bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
@@ -105,12 +105,14 @@ void getModes(PtrList<GeometricField<Field_type, fvPatchField, volMesh>>&
 /// @param[in]  nmodes      Number of modes to be stored. If 0, the
 ///                         maximum number of modes will computed.
 ///
-/// @tparam     Field_type  volVectorField or volScalarField.
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
-template<class Field_type>
+template<class Type, template<class> class PatchField, class GeoMesh>
 void getModesSVD(
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>&
-    snapshots, PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+    snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
     word fieldName,
     bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
@@ -128,12 +130,14 @@ void getModesSVD(
 /// @param[out] UModesGlobal  List of snapshots where modes are stored (it must be
 ///                           passed empty).
 ///
-/// @tparam     Field_type  volVectorField or volScalarField.
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
-template<class Field_type>
+template<class Type, template<class> class PatchField, class GeoMesh>
 void getNestedSnapshotMatrix(
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
     word fieldName, int Npar,
     int NnestedOut);
 
@@ -156,12 +160,14 @@ void getNestedSnapshotMatrix(
 /// @param[in]  nmodes      Number of modes to be stored. If 0, the
 ///                         maximum number of modes will computed.
 ///
-/// @tparam     Field_type  volVectorField or volScalarField.
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
-template<class Field_type>
+template<class Type, template<class> class PatchField, class GeoMesh>
 void getWeightedModes(
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& modes,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
     word fieldName, bool podex,
     bool supex = 0, bool sup = 0,
     int nmodes = 0);
@@ -198,15 +204,17 @@ Eigen::MatrixXd corMatrix(Field_type& snapshots);
 ///                         the supremizer bases (in
 ///                         ITHACAOutput/supremizer) 0 elsewhere
 ///                         (Default is 0).
-/// @param[in]  s     a PtrList of GeometricField where the snapshots associated
-///                   with the bases are stored.
+/// @param[in]  s           a PtrList of GeometricField where the snapshots 
+///                         associated with the bases are stored.
 ///
-/// @tparam     Field_type  It can be vector or scalar
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
-template<class Field_type>
+template<class Type, template<class> class PatchField, class GeoMesh>
 void exportBases(
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& snapshots,
-    PtrList<GeometricField<Field_type, fvPatchField, volMesh>>& bases,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& bases,
     word fieldName,
     bool sup = 0);
 
@@ -235,13 +243,13 @@ void exportcumEigenvalues(scalarField cumEigenvalues,  fileName name,
 ///
 /// @param[in]  SnapShotsMatrix  The snapshots matrix
 ///
-/// @tparam     T                templated object for the snapshots matrix type
+/// @tparam     Type             templated object for the snapshots matrix type
 ///
-/// @return     T                the POD modes
+/// @return     Type             the POD modes
 ///
-template<typename T>
-PtrList<GeometricField<T, fvPatchField, volMesh>> DEIMmodes(
-            PtrList<GeometricField<T, fvPatchField, volMesh>>& SnapShotsMatrix, int nmodes,
+template<typename Type>
+PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>& SnapShotsMatrix, int nmodes,
             word FunctionName);
 
 //--------------------------------------------------------------------------
@@ -288,8 +296,9 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 ///
 /// @tparam     Field_type  Type of field
 ///
-template<class Field_type>
-void getModes(PtrList<Field_type>& snapshots, PtrList<Field_type>& modes,
+template<class Type, template<class> class PatchField, class GeoMesh>
+void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots, 
+	      PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
               PtrList<volScalarField>& Volumes, word fieldName, bool podex, bool supex = 0,
               bool sup = 0,
               int nmodes = 0);

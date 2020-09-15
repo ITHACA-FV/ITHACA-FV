@@ -27,9 +27,9 @@ License
 namespace ITHACAutilities
 {
 
-template<typename TypeField>
-PtrList<TypeField> reconstructFromCoeff(
-    PtrList<TypeField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes)
+template<class Type, template<class> class PatchField, class GeoMesh>
+PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstructFromCoeff(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes)
 {
     PtrList<TypeField> rec_field;
     rec_field.resize(0);
@@ -50,14 +50,16 @@ PtrList<TypeField> reconstructFromCoeff(
     return rec_field;
 }
 
-template PtrList<volScalarField> reconstructFromCoeff(
-    PtrList<volScalarField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
-template PtrList<volVectorField> reconstructFromCoeff(
-    PtrList<volVectorField>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes);
+template PtrList<GeometricField<scalar, fvPatchField, volMesh>> reconstructFromCoeff(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& modes, 
+    Eigen::MatrixXd& coeff_matrix, label Nmodes);
+template PtrList<GeometricField<vector, fvPatchField, volMesh>> reconstructFromCoeff(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes, 
+    Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
-template<typename T>
+template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd getMassMatrix(
-    PtrList<GeometricField<T, fvPatchField, volMesh>>& modes, int Nmodes,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes,
     bool consider_volumes)
 {
     label Msize;
@@ -94,12 +96,16 @@ template Eigen::MatrixXd getMassMatrix(
     bool consider_volumes);
 
 template Eigen::MatrixXd getMassMatrix(
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& modes, int Nmodes,
+    bool consider_volumes = false);
+
+template Eigen::MatrixXd getMassMatrix(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes, int Nmodes,
     bool consider_volumes);
 
-template<class TypeField>
+template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd getMassMatrixFV(
-    GeometricField<TypeField, fvPatchField, volMesh>& snapshot)
+    GeometricField<Type, PatchField, GeoMesh>& snapshot)
 {
     Eigen::MatrixXd snapEigen = Foam2Eigen::field2Eigen(snapshot);
     int dim = std::nearbyint(snapEigen.rows() / (snapshot.mesh().V()).size());
@@ -113,10 +119,10 @@ template Eigen::VectorXd getMassMatrixFV(
 template Eigen::VectorXd getMassMatrixFV(
     GeometricField<vector, fvPatchField, volMesh>& snapshot);
 
-template<typename T>
-Eigen::VectorXd getCoeffs(GeometricField<T, fvPatchField, volMesh>&
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
                           snapshot,
-                          PtrList<GeometricField<T, fvPatchField, volMesh>>& modes, int Nmodes,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes,
                           bool consider_volumes)
 {
     label Msize;
@@ -159,15 +165,21 @@ template Eigen::VectorXd getCoeffs(
     bool consider_volumes);
 
 template Eigen::VectorXd getCoeffs(
+    GeometricField<scalar, fvsPatchField, surfaceMesh>&
+    snapshot, PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& modes,
+    int Nmodes,
+    bool consider_volumes = false);
+
+template Eigen::VectorXd getCoeffs(
     GeometricField<vector, fvPatchField, volMesh>&
     snapshot, PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes,
     int Nmodes,
     bool consider_volumes);
 
-template<typename T>
-Eigen::MatrixXd getCoeffs(PtrList<GeometricField<T, fvPatchField, volMesh>>&
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
                           snapshots,
-                          PtrList<GeometricField<T, fvPatchField, volMesh>>& modes, int Nmodes,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes,
                           bool consider_volumes)
 {
     label Msize;

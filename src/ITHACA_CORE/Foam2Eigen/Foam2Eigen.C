@@ -36,9 +36,9 @@ License
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-template<>
+template<template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd Foam2Eigen::field2Eigen(
-    GeometricField<vector, fvPatchField, volMesh>& field)
+    GeometricField<vector, PatchField, GeoMesh>& field)
 {
     Eigen::VectorXd out;
     out.resize(int(field.size() * 3));
@@ -53,9 +53,12 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(
     return out;
 }
 
-template<>
+template Eigen::VectorXd Foam2Eigen::field2Eigen(
+    volVectorField& field);
+
+template<template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd Foam2Eigen::field2Eigen(
-    GeometricField<scalar, fvPatchField, volMesh>& field)
+    GeometricField<scalar, PatchField, GeoMesh>& field)
 {
     Eigen::VectorXd out;
     out.resize(int(field.size()));
@@ -67,6 +70,11 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(
 
     return out;
 }
+
+template Eigen::VectorXd Foam2Eigen::field2Eigen(
+    volScalarField& field);
+template Eigen::VectorXd Foam2Eigen::field2Eigen(
+    surfaceScalarField& field);
 
 template<>
 Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<scalar>& field)
@@ -98,10 +106,24 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<vector>& field)
     return out;
 }
 
-
 template<>
+Eigen::VectorXd Foam2Eigen::field2Eigen(const
+                                        DimensionedField<scalar, Foam::volMesh>& field)
+{
+    Eigen::VectorXd out;
+    out.resize(int(field.size()));
+
+    for (int l = 0; l < field.size(); l++)
+    {
+        out(l) = field[l];
+    }
+
+    return out;
+}
+
+template<template<class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    GeometricField<vector, fvPatchField, volMesh>& field)
+    GeometricField<vector, PatchField, GeoMesh>& field)
 {
     List<Eigen::VectorXd> Out;
     unsigned int size = field.boundaryField().size();
@@ -123,9 +145,13 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     return Out;
 }
 
-template<>
+template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    volVectorField& field);
+
+
+template<template<class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    GeometricField<scalar, fvPatchField, volMesh>& field)
+    GeometricField<scalar, PatchField, GeoMesh>& field)
 {
     List<Eigen::VectorXd> Out;
     unsigned int size = field.boundaryField().size();
@@ -144,10 +170,12 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 
     return Out;
 }
+template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    volScalarField& field);
 
-template<>
+template<template<class> class PatchField, class GeoMesh>
 List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>&
+    PtrList<GeometricField<scalar, PatchField, GeoMesh>>&
     fields, int Nfields)
 {
     unsigned int Nf;
@@ -187,9 +215,13 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     return Out;
 }
 
-template<>
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<volScalarField>& fields, int Nfields);
+
+
+template<template<class> class PatchField, class GeoMesh>
 List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>&
+    PtrList<GeometricField<vector, PatchField, GeoMesh>>&
     fields, int Nfields)
 {
     unsigned int Nf;
@@ -229,13 +261,15 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     return Out;
 }
 
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<volVectorField>& fields, int Nfields);
 
-template<>
-GeometricField<vector, fvPatchField, volMesh> Foam2Eigen::Eigen2field(
-    GeometricField<vector, fvPatchField, volMesh>& field_in,
+template<template<class> class PatchField, class GeoMesh>
+GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
+    GeometricField<vector, PatchField, GeoMesh>& field_in,
     Eigen::VectorXd& eigen_vector)
 {
-    GeometricField<vector, fvPatchField, volMesh> field_out(field_in);
+    GeometricField<vector, PatchField, GeoMesh> field_out(field_in);
 
     for (auto i = 0; i < field_out.size(); i++)
     {
@@ -248,56 +282,96 @@ GeometricField<vector, fvPatchField, volMesh> Foam2Eigen::Eigen2field(
     return field_out;
 }
 
-template<>
-GeometricField<scalar, fvPatchField, volMesh> Foam2Eigen::Eigen2field(
-    GeometricField<scalar, fvPatchField, volMesh>& field_in,
+template volVectorField Foam2Eigen::Eigen2field(
+    volVectorField& field_in,
+    Eigen::VectorXd& eigen_vector);
+
+
+template<template<class> class PatchField, class GeoMesh>
+GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
+    GeometricField<scalar, PatchField, GeoMesh>& field_in,
     Eigen::VectorXd& eigen_vector)
 {
-    GeometricField<scalar, fvPatchField, volMesh> field_out(field_in);
-
-    // std::memcpy (&field_out.ref()[0], eigen_vector.data(), field_out.ref().size()*sizeof(double));
+    GeometricField<scalar, PatchField, GeoMesh> field_out(field_in);
 
     for (auto i = 0; i < field_out.size(); i++)
     {
         field_out.ref()[i] = eigen_vector(i);
     }
 
-    field_out.correctBoundaryConditions();
     return field_out;
 }
 
+template volScalarField Foam2Eigen::Eigen2field(
+    volScalarField& field_in,
+    Eigen::VectorXd& eigen_vector);
+template surfaceScalarField Foam2Eigen::Eigen2field(
+    surfaceScalarField& field_in,
+    Eigen::VectorXd& eigen_vector);
 
 template<>
-Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields,
-    int Nfields)
+Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
+                                      Eigen::MatrixXd& matrix)
 {
-    int Nf;
-    M_Assert(Nfields <= fields.size(),
-             "The Number of requested fields cannot be bigger than the number of requested entries.");
+    int sizeBC = field.size();
+    M_Assert(matrix.cols() == 1,
+             "The number of columns of the Input members is not correct, it should be 1");
 
-    if (Nfields == -1)
+    if (matrix.rows() == 1)
     {
-        Nf = fields.size();
-    }
-    else
-    {
-        Nf = Nfields;
+        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC, 1);
+        matrix.conservativeResize(sizeBC, 1);
+        matrix = new_matrix;
     }
 
-    Eigen::MatrixXd out;
-    out.resize(int(fields[0].size() * 3), Nf);
+    std::string message = "The input Eigen::MatrixXd has size " + name(
+                              matrix.rows()) +
+                          ". It should have the same size of the Field, i.e. " +
+                          name(sizeBC);
+    M_Assert(matrix.rows() == sizeBC, message.c_str());
 
-    for (int k = 0; k < Nf; k++)
+    for (auto i = 0; i < sizeBC; i++)
     {
-        out.col(k) = field2Eigen<vector>(fields[k]);
+        field[i] = matrix(i, 0);
     }
 
-    return out;
+    return field;
 }
 
-template <class type_f>
-Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<type_f>>& fields,
+template<>
+Field<vector> Foam2Eigen::Eigen2field(Field<vector>& field,
+                                      Eigen::MatrixXd& matrix)
+{
+    int sizeBC = field.size();
+    M_Assert(matrix.cols() == 3,
+             "The number of columns of the Input members is not correct, it should be 1");
+
+    if (matrix.rows() == 1)
+    {
+        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC, 1);
+        matrix.conservativeResize(sizeBC, 3);
+        matrix = new_matrix;
+    }
+	
+    std::string message = "The input Eigen::MatrixXd has size " + name(
+                              matrix.rows()) +
+                          ". It should have the same size of the Field, i.e. " +
+                          name(sizeBC);
+
+    M_Assert(matrix.rows() == sizeBC, message.c_str());
+
+    for (auto i = 0; i < sizeBC; i++)
+    {
+        field[i][0] = matrix(i, 0);
+        field[i][1] = matrix(i, 1);
+        field[i][2] = matrix(i, 2);
+    }
+
+    return field;
+}
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
         int Nfields)
 {
     int Nf;
@@ -325,40 +399,12 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<type_f>>& fields,
     return out;
 }
 
-template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<scalar>>&
+template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volScalarField>&
         fields, int Nfields);
-template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<Field<vector>>&
+template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<surfaceScalarField>&
         fields, int Nfields);
-
-template<>
-Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields,
-    int Nfields)
-{
-    int Nf;
-    M_Assert(Nfields <= fields.size(),
-             "The Number of requested fields cannot be bigger than the number of requested entries.");
-
-    if (Nfields == -1)
-    {
-        Nf = fields.size();
-    }
-    else
-    {
-        Nf = Nfields;
-    }
-
-    Eigen::MatrixXd out;
-    out.resize(int(fields[0].size()), Nf);
-
-    for (int k = 0; k < Nf; k++)
-    {
-        out.col(k) = field2Eigen<scalar>(fields[k]);
-    }
-
-    return out;
-}
-
+template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volVectorField>&
+        fields, int Nfields);
 
 template<>
 void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
@@ -756,62 +802,130 @@ void Foam2Eigen::fvMatrix2EigenV(fvMatrix<vector>& foam_matrix,
     }
 }
 
-template <>
-Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
-                                      Eigen::MatrixXd& matrix)
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::VectorXd Foam2Eigen::projectField(
+    GeometricField<Type, PatchField, GeoMesh>& field,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    int Nmodes)
 {
-    int sizeBC = field.size();
-    M_Assert(matrix.cols() == 1,
-             "The number of columns of the Input members is not correct, it should be 1");
+    Eigen::VectorXd fr;
+    Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
+    Eigen::VectorXd f = Foam2Eigen::field2Eigen(field);
+    Eigen::VectorXd Volumes = field2Eigen(modes[0].mesh());
+    Eigen::MatrixXd VolumesN(Volumes.rows(), 1);
+    VolumesN = Volumes;
 
-    if (matrix.rows() == 1)
+    if (Volumes.rows() != Eig_Modes.rows())
     {
-        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC, 1);
-        matrix.conservativeResize(sizeBC, 1);
-        matrix = new_matrix;
+        VolumesN.resize(Eig_Modes.rows(), 1);
+        VolumesN.col(0).segment(0, Volumes.rows()) = Volumes;
+        VolumesN.col(0).segment(Volumes.rows() + 1, Volumes.rows() * 2) = Volumes;
+        VolumesN.col(0).segment(Volumes.rows() * 2 + 1, Volumes.rows() * 3) = Volumes;
     }
 
-    std::string message = "The input Eigen::MatrixXd has size " + name(
-                              matrix.rows()) +
-                          ". It should have the same size of the Field, i.e. " +
-                          name(sizeBC);
-    M_Assert(matrix.rows() == sizeBC, message.c_str());
-
-    for (auto i = 0; i < sizeBC; i++)
-    {
-        field[i] = matrix(i, 0);
-    }
-
-    return field;
+    fr = Eig_Modes.transpose() * (f.cwiseProduct(VolumesN));
+    return fr;
 }
 
-template <>
-Field<vector> Foam2Eigen::Eigen2field(Field<vector>& field,
-                                      Eigen::MatrixXd& matrix)
+template<class Type, template<class> class PatchField, class GeoMesh>
+std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(
+    fvMatrix<Type>& matrix,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes)
 {
-    int sizeBC = field.size();
-    M_Assert(matrix.cols() == 1,
-             "The number of columns of the Input members is not correct, it should be 1");
+    Eigen::SparseMatrix<double> A;
+    Eigen::MatrixXd Ar;
+    Eigen::VectorXd b;
+    Eigen::VectorXd br;
+    Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
+    Foam2Eigen::fvMatrix2Eigen(matrix, A, b);
+    Eigen::VectorXd Volumes = field2Eigen(modes[0].mesh());
+    Eigen::MatrixXd VolumesN(Volumes.rows(), Nmodes);
 
-    if (matrix.rows() == 1)
+    if (Volumes.rows() != Eig_Modes.rows())
     {
-        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC * 3, 1);
-        matrix.conservativeResize(sizeBC * 3, 1);
-        matrix = new_matrix;
+        VolumesN.resize(Eig_Modes.rows(), Nmodes);
     }
 
-    std::string message = "The input Eigen::MatrixXd has size " + name(
-                              matrix.rows()) +
-                          ". It should have the same size of the Field, i.e. " +
-                          name(sizeBC * 3);
-    M_Assert(matrix.rows() == sizeBC * 3, "message.c_str()");
-
-    for (auto i = 0; i < field.size(); i++)
+    if (Volumes.rows() == Eig_Modes.rows())
     {
-        field[i][0] = matrix(i);
-        field[i][1] = matrix(i + field.size());
-        field[i][2] = matrix(i + field.size() * 2);
+        for (auto i = 0; i < Nmodes; i++)
+        {
+            VolumesN.col(i) = Volumes;
+        }
+    }
+    else
+    {
+        for (auto i = 0; i < Nmodes; i++)
+        {
+            VolumesN.col(i).segment(0, Volumes.rows()) = Volumes;
+            VolumesN.col(i).segment(Volumes.rows() + 1, Volumes.rows() * 2) = Volumes;
+            VolumesN.col(i).segment(Volumes.rows() * 2 + 1, Volumes.rows() * 3) = Volumes;
+        }
     }
 
-    return field;
+    Ar = Eig_Modes.transpose() * A * Eig_Modes;
+    br = Eig_Modes.transpose() * b;
+    std::tuple <Eigen::MatrixXd, Eigen::VectorXd> tupla;
+    tupla = std::make_tuple(Ar, br);
+    return tupla;
 }
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::MatrixXd Foam2Eigen::MassMatrix(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes)
+{
+    Eigen::MatrixXd Mr;
+    Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
+    Eigen::VectorXd Volumes = field2Eigen(modes[0].mesh());
+    Eigen::MatrixXd VolumesN(Volumes.rows(), Nmodes);
+
+    if (Volumes.rows() != Eig_Modes.rows())
+    {
+        VolumesN.resize(Eig_Modes.rows(), Nmodes);
+    }
+
+    if (Volumes.rows() == Eig_Modes.rows())
+    {
+        for (auto i = 0; i < Nmodes; i++)
+        {
+            VolumesN.col(i) = Volumes;
+        }
+    }
+    else
+    {
+        for (auto i = 0; i < Nmodes; i++)
+        {
+            VolumesN.col(i).segment(0, Volumes.rows()) = Volumes;
+            VolumesN.col(i).segment(Volumes.rows() + 1, Volumes.rows() * 2) = Volumes;
+            VolumesN.col(i).segment(Volumes.rows() * 2 + 1, Volumes.rows() * 3) = Volumes;
+        }
+    }
+
+    Mr = Eig_Modes.transpose() * (Eig_Modes.cwiseProduct(VolumesN));
+    return Mr;
+}
+
+template<class Type>
+std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
+        Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<Type>>& MatrixList)
+{
+    List<Eigen::SparseMatrix<double>> SM_list;
+    List<Eigen::VectorXd> V_list;
+    int LSize =  MatrixList.size();
+    SM_list.resize(LSize);
+    V_list.resize(LSize);
+    Eigen::SparseMatrix<double> A;
+    Eigen::VectorXd b;
+
+    for (int j = 0; j < LSize; j++)
+    {
+        fvMatrix2Eigen(MatrixList[j], A, b);
+        SM_list[j] = A;
+        V_list[j] = b;
+    }
+
+    std::tuple <List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>> tupla;
+    tupla = std::make_tuple(SM_list, V_list);
+    return tupla;
+}
+
