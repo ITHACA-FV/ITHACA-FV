@@ -606,8 +606,8 @@ Eigen::MatrixXd corMatrix(List<Eigen::VectorXd>& snapshots)
 /// Export the Bases
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportBases(PtrList<GeometricField<Type, PatchField, GeoMesh>>& s,
-                 PtrList<GeometricField<Type, PatchField, GeoMesh>>& bases, 
-		 word fieldName, bool sup)
+                 PtrList<GeometricField<Type, PatchField, GeoMesh>>& bases,
+                 word fieldName, bool sup)
 {
     if (sup)
     {
@@ -638,9 +638,9 @@ void exportBases(PtrList<GeometricField<Type, PatchField, GeoMesh>>& s,
     }
 }
 template void exportBases(PtrList<volVectorField>& s,
-                 PtrList<volVectorField>& bases, word fieldName, bool sup);
+                          PtrList<volVectorField>& bases, word fieldName, bool sup);
 template void exportBases(PtrList<volScalarField>& s,
-                 PtrList<volScalarField>& bases, word fieldName, bool sup);
+                          PtrList<volScalarField>& bases, word fieldName, bool sup);
 
 void exportEigenvalues(scalarField Eigenvalues, fileName name,
                        bool sup)
@@ -921,8 +921,8 @@ void GrammSchmidt(Eigen::MatrixXd& Matrix)
 }
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
-              PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, 
-	      PtrList<volScalarField>& Volumes,
+              PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+              PtrList<volScalarField>& Volumes,
               word fieldName, bool podex,
               bool supex, bool sup, int nmodes)
 {
@@ -1024,7 +1024,8 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
 
         for (label i = 0; i < modes.size(); i++)
         {
-            GeometricField<Type, PatchField, GeoMesh> tmp(snapshots[0].name(), snapshots[0] * 0);
+            GeometricField<Type, PatchField, GeoMesh> tmp(snapshots[0].name(),
+                    snapshots[0] * 0);
             Eigen::VectorXd vec = modesEig.col(i);
             tmp = Foam2Eigen::Eigen2field(tmp, vec);
 
@@ -1070,13 +1071,13 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
     }
 }
 template void getModes(PtrList<volScalarField>& snapshots,
-              PtrList<volScalarField>& modes, PtrList<volScalarField>& Volumes,
-              word fieldName, bool podex,
-              bool supex, bool sup, int nmodes);
+                       PtrList<volScalarField>& modes, PtrList<volScalarField>& Volumes,
+                       word fieldName, bool podex,
+                       bool supex, bool sup, int nmodes);
 template void getModes(PtrList<volVectorField>& snapshots,
-              PtrList<volVectorField>& modes, PtrList<volScalarField>& Volumes,
-              word fieldName, bool podex,
-              bool supex, bool sup, int nmodes);
+                       PtrList<volVectorField>& modes, PtrList<volScalarField>& Volumes,
+                       word fieldName, bool podex,
+                       bool supex, bool sup, int nmodes);
 
 
 template<typename type_matrix>
@@ -1265,7 +1266,8 @@ DEIMmodes(PtrList<fvVectorMatrix>& MatrixList, int nmodesA,
 
 template<typename Type>
 PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
-            PtrList<GeometricField<Type, fvPatchField, volMesh>>& SnapShotsMatrix, int nmodes,
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>& SnapShotsMatrix,
+            int nmodes,
             word FunctionName)
 {
     if (nmodes == 0)

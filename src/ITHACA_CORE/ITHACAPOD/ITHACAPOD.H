@@ -62,24 +62,24 @@ namespace ITHACAPOD
 
 // Public Members
 
-//----------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// Computes the bases or reads them for a field
 ///
 /// @param[in]  snapshots   List of snapshots.
-/// @param[out] modes       A PtrList where modes are stored (it must be
-///                         passed empty).
+/// @param[out] modes       A PtrList where modes are stored (it must be passed
+///                         empty).
 /// @param[in]  fieldName   The field name
-/// @param[in]  podex       If 1, the functions read the stored mode. If
-///                         0, the function computes the modes and
-///                         stores them.
-/// @param[in]  supex       If 1, the functions read the stored
-///                         supremizer mode. If 0, the function computes
-///                         and stores them.
+/// @param[in]  podex       If 1, the functions read the stored mode. If 0, the
+///                         function computes the modes and stores them.
+/// @param[in]  supex       If 1, the functions read the stored supremizer mode.
+///                         If 0, the function computes and stores them.
 /// @param[in]  sup         If 1 it computes the supremizer modes.
-/// @param[in]  nmodes      Number of modes to be stored. If 0, the
-///                         maximum number of modes will computed.
+/// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum
+///                         number of modes will computed.
 ///
-/// @tparam     Field_type  volVectorField or volScalarField.
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
@@ -87,23 +87,21 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
               word fieldName,
               bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
-//----------------------------------------------------------------------
-/// @brief      Gets the bases for a scalar field using SVD instead of
-///             the method of snapshots
+//------------------------------------------------------------------------------
+/// @brief      Gets the bases for a scalar field using SVD instead of the
+///             method of snapshots
 ///
 /// @param[in]  snapshots   List of snapshots.
-/// @param[out] modes       A PtrList where modes are stored (it must be
-///                         passed empty).
+/// @param[out] modes       A PtrList where modes are stored (it must be passed
+///                         empty).
 /// @param[in]  fieldName   The file name
-/// @param[in]  podex       If 1, the functions read the stored mode. If
-///                         0, the function computes the modes and
-///                         stores them.
-/// @param[in]  supex       If 1, the functions read the stored
-///                         supremizer mode. If 0, the function computes
-///                         and stores them.
+/// @param[in]  podex       If 1, the functions read the stored mode. If 0, the
+///                         function computes the modes and stores them.
+/// @param[in]  supex       If 1, the functions read the stored supremizer mode.
+///                         If 0, the function computes and stores them.
 /// @param[in]  sup         If 1 it computes the supremizer modes.
-/// @param[in]  nmodes      Number of modes to be stored. If 0, the
-///                         maximum number of modes will computed.
+/// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum
+///                         number of modes will computed.
 ///
 /// @tparam     Type        vector or scalar.
 /// @tparam     PatchField  fvPatchField or fvsPatchField.
@@ -117,16 +115,16 @@ void getModesSVD(
     bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
 
 
-//----------------------------------------------------------------------
-/// Nested-POD approach. Computes the nested snapshot matrix and
-/// weighted bases for a vector field
+//------------------------------------------------------------------------------
+/// Nested-POD approach. Computes the nested snapshot matrix and weighted bases
+/// for a vector field
 ///
 /// @param[in]  snapshots   List of snapshots.
 /// @param      modes       The modes
 /// @param[in]  fieldName   The field name
 /// @param[in]  Npar        Number of parameters
-/// @param[in]  NnestedOut  Number of weighted modes to be stored for
-///                         the assembly of the nested matrix
+/// @param[in]  NnestedOut  Number of weighted modes to be stored for the
+///                         assembly of the nested matrix
 /// @param[out] UModesGlobal  List of snapshots where modes are stored (it must be
 ///                           passed empty).
 ///
@@ -142,23 +140,21 @@ void getNestedSnapshotMatrix(
     int NnestedOut);
 
 
-//----------------------------------------------------------------------
-/// Computes the weighted bases (using the nested-pod approach) or read
-/// them for a vector field
+//------------------------------------------------------------------------------
+/// Computes the weighted bases (using the nested-pod approach) or read them for
+/// a vector field
 ///
 /// @param[in]  snapshots   List of snapshots.
-/// @param[out] modes       A PtrList where modes are stored (it must be
-///                         passed empty).
+/// @param[out] modes       A PtrList where modes are stored (it must be passed
+///                         empty).
 /// @param[in]  fieldName   The field name
-/// @param[in]  podex       If 1, the functions read the stored mode. If
-///                         0, the function computes the modes and
-///                         stores them.
-/// @param[in]  supex       If 1, the functions read the stored
-///                         supremizer mode. If 0, the function computes
-///                         and stores them.
+/// @param[in]  podex       If 1, the functions read the stored mode. If 0, the
+///                         function computes the modes and stores them.
+/// @param[in]  supex       If 1, the functions read the stored supremizer mode.
+///                         If 0, the function computes and stores them.
 /// @param[in]  sup         If 1, it computes the supremizer modes.
-/// @param[in]  nmodes      Number of modes to be stored. If 0, the
-///                         maximum number of modes will computed.
+/// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum
+///                         number of modes will computed.
 ///
 /// @tparam     Type        vector or scalar.
 /// @tparam     PatchField  fvPatchField or fvsPatchField.
@@ -172,40 +168,43 @@ void getWeightedModes(
     bool supex = 0, bool sup = 0,
     int nmodes = 0);
 
-//--------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// @brief      Performs GrammSchmidt orthonormalization on an Eigen Matrix
 ///
-/// @param[out]      Matrix  The matrix
+/// @param[out] Matrix  The matrix
 ///
 void GrammSchmidt(Eigen::MatrixXd& Matrix);
 
-//--------------------------------------------------------------------------
-/// Computes the correlation matrix given a vector field snapshot Matrix using different norms depending on the input snapshots
+//------------------------------------------------------------------------------
+/// Computes the correlation matrix given a vector field snapshot Matrix using
+/// different norms depending on the input snapshots
 ///
 /// @param[in]  snapshots   List of snapshots.
 ///
-/// @return    the Eigen::MatrixXd correlation matrix.
+/// @tparam     Field_type  Type of the input list you are passing, it can be:
+///                         PtrList<volVectorField>, PtrList<volScalarField>,
+///                         List<Eigen::SparseMatrix<double>>,
+///                         List<Eigen::VectorXd>.
 ///
-/// @tparam     Field_type  Type of the input list you are passing, it can be: PtrList<volVectorField>, PtrList<volScalarField>, List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>.
+/// @return     the Eigen::MatrixXd correlation matrix.
 ///
 template<class Field_type>
 Eigen::MatrixXd corMatrix(Field_type& snapshots);
 
 
-//----------------------------------------------------------------------
-/// Exports the basis for an OpenFOAM GeometricField into the
-/// ITHACAOutput/POD or ITHACAOutput/supremizer
+//------------------------------------------------------------------------------
+/// Exports the basis for an OpenFOAM GeometricField into the ITHACAOutput/POD
+/// or ITHACAOutput/supremizer
 ///
 /// @param      snapshots   The snapshots
-/// @param[in]  bases       a PtrList of GeometricField where the bases
-///                         are stored.
+/// @param[in]  bases       a PtrList of GeometricField where the bases are
+///                         stored.
 /// @param[in]  fieldName   The field name
-/// @param[in]  sup         a boolean variable 1 if you want to export
-///                         the supremizer bases (in
-///                         ITHACAOutput/supremizer) 0 elsewhere
-///                         (Default is 0).
-/// @param[in]  s           a PtrList of GeometricField where the snapshots 
-///                         associated with the bases are stored.
+/// @param[in]  sup         a boolean variable 1 if you want to export the
+///                         supremizer bases (in ITHACAOutput/supremizer) 0
+///                         elsewhere (Default is 0).
+/// @param[in]  s     a PtrList of GeometricField where the snapshots associated
+///                   with the bases are stored.
 ///
 /// @tparam     Type        vector or scalar.
 /// @tparam     PatchField  fvPatchField or fvsPatchField.
@@ -218,30 +217,36 @@ void exportBases(
     word fieldName,
     bool sup = 0);
 
-//--------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// Exports the eigenvalues as a txt file
 ///
-/// @param[in] Eigenvalues  a scalarField of eigenvalues.
-/// @param[in] name         a fileName to indicate the name of the txt file.
-/// @param[in] sup          If 1, it exports the eigenValues in "ITHACAOutput/supremizer". If 0, no actions (Default is 0).
+/// @param[in]  Eigenvalues  a scalarField of eigenvalues.
+/// @param[in]  name         a fileName to indicate the name of the txt file.
+/// @param[in]  sup          If 1, it exports the eigenValues in
+///                          "ITHACAOutput/supremizer". If 0, no actions
+///                          (Default is 0).
 ///
 void exportEigenvalues(scalarField Eigenvalues, fileName name,
                        bool sup = 0);
 
-//--------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// Export the cumulative eigenvalues as a txt file
 ///
-/// @param[in] cumEigenvalues   a scalarField of cumEigenvalues.
-/// @param[in] name             a fileName to indicate the name of the txt file.
-/// @param[in] sup              If 1, it exports the cumEigenValues in "ITHACAOutput/supremizer". If 0, no actions (Default is 0).
+/// @param[in]  cumEigenvalues  a scalarField of cumEigenvalues.
+/// @param[in]  name            a fileName to indicate the name of the txt file.
+/// @param[in]  sup             If 1, it exports the cumEigenValues in
+///                             "ITHACAOutput/supremizer". If 0, no actions
+///                             (Default is 0).
 ///
 void exportcumEigenvalues(scalarField cumEigenvalues,  fileName name,
                           bool sup = 0);
 
-//--------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// @brief      Get the DEIM modes for a generic non linear function
 ///
 /// @param[in]  SnapShotsMatrix  The snapshots matrix
+/// @param[in]  nmodes           The number of modes
+/// @param[in]  FunctionName     The function name
 ///
 /// @tparam     Type             templated object for the snapshots matrix type
 ///
@@ -249,72 +254,97 @@ void exportcumEigenvalues(scalarField cumEigenvalues,  fileName name,
 ///
 template<typename Type>
 PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
-            PtrList<GeometricField<Type, fvPatchField, volMesh>>& SnapShotsMatrix, int nmodes,
+            PtrList<GeometricField<Type, fvPatchField, volMesh>>& SnapShotsMatrix,
+            int nmodes,
             word FunctionName);
 
-//--------------------------------------------------------------------------
-/// @brief      Get the DEIM modes for a generic non-parametrized matrix coming from a differential operator function
+//------------------------------------------------------------------------------
+/// @brief      Get the DEIM modes for a generic non-parametrized matrix coming
+///             from a differential operator function
 ///
 /// @param[in]  MatrixList   The matrix list as a list of pointers
-/// @param[in]  nmodes       The number of modes
+/// @param[in]  nmodesA      The number of modes for A
+/// @param[in]  nmodesB      The number of modes for B
 /// @param[in]  MatrixName   The matrix name, used to save the matrix
 ///
-/// @tparam     The type of matrix, can be fvScalarMatrix or fvVectorMatrix
+/// @tparam     type_matrix  The   type of matrix, can be fvScalarMatrix or
+///                          fvVectorMatrix
 ///
-/// @return     It returns a tuple containing the list of modes for the matrix and the list of modes for the source term
+/// @return     It returns a tuple containing the list of modes for the matrix
+///             and the list of modes for the source term
 ///
 template<typename type_matrix>
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
         DEIMmodes(PtrList<type_matrix>& MatrixList, int nmodesA, int nmodesB,
                   word MatrixName = "Matrix");
 
-//--------------------------------------------------------------------------
-/// @brief      Get the DEIM modes for a generic non a parametrized matrix coming from a differential operator function
+//------------------------------------------------------------------------------
+/// @brief      Get the DEIM modes for a generic non a parametrized matrix
+///             coming from a differential operator function
 ///
-/// @param[in]  MatrixList   The matrix list as a list of pointers
-/// @param[in]  nmodes       The number of modes
-/// @param[in]  MatrixName   The matrix name, used to save the matrix
+/// @param      A           List of matrices for the lhs
+/// @param      b           List of vectors for the rhs
+/// @param[in]  nmodesA     The number of modes
+/// @param[in]  nmodesB     The nmodes b
+/// @param[in]  MatrixName  The matrix name, used to save the matrix
+/// @param[in]  MatrixList  The matrix list as a list of pointers
 ///
-/// @tparam     The type of matrix, can be fvScalarMatrix or fvVectorMatrix
+/// @tparam     The   type of matrix, can be fvScalarMatrix or fvVectorMatrix
 ///
-/// @return     It returns a tuple containing the list of modes for the matrix and the list of modes for the source term
+/// @return     It returns a tuple containing the list of modes for the matrix
+///             and the list of modes for the source term
 ///
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
         DEIMmodes(List<Eigen::SparseMatrix<double>>& A, List<Eigen::VectorXd>& b,
                   int nmodesA, int nmodesB, word MatrixName = "Matrix");
 
 
-//--------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// @brief      Gets the modes.
 ///
 /// @param[in]  snapshots   List of snapshots.
-/// @param[out] modes       A PtrList where modes are stored (it must be passed empty).
-/// @param[in]  podex       If 1, the functions read the stored mode. If 0, the function computes the modes and stores them.
-/// @param[in]  supex       If 1, the functions read the stored supremizer mode. If 0, the function computes and stores them.
+/// @param[out] modes       A PtrList where modes are stored (it must be passed
+///                         empty).
+/// @param      Volumes     The volumes
+/// @param[in]  fieldName   The field name
+/// @param[in]  podex       If 1, the functions read the stored mode. If 0, the
+///                         function computes the modes and stores them.
+/// @param[in]  supex       If 1, the functions read the stored supremizer mode.
+///                         If 0, the function computes and stores them.
 /// @param[in]  sup         If 1 it computes the supremizer modes.
-/// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum number of modes will computed.
+/// @param[in]  nmodes      Number of modes to be stored. If 0, the maximum
+///                         number of modes will computed.
 ///
-/// @tparam     Field_type  Type of field
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots, 
-	      PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
+              PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
               PtrList<volScalarField>& Volumes, word fieldName, bool podex, bool supex = 0,
               bool sup = 0,
               int nmodes = 0);
 
-//----------------------------------------------------------------------
-/// @brief      Gets Modes based on eigenvalue decomposition of another
-///             Field
+//------------------------------------------------------------------------------
+/// @brief      Gets Modes based on eigenvalue decomposition of another Field
 ///
-/// @param      snapshots     The snapshots of which we want to create
-///                           the modes
+/// @param      snapshots     The snapshots of which we want to create the modes
 /// @param      modes         The modes of the snapshots
-/// @param      fields2       The fields that we want to use for the eigenvalue decomposition
-/// @param[in]  podex         boolean variable 1 if the modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
-/// @param[in]  supex         boolean variable 1 if the supremizer modes have been already computed and stored (in this case the function is reading them) 0 elsewhere.
-/// @param[in]  sup           boolean variable 1 if you want to compute the supremizer modes 0 elsewhere.
-/// @param[in]  nmodes        int variable to set the number of modes to be stored, if set to 0 the maximum number of modes will computed.
+/// @param      fields2       The fields that we want to use for the eigenvalue
+///                           decomposition
+/// @param[in]  fieldName     The field name
+/// @param[in]  podex         boolean variable 1 if the modes have been already
+///                           computed and stored (in this case the function is
+///                           reading them) 0 elsewhere.
+/// @param[in]  supex         boolean variable 1 if the supremizer modes have
+///                           been already computed and stored (in this case the
+///                           function is reading them) 0 elsewhere.
+/// @param[in]  sup           boolean variable 1 if you want to compute the
+///                           supremizer modes 0 elsewhere.
+/// @param[in]  nmodes        int variable to set the number of modes to be
+///                           stored, if set to 0 the maximum number of modes
+///                           will computed.
 ///
 /// @tparam     Field_type    Type of field snapshots
 /// @tparam     Field_type_2  Type of the other fields

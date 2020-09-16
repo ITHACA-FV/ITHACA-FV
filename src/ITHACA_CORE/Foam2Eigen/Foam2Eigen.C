@@ -354,12 +354,11 @@ Field<vector> Foam2Eigen::Eigen2field(Field<vector>& field,
         matrix.conservativeResize(sizeBC, 3);
         matrix = new_matrix;
     }
-	
+
     std::string message = "The input Eigen::MatrixXd has size " + name(
                               matrix.rows()) +
                           ". It should have the same size of the Field, i.e. " +
                           name(sizeBC);
-
     M_Assert(matrix.rows() == sizeBC, message.c_str());
 
     for (auto i = 0; i < sizeBC; i++)
@@ -373,8 +372,9 @@ Field<vector> Foam2Eigen::Eigen2field(Field<vector>& field,
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
-        int Nfields)
+Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
+    int Nfields)
 {
     int Nf;
     M_Assert(Nfields <= fields.size(),
@@ -401,11 +401,13 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<GeometricField<Type, PatchFiel
     return out;
 }
 
-template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volScalarField>&
+template Eigen::MatrixXd
+Foam2Eigen::PtrList2Eigen<scalar, fvPatchField, volMesh>(PtrList<volScalarField>&
         fields, int Nfields);
 template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<surfaceScalarField>&
         fields, int Nfields);
-template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<volVectorField>&
+template Eigen::MatrixXd
+Foam2Eigen::PtrList2Eigen<vector, fvPatchField, volMesh>(PtrList<volVectorField>&
         fields, int Nfields);
 
 template<>
@@ -932,7 +934,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 }
 
 template std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-        Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<scalar>>& MatrixList);
+Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<scalar>>& MatrixList);
 template std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-        Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<vector>>& MatrixList);
+Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<vector>>& MatrixList);
 

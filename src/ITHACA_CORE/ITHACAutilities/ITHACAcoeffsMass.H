@@ -75,8 +75,8 @@ namespace ITHACAutilities
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstructFromCoeff(
-		PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-                Eigen::MatrixXd& coeff_matrix, label Nmodes);
+            PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+            Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
 //-----------------------------------------------------------------------------
 /// Gets the mass matrix using the eigen routine

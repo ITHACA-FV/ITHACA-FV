@@ -100,7 +100,8 @@ class ITHACAstream
         /// @tparam     Type        can be scalar or vector
         ///
         template<typename Type>
-        static void exportFvMatrix(fvMatrix<Type>& Matrix, word folder, word MatrixName);
+        static void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
+                                   word MatrixName);
 
         //--------------------------------------------------------------------------
         /// Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format
@@ -111,8 +112,8 @@ class ITHACAstream
         /// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
         /// @param[in] folder    Directory in which the fali is saved.
         ///
- 	/// @tparam    T         The matrix can be of integers, double or float
-	/// 
+        /// @tparam    T         The matrix can be of integers, double or float
+        ///
         template<typename T>
         static void exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix, word Name,
                                  word type = "python", word folder = "./Matrices");
@@ -161,11 +162,12 @@ class ITHACAstream
         /// @param[in]  n_snap      The number of snapshots you want to read.
         ///
         /// @tparam     Type        vector or scalar.
-	/// @tparam     PatchField  fvPatchField or fvsPatchField.
-	/// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
-        static void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield, word Name,
+        static void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                                Lfield, word Name,
                                 fileName casename, label first_snap = 0, label n_snap = 0);
 
 
@@ -183,12 +185,13 @@ class ITHACAstream
         /// @param[in]  n_snap      The number of snapshots you want to read.
         ///
         /// @tparam     Type        vector or scalar.
-	/// @tparam     PatchField  fvPatchField or fvsPatchField.
-	/// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
-        static void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
-				GeometricField<Type, PatchField, GeoMesh>& field,
+        static void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                                Lfield,
+                                GeometricField<Type, PatchField, GeoMesh>& field,
                                 fileName casename, label first_snap = 0, label n_snap = 0);
 
         //----------------------------------------------------------------------
@@ -201,12 +204,13 @@ class ITHACAstream
         /// @param[in]  casename    The folder where the field is stored.
         ///
         /// @tparam     Type        vector or scalar.
-	/// @tparam     PatchField  fvPatchField or fvsPatchField.
-	/// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
-        static void readMiddleFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield, 
-				     GeometricField<Type, PatchField, GeoMesh>& field,
+        static void readMiddleFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                                     Lfield,
+                                     GeometricField<Type, PatchField, GeoMesh>& field,
                                      fileName casename);
 
         //----------------------------------------------------------------------
@@ -219,13 +223,14 @@ class ITHACAstream
         /// @param[in]  casename    The folder where the field is stored.
         ///
         /// @tparam     Type        vector or scalar.
-	/// @tparam     PatchField  fvPatchField or fvsPatchField.
-	/// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
-        static void readConvergedFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield, 
-				        GeometricField<Type, PatchField, GeoMesh>& field,
-                                        fileName casename);
+        static void readConvergedFields(
+            PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
+            GeometricField<Type, PatchField, GeoMesh>& field,
+            fileName casename);
 
         //--------------------------------------------------------------------------
         /// Function to export a scalar of vector field
@@ -235,12 +240,13 @@ class ITHACAstream
         /// @param[in]  fieldname  The name you want to give to the file.
         ///
         /// @tparam     Type        vector or scalar.
-	/// @tparam     PatchField  fvPatchField or fvsPatchField.
-	/// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
-        static void exportFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& field, 
-				 word folder, word fieldname);
+        static void exportFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                                 field,
+                                 word folder, word fieldname);
 
         //--------------------------------------------------------------------------
         /// Read a two dimensional matrix from a txt file in Eigen format
@@ -275,12 +281,12 @@ class ITHACAstream
         /// @param[in] fieldName  Name of the field/file
         ///
         /// @tparam     Type        vector or scalar.
-	/// @tparam     PatchField  fvPatchField or fvsPatchField.
-	/// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
-        static void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s, 
-				   fileName subfolder, fileName folder,
+        static void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
+                                   fileName subfolder, fileName folder,
                                    word fieldName);
 
         //--------------------------------------------------------------------------
@@ -291,12 +297,12 @@ class ITHACAstream
         /// @param[in] folder     Folder where the field is stored
         ///
         /// @tparam     Type        vector or scalar.
-	/// @tparam     PatchField  fvPatchField or fvsPatchField.
-	/// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
-        static void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s, 
-				   fileName subfolder, fileName folder);
+        static void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
+                                   fileName subfolder, fileName folder);
 
         //--------------------------------------------------------------------------
         /// Export a list to file
@@ -412,7 +418,7 @@ class ITHACAstream
         /// @param[in]      MatrixName  The matrix name prefix, files are the named with an incremental number
         ///
         /// @tparam     MatrixType  MatrixType  type of the matrix, i.e. double, float, ...
-	/// @tparam     Nrows       number of matrix rows
+        /// @tparam     Nrows       number of matrix rows
         /// @tparam     IND         number of matrix cols
         ///
         template <typename T, int Nrows, typename IND>
@@ -476,63 +482,63 @@ class ITHACAstream
 
 namespace Foam
 {
-    template<typename T>
-    Ostream& operator<< (Ostream& os, const Eigen::Matrix < T, -1, -1 > & mat)
-    {
-    	os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::MatrixXd&>
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Matrix < T, -1, -1 > & mat)
+{
+    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::MatrixXd&>
             (mat).data(), mat.size());
-    	return os;
-    }
+    return os;
+}
 
-    template<typename T>
-    Istream& operator>> (Istream& is, Eigen::Matrix < T, -1, -1 > & mat)
-    {
-    	label nrow, ncol;
-    	is >> nrow >> ncol;
-   	mat.resize(nrow, ncol);
-    	UList<T> list(mat.data(), nrow * ncol);
-    	is >> list;
-    	return is;
-    }
+template<typename T>
+Istream& operator>> (Istream& is, Eigen::Matrix < T, -1, -1 > & mat)
+{
+    label nrow, ncol;
+    is >> nrow >> ncol;
+    mat.resize(nrow, ncol);
+    UList<T> list(mat.data(), nrow * ncol);
+    is >> list;
+    return is;
+}
 
-    template<typename T>
-    Ostream& operator<< (Ostream& os, const Eigen::Matrix < T, -1, 1 > & mat)
-    {
-    	os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::MatrixXd&>
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Matrix < T, -1, 1 > & mat)
+{
+    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::MatrixXd&>
             (mat).data(), mat.size());
-    	return os;
-    }
+    return os;
+}
 
-    template<typename T>
-    Istream& operator>> (Istream& is, Eigen::Matrix < T, -1, 1 > & mat)
-    {
-    	label nrow, ncol;
-    	is >> nrow >> ncol;
-    	mat.resize(nrow, ncol);
-    	UList<T> list(mat.data(), nrow * ncol);
-    	is >> list;
-    	return is;
-    }
+template<typename T>
+Istream& operator>> (Istream& is, Eigen::Matrix < T, -1, 1 > & mat)
+{
+    label nrow, ncol;
+    is >> nrow >> ncol;
+    mat.resize(nrow, ncol);
+    UList<T> list(mat.data(), nrow * ncol);
+    is >> list;
+    return is;
+}
 
-    template<typename T>
-    Ostream& operator<< (Ostream& os, const Eigen::Tensor<T, 3>& tens)
-    {
-    	os << tens.dimension(0) << tens.dimension(1) << tens.dimension(
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Tensor<T, 3>& tens)
+{
+    os << tens.dimension(0) << tens.dimension(1) << tens.dimension(
            2) << UList<T>(const_cast<Eigen::Tensor<T, 3>&>(tens).data(),
                           tens.size());
-    	return os;
-    }
+    return os;
+}
 
-    template<typename T>
-    Istream& operator>> (Istream& is, Eigen::Tensor<T, 3>& tens)
-    {
-    	label d1, d2, d3;
-    	is >> d1 >> d2 >> d3;
-    	tens.resize(d1, d2, d3);
-    	UList<T> list(tens.data(), d1 * d2 * d3);
-    	is >> list;
-    	return is;
-    }
+template<typename T>
+Istream& operator>> (Istream& is, Eigen::Tensor<T, 3>& tens)
+{
+    label d1, d2, d3;
+    is >> d1 >> d2 >> d3;
+    tens.resize(d1, d2, d3);
+    UList<T> list(tens.data(), d1 * d2 * d3);
+    is >> list;
+    return is;
+}
 
 }
 
