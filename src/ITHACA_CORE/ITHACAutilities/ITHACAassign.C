@@ -121,8 +121,8 @@ template void assignIF(GeometricField<vector, fvPatchField, volMesh>& s,
                        vector& value, List<int>& indices);
 
 template<typename Type>
-void assignIF(GeometricField<Type, fvPatchField, volMesh>& s, 
-	      Type& value, int index)
+void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
+              Type& value, int index)
 {
     s.ref()[index] = value;
 }
@@ -140,7 +140,8 @@ void assignONE(volScalarField& s, List<int>& L)
     }
 }
 
-void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind, double value)
+void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
+              double value)
 {
     int sizeBC = s.boundaryField()[BC_ind].size();
     List<double> valueList(sizeBC);

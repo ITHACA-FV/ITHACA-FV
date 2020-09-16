@@ -29,7 +29,8 @@ namespace ITHACAutilities
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstructFromCoeff(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, Eigen::MatrixXd& coeff_matrix, label Nmodes)
+            PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+            Eigen::MatrixXd& coeff_matrix, label Nmodes)
 {
     PtrList<GeometricField<Type, PatchField, GeoMesh>> rec_field;
     rec_field.resize(0);
@@ -50,11 +51,13 @@ PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstructFromCoeff(
     return rec_field;
 }
 
-template PtrList<GeometricField<scalar, fvPatchField, volMesh>> reconstructFromCoeff(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& modes, 
+template PtrList<GeometricField<scalar, fvPatchField, volMesh>>
+reconstructFromCoeff(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& modes,
     Eigen::MatrixXd& coeff_matrix, label Nmodes);
-template PtrList<GeometricField<vector, fvPatchField, volMesh>> reconstructFromCoeff(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes, 
+template PtrList<GeometricField<vector, fvPatchField, volMesh>>
+reconstructFromCoeff(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes,
     Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
 template<class Type, template<class> class PatchField, class GeoMesh>

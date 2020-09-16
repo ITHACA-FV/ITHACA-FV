@@ -409,8 +409,9 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield, word Name,
-                               fileName casename, label first_snap, label n_snap)
+void ITHACAstream::read_fields(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield, word Name,
+    fileName casename, label first_snap, label n_snap)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     fvMesh& mesh = para->mesh;
@@ -463,9 +464,10 @@ void ITHACAstream::read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
-                               GeometricField<Type, PatchField, GeoMesh>& field, 
-			       fileName casename, label first_snap, label n_snap)
+void ITHACAstream::read_fields(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
+    GeometricField<Type, PatchField, GeoMesh>& field,
+    fileName casename, label first_snap, label n_snap)
 {
     if (!Pstream::parRun())
     {
@@ -556,8 +558,9 @@ void ITHACAstream::read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::readMiddleFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
-                                    GeometricField<Type, PatchField, GeoMesh>& field, fileName casename)
+void ITHACAstream::readMiddleFields(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
+    GeometricField<Type, PatchField, GeoMesh>& field, fileName casename)
 {
     int par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
@@ -571,9 +574,10 @@ void ITHACAstream::readMiddleFields(PtrList<GeometricField<Type, PatchField, Geo
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::readConvergedFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
-                                       GeometricField<Type, PatchField, GeoMesh>& field,
-                                       fileName casename)
+void ITHACAstream::readConvergedFields(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
+    GeometricField<Type, PatchField, GeoMesh>& field,
+    fileName casename)
 {
     int par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
@@ -624,8 +628,9 @@ int ITHACAstream::numberOfFiles(word folder, word MatrixName)
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::exportFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>& field, 
-				word folder, word fieldname)
+void ITHACAstream::exportFields(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& field,
+    word folder, word fieldname)
 {
     ITHACAutilities::createSymLink(folder);
     Info << "######### Exporting the Data for " << fieldname << " #########" <<
@@ -640,16 +645,19 @@ void ITHACAstream::exportFields(PtrList<GeometricField<Type, PatchField, GeoMesh
     std::cout << std::endl;
 }
 
-template void ITHACAstream::exportFields(PtrList<GeometricField<scalar, fvPatchField, volMesh>>& field, 
-				word folder, word fieldname);
-template void ITHACAstream::exportFields(PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& field, 
-				word folder, word fieldname);
-template void ITHACAstream::exportFields(PtrList<GeometricField<vector, fvPatchField, volMesh>>& field, 
-				word folder, word fieldname);
+template void ITHACAstream::exportFields(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& field,
+    word folder, word fieldname);
+template void ITHACAstream::exportFields(
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& field,
+    word folder, word fieldname);
+template void ITHACAstream::exportFields(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& field,
+    word folder, word fieldname);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s, 
-				  fileName subfolder, fileName folder,
+void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
+                                  fileName subfolder, fileName folder,
                                   word fieldName)
 {
     if (!Pstream::parRun())
@@ -676,16 +684,18 @@ void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
     }
 }
 
-template void ITHACAstream::exportSolution(GeometricField<scalar, fvPatchField, volMesh>& s, 
-				  fileName subfolder, fileName folder,
-                                  word fieldName);
-template void ITHACAstream::exportSolution(GeometricField<vector, fvPatchField, volMesh>& s, 
-				  fileName subfolder, fileName folder,
-                                  word fieldName);
+template void ITHACAstream::exportSolution(
+    GeometricField<scalar, fvPatchField, volMesh>& s,
+    fileName subfolder, fileName folder,
+    word fieldName);
+template void ITHACAstream::exportSolution(
+    GeometricField<vector, fvPatchField, volMesh>& s,
+    fileName subfolder, fileName folder,
+    word fieldName);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s, 
-				  fileName subfolder, fileName folder)
+void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
+                                  fileName subfolder, fileName folder)
 {
     if (!Pstream::parRun())
     {
@@ -708,10 +718,12 @@ void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
     }
 }
 
-template void ITHACAstream::exportSolution(GeometricField<scalar, fvPatchField, volMesh>& s, 
-				  fileName subfolder, fileName folder);
-template void ITHACAstream::exportSolution(GeometricField<vector, fvPatchField, volMesh>& s, 
-				  fileName subfolder, fileName folder);
+template void ITHACAstream::exportSolution(
+    GeometricField<scalar, fvPatchField, volMesh>& s,
+    fileName subfolder, fileName folder);
+template void ITHACAstream::exportSolution(
+    GeometricField<vector, fvPatchField, volMesh>& s,
+    fileName subfolder, fileName folder);
 
 void ITHACAstream::writePoints(pointField points, fileName folder,
                                fileName subfolder)
@@ -802,8 +814,10 @@ void ITHACAstream::exportList(T& list, word folder, word filename)
     }
 }
 
-template void ITHACAstream::exportList(Field<scalar>& list, word folder, word filename);
-template void ITHACAstream::exportList(Field<vector>& list, word folder, word filename);
+template void ITHACAstream::exportList(Field<scalar>& list, word folder,
+                                       word filename);
+template void ITHACAstream::exportList(Field<vector>& list, word folder,
+                                       word filename);
 
 
 
