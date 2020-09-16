@@ -829,85 +829,53 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_PPE(Eigen::MatrixXd& vel_now,
     return tauIter;
 }
 
-void reducedUnsteadyNS::reconstruct_PPE(fileName folder)
+void reducedUnsteadyNS::reconstruct(bool exportFields, fileName folder)
 {
-    mkDir(folder);
-    ITHACAutilities::createSymLink(folder);
+    if (exportFields)
+    {
+        mkDir(folder);
+        ITHACAutilities::createSymLink(folder);
+    }
+
     int counter = 0;
     int nextwrite = 0;
-    int counter2 = 1;
+    List < Eigen::MatrixXd> CoeffU;
+    List < Eigen::MatrixXd> CoeffP;
+    List <double> tValues;
+    CoeffU.resize(0);
+    CoeffP.resize(0);
+    tValues.resize(0);
     int exportEveryIndex = round(exportEvery / storeEvery);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextwrite)
         {
-            volVectorField U_rec("U_rec", Umodes[0] * 0);
-
-            for (label j = 0; j < Nphi_u; j++)
-            {
-                U_rec += Umodes[j] * online_solution[i](j + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(U_rec,  name(counter2), folder);
-            volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
-
-            for (label j = 0; j < Nphi_p; j++)
-            {
-                P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(P_rec, name(counter2), folder);
+            Eigen::MatrixXd currentUCoeff;
+            Eigen::MatrixXd currentPCoeff;
+            currentUCoeff = online_solution[i].block(1, 0, Nphi_u, 1);
+            currentPCoeff = online_solution[i].bottomRows(Nphi_p);
+            CoeffU.append(currentUCoeff);
+            CoeffP.append(currentPCoeff);
             nextwrite += exportEveryIndex;
-            double timenow = online_solution[i](0, 0);
-            std::ofstream of(folder + name(counter2) + "/" + name(timenow));
-            counter2 ++;
-            UREC.append(U_rec);
-            PREC.append(P_rec);
+            double timeNow = online_solution[i](0, 0);
+            tValues.append(timeNow);
         }
 
         counter++;
     }
-}
 
-void reducedUnsteadyNS::reconstruct_sup(fileName folder)
-{
-    mkDir(folder);
-    ITHACAutilities::createSymLink(folder);
-    int counter = 0;
-    int nextwrite = 0;
-    int counter2 = 1;
-    int exportEveryIndex = round(exportEvery / storeEvery);
+    volVectorField uRec("uRec", Umodes[0] * 0);
+    volScalarField pRec("pRec", problem->Pmodes[0] * 0);
+    uRecFields = problem->L_U_SUPmodes.reconstruct(uRec, CoeffU, "uRec");
+    pRecFields = problem->Pmodes.reconstruct(pRec, CoeffP, "pRec");
 
-    for (label i = 0; i < online_solution.size(); i++)
+    if (exportFields)
     {
-        if (counter == nextwrite)
-        {
-            volVectorField U_rec("U_rec", Umodes[0] * 0);
-
-            for (label j = 0; j < Nphi_u; j++)
-            {
-                U_rec += Umodes[j] * online_solution[i](j + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(U_rec,  name(counter2), folder);
-            volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
-
-            for (label j = 0; j < Nphi_p; j++)
-            {
-                P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(P_rec, name(counter2), folder);
-            nextwrite += exportEveryIndex;
-            double timenow = online_solution[i](0, 0);
-            std::ofstream of(folder + name(counter2) + "/" + name(timenow));
-            counter2 ++;
-            UREC.append(U_rec);
-            PREC.append(P_rec);
-        }
-
-        counter++;
+        ITHACAstream::exportFields(uRecFields, folder,
+                                   "uRec");
+        ITHACAstream::exportFields(pRecFields, folder,
+                                   "pRec");
     }
 }
 
