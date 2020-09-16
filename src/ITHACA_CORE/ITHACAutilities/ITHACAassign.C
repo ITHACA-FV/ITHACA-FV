@@ -90,9 +90,9 @@ template volScalarField computeAverage(
     PtrList<volScalarField>& fields);
 
 
-template<typename T>
-void assignIF(GeometricField<T, fvPatchField, volMesh>& s,
-              T& value)
+template<typename Type>
+void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
+              Type& value)
 {
     for (label i = 0; i < s.internalField().size(); i++)
     {
@@ -105,9 +105,9 @@ template void assignIF(
 template void assignIF(
     GeometricField<vector, fvPatchField, volMesh>& field, vector& value);
 
-template<typename T>
-void assignIF(GeometricField<T, fvPatchField, volMesh>& s,
-              T& value, List<int>& indices)
+template<typename Type>
+void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
+              Type& value, List<int>& indices)
 {
     for (label i = 0; i < indices.size(); i++)
     {
@@ -120,8 +120,9 @@ template void assignIF(GeometricField<scalar, fvPatchField, volMesh>& s,
 template void assignIF(GeometricField<vector, fvPatchField, volMesh>& s,
                        vector& value, List<int>& indices);
 
-template<typename T>
-void assignIF(GeometricField<T, fvPatchField, volMesh>& s, T& value, int index)
+template<typename Type>
+void assignIF(GeometricField<Type, fvPatchField, volMesh>& s, 
+	      Type& value, int index)
 {
     s.ref()[index] = value;
 }
@@ -139,7 +140,7 @@ void assignONE(volScalarField& s, List<int>& L)
     }
 }
 
-void assignBC(volScalarField& s, label BC_ind, double value)
+void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind, double value)
 {
     int sizeBC = s.boundaryField()[BC_ind].size();
     List<double> valueList(sizeBC);
@@ -152,7 +153,7 @@ void assignBC(volScalarField& s, label BC_ind, double value)
     assignBC(s, BC_ind, valueList);
 }
 
-void assignBC(volScalarField& s, label BC_ind,
+void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
               Eigen::MatrixXd valueVec)
 {
     int sizeBC = s.boundaryField()[BC_ind].size();
@@ -169,7 +170,7 @@ void assignBC(volScalarField& s, label BC_ind,
 }
 
 // Assign a BC for a scalar field
-void assignBC(volScalarField& s, label BC_ind,
+void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
               List<double> valueList)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
@@ -220,7 +221,7 @@ void assignBC(volScalarField& s, label BC_ind,
     }
 }
 
-void assignBC(volVectorField& s, label BC_ind,
+void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
               vector value)
 {
     M_Assert(value.size() == 3,
@@ -236,7 +237,7 @@ void assignBC(volVectorField& s, label BC_ind,
     assignBC(s, BC_ind, valueList);
 }
 
-void assignBC(volVectorField& s, label BC_ind,
+void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
               Eigen::MatrixXd valueVec)
 {
     int sizeBC = s.boundaryField()[BC_ind].size();
@@ -254,8 +255,42 @@ void assignBC(volVectorField& s, label BC_ind,
     assignBC(s, BC_ind, valueList);
 }
 
+void assignBC(GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
+              label BC_ind, Eigen::MatrixXd valueVec)
+{
+    int sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC  == valueVec.rows() && valueVec.cols() == 1,
+             "The given matrix must be a column one with the size equal to 3 times the dimension of the boundaryField");
+    List<scalar> valueList(sizeBC);
+
+    for (label i = 0; i < sizeBC; i++)
+    {
+        valueList[i] = valueVec(i);
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
+
+void assignBC(GeometricField<vector, fvsPatchField, surfaceMesh>& s,
+              label BC_ind, Eigen::MatrixXd valueVec)
+{
+    int sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC * 3  == valueVec.rows() && valueVec.cols() == 1,
+             "The given matrix must be a column one with the size equal to the dimension of the boundaryField");
+    List<vector> valueList(sizeBC);
+
+    for (label i = 0; i < sizeBC; i++)
+    {
+        valueList[i].component(0) = valueVec(i);
+        valueList[i].component(1) = valueVec(i + sizeBC);
+        valueList[i].component(2) = valueVec(i + sizeBC * 2);
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
+
 // Assign a BC for a vector field
-void assignBC(volVectorField& s, label BC_ind,
+void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
               List<vector> valueList)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
@@ -292,9 +327,9 @@ void assignBC(volVectorField& s, label BC_ind,
     }
 }
 
-template<typename T>
-void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& s, label BC_ind,
-              List<T>& valueList)
+template<typename Type>
+void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
+              List<Type>& valueList)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
     int sizeBC = s.boundaryField()[BC_ind].size();
@@ -311,9 +346,9 @@ void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& s, label BC_ind,
     }
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
-        fixedGradientFvPatchField<T>& Tpatch =
-            refCast<fixedGradientFvPatchField<T>>(s.boundaryFieldRef()[BC_ind]);
-        Field<T>& gradTpatch = Tpatch.gradient();
+        fixedGradientFvPatchField<Type>& Tpatch =
+            refCast<fixedGradientFvPatchField<Type>>(s.boundaryFieldRef()[BC_ind]);
+        Field<Type>& gradTpatch = Tpatch.gradient();
         forAll(gradTpatch, faceI)
         {
             gradTpatch[faceI] = valueList[faceI];
@@ -326,9 +361,9 @@ void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = valueList[i];
         }
 
-        freestreamFvPatchField<T>& Tpatch =
-            refCast<freestreamFvPatchField<T>>(s.boundaryFieldRef()[BC_ind]);
-        Field<T>& gradTpatch = Tpatch.freestreamValue();
+        freestreamFvPatchField<Type>& Tpatch =
+            refCast<freestreamFvPatchField<Type>>(s.boundaryFieldRef()[BC_ind]);
+        Field<Type>& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
             gradTpatch[faceI] = valueList[faceI];
@@ -346,12 +381,12 @@ template void assignBC(
     GeometricField<vector, fvsPatchField, surfaceMesh>& s, label BC_ind,
     List<vector>& valueList);
 
-template<typename T>
-void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& s, label BC_ind,
-              T& value)
+template<typename Type>
+void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
+              Type& value)
 {
     int sizeBC = s.boundaryField()[BC_ind].size();
-    List<T> valueList(sizeBC);
+    List<Type> valueList(sizeBC);
 
     for (label i = 0; i < sizeBC; i++)
     {
@@ -368,43 +403,9 @@ template void assignBC(
     GeometricField<vector, fvsPatchField, surfaceMesh>& s, label BC_ind,
     vector& valueList);
 
-void assignBC(GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
-              label BC_ind, Eigen::MatrixXd& valueVec)
-{
-    int sizeBC = s.boundaryField()[BC_ind].size();
-    M_Assert(sizeBC  == valueVec.rows() && valueVec.cols() == 1,
-             "The given matrix must be a column one with the size equal to 3 times the dimension of the boundaryField");
-    List<scalar> valueList(sizeBC);
-
-    for (label i = 0; i < sizeBC; i++)
-    {
-        valueList[i] = valueVec(i);
-    }
-
-    assignBC(s, BC_ind, valueList);
-}
-
-void assignBC(GeometricField<vector, fvsPatchField, surfaceMesh>& s,
-              label BC_ind, Eigen::MatrixXd& valueVec)
-{
-    int sizeBC = s.boundaryField()[BC_ind].size();
-    M_Assert(sizeBC * 3  == valueVec.rows() && valueVec.cols() == 1,
-             "The given matrix must be a column one with the size equal to the dimension of the boundaryField");
-    List<vector> valueList(sizeBC);
-
-    for (label i = 0; i < sizeBC; i++)
-    {
-        valueList[i].component(0) = valueVec(i);
-        valueList[i].component(1) = valueVec(i + sizeBC);
-        valueList[i].component(2) = valueVec(i + sizeBC * 2);
-    }
-
-    assignBC(s, BC_ind, valueList);
-}
-
-template<typename T>
-void setBoxToValue(GeometricField<T, fvPatchField, volMesh>& field,
-                   Eigen::MatrixXd Box, T value)
+template<typename Type>
+void setBoxToValue(GeometricField<Type, fvPatchField, volMesh>& field,
+                   Eigen::MatrixXd Box, Type value)
 {
     M_Assert(Box.rows() == 2
              && Box.cols() == 3,
@@ -449,9 +450,9 @@ template void setBoxToValue(GeometricField<scalar, fvPatchField, volMesh>&
 template void setBoxToValue(GeometricField<vector, fvPatchField, volMesh>&
                             field, Eigen::MatrixXd Box, vector value);
 
-template<typename T>
-void setIndices2Value(labelList& ind2set, List<T>& value2set,
-                      labelList& movingIDS, List<T>& originalList)
+template<typename Type>
+void setIndices2Value(labelList& ind2set, List<Type>& value2set,
+                      labelList& movingIDS, List<Type>& originalList)
 {
     M_Assert(ind2set.size() == value2set.size(),
              "The size of the indices must be equal to the size of the values list");
@@ -482,12 +483,12 @@ template void setIndices2Value(labelList& ind2set, List<scalar>& value2set,
 template void setIndices2Value(labelList& ind2set, List<vector>& value2set,
                                labelList& movingIDS, List<vector>& originalList);
 
-template<class TypeField>
+template<class Type>
 void changeBCtype(
-    GeometricField<TypeField, fvPatchField, volMesh>& field, word BCtype,
+    GeometricField<Type, fvPatchField, volMesh>& field, word BCtype,
     label BC_ind)
 {
-    field.boundaryFieldRef().set(BC_ind, fvPatchField<TypeField>::New(BCtype,
+    field.boundaryFieldRef().set(BC_ind, fvPatchField<Type>::New(BCtype,
                                  field.mesh().boundary()[BC_ind], field));
 }
 
@@ -498,10 +499,10 @@ template void changeBCtype<vector>
 (GeometricField<vector, fvPatchField, volMesh>& field, word BCtype,
  label BC_ind);
 
-template<typename type_f>
+template<typename Type>
 void assignMixedBC(
-    GeometricField<type_f, fvPatchField, volMesh>& field, label BC_ind,
-    List<type_f>& value, List<type_f>& grad, List<scalar>& valueFrac)
+    GeometricField<Type, fvPatchField, volMesh>& field, label BC_ind,
+    List<Type>& value, List<Type>& grad, List<scalar>& valueFrac)
 {
     std::string message = "Patch is NOT mixed. It is of type: " +
                           field.boundaryField()[BC_ind].type();
@@ -509,10 +510,10 @@ void assignMixedBC(
 
     if (field.boundaryField()[BC_ind].type() == "mixed")
     {
-        mixedFvPatchField<type_f>& Tpatch =
-            refCast<mixedFvPatchField<type_f>>(field.boundaryFieldRef()[BC_ind]);
-        Field<type_f>& valueTpatch = Tpatch.refValue();
-        Field<type_f>& gradTpatch = Tpatch.refGrad();
+        mixedFvPatchField<Type>& Tpatch =
+            refCast<mixedFvPatchField<Type>>(field.boundaryFieldRef()[BC_ind]);
+        Field<Type>& valueTpatch = Tpatch.refValue();
+        Field<Type>& gradTpatch = Tpatch.refGrad();
         Field<scalar>& valueFracTpatch = Tpatch.valueFraction();
         valueTpatch = value;
         gradTpatch = grad;
@@ -527,5 +528,36 @@ template void assignMixedBC<scalar>(
 template void assignMixedBC<vector>(
     GeometricField<vector, fvPatchField, volMesh>& field, label BC_ind,
     List<vector>& value, List<vector>& grad, List<scalar>& valueFrac);
+
+template<typename Type>
+void normalizeFields(
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& fields)
+{
+    Eigen::MatrixXd eigenFields = Foam2Eigen::PtrList2Eigen(fields);
+    List<Eigen::MatrixXd> eigenFieldsBC = Foam2Eigen::PtrList2EigenBC(fields);
+
+    for (label i = 0; i < fields.size(); i++)
+    {
+        double norm = L2Norm(fields[i]);
+        GeometricField<Type, fvPatchField, volMesh> tmp(fields[0].name(),
+                fields[0] * 0);
+        Eigen::VectorXd vec = eigenFields.col(i) / norm;
+        tmp = Foam2Eigen::Eigen2field(tmp, vec);
+
+        // Adjusting boundary conditions
+        for (int k = 0; k < tmp.boundaryField().size(); k++)
+        {
+            Eigen::MatrixXd vec = eigenFieldsBC[k].col(i) / norm;
+            assignBC(tmp, k, vec);
+        }
+
+        fields.set(i, tmp);
+    }
+}
+
+template void normalizeFields(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields);
+template void normalizeFields(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields);
 
 }

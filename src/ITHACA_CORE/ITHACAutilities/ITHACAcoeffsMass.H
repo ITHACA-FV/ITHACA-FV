@@ -67,13 +67,16 @@ namespace ITHACAutilities
 /// @param[in]  Nmodes        The number of modes you want to use.
 /// @param[in]  coeff_matrix  The matrix of coefficients.
 ///
-/// @tparam     TypeField   type of field
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 /// @return     rec_field     The reconstructed field as PtrList.
 ///
-template<typename TypeField>
-PtrList<TypeField> reconstructFromCoeff(PtrList<TypeField>& modes,
-                                        Eigen::MatrixXd& coeff_matrix, label Nmodes);
+template<class Type, template<class> class PatchField, class GeoMesh>
+PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstructFromCoeff(
+		PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+                Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
 //-----------------------------------------------------------------------------
 /// Gets the mass matrix using the eigen routine
@@ -81,12 +84,14 @@ PtrList<TypeField> reconstructFromCoeff(PtrList<TypeField>& modes,
 /// @param[in]  fields            The openFoam fields
 /// @param[in]  consider_volumes  True if you want to consider the volumes
 ///
-/// @tparam     T                 type of field
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 /// @return     The mass matrix eigen.
 ///
-template<typename T>
-Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<T, fvPatchField, volMesh>>&
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
                               fields, int nModes = 0,
                               bool consider_volumes = true);
 
@@ -95,13 +100,15 @@ Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<T, fvPatchField, volMesh>>&
 ///
 /// @param[in]  snapshot   A snapshot, scalar or vector field.
 ///
-/// @tparam     TypeField   type of field
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 /// @return     The FV mass matrix in Eigen::MatrixXd form.
 ///
-template<class TypeField>
+template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd getMassMatrixFV(
-    GeometricField<TypeField, fvPatchField, volMesh>& snapshot);
+    GeometricField<Type, PatchField, GeoMesh>& snapshot);
 
 //------------------------------------------------------------------------------
 /// Projects a snapshot on a basis function and gets
@@ -112,13 +119,16 @@ Eigen::VectorXd getMassMatrixFV(
 /// @param[in]  Nmodes            The number of modes
 /// @param[in]  consider_volumes  Consider volumes or not, in not equals Frobenius Projection
 ///
-/// @tparam     T                 Type of fields can be scalar or vector.
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
 /// @return     The coefficients of the projection.
 ///
-template<typename T>
-Eigen::VectorXd getCoeffs(GeometricField<T, fvPatchField, volMesh>&
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
                           snapshot,
-                          PtrList<GeometricField<T, fvPatchField, volMesh>>& modes, int Nmodes = 0,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes = 0,
                           bool consider_volumes = true);
 
 //------------------------------------------------------------------------------
@@ -128,16 +138,18 @@ Eigen::VectorXd getCoeffs(GeometricField<T, fvPatchField, volMesh>&
 /// @param[in]  snapshot          The snapshots.
 /// @param[in]  modes             The modes.
 /// @param[in]  Nmodes            The number of modes you want to use
-/// @param[in]  consider_volumes  The consider volumes
+/// @param[in]  consider_volumes  The consider volumes (if not equals Frobenius Projection)
 ///
-/// @tparam     T                 Consider volumes or not, in not equals Frobenius Projection
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 /// @return     The coefficients of the projection.
 ///
-template<typename T>
-Eigen::MatrixXd getCoeffs(PtrList<GeometricField<T, fvPatchField, volMesh>>&
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
                           snapshot,
-                          PtrList<GeometricField<T, fvPatchField, volMesh>>& modes, int Nmodes = 0,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes = 0,
                           bool consider_volumes = true);
 
 //--------------------------------------------------------------------------

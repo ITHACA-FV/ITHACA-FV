@@ -94,23 +94,24 @@ TypeField computeAverage(PtrList<TypeField>& fields);
 /// @param[in,out]  field  Field to which assign the internal field
 /// @param          value  The value you want to assign
 ///
-/// @tparam         T      type of field (volVectorField or volScalarField)
+/// @tparam         Type   Type of field vector or scalar
 ///
-template<typename T>
-void assignIF(GeometricField<T, fvPatchField, volMesh>& field, T& value);
+template<typename Type>
+void assignIF(GeometricField<Type, fvPatchField, volMesh>& field, 
+	      Type& value);
 
 //--------------------------------------------------------------------------
 /// Assign internal field
 ///
 /// @param[in,out]  field  Field to which assign the internal field
 /// @param          value  The value you want to assign
-/// @param          indices  The list of indices where you want assign
+/// @param          indices The list of indices where you want assign
 ///
-/// @tparam         T      type of field (volVectorField or volScalarField)
+/// @tparam         Type   Type of field vector or scalar
 ///
-template<typename T>
-void assignIF(GeometricField<T, fvPatchField, volMesh>& field, T& value,
-              List<int>& indices);
+template<typename Type>
+void assignIF(GeometricField<Type, fvPatchField, volMesh>& field, 
+	      Type& value, List<int>& indices);
 
 //--------------------------------------------------------------------------
 /// Assign internal field
@@ -119,11 +120,11 @@ void assignIF(GeometricField<T, fvPatchField, volMesh>& field, T& value,
 /// @param          value  The value you want to assign
 /// @param          index  The index where you want assign
 ///
-/// @tparam         T      type of field (volVectorField or volScalarField)
+/// @tparam         Type   Type of field vector or scalar
 ///
-template<typename T>
-void assignIF(GeometricField<T, fvPatchField, volMesh>& field, T& value,
-              int index);
+template<typename Type>
+void assignIF(GeometricField<Type, fvPatchField, volMesh>& field, 
+	      Type& value, int index);
 
 //--------------------------------------------------------------------------
 /// Assign one to volScalarField
@@ -142,7 +143,8 @@ void assignONE(volScalarField& s, List<int>& L);
 /// @param[in]  BC_ind  The BC index.
 /// @param[in]  value   The value you want to assign (it must be a double).
 ///
-void assignBC(volScalarField& s, label BC_ind, double value);
+void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind, 
+	      double value);
 
 //--------------------------------------------------------------------------
 /// Assign Boundary Condition to a volScalarField
@@ -151,7 +153,8 @@ void assignBC(volScalarField& s, label BC_ind, double value);
 /// @param[in]  BC_ind  The BC index.
 /// @param[in]  valueVec   The value you want to assign (it must be an Eigen MatrixXd).
 ///
-void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd valueVec);
+void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind, 
+	      Eigen::MatrixXd valueVec);
 
 //--------------------------------------------------------------------------
 /// Assign Boundary Condition to a volScalarField
@@ -160,7 +163,8 @@ void assignBC(volScalarField& s, label BC_ind, Eigen::MatrixXd valueVec);
 /// @param[in]  BC_ind  The BC index.
 /// @param[in]  valueList   The value you want to assign (it must be a list of doubles).
 ///
-void assignBC(volScalarField& s, label BC_ind, List<double> valueList);
+void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind, 
+	      List<double> valueList);
 
 //--------------------------------------------------------------------------
 /// Assign Boundary Condition to a volVectorField
@@ -169,7 +173,8 @@ void assignBC(volScalarField& s, label BC_ind, List<double> valueList);
 /// @param[in]  BC_ind  The BC index.
 /// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
 ///
-void assignBC(volVectorField& s, label BC_ind, vector value);
+void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind, 
+	      vector value);
 
 //--------------------------------------------------------------------------
 /// Assign Boundary Condition to a volVectorField
@@ -178,7 +183,8 @@ void assignBC(volVectorField& s, label BC_ind, vector value);
 /// @param[in]  BC_ind  The BC index.
 /// @param[in]  valueVec   The value you want to assign (it must be an Eigen MatrixXd).
 ///
-void assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd valueVec);
+void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind, 
+	      Eigen::MatrixXd valueVec);
 
 //--------------------------------------------------------------------------
 /// Assign Boundary Condition to a volVectorField
@@ -187,21 +193,8 @@ void assignBC(volVectorField& s, label BC_ind, Eigen::MatrixXd valueVec);
 /// @param[in]  BC_ind  The BC index.
 /// @param[in]  valueList   The value you want to assign (it must be a list of doubles).
 ///
-void assignBC(volVectorField& s, label BC_ind, List<vector> valueList);
-
-//------------------------------------------------------------------------------
-/// @brief      Assign Boundary Condition to a surfaceField
-///
-/// @param      field   field where you want to assign the BC.
-/// @param[in]  BC_ind  The bc ind
-/// @param      value   you want to assign (it must be a list of double or vector).
-///
-/// @tparam     T type of field (surfaceVectorField or surfaceScalarField)
-///
-template<typename T>
-void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& field,
-              label BC_ind,
-              List<T>& value);
+void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind, 
+	      List<vector> valueList);
 
 //------------------------------------------------------------------------------
 /// @brief      Assign Boundary Condition to a surfaceField
@@ -210,12 +203,28 @@ void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& field,
 /// @param[in]  BC_ind  The bc ind
 /// @param      value   you want to assign (it must be column matrix).
 ///
-/// @tparam     T type of field (surfaceVectorField or surfaceScalarField)
+/// @tparam     Type    Type of field (vector or scalar)
 ///
-template<typename T>
-void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& field,
-              label BC_ind,
-              Eigen::MatrixXd& value);
+void assignBC(GeometricField<scalar, fvsPatchField, surfaceMesh>& field,
+              label BC_ind, Eigen::MatrixXd value);
+
+void assignBC(GeometricField<vector, fvsPatchField, surfaceMesh>& field,
+              label BC_ind, Eigen::MatrixXd value);
+
+//------------------------------------------------------------------------------
+/// @brief      Assign Boundary Condition to a surfaceField
+///
+/// @param      field   field where you want to assign the BC.
+/// @param[in]  BC_ind  The bc ind
+/// @param      value   you want to assign (it must be a list of double or vector).
+///
+/// @tparam     Type    Type of field (vector or scalar)
+///
+template<typename Type>
+void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& field,
+              label BC_ind, List<Type>& value);
+
+
 
 //------------------------------------------------------------------------------
 /// @brief      Assign Boundary Condition to a surfaceField
@@ -224,12 +233,11 @@ void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& field,
 /// @param[in]  BC_ind  The bc ind
 /// @param      value   you want to assign (it must be a double or vector).
 ///
-/// @tparam     T type of field (surfaceVectorField or surfaceScalarField)
+/// @tparam     Type    Type of field (vector or scalar)
 ///
-template<typename T>
-void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& field,
-              label BC_ind,
-              T& value);
+template<typename Type>
+void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& field,
+              label BC_ind, Type& value);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
@@ -252,11 +260,11 @@ void assignBC(GeometricField<T, fvsPatchField, surfaceMesh>& field,
 /// @param[in]  Box    The box.
 /// @param[in]  value  The value you want to give to the volScalarField
 ///
-/// @tparam     T      type of field can be scalar or vector
+/// @tparam     Type   Type of field can be scalar or vector
 ///
-template<typename T>
-void setBoxToValue(GeometricField<T, fvPatchField, volMesh>& field,
-                   Eigen::MatrixXd Box, T value);
+template<typename Type>
+void setBoxToValue(GeometricField<Type, fvPatchField, volMesh>& field,
+                   Eigen::MatrixXd Box, Type value);
 #pragma GCC diagnostic pop
 
 //--------------------------------------------------------------------------
@@ -266,12 +274,11 @@ void setBoxToValue(GeometricField<T, fvPatchField, volMesh>& field,
 /// @param[in]  BCtype  The The BC type you want to set
 /// @param[in]  BC_ind  The BC index
 ///
-/// @tparam     TypeField  The type of field it can be scalar or vector
+/// @tparam     Type    The type of field it can be scalar or vector
 ///
-template<class TypeField>
-void changeBCtype(GeometricField<TypeField, fvPatchField, volMesh>&
-                  field,
-                  word BCtype, label BC_ind);
+template<class Type>
+void changeBCtype(GeometricField<Type, fvPatchField, volMesh>&
+                  field, word BCtype, label BC_ind);
 
 
 //--------------------------------------------------------------------------
@@ -282,11 +289,11 @@ void changeBCtype(GeometricField<TypeField, fvPatchField, volMesh>&
 /// @param      movingIDS     The index of the list in the original list that you want to assign
 /// @param      originalList  The original list
 ///
-/// @tparam     T             Type of list
+/// @tparam     Type          Type of list (scalar or vector)
 ///
-template<typename T>
-void setIndices2Value(labelList& ind2set, List<T>& value2set,
-                      labelList& movingIDS, List<T>& originalList);
+template<typename Type>
+void setIndices2Value(labelList& ind2set, List<Type>& value2set,
+                      labelList& movingIDS, List<Type>& originalList);
 
 //--------------------------------------------------------------------------
 /// @brief      Assign value of a boundary condition of type "mixed"
@@ -297,10 +304,10 @@ void setIndices2Value(labelList& ind2set, List<T>& value2set,
 /// @param[in]       grad       Reference normal gradient
 /// @param[in]       valueFrac  Weight field
 ///
-/// @tparam          type_f     Type of the field, it can be scalar or vector.
+/// @tparam          Type       Type of the field, it can be scalar or vector.
 ///
-template<typename type_f>
-void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
+template<typename Type>
+void assignMixedBC(GeometricField<Type, fvPatchField, volMesh>& field,
                    label BC_ind, Eigen::MatrixXd& value,
                    Eigen::MatrixXd& grad, Eigen::MatrixXd& valueFrac);
 
@@ -314,12 +321,12 @@ void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
 /// @param[in]       grad       Reference normal gradient
 /// @param[in]       valueFrac  Weight field
 ///
-/// @tparam          type_f     Type of the field, it can be scalar or vector.
+/// @tparam          Type      Type of the field, it can be scalar or vector.
 ///
-template<typename type_f>
-void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
-                   label BC_ind, List<type_f>& value,
-                   List<type_f>& grad, List<scalar>& valueFrac);
+template<typename Type>
+void assignMixedBC(GeometricField<Type, fvPatchField, volMesh>& field,
+                   label BC_ind, List<Type>& value,
+                   List<Type>& grad, List<scalar>& valueFrac);
 
 
 //--------------------------------------------------------------------------
@@ -327,42 +334,11 @@ void assignMixedBC(GeometricField<type_f, fvPatchField, volMesh>& field,
 ///
 /// @param      fields  The fields to be normalized
 ///
-/// @tparam     type_f  type of the Field can be Scalar or Vector
+/// @tparam     Type  type of the Field can be Scalar or Vector
 ///
-template<typename type_f>
+template<typename Type>
 void normalizeFields(
-    PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields);
-
-template<typename type_f>
-void normalizeFields(
-    PtrList<GeometricField<type_f, fvPatchField, volMesh>>& fields)
-{
-    Eigen::MatrixXd eigenFields = Foam2Eigen::PtrList2Eigen(fields);
-    List<Eigen::MatrixXd> eigenFieldsBC = Foam2Eigen::PtrList2EigenBC(fields);
-
-    for (label i = 0; i < fields.size(); i++)
-    {
-        double norm = L2Norm(fields[i]);
-        GeometricField<type_f, fvPatchField, volMesh> tmp(fields[0].name(),
-                fields[0] * 0);
-        Eigen::VectorXd vec = eigenFields.col(i) / norm;
-        tmp = Foam2Eigen::Eigen2field(tmp, vec);
-
-        // Adjusting boundary conditions
-        for (int k = 0; k < tmp.boundaryField().size(); k++)
-        {
-            Eigen::MatrixXd vec = eigenFieldsBC[k].col(i) / norm;
-            assignBC(tmp, k, vec);
-        }
-
-        fields.set(i, tmp);
-    }
-}
-
-template void normalizeFields(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields);
-template void normalizeFields(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields);
+    PtrList<GeometricField<Type, fvPatchField, volMesh>>& fields);
 
 }
 
