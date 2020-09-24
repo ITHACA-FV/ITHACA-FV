@@ -39,4 +39,8 @@ exportTxt 1;
 
 bcMethod lift;
 
+POD_U L2;
+POD_p L2;
+POD_Usup L2;
 
+normalizationNorm L2;

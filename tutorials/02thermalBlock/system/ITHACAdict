@@ -24,3 +24,5 @@ NmodesTproj 10;
 // Output format to save market vectors.
 OutPrecision 20;
 OutType fixed;
+
+POD_T Frobenius;

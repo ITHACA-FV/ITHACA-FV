@@ -55,6 +55,7 @@ SourceFiles
 using namespace std::placeholders;
 #include "Foam2Eigen.H"
 #include "ITHACAerror.H"
+#include "ITHACAparameters.H"
 
 /// Namespace to implement some useful assign operation of OF fields
 namespace ITHACAutilities
