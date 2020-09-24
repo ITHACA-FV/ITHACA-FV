@@ -54,6 +54,8 @@ SourceFiles
 #include "fvMeshSubset.H"
 using namespace std::placeholders;
 #include "Foam2Eigen.H"
+#include "ITHACAstream.H"
+#include "ITHACAparameters.H"
 #include "ITHACAgeometry.H"
 #include "ITHACAsystem.H"
 #include "ITHACAerror.H"

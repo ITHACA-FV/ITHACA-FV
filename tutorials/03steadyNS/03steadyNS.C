@@ -109,6 +109,7 @@ int main(int argc, char* argv[])
     // Solve the supremizer problem
     example.solvesupremizer();
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
+    ITHACAutilities::normalizeFields(example.liftfield);
     // Homogenize the snapshots
     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     // Perform POD on velocity pressure and supremizers and store the first 10 modes

@@ -534,12 +534,27 @@ template<typename Type>
 void normalizeFields(
     PtrList<GeometricField<Type, fvPatchField, volMesh>>& fields)
 {
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+    word normType = para->ITHACAdict->lookupOrDefault<word>("normalizationNorm",
+                    "L2");
+    M_Assert(normType == "L2" ||
+             normType == "Frobenius", "The normalizationNorm can be only L2 or Frobenius" );
     Eigen::MatrixXd eigenFields = Foam2Eigen::PtrList2Eigen(fields);
     List<Eigen::MatrixXd> eigenFieldsBC = Foam2Eigen::PtrList2EigenBC(fields);
 
     for (label i = 0; i < fields.size(); i++)
     {
-        double norm = L2Norm(fields[i]);
+        double norm;
+
+        if (normType == "L2")
+        {
+            norm = L2Norm(fields[i]);
+        }
+        else if (normType == "Frobenius")
+        {
+            norm = frobNorm(fields[i]);
+        }
+
         GeometricField<Type, fvPatchField, volMesh> tmp(fields[0].name(),
                 fields[0] * 0);
         Eigen::VectorXd vec = eigenFields.col(i) / norm;

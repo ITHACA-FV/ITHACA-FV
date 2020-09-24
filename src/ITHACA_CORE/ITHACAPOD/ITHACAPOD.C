@@ -95,6 +95,12 @@ void getModes(
     word fieldName, bool podex, bool supex, bool sup, int nmodes)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
+    word PODkey = "POD_" + fieldName;
+    word PODnorm = para->ITHACAdict->lookupOrDefault<word>(PODkey, "L2");
+    M_Assert(PODnorm == "L2" ||
+             PODnorm == "Frobenius", "The PODnorm can be only L2 or Frobenius");
+    Info << "Performing POD for " << fieldName << " using the " << PODnorm <<
+         " norm" << endl;
 
     if ((podex == 0 && sup == 0) || (supex == 0 && sup == 1))
     {
@@ -122,7 +128,16 @@ void getModes(
         Eigen::MatrixXd SnapMatrix = Foam2Eigen::PtrList2Eigen(snapshots);
         List<Eigen::MatrixXd> SnapMatrixBC = Foam2Eigen::PtrList2EigenBC(snapshots);
         int NBC = snapshots[0].boundaryField().size();
-        Eigen::MatrixXd _corMatrix = ITHACAutilities::getMassMatrix(snapshots);
+        Eigen::MatrixXd _corMatrix;
+
+        if (PODnorm == "L2")
+        {
+            _corMatrix = ITHACAutilities::getMassMatrix(snapshots);
+        }
+        else if (PODnorm == "Frobenius")
+        {
+            _corMatrix = ITHACAutilities::getMassMatrix(snapshots, false);
+        }
 
         if (Pstream::parRun())
         {
@@ -169,6 +184,23 @@ void getModes(
             eigenValueseig.real().array().cwiseInverse().abs().sqrt() ;
         Eigen::MatrixXd modesEig = (SnapMatrix * eigenVectoreig) *
                                    eigenValueseigLam.head(nmodes).asDiagonal();
+        // Computing Normalization factors of the POD Modes
+        Eigen::VectorXd V = ITHACAutilities::getMassMatrixFV(snapshots[0]);
+        Eigen::VectorXd normFact(nmodes);
+
+        for (unsigned int i = 0; i < nmodes; i++)
+        {
+            if (PODnorm == "L2")
+            {
+                normFact(i) = std::sqrt((modesEig.col(i).transpose() * V.asDiagonal() *
+                                         modesEig.col(i))(0, 0));
+            }
+            else if (PODnorm == "Frobenius")
+            {
+                normFact(i) = std::sqrt((modesEig.col(i).transpose() * modesEig.col(i))(0, 0));
+            }
+        }
+
         List<Eigen::MatrixXd> modesEigBC;
         modesEigBC.resize(NBC);
 
@@ -176,6 +208,16 @@ void getModes(
         {
             modesEigBC[i] = (SnapMatrixBC[i] * eigenVectoreig) *
                             eigenValueseigLam.head(nmodes).asDiagonal();
+        }
+
+        for (unsigned int i = 0; i < nmodes; i++)
+        {
+            modesEig.col(i) = modesEig.col(i).array() / normFact(i);
+
+            for (unsigned int j = 0; j < NBC; j++)
+            {
+                modesEigBC[j].col(i) = modesEigBC[j].col(i).array() / normFact(i);
+            }
         }
 
         for (int i = 0; i < modes.size(); i++)
