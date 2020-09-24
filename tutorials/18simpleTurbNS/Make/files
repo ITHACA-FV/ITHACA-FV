@@ -1,3 +1,0 @@
-18simpleTurbNS.C
-
-EXE = $(FOAM_USER_APPBIN)/18simpleTurbNS
