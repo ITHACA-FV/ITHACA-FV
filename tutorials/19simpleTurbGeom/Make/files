@@ -1,3 +1,0 @@
-19simpleTurbGeom.C
-
-EXE = $(FOAM_USER_APPBIN)/19simpleTurbGeom
