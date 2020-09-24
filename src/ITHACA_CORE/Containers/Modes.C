@@ -419,3 +419,4 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
 }
 template class Modes<scalar, fvPatchField, volMesh>;
 template class Modes<vector, fvPatchField, volMesh>;
+template class Modes<scalar, fvsPatchField, surfaceMesh>;

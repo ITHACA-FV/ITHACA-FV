@@ -692,6 +692,10 @@ template void ITHACAstream::exportSolution(
     GeometricField<vector, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
+template void ITHACAstream::exportSolution(
+    GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
+    fileName subfolder, fileName folder,
+    word fieldName);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
@@ -723,6 +727,9 @@ template void ITHACAstream::exportSolution(
     fileName subfolder, fileName folder);
 template void ITHACAstream::exportSolution(
     GeometricField<vector, fvPatchField, volMesh>& s,
+    fileName subfolder, fileName folder);
+template void ITHACAstream::exportSolution(
+    GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
     fileName subfolder, fileName folder);
 
 void ITHACAstream::writePoints(pointField points, fileName folder,
