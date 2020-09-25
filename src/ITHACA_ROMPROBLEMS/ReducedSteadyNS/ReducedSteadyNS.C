@@ -251,8 +251,8 @@ void reducedSteadyNS::reconstruct_sup(bool exportFields, fileName folder,
 
     int counter = 0;
     int nextwrite = 0;
-    List < Eigen::MatrixXd> CoeffU;
-    List < Eigen::MatrixXd> CoeffP;
+    List <Eigen::MatrixXd> CoeffU;
+    List <Eigen::MatrixXd> CoeffP;
     CoeffU.resize(0);
     CoeffP.resize(0);
 
