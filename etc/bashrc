@@ -2,3 +2,5 @@
 export LIB_ITHACA_ETC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export LIB_ITHACA="$(dirname "${LIB_ITHACA_ETC}")"
 export LIB_ITHACA_SRC="$LIB_ITHACA/src"
+export PATH=$PATH:${LIB_ITHACA}/bin
+
