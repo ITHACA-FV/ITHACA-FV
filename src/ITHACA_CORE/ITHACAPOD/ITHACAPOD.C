@@ -174,12 +174,15 @@ void getModes(
             M_Assert(esEg.info() == Eigen::Success,
                      "The Eigenvalue Decomposition did not succeed");
             eigenVectoreig = esEg.eigenvectors().real().rowwise().reverse().leftCols(
-                                 nmodes);
-            eigenValueseig = esEg.eigenvalues().real().array().reverse() + 2*abs(esEg.eigenvalues().real().array().minCoeff());
-	    //double minvalue = eigenValueseig.array().abs().min();
-	std::cout <<  abs(eigenValueseig.real().array().minCoeff()) << std::endl;
-	    std::cout <<  eigenValueseig << std::endl;
+                                 nmodes);            
+            eigenValueseig = esEg.eigenvalues().real().array().reverse(); 
         }
+
+        if (eigenValueseig.array().minCoeff() < 0)
+        {
+            eigenValueseig = eigenValueseig.array() + 2*abs(eigenValueseig.array().minCoeff());
+        }
+
 
         Info << "####### End of the POD for " << snapshots[0].name() << " #######" <<
              endl;
