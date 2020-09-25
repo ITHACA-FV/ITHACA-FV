@@ -272,8 +272,8 @@ void reducedSteadyNS::reconstruct_sup(bool exportFields, fileName folder,
         counter++;
     }
 
-    volVectorField uRec("uRec", Umodes[0] * 0);
-    volScalarField pRec("pRec", problem->Pmodes[0] * 0);
+    volVectorField uRec("uRec", Umodes[0]);
+    volScalarField pRec("pRec", problem->Pmodes[0]);
     uRecFields = problem->L_U_SUPmodes.reconstruct(uRec, CoeffU, "uRec");
     pRecFields = problem->Pmodes.reconstruct(pRec, CoeffP, "pRec");
 
