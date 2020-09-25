@@ -236,6 +236,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
 
 typedef Modes<scalar, fvPatchField, volMesh> volScalarModes;
 typedef Modes<vector, fvPatchField, volMesh> volVectorModes;
+typedef Modes<scalar, fvsPatchField, surfaceMesh> surfaceScalarModes;
 
 #endif
 

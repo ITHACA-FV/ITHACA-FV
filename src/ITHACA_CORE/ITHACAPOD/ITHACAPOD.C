@@ -175,13 +175,16 @@ void getModes(
                      "The Eigenvalue Decomposition did not succeed");
             eigenVectoreig = esEg.eigenvectors().real().rowwise().reverse().leftCols(
                                  nmodes);
-            eigenValueseig = esEg.eigenvalues().real().reverse();
+            eigenValueseig = esEg.eigenvalues().real().array().reverse() + 2*abs(esEg.eigenvalues().real().array().minCoeff());
+	    //double minvalue = eigenValueseig.array().abs().min();
+	std::cout <<  abs(eigenValueseig.real().array().minCoeff()) << std::endl;
+	    std::cout <<  eigenValueseig << std::endl;
         }
 
         Info << "####### End of the POD for " << snapshots[0].name() << " #######" <<
              endl;
         Eigen::VectorXd eigenValueseigLam =
-            eigenValueseig.real().array().cwiseInverse().abs().sqrt() ;
+            eigenValueseig.real().array().abs().cwiseInverse().sqrt() ;
         Eigen::MatrixXd modesEig = (SnapMatrix * eigenVectoreig) *
                                    eigenValueseigLam.head(nmodes).asDiagonal();
         // Computing Normalization factors of the POD Modes
