@@ -240,8 +240,8 @@ void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
     }
 }
 
-void reducedSteadyNS::reconstruct_sup(bool exportFields, fileName folder,
-                                      int printevery)
+void reducedSteadyNS::reconstruct(bool exportFields, fileName folder,
+                                  int printevery)
 {
     if (exportFields)
     {

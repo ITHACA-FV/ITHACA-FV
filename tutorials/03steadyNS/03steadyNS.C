@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
     ITHACAstream::exportMatrix(ridotto.online_solution, "red_coeff", "eigen",
                                "./ITHACAoutput/red_coeff");
     // Reconstruct and export the solution
-    ridotto.reconstruct_sup(true, "./ITHACAoutput/Reconstruction/");
+    ridotto.reconstruct(true, "./ITHACAoutput/Reconstruction/");
     return 0;
 }
 
