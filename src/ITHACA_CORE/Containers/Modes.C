@@ -370,12 +370,16 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
     int numberOfModes,
     word innerProduct)
 {
+    if (EigenModes.size() == 0)
+    {
+        toEigen();
+    }
+
     M_Assert(numberOfModes <= this->size(),
              "The number of Modes used for the projection cannot be bigger than the number of available modes");
     M_Assert(innerProduct == "L2" || innerProduct == "Frobenius",
              "The chosen inner product is not implemented");
-    M_Assert(snapshots.size() == projSnapshots.size(),
-             "The projected snapshots list size has to be equal to the original snapshots one");
+    projSnapshots.resize(snapshots.size());
     Eigen::MatrixXd Modes;
 
     if (numberOfModes == 0)
@@ -387,11 +391,6 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
         Modes = EigenModes[0].leftCols(numberOfModes);
     }
 
-    if (EigenModes.size() == 0)
-    {
-        toEigen();
-    }
-
     Eigen::MatrixXd M_vol;
     Eigen::MatrixXd M;
     Eigen::MatrixXd projSnapI;
@@ -399,6 +398,7 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
 
     for (int i = 0; i < snapshots.size(); i++)
     {
+        GeometricField<Type, PatchField, GeoMesh> Fr = snapshots[0];
         Eigen::MatrixXd F_eigen = Foam2Eigen::field2Eigen(snapshots[i]);
 
         if (innerProduct == "L2")
@@ -418,7 +418,8 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
         M = Modes.transpose() * M_vol.asDiagonal() * Modes;
         projSnapI = Modes.transpose() * M_vol.asDiagonal() * F_eigen;
         projSnapCoeff = M.fullPivLu().solve(projSnapI);
-        reconstruct(projSnapshots[i], projSnapCoeff, "projSnap");
+        reconstruct(Fr, projSnapCoeff, "projSnap");
+        projSnapshots.set(i, Fr);
     }
 }
 template<class Type, template<class> class PatchField, class GeoMesh>
