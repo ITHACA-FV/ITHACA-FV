@@ -173,6 +173,18 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+GeometricField<Type, PatchField, GeoMesh>
+Modes<Type, PatchField, GeoMesh>::projectSnapshot(
+    GeometricField<Type, PatchField, GeoMesh>&
+    field, int numberOfModes, word projType, fvMatrix<Type>* Af)
+{
+    Eigen::MatrixXd proj = project(field, numberOfModes, projType, Af);
+    GeometricField<Type, PatchField, GeoMesh> projSnap = field;
+    reconstruct(projSnap, proj, projSnap.name());
+    return projSnap;
+}
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>&
     fields,
@@ -293,8 +305,7 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
              "The number of Modes used for the projection cannot be bigger than the number of available modes");
     M_Assert(innerProduct == "L2" || innerProduct == "Frobenius",
              "The chosen inner product is not implemented");
-    M_Assert(snapshots.size() == projSnapshots.size(),
-             "The projected snapshots list size has to be equal to the original snapshots one");
+    projSnapshots.resize(snapshots.size());
     int dim = std::nearbyint(EigenModes[0].rows() /
                              Volumes[0].size()); //Checking if volumes and modes have the same size that means check if the problem is vector or scalar
     Eigen::MatrixXd totVolumes(Volumes[0].size()*dim, Volumes.size());
@@ -322,6 +333,7 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
 
     for (int i = 0; i < snapshots.size(); i++)
     {
+        GeometricField<Type, PatchField, GeoMesh> Fr = snapshots[0];
         Eigen::MatrixXd F_eigen = Foam2Eigen::field2Eigen(snapshots[i]);
 
         if (innerProduct == "L2")
@@ -336,7 +348,8 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
         }
 
         projSnapCoeff = M.fullPivLu().solve(projSnapI);
-        reconstruct(projSnapshots[i], projSnapCoeff, "projSnap");
+        reconstruct(Fr, projSnapCoeff, "projSnap");
+        projSnapshots.set(i, Fr);
     }
 }
 template<class Type, template<class> class PatchField, class GeoMesh>
