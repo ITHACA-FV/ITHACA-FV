@@ -206,7 +206,6 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     Vector<double> uresidual_v(0, 0, 0);
     scalar presidual = 1;
     scalar csolve = 0;
-    // Variable that can be changed
     turbulence->read();
     std::ofstream res_os;
     res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
@@ -315,7 +314,6 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
                 }
         }
     }
-
     res_os << residual << std::endl;
     res_os.close();
     runTime.setTime(runTime.startTime(), 0);
