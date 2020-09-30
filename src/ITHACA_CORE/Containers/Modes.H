@@ -155,6 +155,20 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
                                 int numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
 
         //----------------------------------------------------------------------
+        /// @brief      A function that project and reconstruct a snapshot on the modes
+        ///
+        /// @param      field          The field one wants to project
+        /// @param[in]  numberOfModes  The number of modes
+        /// @param[in]  projType       The projection type, it can be Galerkin "G" or Petrov-Galerkin "PG"
+        /// @param      Af             The system matrix used in case of Petrov-Galerkin projection
+        ///
+        /// @return     The projected snapshot
+        ///
+        GeometricField<Type, PatchField, GeoMesh> projectSnapshot(
+            GeometricField<Type, PatchField, GeoMesh>& field,
+            int numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
+
+        //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
         ///             coefficients, in this case the field is passed as
         ///             input/output
