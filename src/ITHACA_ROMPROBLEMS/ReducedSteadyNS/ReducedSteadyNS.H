@@ -198,15 +198,17 @@ class reducedSteadyNS: public reducedProblem
         void reconstruct_PPE(fileName folder = "./ITHACAoutput/online_rec",
                              int printevery = 1);
 
-        /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
-        /// stabilisation method
+
         ///
-        /// @param[in]  folder      The folder where to output the solutions
-        /// @param[in]  printevery  The printevery
+        /// Method to reconstruct the solutions from an online solve.
         ///
-        void reconstruct_sup(bool exportFields = false,
-                             fileName folder = "./ITHACAoutput/online_rec",
-                             int printevery = 1);
+        /// @param[in]  exportFields  A boolean variable which determines whether to export fields or not
+        /// @param[in]  folder        The folder where to output the solutions in case on wants to
+        /// @param[in]  printevery    The printevery variabel, when it is 1 the function outputs all stored fields
+        ///
+        void reconstruct(bool exportFields = false,
+                         fileName folder = "./ITHACAoutput/online_rec",
+                         int printevery = 1);
 
         /// Method to compute the reduced order forces
         ///

@@ -109,8 +109,8 @@ class ReducedSteadyNSTurb: public reducedSteadyNS
         /// List of POD modes for eddy viscosity
         PtrList<volScalarField> nutModes;
 
-        /// Reconstructed eddy viscosity field
-        PtrList<volScalarField> nutRec;
+        /// The matrix of the eddy viscosity RBF interoplated coefficients
+        Eigen::MatrixXd rbfCoeffMat;
 
         /// Vector of eddy viscosity RBF interoplated coefficients
         Eigen::VectorXd rbfCoeff;
@@ -124,7 +124,9 @@ class ReducedSteadyNSTurb: public reducedSteadyNS
         /// Pointer to the FOM problem
         SteadyNSTurb* problem;
 
-        ///
+        /// Reconstructed eddy viscosity fields list
+        PtrList<volScalarField> nutRecFields;
+
         /// Method to perform an online solve using a supremizer stabilisation method
         ///
         /// @param[in]  velNow   The vector of online velocity. It is defined in
@@ -135,14 +137,16 @@ class ReducedSteadyNSTurb: public reducedSteadyNS
         ///
         void solveOnlineSUP(Eigen::MatrixXd velNow);
 
-        /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
-        /// stabilisation method
+
+        /// Method to reconstruct the solutions from an online solve.
         ///
-        /// @param[in]  folder      The folder where to output the solutions
-        /// @param[in]  printEvery  The printEvery
+        /// @param[in]  exportFields  A boolean variable which determines whether to export fields or not
+        /// @param[in]  folder        The folder where to output the solutions in case on wants to
+        /// @param[in]  printevery    The printevery variabel, when it is 1 the function outputs all stored fields
         ///
-        void reconstructSUP(fileName folder = "./ITHACAOutput/online_rec",
-                            int printEvery = 1);
+        void reconstruct(bool exportFields = false,
+                         fileName folder = "./ITHACAoutput/online_rec",
+                         int printevery = 1);
 
         ///
         /// @brief      Sets the online velocity.

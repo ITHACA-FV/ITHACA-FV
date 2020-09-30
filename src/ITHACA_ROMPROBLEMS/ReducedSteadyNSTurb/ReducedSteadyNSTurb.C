@@ -192,14 +192,6 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
         exit(0);
     }
 
-    volScalarField nutTmp("nutRec", problem->nutModes[0] * 0);
-
-    for (label j = 0; j < nphiNut; j++)
-    {
-        nutTmp += problem->nutModes[j] * newtonObject.gNut(j);
-    }
-
-    nutRec.append(nutTmp);
     newtonObject.nu = nu;
     hnls.solve(y);
     Eigen::VectorXd res(y);
@@ -223,39 +215,58 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
 }
 
 
-void ReducedSteadyNSTurb::reconstructSUP(fileName folder, int printEvery)
+void ReducedSteadyNSTurb::reconstruct(bool exportFields, fileName folder,
+                                      int printevery)
 {
-    mkDir(folder);
-    ITHACAutilities::createSymLink(folder);
+    if (exportFields)
+    {
+        mkDir(folder);
+        ITHACAutilities::createSymLink(folder);
+    }
+
     int counter = 0;
     int nextWrite = 0;
+    List <Eigen::MatrixXd> CoeffU;
+    List <Eigen::MatrixXd> CoeffP;
+    List <Eigen::MatrixXd> CoeffNut;
+    CoeffU.resize(0);
+    CoeffP.resize(0);
+    CoeffNut.resize(0);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextWrite)
         {
-            volVectorField uRec("uRec", Umodes[0] * 0);
-
-            for (label j = 0; j < Nphi_u; j++)
-            {
-                uRec += Umodes[j] * online_solution[i](j + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(uRec, name(online_solution[i](0, 0)), folder);
-            volScalarField pRec("pRec", problem->Pmodes[0] * 0);
-
-            for (label j = 0; j < Nphi_p; j++)
-            {
-                pRec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(pRec, name(online_solution[i](0, 0)), folder);
-            nextWrite += printEvery;
-            UREC.append(uRec);
-            PREC.append(pRec);
+            Eigen::MatrixXd currentUCoeff;
+            Eigen::MatrixXd currentPCoeff;
+            Eigen::MatrixXd currentNutCoeff;
+            currentUCoeff = online_solution[i].block(1, 0, Nphi_u, 1);
+            currentPCoeff = online_solution[i].bottomRows(Nphi_p);
+            currentNutCoeff = rbfCoeffMat.block(0, i, nphiNut, 1);
+            CoeffU.append(currentUCoeff);
+            CoeffP.append(currentPCoeff);
+            CoeffNut.append(currentNutCoeff);
+            nextWrite += printevery;
         }
 
         counter++;
+    }
+
+    volVectorField uRec("uRec", Umodes[0]);
+    volScalarField pRec("pRec", problem->Pmodes[0]);
+    volScalarField nutRec("nutRec", problem->nutModes[0]);
+    uRecFields = problem->L_U_SUPmodes.reconstruct(uRec, CoeffU, "uRec");
+    pRecFields = problem->Pmodes.reconstruct(pRec, CoeffP, "pRec");
+    nutRecFields = problem->nutModes.reconstruct(nutRec, CoeffNut, "nutRec");
+
+    if (exportFields)
+    {
+        ITHACAstream::exportFields(uRecFields, folder,
+                                   "uRec");
+        ITHACAstream::exportFields(pRecFields, folder,
+                                   "pRec");
+        ITHACAstream::exportFields(nutRecFields, folder,
+                                   "nutRec");
     }
 }
 
