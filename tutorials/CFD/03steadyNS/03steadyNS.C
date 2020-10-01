@@ -68,7 +68,6 @@ class tutorial03 : public steadyNS
                 mu_samples =
                     ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }
-
             else
             {
                 Vector<double> Uinl(0, 0, 0);
@@ -120,7 +119,6 @@ int main(int argc, char* argv[])
         ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
                             example.podex, 0, 0, NmodesUout);
     }
-
     else
     {
         ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),

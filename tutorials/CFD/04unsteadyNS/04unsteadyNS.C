@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
     vel_now(0, 0) = 1;
     reduced.solveOnline_sup(vel_now, 1);
     // Reconstruct the solution and export it
-    reduced.reconstruct(true,"./ITHACAoutput/ReconstructionSUP/");
+    reduced.reconstruct(true, "./ITHACAoutput/ReconstructionSUP/");
     exit(0);
 }
 

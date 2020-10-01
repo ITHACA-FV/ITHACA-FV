@@ -69,7 +69,6 @@ class tutorial02: public laplacianProblem
                 mu_samples =
                     ITHACAstream::readMatrix(folder + "/mu_samples_mat.txt");
             }
-
             else
             {
                 List<scalar> mu_now(9);
@@ -196,12 +195,9 @@ int main(int argc, char* argv[])
     // Perform an Offline Solve
     example.offlineSolve();
     // Perform a POD decomposition and get the modes
-    
     ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
                         example.podex, 0, 0,
                         NmodesTout);
-
-
     /// Create a new instance of the FOM problem for testing purposes
     tutorial02 FOM_test(argc, argv);
     FOM_test.offline = false;
@@ -225,10 +221,8 @@ int main(int argc, char* argv[])
     FOM_test.assemble_operator();
     // Perform an Offline Solve
     FOM_test.offlineSolve("./ITHACAoutput/FOMtest");
-
     // Perform the Galerkin projection onto the space spanned by the POD modes
     example.project(NmodesTproj);
-
     // Create a reduced object
     reducedLaplacian reduced(example);
 
@@ -240,10 +234,9 @@ int main(int argc, char* argv[])
 
     // Reconstruct the solution and store it into Reconstruction folder
     reduced.reconstruct("./ITHACAoutput/Reconstruction");
-
     // Compute the error on the testing set
-    Eigen::MatrixXd error = ITHACAutilities::errorL2Rel(FOM_test.Tfield, reduced.Trec);
-
+    Eigen::MatrixXd error = ITHACAutilities::errorL2Rel(FOM_test.Tfield,
+                            reduced.Trec);
 }
 //--------
 /// \dir 02thermalBlock Folder of the turorial 2
