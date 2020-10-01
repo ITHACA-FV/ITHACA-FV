@@ -1,0 +1,116 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    p
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-06;
+        relTol          0;
+    }
+
+    pcorr
+    {
+
+        $p;
+        tolerance        0;
+        relTol           0;
+    }
+
+
+    pFinal
+    {
+        $p;
+        tolerance        1e-6;
+        relTol           0;
+    }
+
+    "(U|k|epsilon|omega|f|v2)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-8;
+        relTol          0;
+    }
+    Phi
+    {
+        $p;
+    }
+}
+
+relaxationFactors
+{
+    fields
+    {
+        p               0.3;
+    }
+    equations
+    {
+        U               0.7;
+        nuTilda         0.7;
+        ".*"            0.9; // 0.9 is more stable but 0.95 more convergent
+    }
+}
+
+potentialFlow
+{
+    nNonOrthogonalCorrectors 3;
+}
+
+PISO
+{
+    nCorrectors     2;
+    nNonOrthogonalCorrectors 0;
+    pRefCell        0;
+    pRefValue       0;
+}
+
+
+cache
+{
+    grad(U);
+}
+
+PIMPLE
+{
+    correctPhi          yes;
+    nOuterCorrectors    3;
+    nCorrectors         3;
+    nNonOrthogonalCorrectors 0;
+    pRefCell        0;
+    pRefValue       0;
+}
+SIMPLE
+{
+    nNonOrthogonalCorrectors 2;
+    consistent      false;
+    nOuterCorrectors    2;
+    nCorrectors         2;
+    pRefCell        0;
+    pRefValue       0;
+
+    residualControl
+    {
+        p               1e-9;
+        U               1e-9;
+        nuTilda         1e-6;
+    }
+}
+
+
+// ************************************************************************* //
