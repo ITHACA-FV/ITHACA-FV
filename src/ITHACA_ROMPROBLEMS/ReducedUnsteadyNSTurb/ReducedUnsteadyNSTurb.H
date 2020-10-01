@@ -249,6 +249,9 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         /// Interpolation independent variable choice
         int interChoice = 1;
 
+        /// Reconstructed eddy viscosity fields list
+        PtrList<volScalarField> nutRecFields;
+
         // Functions
 
         ///
@@ -285,19 +288,14 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         ///
         void solveOnlinePPEAve(Eigen::MatrixXd velNow);
 
-        /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
-        /// stabilisation method
+        /// Method to reconstruct the solutions from an online solve with any of
+        /// the two techniques SUP or the PPE
         ///
-        /// @param[in]  folder      The folder where to output the solutions
+        /// @param[in]  exportFields  A boolean variable which determines whether to export fields or not
+        /// @param[in]  folder        The folder where to output the solutions in case on wants to
         ///
-        void reconstructPPE(fileName folder = "./online_rec");
-
-        /// Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.
-        /// stabilisation method
-        ///
-        /// @param[in]  folder      The folder where to output the solutions
-        ///
-        void reconstructSUP(fileName folder = "./online_rec");
+        void reconstruct(bool exportFields = false,
+                         fileName folder = "./online_rec");
 
         ///
         /// @brief      Sets the online velocity.

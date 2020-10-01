@@ -306,14 +306,16 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             ITHACAstream::exportSolution(p, name(folderN), Folder + name(counter));
             Ufield.append(U);
             Pfield.append(p);
+
             if (ITHACAutilities::isTurbulent())
-                {
-                    auto nut = mesh.lookupObject<volScalarField>("nut");
-                    ITHACAstream::exportSolution(nut, name(folderN), Folder + name(counter));
-                    nutFields.append(nut);
-                }
+            {
+                auto nut = mesh.lookupObject<volScalarField>("nut");
+                ITHACAstream::exportSolution(nut, name(folderN), Folder + name(counter));
+                nutFields.append(nut);
+            }
         }
     }
+
     res_os << residual << std::endl;
     res_os.close();
     runTime.setTime(runTime.startTime(), 0);
