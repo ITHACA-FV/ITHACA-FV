@@ -249,6 +249,9 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         /// Interpolation independent variable choice
         int interChoice = 1;
 
+        /// Interpolation boolean variable to skip lifting functions
+        bool skipLift = false;
+
         /// Reconstructed eddy viscosity fields list
         PtrList<volScalarField> nutRecFields;
 
