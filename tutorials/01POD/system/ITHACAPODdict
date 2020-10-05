@@ -48,7 +48,7 @@ U_pod
 // Specify the field name
 field_name U;
 // Specify the number of modes you want to extract
-nmodes 10;
+nmodes 2;
 // Specify the type of field (if vector or scalar)
 field_type vector;
 }
@@ -58,7 +58,7 @@ p_pod
 // Specify the field name
 field_name p;
 // Specify the number of modes you want to extract
-nmodes 10;
+nmodes 2;
 // Specify the type of field (if vector or scalar)
 field_type scalar;
 }
