@@ -505,6 +505,17 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
         }
     }
 
+    int firstRBFInd;
+
+    if (skipLift == true && problem->bcMethod == "lift")
+    {
+        firstRBFInd = N_BC;
+    }
+    else
+    {
+        firstRBFInd = 0;
+    }
+
     // Set some properties of the newton object
     newtonObjectSUP.nu = nu;
     newtonObjectSUP.y_old = y;
@@ -567,24 +578,24 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
         switch (interChoice)
         {
             case 1:
-                tv << y.head(dimA);
+                tv << y.segment(firstRBFInd, dimA);
                 break;
 
             case 2:
-                tv << muStar, y.head(dimA - muStar.size());
+                tv << muStar, y.segment(firstRBFInd, dimA - muStar.size());
                 break;
 
             case 3:
-                tv << y.head(dimA / 2), aDer.head(dimA / 2);
+                tv << y.segment(firstRBFInd, dimA / 2), aDer.segment(firstRBFInd, dimA / 2);
                 break;
 
             case 4:
-                tv << muStar, y.head((dimA - muStar.size()) / 2),
-                aDer.head((dimA - muStar.size()) / 2);
+                tv << muStar, y.segment(firstRBFInd, (dimA - muStar.size()) / 2),
+                aDer.segment(firstRBFInd, (dimA - muStar.size()) / 2);
                 break;
 
             default:
-                tv << y.head(dimA);
+                tv << y.segment(firstRBFInd, dimA);
                 break;
         }
 
@@ -694,6 +705,17 @@ void ReducedUnsteadyNSTurb::solveOnlineSUPAve(Eigen::MatrixXd vel)
         }
     }
 
+    int firstRBFInd;
+
+    if (skipLift == true && problem->bcMethod == "lift")
+    {
+        firstRBFInd = N_BC;
+    }
+    else
+    {
+        firstRBFInd = 0;
+    }
+
     // Set some properties of the newton object
     newtonObjectSUPAve.nu = nu;
     newtonObjectSUPAve.y_old = y;
@@ -758,24 +780,24 @@ void ReducedUnsteadyNSTurb::solveOnlineSUPAve(Eigen::MatrixXd vel)
         switch (interChoice)
         {
             case 1:
-                tv << y.head(dimA);
+                tv << y.segment(firstRBFInd, dimA);
                 break;
 
             case 2:
-                tv << muStar, y.head(dimA - muStar.size());
+                tv << muStar, y.segment(firstRBFInd, dimA - muStar.size());
                 break;
 
             case 3:
-                tv << y.head(dimA / 2), aDer.head(dimA / 2);
+                tv << y.segment(firstRBFInd, dimA / 2), aDer.segment(firstRBFInd, dimA / 2);
                 break;
 
             case 4:
-                tv << muStar, y.head((dimA - muStar.size()) / 2),
-                aDer.head((dimA - muStar.size()) / 2);
+                tv << muStar, y.segment(firstRBFInd, (dimA - muStar.size()) / 2),
+                aDer.segment(firstRBFInd, (dimA - muStar.size()) / 2);
                 break;
 
             default:
-                tv << y.head(dimA);
+                tv << y.segment(firstRBFInd, dimA);
                 break;
         }
 
@@ -885,6 +907,17 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
         }
     }
 
+    int firstRBFInd;
+
+    if (skipLift == true && problem->bcMethod == "lift")
+    {
+        firstRBFInd = N_BC;
+    }
+    else
+    {
+        firstRBFInd = 0;
+    }
+
     // Set some properties of the newton object
     newtonObjectPPE.nu = nu;
     newtonObjectPPE.y_old = y;
@@ -947,24 +980,24 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
         switch (interChoice)
         {
             case 1:
-                tv << y.head(dimA);
+                tv << y.segment(firstRBFInd, dimA);
                 break;
 
             case 2:
-                tv << muStar, y.head(dimA - muStar.size());
+                tv << muStar, y.segment(firstRBFInd, dimA - muStar.size());
                 break;
 
             case 3:
-                tv << y.head(dimA / 2), aDer.head(dimA / 2);
+                tv << y.segment(firstRBFInd, dimA / 2), aDer.segment(firstRBFInd, dimA / 2);
                 break;
 
             case 4:
-                tv << muStar, y.head((dimA - muStar.size()) / 2),
-                aDer.head((dimA - muStar.size()) / 2);
+                tv << muStar, y.segment(firstRBFInd, (dimA - muStar.size()) / 2),
+                aDer.segment(firstRBFInd, (dimA - muStar.size()) / 2);
                 break;
 
             default:
-                tv << y.head(dimA);
+                tv << y.segment(firstRBFInd, dimA);
                 break;
         }
 
@@ -1065,6 +1098,17 @@ void ReducedUnsteadyNSTurb::solveOnlinePPEAve(Eigen::MatrixXd vel)
         }
     }
 
+    int firstRBFInd;
+
+    if (skipLift == true && problem->bcMethod == "lift")
+    {
+        firstRBFInd = N_BC;
+    }
+    else
+    {
+        firstRBFInd = 0;
+    }
+
     // Set some properties of the newton object
     newtonObjectPPEAve.nu = nu;
     newtonObjectPPEAve.y_old = y;
@@ -1129,24 +1173,24 @@ void ReducedUnsteadyNSTurb::solveOnlinePPEAve(Eigen::MatrixXd vel)
         switch (interChoice)
         {
             case 1:
-                tv << y.head(dimA);
+                tv << y.segment(firstRBFInd, dimA);
                 break;
 
             case 2:
-                tv << muStar, y.head(dimA - muStar.size());
+                tv << muStar, y.segment(firstRBFInd, dimA - muStar.size());
                 break;
 
             case 3:
-                tv << y.head(dimA / 2), aDer.head(dimA / 2);
+                tv << y.segment(firstRBFInd, dimA / 2), aDer.segment(firstRBFInd, dimA / 2);
                 break;
 
             case 4:
-                tv << muStar, y.head((dimA - muStar.size()) / 2),
-                aDer.head((dimA - muStar.size()) / 2);
+                tv << muStar, y.segment(firstRBFInd, (dimA - muStar.size()) / 2),
+                aDer.segment(firstRBFInd, (dimA - muStar.size()) / 2);
                 break;
 
             default:
-                tv << y.head(dimA);
+                tv << y.segment(firstRBFInd, dimA);
                 break;
         }
 
