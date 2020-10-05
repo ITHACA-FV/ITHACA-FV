@@ -72,6 +72,9 @@ int main(int argc, char *argv[])
     volVectorField * vector_field;
     volScalarField * scalar_field;
 
+    ITHACAparameters* para = ITHACAparameters::getInstance(mesh,
+                             runTime);
+
     bool pod_exist;
     struct stat sb;
 
@@ -214,13 +217,15 @@ int main(int argc, char *argv[])
             }
         }
 
+        std::cerr << "File: perform_POD.C, Line: 217"<< std::endl;
+
         if (field_type == "vector")
         {
-            ITHACAPOD::getModes(Vfield, Vmodes, 0, 0, 0, nmodes);
+            ITHACAPOD::getModes(Vfield, Vmodes, field_name, 0, 0, 0, nmodes);
         }
         if (field_type == "scalar")
         {
-            ITHACAPOD::getModes(Sfield, Smodes, 0, 0, 0, nmodes);
+            ITHACAPOD::getModes(Sfield, Smodes, field_name, 0, 0, 0, nmodes);
         }
 
         Vfield.clear();
