@@ -530,11 +530,11 @@ void UnsteadyNSTTurb::projectSUP(fileName folder, label NU, label NP,
     SAMPLES.resize(Nnutmodes);
     rbfsplines.resize(Nnutmodes);
 
-    for (int i = 0; i < Nnutmodes; i++)
+    for (label i = 0; i < Nnutmodes; i++)
     {
         SAMPLES[i] = new SPLINTER::DataTable(1, 1);
 
-        for (int j = 0; j < Ncoeff.cols(); j++)
+        for (label j = 0; j < Ncoeff.cols(); j++)
         {
             SAMPLES[i]->addSample(mu.row(j), Ncoeff(i, j));
         }

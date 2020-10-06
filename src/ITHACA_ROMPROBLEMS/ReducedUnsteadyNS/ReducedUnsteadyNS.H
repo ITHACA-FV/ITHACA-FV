@@ -50,7 +50,7 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
 {
     public:
         newton_unsteadyNS_sup() {}
-        newton_unsteadyNS_sup(int Nx, int Ny,
+        newton_unsteadyNS_sup(label Nx, label Ny,
                               unsteadyNS& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
@@ -58,13 +58,13 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
             N_BC(problem.inletIndex.rows())
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         unsteadyNS* problem;
-        int Nphi_u;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label Nphi_p;
+        label N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -79,7 +79,7 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
 {
     public:
         newton_unsteadyNS_PPE() {}
-        newton_unsteadyNS_PPE(int Nx, int Ny,
+        newton_unsteadyNS_PPE(label Nx, label Ny,
                               unsteadyNS& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
@@ -87,13 +87,13 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
             N_BC(problem.inletIndex.rows())
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         unsteadyNS* problem;
-        int Nphi_u;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label Nphi_p;
+        label N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -154,7 +154,7 @@ class reducedUnsteadyNS: public reducedSteadyNS
         bool startFromZero = false;
 
         /// Number of timesteps calculated for the iterative penalty method
-        int timeStepPenalty = 1;
+        label timeStepPenalty = 1;
 
         /// Penalty Factor determined with iterative solver
         Eigen::MatrixXd tauIter;

@@ -81,7 +81,7 @@ class EigenFunctions
         /// @return     the maximum
         ///
         template <typename T>
-        static T max(Eigen::SparseMatrix<T>& mat, int& ind_row, int& ind_col);
+        static T max(Eigen::SparseMatrix<T>& mat, label& ind_row, label& ind_col);
 
         //--------------------------------------------------------------------------
         /// @brief           Find the minimum of a sparse Matrix (Useful for DEIM)
@@ -95,7 +95,7 @@ class EigenFunctions
         /// @return     the minimum
         ///
         template <typename T>
-        static T min(Eigen::SparseMatrix<T>& mat, int& ind_row, int& ind_col);
+        static T min(Eigen::SparseMatrix<T>& mat, label& ind_row, label& ind_col);
 
         //--------------------------------------------------------------------------
         /// @brief      sort eigenvalues
@@ -233,7 +233,7 @@ Eigen::SparseMatrix<T> EigenFunctions::vectorize(Eigen::SparseMatrix<T>& Matrix)
     vec.resize(1, Matrix.size());
     vec.reserve(Matrix.nonZeros());
 
-    for (int k = 0; k < Matrix.outerSize(); ++k)
+    for (label k = 0; k < Matrix.outerSize(); ++k)
     {
         for (Eigen::SparseMatrix<double>::InnerIterator it(Matrix, k); it; ++it)
         {
@@ -245,12 +245,13 @@ Eigen::SparseMatrix<T> EigenFunctions::vectorize(Eigen::SparseMatrix<T>& Matrix)
 }
 
 template <typename T>
-T EigenFunctions::max(Eigen::SparseMatrix<T>& mat, int& ind_row, int& ind_col)
+T EigenFunctions::max(Eigen::SparseMatrix<T>& mat, label& ind_row,
+                      label& ind_col)
 {
-    int i = 0;
+    label i = 0;
     T max = 0;
 
-    for (int k = 0; k < mat.outerSize(); ++k)
+    for (label k = 0; k < mat.outerSize(); ++k)
     {
         for (typename Eigen::SparseMatrix<T>::InnerIterator it(mat, k); it; ++it)
         {
@@ -268,12 +269,13 @@ T EigenFunctions::max(Eigen::SparseMatrix<T>& mat, int& ind_row, int& ind_col)
 }
 
 template <typename T>
-T EigenFunctions::min(Eigen::SparseMatrix<T>& mat, int& ind_row, int& ind_col)
+T EigenFunctions::min(Eigen::SparseMatrix<T>& mat, label& ind_row,
+                      label& ind_col)
 {
-    int i = 0;
+    label i = 0;
     T min = 0;
 
-    for (int k = 0; k < mat.outerSize(); ++k)
+    for (label k = 0; k < mat.outerSize(); ++k)
     {
         for (typename Eigen::SparseMatrix<T>::InnerIterator it(mat, k); it; ++it)
         {
@@ -294,14 +296,14 @@ template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> EigenFunctions::innerProduct(
     List <Eigen::SparseMatrix<T>>& A, List <Eigen::SparseMatrix<T>>& B)
 {
-    int rows = A.size();
-    int cols = B.size();
+    label rows = A.size();
+    label cols = B.size();
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> out;
     out.resize(rows, cols);
 
-    for (int i = 0; i < rows; i++)
+    for (label i = 0; i < rows; i++)
     {
-        for (int j = 0; j < cols; j++)
+        for (label j = 0; j < cols; j++)
         {
             out(i, j) = innerProduct(A[i], B[j]);
         }
@@ -314,12 +316,12 @@ template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> EigenFunctions::innerProduct(
     List<Eigen::SparseMatrix<T>>& A, Eigen::SparseMatrix<T>& B)
 {
-    int rows = A.size();
-    int cols = 1;
+    label rows = A.size();
+    label cols = 1;
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> out;
     out.resize(rows, cols);
 
-    for (int i = 0; i < rows; i++)
+    for (label i = 0; i < rows; i++)
     {
         out(i, 0) = innerProduct(A[i], B);
     }
@@ -333,7 +335,7 @@ T EigenFunctions::innerProduct(Eigen::SparseMatrix<T>& A,
 {
     T res = 0;
 
-    for (int k = 0; k < A.cols(); k++)
+    for (label k = 0; k < A.cols(); k++)
     {
         res += A.col(k).dot(B.col(k));
     }
@@ -348,7 +350,7 @@ Eigen::SparseMatrix<T> EigenFunctions::MVproduct(List<Eigen::SparseMatrix<T>>& A
     Eigen::SparseMatrix<T> out;
     out = A[0] * C(0);
 
-    for (int i = 1; i < A.size(); i++)
+    for (label i = 1; i < A.size(); i++)
     {
         out += A[i] * C(i);
     }
@@ -364,7 +366,7 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> EigenFunctions::MVproduct(
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> out;
     out = A[0] * C(0);
 
-    for (unsigned int i = 1; i < A.size(); i++)
+    for (label i = 1; i < A.size(); i++)
     {
         out += A[i] * C(i);
     }
@@ -383,7 +385,7 @@ List<Eigen::SparseMatrix<T>> EigenFunctions::MMproduct(
     out.resize(C.cols());
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> col;
 
-    for (int i = 0; i < C.cols(); i++)
+    for (label i = 0; i < C.cols(); i++)
     {
         col = C.col(i);
         out[i] = MVproduct(A, col);
@@ -409,7 +411,7 @@ using namespace Eigen;
 
 template<typename VectorType>
 bool saveMarketVector (const VectorType& vec, const std::string& filename,
-                       int prec, std::_Ios_Fmtflags outytpe = std::ios_base::scientific)
+                       label prec, std::_Ios_Fmtflags outytpe = std::ios_base::scientific)
 {
     typedef typename VectorType::Scalar Scalar;
     std::ofstream out(filename.c_str(), std::ios::out);
@@ -434,7 +436,7 @@ bool saveMarketVector (const VectorType& vec, const std::string& filename,
 
     out << vec.size() << " " << 1 << "\n";
 
-    for (int i = 0; i < vec.size(); i++)
+    for (label i = 0; i < vec.size(); i++)
     {
         internal::putVectorElt(vec(i), out);
     }
@@ -445,7 +447,7 @@ bool saveMarketVector (const VectorType& vec, const std::string& filename,
 
 template<typename VectorType>
 Matrix<VectorType, Dynamic, Dynamic> SliceFromTensor(
-    Eigen::Tensor<VectorType, 3>& tensor, int dim, int index1)
+    Eigen::Tensor<VectorType, 3>& tensor, label dim, label index1)
 {
     Eigen::Tensor<VectorType, 2> t2 = tensor.chip(index1, dim);
     Matrix<VectorType, Dynamic, Dynamic> m = Eigen::Map<Eigen::Matrix<

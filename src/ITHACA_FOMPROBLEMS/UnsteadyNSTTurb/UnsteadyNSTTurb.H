@@ -108,7 +108,7 @@ class UnsteadyNSTTurb: public unsteadyNST
         scalar Pr;
 
         /// Number of nut field modes
-        int Nphi_nut;
+        label Nphi_nut;
 
         /// Create a Rbf splines for interpolation
         std::vector<SPLINTER::DataTable*> SAMPLES;

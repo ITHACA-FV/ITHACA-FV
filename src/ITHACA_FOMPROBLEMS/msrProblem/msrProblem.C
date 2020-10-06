@@ -4,7 +4,7 @@
 // Constructor
 msrProblem::msrProblem() {}
 
-msrProblem::msrProblem(int argc, char* argv[])
+msrProblem::msrProblem(label argc, char* argv[])
 {
 #include "setRootCase.H"
 #include "createTime.H"
@@ -128,7 +128,7 @@ void msrProblem::truthSolve(List<scalar> mu_now)
     // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points
     mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
 
-    for (int i = 0; i < mu_now.size(); i++)
+    for (label i = 0; i < mu_now.size(); i++)
     {
         mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
     }
@@ -150,22 +150,22 @@ void msrProblem::truthSolve(List<scalar> mu_now)
 // Get the modes function SVD
 void msrProblem::msrgetModesSVD()
 {
-    int NU = para->ITHACAdict->lookupOrDefault<int>("NUout", 10);
-    int NP = para->ITHACAdict->lookupOrDefault<int>("NPout", 10);
-    int NF = para->ITHACAdict->lookupOrDefault<int>("NFluxout", 10);
-    int NPrec1 = para->ITHACAdict->lookupOrDefault<int>("NPrecout1", 10);
-    int NPrec2 = para->ITHACAdict->lookupOrDefault<int>("NPrecout2", 10);
-    int NPrec3 = para->ITHACAdict->lookupOrDefault<int>("NPrecout3", 10);
-    int NPrec4 = para->ITHACAdict->lookupOrDefault<int>("NPrecout4", 10);
-    int NPrec5 = para->ITHACAdict->lookupOrDefault<int>("NPrecout5", 10);
-    int NPrec6 = para->ITHACAdict->lookupOrDefault<int>("NPrecout6", 10);
-    int NPrec7 = para->ITHACAdict->lookupOrDefault<int>("NPrecout7", 10);
-    int NPrec8 = para->ITHACAdict->lookupOrDefault<int>("NPrecout8", 10);
-    int NT = para->ITHACAdict->lookupOrDefault<int>("NTout", 10);
-    int NDec1 = para->ITHACAdict->lookupOrDefault<int>("NDecout1", 10);
-    int NDec2 = para->ITHACAdict->lookupOrDefault<int>("NDecout2", 10);
-    int NDec3 = para->ITHACAdict->lookupOrDefault<int>("NDecout3", 10);
-    int NC = para->ITHACAdict->lookupOrDefault<int>("NCout", 10);
+    label NU = para->ITHACAdict->lookupOrDefault<label>("NUout", 10);
+    label NP = para->ITHACAdict->lookupOrDefault<label>("NPout", 10);
+    label NF = para->ITHACAdict->lookupOrDefault<label>("NFluxout", 10);
+    label NPrec1 = para->ITHACAdict->lookupOrDefault<label>("NPrecout1", 10);
+    label NPrec2 = para->ITHACAdict->lookupOrDefault<label>("NPrecout2", 10);
+    label NPrec3 = para->ITHACAdict->lookupOrDefault<label>("NPrecout3", 10);
+    label NPrec4 = para->ITHACAdict->lookupOrDefault<label>("NPrecout4", 10);
+    label NPrec5 = para->ITHACAdict->lookupOrDefault<label>("NPrecout5", 10);
+    label NPrec6 = para->ITHACAdict->lookupOrDefault<label>("NPrecout6", 10);
+    label NPrec7 = para->ITHACAdict->lookupOrDefault<label>("NPrecout7", 10);
+    label NPrec8 = para->ITHACAdict->lookupOrDefault<label>("NPrecout8", 10);
+    label NT = para->ITHACAdict->lookupOrDefault<label>("NTout", 10);
+    label NDec1 = para->ITHACAdict->lookupOrDefault<label>("NDecout1", 10);
+    label NDec2 = para->ITHACAdict->lookupOrDefault<label>("NDecout2", 10);
+    label NDec3 = para->ITHACAdict->lookupOrDefault<label>("NDecout3", 10);
+    label NC = para->ITHACAdict->lookupOrDefault<label>("NCout", 10);
 
     if (homboolU == true)
     {
@@ -222,22 +222,22 @@ void msrProblem::msrgetModesSVD()
 // Get the modes function Compliance matrix method
 void msrProblem::msrgetModesEVD()
 {
-    int NU = para->ITHACAdict->lookupOrDefault<int>("NUout", 10);
-    int NP = para->ITHACAdict->lookupOrDefault<int>("NPout", 10);
-    int NF = para->ITHACAdict->lookupOrDefault<int>("NFluxout", 10);
-    int NPrec1 = para->ITHACAdict->lookupOrDefault<int>("NPrecout1", 10);
-    int NPrec2 = para->ITHACAdict->lookupOrDefault<int>("NPrecout2", 10);
-    int NPrec3 = para->ITHACAdict->lookupOrDefault<int>("NPrecout3", 10);
-    int NPrec4 = para->ITHACAdict->lookupOrDefault<int>("NPrecout4", 10);
-    int NPrec5 = para->ITHACAdict->lookupOrDefault<int>("NPrecout5", 10);
-    int NPrec6 = para->ITHACAdict->lookupOrDefault<int>("NPrecout6", 10);
-    int NPrec7 = para->ITHACAdict->lookupOrDefault<int>("NPrecout7", 10);
-    int NPrec8 = para->ITHACAdict->lookupOrDefault<int>("NPrecout8", 10);
-    int NT = para->ITHACAdict->lookupOrDefault<int>("NTout", 10);
-    int NDec1 = para->ITHACAdict->lookupOrDefault<int>("NDecout1", 10);
-    int NDec2 = para->ITHACAdict->lookupOrDefault<int>("NDecout2", 10);
-    int NDec3 = para->ITHACAdict->lookupOrDefault<int>("NDecout3", 10);
-    int NC = para->ITHACAdict->lookupOrDefault<int>("NCout", 10);
+    label NU = para->ITHACAdict->lookupOrDefault<label>("NUout", 10);
+    label NP = para->ITHACAdict->lookupOrDefault<label>("NPout", 10);
+    label NF = para->ITHACAdict->lookupOrDefault<label>("NFluxout", 10);
+    label NPrec1 = para->ITHACAdict->lookupOrDefault<label>("NPrecout1", 10);
+    label NPrec2 = para->ITHACAdict->lookupOrDefault<label>("NPrecout2", 10);
+    label NPrec3 = para->ITHACAdict->lookupOrDefault<label>("NPrecout3", 10);
+    label NPrec4 = para->ITHACAdict->lookupOrDefault<label>("NPrecout4", 10);
+    label NPrec5 = para->ITHACAdict->lookupOrDefault<label>("NPrecout5", 10);
+    label NPrec6 = para->ITHACAdict->lookupOrDefault<label>("NPrecout6", 10);
+    label NPrec7 = para->ITHACAdict->lookupOrDefault<label>("NPrecout7", 10);
+    label NPrec8 = para->ITHACAdict->lookupOrDefault<label>("NPrecout8", 10);
+    label NT = para->ITHACAdict->lookupOrDefault<label>("NTout", 10);
+    label NDec1 = para->ITHACAdict->lookupOrDefault<label>("NDecout1", 10);
+    label NDec2 = para->ITHACAdict->lookupOrDefault<label>("NDecout2", 10);
+    label NDec3 = para->ITHACAdict->lookupOrDefault<label>("NDecout3", 10);
+    label NC = para->ITHACAdict->lookupOrDefault<label>("NCout", 10);
 
     if (homboolU == true)
     {
@@ -407,19 +407,19 @@ void msrProblem::projectPPE(fileName folder, label NU, label NP, label NF,
     NPmodes = NP;
     NFluxmodes = NF;
     NPrecmodes = NPrec;
-    int NPrec1 = NPrecmodes(0);
-    int NPrec2 = NPrecmodes(1);
-    int NPrec3 = NPrecmodes(2);
-    int NPrec4 = NPrecmodes(3);
-    int NPrec5 = NPrecmodes(4);
-    int NPrec6 = NPrecmodes(5);
-    int NPrec7 = NPrecmodes(6);
-    int NPrec8 = NPrecmodes(7);
+    label NPrec1 = NPrecmodes(0);
+    label NPrec2 = NPrecmodes(1);
+    label NPrec3 = NPrecmodes(2);
+    label NPrec4 = NPrecmodes(3);
+    label NPrec5 = NPrecmodes(4);
+    label NPrec6 = NPrecmodes(5);
+    label NPrec7 = NPrecmodes(6);
+    label NPrec8 = NPrecmodes(7);
     NTmodes = NT;
     NDecmodes = NDec;
-    int NDec1 = NDecmodes(0);
-    int NDec2 = NDecmodes(1);
-    int NDec3 = NDecmodes(2);
+    label NDec1 = NDecmodes(0);
+    label NDec2 = NDecmodes(1);
+    label NDec3 = NDecmodes(2);
     NCmodes = NC;
     Info << "\n Computing fluid-dynamics matrices\n" << endl;
     B_matrix = diffusive_term(NUmodes, NPmodes);
@@ -1050,9 +1050,9 @@ List<Eigen::MatrixXd> msrProblem::abs_flux(label NFluxmodes, label NCmodes)
 }
 
 Eigen::MatrixXd msrProblem::prec_source(label NFluxmodes, label NPrecmodes,
-                                        int family)
+                                        label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label PS1size = NFluxmodes;
     label PS2size = NPrecmodes;
@@ -1075,9 +1075,9 @@ Eigen::MatrixXd msrProblem::prec_source(label NFluxmodes, label NPrecmodes,
 // * * * * * * * * * * * * * * Precursor Eq. Methods * * * * * * * * * * * * * //
 
 List<Eigen::MatrixXd> msrProblem::stream_term(label NUmodes, label NPrecmodes,
-        int family)
+        label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label ST1size = NPrecmodes; //Qsizet
     label ST2size = NUmodes + liftfield.size();
@@ -1125,9 +1125,9 @@ List<Eigen::MatrixXd> msrProblem::stream_term(label NUmodes, label NPrecmodes,
     return ST_matrix;
 }
 
-Eigen::MatrixXd msrProblem::prec_mass(label NPrecmodes, int family)
+Eigen::MatrixXd msrProblem::prec_mass(label NPrecmodes, label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label MPsize = NPrecmodes;
     Eigen::MatrixXd MP_matrix;
@@ -1146,9 +1146,9 @@ Eigen::MatrixXd msrProblem::prec_mass(label NPrecmodes, int family)
     return MP_matrix;
 }
 
-Eigen::MatrixXd msrProblem::laplacian_prec(label NPrecmodes, int family)
+Eigen::MatrixXd msrProblem::laplacian_prec(label NPrecmodes, label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label LPsize = NPrecmodes;
     Eigen::MatrixXd LP_matrix;
@@ -1168,9 +1168,9 @@ Eigen::MatrixXd msrProblem::laplacian_prec(label NPrecmodes, int family)
 }
 
 List<Eigen::MatrixXd> msrProblem::flux_source(label NFluxmodes,
-        label NPrecmodes, label NCmodes, int family)
+        label NPrecmodes, label NCmodes, label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label FSsize = NPrecmodes;
     List<Eigen::MatrixXd> FS_matrix;
@@ -1206,9 +1206,9 @@ List<Eigen::MatrixXd> msrProblem::flux_source(label NFluxmodes,
 
 
 List<Eigen::MatrixXd> msrProblem::stream_dec(label NUmodes, label NDecmodes,
-        int decgroup)
+        label decgroup)
 {
-    int g = decgroup;
+    label g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label SD1size = NDecmodes; //Qsizet
     label SD2size = NUmodes + liftfield.size();
@@ -1256,9 +1256,9 @@ List<Eigen::MatrixXd> msrProblem::stream_dec(label NUmodes, label NDecmodes,
     return SD_matrix;
 }
 
-Eigen::MatrixXd msrProblem::dec_mass(label NDecmodes, int decgroup)
+Eigen::MatrixXd msrProblem::dec_mass(label NDecmodes, label decgroup)
 {
-    int g = decgroup;
+    label g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label MDsize = NDecmodes;
     Eigen::MatrixXd MD_matrix;
@@ -1278,9 +1278,9 @@ Eigen::MatrixXd msrProblem::dec_mass(label NDecmodes, int decgroup)
 }
 
 
-Eigen::MatrixXd msrProblem::laplacian_dec(label NDecmodes, int decgroup)
+Eigen::MatrixXd msrProblem::laplacian_dec(label NDecmodes, label decgroup)
 {
-    int g = decgroup;
+    label g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label LDsize = NDecmodes;
     Eigen::MatrixXd LD_matrix;
@@ -1301,9 +1301,9 @@ Eigen::MatrixXd msrProblem::laplacian_dec(label NDecmodes, int decgroup)
 }
 
 List<Eigen::MatrixXd> msrProblem::dec_fluxsource(label NFluxmodes,
-        label NDecmodes, label NCmodes, int decgroup)
+        label NDecmodes, label NCmodes, label decgroup)
 {
-    int g = decgroup;
+    label g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label DFSsize = NDecmodes;
     List<Eigen::MatrixXd> DFS_matrix;
@@ -1532,9 +1532,9 @@ List<Eigen::MatrixXd> msrProblem::temp_XSfluxsource(label NTmodes,
 }
 
 List<Eigen::MatrixXd> msrProblem::temp_heatsource(label NTmodes,
-        label NDecmodes, label NCmodes, int decgroup)
+        label NDecmodes, label NCmodes, label decgroup)
 {
-    int  g = decgroup;
+    label  g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label THSsize = NTmodes + liftfieldT.size();
     List<Eigen::MatrixXd> THS_matrix;
@@ -1581,7 +1581,7 @@ List<Eigen::MatrixXd> msrProblem::temp_heatsource(label NTmodes,
     return THS_matrix;
 }
 
-PtrList<volScalarField> msrProblem::choose_group(string field, int ith)
+PtrList<volScalarField> msrProblem::choose_group(string field, label ith)
 {
     if (field == "prec")
     {
@@ -1642,7 +1642,7 @@ PtrList<volScalarField> msrProblem::choose_group(string field, int ith)
 
 
 template<typename M>
-void msrProblem::savegroupMatrix(string nome, int n, word folder, M matrice)
+void msrProblem::savegroupMatrix(string nome, label n, word folder, M matrice)
 {
     nome.append(std::to_string(n));
     word name = nome;
@@ -1743,7 +1743,7 @@ void msrProblem::readMSRfields(std::string& dir)
 
     if (ITHACAutilities::check_folder(folder) == true)
     {
-        for (int i = 0; i < mu.cols(); i++)
+        for (label i = 0; i < mu.cols(); i++)
         {
             folder.append(std::to_string(i));
             folder.append("/");
@@ -1785,29 +1785,29 @@ void msrProblem::change_viscosity(double mu)
     volScalarField& ciao = const_cast<volScalarField&>(nu);
     this->assignIF(ciao, mu);
 
-    for (int i = 0; i < ciao.boundaryFieldRef().size(); i++)
+    for (label i = 0; i < ciao.boundaryFieldRef().size(); i++)
     {
         this->assignBC(ciao, i, mu);
     }
 }
 
-void msrProblem::msrcoeff(int& NC)
+void msrProblem::msrcoeff(label& NC)
 {
     NCmodes = NC;
     Eigen::MatrixXd Ncoeff_v = ITHACAutilities::getCoeffs(vFields, vmodes);
     ITHACAstream::exportMatrix(Ncoeff_v, "Ncoeff_v", "matlab",
                                "./ITHACAoutput/Matrices/");
-    int Ncol = Ncoeff_v.cols();
+    label Ncol = Ncoeff_v.cols();
     SAMPLES_v.resize(NCmodes);
     rbfsplines_v.resize(NCmodes);
 
-    for (int i = 0; i < NCmodes; i++)
+    for (label i = 0; i < NCmodes; i++)
     {
         std::cout << "Constructing v RadialBasisFunction for mode " << i + 1 <<
                   std::endl;
         SAMPLES_v[i] = new SPLINTER::DataTable(1, 1);
 
-        for (int j = 0; j < Ncol; j++)
+        for (label j = 0; j < Ncol; j++)
         {
             SAMPLES_v[i]->addSample(mu_samples.row(j), Ncoeff_v(i, j));
         }
@@ -1822,13 +1822,13 @@ void msrProblem::msrcoeff(int& NC)
     SAMPLES_D.resize(NCmodes);
     rbfsplines_D.resize(NCmodes);
 
-    for (int i = 0; i < NCmodes; i++)
+    for (label i = 0; i < NCmodes; i++)
     {
         std::cout << "Constructing D RadialBasisFunction for mode " << i + 1 <<
                   std::endl;
         SAMPLES_D[i] = new SPLINTER::DataTable(1, 1);
 
-        for (int j = 0; j < Ncol; j++)
+        for (label j = 0; j < Ncol; j++)
         {
             SAMPLES_D[i]->addSample(mu_samples.row(j), Ncoeff_D(i, j));
         }
@@ -1844,13 +1844,13 @@ void msrProblem::msrcoeff(int& NC)
     SAMPLES_NSF.resize(NCmodes);
     rbfsplines_NSF.resize(NCmodes);
 
-    for (int i = 0; i < NCmodes; i++)
+    for (label i = 0; i < NCmodes; i++)
     {
         std::cout << "Constructing NSF RadialBasisFunction for mode " << i + 1 <<
                   std::endl;
         SAMPLES_NSF[i] = new SPLINTER::DataTable(1, 1);
 
-        for (int j = 0; j < Ncol; j++)
+        for (label j = 0; j < Ncol; j++)
         {
             SAMPLES_NSF[i]->addSample(mu_samples.row(j), Ncoeff_NSF(i, j));
         }
@@ -1865,13 +1865,13 @@ void msrProblem::msrcoeff(int& NC)
     SAMPLES_A.resize(NCmodes);
     rbfsplines_A.resize(NCmodes);
 
-    for (int i = 0; i < NCmodes; i++)
+    for (label i = 0; i < NCmodes; i++)
     {
         std::cout << "Constructing A RadialBasisFunction for mode " << i + 1 <<
                   std::endl;
         SAMPLES_A[i] = new SPLINTER::DataTable(1, 1);
 
-        for (int j = 0; j < Ncol; j++)
+        for (label j = 0; j < Ncol; j++)
         {
             SAMPLES_A[i]->addSample(mu_samples.row(j), Ncoeff_A(i, j));
         }
@@ -1887,13 +1887,13 @@ void msrProblem::msrcoeff(int& NC)
     SAMPLES_SP.resize(NCmodes);
     rbfsplines_SP.resize(NCmodes);
 
-    for (int i = 0; i < NCmodes; i++)
+    for (label i = 0; i < NCmodes; i++)
     {
         std::cout << "Constructing  SP RadialBasisFunction for mode " << i + 1 <<
                   std::endl;
         SAMPLES_SP[i] = new SPLINTER::DataTable(1, 1);
 
-        for (int j = 0; j < Ncol; j++)
+        for (label j = 0; j < Ncol; j++)
         {
             SAMPLES_SP[i]->addSample(mu_samples.row(j), Ncoeff_SP(i, j));
         }
@@ -1909,13 +1909,13 @@ void msrProblem::msrcoeff(int& NC)
     SAMPLES_TXS.resize(NCmodes);
     rbfsplines_TXS.resize(NCmodes);
 
-    for (int i = 0; i < NCmodes; i++)
+    for (label i = 0; i < NCmodes; i++)
     {
         std::cout << "Constructing  TXS RadialBasisFunction for mode " << i + 1 <<
                   std::endl;
         SAMPLES_TXS[i] = new SPLINTER::DataTable(1, 1);
 
-        for (int j = 0; j < Ncol; j++)
+        for (label j = 0; j < Ncol; j++)
         {
             SAMPLES_TXS[i]->addSample(mu_samples.row(j), Ncoeff_TXS(i, j));
         }

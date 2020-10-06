@@ -2,7 +2,7 @@
 
 Ptot::Ptot() {}
 
-Ptot::Ptot(int argc, char* argv[], int Nsampled)
+Ptot::Ptot(label argc, char* argv[], label Nsampled)
 {
     Npoints = Nsampled;
     modelOutput.resize(Npoints);
@@ -23,7 +23,7 @@ void Ptot::buildMO(std::string dir)
 
     if (ITHACAutilities::check_folder(folder) == true)
     {
-        for (int j = 0; j < Npoints; j++)
+        for (label j = 0; j < Npoints; j++)
         {
             folder.append(std::to_string(j));
             folder.append("/");

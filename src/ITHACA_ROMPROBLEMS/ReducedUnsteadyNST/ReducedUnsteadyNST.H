@@ -49,7 +49,7 @@ struct newton_unsteadyNST_sup: public newton_argument<double>
 {
     public:
         newton_unsteadyNST_sup() {}
-        newton_unsteadyNST_sup(int Nx, int Ny,
+        newton_unsteadyNST_sup(label Nx, label Ny,
                                unsteadyNST& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
@@ -57,12 +57,12 @@ struct newton_unsteadyNST_sup: public newton_argument<double>
             N_BC(problem.inletIndex.rows())
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
         unsteadyNST* problem;
-        int Nphi_u;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label Nphi_p;
+        label N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -74,19 +74,19 @@ struct newton_unsteadyNST_sup_t: public newton_argument<double>
 {
     public:
         newton_unsteadyNST_sup_t() {}
-        newton_unsteadyNST_sup_t(int Nx, int Ny,
+        newton_unsteadyNST_sup_t(label Nx, label Ny,
                                  unsteadyNST& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
             N_BC_t(problem.inletIndexT.rows())
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
         unsteadyNST* problem;
-        int Nphi_t;
-        int N_BC_t;
-        int Nphi_u;
+        label Nphi_t;
+        label N_BC_t;
+        label Nphi_u;
         scalar nu;
         scalar DT;
         scalar dt;
@@ -172,13 +172,13 @@ class reducedUnsteadyNST: public reducedUnsteadyNS
         PtrList<volScalarField> T_rec;
 
         /// Number of temperature modes
-        int Nphi_t;
+        label Nphi_t;
 
         /// Reconstructed temperature field
         PtrList<volScalarField> TREC;
 
         /// Number of parametrized boundary conditions related to temperature field
-        int N_BC_t;
+        label N_BC_t;
 
         /// Scalar to store the current time
         scalar time;
@@ -227,7 +227,7 @@ class reducedUnsteadyNST: public reducedUnsteadyNS
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
         void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec",
-                             int printevery = 1);
+                             label printevery = 1);
 
         /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique for temperature field.
         /// stabilisation method
@@ -236,7 +236,7 @@ class reducedUnsteadyNST: public reducedUnsteadyNS
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
         void reconstruct_supt(fileName folder = "./ITHACAOutput/online_rec",
-                              int printevery = 1);
+                              label printevery = 1);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

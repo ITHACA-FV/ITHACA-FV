@@ -55,9 +55,9 @@ void reductionProblem::setParameters()
 // Generate Random Parameters
 void reductionProblem::genRandPar()
 {
-    for (int k = 0; k < Pnumber; k++)
+    for (label k = 0; k < Pnumber; k++)
     {
-        for (int n = 0; n < Tnumber; ++n)
+        for (label n = 0; n < Tnumber; ++n)
         {
             mu(k, n) = mu_range(k, 0) + static_cast <float> (rand()) / static_cast <float>
                        (RAND_MAX / (mu_range(k, 1) - mu_range(k, 0))); // generate numbers
@@ -65,7 +65,7 @@ void reductionProblem::genRandPar()
     }
 }
 
-void reductionProblem::genRandPar(int Tsize)
+void reductionProblem::genRandPar(label Tsize)
 {
     mu.resize(Tsize, Pnumber);
     std::srand(std::time(0));
@@ -74,7 +74,7 @@ void reductionProblem::genRandPar(int Tsize)
     Eigen::MatrixXd k;
     k = (rand.array() + double(1)) / 2;
 
-    for (int i = 0; i < Pnumber; i ++)
+    for (label i = 0; i < Pnumber; i ++)
     {
         k.col(i) = (k.col(i) * dx(i)).array() + mu_range(i, 0);
     }
@@ -87,7 +87,7 @@ void reductionProblem::genEquiPar()
 {
     Eigen::VectorXd vec;
 
-    for (int k = 0; k < Pnumber; k++)
+    for (label k = 0; k < Pnumber; k++)
     {
         mu.row(k) = vec.LinSpaced(Tnumber, mu_range(k, 0), mu_range(k, 1));
     }

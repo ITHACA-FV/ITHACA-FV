@@ -94,13 +94,13 @@ class SteadyNSSimple: public steadyNS
         Eigen::MatrixXd coeffL2;
 
         /// Distancing between intermediate steps (for turbulent case only)
-        int middleStep;
+        label middleStep;
 
         /// Counter to check if the middleStep has been reached or not (for turbulent case only)
-        int saver;
+        label saver;
 
         /// Counter to save intermediate steps in the correct folder (for turbulent case only)
-        int folderN;
+        label folderN;
 
         // Variables
         /// Initialization for the full velocity linear system.
@@ -135,7 +135,7 @@ class SteadyNSSimple: public steadyNS
         ///
         /// @param[in]  NNutModes  Number of modes to be used for nut.
         ///
-        void getTurbRBF(int NNutModes);
+        void getTurbRBF(label NNutModes);
         ///
         /// @brief      Offline solver for the whole Navier-Stokes problem.
         ///

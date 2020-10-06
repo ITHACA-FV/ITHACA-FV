@@ -124,14 +124,14 @@ class usmsrProblem: public msrProblem
         /// where prec_i(x=outlet,t-tau) is the averege over the outlet
         /// patch identified by "precoutIndex"
         /// values are saved in bc_prec(i,call)
-        void computePrecsBC(int call);
+        void computePrecsBC(label call);
         //---------------------------------------------------------------
 
         /// Method to assign the inlet BC to all precursors
         /// it assigns prec_i(x=inlet,t)=prec_i(x=outlet,t-tau)exp(-lam_i*tau)
         /// in practice bc_prec(i,call-Ntau) is assigned to prec_i
         /// patch identified by "precinIndex"
-        void assignPrecsBC(int call, int Ntau);
+        void assignPrecsBC(label call, label Ntau);
         //---------------------------------------------------------------
 
         ///note: these methods are protected since they are very peculiar and problem

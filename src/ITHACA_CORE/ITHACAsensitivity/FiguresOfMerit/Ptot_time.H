@@ -43,7 +43,7 @@ class Ptot_time : public FofM
     public:
         //constructors
         Ptot_time();
-        Ptot_time(int argc, char* argv[], int Nsampled);
+        Ptot_time(label argc, char* argv[], label Nsampled);
         ~Ptot_time() {};
 
         //Members
@@ -55,7 +55,7 @@ class Ptot_time : public FofM
         /// Method that computes the total power for the snapshot number t (starting from 0),
         /// output are sought in dir/0, dir/1, dir/2, etc... i.e solution correspondent to
         /// 0th,1st,2nd etc... parameters set passed to FOM/ROM
-        void buildMO(std::string dir, int t);
+        void buildMO(std::string dir, label t);
 
 };
 

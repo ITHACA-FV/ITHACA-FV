@@ -81,8 +81,8 @@ reducedUnsteadyNS::reducedUnsteadyNS(unsteadyNS& FOMproblem)
 // * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the Supremizer approach
-int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
-                                      Eigen::VectorXd& fvec) const
+label newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
+                                        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -158,8 +158,8 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newton_unsteadyNS_sup::df(const Eigen::VectorXd& x,
-                              Eigen::MatrixXd& fjac) const
+label newton_unsteadyNS_sup::df(const Eigen::VectorXd& x,
+                                Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyNS_sup> numDiff(*this);
     numDiff.df(x, fjac);
@@ -169,8 +169,8 @@ int newton_unsteadyNS_sup::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Operators PPE * * * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the Pressure Poisson Equation (PPE) approach
-int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
-                                      Eigen::VectorXd& fvec) const
+label newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
+                                        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -258,8 +258,8 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newton_unsteadyNS_PPE::df(const Eigen::VectorXd& x,
-                              Eigen::MatrixXd& fjac) const
+label newton_unsteadyNS_PPE::df(const Eigen::VectorXd& x,
+                                Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyNS_PPE> numDiff(*this);
     numDiff.df(x, fjac);
@@ -282,7 +282,7 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
              "The variable exportEvery must be an integer multiple of the time step dt.");
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
-    int numberOfStores = round(storeEvery / dt);
+    label numberOfStores = round(storeEvery / dt);
 
     if (problem->bcMethod == "lift")
     {
@@ -300,8 +300,8 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
                      Umodes);
     y.tail(Nphi_p) = ITHACAutilities::getCoeffs(problem->Pfield[startSnap],
                      Pmodes);
-    int nextStore = 0;
-    int counter2 = 0;
+    label nextStore = 0;
+    label counter2 = 0;
 
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
@@ -326,13 +326,13 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vector to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
@@ -441,7 +441,7 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
              "The variable exportEvery must be an integer multiple of the time step dt.");
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
-    int numberOfStores = round(storeEvery / dt);
+    label numberOfStores = round(storeEvery / dt);
 
     if (problem->bcMethod == "lift")
     {
@@ -460,8 +460,8 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
                      Umodes);
     y.tail(Nphi_p) = ITHACAutilities::getCoeffs(problem->Pfield[startSnap],
                      Pmodes);
-    int nextStore = 0;
-    int counter2 = 0;
+    label nextStore = 0;
+    label counter2 = 0;
 
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
@@ -486,13 +486,13 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vector to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
@@ -595,7 +595,7 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_sup(Eigen::MatrixXd& vel_now,
     Eigen::MatrixXd valBC = Eigen::MatrixXd::Zero(N_BC, timeStepPenalty);
     // Initialize old values on boundaries
     Eigen::MatrixXd valBC0 = Eigen::MatrixXd::Zero(N_BC, timeStepPenalty);
-    int Iter = 0;
+    label Iter = 0;
     Eigen::VectorXd diffvel =  (vel_now.col(timeStepPenalty - 1) - valBC.col(
                                     timeStepPenalty - 1));
     diffvel = diffvel.cwiseAbs();
@@ -716,7 +716,7 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_PPE(Eigen::MatrixXd& vel_now,
     Eigen::MatrixXd valBC = Eigen::MatrixXd::Zero(N_BC, timeStepPenalty);
     // Initialize old values on boundaries
     Eigen::MatrixXd valBC0 = Eigen::MatrixXd::Zero(N_BC, timeStepPenalty);
-    int Iter = 0;
+    label Iter = 0;
     Eigen::VectorXd diffvel =  (vel_now.col(timeStepPenalty - 1) - valBC.col(
                                     timeStepPenalty - 1));
     diffvel = diffvel.cwiseAbs();
@@ -837,15 +837,15 @@ void reducedUnsteadyNS::reconstruct(bool exportFields, fileName folder)
         ITHACAutilities::createSymLink(folder);
     }
 
-    int counter = 0;
-    int nextwrite = 0;
+    label counter = 0;
+    label nextwrite = 0;
     List < Eigen::MatrixXd> CoeffU;
     List < Eigen::MatrixXd> CoeffP;
     List <double> tValues;
     CoeffU.resize(0);
     CoeffP.resize(0);
     tValues.resize(0);
-    int exportEveryIndex = round(exportEvery / storeEvery);
+    label exportEveryIndex = round(exportEvery / storeEvery);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -886,7 +886,7 @@ Eigen::MatrixXd reducedUnsteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    for (label k = 0; k < problem->inletIndex.rows(); k++)
     {
         label p = problem->inletIndex(k, 0);
         label l = problem->inletIndex(k, 1);
@@ -894,7 +894,7 @@ Eigen::MatrixXd reducedUnsteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
         scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
                            problem->liftfield[k].boundaryField()[p]).component(l) / area;
 
-        for (int i = 0; i < vel.cols(); i++)
+        for (label i = 0; i < vel.cols(); i++)
         {
             vel_scal(k, i) = vel(k, i) / u_lf;
         }

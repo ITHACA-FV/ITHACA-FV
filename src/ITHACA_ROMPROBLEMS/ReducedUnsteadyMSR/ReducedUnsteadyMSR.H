@@ -40,19 +40,19 @@ struct newton_usmsr_fd: public newton_argument<double>
 {
     public:
         newton_usmsr_fd() {}
-        newton_usmsr_fd(int Nx, int Ny, usmsrProblem& problem):
+        newton_usmsr_fd(label Nx, label Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows())
         {}
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x, Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x, Eigen::MatrixXd& fjac) const;
 
-        int Nphi_u;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label Nphi_p;
+        label N_BC;
 
         scalar nu;
         scalar dt;
@@ -66,7 +66,7 @@ struct newton_usmsr_n: public newton_argument<double>
 {
     public:
         newton_usmsr_n() {}
-        newton_usmsr_n(int Nx, int Ny, usmsrProblem& problem):
+        newton_usmsr_n(label Nx, label Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_flux(problem.NFluxmodes),
@@ -83,19 +83,19 @@ struct newton_usmsr_n: public newton_argument<double>
             nsf_c(problem.NCmodes),
             a_c(problem.NCmodes)
         {}
-        int operator()(const Eigen::VectorXd& n, Eigen::VectorXd& fvecn) const;
-        int df(const Eigen::VectorXd& n, Eigen::MatrixXd& fjacn) const;
-        int Nphi_flux;
-        int Nphi_prec1;
-        int Nphi_prec2;
-        int Nphi_prec3;
-        int Nphi_prec4;
-        int Nphi_prec5;
-        int Nphi_prec6;
-        int Nphi_prec7;
-        int Nphi_prec8;
-        int Nphi_u;
-        int Nphi_const;
+        label operator()(const Eigen::VectorXd& n, Eigen::VectorXd& fvecn) const;
+        label df(const Eigen::VectorXd& n, Eigen::MatrixXd& fjacn) const;
+        label Nphi_flux;
+        label Nphi_prec1;
+        label Nphi_prec2;
+        label Nphi_prec3;
+        label Nphi_prec4;
+        label Nphi_prec5;
+        label Nphi_prec6;
+        label Nphi_prec7;
+        label Nphi_prec8;
+        label Nphi_u;
+        label Nphi_const;
         scalar nu;
         //neutronic constants
         scalar d;
@@ -138,7 +138,7 @@ struct newton_usmsr_t: public newton_argument<double>
 {
     public:
         newton_usmsr_t() {}
-        newton_usmsr_t(int Nx, int Ny, usmsrProblem& problem):
+        newton_usmsr_t(label Nx, label Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_T(problem.NTmodes + problem.liftfieldT.size()),
@@ -151,16 +151,16 @@ struct newton_usmsr_t: public newton_argument<double>
             sp_c(problem.NCmodes),
             txs_c(problem.NCmodes)
         {}
-        int operator()(const Eigen::VectorXd& t, Eigen::VectorXd& fvect) const;
-        int df(const Eigen::VectorXd& t, Eigen::MatrixXd& fjact) const;
-        int Nphi_T;
-        int Nphi_dec1;
-        int Nphi_dec2;
-        int Nphi_dec3;
-        int Nphi_u;
-        int Nphi_flux;
-        int N_BCt;
-        int Nphi_const;
+        label operator()(const Eigen::VectorXd& t, Eigen::VectorXd& fvect) const;
+        label df(const Eigen::VectorXd& t, Eigen::MatrixXd& fjact) const;
+        label Nphi_T;
+        label Nphi_dec1;
+        label Nphi_dec2;
+        label Nphi_dec3;
+        label Nphi_u;
+        label Nphi_flux;
+        label N_BCt;
+        label Nphi_const;
         scalar nu;
         //neutronic constants
         scalar Keff;
@@ -215,15 +215,15 @@ class reducedusMSR: public reducedMSR
         void solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
                          Eigen::VectorXd mu_online, label startSnap = 0);
         void reconstructAP(fileName folder = "./ITHACAOutput/online_rec",
-                           int printevery = 1);
+                           label printevery = 1);
         void reconstruct_fd(fileName folder = "./ITHACAOutput/online_rec",
-                            int printevery = 1);
+                            label printevery = 1);
         void reconstruct_n(fileName folder = "./ITHACAOutput/online_rec",
-                           int printevery = 1);
+                           label printevery = 1);
         void reconstruct_t(fileName folder = "./ITHACAOutput/online_rec",
-                           int printevery = 1);
+                           label printevery = 1);
         void reconstruct_C(fileName folder = "./ITHACAOutput/online_rec",
-                           int printevery = 1);
+                           label printevery = 1);
 
 
 };

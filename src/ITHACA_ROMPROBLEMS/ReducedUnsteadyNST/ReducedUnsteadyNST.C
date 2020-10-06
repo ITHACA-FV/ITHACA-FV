@@ -106,8 +106,8 @@ reducedUnsteadyNST::reducedUnsteadyNST(unsteadyNST& FOMproblem)
 
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 //Operator to evaluate the residual for the supremizer approach
-int newton_unsteadyNST_sup::operator()(const Eigen::VectorXd& x,
-                                       Eigen::VectorXd& fvec) const
+label newton_unsteadyNST_sup::operator()(const Eigen::VectorXd& x,
+        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -147,15 +147,15 @@ int newton_unsteadyNST_sup::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newton_unsteadyNST_sup::df(const Eigen::VectorXd& x,
-                               Eigen::MatrixXd& fjac) const
+label newton_unsteadyNST_sup::df(const Eigen::VectorXd& x,
+                                 Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyNST_sup> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
 
-int newton_unsteadyNST_sup_t::operator()(const Eigen::VectorXd& t,
+label newton_unsteadyNST_sup_t::operator()(const Eigen::VectorXd& t,
         Eigen::VectorXd& fvect) const
 {
     Eigen::VectorXd c_dot(Nphi_t);
@@ -182,8 +182,8 @@ int newton_unsteadyNST_sup_t::operator()(const Eigen::VectorXd& t,
 
     return 0;
 }
-int newton_unsteadyNST_sup_t::df(const Eigen::VectorXd& t,
-                                 Eigen::MatrixXd& fjact) const
+label newton_unsteadyNST_sup_t::df(const Eigen::VectorXd& t,
+                                   Eigen::MatrixXd& fjact) const
 {
     Eigen::NumericalDiff<newton_unsteadyNST_sup_t> numDiff(*this);
     numDiff.df(t, fjact);
@@ -236,13 +236,13 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
     online_solution.resize(Ntsteps);
     online_solutiont.resize(Ntsteps);
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vector to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
@@ -360,13 +360,13 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
 }
 
 
-void reducedUnsteadyNST::reconstruct_sup(fileName folder, int printevery)
+void reducedUnsteadyNST::reconstruct_sup(fileName folder, label printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    int counter = 0;
-    int nextwrite = 0;
-    int counter2 = 1;
+    label counter = 0;
+    label nextwrite = 0;
+    label counter2 = 1;
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -402,13 +402,13 @@ void reducedUnsteadyNST::reconstruct_sup(fileName folder, int printevery)
 
 
 
-void reducedUnsteadyNST::reconstruct_supt(fileName folder, int printevery)
+void reducedUnsteadyNST::reconstruct_supt(fileName folder, label printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    int counter = 0;
-    int nextwrite = 0;
-    int counter2 = 1;
+    label counter = 0;
+    label nextwrite = 0;
+    label counter2 = 1;
 
     for (label i = 0; i < online_solutiont.size(); i++)
     {

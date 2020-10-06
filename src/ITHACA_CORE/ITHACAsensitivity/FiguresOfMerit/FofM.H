@@ -41,7 +41,7 @@ class FofM
     public:
         //constructors
         FofM();
-        FofM(int argc, char* argv[], int Nsampled);
+        FofM(label argc, char* argv[], label Nsampled);
         ~FofM() {};
 
         //Members:
@@ -54,7 +54,7 @@ class FofM
         PtrList<volScalarField> ptrfield;
         PtrList<volVectorField> Vptrfield;
         /// Number of points for which simulation is run
-        int Npoints;
+        label Npoints;
         /// Name of the figure of merit
         std::string name;
         /// boolean variable to check if the model output is computed (true) or not (false)

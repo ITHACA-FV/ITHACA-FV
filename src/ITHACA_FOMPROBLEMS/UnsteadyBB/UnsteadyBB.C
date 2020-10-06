@@ -373,7 +373,8 @@ void UnsteadyBB::solvesupremizer(word type)
                 ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
             }
 
-            int systemRet = system("ln -s ../../constant ./ITHACAoutput/supfield/constant");
+            label systemRet =
+                system("ln -s ../../constant ./ITHACAoutput/supfield/constant");
             systemRet += system("ln -s ../../0 ./ITHACAoutput/supfield/0");
             systemRet += system("ln -s ../../system ./ITHACAoutput/supfield/system");
 
@@ -399,7 +400,7 @@ void UnsteadyBB::solvesupremizer(word type)
                 ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
             }
 
-            int systemRet =
+            label systemRet =
                 system("ln -s ../../constant ./ITHACAoutput/supremizer/constant");
             systemRet += system("ln -s ../../0 ./ITHACAoutput/supremizer/0");
             systemRet += system("ln -s ../../system ./ITHACAoutput/supremizer/system");
@@ -1139,7 +1140,7 @@ void UnsteadyBB::change_viscosity(double mu)
     volScalarField& ciao = const_cast<volScalarField&>(nu);
     this->assignIF(ciao, mu);
 
-    for (int i = 0; i < ciao.boundaryFieldRef().size(); i++)
+    for (label i = 0; i < ciao.boundaryFieldRef().size(); i++)
     {
         this->assignBC(ciao, i, mu);
     }

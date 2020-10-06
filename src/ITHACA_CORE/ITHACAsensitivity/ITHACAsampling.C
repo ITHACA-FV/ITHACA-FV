@@ -3,18 +3,18 @@
 std::vector<std::string> ITHACAsampling::distributions = {"UNIFORM", "NORMAL", "POISSON", "EXPONENTIAL"};
 
 Eigen::VectorXd ITHACAsampling::samplingMC(std::string pdftype, double& lowerE,
-        double& upperE, double& distpara1, double& distpara2, int& Npoints)
+        double& upperE, double& distpara1, double& distpara2, label& Npoints)
 {
     std::random_device rd;
     std::mt19937 generator(rd());
 
     //to make it non-case sensitive
-    for (int i = 0; i < pdftype.size(); i++)
+    for (label i = 0; i < pdftype.size(); i++)
     {
         pdftype[i] = toupper(pdftype[i]);
     }
 
-    int pos = -1;
+    label pos = -1;
     bool pdf_found = false;
     Eigen::VectorXd samplingVector;
     samplingVector.resize(Npoints);
@@ -23,7 +23,7 @@ Eigen::VectorXd ITHACAsampling::samplingMC(std::string pdftype, double& lowerE,
     std::poisson_distribution<> dist2(distpara1);
     std::exponential_distribution<> dist3(distpara1);
 
-    for (int j = 0; j < distributions.size(); j++)
+    for (label j = 0; j < distributions.size(); j++)
     {
         if (pdftype == distributions[j])
         {
@@ -33,7 +33,7 @@ Eigen::VectorXd ITHACAsampling::samplingMC(std::string pdftype, double& lowerE,
     }
 
     double random;
-    int p_counter = 0;
+    label p_counter = 0;
 
     if (pdf_found == true)
     {

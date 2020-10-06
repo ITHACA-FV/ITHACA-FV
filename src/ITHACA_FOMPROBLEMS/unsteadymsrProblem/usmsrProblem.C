@@ -62,7 +62,7 @@ usmsrProblem::usmsrProblem(int argc, char* argv[])
 
 void usmsrProblem::truthSolve(List<scalar> mu_now)
 {
-    int cc_p = 0;
+    label cc_p = 0;
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
 #include "initContinuityErrs.H"
@@ -155,11 +155,11 @@ void usmsrProblem::truthSolve(List<scalar> mu_now)
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
-    int Ntau = static_cast<int> (tau.value() / timeStep);
-    int Ntot = static_cast<int> (finalTime / timeStep);
+    label Ntau = static_cast<int> (tau.value() / timeStep);
+    label Ntot = static_cast<int> (finalTime / timeStep);
     bc_prec.resize(8, Ntot + 1);
     bool flagBC = false;
-    int nsnapshots = 0;
+    label nsnapshots = 0;
 
     while (runTime.run())
     {
@@ -264,7 +264,7 @@ void usmsrProblem::truthSolve(List<scalar> mu_now)
             mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
             mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
 
-            for (int i = 0; i < mu_now.size(); i++)
+            for (label i = 0; i < mu_now.size(); i++)
             {
                 mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
             }
@@ -328,7 +328,7 @@ void usmsrProblem::truthSolve(List<scalar> mu_now, std::string folder)
     ITHACAutilities::createSymLink(folder);
     counter = 1;
 #include "initContinuityErrs.H"
-    int cc_p = 0;
+    label cc_p = 0;
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
     volScalarField& p = _p();
@@ -420,11 +420,11 @@ void usmsrProblem::truthSolve(List<scalar> mu_now, std::string folder)
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
-    int Ntau = static_cast<int> (tau.value() / timeStep);
-    int Ntot = static_cast<int> (finalTime / timeStep);
+    label Ntau = static_cast<int> (tau.value() / timeStep);
+    label Ntot = static_cast<int> (finalTime / timeStep);
     bc_prec.resize(8, Ntot + 1);
     bool flagBC = false;
-    int nsnapshots = 0;
+    label nsnapshots = 0;
 
     while (runTime.run())
     {
@@ -526,7 +526,7 @@ void usmsrProblem::truthSolve(List<scalar> mu_now, std::string folder)
             mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
             mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
 
-            for (int i = 0; i < mu_now.size(); i++)
+            for (label i = 0; i < mu_now.size(); i++)
             {
                 mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
             }
@@ -583,7 +583,7 @@ void usmsrProblem::changePrecsBC()
                                  fvPatchField<scalar>::New("fixedValue", mesh.boundary()[precinIndex], prec8));
 }
 
-void usmsrProblem::computePrecsBC(int call)
+void usmsrProblem::computePrecsBC(label call)
 {
     fvMesh& mesh = _mesh();
     volScalarField& prec1 = _prec1();
@@ -637,7 +637,7 @@ void usmsrProblem::computePrecsBC(int call)
                                    tau.value());
 }
 
-void usmsrProblem::assignPrecsBC(int call, int Ntau)
+void usmsrProblem::assignPrecsBC(label call, label Ntau)
 {
     volScalarField& prec1 = _prec1();
     volScalarField& prec2 = _prec2();

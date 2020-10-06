@@ -62,7 +62,7 @@ reconstructFromCoeff(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd getMassMatrix(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, label Nmodes,
     bool consider_volumes)
 {
     label Msize;
@@ -95,15 +95,16 @@ Eigen::MatrixXd getMassMatrix(
 }
 
 template Eigen::MatrixXd getMassMatrix(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& modes, int Nmodes,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& modes, label Nmodes,
     bool consider_volumes);
 
 template Eigen::MatrixXd getMassMatrix(
-    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& modes, int Nmodes,
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& modes,
+    label Nmodes,
     bool consider_volumes = false);
 
 template Eigen::MatrixXd getMassMatrix(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes, int Nmodes,
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes, label Nmodes,
     bool consider_volumes);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -111,7 +112,7 @@ Eigen::VectorXd getMassMatrixFV(
     GeometricField<Type, PatchField, GeoMesh>& snapshot)
 {
     Eigen::MatrixXd snapEigen = Foam2Eigen::field2Eigen(snapshot);
-    int dim = std::nearbyint(snapEigen.rows() / (snapshot.mesh().V()).size());
+    label dim = std::nearbyint(snapEigen.rows() / (snapshot.mesh().V()).size());
     Eigen::VectorXd volumes = Foam2Eigen::field2Eigen(snapshot.mesh().V());
     Eigen::VectorXd vol3 = volumes.replicate(dim, 1);
     return vol3;
@@ -125,7 +126,7 @@ template Eigen::VectorXd getMassMatrixFV(
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
                           snapshot,
-                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, label Nmodes,
                           bool consider_volumes)
 {
     label Msize;
@@ -164,25 +165,25 @@ Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
 template Eigen::VectorXd getCoeffs(
     GeometricField<scalar, fvPatchField, volMesh>&
     snapshot, PtrList<GeometricField<scalar, fvPatchField, volMesh>>& modes,
-    int Nmodes,
+    label Nmodes,
     bool consider_volumes);
 
 template Eigen::VectorXd getCoeffs(
     GeometricField<scalar, fvsPatchField, surfaceMesh>&
     snapshot, PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& modes,
-    int Nmodes,
+    label Nmodes,
     bool consider_volumes = false);
 
 template Eigen::VectorXd getCoeffs(
     GeometricField<vector, fvPatchField, volMesh>&
     snapshot, PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes,
-    int Nmodes,
+    label Nmodes,
     bool consider_volumes);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
                           snapshots,
-                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, label Nmodes,
                           bool consider_volumes)
 {
     label Msize;
@@ -211,25 +212,25 @@ Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
 template Eigen::MatrixXd getCoeffs(
     PtrList<GeometricField<scalar, fvPatchField, volMesh>>&
     snapshot, PtrList<GeometricField<scalar, fvPatchField, volMesh>>& modes,
-    int Nmodes,
+    label Nmodes,
     bool consider_volumes);
 
 template Eigen::MatrixXd getCoeffs(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>&
     snapshot, PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes,
-    int Nmodes,
+    label Nmodes,
     bool consider_volumes);
 
 Eigen::MatrixXd parTimeCombMat(List<Eigen::VectorXd>
                                acquiredSnapshotsTimes,
                                Eigen::MatrixXd parameters)
 {
-    int parsNum = parameters.cols();
-    int parsSamplesNum = parameters.rows();
+    label parsNum = parameters.cols();
+    label parsSamplesNum = parameters.rows();
     M_Assert(parsSamplesNum == acquiredSnapshotsTimes.size(),
              "The list of time instants does not have the same number of vectors as the number of parameters samples");
     Eigen::MatrixXd comb;
-    int totalSnapshotsNum = 0;
+    label totalSnapshotsNum = 0;
 
     for (label k = 0; k < acquiredSnapshotsTimes.size(); k++)
     {

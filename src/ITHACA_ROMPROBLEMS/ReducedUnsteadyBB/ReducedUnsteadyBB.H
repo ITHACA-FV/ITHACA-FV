@@ -50,7 +50,7 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
 {
     public:
         newton_unsteadyBB_sup() {}
-        newton_unsteadyBB_sup(int Nx, int Ny,
+        newton_unsteadyBB_sup(label Nx, label Ny,
                               UnsteadyBB& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
@@ -60,14 +60,14 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
             Nphi_prgh(problem.NPrghmodes)
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
         UnsteadyBB* problem;
-        int Nphi_u;
-        int Nphi_t;
-        int N_BC_t;
-        int N_BC;
-        int Nphi_prgh;
+        label Nphi_u;
+        label Nphi_t;
+        label N_BC_t;
+        label N_BC;
+        label Nphi_prgh;
         scalar nu;
         scalar Pr;
         scalar dt;
@@ -82,7 +82,7 @@ struct newton_unsteadyBB_PPE: public newton_argument<double>
 {
     public:
         newton_unsteadyBB_PPE() {}
-        newton_unsteadyBB_PPE(int Nx, int Ny,
+        newton_unsteadyBB_PPE(label Nx, label Ny,
                               UnsteadyBB& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
@@ -93,20 +93,20 @@ struct newton_unsteadyBB_PPE: public newton_argument<double>
             Nphi_prgh(problem.NPrghmodes)
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         UnsteadyBB* problem;
-        int Nphi_u;
-        int Nphi_p;
-        int Nphi_t;
-        int Nphi_prgh;
-        int N_BC_t;
-        int N_BC;
+        label Nphi_u;
+        label Nphi_p;
+        label Nphi_t;
+        label Nphi_prgh;
+        label N_BC_t;
+        label N_BC;
         scalar nu;
         scalar Pr;
         scalar dt;
-        int writeEvery;
+        label writeEvery;
         word BCmethod;
 
         Eigen::VectorXd y_old;
@@ -159,13 +159,13 @@ class ReducedUnsteadyBB: public reducedUnsteadyNS
         PtrList<volScalarField> PREC;
 
         /// Number of temperature modes
-        int Nphi_t;
+        label Nphi_t;
 
         /// Number of shifted pressure modes
-        int Nphi_prgh;
+        label Nphi_prgh;
 
         /// Number of parametrized boundary conditions related to temperature field
-        int N_BC_t;
+        label N_BC_t;
 
         /// DimensionedScalar Pr;
         scalar Pr;
@@ -214,7 +214,7 @@ class ReducedUnsteadyBB: public reducedUnsteadyNS
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
         void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec",
-                             int printevery = 1);
+                             label printevery = 1);
 };
 
 

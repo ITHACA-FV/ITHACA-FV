@@ -110,10 +110,10 @@ class ITHACADMD
         Eigen::MatrixXcd dynamics;
 
         /// Number of snapshots
-        int NSnaps;
+        label NSnaps;
 
         /// Rank of the DMD
-        int SVD_rank_public;
+        label SVD_rank_public;
 
         /// Original time step used to acquire the snapshots
         double originalDT;
@@ -128,7 +128,7 @@ class ITHACADMD
         /// @param[in]  exact           True (default) if you want the exact DMD modes computations. False if you want the projected modes
         /// @param[in]  exportDMDmodes  A flag to export the DMD modes, both real and imaginary parts are exported
         ///
-        void getModes(int SVD_rank = -1, bool exact = true,
+        void getModes(label SVD_rank = -1, bool exact = true,
                       bool exportDMDmodes = false);
 
         //--------------------------------------------------------------------------

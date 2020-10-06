@@ -68,7 +68,7 @@ SourceFiles
 #include <unsupported/Eigen/CXX11/Tensor>
 #pragma GCC diagnostic pop
 
-#define MAXBUFSIZE (static_cast<int> (1e6))
+#define MAXBUFSIZE (static_cast<label> (1e6))
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
 
@@ -328,7 +328,7 @@ class ITHACAstream
         /// @tparam     Nrows       number of matrix rows
         /// @tparam     IND         number of matrix cols
         ///
-        template <typename T, int Nrows, typename IND>
+        template <typename T, label Nrows, typename IND>
         static void SaveSparseMatrix(Eigen::SparseMatrix<T, Nrows, IND>& m,
                                      word folder, word MatrixName);
 
@@ -343,7 +343,7 @@ class ITHACAstream
         /// @tparam     Nrows       number of matrix rows
         /// @tparam     IND         number of matrix cols
         ///
-        template <typename T, int Nrows, typename IND>
+        template <typename T, label Nrows, typename IND>
         static void ReadSparseMatrix(Eigen::SparseMatrix<T, Nrows, IND>& m,
                                      word folder, word MatrixName);
 
@@ -421,7 +421,7 @@ class ITHACAstream
         /// @tparam     Nrows       number of matrix rows
         /// @tparam     IND         number of matrix cols
         ///
-        template <typename T, int Nrows, typename IND>
+        template <typename T, label Nrows, typename IND>
         static void ReadSparseMatrixList(List<Eigen::SparseMatrix<T, Nrows, IND>>& m,
                                          word folder, word MatrixName);
 
@@ -460,7 +460,7 @@ class ITHACAstream
         ///
         /// @return     Number of files matching the request
         ///
-        static int numberOfFiles(word folder, word MatrixName);
+        static label numberOfFiles(word folder, word MatrixName);
 
         //--------------------------------------------------------------------------
         /// Write points of a mesh to a file
@@ -472,7 +472,7 @@ class ITHACAstream
         static void writePoints(pointField points, fileName folder, fileName subfolder);
 
         //--------------------------------------------------------------------------
-        /// Print progress bar given the percentage
+        /// Prlabel progress bar given the percentage
         ///
         /// @param[in]  percentage  The percentage
         ///
@@ -542,11 +542,11 @@ Istream& operator>> (Istream& is, Eigen::Tensor<T, 3>& tens)
 
 }
 
-template <typename T, int whatever, typename IND>
+template <typename T, label whatever, typename IND>
 void ITHACAstream::SaveSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m,
                                     word folder, word MatrixName)
 {
-    typedef Eigen::Triplet<int> Trip;
+    typedef Eigen::Triplet<label> Trip;
     std::vector<Trip> res;
     m.makeCompressed();
     mkDir(folder);
@@ -576,7 +576,7 @@ void ITHACAstream::SaveSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m,
     }
 }
 
-template <typename T, int whatever, typename IND>
+template <typename T, label whatever, typename IND>
 void ITHACAstream::ReadSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m,
                                     word folder, word MatrixName)
 {
@@ -656,9 +656,9 @@ void ITHACAstream::SaveDenseTensor(TensorType& Tensor, word folder,
     std::ofstream out(folder + MatrixName,
                       std::ios::out | std::ios::binary | std::ios::trunc);
     typename TensorType::Dimensions dim = Tensor.dimensions();
-    int tot = 1;
+    label tot = 1;
 
-    for (unsigned int k = 0; k < dim.size(); k++)
+    for (label k = 0; k < dim.size(); k++)
     {
         tot *= dim[k];
     }
@@ -682,9 +682,9 @@ void ITHACAstream::ReadDenseTensor(TensorType& Tensor, word folder,
     auto dims = Tensor.dimensions();
     M_Assert(dims.size() == dim.size(),
              "The rank of the tensor you want to fill does not coincide with the rank of the tensor you are reading");
-    int tot = 1;
+    label tot = 1;
 
-    for (unsigned int k = 0; k < dim.size(); k++)
+    for (label k = 0; k < dim.size(); k++)
     {
         tot *= dim[k];
     }
@@ -699,7 +699,7 @@ template <typename MatrixType>
 void ITHACAstream::SaveSparseMatrixList(List<MatrixType>& MatrixList,
                                         word folder, word MatrixName)
 {
-    for (int i = 0; i < MatrixList.size(); i++)
+    for (label i = 0; i < MatrixList.size(); i++)
     {
         SaveSparseMatrix(MatrixList[i], folder, MatrixName + name(i));
     }
@@ -709,23 +709,23 @@ template <typename MatrixType>
 void ITHACAstream::SaveDenseMatrixList(List<MatrixType>& MatrixList,
                                        word folder, word MatrixName)
 {
-    for (int i = 0; i < MatrixList.size(); i++)
+    for (label i = 0; i < MatrixList.size(); i++)
     {
         SaveDenseMatrix(MatrixList[i], folder, MatrixName + name(i));
     }
 }
 
-template <typename T, int whatever, typename IND>
+template <typename T, label whatever, typename IND>
 void ITHACAstream::ReadSparseMatrixList(
     List<Eigen::SparseMatrix<T, whatever, IND>>& m, word folder, word MatrixName)
 {
-    int number_of_files = numberOfFiles(folder, MatrixName);
+    label number_of_files = numberOfFiles(folder, MatrixName);
     std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
     M_Assert(number_of_files != 0,
              "Check if the file you are trying to read exists" );
     Eigen::SparseMatrix<T, whatever, IND> A;
 
-    for (int i = 0; i < number_of_files; i++)
+    for (label i = 0; i < number_of_files; i++)
     {
         ReadSparseMatrix(A, folder, MatrixName + name(i));
         m.append(A);
@@ -737,13 +737,13 @@ template <typename MatrixType>
 void ITHACAstream::ReadDenseMatrixList(List<MatrixType>& m, word folder,
                                        word MatrixName)
 {
-    int number_of_files = numberOfFiles(folder, MatrixName);
+    label number_of_files = numberOfFiles(folder, MatrixName);
     std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
     M_Assert(number_of_files != 0,
              "Check if the file you are trying to read exists" );
     MatrixType A;
 
-    for (int i = 0; i < number_of_files; i++)
+    for (label i = 0; i < number_of_files; i++)
     {
         ReadDenseMatrix(A, folder, MatrixName + name(i));
         m.append(A);

@@ -51,7 +51,7 @@ class ITHACAsampling
         /// distpara1 and distpara2 are the parameters of the distibution, in case of distribution with
         /// only 1 parameter only the value in distpara1 is used
         static Eigen::VectorXd samplingMC(std::string pdftype, double& lowerE,
-                                          double& upperE, double& distpara1, double& distpara2, int& Npoints);
+                                          double& upperE, double& distpara1, double& distpara2, label& Npoints);
 
     private:
 

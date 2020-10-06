@@ -19,7 +19,7 @@ ITHACAparameters::ITHACAparameters(fvMesh& mesh, Time& localTime)
             true
         )
     );
-    precision = ITHACAdict->lookupOrDefault<int>("OutPrecision", 10);
+    precision = ITHACAdict->lookupOrDefault<label>("OutPrecision", 10);
     word typeout = ITHACAdict->lookupOrDefault<word>("OutType", "fixed");
 
     if (typeout == "fixed")

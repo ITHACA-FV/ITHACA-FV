@@ -65,8 +65,8 @@ ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
                                       fomProblem);
 }
 
-int newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
-                                   Eigen::VectorXd& fvec) const
+label newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
+                                     Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd aTmp(Nphi_u);
     Eigen::VectorXd bTmp(Nphi_p);
@@ -123,8 +123,8 @@ int newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
     return 0;
 }
 
-int newtonSteadyNSTurb::df(const Eigen::VectorXd& x,
-                           Eigen::MatrixXd& fjac) const
+label newtonSteadyNSTurb::df(const Eigen::VectorXd& x,
+                             Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonSteadyNSTurb> numDiff(*this);
     numDiff.df(x, fjac);
@@ -216,7 +216,7 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
 
 
 void ReducedSteadyNSTurb::reconstruct(bool exportFields, fileName folder,
-                                      int printevery)
+                                      label printevery)
 {
     if (exportFields)
     {
@@ -224,8 +224,8 @@ void ReducedSteadyNSTurb::reconstruct(bool exportFields, fileName folder,
         ITHACAutilities::createSymLink(folder);
     }
 
-    int counter = 0;
-    int nextWrite = 0;
+    label counter = 0;
+    label nextWrite = 0;
     List <Eigen::MatrixXd> CoeffU;
     List <Eigen::MatrixXd> CoeffP;
     List <Eigen::MatrixXd> CoeffNut;
@@ -277,7 +277,7 @@ Eigen::MatrixXd ReducedSteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    for (label k = 0; k < problem->inletIndex.rows(); k++)
     {
         label p = problem->inletIndex(k, 0);
         label l = problem->inletIndex(k, 1);

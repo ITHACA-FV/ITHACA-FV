@@ -85,10 +85,10 @@ class ITHACAparallel
             GeometricField<type, fvPatchField, volMesh> field);
 
         /// Totoal number of internal field cells
-        int N_IF_glob;
+        label N_IF_glob;
 
         /// Number of Boundary Patches without considering processors
-        int N_BF;
+        label N_BF;
 
         /// Cell proc addressing
         autoPtr<labelIOList> indices;

@@ -84,7 +84,7 @@ namespace ITHACAutilities
 ///
 /// @return     the matrix
 ///
-Eigen::MatrixXd rand(int rows, int cols, double min, double max);
+Eigen::MatrixXd rand(label rows, label cols, double min, double max);
 
 //--------------------------------------------------------------------------
 /// @brief      Generates random matrix with random values in an interval
@@ -94,7 +94,7 @@ Eigen::MatrixXd rand(int rows, int cols, double min, double max);
 ///
 /// @return     Random matrix
 ///
-Eigen::MatrixXd rand(int rows, Eigen::MatrixXd minMax);
+Eigen::MatrixXd rand(label rows, Eigen::MatrixXd minMax);
 
 
 //--------------------------------------------------------------------------

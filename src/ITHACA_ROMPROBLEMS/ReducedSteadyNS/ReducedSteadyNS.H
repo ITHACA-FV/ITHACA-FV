@@ -52,21 +52,22 @@ struct newton_steadyNS: public newton_argument<double>
 {
     public:
         newton_steadyNS() {}
-        newton_steadyNS(int Nx, int Ny, steadyNS& problem): newton_argument<double>(Nx,
-                    Ny),
+        newton_steadyNS(label Nx, label Ny,
+                        steadyNS& problem): newton_argument<double>(Nx,
+                                    Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows())
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         steadyNS* problem;
-        int Nphi_u;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label Nphi_p;
+        label N_BC;
         scalar nu;
         Eigen::MatrixXd tauU;
         Eigen::VectorXd BC;
@@ -153,19 +154,19 @@ class reducedSteadyNS: public reducedProblem
         steadyNS* problem;
 
         /// Number of velocity modes
-        int Nphi_u;
+        label Nphi_u;
 
         /// Number of pressure modes
-        int Nphi_p;
+        label Nphi_p;
 
         /// Number of supremizer modes
-        int Nphi_sup;
+        label Nphi_sup;
 
         /// Number of parametrized boundary conditions
-        int N_BC;
+        label N_BC;
 
         /// Counter to count the online solutions
-        int count_online_solve = 1;
+        label count_online_solve = 1;
 
         /// Penalty Factor
         Eigen::MatrixXd tauU;
@@ -196,7 +197,7 @@ class reducedSteadyNS: public reducedProblem
         /// @param[in]  printevery  The printevery
         ///
         void reconstruct_PPE(fileName folder = "./ITHACAoutput/online_rec",
-                             int printevery = 1);
+                             label printevery = 1);
 
 
         ///
@@ -208,7 +209,7 @@ class reducedSteadyNS: public reducedProblem
         ///
         void reconstruct(bool exportFields = false,
                          fileName folder = "./ITHACAoutput/online_rec",
-                         int printevery = 1);
+                         label printevery = 1);
 
         /// Method to compute the reduced order forces
         ///
