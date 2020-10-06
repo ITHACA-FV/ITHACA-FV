@@ -45,12 +45,12 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
     problem(&FOMproblem)
 {
     // Create a new Umodes set where the first ones are the lift functions
-    for (int i = 0; i < problem->inletIndex.rows(); i++)
+    for (label i = 0; i < problem->inletIndex.rows(); i++)
     {
         ULmodes.append(problem->liftfield[i]);
     }
 
-    for (int i = 0; i < problem->Umodes.size(); i++)
+    for (label i = 0; i < problem->Umodes.size(); i++)
     {
         ULmodes.append(problem->Umodes.toPtrList()[i]);
     }
@@ -60,21 +60,22 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
 
 
 void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
-        int NmodesUproj, int NmodesPproj, int NmodesNut, int NmodesSup, word Folder)
+        label NmodesUproj, label NmodesPproj, label NmodesNut, label NmodesSup,
+        word Folder)
 {
     ULmodes.resize(0);
 
-    for (int i = 0; i < problem->inletIndex.rows(); i++)
+    for (label i = 0; i < problem->inletIndex.rows(); i++)
     {
         ULmodes.append(problem->liftfield[i]);
     }
 
-    for (int i = 0; i < NmodesUproj; i++)
+    for (label i = 0; i < NmodesUproj; i++)
     {
         ULmodes.append(problem->Umodes.toPtrList()[i]);
     }
 
-    for (int i = 0; i < NmodesSup; i++)
+    for (label i = 0; i < NmodesSup; i++)
     {
         ULmodes.append(problem->supmodes.toPtrList()[i]);
     }
@@ -131,7 +132,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     ULmodes.reconstruct(U, a, "U");
     problem->Pmodes.reconstruct(P, b, "p");
     phi = fvc::interpolate(U) & U.mesh().Sf();
-    int iter = 0;
+    label iter = 0;
     simpleControl& simple = problem->_simple();
 
     if (ITHACAutilities::isTurbulent())
@@ -139,7 +140,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
         Eigen::MatrixXd nutCoeff;
         nutCoeff.resize(NmodesNut, 1);
 
-        for (int i = 0; i < NmodesNut; i++)
+        for (label i = 0; i < NmodesNut; i++)
         {
             Eigen::MatrixXd muEval;
             muEval.resize(1, 1);
@@ -293,7 +294,7 @@ void reducedSimpleSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    for (label k = 0; k < problem->inletIndex.rows(); k++)
     {
         label p = problem->inletIndex(k, 0);
         label l = problem->inletIndex(k, 1);

@@ -52,19 +52,19 @@ struct newtonSteadyNSTurbIntrusive: public newton_argument<double>
 {
     public:
         newtonSteadyNSTurbIntrusive() {}
-        newtonSteadyNSTurbIntrusive(int Nx, int Ny,
+        newtonSteadyNSTurbIntrusive(label Nx, label Ny,
                                     SteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.nModesOnline),
             N_BC(problem.inletIndex.rows())
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         SteadyNSTurbIntrusive* problem;
-        int Nphi_u;
-        int N_BC;
+        label Nphi_u;
+        label N_BC;
         scalar nu;
         Eigen::MatrixXd tauU;
         Eigen::VectorXd bc;
@@ -106,7 +106,7 @@ class ReducedSteadyNSTurbIntrusive: public reducedSteadyNS
         PtrList<volScalarField> nutRec;
 
         /// Number of viscosity modes
-        int nphiNut;
+        label nphiNut;
 
         /// Newton Object to solve the nonlinear problem
         newtonSteadyNSTurbIntrusive newtonObject;
@@ -132,7 +132,7 @@ class ReducedSteadyNSTurbIntrusive: public reducedSteadyNS
         /// @param[in]  printEvery  The printEvery
         ///
         void reconstruct(fileName folder = "./ITHACAOutput/online_rec",
-                         int printEvery = 1);
+                         label printEvery = 1);
 
         ///
         /// @brief      Sets the online velocity.

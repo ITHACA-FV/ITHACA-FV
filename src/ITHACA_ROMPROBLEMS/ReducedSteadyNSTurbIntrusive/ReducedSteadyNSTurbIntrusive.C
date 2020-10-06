@@ -54,7 +54,7 @@ ReducedSteadyNSTurbIntrusive::ReducedSteadyNSTurbIntrusive(
                    fomProblem);
 }
 
-int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
+label newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd aTmp(Nphi_u);
@@ -101,8 +101,8 @@ int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
     return 0;
 }
 
-int newtonSteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
-                                    Eigen::MatrixXd& fjac) const
+label newtonSteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
+                                      Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonSteadyNSTurbIntrusive> numDiff(*this);
     numDiff.df(x, fjac);
@@ -172,12 +172,12 @@ void ReducedSteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
 
 
 void ReducedSteadyNSTurbIntrusive::reconstruct(fileName folder,
-        int printEvery)
+        label printEvery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    int counter = 0;
-    int nextWrite = 0;
+    label counter = 0;
+    label nextWrite = 0;
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -214,7 +214,7 @@ Eigen::MatrixXd ReducedSteadyNSTurbIntrusive::setOnlineVelocity(
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    for (label k = 0; k < problem->inletIndex.rows(); k++)
     {
         label p = problem->inletIndex(k, 0);
         label l = problem->inletIndex(k, 1);

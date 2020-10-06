@@ -128,7 +128,7 @@ template void ITHACAstream::exportMatrix(Eigen::Matrix < double, -1,
         -1 > & matrix, word Name, word type,
         word folder);
 
-template void ITHACAstream::exportMatrix(Eigen::Matrix < int, -1,
+template void ITHACAstream::exportMatrix(Eigen::Matrix < label, -1,
         -1 > & matrix, word Name, word type,
         word folder);
 
@@ -319,7 +319,7 @@ template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3> tensor,
         word Name,
         word type, word folder);
 
-template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3> tensor,
+template void ITHACAstream::exportTensor(Eigen::Tensor<label, 3> tensor,
         word Name,
         word type, word folder);
 
@@ -329,7 +329,7 @@ template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3> tensor,
 
 List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
 {
-    int file_count = 0;
+    label file_count = 0;
     DIR* dirp;
     struct dirent* entry;
     dirp = opendir(folder.c_str());
@@ -357,7 +357,7 @@ List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
 
 Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
 {
-    int cols = 0, rows = 0;
+    label cols = 0, rows = 0;
     double buff[MAXBUFSIZE];
     // Read numbers from file into buffer.
     std::ifstream infile;
@@ -371,7 +371,7 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     {
         string line;
         getline(infile, line);
-        int temp_cols = 0;
+        label temp_cols = 0;
         std::stringstream stream(line);
 
         while (! stream.eof())
@@ -397,9 +397,9 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     // Populate matrix with numbers.
     Eigen::MatrixXd result(rows, cols);
 
-    for (int i = 0; i < rows; i++)
+    for (label i = 0; i < rows; i++)
     {
-        for (int j = 0; j < cols; j++)
+        for (label j = 0; j < cols; j++)
         {
             result(i, j) = buff[ cols * i + j ];
         }
@@ -562,7 +562,7 @@ void ITHACAstream::readMiddleFields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field, fileName casename)
 {
-    int par = 1;
+    label par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
              "No parameter dependent solutions stored into Offline folder");
 
@@ -579,7 +579,7 @@ void ITHACAstream::readConvergedFields(
     GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename)
 {
-    int par = 1;
+    label par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
              "No parameter dependent solutions stored into Offline folder");
     std::cout << "######### Reading the Data for " << field.name() << " #########"
@@ -587,7 +587,7 @@ void ITHACAstream::readConvergedFields(
 
     while (ITHACAutilities::check_folder(casename + name(par)))
     {
-        int last = 1;
+        label last = 1;
 
         while (ITHACAutilities::check_folder(casename + name(par) + "/" + name(last)))
         {
@@ -609,9 +609,9 @@ void ITHACAstream::readConvergedFields(
     }
 }
 
-int ITHACAstream::numberOfFiles(word folder, word MatrixName)
+label ITHACAstream::numberOfFiles(word folder, word MatrixName)
 {
-    int number_of_files = 0;
+    label number_of_files = 0;
     std::ifstream in;
     in.open(folder + MatrixName + name(0), std::ios::in | std::ios::binary);
 
@@ -760,9 +760,9 @@ void ITHACAstream::writePoints(pointField points, fileName folder,
 
 void ITHACAstream::printProgress(double percentage)
 {
-    int val = static_cast<int>(percentage * 100);
-    int lpad = static_cast<int> (percentage * PBWIDTH);
-    int rpad = PBWIDTH - lpad;
+    label val = static_cast<label>(percentage * 100);
+    label lpad = static_cast<label> (percentage * PBWIDTH);
+    label rpad = PBWIDTH - lpad;
 
     if (Pstream::master())
     {

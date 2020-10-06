@@ -46,17 +46,17 @@ SteadyNSSimple::SteadyNSSimple(int argc, char* argv[])
 {
     Info << offline << endl;
     /// Number of velocity modes to be calculated
-    NUmodesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+    NUmodesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesUout", 15);
     /// Number of pressure modes to be calculated
-    NPmodesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
+    NPmodesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesPout", 15);
     /// Number of nut modes to be calculated
-    NNutModesOut = para->ITHACAdict->lookupOrDefault<int>("NmodesNutOut", 15);
+    NNutModesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesNutOut", 15);
     /// Number of velocity modes used for the projection
-    NUmodes = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
+    NUmodes = para->ITHACAdict->lookupOrDefault<label>("NmodesUproj", 10);
     /// Number of pressure modes used for the projection
-    NPmodes = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+    NPmodes = para->ITHACAdict->lookupOrDefault<label>("NmodesPproj", 10);
     /// Number of nut modes used for the projection
-    NNutModes = para->ITHACAdict->lookupOrDefault<int>("NmodesNutProj", 0);
+    NNutModes = para->ITHACAdict->lookupOrDefault<label>("NmodesNutProj", 0);
 }
 
 fvVectorMatrix SteadyNSSimple::get_Umatrix(volVectorField& U,
@@ -105,7 +105,7 @@ fvScalarMatrix SteadyNSSimple::get_Pmatrix(volVectorField& U,
     }
 
     constrainPressure(p, U, phiHbyA, rAtU(), MRF);
-    int i = 0;
+    label i = 0;
 
     while (simple.correctNonOrthogonal())
     {
@@ -144,7 +144,7 @@ fvScalarMatrix SteadyNSSimple::get_Pmatrix(volVectorField& U,
     return pEqn;
 }
 
-void SteadyNSSimple::getTurbRBF(int NNutModes)
+void SteadyNSSimple::getTurbRBF(label NNutModes)
 {
     if (NNutModes == 0)
     {
@@ -156,7 +156,7 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
     rbfSplines.resize(NNutModes);
     Eigen::MatrixXd weights;
 
-    for (int i = 0; i < NNutModes; i++) // i is the nnumber of th mode
+    for (label i = 0; i < NNutModes; i++) // i is the nnumber of th mode
     {
         word weightName = "wRBF_M" + name(i + 1);
 
@@ -164,7 +164,8 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++) // j is the number of the nut snapshot
+            for (label j = 0; j < coeffL2.cols();
+                    j++) // j is the number of the nut snapshot
             {
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
@@ -178,7 +179,8 @@ void SteadyNSSimple::getTurbRBF(int NNutModes)
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++) // j is the number of the nut snapshot
+            for (label j = 0; j < coeffL2.cols();
+                    j++) // j is the number of the nut snapshot
             {
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
@@ -211,7 +213,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
     folderN = 0;
     saver = 0;
-    middleStep = para->ITHACAdict->lookupOrDefault<int>("middleStep", 20);
+    middleStep = para->ITHACAdict->lookupOrDefault<label>("middleStep", 20);
 #if OFVER == 6
 
     while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
@@ -261,7 +263,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             HbyA -= (rAU - rAtU()) * fvc::grad(p);
         }
 
-        int i = 0;
+        label i = 0;
 
         while (simple.correctNonOrthogonal())
         {
@@ -336,7 +338,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     // --- Fill in the mu_samples with parameters (mu) to be used for the POD sample points
     mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
 
-    for (int i = 0; i < mu_now.size(); i++)
+    for (label i = 0; i < mu_now.size(); i++)
     {
         mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
     }

@@ -47,7 +47,7 @@ class ITHACAparameters
         word eigensolver;
 
         /// precision of the output Market Matrix objects (i.e. reduced matrices, eigenvalues, ...)
-        int precision;
+        label precision;
 
         ///
         bool exportPython;

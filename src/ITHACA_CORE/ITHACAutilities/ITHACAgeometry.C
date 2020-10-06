@@ -40,7 +40,7 @@ labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
         const polyPatch& patchFound = mesh.boundaryMesh()[indices[j]];
         labelList labelPatchFound(patchFound.meshPoints());
 
-        for (int i = 0; i < labelPatchFound.size(); i++)
+        for (label i = 0; i < labelPatchFound.size(); i++)
         {
             auto px = meshPoints[labelPatchFound[i]].component(0);
             auto py = meshPoints[labelPatchFound[i]].component(1);
@@ -59,17 +59,17 @@ labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
     return boxIndices;
 }
 
-List<int> getIndices(fvMesh& mesh, int index, int layers)
+List<label> getIndices(fvMesh& mesh, label index, label layers)
 {
-    List<int> out;
+    List<label> out;
     out.resize(1);
     out[0] = index;
 
-    for (int i = 0; i < layers; i++)
+    for (label i = 0; i < layers; i++)
     {
-        int size = out.size();
+        label size = out.size();
 
-        for (int j = 0; j < size; j++)
+        for (label j = 0; j < size; j++)
         {
             out.append(mesh.cellCells()[out[j]]);
         }
@@ -77,7 +77,7 @@ List<int> getIndices(fvMesh& mesh, int index, int layers)
 
     labelList uniqueIndex;
     uniqueOrder(out, uniqueIndex);
-    List<int> out2;
+    List<label> out2;
     forAll(uniqueIndex, i)
     {
         out2.append(out[uniqueIndex[i]]);
@@ -85,19 +85,19 @@ List<int> getIndices(fvMesh& mesh, int index, int layers)
     return out2;
 }
 
-List<int> getIndices(fvMesh& mesh, int index_row,
-                     int index_col, int layers)
+List<label> getIndices(fvMesh& mesh, label index_row,
+                       label index_col, label layers)
 {
-    List<int> out;
+    List<label> out;
     out.resize(2);
     out[0] = index_row;
     out[1] = index_col;
 
-    for (int i = 0; i < layers; i++)
+    for (label i = 0; i < layers; i++)
     {
-        int size = out.size();
+        label size = out.size();
 
-        for (int j = 0; j < size; j++)
+        for (label j = 0; j < size; j++)
         {
             out.append(mesh.cellCells()[out[j]]);
         }
@@ -105,7 +105,7 @@ List<int> getIndices(fvMesh& mesh, int index_row,
 
     labelList uniqueIndex;
     uniqueOrder(out, uniqueIndex);
-    List<int> out2;
+    List<label> out2;
     forAll(uniqueIndex, i)
     {
         out2.append(out[uniqueIndex[i]]);
@@ -121,7 +121,7 @@ void getPointsFromPatch(fvMesh& mesh, label ind,
     labelList labelPatchFound(patchFound.meshPoints());
     points.resize(labelPatchFound.size());
 
-    for (int i = 0; i < labelPatchFound.size(); i++)
+    for (label i = 0; i < labelPatchFound.size(); i++)
     {
         points[i] = meshPoints[labelPatchFound[i]];
     }
@@ -141,7 +141,7 @@ List<vector> displacedSegment(List<vector> x0, double mux1,
     List<vector> xdef(x0);
     List<vector> displ(x0);
 
-    for (int i = 0; i < x0.size(); i++)
+    for (label i = 0; i < x0.size(); i++)
     {
         limin = Foam::sqrt(pow(x0[i][0] - minimum[0], 2) + pow(x0[i][1] - minimum[1],
                            2));
@@ -156,9 +156,9 @@ List<vector> displacedSegment(List<vector> x0, double mux1,
     return displ;
 }
 
-vector displacePoint(vector x0, vector x_low, vector x_up,
-                     double mux_low, double mux_up, double muy_low, double muy_up, double muz_low,
-                     double muz_up)
+vector displacePolabel(vector x0, vector x_low, vector x_up,
+                       double mux_low, double mux_up, double muy_low, double muy_up, double muz_low,
+                       double muz_up)
 {
     vector direction = x_up - x_low;
     double t0;
@@ -215,10 +215,10 @@ vector displacePoint(vector x0, vector x_low, vector x_up,
     Info << abs((x_low + t2 * direction - x0)[2]) << endl;
     M_Assert(abs(abs((x_low + t0 * direction - x0)[0]) + abs((
                      x_low + t0 * direction - x0)[1]) + abs((x_low + t0 * direction - x0)[2])) <
-             1e-6, "The givent point is not on the segment");
-    vector def_point = x_low_def + t1 * direction_def;
-    Info << def_point << endl;
-    return def_point;
+             1e-6, "The givent polabel is not on the segment");
+    vector def_polabel = x_low_def + t1 * direction_def;
+    Info << def_polabel << endl;
+    return def_polabel;
 }
 
 Field<vector> rotateMesh(fvMesh& mesh, double r1, double r2,
@@ -231,7 +231,7 @@ Field<vector> rotateMesh(fvMesh& mesh, double r1, double r2,
              "The variation function of the angle from the inner radius to the outer radius must be either Linear or Sinusoidal or Sigmoid");
     Field<vector> pointRot(mesh.points());
 
-    for (int i = 0; i < movingPointsIDs.size(); i++)
+    for (label i = 0; i < movingPointsIDs.size(); i++)
     {
         double l = radii[i];
         vector pointNow = pointRot[movingPointsIDs[i]];
@@ -313,15 +313,15 @@ Eigen::VectorXd boudaryFaceToCellDistance(
     return (cellFaceDistance);
 }
 
-List<int> getIndicesFromDisc(fvMesh& mesh, double radius,
-                             vector origin, vector axis, List<double>& radii)
+List<label> getIndicesFromDisc(fvMesh& mesh, double radius,
+                               vector origin, vector axis, List<double>& radii)
 {
     pointField meshPoints(mesh.points());
-    List<int> indices(meshPoints.size());
+    List<label> indices(meshPoints.size());
     radii.resize(meshPoints.size());
-    int k = 0;
+    label k = 0;
 
-    for (int i = 0; i < meshPoints.size(); i++)
+    for (label i = 0; i < meshPoints.size(); i++)
     {
         vector pointNow = meshPoints[i];
         vector r = pointNow - origin;
@@ -344,14 +344,14 @@ List<int> getIndicesFromDisc(fvMesh& mesh, double radius,
 }
 
 template<typename type_f>
-List<int> getIndicesFromBox(
+List<label> getIndicesFromBox(
     GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
 {
     M_Assert(Box.rows() == 2
              && Box.cols() == 3,
              "The box must be a 2*3 matrix shaped in this way: \nBox = \t|x0, y0, z0|\n\t|x1, yi, z1|\n");
-    List<int> indices(field.internalField().size());
-    int k = 0;
+    List<label> indices(field.internalField().size());
+    label k = 0;
 
     for (label i = 0; i < field.internalField().size(); i++)
     {
@@ -371,16 +371,16 @@ List<int> getIndicesFromBox(
     return indices;
 }
 
-template List<int> getIndicesFromBox(
+template List<label> getIndicesFromBox(
     GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
-template List<int> getIndicesFromBox(
+template List<label> getIndicesFromBox(
     GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 
 template<typename type_f>
 fvMeshSubset* getSubMeshFromBox(
     GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
 {
-    List<int> indices = getIndicesFromBox(field, Box);
+    List<label> indices = getIndicesFromBox(field, Box);
     fvMeshSubset* sub;
     sub = new fvMeshSubset(field.mesh());
     (field.mesh());
@@ -402,7 +402,7 @@ volScalarField meshNonOrtho(fvMesh& mesh,
 {
     scalarField sno = (polyMeshTools::faceOrthogonality(mesh, mesh.Sf(), mesh.C()));
 
-    for (int i = 0; i < sno.size(); i++)
+    for (label i = 0; i < sno.size(); i++)
     {
         sno[i] = Foam::acos(min(1, sno[i])) * 180 / constant::mathematical::pi;
     }
@@ -410,19 +410,19 @@ volScalarField meshNonOrtho(fvMesh& mesh,
     surfaceScalarField pippo = mesh.magSf();
     const fvPatchList& patches = mesh.boundary();
 
-    for (int i = 0; i < pippo.internalField().size(); i++)
+    for (label i = 0; i < pippo.internalField().size(); i++)
     {
         pippo.ref()[i] = sno[i];
     }
 
-    for (int i = 0; i < patches.size(); i++)
+    for (label i = 0; i < patches.size(); i++)
     {
         if ( patches[i].type() != "empty" )
         {
             label start = patches[i].patch().start();
             label n = patches[i].patch().size();
 
-            for (int k = 0; k < n; k++)
+            for (label k = 0; k < n; k++)
             {
                 pippo.boundaryFieldRef()[i][k] = sno[start + k];
             }
@@ -440,7 +440,7 @@ List<vector> rotatePoints(const List<vector>& originalPoints,
     quaternion q(AxisOfRotation, theta);
     List<vector> rotatedPoints(originalPoints);
 
-    for (int i = 0; i < rotatedPoints.size(); i++)
+    for (label i = 0; i < rotatedPoints.size(); i++)
     {
         rotatedPoints[i] = q.transform(rotatedPoints[i]);
     }

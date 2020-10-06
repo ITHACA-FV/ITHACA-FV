@@ -43,7 +43,7 @@
 
     // Update the pressure BCs to ensure flux consistency
     constrainPressure(p, U, phiHbyA, rAtU(), MRF);
-    int i = 0;
+    label i = 0;
     // Non-orthogonal pressure corrector loop
     while (simple.correctNonOrthogonal())
     {

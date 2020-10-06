@@ -87,7 +87,7 @@ class reducedLaplacian: public reducedProblem
         /// @param[in]  printevery  Variable to recover only every printevery the online solutions
         ///
         void reconstruct(fileName folder = "./ITHACAOutput/online_rec",
-                         int printevery = 1);
+                         label printevery = 1);
 
 };
 

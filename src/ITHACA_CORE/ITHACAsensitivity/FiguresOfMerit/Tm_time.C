@@ -2,7 +2,7 @@
 
 Tm_time::Tm_time() {}
 
-Tm_time::Tm_time(int argc, char* argv[], int Nsampled)
+Tm_time::Tm_time(label argc, char* argv[], label Nsampled)
 {
     Npoints = Nsampled;
     modelOutput.resize(Npoints);
@@ -14,7 +14,7 @@ Tm_time::Tm_time(int argc, char* argv[], int Nsampled)
 #include "createT.H"
 }
 
-void Tm_time::buildMO(std::string dir, int t)
+void Tm_time::buildMO(std::string dir, label t)
 {
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
@@ -23,13 +23,13 @@ void Tm_time::buildMO(std::string dir, int t)
 
     if (ITHACAutilities::check_folder(folder) == true)
     {
-        for (int j = 0; j < Npoints; j++)
+        for (label j = 0; j < Npoints; j++)
         {
             folder.append(std::to_string(j));
             folder.append("/");
             ITHACAstream::read_fields(ptrfield, T, folder);
 
-            for (int i = 0; i < ptrfield.size(); i++)
+            for (label i = 0; i < ptrfield.size(); i++)
             {
                 if (i == t)
                 {

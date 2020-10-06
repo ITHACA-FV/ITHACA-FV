@@ -111,7 +111,7 @@ void steadyNS::truthSolve(List<scalar> mu_now)
     // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points
     mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
 
-    for (int i = 0; i < mu_now.size(); i++)
+    for (label i = 0; i < mu_now.size(); i++)
     {
         mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
     }
@@ -765,7 +765,7 @@ List <Eigen::MatrixXd> steadyNS::convective_term(label NUmodes, label NPmodes,
 
     if (Pstream::parRun())
     {
-        for (int i = 0; i < Csize; i++)
+        for (label i = 0; i < Csize; i++)
         {
             List<double> vec(C_matrix[i].data(), C_matrix[i].data() + C_matrix[i].size());
             reduce(vec, sumOp<List<double>>());
@@ -897,7 +897,7 @@ List <Eigen::MatrixXd> steadyNS::div_momentum(label NUmodes, label NPmodes)
 
     if (Pstream::parRun())
     {
-        for (int i = 0; i < G2size; i++)
+        for (label i = 0; i < G2size; i++)
         {
             List<double> vec(G_matrix[i].data(), G_matrix[i].data() + G_matrix[i].size());
             reduce(vec, sumOp<List<double>>());
@@ -1040,7 +1040,7 @@ List <Eigen::MatrixXd> steadyNS::pressure_BC2(label NUmodes, label NPmodes)
 
     if (Pstream::parRun())
     {
-        for (int i = 0; i < P2_BC1size; i++)
+        for (label i = 0; i < P2_BC1size; i++)
         {
             List<double> vec(BC2_matrix[i].data(),
                              BC2_matrix[i].data() + BC2_matrix[i].size());
@@ -1232,7 +1232,7 @@ void steadyNS::change_viscosity(double mu)
     volScalarField& ciao = const_cast<volScalarField&>(nu);
     this->assignIF(ciao, mu);
 
-    for (int i = 0; i < ciao.boundaryFieldRef().size(); i++)
+    for (label i = 0; i < ciao.boundaryFieldRef().size(); i++)
     {
         this->assignBC(ciao, i, mu);
     }

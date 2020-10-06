@@ -92,7 +92,7 @@ PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstructFromCoeff(
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-                              fields, int nModes = 0,
+                              fields, label nModes = 0,
                               bool consider_volumes = true);
 
 //--------------------------------------------------------------------------
@@ -128,7 +128,7 @@ Eigen::VectorXd getMassMatrixFV(
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
                           snapshot,
-                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes = 0,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, label Nmodes = 0,
                           bool consider_volumes = true);
 
 //------------------------------------------------------------------------------
@@ -149,7 +149,7 @@ Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
                           snapshot,
-                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes = 0,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, label Nmodes = 0,
                           bool consider_volumes = true);
 
 //--------------------------------------------------------------------------

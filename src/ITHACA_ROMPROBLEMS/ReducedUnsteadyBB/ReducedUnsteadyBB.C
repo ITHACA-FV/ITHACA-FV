@@ -88,8 +88,8 @@ ReducedUnsteadyBB::ReducedUnsteadyBB(UnsteadyBB& FOMproblem)
 
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 //Operator to evaluate the residual for the supremizer approach
-int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
-                                      Eigen::VectorXd& fvec) const
+label newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
+                                        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -155,8 +155,8 @@ int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
-                              Eigen::MatrixXd& fjac) const
+label newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
+                                Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyBB_sup> numDiff(*this);
     numDiff.df(x, fjac);
@@ -166,8 +166,8 @@ int newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Operators PPE * * * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-int newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
-                                      Eigen::VectorXd& fvec) const
+label newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
+                                        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -237,8 +237,8 @@ int newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
-                              Eigen::MatrixXd& fjac) const
+label newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
+                                Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyBB_PPE> numDiff(*this);
     numDiff.df(x, fjac);
@@ -253,7 +253,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
               " ##################" << std::endl;
     std::cout << "Solving for the parameter: " << temp_now_BC << std::endl;
     // Count number of time steps
-    int counter = 0;
+    label counter = 0;
     time = tstart;
 
     while (time < finalTime - 0.5 * dt)
@@ -387,7 +387,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
               " ##################" << std::endl;
     std::cout << "Solving for the parameter: " << temp_now_BC << std::endl;
     // Count number of time steps
-    int counter = 0;
+    label counter = 0;
     time = tstart;
 
     while (time < finalTime - 0.5 * dt)
@@ -405,7 +405,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     //{
     //    for (label i = 0; i < N_BC_t; i++)
     //        {
-    //int patche = problem->inletIndexT(i, 0);
+    //label patche = problem->inletIndexT(i, 0);
     //           temp_now_BC(i, j)= temp_now_BC(i, j)-problem->Tsub[0].boundaryField()[problem->inletIndexT(i, 0)][0];
     //    }
     // }
@@ -549,7 +549,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     return online_solutiont;
 }
 
-void ReducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
+void ReducedUnsteadyBB::reconstruct_sup(fileName folder, label printevery)
 {
     if (ITHACAutilities::check_folder(folder))
     {
@@ -560,9 +560,9 @@ void ReducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
         ITHACAutilities::createSymLink(folder);
     }
 
-    int counter = 0;
-    int nextwrite = 0;
-    int counter2 = 1 + TREC.size();
+    label counter = 0;
+    label nextwrite = 0;
+    label counter2 = 1 + TREC.size();
 
     for (label i = 0; i < online_solutiont.cols(); i++)
     {

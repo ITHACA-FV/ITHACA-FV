@@ -52,7 +52,7 @@ struct newtonSteadyNSTurb: public newton_argument<double>
 {
     public:
         newtonSteadyNSTurb() {}
-        newtonSteadyNSTurb(int Nx, int Ny,
+        newtonSteadyNSTurb(label Nx, label Ny,
                            SteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
@@ -62,14 +62,14 @@ struct newtonSteadyNSTurb: public newton_argument<double>
             gNut(problem.nNutModes)
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         SteadyNSTurb* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label nphiNut;
+        label Nphi_p;
+        label N_BC;
         Eigen::VectorXd gNut;
         scalar nu;
         Eigen::MatrixXd tauU;
@@ -116,7 +116,7 @@ class ReducedSteadyNSTurb: public reducedSteadyNS
         Eigen::VectorXd rbfCoeff;
 
         /// Number of viscosity modes
-        int nphiNut;
+        label nphiNut;
 
         /// Newton Object to solve the nonlinear problem
         newtonSteadyNSTurb newtonObject;
@@ -146,7 +146,7 @@ class ReducedSteadyNSTurb: public reducedSteadyNS
         ///
         void reconstruct(bool exportFields = false,
                          fileName folder = "./ITHACAoutput/online_rec",
-                         int printevery = 1);
+                         label printevery = 1);
 
         ///
         /// @brief      Sets the online velocity.

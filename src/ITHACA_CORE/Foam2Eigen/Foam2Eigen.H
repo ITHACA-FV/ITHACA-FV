@@ -140,7 +140,7 @@ class Foam2Eigen
         template<class Type, template<class> class PatchField, class GeoMesh>
         static Eigen::MatrixXd PtrList2Eigen(
             PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
-            int Nfields = -1);
+            label Nfields = -1);
 
         //----------------------------------------------------------------------
         /// @brief      Convert a vector OpenFOAM field into an Eigen Vector
@@ -243,7 +243,7 @@ class Foam2Eigen
         template<template<class> class PatchField, class GeoMesh>
         static List<Eigen::MatrixXd> PtrList2EigenBC(
             PtrList<GeometricField<scalar, PatchField, GeoMesh>>& fields,
-            int Nfields = -1);
+            label Nfields = -1);
 
         //----------------------------------------------------------------------
         /// @brief      Convert an OpenFOAM vector field to a List of Eigen
@@ -260,7 +260,7 @@ class Foam2Eigen
         template<template<class> class PatchField, class GeoMesh>
         static List<Eigen::MatrixXd> PtrList2EigenBC(
             PtrList<GeometricField<vector, PatchField, GeoMesh>>& fields,
-            int Nfields = -1);
+            label Nfields = -1);
 
         //----------------------------------------------------------------------
         /// @brief         Convert a vector in Eigen format into an OpenFOAM
@@ -326,7 +326,7 @@ class Foam2Eigen
         template<class Type, template<class> class PatchField, class GeoMesh>
         static std::tuple<Eigen::MatrixXd, Eigen::VectorXd> projectFvMatrix(
             fvMatrix<Type>& matrix,
-            PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes);
+            PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, label Nmodes);
 
 
         //----------------------------------------------------------------------
@@ -359,7 +359,7 @@ class Foam2Eigen
         static Eigen::VectorXd projectField(
             GeometricField<Type, PatchField, GeoMesh>& field,
             PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-            int Nmodes);
+            label Nmodes);
 
         //----------------------------------------------------------------------
         /// @brief      Obtain the Mass Matrix from a list of reduced basis
@@ -375,7 +375,7 @@ class Foam2Eigen
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
         static Eigen::MatrixXd MassMatrix(
-            PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, int Nmodes);
+            PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, label Nmodes);
 
         //----------------------------------------------------------------------
         /// @brief      Convert a PtrList of OpenFOAM fvMatrix into a tuple of

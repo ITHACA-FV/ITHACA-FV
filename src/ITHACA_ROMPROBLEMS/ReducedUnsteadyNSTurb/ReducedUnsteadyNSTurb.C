@@ -96,8 +96,8 @@ ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
-                                        Eigen::VectorXd& fvec) const
+label newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
+        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd aTmp(Nphi_u);
@@ -170,8 +170,8 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newtonUnsteadyNSTurbSUP::df(const Eigen::VectorXd& x,
-                                Eigen::MatrixXd& fjac) const
+label newtonUnsteadyNSTurbSUP::df(const Eigen::VectorXd& x,
+                                  Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbSUP> numDiff(*this);
     numDiff.df(x, fjac);
@@ -179,7 +179,7 @@ int newtonUnsteadyNSTurbSUP::df(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the residual for the supremizer approach
-int newtonUnsteadyNSTurbSUPAve::operator()(const Eigen::VectorXd& x,
+label newtonUnsteadyNSTurbSUPAve::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
@@ -255,8 +255,8 @@ int newtonUnsteadyNSTurbSUPAve::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newtonUnsteadyNSTurbSUPAve::df(const Eigen::VectorXd& x,
-                                   Eigen::MatrixXd& fjac) const
+label newtonUnsteadyNSTurbSUPAve::df(const Eigen::VectorXd& x,
+                                     Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbSUPAve> numDiff(*this);
     numDiff.df(x, fjac);
@@ -266,8 +266,8 @@ int newtonUnsteadyNSTurbSUPAve::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Operators PPE * * * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
-                                        Eigen::VectorXd& fvec) const
+label newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
+        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd aTmp(Nphi_u);
@@ -351,15 +351,15 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newtonUnsteadyNSTurbPPE::df(const Eigen::VectorXd& x,
-                                Eigen::MatrixXd& fjac) const
+label newtonUnsteadyNSTurbPPE::df(const Eigen::VectorXd& x,
+                                  Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbPPE> numDiff(*this);
     numDiff.df(x, fjac);
     return 0;
 }
 
-int newtonUnsteadyNSTurbPPEAve::operator()(const Eigen::VectorXd& x,
+label newtonUnsteadyNSTurbPPEAve::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
@@ -454,8 +454,8 @@ int newtonUnsteadyNSTurbPPEAve::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the PPE approach
-int newtonUnsteadyNSTurbPPEAve::df(const Eigen::VectorXd& x,
-                                   Eigen::MatrixXd& fjac) const
+label newtonUnsteadyNSTurbPPEAve::df(const Eigen::VectorXd& x,
+                                     Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbPPEAve> numDiff(*this);
     numDiff.df(x, fjac);
@@ -476,7 +476,7 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
              "The variable exportEvery must be an integer multiple of the time step dt.");
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
-    int numberOfStores = round(storeEvery / dt);
+    label numberOfStores = round(storeEvery / dt);
 
     if (problem->bcMethod == "lift")
     {
@@ -493,8 +493,8 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     // Set Initial Conditions
     y.head(Nphi_u) = initCond.col(0).head(Nphi_u);
     y.tail(Nphi_p) = initCond.col(0).tail(Nphi_p);
-    int nextStore = 0;
-    int counter2 = 0;
+    label nextStore = 0;
+    label counter2 = 0;
 
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
@@ -505,7 +505,7 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
         }
     }
 
-    int firstRBFInd;
+    label firstRBFInd;
 
     if (skipLift == true && problem->bcMethod == "lift")
     {
@@ -531,14 +531,14 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
     rbfCoeffMat.resize(nphiNut + 1, onlineSize + 3);
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vector to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
@@ -676,7 +676,7 @@ void ReducedUnsteadyNSTurb::solveOnlineSUPAve(Eigen::MatrixXd vel)
              "The variable exportEvery must be an integer multiple of the time step dt.");
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
-    int numberOfStores = round(storeEvery / dt);
+    label numberOfStores = round(storeEvery / dt);
 
     if (problem->bcMethod == "lift")
     {
@@ -693,8 +693,8 @@ void ReducedUnsteadyNSTurb::solveOnlineSUPAve(Eigen::MatrixXd vel)
     // Set Initial Conditions
     y.head(Nphi_u) = initCond.col(0).head(Nphi_u);
     y.tail(Nphi_p) = initCond.col(0).tail(Nphi_p);
-    int nextStore = 0;
-    int counter2 = 0;
+    label nextStore = 0;
+    label counter2 = 0;
 
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
@@ -705,7 +705,7 @@ void ReducedUnsteadyNSTurb::solveOnlineSUPAve(Eigen::MatrixXd vel)
         }
     }
 
-    int firstRBFInd;
+    label firstRBFInd;
 
     if (skipLift == true && problem->bcMethod == "lift")
     {
@@ -732,14 +732,14 @@ void ReducedUnsteadyNSTurb::solveOnlineSUPAve(Eigen::MatrixXd vel)
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
     rbfCoeffMat.resize(nphiNut + 1, onlineSize + 3);
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vector to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
@@ -878,7 +878,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
              "The variable exportEvery must be an integer multiple of the time step dt.");
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
-    int numberOfStores = round(storeEvery / dt);
+    label numberOfStores = round(storeEvery / dt);
 
     if (problem->bcMethod == "lift")
     {
@@ -895,8 +895,8 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
     // Set Initial Conditions
     y.head(Nphi_u) = initCond.col(0).head(Nphi_u);
     y.tail(Nphi_p) = initCond.col(0).tail(Nphi_p);
-    int nextStore = 0;
-    int counter2 = 0;
+    label nextStore = 0;
+    label counter2 = 0;
 
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
@@ -907,7 +907,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
         }
     }
 
-    int firstRBFInd;
+    label firstRBFInd;
 
     if (skipLift == true && problem->bcMethod == "lift")
     {
@@ -933,14 +933,14 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
     rbfCoeffMat.resize(nphiNut + 1, onlineSize + 3);
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vectpr to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
@@ -1069,7 +1069,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPEAve(Eigen::MatrixXd vel)
              "The variable exportEvery must be an integer multiple of the time step dt.");
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
-    int numberOfStores = round(storeEvery / dt);
+    label numberOfStores = round(storeEvery / dt);
 
     if (problem->bcMethod == "lift")
     {
@@ -1086,8 +1086,8 @@ void ReducedUnsteadyNSTurb::solveOnlinePPEAve(Eigen::MatrixXd vel)
     // Set Initial Conditions
     y.head(Nphi_u) = initCond.col(0).head(Nphi_u);
     y.tail(Nphi_p) = initCond.col(0).tail(Nphi_p);
-    int nextStore = 0;
-    int counter2 = 0;
+    label nextStore = 0;
+    label counter2 = 0;
 
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
@@ -1098,7 +1098,7 @@ void ReducedUnsteadyNSTurb::solveOnlinePPEAve(Eigen::MatrixXd vel)
         }
     }
 
-    int firstRBFInd;
+    label firstRBFInd;
 
     if (skipLift == true && problem->bcMethod == "lift")
     {
@@ -1125,14 +1125,14 @@ void ReducedUnsteadyNSTurb::solveOnlinePPEAve(Eigen::MatrixXd vel)
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
     rbfCoeffMat.resize(nphiNut + 1, onlineSize + 3);
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vectpr to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
@@ -1266,10 +1266,10 @@ void ReducedUnsteadyNSTurb::reconstruct(bool exportFields, fileName folder)
         ITHACAutilities::createSymLink(folder);
     }
 
-    int counter = 0;
-    int nextWrite = 0;
-    int counter2 = 1;
-    int exportEveryIndex = round(exportEvery / storeEvery);
+    label counter = 0;
+    label nextWrite = 0;
+    label counter2 = 1;
+    label exportEveryIndex = round(exportEvery / storeEvery);
     volScalarField nutAveNow("nutAveNow", nutModes[0] * 0);
     List < Eigen::MatrixXd> CoeffU;
     List < Eigen::MatrixXd> CoeffP;
@@ -1332,7 +1332,7 @@ Eigen::MatrixXd ReducedUnsteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    for (label k = 0; k < problem->inletIndex.rows(); k++)
     {
         label p = problem->inletIndex(k, 0);
         label l = problem->inletIndex(k, 1);

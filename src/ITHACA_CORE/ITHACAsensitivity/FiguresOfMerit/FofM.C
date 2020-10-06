@@ -2,7 +2,7 @@
 
 FofM::FofM() {}
 
-FofM::FofM(int argc, char* argv[], int Nsampled)
+FofM::FofM(label argc, char* argv[], label Nsampled)
 {
     Npoints = Nsampled;
     modelOutput.resize(Npoints);

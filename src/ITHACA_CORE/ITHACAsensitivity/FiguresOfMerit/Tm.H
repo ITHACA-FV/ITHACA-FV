@@ -43,7 +43,7 @@ class Tm : public FofM
     public:
         //constructors
         Tm();
-        Tm(int argc, char* argv[], int Nsampled);
+        Tm(label argc, char* argv[], label Nsampled);
         ~Tm() {};
 
         //Members

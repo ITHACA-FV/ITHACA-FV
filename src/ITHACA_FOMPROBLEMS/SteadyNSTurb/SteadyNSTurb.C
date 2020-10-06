@@ -119,7 +119,7 @@ void SteadyNSTurb::truthSolve(List<scalar> mu_now)
     // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points
     mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
 
-    for (int i = 0; i < mu_now.size(); i++)
+    for (label i = 0; i < mu_now.size(); i++)
     {
         mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
     }
@@ -546,7 +546,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
 
-    for (int i = 0; i < nNutModes; i++)
+    for (label i = 0; i < nNutModes; i++)
     {
         word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
                           + name(NUmodes) + "_" + name(NSUPmodes) ;
@@ -555,7 +555,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++)
+            for (label j = 0; j < coeffL2.cols(); j++)
             {
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
@@ -570,7 +570,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++)
+            for (label j = 0; j < coeffL2.cols(); j++)
             {
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }

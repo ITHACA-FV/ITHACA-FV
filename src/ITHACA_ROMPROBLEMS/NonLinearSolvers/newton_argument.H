@@ -40,7 +40,7 @@ SourceFiles
 #define newton_argument_H
 
 /// Template object created to solve non linear problems using the Eigen library
-template<typename _Scalar, int NX = Eigen::Dynamic, int NY = Eigen::Dynamic>
+template<typename _Scalar, label NX = Eigen::Dynamic, label NY = Eigen::Dynamic>
 class newton_argument
 {
     public:
@@ -55,7 +55,7 @@ class newton_argument
         typedef Eigen::Matrix<Scalar, ValuesAtCompileTime, InputsAtCompileTime>
         JacobianType;
 
-        int m_inputs, m_values;
+        label m_inputs, m_values;
 
 
         /// @brief      Constructor
@@ -68,7 +68,8 @@ class newton_argument
         /// @param[in]  inputs  The inputs
         /// @param[in]  values  The values
         ///
-        newton_argument(int inputs, int values) : m_inputs(inputs), m_values(values) {}
+        newton_argument(label inputs, label values) : m_inputs(inputs),
+            m_values(values) {}
 
         /// @brief Operator to compute the residual vector
         ///
@@ -77,7 +78,7 @@ class newton_argument
         ///
         /// @return     0
         ///
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
         {
             std::cout <<
                       "This is a virtual method, it needs to be overriden with a suitable residual function"
@@ -92,7 +93,7 @@ class newton_argument
         ///
         /// @return     0
         ///
-        int df(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
+        label df(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
         {
             std::cout <<
                       "This is a virtual method, it needs to be overriden with a suitable jacobian function"
@@ -104,7 +105,7 @@ class newton_argument
         ///
         /// @return     inputs
         ///
-        int inputs() const
+        label inputs() const
         {
             return m_inputs;
         }
@@ -114,7 +115,7 @@ class newton_argument
         ///
         /// @return     inputs
         ///
-        int values() const
+        label values() const
         {
             return m_values;
         }

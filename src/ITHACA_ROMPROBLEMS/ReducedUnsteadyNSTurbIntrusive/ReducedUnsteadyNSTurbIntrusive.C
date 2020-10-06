@@ -84,7 +84,7 @@ ReducedUnsteadyNSTurbIntrusive::ReducedUnsteadyNSTurbIntrusive(
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-int newtonUnsteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
+label newtonUnsteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
@@ -144,8 +144,8 @@ int newtonUnsteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newtonUnsteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
-                                      Eigen::MatrixXd& fjac) const
+label newtonUnsteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
+                                        Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbIntrusive> numDiff(*this);
     numDiff.df(x, fjac);
@@ -155,7 +155,7 @@ int newtonUnsteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Operators PPE * * * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-int newtonUnsteadyNSTurbIntrusivePPE::operator()(const Eigen::VectorXd& x,
+label newtonUnsteadyNSTurbIntrusivePPE::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
@@ -239,7 +239,7 @@ int newtonUnsteadyNSTurbIntrusivePPE::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-int newtonUnsteadyNSTurbIntrusivePPE::df(const Eigen::VectorXd& x,
+label newtonUnsteadyNSTurbIntrusivePPE::df(const Eigen::VectorXd& x,
         Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbIntrusivePPE> numDiff(*this);
@@ -262,7 +262,7 @@ void ReducedUnsteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
              "The variable exportEvery must be an integer multiple of the time step dt.");
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
-    int numberOfStores = round(storeEvery / dt);
+    label numberOfStores = round(storeEvery / dt);
 
     if (problem->bcMethod == "lift")
     {
@@ -277,8 +277,8 @@ void ReducedUnsteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
     y.resize(Nphi_u, 1);
     y.setZero();
     y = initCond.col(0);
-    int nextStore = 0;
-    int counter2 = 0;
+    label nextStore = 0;
+    label counter2 = 0;
 
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
@@ -303,13 +303,13 @@ void ReducedUnsteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vector to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + 1, 1);
     tmp_sol(0) = time;
@@ -409,7 +409,7 @@ void ReducedUnsteadyNSTurbIntrusive::solveOnlinePPE(Eigen::MatrixXd vel)
              "The variable exportEvery must be an integer multiple of the time step dt.");
     M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
              "The variable exportEvery must be an integer multiple of the variable storeEvery.");
-    int numberOfStores = round(storeEvery / dt);
+    label numberOfStores = round(storeEvery / dt);
 
     if (problem->bcMethod == "lift")
     {
@@ -425,8 +425,8 @@ void ReducedUnsteadyNSTurbIntrusive::solveOnlinePPE(Eigen::MatrixXd vel)
     y.setZero();
     y.head(Nphi_u) = initCond.col(0).head(Nphi_u);
     y.tail(Nphi_p) = initCond.col(0).tail(Nphi_p);
-    int nextStore = 0;
-    int counter2 = 0;
+    label nextStore = 0;
+    label counter2 = 0;
 
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
@@ -451,13 +451,13 @@ void ReducedUnsteadyNSTurbIntrusive::solveOnlinePPE(Eigen::MatrixXd vel)
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
-    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label onlineSize = static_cast<int>(Ntsteps / numberOfStores);
     online_solution.resize(onlineSize);
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vector to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
@@ -549,10 +549,10 @@ void ReducedUnsteadyNSTurbIntrusive::reconstruct(fileName folder)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    int counter = 0;
-    int nextWrite = 0;
-    int counter2 = 1;
-    int exportEveryIndex = round(exportEvery / storeEvery);
+    label counter = 0;
+    label nextWrite = 0;
+    label counter2 = 1;
+    label exportEveryIndex = round(exportEvery / storeEvery);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -586,10 +586,10 @@ void ReducedUnsteadyNSTurbIntrusive::reconstructPPE(fileName folder)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    int counter = 0;
-    int nextWrite = 0;
-    int counter2 = 1;
-    int exportEveryIndex = round(exportEvery / storeEvery);
+    label counter = 0;
+    label nextWrite = 0;
+    label counter2 = 1;
+    label exportEveryIndex = round(exportEvery / storeEvery);
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -631,7 +631,7 @@ Eigen::MatrixXd ReducedUnsteadyNSTurbIntrusive::setOnlineVelocity(
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    for (label k = 0; k < problem->inletIndex.rows(); k++)
     {
         label p = problem->inletIndex(k, 0);
         label l = problem->inletIndex(k, 1);
