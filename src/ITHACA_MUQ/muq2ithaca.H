@@ -40,6 +40,7 @@ SourceFiles
 #include <iostream>
 #include <Eigen/Eigen>
 #include "ITHACAassert.H"
+#include "Foam2Eigen.H"
 
 #include "MUQ/Modeling/Distributions/Gaussian.h"
 #include "MUQ/Modeling/Distributions/Density.h"
@@ -55,6 +56,57 @@ namespace ITHACAmuq
 {
 namespace muq2ithaca
 {
+//--------------------------------------------------------------------------
+/// @brief      Ensemble Kalman Filter
+///
+/// @param[in]  prior           Samples of the prior
+/// @param[in]  measurements    Measured data
+/// @param[in]  measurementsCov Covariance matrix for the measurements, gaussian noise with zero mean is assumed
+/// @param[in]  observedState   Ensemble of the observed state
+///
+/// @return     Ensamble of the posterior
+///
+Eigen::MatrixXd EnsembleKalmanFilter(Eigen::MatrixXd prior,
+                                     Eigen::VectorXd measurements,
+                                     Eigen::MatrixXd measurementsCov,
+                                     Eigen::MatrixXd observedState);
+
+//--------------------------------------------------------------------------
+/// @brief      Ensemble Kalman Filter
+///
+/// @param[in]  prior           Samples of the prior
+/// @param[in]  measurements    Measured data
+/// @param[in]  measurementsCov Covariance matrix for the measurements, gaussian noise with zero mean is assumed
+/// @param[in]  observedState   Ensemble of the observed state
+///
+/// @return     Ensamble of the posterior
+///
+Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField>& prior,
+                                     Eigen::VectorXd measurements,
+                                     Eigen::MatrixXd measurementsCov,
+                                     Eigen::MatrixXd observedState);
+
+//--------------------------------------------------------------------------
+/// @brief      Returns quantile for a vector of samples
+///
+/// @param[in]  samps   Samples
+/// @param[in]  p       Quantile parameter
+/// @param[in]  method  Method used to compute quantile according to Hyndman and Fan (1986)
+///
+/// @return     Quantile
+///
+double quantile(Eigen::VectorXd samps, double p, int method = 1);
+
+//--------------------------------------------------------------------------
+/// @brief      Returns quantile for a matrix of samples
+///
+/// @param[in]  samps   Samples, each variable on a row
+/// @param[in]  p       Quantile parameter
+/// @param[in]  method  Method used to compute quantile according to Hyndman and Fan (1986)
+///
+/// @return     Quantile
+///
+Eigen::VectorXd quantile(Eigen::MatrixXd samps, double p, int method = 1);
 }
 }
 
