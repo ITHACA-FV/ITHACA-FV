@@ -2,7 +2,7 @@
 
 Tm_time::Tm_time() {}
 
-Tm_time::Tm_time(label argc, char* argv[], label Nsampled)
+Tm_time::Tm_time(int argc, char* argv[], label Nsampled)
 {
     Npoints = Nsampled;
     modelOutput.resize(Npoints);

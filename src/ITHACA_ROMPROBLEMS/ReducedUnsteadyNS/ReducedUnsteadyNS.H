@@ -50,7 +50,7 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
 {
     public:
         newton_unsteadyNS_sup() {}
-        newton_unsteadyNS_sup(label Nx, label Ny,
+        newton_unsteadyNS_sup(int Nx, int Ny,
                               unsteadyNS& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
@@ -58,13 +58,13 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
             N_BC(problem.inletIndex.rows())
         {}
 
-        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         unsteadyNS* problem;
-        label Nphi_u;
-        label Nphi_p;
-        label N_BC;
+        int Nphi_u;
+        int Nphi_p;
+        int N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -79,7 +79,7 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
 {
     public:
         newton_unsteadyNS_PPE() {}
-        newton_unsteadyNS_PPE(label Nx, label Ny,
+        newton_unsteadyNS_PPE(int Nx, int Ny,
                               unsteadyNS& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
@@ -87,13 +87,13 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
             N_BC(problem.inletIndex.rows())
         {}
 
-        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         unsteadyNS* problem;
-        label Nphi_u;
-        label Nphi_p;
-        label N_BC;
+        int Nphi_u;
+        int Nphi_p;
+        int N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -154,7 +154,7 @@ class reducedUnsteadyNS: public reducedSteadyNS
         bool startFromZero = false;
 
         /// Number of timesteps calculated for the iterative penalty method
-        label timeStepPenalty = 1;
+        int timeStepPenalty = 1;
 
         /// Penalty Factor determined with iterative solver
         Eigen::MatrixXd tauIter;
@@ -182,7 +182,7 @@ class reducedUnsteadyNS: public reducedSteadyNS
         /// and used to get the reduced initial condition.
         ///
         Eigen::MatrixXd penalty_PPE(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& tauIter,
-                                    label startSnap = 0);
+                                    int startSnap = 0);
 
         /// Method to determine the penalty factors iteratively.
         ///
@@ -196,7 +196,7 @@ class reducedUnsteadyNS: public reducedSteadyNS
         /// and used to get the reduced initial condition.
         ///
         Eigen::MatrixXd penalty_sup(Eigen::MatrixXd& vel_now, Eigen::MatrixXd& tauIter,
-                                    label startSnap = 0);
+                                    int startSnap = 0);
 
         /// Method to perform an online solve using a PPE stabilisation method
         ///
@@ -206,7 +206,7 @@ class reducedUnsteadyNS: public reducedSteadyNS
         /// @param[in]  startSnap The first snapshot taken from the offline snapshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnline_PPE(Eigen::MatrixXd vel_now, label startSnap = 0);
+        void solveOnline_PPE(Eigen::MatrixXd vel_now, int startSnap = 0);
 
         /// Method to perform an online solve using a supremizer stabilisation method
         ///
@@ -216,7 +216,7 @@ class reducedUnsteadyNS: public reducedSteadyNS
         /// @param[in]  startSnap The first snapshot taken from the offline snapshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnline_sup(Eigen::MatrixXd vel_now, label startSnap = 0);
+        void solveOnline_sup(Eigen::MatrixXd vel_now, int startSnap = 0);
 
         /// Method to reconstruct the solutions from an online solve with a
         /// supremizer stabilisation technique. stabilisation method

@@ -41,7 +41,7 @@ class FofM
     public:
         //constructors
         FofM();
-        FofM(label argc, char* argv[], label Nsampled);
+        FofM(int argc, char* argv[], label Nsampled);
         ~FofM() {};
 
         //Members:

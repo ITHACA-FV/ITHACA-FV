@@ -72,7 +72,7 @@ class reducedLaplacian: public reducedProblem
         Eigen::MatrixXd online_solution;
 
         /// Counter for online sol
-        label count_online_solve = 1;
+        int count_online_solve = 1;
 
         /// Function to perform an online solve given a certain mu
         ///
@@ -87,7 +87,7 @@ class reducedLaplacian: public reducedProblem
         /// @param[in]  printevery  Variable to recover only every printevery the online solutions
         ///
         void reconstruct(fileName folder = "./ITHACAOutput/online_rec",
-                         label printevery = 1);
+                         int printevery = 1);
 
 };
 

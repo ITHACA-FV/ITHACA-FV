@@ -49,17 +49,17 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
 
-    for (label k = 0; k < problem->liftfield.size(); k++)
+    for (int k = 0; k < problem->liftfield.size(); k++)
     {
         Umodes.append(problem->liftfield[k]);
     }
 
-    for (label k = 0; k < problem->NUmodes; k++)
+    for (int k = 0; k < problem->NUmodes; k++)
     {
         Umodes.append(problem->Umodes[k]);
     }
 
-    for (label k = 0; k < problem->NSUPmodes; k++)
+    for (int k = 0; k < problem->NSUPmodes; k++)
     {
         Umodes.append(problem->supmodes[k]);
     }
@@ -67,7 +67,7 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
     newton_object = newton_steadyNS(Nphi_u + Nphi_p, Nphi_u + Nphi_p, FOMproblem);
 }
 
-label newton_steadyNS::operator()(const Eigen::VectorXd& x,
+int newton_steadyNS::operator()(const Eigen::VectorXd& x,
                                   Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -88,14 +88,14 @@ label newton_steadyNS::operator()(const Eigen::VectorXd& x,
     // Term for penalty method
     if (problem->bcMethod == "penalty")
     {
-        for (label l = 0; l < N_BC; l++)
+        for (int l = 0; l < N_BC; l++)
         {
             penaltyU.col(l) = BC(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
                               a_tmp;
         }
     }
 
-    for (label i = 0; i < Nphi_u; i++)
+    for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
                 i) * a_tmp;
@@ -107,15 +107,15 @@ label newton_steadyNS::operator()(const Eigen::VectorXd& x,
         }
     }
 
-    for (label j = 0; j < Nphi_p; j++)
+    for (int j = 0; j < Nphi_p; j++)
     {
-        label k = j + Nphi_u;
+        int k = j + Nphi_u;
         fvec(k) = M3(j);
     }
 
     if (problem->bcMethod == "lift")
     {
-        for (label j = 0; j < N_BC; j++)
+        for (int j = 0; j < N_BC; j++)
         {
             fvec(j) = x(j) - BC(j);
         }
@@ -125,7 +125,7 @@ label newton_steadyNS::operator()(const Eigen::VectorXd& x,
 }
 
 
-label newton_steadyNS::df(const Eigen::VectorXd& x,
+int newton_steadyNS::df(const Eigen::VectorXd& x,
                           Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_steadyNS> numDiff(*this);
@@ -160,7 +160,7 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
     {
-        for (label j = 0; j < N_BC; j++)
+        for (int j = 0; j < N_BC; j++)
         {
             y(j) = vel_now(j, 0);
         }
@@ -173,7 +173,7 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
     newton_object.BC.resize(N_BC);
     newton_object.tauU = tauU;
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         newton_object.BC(j) = vel_now(j, 0);
     }
@@ -207,20 +207,20 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
 
 // * * * * * * * * * * * * * * * Jacobian Evaluation  * * * * * * * * * * * * * //
 
-void reducedSteadyNS::reconstruct_PPE(fileName folder, label printevery)
+void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    label counter = 0;
-    label nextwrite = 0;
+    int counter = 0;
+    int nextwrite = 0;
 
-    for (label i = 0; i < online_solution.size(); i++)
+    for (int i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextwrite)
         {
             volVectorField U_rec("U_rec", Umodes[0] * 0);
 
-            for (label j = 0; j < Nphi_u; j++)
+            for (int j = 0; j < Nphi_u; j++)
             {
                 U_rec += Umodes[j] * online_solution[i](j + 1, 0);
             }
@@ -228,7 +228,7 @@ void reducedSteadyNS::reconstruct_PPE(fileName folder, label printevery)
             ITHACAstream::exportSolution(U_rec, name(online_solution[i](0, 0)), folder);
             volScalarField P_rec("P_rec", problem->Pmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_p; j++)
+            for (int j = 0; j < Nphi_p; j++)
             {
                 P_rec += problem->Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
@@ -242,7 +242,7 @@ void reducedSteadyNS::reconstruct_PPE(fileName folder, label printevery)
 }
 
 void reducedSteadyNS::reconstruct(bool exportFields, fileName folder,
-                                  label printevery)
+                                  int printevery)
 {
     if (exportFields)
     {
@@ -250,14 +250,14 @@ void reducedSteadyNS::reconstruct(bool exportFields, fileName folder,
         ITHACAutilities::createSymLink(folder);
     }
 
-    label counter = 0;
-    label nextwrite = 0;
+    int counter = 0;
+    int nextwrite = 0;
     List <Eigen::MatrixXd> CoeffU;
     List <Eigen::MatrixXd> CoeffP;
     CoeffU.resize(0);
     CoeffP.resize(0);
 
-    for (label i = 0; i < online_solution.size(); i++)
+    for (int i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextwrite)
         {
@@ -293,9 +293,9 @@ double reducedSteadyNS::inf_sup_constant()
     Eigen::VectorXd sup(Nphi_u);
     Eigen::VectorXd inf(Nphi_p);
 
-    for (label i = 0; i < Nphi_p; i++)
+    for (int i = 0; i < Nphi_p; i++)
     {
-        for (label j = 0; j < Nphi_u; j++)
+        for (int j = 0; j < Nphi_u; j++)
         {
             sup(j) = fvc::domainIntegrate(fvc::div(Umodes[j]) * Pmodes[i]).value() /
                      ITHACAutilities::H1Seminorm(Umodes[j]) / ITHACAutilities::L2Norm(Pmodes[i]);
@@ -316,11 +316,11 @@ void reducedSteadyNS::reconstructLiftAndDrag(steadyNS& problem,
     system("ln -s ../../constant " + folder + "/constant");
     system("ln -s ../../0 " + folder + "/0");
     system("ln -s ../../system " + folder + "/system");
-    label NUmodes = problem.NUmodes;
-    label NSUPmodes = problem.NSUPmodes;
-    label NPmodes = problem.NPmodes;
-    label liftfieldSize = problem.liftfield.size();
-    label totalSize = NUmodes + NSUPmodes + liftfieldSize;
+    int NUmodes = problem.NUmodes;
+    int NSUPmodes = problem.NSUPmodes;
+    int NPmodes = problem.NPmodes;
+    int liftfieldSize = problem.liftfield.size();
+    int totalSize = NUmodes + NSUPmodes + liftfieldSize;
     Eigen::VectorXd cl(online_solution.size());
     Eigen::VectorXd cd(online_solution.size());
     //Read FORCESdict
@@ -338,14 +338,14 @@ void reducedSteadyNS::reconstructLiftAndDrag(steadyNS& problem,
     fTau.setZero(online_solution.size(), 3);
     fN.setZero(online_solution.size(), 3);
 
-    for (label i = 0; i < online_solution.size(); i++)
+    for (int i = 0; i < online_solution.size(); i++)
     {
-        for (label j = 0; j < totalSize; j++)
+        for (int j = 0; j < totalSize; j++)
         {
             fTau.row(i) += problem.tauMatrix.row(j) * online_solution[i](j + 1, 0);
         }
 
-        for (label j = 0; j < NPmodes; j++)
+        for (int j = 0; j < NPmodes; j++)
         {
             fN.row(i) += problem.nMatrix.row(j) * online_solution[i](j + Nphi_u + 1, 0);
         }
@@ -378,10 +378,10 @@ Eigen::MatrixXd reducedSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (label k = 0; k < problem->inletIndex.rows(); k++)
+    for (int k = 0; k < problem->inletIndex.rows(); k++)
     {
-        label p = problem->inletIndex(k, 0);
-        label l = problem->inletIndex(k, 1);
+        int p = problem->inletIndex(k, 0);
+        int l = problem->inletIndex(k, 1);
         scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
         scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
                            problem->liftfield[k].boundaryField()[p]).component(l) / area;

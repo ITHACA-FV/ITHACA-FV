@@ -121,7 +121,7 @@ class onlineInterp
         virtual ~onlineInterp() {};
 
         /// Number of parameters in the mu_samples matrix in the FOM
-        label Nmu_samples;
+        int Nmu_samples;
 
         //--------------------------------------------------------------------------
         /// @brief      Get interpolated coefficients evaluated at points from matrix "mu_interp" using the constructed parameters-coefficients manifold

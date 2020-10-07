@@ -4,7 +4,7 @@
 // Constructor
 msrProblem::msrProblem() {}
 
-msrProblem::msrProblem(label argc, char* argv[])
+msrProblem::msrProblem(int argc, char* argv[])
 {
 #include "setRootCase.H"
 #include "createTime.H"

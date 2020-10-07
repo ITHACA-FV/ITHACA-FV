@@ -50,7 +50,7 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
 {
     public:
         newton_unsteadyBB_sup() {}
-        newton_unsteadyBB_sup(label Nx, label Ny,
+        newton_unsteadyBB_sup(int Nx, int Ny,
                               UnsteadyBB& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
@@ -60,14 +60,14 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
             Nphi_prgh(problem.NPrghmodes)
         {}
 
-        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
         UnsteadyBB* problem;
-        label Nphi_u;
-        label Nphi_t;
-        label N_BC_t;
-        label N_BC;
-        label Nphi_prgh;
+        int Nphi_u;
+        int Nphi_t;
+        int N_BC_t;
+        int N_BC;
+        int Nphi_prgh;
         scalar nu;
         scalar Pr;
         scalar dt;
@@ -82,7 +82,7 @@ struct newton_unsteadyBB_PPE: public newton_argument<double>
 {
     public:
         newton_unsteadyBB_PPE() {}
-        newton_unsteadyBB_PPE(label Nx, label Ny,
+        newton_unsteadyBB_PPE(int Nx, int Ny,
                               UnsteadyBB& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
@@ -93,20 +93,20 @@ struct newton_unsteadyBB_PPE: public newton_argument<double>
             Nphi_prgh(problem.NPrghmodes)
         {}
 
-        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         UnsteadyBB* problem;
-        label Nphi_u;
-        label Nphi_p;
-        label Nphi_t;
-        label Nphi_prgh;
-        label N_BC_t;
-        label N_BC;
+        int Nphi_u;
+        int Nphi_p;
+        int Nphi_t;
+        int Nphi_prgh;
+        int N_BC_t;
+        int N_BC;
         scalar nu;
         scalar Pr;
         scalar dt;
-        label writeEvery;
+        int writeEvery;
         word BCmethod;
 
         Eigen::VectorXd y_old;
@@ -159,13 +159,13 @@ class ReducedUnsteadyBB: public reducedUnsteadyNS
         PtrList<volScalarField> PREC;
 
         /// Number of temperature modes
-        label Nphi_t;
+        int Nphi_t;
 
         /// Number of shifted pressure modes
-        label Nphi_prgh;
+        int Nphi_prgh;
 
         /// Number of parametrized boundary conditions related to temperature field
-        label N_BC_t;
+        int N_BC_t;
 
         /// DimensionedScalar Pr;
         scalar Pr;
@@ -188,7 +188,7 @@ class ReducedUnsteadyBB: public reducedUnsteadyNS
         /// and used to get the reduced initial condition default = 0.
         ///
         Eigen::MatrixXd solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
-                                        Eigen::MatrixXd& vel_now_BC, label NParaSet = 0, label startSnap = 0);
+                                        Eigen::MatrixXd& vel_now_BC, int NParaSet = 0, int startSnap = 0);
 
 
         /// Method to perform an online solve using a PPE stabilisation method
@@ -204,8 +204,8 @@ class ReducedUnsteadyBB: public reducedUnsteadyNS
         /// and used to get the reduced initial condition default = 0.
         ///
         Eigen::MatrixXd solveOnline_PPE(Eigen::MatrixXd& temp_now_BC,
-                                        Eigen::MatrixXd& vel_now_BC, label NParaSet = 0,
-                                        label startSnap = 0);
+                                        Eigen::MatrixXd& vel_now_BC, int NParaSet = 0,
+                                        int startSnap = 0);
 
         /// Method to reconstruct a solution from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
@@ -214,7 +214,7 @@ class ReducedUnsteadyBB: public reducedUnsteadyNS
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
         void reconstruct_sup(fileName folder = "./ITHACAOutput/online_rec",
-                             label printevery = 1);
+                             int printevery = 1);
 };
 
 

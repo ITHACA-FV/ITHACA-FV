@@ -2,7 +2,7 @@
 
 Ptot::Ptot() {}
 
-Ptot::Ptot(label argc, char* argv[], label Nsampled)
+Ptot::Ptot(int argc, char* argv[], label Nsampled)
 {
     Npoints = Nsampled;
     modelOutput.resize(Npoints);

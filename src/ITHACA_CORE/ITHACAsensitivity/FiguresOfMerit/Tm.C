@@ -2,7 +2,7 @@
 
 Tm::Tm() {}
 
-Tm::Tm(label argc, char* argv[], label Nsampled)
+Tm::Tm(int argc, char* argv[], label Nsampled)
 {
     Npoints = Nsampled;
     modelOutput.resize(Npoints);

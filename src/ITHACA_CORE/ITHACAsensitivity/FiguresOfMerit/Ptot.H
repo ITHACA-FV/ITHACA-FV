@@ -43,7 +43,7 @@ class Ptot : public FofM
     public:
         //Constructors:
         Ptot();
-        Ptot(label argc, char* argv[], label Nsampled);
+        Ptot(int argc, char* argv[], label Nsampled);
         ~Ptot() {};
 
         //Members:

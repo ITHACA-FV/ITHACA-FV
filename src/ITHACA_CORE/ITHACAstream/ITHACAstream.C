@@ -69,9 +69,9 @@ void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
         OFstream str(folder + "/" + Name + "_mat" + est);
         str << Name << "=np.array([";
 
-        for (label i = 0; i < matrix.rows(); i++)
+        for (int i = 0; i < matrix.rows(); i++)
         {
-            for (label j = 0; j < matrix.cols(); j++)
+            for (int j = 0; j < matrix.cols(); j++)
             {
                 if (j == 0)
                 {
@@ -98,9 +98,9 @@ void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
         OFstream str(folder + "/" + Name + "_mat" + est);
         str << Name << "=[";
 
-        for (label i = 0; i < matrix.rows(); i++)
+        for (int i = 0; i < matrix.rows(); i++)
         {
-            for (label j = 0; j < matrix.cols(); j++)
+            for (int j = 0; j < matrix.cols(); j++)
             {
                 str << " " << setprecision(10) << matrix(i, j);
             }
@@ -128,7 +128,7 @@ template void ITHACAstream::exportMatrix(Eigen::Matrix < double, -1,
         -1 > & matrix, word Name, word type,
         word folder);
 
-template void ITHACAstream::exportMatrix(Eigen::Matrix < label, -1,
+template void ITHACAstream::exportMatrix(Eigen::Matrix < int, -1,
         -1 > & matrix, word Name, word type,
         word folder);
 
@@ -155,13 +155,13 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
         str << Name <<  "=np.zeros([" << matrix.size() << "," << matrix[0].rows() <<
             "," << matrix[0].cols() << "])\n";
 
-        for (label i = 0; i < matrix.size(); i++)
+        for (int i = 0; i < matrix.size(); i++)
         {
             str << Name << "[" << i << ",:,:]=np.array([";
 
-            for (label j = 0; j < matrix[0].rows(); j++)
+            for (int j = 0; j < matrix[0].rows(); j++)
             {
-                for (label k = 0; k < matrix[0].cols(); k++)
+                for (int k = 0; k < matrix[0].cols(); k++)
                 {
                     if ( k == 0)
                     {
@@ -188,13 +188,13 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
 
-        for (label i = 0; i < matrix.size(); i++)
+        for (int i = 0; i < matrix.size(); i++)
         {
             str << Name << "(" << i + 1 << ",:,:)=[";
 
-            for (label j = 0; j < matrix[0].rows(); j++)
+            for (int j = 0; j < matrix[0].rows(); j++)
             {
-                for (label k = 0; k < matrix[0].cols(); k++)
+                for (int k = 0; k < matrix[0].cols(); k++)
                 {
                     str << " " << setprecision(10) << matrix[i](j, k);
                 }
@@ -210,7 +210,7 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
     }
     else if (type == "eigen")
     {
-        for (label i = 0; i < matrix.size(); i++)
+        for (int i = 0; i < matrix.size(); i++)
         {
             word Namei = Name + name(i);
             ITHACAstream::exportMatrix(matrix[i], Namei, "eigen", folder);
@@ -242,13 +242,13 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
             "," << Eigen::SliceFromTensor(tensor, 0,
                                           0).cols() << "])\n";
 
-        for (label i = 0; i < tensor.dimension(0); i++)
+        for (int i = 0; i < tensor.dimension(0); i++)
         {
             str << Name << "[" << i << ",:,:]=np.array([";
 
-            for (label j = 0; j < Eigen::SliceFromTensor(tensor, 0, 0).rows(); j++)
+            for (int j = 0; j < Eigen::SliceFromTensor(tensor, 0, 0).rows(); j++)
             {
-                for (label k = 0; k < Eigen::SliceFromTensor(tensor, 0, 0).cols(); k++)
+                for (int k = 0; k < Eigen::SliceFromTensor(tensor, 0, 0).cols(); k++)
                 {
                     if ( k == 0)
                     {
@@ -278,14 +278,14 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
 
-        for (label i = 0; i < tensor.dimension(0); i++)
+        for (int i = 0; i < tensor.dimension(0); i++)
         {
             str << Name << "(" << i + 1 << ",:,:)=[";
 
-            for (label j = 0; j < Eigen::SliceFromTensor(tensor, 0,
+            for (int j = 0; j < Eigen::SliceFromTensor(tensor, 0,
                     0).rows(); j++)
             {
-                for (label k = 0; k < Eigen::SliceFromTensor(tensor, 0,
+                for (int k = 0; k < Eigen::SliceFromTensor(tensor, 0,
                         0).cols(); k++)
                 {
                     str << " " << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
@@ -304,7 +304,7 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
     }
     else if (type == "eigen")
     {
-        for (label i = 0; i < tensor.dimension(0); i++)
+        for (int i = 0; i < tensor.dimension(0); i++)
         {
             Eigen::Matrix < T, -1, -1 > matrixAux = Eigen::SliceFromTensor(tensor, 0, i);
             word Namei = Name + name(i);
@@ -319,7 +319,7 @@ template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3> tensor,
         word Name,
         word type, word folder);
 
-template void ITHACAstream::exportTensor(Eigen::Tensor<label, 3> tensor,
+template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3> tensor,
         word Name,
         word type, word folder);
 
@@ -329,7 +329,7 @@ template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3> tensor,
 
 List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
 {
-    label file_count = 0;
+    int file_count = 0;
     DIR* dirp;
     struct dirent* entry;
     dirp = opendir(folder.c_str());
@@ -345,7 +345,7 @@ List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
 
     closedir (dirp);
 
-    for (label j = 0; j < file_count ; j++)
+    for (int j = 0; j < file_count ; j++)
     {
         word matname = folder + "/" + mat_name + name(j) + "_mat.txt";
         Eigen::MatrixXd temp = readMatrix(matname);
@@ -357,7 +357,7 @@ List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
 
 Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
 {
-    label cols = 0, rows = 0;
+    int cols = 0, rows = 0;
     double buff[MAXBUFSIZE];
     // Read numbers from file into buffer.
     std::ifstream infile;
@@ -371,7 +371,7 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     {
         string line;
         getline(infile, line);
-        label temp_cols = 0;
+        int temp_cols = 0;
         std::stringstream stream(line);
 
         while (! stream.eof())
@@ -397,9 +397,9 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
     // Populate matrix with numbers.
     Eigen::MatrixXd result(rows, cols);
 
-    for (label i = 0; i < rows; i++)
+    for (int i = 0; i < rows; i++)
     {
-        for (label j = 0; j < cols; j++)
+        for (int j = 0; j < cols; j++)
         {
             result(i, j) = buff[ cols * i + j ];
         }
@@ -411,7 +411,7 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
 template<class Type, template<class> class PatchField, class GeoMesh>
 void ITHACAstream::read_fields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield, word Name,
-    fileName casename, label first_snap, label n_snap)
+    fileName casename, int first_snap, int n_snap)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     fvMesh& mesh = para->mesh;
@@ -420,7 +420,7 @@ void ITHACAstream::read_fields(
     {
         Info << "######### Reading the Data for " << Name << " #########" << endl;
         fileName rootpath(".");
-        label last_s;
+        int last_s;
         Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
 
         if (first_snap >= runTime2.times().size())
@@ -439,7 +439,7 @@ void ITHACAstream::read_fields(
             last_s = min(runTime2.times().size(), n_snap + 2);
         }
 
-        for (label i = 2 + first_snap; i < last_s + first_snap; i++)
+        for (int i = 2 + first_snap; i < last_s + first_snap; i++)
         {
             GeometricField<Type, PatchField, GeoMesh> tmp_field(
                 IOobject
@@ -467,7 +467,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 void ITHACAstream::read_fields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field,
-    fileName casename, label first_snap, label n_snap)
+    fileName casename, int first_snap, int n_snap)
 {
     if (!Pstream::parRun())
     {
@@ -475,7 +475,7 @@ void ITHACAstream::read_fields(
              endl;
         fileName rootpath(".");
         Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-        label last_s;
+        int last_s;
 
         if (first_snap >= runTime2.times().size())
         {
@@ -493,7 +493,7 @@ void ITHACAstream::read_fields(
             last_s = min(runTime2.times().size(), n_snap + 2);
         }
 
-        for (label i = 2 + first_snap; i < last_s + first_snap; i++)
+        for (int i = 2 + first_snap; i < last_s + first_snap; i++)
         {
             GeometricField<Type, PatchField, GeoMesh> tmp_field(
                 IOobject
@@ -519,7 +519,7 @@ void ITHACAstream::read_fields(
                       field.mesh().time().caseName() );
         timename = timename.substr(0, timename.find_last_of("\\/"));
         timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
-        label last_s = numberOfFiles(casename,
+        int last_s = numberOfFiles(casename,
                                      "processor" + name(Pstream::myProcNo()) + "/");
 
         if (first_snap > last_s)
@@ -537,7 +537,7 @@ void ITHACAstream::read_fields(
             last_s = min(last_s, n_snap + 2);
         }
 
-        for (label i = 2 + first_snap; i < last_s + first_snap; i++)
+        for (int i = 2 + first_snap; i < last_s + first_snap; i++)
         {
             GeometricField<Type, PatchField, GeoMesh> tmp_field(
                 IOobject
@@ -562,7 +562,7 @@ void ITHACAstream::readMiddleFields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field, fileName casename)
 {
-    label par = 1;
+    int par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
              "No parameter dependent solutions stored into Offline folder");
 
@@ -579,7 +579,7 @@ void ITHACAstream::readConvergedFields(
     GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename)
 {
-    label par = 1;
+    int par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
              "No parameter dependent solutions stored into Offline folder");
     std::cout << "######### Reading the Data for " << field.name() << " #########"
@@ -587,7 +587,7 @@ void ITHACAstream::readConvergedFields(
 
     while (ITHACAutilities::check_folder(casename + name(par)))
     {
-        label last = 1;
+        int last = 1;
 
         while (ITHACAutilities::check_folder(casename + name(par) + "/" + name(last)))
         {
@@ -609,9 +609,9 @@ void ITHACAstream::readConvergedFields(
     }
 }
 
-label ITHACAstream::numberOfFiles(word folder, word MatrixName)
+int ITHACAstream::numberOfFiles(word folder, word MatrixName)
 {
-    label number_of_files = 0;
+    int number_of_files = 0;
     std::ifstream in;
     in.open(folder + MatrixName + name(0), std::ios::in | std::ios::binary);
 
@@ -636,7 +636,7 @@ void ITHACAstream::exportFields(
     Info << "######### Exporting the Data for " << fieldname << " #########" <<
          endl;
 
-    for (label j = 0; j < field.size() ; j++)
+    for (int j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
         printProgress(double(j + 1) / field.size());
@@ -760,9 +760,9 @@ void ITHACAstream::writePoints(pointField points, fileName folder,
 
 void ITHACAstream::printProgress(double percentage)
 {
-    label val = static_cast<label>(percentage * 100);
-    label lpad = static_cast<label> (percentage * PBWIDTH);
-    label rpad = PBWIDTH - lpad;
+    int val = static_cast<int>(percentage * 100);
+    int lpad = static_cast<int> (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
 
     if (Pstream::master())
     {
@@ -773,24 +773,24 @@ void ITHACAstream::printProgress(double percentage)
 
 template void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
                                         word Name,
-                                        fileName casename, label first_snap, label n_snap);
+                                        fileName casename, int first_snap, int n_snap);
 template void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
                                         word Name,
-                                        fileName casename, label first_snap, label n_snap);
+                                        fileName casename, int first_snap, int n_snap);
 template void ITHACAstream::read_fields(PtrList<surfaceScalarField>& Lfield,
                                         word Name,
-                                        fileName casename, label first_snap, label n_snap);
+                                        fileName casename, int first_snap, int n_snap);
 template void ITHACAstream::read_fields(PtrList<surfaceVectorField>& Lfield,
                                         word Name,
-                                        fileName casename, label first_snap, label n_snap);
+                                        fileName casename, int first_snap, int n_snap);
 template void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
-                                        volScalarField& field, fileName casename, label first_snap, label n_snap);
+                                        volScalarField& field, fileName casename, int first_snap, int n_snap);
 template void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
-                                        volVectorField& field, fileName casename, label first_snap, label n_snap);
+                                        volVectorField& field, fileName casename, int first_snap, int n_snap);
 template void ITHACAstream::read_fields(PtrList<surfaceScalarField>& Lfield,
-                                        surfaceScalarField& field, fileName casename, label first_snap, label n_snap);
+                                        surfaceScalarField& field, fileName casename, int first_snap, int n_snap);
 template void ITHACAstream::read_fields(PtrList<surfaceVectorField>& Lfield,
-                                        surfaceVectorField& field, fileName casename, label first_snap, label n_snap);
+                                        surfaceVectorField& field, fileName casename, int first_snap, int n_snap);
 template void ITHACAstream::readMiddleFields(PtrList<volScalarField>& Lfield,
         volScalarField& field, fileName casename);
 template void ITHACAstream::readMiddleFields(PtrList<volVectorField>& Lfield,
@@ -815,7 +815,7 @@ void ITHACAstream::exportList(T& list, word folder, word filename)
     word fieldname = folder + filename;
     OFstream os(fieldname);
 
-    for (label i = 0; i < list.size(); i++)
+    for (int i = 0; i < list.size(); i++)
     {
         os << list[i] << endl;
     }

@@ -45,7 +45,7 @@ ReducedSteadyNSTurbIntrusive::ReducedSteadyNSTurbIntrusive(
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->bMatrix.rows();
 
-    for (label k = 0; k < Nphi_u; k++)
+    for (int k = 0; k < Nphi_u; k++)
     {
         Umodes.append(problem->Umodes[k]);
     }
@@ -54,7 +54,7 @@ ReducedSteadyNSTurbIntrusive::ReducedSteadyNSTurbIntrusive(
                    fomProblem);
 }
 
-label newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
+int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd aTmp(Nphi_u);
@@ -71,14 +71,14 @@ label newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
     // Term for penalty method
     if (problem->bcMethod == "penalty")
     {
-        for (label l = 0; l < N_BC; l++)
+        for (int l = 0; l < N_BC; l++)
         {
             penaltyU.col(l) = bc(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
                               aTmp;
         }
     }
 
-    for (label i = 0; i < Nphi_u; i++)
+    for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->cTotalTensor, 0,
                 i) * aTmp;
@@ -92,7 +92,7 @@ label newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
 
     if (problem->bcMethod == "lift")
     {
-        for (label j = 0; j < N_BC; j++)
+        for (int j = 0; j < N_BC; j++)
         {
             fvec(j) = x(j) - bc(j);
         }
@@ -101,7 +101,7 @@ label newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
     return 0;
 }
 
-label newtonSteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
+int newtonSteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
                                       Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonSteadyNSTurbIntrusive> numDiff(*this);
@@ -130,7 +130,7 @@ void ReducedSteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
     {
-        for (label j = 0; j < N_BC; j++)
+        for (int j = 0; j < N_BC; j++)
         {
             y(j) = vel_now(j, 0);
         }
@@ -143,7 +143,7 @@ void ReducedSteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
     newtonObject.bc.resize(N_BC);
     newtonObject.tauU = tauU;
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         newtonObject.bc(j) = vel_now(j, 0);
     }
@@ -172,14 +172,14 @@ void ReducedSteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
 
 
 void ReducedSteadyNSTurbIntrusive::reconstruct(fileName folder,
-        label printEvery)
+        int printEvery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    label counter = 0;
-    label nextWrite = 0;
+    int counter = 0;
+    int nextWrite = 0;
 
-    for (label i = 0; i < online_solution.size(); i++)
+    for (int i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextWrite)
         {
@@ -187,7 +187,7 @@ void ReducedSteadyNSTurbIntrusive::reconstruct(fileName folder,
             volScalarField pRec("pRec", problem->Pmodes[0] * 0);
             volScalarField nutTemp("nutTemp", problem->nutModes[0] * 0);
 
-            for (label j = 0; j < Nphi_u; j++)
+            for (int j = 0; j < Nphi_u; j++)
             {
                 uRec += Umodes[j] * online_solution[i](j + 1, 0);
                 pRec += problem->Pmodes[j] * online_solution[i](j + 1, 0);
@@ -214,10 +214,10 @@ Eigen::MatrixXd ReducedSteadyNSTurbIntrusive::setOnlineVelocity(
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (label k = 0; k < problem->inletIndex.rows(); k++)
+    for (int k = 0; k < problem->inletIndex.rows(); k++)
     {
-        label p = problem->inletIndex(k, 0);
-        label l = problem->inletIndex(k, 1);
+        int p = problem->inletIndex(k, 0);
+        int l = problem->inletIndex(k, 1);
         scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
         scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
                            problem->liftfield[k].boundaryField()[p]).component(l) / area;
@@ -252,14 +252,14 @@ void ReducedSteadyNSTurbIntrusive::reconstructLiftAndDrag(
     fTau.setZero(online_solution.size(), 3);
     fN.setZero(online_solution.size(), 3);
 
-    for (label i = 0; i < online_solution.size(); i++)
+    for (int i = 0; i < online_solution.size(); i++)
     {
-        for (label j = 0; j < Nphi_u; j++)
+        for (int j = 0; j < Nphi_u; j++)
         {
             fTau.row(i) += problem.tauMatrix.row(j) * online_solution[i](j + 1, 0);
         }
 
-        for (label j = 0; j < Nphi_u; j++)
+        for (int j = 0; j < Nphi_u; j++)
         {
             fN.row(i) += problem.nMatrix.row(j) * online_solution[i](j + 1, 0);
         }

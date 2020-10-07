@@ -2,7 +2,7 @@
 
 Ptot_time::Ptot_time() {}
 
-Ptot_time::Ptot_time(label argc, char* argv[], label Nsampled)
+Ptot_time::Ptot_time(int argc, char* argv[], label Nsampled)
 {
     Npoints = Nsampled;
     modelOutput.resize(Npoints);
