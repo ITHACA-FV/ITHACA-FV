@@ -51,19 +51,19 @@ struct newtonUnsteadyNSTurbIntrusive: public newton_argument<double>
 {
     public:
         newtonUnsteadyNSTurbIntrusive() {}
-        newtonUnsteadyNSTurbIntrusive(label Nx, label Ny,
+        newtonUnsteadyNSTurbIntrusive(int Nx, int Ny,
                                       UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.nModesOnline),
             N_BC(problem.inletIndex.rows())
         {}
 
-        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         UnsteadyNSTurbIntrusive* problem;
-        label Nphi_u;
-        label N_BC;
+        int Nphi_u;
+        int N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -76,7 +76,7 @@ struct newtonUnsteadyNSTurbIntrusivePPE: public newton_argument<double>
 {
     public:
         newtonUnsteadyNSTurbIntrusivePPE() {}
-        newtonUnsteadyNSTurbIntrusivePPE(label Nx, label Ny,
+        newtonUnsteadyNSTurbIntrusivePPE(int Nx, int Ny,
                                          UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes),
@@ -84,13 +84,13 @@ struct newtonUnsteadyNSTurbIntrusivePPE: public newton_argument<double>
             N_BC(problem.inletIndex.rows())
         {}
 
-        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         UnsteadyNSTurbIntrusive* problem;
-        label Nphi_u;
-        label Nphi_p;
-        label N_BC;
+        int Nphi_u;
+        int Nphi_p;
+        int N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;

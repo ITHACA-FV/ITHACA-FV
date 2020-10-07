@@ -54,28 +54,28 @@ ReducedUnsteadyBB::ReducedUnsteadyBB(UnsteadyBB& FOMproblem)
     Nphi_t    = problem->Y_matrix.rows();
 
     // Create locally the velocity modes
-    for (label k = 0; k < problem->liftfield.size(); k++)
+    for (int k = 0; k < problem->liftfield.size(); k++)
     {
         LUmodes.append(problem->liftfield[k]);
     }
 
-    for (label k = 0; k < problem->NUmodes; k++)
+    for (int k = 0; k < problem->NUmodes; k++)
     {
         LUmodes.append(problem->Umodes[k]);
     }
 
-    for (label k = 0; k < problem->NSUPmodes; k++)
+    for (int k = 0; k < problem->NSUPmodes; k++)
     {
         LUmodes.append(problem->supmodes[k]);
     }
 
     // Create locally the temperature modes including BC with liftfield
-    for (label k = 0; k < problem->liftfieldT.size(); k++)
+    for (int k = 0; k < problem->liftfieldT.size(); k++)
     {
         LTmodes.append(problem->liftfieldT[k]);
     }
 
-    for (label k = 0; k < problem->NTmodes; k++)
+    for (int k = 0; k < problem->NTmodes; k++)
     {
         LTmodes.append(problem->Tmodes[k]);
     }
@@ -88,7 +88,7 @@ ReducedUnsteadyBB::ReducedUnsteadyBB(UnsteadyBB& FOMproblem)
 
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 //Operator to evaluate the residual for the supremizer approach
-label newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
+int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
                                         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
@@ -120,34 +120,34 @@ label newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
     // Mass Term Temperature
     Eigen::VectorXd M8 = problem->W_matrix * c_dot;
 
-    for (label i = 0; i < Nphi_u; i++)
+    for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
                 i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M10(i) - M2(i);
     }
 
-    for (label j = 0; j < Nphi_prgh; j++)
+    for (int j = 0; j < Nphi_prgh; j++)
     {
-        label k = j + Nphi_u;
+        int k = j + Nphi_u;
         fvec(k) = M3(j);
     }
 
-    for (label j = 0; j < Nphi_t; j++)
+    for (int j = 0; j < Nphi_t; j++)
     {
-        label k = j + Nphi_u + Nphi_prgh;
+        int k = j + Nphi_u + Nphi_prgh;
         qq = a_tmp.transpose() * problem->Q_matrix[j]  * c_tmp;
         fvec(k) =   -M8(j) + M6(j) - qq(0, 0);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         fvec(j) = x(j) - BC(j);
     }
 
-    for (label j = 0; j < N_BC_t; j++)
+    for (int j = 0; j < N_BC_t; j++)
     {
-        label k = j + Nphi_u + Nphi_prgh;
+        int k = j + Nphi_u + Nphi_prgh;
         fvec(k) = x(k) - BC_t(j);
     }
 
@@ -155,7 +155,7 @@ label newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-label newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
+int newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
                                 Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyBB_sup> numDiff(*this);
@@ -166,7 +166,7 @@ label newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
 // * * * * * * * * * * * * * * * Operators PPE * * * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-label newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
+int newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
                                         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
@@ -206,30 +206,30 @@ label newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
     // Mass Term Temperature
     Eigen::VectorXd M8 = problem->W_matrix * c_dot;
 
-    for (label i = 0; i < Nphi_u; i++)
+    for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
                 i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M10(i) - M2(i);
     }
 
-    for (label j = 0; j < Nphi_prgh; j++)
+    for (int j = 0; j < Nphi_prgh; j++)
     {
-        label k = j + Nphi_u;
+        int k = j + Nphi_u;
         gg = a_tmp.transpose() * problem->G_matrix[j] * a_tmp;
         bb = a_tmp.transpose() * problem->BC2_matrix[j] * a_tmp;
         //fvec(k) = M3(j, 0) - gg(0, 0) - M6(j, 0) + bb(0, 0);
         fvec(k) = M3(j, 0) + gg(0, 0) + M11(j, 0) - M7(j, 0);
     }
 
-    for (label j = 0; j < Nphi_t; j++)
+    for (int j = 0; j < Nphi_t; j++)
     {
-        label k = j + Nphi_u + Nphi_prgh;
+        int k = j + Nphi_u + Nphi_prgh;
         qq = a_tmp.transpose() * problem->Q_matrix[j] * c_tmp;
         fvec(k) = -M8(j) + M9(j) - qq(0, 0);
     }
 
-    // for (label j = 0; j < N_BC; j++)
+    // for (int j = 0; j < N_BC; j++)
     //{
     //     fvec(j) = x(j) - BC(j);
     // }
@@ -237,7 +237,7 @@ label newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-label newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
+int newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
                                 Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyBB_PPE> numDiff(*this);
@@ -247,13 +247,13 @@ label newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
-        Eigen::MatrixXd& vel_now_BC, label NParaSet, label startSnap)
+        Eigen::MatrixXd& vel_now_BC, int NParaSet, int startSnap)
 {
     std::cout << "################## Online solve N° " << NParaSet <<
               " ##################" << std::endl;
     std::cout << "Solving for the parameter: " << temp_now_BC << std::endl;
     // Count number of time steps
-    label counter = 0;
+    int counter = 0;
     time = tstart;
 
     while (time < finalTime - 0.5 * dt)
@@ -267,9 +267,9 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
     // Set initial condition for online solve
     volScalarField T_IC("T_IC", problem->Tfield[0]);
 
-    for (label j = 0; j < T_IC.boundaryField().size(); j++)
+    for (int j = 0; j < T_IC.boundaryField().size(); j++)
     {
-        for (label i = 0; i < N_BC_t; i++)
+        for (int i = 0; i < N_BC_t; i++)
         {
             if (j == problem->inletIndexT(i, 0))
             {
@@ -305,12 +305,12 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
     newton_object_sup.BC.resize(N_BC);
 
     // Change initial condition for the lifting function
-    for (label j = 0; j < N_BC_t; j++)
+    for (int j = 0; j < N_BC_t; j++)
     {
         newton_object_sup.BC_t(j) = temp_now_BC(j, 0);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         newton_object_sup.BC(j) = vel_now_BC(j, 0);
     }
@@ -330,21 +330,21 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
     Color::Modifier def(Color::FG_DEFAULT);
 
     // Start the time loop
-    for (label i = 1; i < online_solutiont.cols(); i++)
+    for (int i = 1; i < online_solutiont.cols(); i++)
     {
         time = time + dt;
         Eigen::VectorXd res(y);
         res.setZero();
         hnls.solve(y);
 
-        for (label j = 0; j < N_BC; j++)
+        for (int j = 0; j < N_BC; j++)
         {
             y(j) = vel_now_BC(j, 0);
         }
 
-        for (label j = 0; j < N_BC_t; j++)
+        for (int j = 0; j < N_BC_t; j++)
         {
-            label k = j + Nphi_prgh + Nphi_u;
+            int k = j + Nphi_prgh + Nphi_u;
             y(k) = temp_now_BC(j, 0);
         }
 
@@ -381,13 +381,13 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
         temp_now_BC,
-        Eigen::MatrixXd& vel_now_BC, label NParaSet, label startSnap)
+        Eigen::MatrixXd& vel_now_BC, int NParaSet, int startSnap)
 {
     std::cout << "################## Online solve N° " << NParaSet <<
               " ##################" << std::endl;
     std::cout << "Solving for the parameter: " << temp_now_BC << std::endl;
     // Count number of time steps
-    label counter = 0;
+    int counter = 0;
     time = tstart;
 
     while (time < finalTime - 0.5 * dt)
@@ -401,18 +401,18 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     //Average Method
     //if (problem->AveMethod == "mean")
     //{
-    // for (label j = 0; j < temp_now_BC.cols(); j++)
+    // for (int j = 0; j < temp_now_BC.cols(); j++)
     //{
-    //    for (label i = 0; i < N_BC_t; i++)
+    //    for (int i = 0; i < N_BC_t; i++)
     //        {
-    //label patche = problem->inletIndexT(i, 0);
+    //int patche = problem->inletIndexT(i, 0);
     //           temp_now_BC(i, j)= temp_now_BC(i, j)-problem->Tsub[0].boundaryField()[problem->inletIndexT(i, 0)][0];
     //    }
     // }
     //volScalarField T_IC("T_IC", problem->Tsub[0]);
-    //for (label j = 0; j < T_IC.boundaryField().size(); j++)
+    //for (int j = 0; j < T_IC.boundaryField().size(); j++)
     //   {
-    //     for (label i = 0; i < N_BC_t; i++)
+    //     for (int i = 0; i < N_BC_t; i++)
     //      {
     //       T_IC.boundaryFieldRef()[problem->inletIndexT(i, 0)][j] =
     //        temp_now_BC(i, 0)-problem->Tsub[0].boundaryField()[problem->inletIndexT(i, 0)][0];
@@ -421,9 +421,9 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     // }
     volScalarField T_IC("T_IC", problem->Tfield[0]);
 
-    for (label j = 0; j < T_IC.boundaryField().size(); j++)
+    for (int j = 0; j < T_IC.boundaryField().size(); j++)
     {
-        for (label i = 0; i < N_BC_t; i++)
+        for (int i = 0; i < N_BC_t; i++)
         {
             if (j == problem->inletIndexT(i, 0))
             {
@@ -463,18 +463,18 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     //    tv.resize(1);
     //    tv[0] = time;
 
-    //for (label l = 0; l < Nphi_nut; l++)
+    //for (int l = 0; l < Nphi_nut; l++)
     //{
     //        newton_object_PPE.nu_c(l) = problem->rbfsplines[l]->eval(tv);
     //}
 
     //Change initial condition for the lifting function
-    for (label j = 0; j < N_BC_t; j++)
+    for (int j = 0; j < N_BC_t; j++)
     {
         newton_object_PPE.BC_t(j) = temp_now_BC(j, 0);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         newton_object_PPE.BC(j) = vel_now_BC(j, 0);
     }
@@ -494,7 +494,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     Color::Modifier def(Color::FG_DEFAULT);
 
     // Start the time loop
-    for (label i = 1; i < online_solutiont.cols(); i++)
+    for (int i = 1; i < online_solutiont.cols(); i++)
     {
         time = time + dt;
         Eigen::VectorXd res(y);
@@ -506,14 +506,14 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
 
         //}
 
-        for (label j = 0; j < N_BC; j++)
+        for (int j = 0; j < N_BC; j++)
         {
             y(j) = vel_now_BC(j, 0);
         }
 
-        for (label j = 0; j < N_BC_t; j++)
+        for (int j = 0; j < N_BC_t; j++)
         {
-            label k = j + Nphi_prgh + Nphi_u;
+            int k = j + Nphi_prgh + Nphi_u;
             y(k) = temp_now_BC(j, 0);
         }
 
@@ -549,7 +549,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
     return online_solutiont;
 }
 
-void ReducedUnsteadyBB::reconstruct_sup(fileName folder, label printevery)
+void ReducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
 {
     if (ITHACAutilities::check_folder(folder))
     {
@@ -560,17 +560,17 @@ void ReducedUnsteadyBB::reconstruct_sup(fileName folder, label printevery)
         ITHACAutilities::createSymLink(folder);
     }
 
-    label counter = 0;
-    label nextwrite = 0;
-    label counter2 = 1 + TREC.size();
+    int counter = 0;
+    int nextwrite = 0;
+    int counter2 = 1 + TREC.size();
 
-    for (label i = 0; i < online_solutiont.cols(); i++)
+    for (int i = 0; i < online_solutiont.cols(); i++)
     {
         if (counter == nextwrite)
         {
             volVectorField U_rec("U_rec", LUmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_u; j++)
+            for (int j = 0; j < Nphi_u; j++)
             {
                 U_rec += LUmodes[j] * online_solutiont(j + 1, i);
             }
@@ -581,7 +581,7 @@ void ReducedUnsteadyBB::reconstruct_sup(fileName folder, label printevery)
             {
                 volScalarField P_rec("P_rec", problem->Prghmodes[0] * 0);
 
-                for (label j = 0; j < Nphi_prgh; j++)
+                for (int j = 0; j < Nphi_prgh; j++)
                 {
                     P_rec += problem->Prghmodes[j] * online_solutiont(j + Nphi_u + 1, i);
                 }
@@ -592,7 +592,7 @@ void ReducedUnsteadyBB::reconstruct_sup(fileName folder, label printevery)
 
             volScalarField T_rec("T_rec", LTmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_t; j++)
+            for (int j = 0; j < Nphi_t; j++)
             {
                 T_rec += LTmodes[j] * online_solutiont(j + Nphi_prgh + Nphi_u + 1, i);
             }

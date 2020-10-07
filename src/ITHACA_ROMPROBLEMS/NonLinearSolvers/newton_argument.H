@@ -40,7 +40,7 @@ SourceFiles
 #define newton_argument_H
 
 /// Template object created to solve non linear problems using the Eigen library
-template<typename _Scalar, label NX = Eigen::Dynamic, label NY = Eigen::Dynamic>
+template<typename _Scalar, int NX = Eigen::Dynamic, int NY = Eigen::Dynamic>
 class newton_argument
 {
     public:
@@ -55,7 +55,7 @@ class newton_argument
         typedef Eigen::Matrix<Scalar, ValuesAtCompileTime, InputsAtCompileTime>
         JacobianType;
 
-        label m_inputs, m_values;
+        int m_inputs, m_values;
 
 
         /// @brief      Constructor
@@ -68,7 +68,7 @@ class newton_argument
         /// @param[in]  inputs  The inputs
         /// @param[in]  values  The values
         ///
-        newton_argument(label inputs, label values) : m_inputs(inputs),
+        newton_argument(int inputs, int values) : m_inputs(inputs),
             m_values(values) {}
 
         /// @brief Operator to compute the residual vector
@@ -78,7 +78,7 @@ class newton_argument
         ///
         /// @return     0
         ///
-        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
         {
             std::cout <<
                       "This is a virtual method, it needs to be overriden with a suitable residual function"
@@ -93,7 +93,7 @@ class newton_argument
         ///
         /// @return     0
         ///
-        label df(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
+        int df(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
         {
             std::cout <<
                       "This is a virtual method, it needs to be overriden with a suitable jacobian function"
@@ -105,7 +105,7 @@ class newton_argument
         ///
         /// @return     inputs
         ///
-        label inputs() const
+        int inputs() const
         {
             return m_inputs;
         }
@@ -115,7 +115,7 @@ class newton_argument
         ///
         /// @return     inputs
         ///
-        label values() const
+        int values() const
         {
             return m_values;
         }

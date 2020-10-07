@@ -88,9 +88,9 @@ class reducedSimpleSteadyNS: public reducedProblem
         ///
         /// @param[in]  Folder The folder where we want to esport solutions (default is "./ITHACAoutput/Reconstruct/")
         ///
-        void solveOnline_Simple(scalar mu_now, label NmodesUproj, label NmodesPproj,
-                                label NmodesNut = 0,
-                                label NmodesSup = 0,
+        void solveOnline_Simple(scalar mu_now, int NmodesUproj, int NmodesPproj,
+                                int NmodesNut = 0,
+                                int NmodesSup = 0,
                                 word Folder = "./ITHACAoutput/Reconstruct/");
 
         ///
@@ -136,10 +136,10 @@ class reducedSimpleSteadyNS: public reducedProblem
         Eigen::MatrixXd vel_now;
 
         /// Maximum iterations number for the online step
-        label maxIterOn;
+        int maxIterOn;
 
         /// Counter.
-        label counter = 0;
+        int counter = 0;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -43,7 +43,7 @@ class Ptot_time : public FofM
     public:
         //constructors
         Ptot_time();
-        Ptot_time(label argc, char* argv[], label Nsampled);
+        Ptot_time(int argc, char* argv[], label Nsampled);
         ~Ptot_time() {};
 
         //Members

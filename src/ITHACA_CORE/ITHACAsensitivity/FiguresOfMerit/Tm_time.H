@@ -43,7 +43,7 @@ class Tm_time : public FofM
     public:
         //constructors
         Tm_time();
-        Tm_time(label argc, char* argv[], label Nsampled);
+        Tm_time(int argc, char* argv[], label Nsampled);
         ~Tm_time() {};
         //Members
         /// List of pointers to temperature field

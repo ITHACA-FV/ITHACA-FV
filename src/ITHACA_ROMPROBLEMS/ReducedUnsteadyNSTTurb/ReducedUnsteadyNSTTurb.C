@@ -55,46 +55,46 @@ ReducedUnsteadyNSTTurb::ReducedUnsteadyNSTTurb(UnsteadyNSTTurb& FOMproblem)
     Nphi_nut  = problem->CT2_matrix[0].rows();
 
     // Create locally the velocity modes
-    for (label k = 0; k < problem->liftfield.size(); k++)
+    for (int k = 0; k < problem->liftfield.size(); k++)
     {
         Umodes.append(problem->liftfield[k]);
     }
 
-    for (label k = 0; k < problem->NUmodes; k++)
+    for (int k = 0; k < problem->NUmodes; k++)
     {
         Umodes.append(problem->Umodes[k]);
     }
 
-    for (label k = 0; k < problem->NSUPmodes; k++)
+    for (int k = 0; k < problem->NSUPmodes; k++)
     {
         Umodes.append(problem->supmodes[k]);
     }
 
     // Create locally the pressure modes
-    for (label k = 0; k < problem->NPmodes; k++)
+    for (int k = 0; k < problem->NPmodes; k++)
     {
         Pmodes.append(problem->Pmodes[k]);
     }
 
-    for (label k = 0; k < problem->liftfieldT.size(); k++)
+    for (int k = 0; k < problem->liftfieldT.size(); k++)
     {
         Tmodes.append(problem->liftfieldT[k]);
     }
 
     // Create locally the temperature modes
-    for (label k = 0; k < problem->NTmodes; k++)
+    for (int k = 0; k < problem->NTmodes; k++)
     {
         Tmodes.append(problem->Tmodes[k]);
     }
 
     // Store locally the snapshots for projections
-    for (label k = 0; k < problem->Ufield.size(); k++)
+    for (int k = 0; k < problem->Ufield.size(); k++)
     {
         Usnapshots.append(problem->Ufield[k]);
         Psnapshots.append(problem->Pfield[k]);
     }
 
-    for (label k = 0; k < problem->Tfield.size(); k++)
+    for (int k = 0; k < problem->Tfield.size(); k++)
     {
         Tsnapshots.append(problem->Tfield[k]);
     }
@@ -107,7 +107,7 @@ ReducedUnsteadyNSTTurb::ReducedUnsteadyNSTTurb(UnsteadyNSTTurb& FOMproblem)
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 
 // Operator to evaluate the residual for the supremizer approach
-label newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
+int newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
         Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
@@ -128,7 +128,7 @@ label newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
 
     //std::cerr << "I am here 5" << std::endl;
-    for (label i = 0; i < Nphi_u; i++)
+    for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp - nu_c.transpose() *
              problem->C_total_matrix[i] * a_tmp;
@@ -136,13 +136,13 @@ label newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
         //Info << "Non-turb part is " << a_tmp.transpose() * C_matrix[i] * a_tmp << endl;   //Info << "Turb part is " << nu_c.transpose() * C_total_matrix[i] * a_tmp << endl
     }
 
-    for (label j = 0; j < Nphi_p; j++)
+    for (int j = 0; j < Nphi_p; j++)
     {
-        label k = j + Nphi_u;
+        int k = j + Nphi_u;
         fvec(k) = M3(j);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         fvec(j) = x(j) - BC(j);
     }
@@ -151,7 +151,7 @@ label newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
 }
 
 // Operator to evaluate the Jacobian for the supremizer approach
-label newton_unsteadyNSTTurb_sup::df(const Eigen::VectorXd& x,
+int newton_unsteadyNSTTurb_sup::df(const Eigen::VectorXd& x,
                                      Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup> numDiff(*this);
@@ -160,7 +160,7 @@ label newton_unsteadyNSTTurb_sup::df(const Eigen::VectorXd& x,
 }
 
 
-label newton_unsteadyNSTTurb_sup_t::operator()(const Eigen::VectorXd& t,
+int newton_unsteadyNSTTurb_sup_t::operator()(const Eigen::VectorXd& t,
         Eigen::VectorXd& fvect) const
 {
     // Eigen::VectorXd a_tmp(Nphi_u);
@@ -176,21 +176,21 @@ label newton_unsteadyNSTTurb_sup_t::operator()(const Eigen::VectorXd& t,
     // Mass Term Temperature
     Eigen::VectorXd M8 = problem->MT_matrix * c_dot;
 
-    for (label i = 0; i < Nphi_t; i++)
+    for (int i = 0; i < Nphi_t; i++)
     {
         qq = a_tmp.transpose() * problem->Q_matrix[i] * c_tmp;
         st = nu_c.transpose() * problem->S_matrix[i] * c_tmp;
         fvect(i) = -M8(i) + M6(i) - qq(0, 0) + st(0, 0) / Prt;
     }
 
-    for (label j = 0; j < N_BC_t; j++)
+    for (int j = 0; j < N_BC_t; j++)
     {
         fvect(j) = t(j) - BC_t(j);
     }
 
     return 0;
 }
-label newton_unsteadyNSTTurb_sup_t::df(const Eigen::VectorXd& t,
+int newton_unsteadyNSTTurb_sup_t::df(const Eigen::VectorXd& t,
                                        Eigen::MatrixXd& fjact) const
 {
     Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup_t> numDiff(*this);
@@ -201,7 +201,7 @@ label newton_unsteadyNSTTurb_sup_t::df(const Eigen::VectorXd& t,
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
-        Eigen::MatrixXd& temp_now, label startSnap)
+        Eigen::MatrixXd& temp_now, int startSnap)
 {
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
@@ -210,9 +210,9 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
     z.setZero();
     volScalarField T_IC("T_IC", problem->Tfield[0]);
 
-    for (label j = 0; j < T_IC.boundaryField().size(); j++)
+    for (int j = 0; j < T_IC.boundaryField().size(); j++)
     {
-        for (label i = 0; i < N_BC_t; i++)
+        for (int i = 0; i < N_BC_t; i++)
         {
             if (j == problem->inletIndexT(i, 0))
             {
@@ -229,12 +229,12 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
     z.head(Nphi_t) = ITHACAutilities::getCoeffs(T_IC, Tmodes);
 
     // Change initial condition for the lifting function
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         y(j) = vel_now(j, 0);
     }
 
-    for (label j = 0; j < N_BC_t; j++)
+    for (int j = 0; j < N_BC_t; j++)
     {
         z(j) = temp_now(j, 0);
     }
@@ -251,24 +251,24 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
     newton_object_sup.BC.resize(N_BC);
     newton_object_sup_t.BC_t.resize(N_BC_t);
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         newton_object_sup.BC(j) = vel_now(j, 0);
     }
 
-    for (label j = 0; j < N_BC_t; j++)
+    for (int j = 0; j < N_BC_t; j++)
     {
         newton_object_sup_t.BC_t(j) = temp_now(j, 0);
     }
 
     // Set number of online solutions
-    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
     online_solution.resize(Ntsteps);
     online_solutiont.resize(Ntsteps);
     // Set the initial time
     time = tstart;
     // Counting variable
-    label counter = 0;
+    int counter = 0;
     // Create vector to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
     tmp_sol(0) = time;
@@ -296,19 +296,19 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
         tv.resize(1 + vel_now.size());
         tv[0] = time;
 
-        for (label i = 1; i < tv.size(); i++)
+        for (int i = 1; i < tv.size(); i++)
         {
             tv[i] = vel_now(i - 1);
         }
 
-        for (label i = 0; i < Nphi_nut; i++)
+        for (int i = 0; i < Nphi_nut; i++)
         {
             newton_object_sup.nu_c(i) = problem->rbfsplines[i]->eval(tv);
         }
 
         volScalarField nut_rec("nut_rec", problem->nuTmodes[0] * 0);
 
-        for (label j = 0; j < Nphi_nut; j++)
+        for (int j = 0; j < Nphi_nut; j++)
         {
             nut_rec += problem->nuTmodes[j] * newton_object_sup.nu_c(j);
         }
@@ -321,7 +321,7 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
         rest.setZero();
         hnls.solve(y);
 
-        for (label j = 0; j < N_BC; j++)
+        for (int j = 0; j < N_BC; j++)
         {
             y(j) = vel_now(j, 0);
         }
@@ -329,7 +329,7 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
         newton_object_sup_t.a_tmp = y.head(Nphi_u);
         hnlst.solve(z);
 
-        for (label j = 0; j < N_BC_t; j++)
+        for (int j = 0; j < N_BC_t; j++)
         {
             z(j) = temp_now(j, 0);
         }
@@ -397,23 +397,23 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void ReducedUnsteadyNSTTurb::reconstructSup(fileName folder, label printevery)
+void ReducedUnsteadyNSTTurb::reconstructSup(fileName folder, int printevery)
 {
     mkDir(folder);
     system("ln -s ../../constant " + folder + "/constant");
     system("ln -s ../../0 " + folder + "/0");
     system("ln -s ../../system " + folder + "/system");
-    label counter = 0;
-    label nextwrite = 0;
-    label counter2 = 1;
+    int counter = 0;
+    int nextwrite = 0;
+    int counter2 = 1;
 
-    for (label i = 0; i < online_solution.size(); i++)
+    for (int i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextwrite)
         {
             volVectorField U_rec("U_rec", Umodes[0] * 0);
 
-            for (label j = 0; j < Nphi_u; j++)
+            for (int j = 0; j < Nphi_u; j++)
             {
                 U_rec += Umodes[j] * online_solution[i](j + 1, 0);
             }
@@ -421,7 +421,7 @@ void ReducedUnsteadyNSTTurb::reconstructSup(fileName folder, label printevery)
             ITHACAstream::exportSolution(U_rec,  name(counter2), folder);
             volScalarField P_rec("P_rec", Pmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_p; j++)
+            for (int j = 0; j < Nphi_p; j++)
             {
                 P_rec += Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
             }
@@ -438,23 +438,23 @@ void ReducedUnsteadyNSTTurb::reconstructSup(fileName folder, label printevery)
     }
 }
 
-void ReducedUnsteadyNSTTurb::reconstructSupt(fileName folder, label printevery)
+void ReducedUnsteadyNSTTurb::reconstructSupt(fileName folder, int printevery)
 {
     mkDir(folder);
     system("ln -s ../../constant " + folder + "/constant");
     system("ln -s ../../0 " + folder + "/0");
     system("ln -s ../../system " + folder + "/system");
-    label counter = 0;
-    label nextwrite = 0;
-    label counter2 = 1;
+    int counter = 0;
+    int nextwrite = 0;
+    int counter2 = 1;
 
-    for (label i = 0; i < online_solutiont.size(); i++)
+    for (int i = 0; i < online_solutiont.size(); i++)
     {
         if (counter == nextwrite)
         {
             volScalarField T_rec("T_rec", Tmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_t; j++)
+            for (int j = 0; j < Nphi_t; j++)
             {
                 T_rec += Tmodes[j] * online_solutiont[i](j + 1, 0);
             }

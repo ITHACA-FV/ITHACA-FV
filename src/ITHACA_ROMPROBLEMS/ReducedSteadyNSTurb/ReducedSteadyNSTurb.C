@@ -46,17 +46,17 @@ ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
     Nphi_p = problem->K_matrix.cols();
     nphiNut = problem->cTotalTensor.dimension(1);
 
-    for (label k = 0; k < problem->liftfield.size(); k++)
+    for (int k = 0; k < problem->liftfield.size(); k++)
     {
         Umodes.append(problem->liftfield[k]);
     }
 
-    for (label k = 0; k < problem->NUmodes; k++)
+    for (int k = 0; k < problem->NUmodes; k++)
     {
         Umodes.append(problem->Umodes[k]);
     }
 
-    for (label k = 0; k < problem->NSUPmodes; k++)
+    for (int k = 0; k < problem->NSUPmodes; k++)
     {
         Umodes.append(problem->supmodes[k]);
     }
@@ -65,7 +65,7 @@ ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
                                       fomProblem);
 }
 
-label newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
+int newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
                                      Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd aTmp(Nphi_u);
@@ -86,14 +86,14 @@ label newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
     // Term for penalty method
     if (problem->bcMethod == "penalty")
     {
-        for (label l = 0; l < N_BC; l++)
+        for (int l = 0; l < N_BC; l++)
         {
             penaltyU.col(l) = bc(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
                               aTmp;
         }
     }
 
-    for (label i = 0; i < Nphi_u; i++)
+    for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
                 i) * aTmp - gNut.transpose() *
@@ -106,15 +106,15 @@ label newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
         }
     }
 
-    for (label j = 0; j < Nphi_p; j++)
+    for (int j = 0; j < Nphi_p; j++)
     {
-        label k = j + Nphi_u;
+        int k = j + Nphi_u;
         fvec(k) = m3(j);
     }
 
     if (problem->bcMethod == "lift")
     {
-        for (label j = 0; j < N_BC; j++)
+        for (int j = 0; j < N_BC; j++)
         {
             fvec(j) = x(j) - bc(j);
         }
@@ -123,7 +123,7 @@ label newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
     return 0;
 }
 
-label newtonSteadyNSTurb::df(const Eigen::VectorXd& x,
+int newtonSteadyNSTurb::df(const Eigen::VectorXd& x,
                              Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonSteadyNSTurb> numDiff(*this);
@@ -152,7 +152,7 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     // Change initial condition for the lifting function
     if (problem->bcMethod == "lift")
     {
-        for (label j = 0; j < N_BC; j++)
+        for (int j = 0; j < N_BC; j++)
         {
             y(j) = vel_now(j, 0);
         }
@@ -165,21 +165,21 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     newtonObject.bc.resize(N_BC);
     newtonObject.tauU = tauU;
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         newtonObject.bc(j) = vel_now(j, 0);
     }
 
     if (problem->viscCoeff == "L2")
     {
-        for (label i = 0; i < nphiNut; i++)
+        for (int i = 0; i < nphiNut; i++)
         {
             newtonObject.gNut = problem->nutCoeff;
         }
     }
     else if (problem->viscCoeff == "RBF")
     {
-        for (label i = 0; i < nphiNut; i++)
+        for (int i = 0; i < nphiNut; i++)
         {
             newtonObject.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
             rbfCoeff = newtonObject.gNut;
@@ -216,7 +216,7 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
 
 
 void ReducedSteadyNSTurb::reconstruct(bool exportFields, fileName folder,
-                                      label printevery)
+                                      int printevery)
 {
     if (exportFields)
     {
@@ -224,8 +224,8 @@ void ReducedSteadyNSTurb::reconstruct(bool exportFields, fileName folder,
         ITHACAutilities::createSymLink(folder);
     }
 
-    label counter = 0;
-    label nextWrite = 0;
+    int counter = 0;
+    int nextWrite = 0;
     List <Eigen::MatrixXd> CoeffU;
     List <Eigen::MatrixXd> CoeffP;
     List <Eigen::MatrixXd> CoeffNut;
@@ -233,7 +233,7 @@ void ReducedSteadyNSTurb::reconstruct(bool exportFields, fileName folder,
     CoeffP.resize(0);
     CoeffNut.resize(0);
 
-    for (label i = 0; i < online_solution.size(); i++)
+    for (int i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextWrite)
         {
@@ -277,10 +277,10 @@ Eigen::MatrixXd ReducedSteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (label k = 0; k < problem->inletIndex.rows(); k++)
+    for (int k = 0; k < problem->inletIndex.rows(); k++)
     {
-        label p = problem->inletIndex(k, 0);
-        label l = problem->inletIndex(k, 1);
+        int p = problem->inletIndex(k, 0);
+        int l = problem->inletIndex(k, 1);
         scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
         scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
                            problem->liftfield[k].boundaryField()[p]).component(l) / area;

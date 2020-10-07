@@ -52,92 +52,92 @@ reducedMSR::reducedMSR(msrProblem& FOMproblem)
     loadConstants(problem);
 
     //load the modes function
-    for (label k = 0; k < problem->liftfield.size(); k++)
+    for (int k = 0; k < problem->liftfield.size(); k++)
     {
         Umodes.append(problem->liftfield[k]);
     }
 
-    for (label k = 0; k < problem->NUmodes; k++)
+    for (int k = 0; k < problem->NUmodes; k++)
     {
         Umodes.append(problem->Umodes[k]);
     }
 
-    for (label k = 0; k < problem->NPmodes; k++)
+    for (int k = 0; k < problem->NPmodes; k++)
     {
         Pmodes.append(problem->Pmodes[k]);
     }
 
-    for (label k = 0; k < problem->NFluxmodes; k++)
+    for (int k = 0; k < problem->NFluxmodes; k++)
     {
         Fluxmodes.append(problem->Fluxmodes[k]);
     }
 
-    for (label k = 0; k < Nphi_prec1; k++)
+    for (int k = 0; k < Nphi_prec1; k++)
     {
         Prec1modes.append(problem->Prec1modes[k]);
     }
 
-    for (label k = 0; k < Nphi_prec2; k++)
+    for (int k = 0; k < Nphi_prec2; k++)
     {
         Prec2modes.append(problem->Prec2modes[k]);
     }
 
-    for (label k = 0; k < Nphi_prec3; k++)
+    for (int k = 0; k < Nphi_prec3; k++)
     {
         Prec3modes.append(problem->Prec3modes[k]);
     }
 
-    for (label k = 0; k < Nphi_prec4; k++)
+    for (int k = 0; k < Nphi_prec4; k++)
     {
         Prec4modes.append(problem->Prec4modes[k]);
     }
 
-    for (label k = 0; k < Nphi_prec5; k++)
+    for (int k = 0; k < Nphi_prec5; k++)
     {
         Prec5modes.append(problem->Prec5modes[k]);
     }
 
-    for (label k = 0; k < Nphi_prec6; k++)
+    for (int k = 0; k < Nphi_prec6; k++)
     {
         Prec6modes.append(problem->Prec6modes[k]);
     }
 
-    for (label k = 0; k < Nphi_prec7; k++)
+    for (int k = 0; k < Nphi_prec7; k++)
     {
         Prec7modes.append(problem->Prec7modes[k]);
     }
 
-    for (label k = 0; k < Nphi_prec8; k++)
+    for (int k = 0; k < Nphi_prec8; k++)
     {
         Prec8modes.append(problem->Prec8modes[k]);
     }
 
-    for (label k = 0; k < problem->liftfieldT.size(); k++)
+    for (int k = 0; k < problem->liftfieldT.size(); k++)
     {
         Tmodes.append(problem->liftfieldT[k]);
     }
 
-    for (label k = 0; k < problem->NTmodes; k++)
+    for (int k = 0; k < problem->NTmodes; k++)
     {
         Tmodes.append(problem->Tmodes[k]);
     }
 
-    for (label k = 0; k < Nphi_dec1; k++)
+    for (int k = 0; k < Nphi_dec1; k++)
     {
         Dec1modes.append(problem->Dec1modes[k]);
     }
 
-    for (label k = 0; k < Nphi_dec2; k++)
+    for (int k = 0; k < Nphi_dec2; k++)
     {
         Dec2modes.append(problem->Dec2modes[k]);
     }
 
-    for (label k = 0; k < Nphi_dec3; k++)
+    for (int k = 0; k < Nphi_dec3; k++)
     {
         Dec3modes.append(problem->Dec3modes[k]);
     }
 
-    for (label k = 0; k < Nphi_const; k++)
+    for (int k = 0; k < Nphi_const; k++)
     {
         vmodes.append(problem->vmodes[k]);
         Dmodes.append(problem->Dmodes[k]);
@@ -148,7 +148,7 @@ reducedMSR::reducedMSR(msrProblem& FOMproblem)
     }
 
     //load the snapshots
-    for (label k = 0; k < problem->Ufield.size(); k++)
+    for (int k = 0; k < problem->Ufield.size(); k++)
     {
         Usnapshots.append(problem->Ufield[k]);
         Psnapshots.append(problem->Pfield[k]);
@@ -205,23 +205,23 @@ int newton_msr_fd::operator()(const Eigen::VectorXd& x,
     // BC PPE
     Eigen::VectorXd M7 = problem->BC3_matrix * a_tmp * nu;
 
-    for (label i = 0; i < Nphi_u; i++)
+    for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp;
         fvec(i) =  M1(i) - cc(0, 0) - M2(i);
     }
 
-    label p_fvec = Nphi_u;
+    int p_fvec = Nphi_u;
 
-    for (label i = 0; i < Nphi_p; i++)
+    for (int i = 0; i < Nphi_p; i++)
     {
-        label k = i + p_fvec;
+        int k = i + p_fvec;
         gg = a_tmp.transpose() * problem->G_matrix[i] * a_tmp;
         //bb = a_tmp.transpose() * problem->BC2_matrix[i] * a_tmp;
         fvec(k) =  M3(i, 0) + gg(0, 0) - M7(i, 0);
     }
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         fvec(j) = x(j) - BC(j);
     }
@@ -318,7 +318,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     Eigen::MatrixXd fs7(1, 1);
     Eigen::MatrixXd fs8(1, 1);
 
-    for (label i = 0; i < Nphi_flux; i++)
+    for (int i = 0; i < Nphi_flux; i++)
     {
         lf = d_c.transpose() * problem->LF_matrix[i] * c_tmp;
         pf = nsf_c.transpose() * problem->PF_matrix[i] * c_tmp * (1 - btot);
@@ -328,11 +328,11 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
                        i);
     }
 
-    label pfvecn = Nphi_flux;
+    int pfvecn = Nphi_flux;
 
-    for (label i = 0; i < Nphi_prec1; i++)
+    for (int i = 0; i < Nphi_prec1; i++)
     {
-        label k = i + pfvecn;
+        int k = i + pfvecn;
         pp1 = a_tmp.transpose() * problem->ST1_matrix[i] * d1_tmp;
         fs1 = nsf_c.transpose() * problem->FS1_matrix[i] * c_tmp * b1;
         fvecn(k) = -pp1(0, 0) + P1_1(i) - P2_1(i) + fs1(0, 0);
@@ -340,9 +340,9 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
 
     pfvecn += Nphi_prec1;
 
-    for (label i = 0; i < Nphi_prec2; i++)
+    for (int i = 0; i < Nphi_prec2; i++)
     {
-        label k = i + pfvecn;
+        int k = i + pfvecn;
         pp2 = a_tmp.transpose() * problem->ST2_matrix[i] * d2_tmp;
         fs2 = nsf_c.transpose() * problem->FS2_matrix[i] * c_tmp * b2;
         fvecn(k) = -pp2(0, 0) + P1_2(i) - P2_2(i) + fs2(0, 0);
@@ -350,9 +350,9 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
 
     pfvecn += Nphi_prec2;
 
-    for (label i = 0; i < Nphi_prec3; i++)
+    for (int i = 0; i < Nphi_prec3; i++)
     {
-        label k = i + pfvecn;
+        int k = i + pfvecn;
         pp3 = a_tmp.transpose() * problem->ST3_matrix[i] * d3_tmp;
         fs3 = nsf_c.transpose() * problem->FS3_matrix[i] * c_tmp * b3;
         fvecn(k) = -pp3(0, 0) + P1_3(i) - P2_3(i) + fs3(0, 0);
@@ -360,9 +360,9 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
 
     pfvecn += Nphi_prec3;
 
-    for (label i = 0; i < Nphi_prec4; i++)
+    for (int i = 0; i < Nphi_prec4; i++)
     {
-        label k = i + pfvecn;
+        int k = i + pfvecn;
         pp4 = a_tmp.transpose() * problem->ST4_matrix[i] * d4_tmp;
         fs4 = nsf_c.transpose() * problem->FS4_matrix[i] * c_tmp * b4;
         fvecn(k) = -pp4(0, 0) + P1_4(i) - P2_4(i) + fs4(0, 0);
@@ -370,9 +370,9 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
 
     pfvecn += Nphi_prec4;
 
-    for (label i = 0; i < Nphi_prec5; i++)
+    for (int i = 0; i < Nphi_prec5; i++)
     {
-        label k = i + pfvecn;
+        int k = i + pfvecn;
         pp5 = a_tmp.transpose() * problem->ST5_matrix[i] * d5_tmp;
         fs5 = nsf_c.transpose() * problem->FS5_matrix[i] * c_tmp * b5;
         fvecn(k) = -pp5(0, 0) + P1_5(i) - P2_5(i) + fs5(0, 0);
@@ -380,9 +380,9 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
 
     pfvecn += Nphi_prec5;
 
-    for (label i = 0; i < Nphi_prec6; i++)
+    for (int i = 0; i < Nphi_prec6; i++)
     {
-        label k = i + pfvecn;
+        int k = i + pfvecn;
         pp6 = a_tmp.transpose() * problem->ST6_matrix[i] * d6_tmp;
         fs6 = nsf_c.transpose() * problem->FS6_matrix[i] * c_tmp * b6;
         fvecn(k) = -pp6(0, 0) + P1_6(i) - P2_6(i) + fs6(0, 0);
@@ -390,9 +390,9 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
 
     pfvecn += Nphi_prec6;
 
-    for (label i = 0; i < Nphi_prec7; i++)
+    for (int i = 0; i < Nphi_prec7; i++)
     {
-        label k = i + pfvecn;
+        int k = i + pfvecn;
         pp7 = a_tmp.transpose() * problem->ST7_matrix[i] * d7_tmp;
         fs7 = nsf_c.transpose() * problem->FS7_matrix[i] * c_tmp * b7;
         fvecn(k) = -pp7(0, 0) + P1_7(i) - P2_7(i) + fs7(0, 0);
@@ -400,9 +400,9 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
 
     pfvecn += Nphi_prec7;
 
-    for (label i = 0; i < Nphi_prec8; i++)
+    for (int i = 0; i < Nphi_prec8; i++)
     {
-        label k = i + pfvecn;
+        int k = i + pfvecn;
         pp8 = a_tmp.transpose() * problem->ST8_matrix[i] * d8_tmp;
         fs8 = nsf_c.transpose() * problem->FS8_matrix[i] * c_tmp * b8;
         fvecn(k) = -pp8(0, 0) + P1_8(i) - P2_8(i) + fs8(0, 0);
@@ -461,7 +461,7 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
     Eigen::MatrixXd dfs2(1, 1);
     Eigen::MatrixXd dfs3(1, 1);
 
-    for (label i = 0; i < Nphi_T; i++)
+    for (int i = 0; i < Nphi_T; i++)
     {
         tt = a_tmp.transpose() * problem->TS_matrix[i] * e_tmp;
         xsf = txs_c.transpose() * problem->TXS_matrix[i] * c_tmp * ((1 - dbtot) / cp);
@@ -471,11 +471,11 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
         fvect(i) = -tt(0, 0) + T1(i) + xsf(0, 0) + dhs1(0, 0) + dhs2(0, 0) + dhs3(0, 0);
     }
 
-    label pfvect = Nphi_T;
+    int pfvect = Nphi_T;
 
-    for (label i = 0; i < Nphi_dec1; i++)
+    for (int i = 0; i < Nphi_dec1; i++)
     {
-        label k = i + pfvect;
+        int k = i + pfvect;
         dh1 = a_tmp.transpose() * problem->SD1_matrix[i] * f1_tmp;
         dfs1 = sp_c.transpose() * problem->DFS1_matrix[i] * c_tmp * db1;
         fvect(k) = -dh1(0, 0) + DH1_1(i) - DH2_1(i) + dfs1(0, 0);
@@ -483,9 +483,9 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
 
     pfvect += Nphi_dec1;
 
-    for (label i = 0; i < Nphi_dec2; i++)
+    for (int i = 0; i < Nphi_dec2; i++)
     {
-        label k = i + pfvect;
+        int k = i + pfvect;
         dh2 = a_tmp.transpose() * problem->SD2_matrix[i] * f2_tmp;
         dfs2 = sp_c.transpose() * problem->DFS2_matrix[i] * c_tmp * db2;
         fvect(k) = -dh2(0, 0) + DH1_2(i) - DH2_2(i) + dfs2(0, 0);
@@ -493,15 +493,15 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
 
     pfvect += Nphi_dec2;
 
-    for (label i = 0; i < Nphi_dec3; i++)
+    for (int i = 0; i < Nphi_dec3; i++)
     {
-        label k = i + pfvect;
+        int k = i + pfvect;
         dh3 = a_tmp.transpose() * problem->SD3_matrix[i] * f3_tmp;
         dfs3 = sp_c.transpose() * problem->DFS3_matrix[i] * c_tmp * db3;
         fvect(k) = -dh3(0, 0) + DH1_3(i) - DH2_3(i) + dfs3(0, 0);
     }
 
-    for (label i = 0; i < N_BCt; i++)
+    for (int i = 0; i < N_BCt; i++)
     {
         fvect(i) = t(i) - BCt(i);
     }
@@ -530,17 +530,17 @@ void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
     z.resize(Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3, 1);
     z.setZero();
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         y(j) = vel_now(j, 0);
     }
 
-    for (label j = 0; j < N_BCt; j++)
+    for (int j = 0; j < N_BCt; j++)
     {
         z(j) = temp_now(j, 0);
     }
 
-    for (label i = 0; i < Nphi_const; i++)
+    for (int i = 0; i < Nphi_const; i++)
     {
         newton_object_n.d_c(i) = problem->rbfsplines_D[i]->eval(mu_online);
         newton_object_n.nsf_c(i) = problem->rbfsplines_NSF[i]->eval(mu_online);
@@ -566,7 +566,7 @@ void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
     Eigen::HybridNonLinearSolver<newton_msr_t> hnls_t(newton_object_t);
     newton_object_fd.BC.resize(N_BC);
 
-    for (label j = 0; j < N_BC; j++)
+    for (int j = 0; j < N_BC; j++)
     {
         newton_object_fd.BC(j) = vel_now(j, 0);
     }
@@ -602,7 +602,7 @@ void reducedMSR::solveOnline(Eigen::MatrixXd vel_now, Eigen::MatrixXd temp_now,
     newton_object_t.dbtot = dbtot;
     newton_object_t.BCt.resize(N_BCt);
 
-    for (label j = 0; j < N_BCt; j++)
+    for (int j = 0; j < N_BCt; j++)
     {
         newton_object_t.BCt(j) = temp_now(j, 0);
     }
@@ -716,13 +716,13 @@ void reducedMSR::reconstruct_fd(fileName folder, int printevery)
     int nextwrite = 0;
     int counter2 = 1;
 
-    for (label i = 0; i < online_solution_fd.size(); i++)
+    for (int i = 0; i < online_solution_fd.size(); i++)
     {
         if (counter == nextwrite)
         {
             volVectorField U_rec("U", Umodes[0] * 0);
 
-            for (label j = 0; j < Nphi_u; j++)
+            for (int j = 0; j < Nphi_u; j++)
             {
                 U_rec += Umodes[j] * online_solution_fd[i](j + 1, 0);
             }
@@ -730,7 +730,7 @@ void reducedMSR::reconstruct_fd(fileName folder, int printevery)
             ITHACAstream::exportSolution(U_rec,  name(counter2), folder);
             volScalarField P_rec("p", Pmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_p; j++)
+            for (int j = 0; j < Nphi_p; j++)
             {
                 P_rec += Pmodes[j] * online_solution_fd[i](j + Nphi_u + 1, 0);
             }
@@ -761,22 +761,22 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
     int nextwrite = 0;
     int counter2 = 1;
 
-    for (label i = 0; i < online_solution_fd.size(); i++)
+    for (int i = 0; i < online_solution_fd.size(); i++)
     {
         if (counter == nextwrite)
         {
             volScalarField Flux_rec("flux", Fluxmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_flux; j++)
+            for (int j = 0; j < Nphi_flux; j++)
             {
                 Flux_rec += Fluxmodes[j] * online_solution_n[i](j + 1, 0);
             }
 
             ITHACAstream::exportSolution(Flux_rec,  name(counter2), folder);
-            label pos = Nphi_flux;
+            int pos = Nphi_flux;
             volScalarField Prec1_rec("prec1", Prec1modes[0] * 0);
 
-            for (label j = 0; j < Nphi_prec1; j++)
+            for (int j = 0; j < Nphi_prec1; j++)
             {
                 Prec1_rec += Prec1modes[j] * online_solution_n[i](j + pos + 1, 0);
             }
@@ -785,7 +785,7 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
             pos += Nphi_prec1;
             volScalarField Prec2_rec("prec2", Prec2modes[0] * 0);
 
-            for (label j = 0; j < Nphi_prec2; j++)
+            for (int j = 0; j < Nphi_prec2; j++)
             {
                 Prec2_rec += Prec2modes[j] * online_solution_n[i](j + pos + 1, 0);
             }
@@ -794,7 +794,7 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
             pos += Nphi_prec2;
             volScalarField Prec3_rec("prec3", Prec3modes[0] * 0);
 
-            for (label j = 0; j < Nphi_prec3; j++)
+            for (int j = 0; j < Nphi_prec3; j++)
             {
                 Prec3_rec += Prec3modes[j] * online_solution_n[i](j + pos + 1, 0);
             }
@@ -803,7 +803,7 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
             pos += Nphi_prec3;
             volScalarField Prec4_rec("prec4", Prec4modes[0] * 0);
 
-            for (label j = 0; j < Nphi_prec4; j++)
+            for (int j = 0; j < Nphi_prec4; j++)
             {
                 Prec4_rec += Prec4modes[j] * online_solution_n[i](j + pos + 1, 0);
             }
@@ -812,7 +812,7 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
             pos += Nphi_prec4;
             volScalarField Prec5_rec("prec5", Prec5modes[0] * 0);
 
-            for (label j = 0; j < Nphi_prec5; j++)
+            for (int j = 0; j < Nphi_prec5; j++)
             {
                 Prec5_rec += Prec5modes[j] * online_solution_n[i](j + pos + 1, 0);
             }
@@ -821,7 +821,7 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
             pos += Nphi_prec5;
             volScalarField Prec6_rec("prec6", Prec6modes[0] * 0);
 
-            for (label j = 0; j < Nphi_prec6; j++)
+            for (int j = 0; j < Nphi_prec6; j++)
             {
                 Prec6_rec += Prec6modes[j] * online_solution_n[i](j + pos + 1, 0);
             }
@@ -830,7 +830,7 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
             pos += Nphi_prec6;
             volScalarField Prec7_rec("prec7", Prec7modes[0] * 0);
 
-            for (label j = 0; j < Nphi_prec7; j++)
+            for (int j = 0; j < Nphi_prec7; j++)
             {
                 Prec7_rec += Prec7modes[j] * online_solution_n[i](j + pos + 1, 0);
             }
@@ -839,7 +839,7 @@ void reducedMSR::reconstruct_n(fileName folder, int printevery)
             pos += Nphi_prec7;
             volScalarField Prec8_rec("prec8", Prec8modes[0] * 0);
 
-            for (label j = 0; j < Nphi_prec8; j++)
+            for (int j = 0; j < Nphi_prec8; j++)
             {
                 Prec8_rec += Prec8modes[j] * online_solution_n[i](j + pos + 1, 0);
             }
@@ -880,23 +880,23 @@ void reducedMSR::reconstruct_t(fileName folder, int printevery)
     dimensionedScalar decLam2("decLam2", dimensionSet(0, 0, -1, 0, 0, 0, 0), dl2);
     dimensionedScalar decLam3("decLam3", dimensionSet(0, 0, -1, 0, 0, 0, 0), dl3);
 
-    for (label i = 0; i < online_solution_t.size(); i++)
+    for (int i = 0; i < online_solution_t.size(); i++)
     {
         if (counter == nextwrite)
         {
             volScalarField T_rec("T", Tmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_T; j++)
+            for (int j = 0; j < Nphi_T; j++)
             {
                 T_rec += Tmodes[j] * online_solution_t[i](j + 1, 0);
             }
 
             ITHACAstream::exportSolution(T_rec,  name(counter2), folder);
-            label pos = Nphi_T;
+            int pos = Nphi_T;
             volScalarField PowerDens_rec("powerDens", Dec1modes[0] * 0 * decLam1);
             volScalarField Dec1_rec("dec1", Dec1modes[0] * 0);
 
-            for (label j = 0; j < Nphi_dec1; j++)
+            for (int j = 0; j < Nphi_dec1; j++)
             {
                 Dec1_rec += Dec1modes[j] * online_solution_t[i](j + pos + 1, 0);
                 PowerDens_rec += Dec1modes[j] * online_solution_t[i](j + pos + 1, 0) * decLam1;
@@ -906,7 +906,7 @@ void reducedMSR::reconstruct_t(fileName folder, int printevery)
             pos += Nphi_dec1;
             volScalarField Dec2_rec("dec2", Dec2modes[0] * 0);
 
-            for (label j = 0; j < Nphi_dec2; j++)
+            for (int j = 0; j < Nphi_dec2; j++)
             {
                 Dec2_rec += Dec2modes[j] * online_solution_t[i](j + pos + 1, 0);
                 PowerDens_rec += Dec2modes[j] * online_solution_t[i](j + pos + 1, 0) * decLam2;
@@ -916,7 +916,7 @@ void reducedMSR::reconstruct_t(fileName folder, int printevery)
             pos += Nphi_dec2;
             volScalarField Dec3_rec("dec3", Dec3modes[0] * 0);
 
-            for (label j = 0; j < Nphi_dec3; j++)
+            for (int j = 0; j < Nphi_dec3; j++)
             {
                 Dec3_rec += Dec3modes[j] * online_solution_t[i](j + pos + 1, 0);
                 PowerDens_rec += Dec3modes[j] * online_solution_t[i](j + pos + 1, 0) * decLam3;
@@ -953,22 +953,22 @@ void reducedMSR::reconstruct_C(fileName folder, int printevery)
     int nextwrite = 0;
     int counter2 = 1;
 
-    for (label i = 0; i < online_solution_C.size(); i++)
+    for (int i = 0; i < online_solution_C.size(); i++)
     {
         if (counter == nextwrite)
         {
             volScalarField v_rec("v", vmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_const; j++)
+            for (int j = 0; j < Nphi_const; j++)
             {
                 v_rec += vmodes[j] * online_solution_C[i](j + 1, 0);
             }
 
             ITHACAstream::exportSolution(v_rec,  name(counter2), folder);
-            label pos = Nphi_const;
+            int pos = Nphi_const;
             volScalarField D_rec("D", Dmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_const; j++)
+            for (int j = 0; j < Nphi_const; j++)
             {
                 D_rec += Dmodes[j] * online_solution_C[i](j + pos + 1, 0);
             }
@@ -977,7 +977,7 @@ void reducedMSR::reconstruct_C(fileName folder, int printevery)
             pos += Nphi_const;
             volScalarField NSF_rec("NSF", NSFmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_const; j++)
+            for (int j = 0; j < Nphi_const; j++)
             {
                 NSF_rec += NSFmodes[j] * online_solution_C[i](j + pos + 1, 0);
             }
@@ -986,7 +986,7 @@ void reducedMSR::reconstruct_C(fileName folder, int printevery)
             pos += Nphi_const;
             volScalarField A_rec("A", Amodes[0] * 0);
 
-            for (label j = 0; j < Nphi_const; j++)
+            for (int j = 0; j < Nphi_const; j++)
             {
                 A_rec += Amodes[j] * online_solution_C[i](j + pos + 1, 0);
             }
@@ -995,7 +995,7 @@ void reducedMSR::reconstruct_C(fileName folder, int printevery)
             pos += Nphi_const;
             volScalarField SP_rec("SP", SPmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_const; j++)
+            for (int j = 0; j < Nphi_const; j++)
             {
                 SP_rec += SPmodes[j] * online_solution_C[i](j + pos + 1, 0);
             }
@@ -1004,7 +1004,7 @@ void reducedMSR::reconstruct_C(fileName folder, int printevery)
             pos += Nphi_const;
             volScalarField TXS_rec("TXS", TXSmodes[0] * 0);
 
-            for (label j = 0; j < Nphi_const; j++)
+            for (int j = 0; j < Nphi_const; j++)
             {
                 TXS_rec += TXSmodes[j] * online_solution_C[i](j + pos + 1, 0);
             }

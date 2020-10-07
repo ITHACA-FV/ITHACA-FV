@@ -45,12 +45,12 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
     problem(&FOMproblem)
 {
     // Create a new Umodes set where the first ones are the lift functions
-    for (label i = 0; i < problem->inletIndex.rows(); i++)
+    for (int i = 0; i < problem->inletIndex.rows(); i++)
     {
         ULmodes.append(problem->liftfield[i]);
     }
 
-    for (label i = 0; i < problem->Umodes.size(); i++)
+    for (int i = 0; i < problem->Umodes.size(); i++)
     {
         ULmodes.append(problem->Umodes.toPtrList()[i]);
     }
@@ -60,22 +60,22 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
 
 
 void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
-        label NmodesUproj, label NmodesPproj, label NmodesNut, label NmodesSup,
+        int NmodesUproj, int NmodesPproj, int NmodesNut, int NmodesSup,
         word Folder)
 {
     ULmodes.resize(0);
 
-    for (label i = 0; i < problem->inletIndex.rows(); i++)
+    for (int i = 0; i < problem->inletIndex.rows(); i++)
     {
         ULmodes.append(problem->liftfield[i]);
     }
 
-    for (label i = 0; i < NmodesUproj; i++)
+    for (int i = 0; i < NmodesUproj; i++)
     {
         ULmodes.append(problem->Umodes.toPtrList()[i]);
     }
 
-    for (label i = 0; i < NmodesSup; i++)
+    for (int i = 0; i < NmodesSup; i++)
     {
         ULmodes.append(problem->supmodes.toPtrList()[i]);
     }
@@ -132,7 +132,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     ULmodes.reconstruct(U, a, "U");
     problem->Pmodes.reconstruct(P, b, "p");
     phi = fvc::interpolate(U) & U.mesh().Sf();
-    label iter = 0;
+    int iter = 0;
     simpleControl& simple = problem->_simple();
 
     if (ITHACAutilities::isTurbulent())
@@ -140,7 +140,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
         Eigen::MatrixXd nutCoeff;
         nutCoeff.resize(NmodesNut, 1);
 
-        for (label i = 0; i < NmodesNut; i++)
+        for (int i = 0; i < NmodesNut; i++)
         {
             Eigen::MatrixXd muEval;
             muEval.resize(1, 1);
@@ -156,7 +156,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
 
     PtrList<volVectorField> gradModP;
 
-    for (label i = 0; i < NmodesPproj; i++)
+    for (int i = 0; i < NmodesPproj; i++)
     {
         gradModP.append(fvc::grad(problem->Pmodes[i]));
     }
@@ -294,10 +294,10 @@ void reducedSimpleSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (label k = 0; k < problem->inletIndex.rows(); k++)
+    for (int k = 0; k < problem->inletIndex.rows(); k++)
     {
-        label p = problem->inletIndex(k, 0);
-        label l = problem->inletIndex(k, 1);
+        int p = problem->inletIndex(k, 0);
+        int l = problem->inletIndex(k, 1);
         scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
         scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
                            problem->liftfield[k].boundaryField()[p]).component(l) / area;

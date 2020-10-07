@@ -74,7 +74,7 @@ Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys,
              || solverType == "jacobiSvd", "solver not defined");
     Eigen::MatrixXd y;
 
-    for (label i = 0; i < bc.size(); i++)
+    for (int i = 0; i < bc.size(); i++)
     {
         LinSys[0].row(i) *= 0;
         LinSys[0](i, i) = 1;
@@ -156,13 +156,13 @@ Eigen::MatrixXd onlineInterp::getInterpCoeffRBF(std::vector<SPLINTER::RBFSpline>
 {
     M_Assert(mu_interp.cols() == Nmu_samples,
              "Matrix 'mu_interp' must have same number and order of columns (i.e. parameters) as the matrix 'mu_samples'.");
-    label Nmodes = rbfVec.size();
+    int Nmodes = rbfVec.size();
     // Nsamples (snapshots) to evaluate the interpolator at
-    label Nsamples = mu_interp.rows();
+    int Nsamples = mu_interp.rows();
     Eigen::MatrixXd muInterpRefined(mu_interp.rows(), 0);
 
     // Discard columns of mu_interp that have constant value for all elements, and use a refined matrix muInterpRefined
-    for (label i = 0; i < mu_interp.cols(); i++)
+    for (int i = 0; i < mu_interp.cols(); i++)
     {
         double firstVal = mu_interp(0, i);
         bool isConst = (mu_interp.col(i).array() == firstVal).all();
@@ -176,16 +176,16 @@ Eigen::MatrixXd onlineInterp::getInterpCoeffRBF(std::vector<SPLINTER::RBFSpline>
         }
     }
 
-    label Nmu = muInterpRefined.cols();
+    int Nmu = muInterpRefined.cols();
     Eigen::MatrixXd coeff_interp(Nmodes, Nsamples);
 
-    for (label i = 0; i < Nmodes; i++)
+    for (int i = 0; i < Nmodes; i++)
     {
-        for (label j = 0; j < Nsamples; j++)
+        for (int j = 0; j < Nsamples; j++)
         {
             SPLINTER::DenseVector x(Nmu);
 
-            for (label k = 0; k < Nmu; k++)
+            for (int k = 0; k < Nmu; k++)
             {
                 x(k) = muInterpRefined(j, k);
             }
@@ -203,13 +203,13 @@ Eigen::MatrixXd onlineInterp::getInterpCoeffSPL(std::vector<SPLINTER::BSpline>
 {
     M_Assert(mu_interp.cols() == Nmu_samples,
              "Matrix 'mu_interp' must have same number and order of columns (i.e. parametes) as the matrix 'mu_samples'.");
-    label Nmodes = splVec.size();
+    int Nmodes = splVec.size();
     // Nsamples (snapshots) to evaluate the interpolator at
-    label Nsamples = mu_interp.rows();
+    int Nsamples = mu_interp.rows();
     Eigen::MatrixXd muInterpRefined(mu_interp.rows(), 0);
 
     // Discard columns of mu_interp that have constant value for all elements, and use a refined matrix muInterpRefined
-    for (label i = 0; i < mu_interp.cols(); i++)
+    for (int i = 0; i < mu_interp.cols(); i++)
     {
         double firstVal = mu_interp(0, i);
         bool isConst = (mu_interp.col(i).array() == firstVal).all();
@@ -223,16 +223,16 @@ Eigen::MatrixXd onlineInterp::getInterpCoeffSPL(std::vector<SPLINTER::BSpline>
         }
     }
 
-    label Nmu = muInterpRefined.cols();
+    int Nmu = muInterpRefined.cols();
     Eigen::MatrixXd coeff_interp(Nmodes, Nsamples);
 
-    for (label i = 0; i < Nmodes; i++)
+    for (int i = 0; i < Nmodes; i++)
     {
-        for (label j = 0; j < Nsamples; j++)
+        for (int j = 0; j < Nsamples; j++)
         {
             SPLINTER::DenseVector x(Nmu);
 
-            for (label k = 0; k < Nmu; k++)
+            for (int k = 0; k < Nmu; k++)
             {
                 x(k) = muInterpRefined(j, k);
             }
