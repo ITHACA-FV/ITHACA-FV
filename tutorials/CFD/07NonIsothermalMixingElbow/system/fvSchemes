@@ -1,0 +1,138 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.1                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default                            backward;
+}
+
+gradSchemes
+{
+    default                            Gauss linear;
+}
+
+divSchemes
+{
+    default                             none;
+    div(phi,U)                          Gauss linearUpwind grad(U);
+    div(phi,T)                          Gauss upwind;
+    div((nuEff*dev2(T(grad(U)))))       Gauss linear;
+    //div(phi,U)                          Gauss linearUpwind grad(U);
+    div((nuEff*dev(T(grad(U)))))        Gauss linear;
+    div((nuEff*dev2(T(grad(U)))))       Gauss linear;
+    div((nuEff*dev2(T(grad(Ua)))))      Gauss linear;
+    div((interpolate(U)&S),U)           Gauss linearUpwind grad(U);
+    div((interpolate(U)&S),Usup)        Gauss linearUpwind grad(Usup);
+    div((interpolate(U)&S),Ulift0)      Gauss linearUpwind grad(Ulift0);
+    div((interpolate(Usup)&S),U)        Gauss linearUpwind grad(U);
+    div((interpolate(Usup)&S),Usup)     Gauss linearUpwind grad(Usup);
+    div((interpolate(Usup)&S),Ulift0)   Gauss linearUpwind grad(Ulift0);
+    div((interpolate(Ulift0)&S),U)      Gauss linearUpwind grad(U);
+    div((interpolate(Ulift0)&S),Usup)   Gauss linearUpwind grad(Usup);
+    div((interpolate(Ulift0)&S),Ulift0) Gauss linearUpwind grad(Ulift0);
+    div((interpolate(Ulift0)&S),Ulift1) Gauss linearUpwind grad(Ulift1);
+    div((interpolate(Ulift1)&S),Ulift0) Gauss linearUpwind grad(Ulift0);
+    div((interpolate(Ulift1)&S),Usup)   Gauss linearUpwind grad(Usup);
+    div((interpolate(Ulift1)&S),Ulift1) Gauss linearUpwind grad(Ulift1);
+    div((interpolate(Ulift1)&S),U)      Gauss linearUpwind grad(U);
+    div((interpolate(U)&S),Ulift1)      Gauss linearUpwind grad(Ulift1);
+    div((interpolate(Usup)&S),Ulift1)   Gauss linearUpwind grad(Ulift1);
+    div((interpolate(Ulift0)&S),Tlift0) Gauss upwind;
+    div((interpolate(Ulift0)&S),Tlift1) Gauss upwind;
+    div((interpolate(Ulift1)&S),Tlift0) Gauss upwind;
+    div((interpolate(Ulift1)&S),Tlift1) Gauss upwind;
+    div((interpolate(Usup)&S),Tlift0)   Gauss upwind;
+    div((interpolate(Usup)&S),Tlift1)   Gauss upwind;
+    div((interpolate(Ulift0)&S),T)      Gauss upwind;
+    div((interpolate(Ulift1)&S),T)      Gauss upwind;
+    div((interpolate(Usup)&S),T)        Gauss upwind;
+    div((interpolate(U)&S),Tlift0)      Gauss upwind;
+    div((interpolate(U)&S),Tlift1)      Gauss upwind;
+    div((interpolate(U)&S),T)           Gauss upwind;
+    div((interpolate(Ulift0)&S),Tlift2) Gauss upwind;
+    div((interpolate(Ulift1)&S),Tlift2) Gauss upwind;
+    div((interpolate(Usup)&S),Tlift2)   Gauss upwind;
+    div((interpolate(U)&S),Tlift2)      Gauss upwind;
+    div((interpolate(Ulift0)&S),Tlift3) Gauss upwind;
+    div((interpolate(Ulift1)&S),Tlift3) Gauss upwind;
+    div((interpolate(Ulift2)&S),Tlift3) Gauss upwind;
+    div((interpolate(Usup)&S),Tlift3)   Gauss upwind;
+    div((interpolate(U)&S),Tlift3)      Gauss upwind;
+    
+    div(Ulift0)                         Gauss linear;
+    div(Ulift1)                         Gauss linear;
+    div(Usup)                           Gauss linear;
+    div(U)                              Gauss linear;
+    div(phi,Tlift0)                     Gauss upwind;
+    div(phi,Tlift1)                     Gauss upwind;
+    div(phi,Tlift2)                     Gauss upwind;
+    div(phi,Tlift3)                     Gauss upwind;
+}
+
+
+
+
+laplacianSchemes
+{
+    default                            Gauss linear corrected;
+    laplacian(nu,U)                    Gauss linear corrected;
+    laplacian((1|A(U)),p) 	           Gauss linear corrected;
+    laplacian(nu,Phi)                  Gauss linear corrected;
+    laplacian(DT,T)                    Gauss linear corrected;
+    laplacian(nuEff,U)                 Gauss linear corrected;
+    laplacian(DT,Tlift0)               Gauss linear corrected;
+    laplacian(DT,Tlift1)               Gauss linear corrected;
+    laplacian(DT,Tlift2)               Gauss linear corrected;  
+    laplacian(DT,Tlift3)               Gauss linear corrected;
+    laplacian(1,Phi)                   Gauss linear corrected;
+    laplacian(nu_fake,Usup)            Gauss linear corrected;
+    laplacian(1,Ulift0)                Gauss linear corrected;
+    laplacian(1,Ulift1)                Gauss linear corrected;
+    laplacian(1,Tlift0)                Gauss linear corrected;
+    laplacian(1,Tlift1)                Gauss linear corrected; 
+    laplacian(1,U)                     Gauss linear corrected;
+    laplacian(1,Usup)                  Gauss linear corrected;
+    laplacian(Tlift0)                  Gauss linear corrected;
+    laplacian(Tlift1)                  Gauss linear corrected;
+    laplacian(Tlift2)                  Gauss linear corrected;
+    laplacian(Tlift3)                  Gauss linear corrected;
+    laplacian(DT,Tlift2)               Gauss linear corrected;
+    laplacian(DT,Tlift3)               Gauss linear corrected;
+    laplacian(T)                       Gauss linear corrected;
+}
+
+
+interpolationSchemes
+{
+    default                           linear;
+}
+
+snGradSchemes
+{
+    default                           corrected;
+}
+
+fluxRequired
+{
+    default                           no;
+    p;
+    Phi;
+}
+
+
+
+// ************************************************************************* //
