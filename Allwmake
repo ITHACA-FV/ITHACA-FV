@@ -95,6 +95,7 @@ cd ..
 
 cd tutorials
 if [[ $tutorial_flag == 'true' ]]; then
+cd CFD
 for d in ./*/ ; do   
     echo $d    
     cd $d
@@ -108,6 +109,22 @@ for d in ./*/ ; do
     fi
     cd ../
 done
+cd ../
+if [[ $muq_flag == 'true' ]]; then  
+for d in ./*/ ; do   
+    echo $d    
+    cd $d
+    if [ -f "Make/files" ]; then
+    wmake $parallel_flag 
+     if [ $? -ne 0 ]
+     then
+      echo $d "did not compile"
+      exit 1
+     fi
+    fi
+    cd ../
+done
+fi
 fi
 cd ..
 
