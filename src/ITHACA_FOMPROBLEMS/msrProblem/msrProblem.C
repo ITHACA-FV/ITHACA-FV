@@ -1050,9 +1050,9 @@ List<Eigen::MatrixXd> msrProblem::abs_flux(label NFluxmodes, label NCmodes)
 }
 
 Eigen::MatrixXd msrProblem::prec_source(label NFluxmodes, label NPrecmodes,
-                                        int family)
+                                        label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label PS1size = NFluxmodes;
     label PS2size = NPrecmodes;
@@ -1075,9 +1075,9 @@ Eigen::MatrixXd msrProblem::prec_source(label NFluxmodes, label NPrecmodes,
 // * * * * * * * * * * * * * * Precursor Eq. Methods * * * * * * * * * * * * * //
 
 List<Eigen::MatrixXd> msrProblem::stream_term(label NUmodes, label NPrecmodes,
-        int family)
+        label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label ST1size = NPrecmodes; //Qsizet
     label ST2size = NUmodes + liftfield.size();
@@ -1125,9 +1125,9 @@ List<Eigen::MatrixXd> msrProblem::stream_term(label NUmodes, label NPrecmodes,
     return ST_matrix;
 }
 
-Eigen::MatrixXd msrProblem::prec_mass(label NPrecmodes, int family)
+Eigen::MatrixXd msrProblem::prec_mass(label NPrecmodes, label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label MPsize = NPrecmodes;
     Eigen::MatrixXd MP_matrix;
@@ -1146,9 +1146,9 @@ Eigen::MatrixXd msrProblem::prec_mass(label NPrecmodes, int family)
     return MP_matrix;
 }
 
-Eigen::MatrixXd msrProblem::laplacian_prec(label NPrecmodes, int family)
+Eigen::MatrixXd msrProblem::laplacian_prec(label NPrecmodes, label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label LPsize = NPrecmodes;
     Eigen::MatrixXd LP_matrix;
@@ -1168,9 +1168,9 @@ Eigen::MatrixXd msrProblem::laplacian_prec(label NPrecmodes, int family)
 }
 
 List<Eigen::MatrixXd> msrProblem::flux_source(label NFluxmodes,
-        label NPrecmodes, label NCmodes, int family)
+        label NPrecmodes, label NCmodes, label family)
 {
-    int p = family;
+    label p = family;
     PtrList<volScalarField> Precmodes = choose_group("prec", p);
     label FSsize = NPrecmodes;
     List<Eigen::MatrixXd> FS_matrix;
@@ -1206,9 +1206,9 @@ List<Eigen::MatrixXd> msrProblem::flux_source(label NFluxmodes,
 
 
 List<Eigen::MatrixXd> msrProblem::stream_dec(label NUmodes, label NDecmodes,
-        int decgroup)
+        label decgroup)
 {
-    int g = decgroup;
+    label g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label SD1size = NDecmodes; //Qsizet
     label SD2size = NUmodes + liftfield.size();
@@ -1256,9 +1256,9 @@ List<Eigen::MatrixXd> msrProblem::stream_dec(label NUmodes, label NDecmodes,
     return SD_matrix;
 }
 
-Eigen::MatrixXd msrProblem::dec_mass(label NDecmodes, int decgroup)
+Eigen::MatrixXd msrProblem::dec_mass(label NDecmodes, label decgroup)
 {
-    int g = decgroup;
+    label g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label MDsize = NDecmodes;
     Eigen::MatrixXd MD_matrix;
@@ -1278,9 +1278,9 @@ Eigen::MatrixXd msrProblem::dec_mass(label NDecmodes, int decgroup)
 }
 
 
-Eigen::MatrixXd msrProblem::laplacian_dec(label NDecmodes, int decgroup)
+Eigen::MatrixXd msrProblem::laplacian_dec(label NDecmodes, label decgroup)
 {
-    int g = decgroup;
+    label g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label LDsize = NDecmodes;
     Eigen::MatrixXd LD_matrix;
@@ -1301,9 +1301,9 @@ Eigen::MatrixXd msrProblem::laplacian_dec(label NDecmodes, int decgroup)
 }
 
 List<Eigen::MatrixXd> msrProblem::dec_fluxsource(label NFluxmodes,
-        label NDecmodes, label NCmodes, int decgroup)
+        label NDecmodes, label NCmodes, label decgroup)
 {
-    int g = decgroup;
+    label g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label DFSsize = NDecmodes;
     List<Eigen::MatrixXd> DFS_matrix;
@@ -1532,9 +1532,9 @@ List<Eigen::MatrixXd> msrProblem::temp_XSfluxsource(label NTmodes,
 }
 
 List<Eigen::MatrixXd> msrProblem::temp_heatsource(label NTmodes,
-        label NDecmodes, label NCmodes, int decgroup)
+        label NDecmodes, label NCmodes, label decgroup)
 {
-    int  g = decgroup;
+    label  g = decgroup;
     PtrList<volScalarField> Decmodes = choose_group("dec", g);
     label THSsize = NTmodes + liftfieldT.size();
     List<Eigen::MatrixXd> THS_matrix;
@@ -1791,7 +1791,7 @@ void msrProblem::change_viscosity(double mu)
     }
 }
 
-void msrProblem::msrcoeff(int& NC)
+void msrProblem::msrcoeff(label& NC)
 {
     NCmodes = NC;
     Eigen::MatrixXd Ncoeff_v = ITHACAutilities::getCoeffs(vFields, vmodes);

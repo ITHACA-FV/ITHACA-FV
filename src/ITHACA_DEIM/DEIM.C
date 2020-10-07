@@ -197,7 +197,7 @@ PtrList<S> DEIM<T>::generateSubmeshes(int layers, fvMesh& mesh, S field,
 {
     fvMeshSubset* submesh;
     PtrList<S> fields;
-    List<int> indices;
+    List<label> indices;
     volScalarField Indici
     (
         IOobject
@@ -264,7 +264,7 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
 {
     fvMeshSubset* submesh;
     PtrList<S> fieldsA;
-    List<int> indices;
+    List<label> indices;
     volScalarField Indici
     (
         IOobject
@@ -345,7 +345,7 @@ PtrList<S> DEIM<T>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
         int secondTime)
 {
     fvMeshSubset* submesh;
-    List<int> indices;
+    List<label> indices;
     PtrList<S> fieldsB;
     volScalarField Indici
     (

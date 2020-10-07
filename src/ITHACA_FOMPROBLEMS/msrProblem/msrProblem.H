@@ -561,7 +561,7 @@ class msrProblem: public reductionProblem
 
         /// method to apply RBF interpolation procedure
         /// NC is the number of modes to adopt for construncting the basis
-        void msrcoeff(int& NC);
+        void msrcoeff(label& NC);
         //----------------------------------------------------------------------------------
 
         /// Perform a lift solve for the velocity field
@@ -640,7 +640,7 @@ class msrProblem: public reductionProblem
         Eigen::MatrixXd mass_flux(label NFluxmodes);
         List<Eigen::MatrixXd> prod_flux(label NFluxmodes, label NCmodes);
         List<Eigen::MatrixXd> abs_flux(label NFluxmodes, label NCmodes);
-        Eigen::MatrixXd prec_source(label NFluxmodes, label NPrecmodes, int family);
+        Eigen::MatrixXd prec_source(label NFluxmodes, label NPrecmodes, label family);
 
         /// precursor eq. methods:
         List<Eigen::MatrixXd> stream_term(label NUmodes, label NPrecmodes,
@@ -648,21 +648,22 @@ class msrProblem: public reductionProblem
         Eigen::MatrixXd prec_mass(label NPrecmodes, label family);
         Eigen::MatrixXd laplacian_prec(label NPrecmodes, label family);
         List<Eigen::MatrixXd> flux_source(label NFluxmodes, label NPrecmodes,
-                                          label NCmodes, int family);
+                                          label NCmodes, label family);
 
         /// decay heat eq. methods:
-        List<Eigen::MatrixXd> stream_dec(label NUmodes, label NDecmodes, int decgroup);
-        Eigen::MatrixXd dec_mass(label NDecmodes, int decgroup);
-        Eigen::MatrixXd laplacian_dec(label NDecmodes, int decgroup);
+        List<Eigen::MatrixXd> stream_dec(label NUmodes, label NDecmodes,
+                                         label decgroup);
+        Eigen::MatrixXd dec_mass(label NDecmodes, label decgroup);
+        Eigen::MatrixXd laplacian_dec(label NDecmodes, label decgroup);
         List<Eigen::MatrixXd> dec_fluxsource(label NFluxmodes, label NDecmodes,
-                                             label NCmodes, int decgroup);
+                                             label NCmodes, label decgroup);
 
         /// temperature eq. methods
         Eigen::MatrixXd mass_temp(label NTmodes);
         List<Eigen::MatrixXd> temp_stream(label NUmodes, label NTmodes);
         Eigen::MatrixXd laplacian_temp(label NTmodes);
         List<Eigen::MatrixXd> temp_heatsource(label NTmodes, label NDecmodes,
-                                              label NCmodes, int decgroup);
+                                              label NCmodes, label decgroup);
         List<Eigen::MatrixXd> temp_XSfluxsource(label NTmodes, label NFluxmodes,
                                                 label NCmodes);
 

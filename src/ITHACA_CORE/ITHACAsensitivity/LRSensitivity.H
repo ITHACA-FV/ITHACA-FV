@@ -57,9 +57,9 @@ class LRSensitivity
         /// Figure of merit object
         FofM M;
         /// Number of parameters used for the analysis
-        int No_parameters;
+        label No_parameters;
         /// Number of points used for Monte Carlo sampling
-        int Npoints;
+        label Npoints;
         /// Vectors to store the output of the model
         Eigen::VectorXd y;
         ///Vector to store the normalized output of the model

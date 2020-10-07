@@ -107,7 +107,7 @@ template void assignIF(
 
 template<typename Type>
 void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
-              Type& value, List<int>& indices)
+              Type& value, List<label>& indices)
 {
     for (label i = 0; i < indices.size(); i++)
     {
@@ -116,9 +116,9 @@ void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
 }
 
 template void assignIF(GeometricField<scalar, fvPatchField, volMesh>& s,
-                       scalar& value, List<int>& indices);
+                       scalar& value, List<label>& indices);
 template void assignIF(GeometricField<vector, fvPatchField, volMesh>& s,
-                       vector& value, List<int>& indices);
+                       vector& value, List<label>& indices);
 
 template<typename Type>
 void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
@@ -132,7 +132,7 @@ template void assignIF(GeometricField<scalar, fvPatchField, volMesh>& field,
 template void assignIF(GeometricField<vector, fvPatchField, volMesh>& field,
                        vector& value, int index);
 
-void assignONE(volScalarField& s, List<int>& L)
+void assignONE(volScalarField& s, List<label>& L)
 {
     for (label i = 0; i < L.size(); i++)
     {

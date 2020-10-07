@@ -3,7 +3,7 @@
 std::vector<std::string> ITHACAsampling::distributions = {"UNIFORM", "NORMAL", "POISSON", "EXPONENTIAL"};
 
 Eigen::VectorXd ITHACAsampling::samplingMC(std::string pdftype, double& lowerE,
-        double& upperE, double& distpara1, double& distpara2, int& Npoints)
+        double& upperE, double& distpara1, double& distpara2, label& Npoints)
 {
     std::random_device rd;
     std::mt19937 generator(rd());

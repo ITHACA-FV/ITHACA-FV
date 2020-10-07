@@ -1,7 +1,7 @@
 #include "ITHACAparallel.H"
 
-List<label> ITHACAparallel::oldProcIDs_(0);
-List<label> ITHACAparallel::newProcIDs_(0);
+List<int> ITHACAparallel::oldProcIDs_(0);
+List<int> ITHACAparallel::newProcIDs_(0);
 ITHACAparallel* ITHACAparallel::instance = nullptr;
 
 ITHACAparallel* ITHACAparallel::getInstance(fvMesh& mesh, Time& localTime)
@@ -73,9 +73,9 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
     N_IF_glob = (mesh.C().size());
     reduce(N_IF_glob, sumOp<int>());
     // BF construction
-    Gsize_BF = autoPtr<labelList>(new labelList (N_BF, 0));
+    Gsize_BF = autoPtr<labelList>(new labelList (N_BF, label(0)));
     IndFaceLocal = autoPtr< List<labelList>> (new List<labelList> (N_BF,
-                   labelList(0, 0)));
+                   labelList(label(0), label(0))));
 
     for (int i = 0; i < N_BF; i++)
     {
@@ -116,7 +116,7 @@ void ITHACAparallel::suspendMPI()
     Pstream::parRun() = false;
     label comm        = Pstream::worldComm;
     oldProcIDs_       = Pstream::procID(comm);
-    newProcIDs_       = List<label> (1, 0);
+    newProcIDs_       = List<int> (1);
     Pstream::procID(comm) = newProcIDs_;
 }
 

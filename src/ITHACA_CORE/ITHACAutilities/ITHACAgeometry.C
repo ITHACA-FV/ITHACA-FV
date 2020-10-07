@@ -59,9 +59,9 @@ labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
     return boxIndices;
 }
 
-List<int> getIndices(fvMesh& mesh, int index, int layers)
+List<label> getIndices(fvMesh& mesh, int index, int layers)
 {
-    List<int> out;
+    List<label> out;
     out.resize(1);
     out[0] = index;
 
@@ -77,7 +77,7 @@ List<int> getIndices(fvMesh& mesh, int index, int layers)
 
     labelList uniqueIndex;
     uniqueOrder(out, uniqueIndex);
-    List<int> out2;
+    List<label> out2;
     forAll(uniqueIndex, i)
     {
         out2.append(out[uniqueIndex[i]]);
@@ -85,10 +85,10 @@ List<int> getIndices(fvMesh& mesh, int index, int layers)
     return out2;
 }
 
-List<int> getIndices(fvMesh& mesh, int index_row,
-                     int index_col, int layers)
+List<label> getIndices(fvMesh& mesh, int index_row,
+                       int index_col, int layers)
 {
-    List<int> out;
+    List<label> out;
     out.resize(2);
     out[0] = index_row;
     out[1] = index_col;
@@ -105,7 +105,7 @@ List<int> getIndices(fvMesh& mesh, int index_row,
 
     labelList uniqueIndex;
     uniqueOrder(out, uniqueIndex);
-    List<int> out2;
+    List<label> out2;
     forAll(uniqueIndex, i)
     {
         out2.append(out[uniqueIndex[i]]);
@@ -313,11 +313,11 @@ Eigen::VectorXd boudaryFaceToCellDistance(
     return (cellFaceDistance);
 }
 
-List<int> getIndicesFromDisc(fvMesh& mesh, double radius,
-                             vector origin, vector axis, List<double>& radii)
+List<label> getIndicesFromDisc(fvMesh& mesh, double radius,
+                               vector origin, vector axis, List<double>& radii)
 {
     pointField meshPoints(mesh.points());
-    List<int> indices(meshPoints.size());
+    List<label> indices(meshPoints.size());
     radii.resize(meshPoints.size());
     int k = 0;
 
@@ -344,13 +344,13 @@ List<int> getIndicesFromDisc(fvMesh& mesh, double radius,
 }
 
 template<typename type_f>
-List<int> getIndicesFromBox(
+List<label> getIndicesFromBox(
     GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
 {
     M_Assert(Box.rows() == 2
              && Box.cols() == 3,
              "The box must be a 2*3 matrix shaped in this way: \nBox = \t|x0, y0, z0|\n\t|x1, yi, z1|\n");
-    List<int> indices(field.internalField().size());
+    List<label> indices(field.internalField().size());
     int k = 0;
 
     for (label i = 0; i < field.internalField().size(); i++)
@@ -371,16 +371,16 @@ List<int> getIndicesFromBox(
     return indices;
 }
 
-template List<int> getIndicesFromBox(
+template List<label> getIndicesFromBox(
     GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
-template List<int> getIndicesFromBox(
+template List<label> getIndicesFromBox(
     GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 
 template<typename type_f>
 fvMeshSubset* getSubMeshFromBox(
     GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
 {
-    List<int> indices = getIndicesFromBox(field, Box);
+    List<label> indices = getIndicesFromBox(field, Box);
     fvMeshSubset* sub;
     sub = new fvMeshSubset(field.mesh());
     (field.mesh());

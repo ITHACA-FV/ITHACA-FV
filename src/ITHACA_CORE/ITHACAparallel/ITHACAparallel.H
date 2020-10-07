@@ -85,10 +85,10 @@ class ITHACAparallel
             GeometricField<type, fvPatchField, volMesh> field);
 
         /// Totoal number of internal field cells
-        int N_IF_glob;
+        label N_IF_glob;
 
         /// Number of Boundary Patches without considering processors
-        int N_BF;
+        label N_BF;
 
         /// Cell proc addressing
         autoPtr<labelIOList> indices;
@@ -109,10 +109,10 @@ class ITHACAparallel
         autoPtr<labelList> Start;
 
         /// ID of the OLD process
-        static List<label> oldProcIDs_;
+        static List<int> oldProcIDs_;
 
         /// ID of the NEW process
-        static List<label> newProcIDs_;
+        static List<int> newProcIDs_;
 
         /// runTime defined locally
         Time& runTime;

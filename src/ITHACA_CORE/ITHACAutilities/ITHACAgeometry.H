@@ -82,7 +82,7 @@ labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
 ///
 /// @return     The indices.
 ///
-List<int> getIndices(fvMesh& mesh, int index, int layers);
+List<label> getIndices(fvMesh& mesh, int index, int layers);
 
 //--------------------------------------------------------------------------
 /// @brief      Gets the indices of the cells around a certain cell.
@@ -94,8 +94,8 @@ List<int> getIndices(fvMesh& mesh, int index, int layers);
 ///
 /// @return     The indices.
 ///
-List<int> getIndices(fvMesh& mesh, int index_row, int index_col,
-                     int layers);
+List<label> getIndices(fvMesh& mesh, int index_row, int index_col,
+                       int layers);
 
 //--------------------------------------------------------------------------
 /// @brief      Get the point coordinates and indices from patch.
@@ -194,8 +194,8 @@ Eigen::VectorXd boudaryFaceToCellDistance(fvMesh& mesh, label BC_ind);
 ///
 /// @return     The indices of the points lying inside the specified the disc.
 ///
-List<int> getIndicesFromDisc(fvMesh& mesh, double radius,
-                             vector origin, vector axis, List<double>& radii);
+List<label> getIndicesFromDisc(fvMesh& mesh, double radius,
+                               vector origin, vector axis, List<double>& radii);
 
 //--------------------------------------------------------------------------
 /// @brief      Gets the indices from coordinates of a given box.
@@ -208,7 +208,7 @@ List<int> getIndicesFromDisc(fvMesh& mesh, double radius,
 /// @return     The indices from box.
 ///
 template<typename type_f>
-List<int> getIndicesFromBox(
+List<label> getIndicesFromBox(
     GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
 
 //--------------------------------------------------------------------------

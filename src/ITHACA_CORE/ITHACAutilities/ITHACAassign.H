@@ -112,7 +112,7 @@ void assignIF(GeometricField<Type, fvPatchField, volMesh>& field,
 ///
 template<typename Type>
 void assignIF(GeometricField<Type, fvPatchField, volMesh>& field,
-              Type& value, List<int>& indices);
+              Type& value, List<label>& indices);
 
 //--------------------------------------------------------------------------
 /// Assign internal field
@@ -134,7 +134,7 @@ void assignIF(GeometricField<Type, fvPatchField, volMesh>& field,
 ///                      condition
 /// @param         L     List of indices
 ///
-void assignONE(volScalarField& s, List<int>& L);
+void assignONE(volScalarField& s, List<label>& L);
 
 
 //--------------------------------------------------------------------------
