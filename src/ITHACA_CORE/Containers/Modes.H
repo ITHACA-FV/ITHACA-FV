@@ -73,7 +73,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
         List<Eigen::MatrixXd> EigenModes;
 
         /// Number of patches
-        int NBC;
+        label NBC;
 
         /// Method that convert a PtrList of modes into Eigen matrices filling the EigenModes object
         List<Eigen::MatrixXd> toEigen();
@@ -110,7 +110,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
         ///             system, the second element is the reduced source term of
         ///             the linear system.
         ///
-        List<Eigen::MatrixXd> project(fvMatrix<Type>& Af, int numberOfModes = 0,
+        List<Eigen::MatrixXd> project(fvMatrix<Type>& Af, label numberOfModes = 0,
                                       word projType = "G");
 
         //----------------------------------------------------------------------
@@ -131,7 +131,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
         /// @return     An Eigen MatrixXd.
         ///
         Eigen::MatrixXd project(GeometricField<Type, PatchField, GeoMesh>& field,
-                                int numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
+                                label numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
 
         //----------------------------------------------------------------------
         /// @brief      A function that project a list of fields on the modes
@@ -152,7 +152,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
         ///
         Eigen::MatrixXd project(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
                                 fields,
-                                int numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
+                                label numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
 
         //----------------------------------------------------------------------
         /// @brief      A function that project and reconstruct a snapshot on the modes
@@ -166,7 +166,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
         ///
         GeometricField<Type, PatchField, GeoMesh> projectSnapshot(
             GeometricField<Type, PatchField, GeoMesh>& field,
-            int numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
+            label numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
 
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct the solution starting from the
@@ -210,7 +210,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
         ///
         void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh>>
                               snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
-                              int numberOfModes = 0, word innerProduct = "L2");
+                              label numberOfModes = 0, word innerProduct = "L2");
 
         //----------------------------------------------------------------------
         /// @brief      Function to project a list of fields into the modes manifold by the use of all the modes
@@ -233,7 +233,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
         void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh>>
                               snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
                               PtrList<volScalarField> Volumes,
-                              int numberOfModes = 0, word innerProduct = "L2");
+                              label numberOfModes = 0, word innerProduct = "L2");
 
         //----------------------------------------------------------------------
         /// @brief      Function to project a list of fields into the modes manifold by the use of all the modes

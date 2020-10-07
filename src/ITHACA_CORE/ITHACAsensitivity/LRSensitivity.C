@@ -7,7 +7,7 @@ using std::string;
 // Constructors
 LRSensitivity::LRSensitivity() {};
 
-LRSensitivity::LRSensitivity(int Npara, int Np)
+LRSensitivity::LRSensitivity(label Npara, label Np)
 {
     No_parameters = Npara;
     Npoints = Np;
@@ -18,7 +18,7 @@ LRSensitivity::LRSensitivity(int Npara, int Np)
 void LRSensitivity::buildSamplingSet(std::vector<std::string>& pdflist,
                                      Eigen::MatrixXd plist)
 {
-    for (int i = 0; i < No_parameters; i++)
+    for (label i = 0; i < No_parameters; i++)
     {
         MatX.col(i) = ITHACAsampling::samplingMC(pdflist[i], trainingRange(i, 0),
                       trainingRange(i, 1), plist(i, 0), plist(i, 1), Npoints);
@@ -68,7 +68,7 @@ void LRSensitivity::getYstat()
     Vy = 0;
     Ey = y.sum() / Npoints;
 
-    for (int i = 0; i < Npoints; i++)
+    for (label i = 0; i < Npoints; i++)
     {
         Vy += (y(i) - Ey) * (y(i) - Ey);
     }
@@ -79,12 +79,12 @@ void LRSensitivity::getYstat()
 
 void LRSensitivity::getXstats()
 {
-    for (int i = 0; i < No_parameters; i++)
+    for (label i = 0; i < No_parameters; i++)
     {
         EX(i) = MatX.col(i).sum() / Npoints;
         VX(i) = 0;
 
-        for (int j = 0; j < Npoints; j++)
+        for (label j = 0; j < Npoints; j++)
         {
             VX(i) += (MatX(j, i) - EX(i)) * (MatX(j, i) - EX(i));
         }
@@ -101,11 +101,11 @@ void LRSensitivity::getBetas()
     if (Ydone == true && Xdone == true)
     {
         //Normalize independent variables and output
-        for (int j = 0; j < Npoints; j++)
+        for (label j = 0; j < Npoints; j++)
         {
             yn(j) = (y(j) - Ey) / std::sqrt(Vy);
 
-            for (int i = 0; i < No_parameters; i++)
+            for (label i = 0; i < No_parameters; i++)
             {
                 MatXn(j, i) = (MatX(j, i) - EX(i)) / std::sqrt(VX(i));
             }
@@ -132,11 +132,11 @@ void LRSensitivity::assessQuality()
         double  N = 0;
         double  D = 0;
 
-        for (int j = 0; j < Npoints; j++)
+        for (label j = 0; j < Npoints; j++)
         {
             ylin(j) = Ey;
 
-            for (int i = 0; i < No_parameters; i++)
+            for (label i = 0; i < No_parameters; i++)
             {
                 ylin(j) += betas(i) * MatXn(j, i) * std::sqrt(Vy);
             }

@@ -112,7 +112,7 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now)
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
     // Initialize Nsnapshots
-    int nsnapshots = 0;
+    label nsnapshots = 0;
 
     // Start the time loop
     while (runTime.run())
@@ -164,7 +164,7 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now)
             mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
             mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
 
-            for (int i = 0; i < mu_now.size(); i++)
+            for (label i = 0; i < mu_now.size(); i++)
             {
                 mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
             }
@@ -743,7 +743,7 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
 
-    for (int i = 0; i < nNutModes; i++)
+    for (label i = 0; i < nNutModes; i++)
     {
         word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
                           + name(NUmodes) + "_" + name(NSUPmodes) ;
@@ -752,7 +752,7 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++)
+            for (label j = 0; j < coeffL2.cols(); j++)
             {
                 samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
             }
@@ -767,7 +767,7 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++)
+            for (label j = 0; j < coeffL2.cols(); j++)
             {
                 samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
             }
@@ -1191,7 +1191,7 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
 
-    for (int i = 0; i < nNutModes; i++)
+    for (label i = 0; i < nNutModes; i++)
     {
         word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
                           + name(NUmodes) + "_" + name(NSUPmodes) ;
@@ -1200,7 +1200,7 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++)
+            for (label j = 0; j < coeffL2.cols(); j++)
             {
                 samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
             }
@@ -1215,7 +1215,7 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
 
-            for (int j = 0; j < coeffL2.cols(); j++)
+            for (label j = 0; j < coeffL2.cols(); j++)
             {
                 samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
             }
@@ -1235,13 +1235,13 @@ List < Eigen::MatrixXd > UnsteadyNSTurb::velDerivativeCoeff(Eigen::MatrixXd A,
 {
     List < Eigen::MatrixXd > newCoeffs;
     newCoeffs.setSize(2);
-    int velCoeffsNum = A.cols();
-    int snapshotsNum = A.rows();
+    label velCoeffsNum = A.cols();
+    label snapshotsNum = A.rows();
     Eigen::MatrixXd pars;
-    int parsSamplesNum = initSnapInd.size();
-    int timeSnapshotsPerSample = snapshotsNum / parsSamplesNum;
-    int newColsNum = 2 * velCoeffsNum;
-    int newRowsNum = snapshotsNum - parsSamplesNum;
+    label parsSamplesNum = initSnapInd.size();
+    label timeSnapshotsPerSample = snapshotsNum / parsSamplesNum;
+    label newColsNum = 2 * velCoeffsNum;
+    label newRowsNum = snapshotsNum - parsSamplesNum;
     newCoeffs[0].resize(newRowsNum, newColsNum);
     newCoeffs[1].resize(newRowsNum, G.cols());
 
@@ -1285,14 +1285,14 @@ List < Eigen::MatrixXd > UnsteadyNSTurb::velParDerivativeCoeff(
 {
     List < Eigen::MatrixXd > newCoeffs;
     newCoeffs.setSize(2);
-    int velCoeffsNum = A.cols();
-    int snapshotsNum = A.rows();
+    label velCoeffsNum = A.cols();
+    label snapshotsNum = A.rows();
     Eigen::MatrixXd pars;
     pars = z.leftCols(z.cols() - 1);
-    int parsSamplesNum = initSnapInd.size();
-    int timeSnapshotsPerSample = snapshotsNum / parsSamplesNum;
-    int newColsNum = 2 * velCoeffsNum;
-    int newRowsNum = snapshotsNum - parsSamplesNum;
+    label parsSamplesNum = initSnapInd.size();
+    label timeSnapshotsPerSample = snapshotsNum / parsSamplesNum;
+    label newColsNum = 2 * velCoeffsNum;
+    label newRowsNum = snapshotsNum - parsSamplesNum;
     newCoeffs[0].resize(newRowsNum, newColsNum + z.cols() - 1);
     newCoeffs[1].resize(newRowsNum, G.cols());
 
@@ -1323,11 +1323,11 @@ Eigen::MatrixXd UnsteadyNSTurb::velParDerivativeCoeff(Eigen::MatrixXd A,
         Eigen::VectorXd par, double timeSnap)
 {
     Eigen::MatrixXd newCoeffs;
-    int velCoeffsNum = A.cols();
-    int snapshotsNum = A.rows();
-    int parsSamplesNum = par.size();
-    int newColsNum = 2 * velCoeffsNum + parsSamplesNum;
-    int newRowsNum = snapshotsNum - 1;
+    label velCoeffsNum = A.cols();
+    label snapshotsNum = A.rows();
+    label parsSamplesNum = par.size();
+    label newColsNum = 2 * velCoeffsNum + parsSamplesNum;
+    label newRowsNum = snapshotsNum - 1;
     newCoeffs.resize(newRowsNum, newColsNum);
     Eigen::MatrixXd b0 = A.topRows(A.rows() - 1);
     Eigen::MatrixXd b1 = A.bottomRows(A.rows() - 1);

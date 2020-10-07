@@ -125,7 +125,7 @@ void assignIF(GeometricField<Type, fvPatchField, volMesh>& field,
 ///
 template<typename Type>
 void assignIF(GeometricField<Type, fvPatchField, volMesh>& field,
-              Type& value, int index);
+              Type& value, label index);
 
 //--------------------------------------------------------------------------
 /// Assign one to volScalarField

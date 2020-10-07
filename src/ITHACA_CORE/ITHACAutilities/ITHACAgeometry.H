@@ -98,7 +98,7 @@ List<label> getIndices(fvMesh& mesh, int index_row, int index_col,
                        int layers);
 
 //--------------------------------------------------------------------------
-/// @brief      Get the point coordinates and indices from patch.
+/// @brief      Get the polabel coordinates and indices from patch.
 ///
 /// @param[in]  mesh     The mesh
 /// @param[in]  ind      The index of the patch from which you want to extract the points
@@ -122,9 +122,9 @@ void getPointsFromPatch(fvMesh& mesh, label ind, List<vector>& points,
 List<vector> displacedSegment(List<vector> x0, double mux1, double mux2,
                               double muy1, double muy2);
 //----------------------------------------------------------------------
-/// @brief      Displace a Point belonging to a given segment
+/// @brief      Displace a Polabel belonging to a given segment
 ///
-/// @param[in]  x0       The initial coordinate of the point
+/// @param[in]  x0       The initial coordinate of the polabel
 /// @param[in]  x_low    The position of the lower end of the segment
 /// @param[in]  x_up     The posizion of the upper end of the segment
 /// @param[in]  mux_low  The x displacement of the lower end of the segment
@@ -134,11 +134,11 @@ List<vector> displacedSegment(List<vector> x0, double mux1, double mux2,
 /// @param[in]  muz_low  The z displacement of the lower end of the segment
 /// @param[in]  muz_up   The z displacement of the upper end of the segment
 ///
-/// @return     The displaced point
+/// @return     The displaced polabel
 ///
-vector displacePoint(vector x0, vector x_low, vector x_up,
-                     double mux_low, double mux_up,
-                     double muy_low, double muy_up, double muz_low = 0.0, double muz_up = 0.0);
+vector displacePolabel(vector x0, vector x_low, vector x_up,
+                       double mux_low, double mux_up,
+                       double muy_low, double muy_up, double muz_low = 0.0, double muz_up = 0.0);
 
 //--------------------------------------------------------------------------
 /// @brief      A function that rotates the mesh rigidly, by a fixed specified angle for the points

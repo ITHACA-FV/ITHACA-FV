@@ -67,8 +67,8 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
     newton_object = newton_steadyNS(Nphi_u + Nphi_p, Nphi_u + Nphi_p, FOMproblem);
 }
 
-int newton_steadyNS::operator()(const Eigen::VectorXd& x,
-                                Eigen::VectorXd& fvec) const
+label newton_steadyNS::operator()(const Eigen::VectorXd& x,
+                                  Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_tmp(Nphi_u);
     Eigen::VectorXd b_tmp(Nphi_p);
@@ -125,7 +125,8 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
 }
 
 
-int newton_steadyNS::df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const
+label newton_steadyNS::df(const Eigen::VectorXd& x,
+                          Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_steadyNS> numDiff(*this);
     numDiff.df(x, fjac);
@@ -206,12 +207,12 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
 
 // * * * * * * * * * * * * * * * Jacobian Evaluation  * * * * * * * * * * * * * //
 
-void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
+void reducedSteadyNS::reconstruct_PPE(fileName folder, label printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    int counter = 0;
-    int nextwrite = 0;
+    label counter = 0;
+    label nextwrite = 0;
 
     for (label i = 0; i < online_solution.size(); i++)
     {
@@ -241,7 +242,7 @@ void reducedSteadyNS::reconstruct_PPE(fileName folder, int printevery)
 }
 
 void reducedSteadyNS::reconstruct(bool exportFields, fileName folder,
-                                  int printevery)
+                                  label printevery)
 {
     if (exportFields)
     {
@@ -249,8 +250,8 @@ void reducedSteadyNS::reconstruct(bool exportFields, fileName folder,
         ITHACAutilities::createSymLink(folder);
     }
 
-    int counter = 0;
-    int nextwrite = 0;
+    label counter = 0;
+    label nextwrite = 0;
     List <Eigen::MatrixXd> CoeffU;
     List <Eigen::MatrixXd> CoeffP;
     CoeffU.resize(0);
@@ -292,9 +293,9 @@ double reducedSteadyNS::inf_sup_constant()
     Eigen::VectorXd sup(Nphi_u);
     Eigen::VectorXd inf(Nphi_p);
 
-    for (int i = 0; i < Nphi_p; i++)
+    for (label i = 0; i < Nphi_p; i++)
     {
-        for (int j = 0; j < Nphi_u; j++)
+        for (label j = 0; j < Nphi_u; j++)
         {
             sup(j) = fvc::domainIntegrate(fvc::div(Umodes[j]) * Pmodes[i]).value() /
                      ITHACAutilities::H1Seminorm(Umodes[j]) / ITHACAutilities::L2Norm(Pmodes[i]);
@@ -377,7 +378,7 @@ Eigen::MatrixXd reducedSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
     Eigen::MatrixXd vel_scal;
     vel_scal.resize(vel.rows(), vel.cols());
 
-    for (int k = 0; k < problem->inletIndex.rows(); k++)
+    for (label k = 0; k < problem->inletIndex.rows(); k++)
     {
         label p = problem->inletIndex(k, 0);
         label l = problem->inletIndex(k, 1);

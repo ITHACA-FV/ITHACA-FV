@@ -41,10 +41,10 @@ License
 namespace ITHACAutilities
 {
 
-Eigen::MatrixXd rand(int rows, int cols, double min,
+Eigen::MatrixXd rand(label rows, label cols, double min,
                      double max)
 {
-    std::srand(static_cast<long unsigned int>
+    std::srand(static_cast<long unsigned label>
                (std::chrono::high_resolution_clock::now().time_since_epoch().count()));
     Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);
     matr = (matr.array() + 1) / 2;
@@ -53,15 +53,15 @@ Eigen::MatrixXd rand(int rows, int cols, double min,
     return matr;
 }
 
-Eigen::MatrixXd rand(int rows, Eigen::MatrixXd minMax)
+Eigen::MatrixXd rand(label rows, Eigen::MatrixXd minMax)
 {
-    std::srand(static_cast<long unsigned int>
+    std::srand(static_cast<long unsigned label>
                (std::chrono::high_resolution_clock::now().time_since_epoch().count()));
-    int cols = minMax.rows();
+    label cols = minMax.rows();
     Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);
     matr = (matr.array() + 1) / 2;
 
-    for (int i = 0; i < cols; i++)
+    for (label i = 0; i < cols; i++)
     {
         matr.col(i) = matr.col(i).array() * (minMax(i, 1) - minMax(i, 0));
         matr.col(i) = matr.col(i).array() + (minMax(i, 0));

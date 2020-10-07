@@ -67,7 +67,7 @@ void laplacianProblem::truthSolve(List<scalar> mu_now)
     volScalarField& S = _S();
     fvScalarMatrix lhs(theta[0]*operator_list[0]);
 
-    for (int i = 1; i < operator_list.size(); i++)
+    for (label i = 1; i < operator_list.size(); i++)
     {
         lhs += theta[i] * operator_list[i];
     }
@@ -80,7 +80,7 @@ void laplacianProblem::truthSolve(List<scalar> mu_now)
     // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points
     mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
 
-    for (int i = 0; i < mu_now.size(); i++)
+    for (label i = 0; i < mu_now.size(); i++)
     {
         mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
     }
@@ -105,18 +105,18 @@ void laplacianProblem::project(label Nmodes)
     source.resize(Nmodes, 1);
     volScalarField& S = _S();
 
-    for (int i = 0; i < operator_list.size(); i++)
+    for (label i = 0; i < operator_list.size(); i++)
     {
         A_matrices[i].resize(Nmodes, Nmodes);
 
-        for (int j = 0; j < Nmodes; j++)
+        for (label j = 0; j < Nmodes; j++)
         {
             if (i == 0)
             {
                 source(j, 0) = fvc::domainIntegrate( Tmodes[j] * S).value();
             }
 
-            for (int k = 0; k < Nmodes; k++)
+            for (label k = 0; k < Nmodes; k++)
             {
                 A_matrices[i](j, k) = fvc::domainIntegrate( Tmodes[j] * fvc::laplacian(
                                           nu_list[i], Tmodes[k])).value();

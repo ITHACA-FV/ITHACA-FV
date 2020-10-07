@@ -49,7 +49,7 @@ class DEIM
         /// @param[in]  MaxModes         The maximum number of modes
         /// @param[in]  FunctionName     The function name
         ///
-        DEIM (PtrList<T>& SnapShotsMatrix, int MaxModes, word FunctionName);
+        DEIM (PtrList<T>& SnapShotsMatrix, label MaxModes, word FunctionName);
 
         ///
         /// @brief      Construct DEIM for matrix with non-linear dependency
@@ -59,7 +59,7 @@ class DEIM
         /// @param[in]  MaxModesB        The maximum number of modes for the source term b
         /// @param[in]  MatrixName       The matrix name
         ///
-        DEIM (PtrList<T>& SnapShotsMatrix, int MaxModesA, int MaxModesB,
+        DEIM (PtrList<T>& SnapShotsMatrix, label MaxModesA, label MaxModesB,
               word MatrixName);
 
         /// The snapshots matrix containing the nonlinear function or operator
@@ -78,9 +78,9 @@ class DEIM
         //PtrList<S> fieldsB;
 
         /// The maximum number of modes to be considered
-        int MaxModes;
-        int MaxModesA;
-        int MaxModesB;
+        label MaxModes;
+        label MaxModesA;
+        label MaxModesB;
 
         /// The name of the non-linear function
         word FunctionName;
@@ -94,7 +94,7 @@ class DEIM
         Eigen::VectorXd thetaB;
 
         /// Int Number of Cells;
-        int Ncells;
+        label Ncells;
 
         /// source
         bool source;
@@ -116,16 +116,16 @@ class DEIM
         Eigen::MatrixXd UB;
 
         /// Indices of the magic points
-        List<int> magicPoints;
-        List<Pair <int >> magicPointsA;
-        List<int> magicPointsB;
-        List<Pair<int>> xyz_A;
-        List<int> xyz_B;
+        List<label> magicPoints;
+        List<Pair <label >> magicPointsA;
+        List<label> magicPointsB;
+        List<Pair<label>> xyz_A;
+        List<label> xyz_B;
 
         /// Indices of the local magic points in the subMesh
-        List<int> localMagicPoints;
-        List<Pair <int>> localMagicPointsA;
-        List<int> localMagicPointsB;
+        List<label> localMagicPoints;
+        List<Pair <label>> localMagicPointsA;
+        List<label> localMagicPointsB;
 
         /// The P matrix of the DEIM method
         Eigen::SparseMatrix<double> P;
@@ -148,8 +148,8 @@ class DEIM
         /// @param      mesh    The mesh of the problem
         ///
         template <class S>
-        PtrList<S> generateSubmeshes(int layers, fvMesh& mesh, S field,
-                                     int secondTime = 0);
+        PtrList<S> generateSubmeshes(label layers, fvMesh& mesh, S field,
+                                     label secondTime = 0);
 
         ///
         /// @brief      { function_description }
@@ -159,8 +159,8 @@ class DEIM
         /// @param[in]  field   The field
         ///
         template <class S>
-        PtrList<S> generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
-                                           int secondTime = 0);
+        PtrList<S> generateSubmeshesMatrix(label layers, fvMesh& mesh, S field,
+                                           label secondTime = 0);
 
         ///
         /// @brief      { function_description }
@@ -170,8 +170,8 @@ class DEIM
         /// @param[in]  field   The field
         ///
         template <class S>
-        PtrList<S> generateSubmeshesVector(int layers, fvMesh& mesh, S field,
-                                           int secondTime = 0);
+        PtrList<S> generateSubmeshesVector(label layers, fvMesh& mesh, S field,
+                                           label secondTime = 0);
 
         ///
         /// @brief      Function to generate a PtrList of subfield in the location of the magic points computed for the Matrix (LHS)
@@ -210,7 +210,8 @@ class DEIM
         ///
         /// @return     The local indices
         ///
-        List<int> global2local(List<int>& points, PtrList<fvMeshSubset>& submeshList);
+        List<label> global2local(List<label>& points,
+                                 PtrList<fvMeshSubset>& submeshList);
 
         ///
         /// @brief      Get local indices in the submeshes from indices in the global ones
@@ -220,8 +221,8 @@ class DEIM
         ///
         /// @return     The local indices
         ///
-        List<Pair <int >> global2local(List< Pair <int>>& points,
-                                       PtrList<fvMeshSubset>& submeshList);
+        List<Pair <label >> global2local(List< Pair <label>>& points,
+                                         PtrList<fvMeshSubset>& submeshList);
 
         ///
         /// @brief      check3DIndices in case of three dimensional fields
@@ -231,8 +232,8 @@ class DEIM
         /// @param      xyz_rowA  The xyz row a
         /// @param      xyz_colA  The xyz col a
         ///
-        void check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
-                            int& xyz_colA);
+        void check3DIndices(label& ind_rowA, label&  ind_colA, label& xyz_rowA,
+                            label& xyz_colA);
 
         ///
         /// @brief      check3DIndices in case of three dimensional fields
@@ -240,7 +241,7 @@ class DEIM
         /// @param      ind_rowA  The ind row a
         /// @param      xyz_rowA  The xyz row a
         ///
-        void check3DIndices(int& ind_rowA, int& xyz_rowA);
+        void check3DIndices(label& ind_rowA, label& xyz_rowA);
 
         /// @brief      get the number of cells from the dimension of a LHS matrix
         ///
@@ -248,7 +249,7 @@ class DEIM
         ///
         /// @return     The number of cells
         ///
-        int getNcells(int sizeM);
+        label getNcells(label sizeM);
 
 };
 

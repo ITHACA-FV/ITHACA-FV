@@ -112,7 +112,7 @@ bool check_off()
         }
     }
 
-    reduce(off_exist, sumOp<int>());
+    reduce(off_exist, sumOp<label>());
 
     if (!off_exist)
     {
@@ -148,7 +148,7 @@ bool check_pod()
         }
     }
 
-    reduce(pod_exist, sumOp<int>());
+    reduce(pod_exist, sumOp<label>());
 
     if (!pod_exist)
     {
@@ -178,7 +178,7 @@ bool check_sup()
         }
     }
 
-    reduce(sup_exist, sumOp<int>());
+    reduce(sup_exist, sumOp<label>());
 
     if (!sup_exist)
     {

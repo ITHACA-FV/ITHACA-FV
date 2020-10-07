@@ -32,7 +32,7 @@ License
 
 // Template function constructor
 template<typename T>
-DEIM<T>::DEIM (PtrList<T>& s, int MaxModes, word FunctionName)
+DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName)
     :
     SnapShotsMatrix(s),
     MaxModes(MaxModes),
@@ -45,7 +45,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModes, word FunctionName)
     Eigen::VectorXd rho(1);
     modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModes, FunctionName);
     MatrixModes = Foam2Eigen::PtrList2Eigen(modes);
-    int ind_max, c1;
+    label ind_max, c1;
     double max = MatrixModes.cwiseAbs().col(0).maxCoeff(&ind_max, &c1);
     rho(0) = max;
     magicPoints.append(ind_max);
@@ -53,7 +53,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModes, word FunctionName)
     P.resize(MatrixModes.rows(), 1);
     P.insert(ind_max, 0) = 1;
 
-    for (int i = 1; i < MaxModes; i++)
+    for (label i = 1; i < MaxModes; i++)
     {
         A = P.transpose() * U;
         b = P.transpose() * MatrixModes.col(i);
@@ -74,7 +74,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModes, word FunctionName)
 
 
 template<typename T>
-DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
+DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
     :
     SnapShotsMatrix(s),
     MaxModesA(MaxModesA),
@@ -93,15 +93,15 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     Matrix_Modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModesA, MaxModesB,
                                         MatrixName);
     Ncells = getNcells(std::get<1>(Matrix_Modes)[0].rows());
-    int ind_rowA, ind_colA, xyz_rowA, xyz_colA;
+    label ind_rowA, ind_colA, xyz_rowA, xyz_colA;
     ind_rowA = ind_colA = xyz_rowA = xyz_colA = 0;
     double maxA = EigenFunctions::max(std::get<0>(Matrix_Modes)[0], ind_rowA,
                                       ind_colA);
-    int ind_rowAOF = ind_rowA;
-    int ind_colAOF = ind_colA;
+    label ind_rowAOF = ind_rowA;
+    label ind_colAOF = ind_colA;
     check3DIndices(ind_rowAOF, ind_colAOF, xyz_rowA, xyz_colA);
-    Pair <int> indA(ind_rowAOF, ind_colAOF);
-    Pair <int> xyzA(xyz_rowA, xyz_colA);
+    Pair <label> indA(ind_rowAOF, ind_colAOF);
+    Pair <label> xyzA(xyz_rowA, xyz_colA);
     xyz_A.append(xyzA);
     rhoA(0) = maxA;
     magicPointsA.append(indA);
@@ -111,7 +111,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     Pnow.insert(ind_rowA, ind_colA) = 1;
     PA.append(Pnow);
 
-    for (int i = 1; i < MaxModesA; i++)
+    for (label i = 1; i < MaxModesA; i++)
     {
         AA = EigenFunctions::innerProduct(PA, UA);
         bA = EigenFunctions::innerProduct(PA, std::get<0>(Matrix_Modes)[i]);
@@ -120,11 +120,11 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
         double maxA = EigenFunctions::max(rA, ind_rowA, ind_colA);
         rhoA.conservativeResize(i + 1);
         rhoA(i) = maxA;
-        int ind_rowAOF = ind_rowA;
-        int ind_colAOF = ind_colA;
+        label ind_rowAOF = ind_rowA;
+        label ind_colAOF = ind_colA;
         check3DIndices(ind_rowAOF, ind_colAOF, xyz_rowA, xyz_colA);
-        Pair <int> indA(ind_rowAOF, ind_colAOF);
-        Pair <int> xyzA(xyz_rowA, xyz_colA);
+        Pair <label> indA(ind_rowAOF, ind_colAOF);
+        Pair <label> xyzA(xyz_rowA, xyz_colA);
         xyz_A.append(xyzA);
         magicPointsA.append(indA);
         UA.append(std::get<0>(Matrix_Modes)[i]);
@@ -142,10 +142,10 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     Eigen::VectorXd cB;
     Eigen::VectorXd rB;
     Eigen::VectorXd rhoB(1);
-    int ind_rowB, xyz_rowB, c1;
+    label ind_rowB, xyz_rowB, c1;
     double maxB = std::get<1>(Matrix_Modes)[0].cwiseAbs().maxCoeff(&ind_rowB,
                   &c1);
-    int ind_rowBOF = ind_rowB;
+    label ind_rowBOF = ind_rowB;
     check3DIndices(ind_rowBOF, xyz_rowB);
     rhoB(0) = maxB;
     xyz_B.append(xyz_rowB);
@@ -154,7 +154,7 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
     PB.resize(UB.rows(), 1);
     PB.insert(ind_rowB, 0) = 1;
 
-    for (int i = 1; i < MaxModesB; i++)
+    for (label i = 1; i < MaxModesB; i++)
     {
         AB = PB.transpose() * UB;
         bB = PB.transpose() * std::get<1>(Matrix_Modes)[i];
@@ -192,8 +192,8 @@ DEIM<T>::DEIM (PtrList<T>& s, int MaxModesA, int MaxModesB, word MatrixName)
 
 template<typename T>
 template<typename S>
-PtrList<S> DEIM<T>::generateSubmeshes(int layers, fvMesh& mesh, S field,
-                                      int secondTime)
+PtrList<S> DEIM<T>::generateSubmeshes(label layers, fvMesh& mesh, S field,
+                                      label secondTime)
 {
     fvMeshSubset* submesh;
     PtrList<S> fields;
@@ -217,7 +217,7 @@ PtrList<S> DEIM<T>::generateSubmeshes(int layers, fvMesh& mesh, S field,
         Indici = Indici * 0;
     }
 
-    for (int i = 0; i < magicPoints.size(); i++)
+    for (label i = 0; i < magicPoints.size(); i++)
     {
         submesh = new fvMeshSubset(mesh);
         indices = ITHACAutilities::getIndices(mesh, magicPoints[i], layers);
@@ -259,8 +259,8 @@ PtrList<S> DEIM<T>::generateSubmeshes(int layers, fvMesh& mesh, S field,
 
 template<typename T>
 template<typename S>
-PtrList<S> DEIM<T>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
-        int secondTime)
+PtrList<S> DEIM<T>::generateSubmeshesMatrix(label layers, fvMesh& mesh, S field,
+        label secondTime)
 {
     fvMeshSubset* submesh;
     PtrList<S> fieldsA;
@@ -287,7 +287,7 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
 
     fieldsA.resize(0);
 
-    for (int i = 0; i < magicPointsA.size(); i++)
+    for (label i = 0; i < magicPointsA.size(); i++)
     {
         submesh = new fvMeshSubset(mesh);
         indices = ITHACAutilities::getIndices(mesh, magicPointsA[i].first(), layers);
@@ -321,7 +321,7 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
 
     if (!secondTime)
     {
-        for (int i = 0; i < magicPointsA.size(); i++)
+        for (label i = 0; i < magicPointsA.size(); i++)
         {
             Indici.ref()[magicPointsA[i].first()] = 10;
             Indici.ref()[magicPointsA[i].second()] = 10;
@@ -341,8 +341,8 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(int layers, fvMesh& mesh, S field,
 
 template<typename T>
 template<typename S>
-PtrList<S> DEIM<T>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
-        int secondTime)
+PtrList<S> DEIM<T>::generateSubmeshesVector(label layers, fvMesh& mesh, S field,
+        label secondTime)
 {
     fvMeshSubset* submesh;
     List<label> indices;
@@ -369,7 +369,7 @@ PtrList<S> DEIM<T>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
 
     fieldsB.resize(0);
 
-    for (int i = 0; i < magicPointsB.size(); i++)
+    for (label i = 0; i < magicPointsB.size(); i++)
     {
         submesh = new fvMeshSubset(mesh);
         indices = ITHACAutilities::getIndices(mesh, magicPointsB[i], layers);
@@ -401,7 +401,7 @@ PtrList<S> DEIM<T>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
 
     if (!secondTime)
     {
-        for (int i = 0; i < magicPointsB.size(); i++)
+        for (label i = 0; i < magicPointsB.size(); i++)
         {
             Indici.ref()[magicPointsB[i]] = 10;
         }
@@ -420,14 +420,14 @@ PtrList<S> DEIM<T>::generateSubmeshesVector(int layers, fvMesh& mesh, S field,
 
 
 template<typename T>
-List<int> DEIM<T>::global2local(List<int>& points,
-                                PtrList<fvMeshSubset>& submeshList)
+List<label> DEIM<T>::global2local(List<label>& points,
+                                  PtrList<fvMeshSubset>& submeshList)
 {
-    List<int> localPoints;
+    List<label> localPoints;
 
-    for (int i = 0; i < points.size(); i++)
+    for (label i = 0; i < points.size(); i++)
     {
-        for (int j = 0; j < submeshList[i].cellMap().size(); j++)
+        for (label j = 0; j < submeshList[i].cellMap().size(); j++)
         {
             if (submeshList[i].cellMap()[j] == points[i])
             {
@@ -441,14 +441,14 @@ List<int> DEIM<T>::global2local(List<int>& points,
 }
 
 template<typename T>
-List<Pair <int>> DEIM<T>::global2local(List<Pair <int>>& points,
-                                       PtrList<fvMeshSubset>& submeshList)
+List<Pair <label>> DEIM<T>::global2local(List<Pair <label>>& points,
+                PtrList<fvMeshSubset>& submeshList)
 {
-    List<Pair <int>> localPoints(points.size());
+    List<Pair <label>> localPoints(points.size());
 
-    for (int i = 0; i < points.size(); i++)
+    for (label i = 0; i < points.size(); i++)
     {
-        for (int j = 0; j < submeshList[i].cellMap().size(); j++)
+        for (label j = 0; j < submeshList[i].cellMap().size(); j++)
         {
             if (submeshList[i].cellMap()[j] == points[i].first())
             {
@@ -457,7 +457,7 @@ List<Pair <int>> DEIM<T>::global2local(List<Pair <int>>& points,
             }
         }
 
-        for (int j = 0; j < submeshList[i].cellMap().size(); j++)
+        for (label j = 0; j < submeshList[i].cellMap().size(); j++)
         {
             if (submeshList[i].cellMap()[j] == points[i].second())
             {
@@ -471,8 +471,8 @@ List<Pair <int>> DEIM<T>::global2local(List<Pair <int>>& points,
 }
 
 template<typename T>
-void DEIM<T>::check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
-                             int& xyz_colA)
+void DEIM<T>::check3DIndices(label& ind_rowA, label&  ind_colA, label& xyz_rowA,
+                             label& xyz_colA)
 {
     if (ind_rowA < Ncells)
     {
@@ -506,7 +506,7 @@ void DEIM<T>::check3DIndices(int& ind_rowA, int&  ind_colA, int& xyz_rowA,
 };
 
 template<typename T>
-void DEIM<T>::check3DIndices(int& ind_rowA, int& xyz_rowA)
+void DEIM<T>::check3DIndices(label& ind_rowA, label& xyz_rowA)
 {
     if (ind_rowA < Ncells)
     {
@@ -532,7 +532,7 @@ PtrList<F> DEIM<T>::generateSubFieldsMatrix(F& field)
     M_Assert(runSubMeshA == true,
              "You have to compute the magicPointsA before calling this function, try to rerun generateSubmeshesMatrix");
 
-    for (int i = 0; i < submeshListA.size(); i++)
+    for (label i = 0; i < submeshListA.size(); i++)
     {
         F f = submeshListA[i].interpolate(field);
         fields.append(f);
@@ -549,7 +549,7 @@ PtrList<F> DEIM<T>::generateSubFieldsVector(F& field)
              "You have to compute the magicPointsB before calling this function, try to rerun generateSubmeshesVector");
     PtrList<F> fields;
 
-    for (int i = 0; i < submeshListB.size(); i++)
+    for (label i = 0; i < submeshListB.size(); i++)
     {
         F f = submeshListB[i].interpolate(field);
         fields.append(f);
@@ -559,26 +559,28 @@ PtrList<F> DEIM<T>::generateSubFieldsVector(F& field)
 }
 
 
-template<> int DEIM<fvScalarMatrix>::getNcells(int sizeM)
+template<> label DEIM<fvScalarMatrix>::getNcells(label sizeM)
 {
-    int Ncells = sizeM;
+    label Ncells = sizeM;
     return sizeM;
 }
 
-template<> int DEIM<fvVectorMatrix>::getNcells(int sizeM)
+template<> label DEIM<fvVectorMatrix>::getNcells(label sizeM)
 {
-    int Ncells = sizeM / 3;
+    label Ncells = sizeM / 3;
     return Ncells;
 }
 
 // Specialization of the constructor
-template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix>& s, int MaxModesA,
-                                     int MaxModesB, word MatrixName);
-template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix>& s, int MaxModesA,
-                                     int MaxModesB, word MatrixName);
-template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, int MaxModes,
+template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix>& s,
+                                     label MaxModesA,
+                                     label MaxModesB, word MatrixName);
+template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix>& s,
+                                     label MaxModesA,
+                                     label MaxModesB, word MatrixName);
+template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, label MaxModes,
                                     word FunctionName);
-template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, int MaxModes,
+template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, label MaxModes,
                                     word FunctionName);
 
 // Specialization for generateSubFieldsMatrix
@@ -619,59 +621,59 @@ DEIM<fvVectorMatrix>::generateSubFieldsVector(surfaceVectorField& field);
 
 // Specialization for generateSubmeshes
 template PtrList<volScalarField> DEIM<volScalarField>::generateSubmeshes(
-    int layers, fvMesh& mesh, volScalarField field,
-    int secondTime);
+    label layers, fvMesh& mesh, volScalarField field,
+    label secondTime);
 template PtrList<volVectorField> DEIM<volVectorField>::generateSubmeshes(
-    int layers, fvMesh& mesh, volVectorField field,
-    int secondTime);
+    label layers, fvMesh& mesh, volVectorField field,
+    label secondTime);
 template PtrList<volScalarField> DEIM<volVectorField>::generateSubmeshes(
-    int layers, fvMesh& mesh, volScalarField field,
-    int secondTime);
+    label layers, fvMesh& mesh, volScalarField field,
+    label secondTime);
 template PtrList<volVectorField> DEIM<volScalarField>::generateSubmeshes(
-    int layers, fvMesh& mesh, volVectorField field,
-    int secondTime);
+    label layers, fvMesh& mesh, volVectorField field,
+    label secondTime);
 
 // Specialization for generateSubmeshesVector
 template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubmeshesVector(
-    int layers, fvMesh& mesh, volScalarField field, int secondTime);
+    label layers, fvMesh& mesh, volScalarField field, label secondTime);
 template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubmeshesVector(
-    int layers, fvMesh& mesh, volVectorField field, int secondTime);
+    label layers, fvMesh& mesh, volVectorField field, label secondTime);
 template PtrList<surfaceScalarField>
-DEIM<fvScalarMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
-        surfaceScalarField field, int secondTime);
+DEIM<fvScalarMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
+        surfaceScalarField field, label secondTime);
 template PtrList<surfaceVectorField>
-DEIM<fvScalarMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
-        surfaceVectorField field, int secondTime);
+DEIM<fvScalarMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
+        surfaceVectorField field, label secondTime);
 template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubmeshesVector(
-    int layers, fvMesh& mesh, volScalarField field, int secondTime);
+    label layers, fvMesh& mesh, volScalarField field, label secondTime);
 template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubmeshesVector(
-    int layers, fvMesh& mesh, volVectorField field, int secondTime);
+    label layers, fvMesh& mesh, volVectorField field, label secondTime);
 template PtrList<surfaceScalarField>
-DEIM<fvVectorMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
-        surfaceScalarField field, int secondTime);
+DEIM<fvVectorMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
+        surfaceScalarField field, label secondTime);
 template PtrList<surfaceVectorField>
-DEIM<fvVectorMatrix>::generateSubmeshesVector(int layers, fvMesh& mesh,
-        surfaceVectorField field, int secondTime);
+DEIM<fvVectorMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
+        surfaceVectorField field, label secondTime);
 template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
-    int layers, fvMesh& mesh, volScalarField field, int secondTime);
+    label layers, fvMesh& mesh, volScalarField field, label secondTime);
 template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
-    int layers, fvMesh& mesh, volVectorField field, int secondTime);
+    label layers, fvMesh& mesh, volVectorField field, label secondTime);
 template PtrList<surfaceScalarField>
 
 // Specialization for generateSubmeshesMatrix
-DEIM<fvScalarMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
-        surfaceScalarField field, int secondTime);
+DEIM<fvScalarMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
+        surfaceScalarField field, label secondTime);
 template PtrList<surfaceVectorField>
-DEIM<fvScalarMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
-        surfaceVectorField field, int secondTime);
+DEIM<fvScalarMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
+        surfaceVectorField field, label secondTime);
 template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubmeshesMatrix(
-    int layers, fvMesh& mesh, volScalarField field, int secondTime);
+    label layers, fvMesh& mesh, volScalarField field, label secondTime);
 template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubmeshesMatrix(
-    int layers, fvMesh& mesh, volVectorField field, int secondTime);
+    label layers, fvMesh& mesh, volVectorField field, label secondTime);
 template PtrList<surfaceScalarField>
-DEIM<fvVectorMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
-        surfaceScalarField field, int secondTime);
+DEIM<fvVectorMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
+        surfaceScalarField field, label secondTime);
 template PtrList<surfaceVectorField>
-DEIM<fvVectorMatrix>::generateSubmeshesMatrix(int layers, fvMesh& mesh,
-        surfaceVectorField field, int secondTime);
+DEIM<fvVectorMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
+        surfaceVectorField field, label secondTime);
 

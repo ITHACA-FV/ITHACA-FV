@@ -169,7 +169,7 @@ class reductionProblem
         ///
         /// @param[in]  tsize  Dimension of the training set.
         ///
-        void genRandPar(int tsize);
+        void genRandPar(label tsize);
 
         //--------------------------------------------------------------------------
         /// Generate Equidistributed Numbers

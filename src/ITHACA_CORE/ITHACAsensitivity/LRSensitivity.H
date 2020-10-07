@@ -44,7 +44,7 @@ class LRSensitivity
     public:
         //Constructors
         LRSensitivity();
-        explicit LRSensitivity(int Npara, int Np);
+        explicit LRSensitivity(label Npara, label Np);
         ~LRSensitivity() {};
 
         //Members

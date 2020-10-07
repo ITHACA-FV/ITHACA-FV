@@ -51,7 +51,7 @@ struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
 {
     public:
         newtonUnsteadyNSTurbSUP() {}
-        newtonUnsteadyNSTurbSUP(int Nx, int Ny,
+        newtonUnsteadyNSTurbSUP(label Nx, label Ny,
                                 UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
@@ -61,14 +61,14 @@ struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
             gNut(problem.nNutModes)
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         UnsteadyNSTurb* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label nphiNut;
+        label Nphi_p;
+        label N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -85,7 +85,7 @@ struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
 {
     public:
         newtonUnsteadyNSTurbPPE() {}
-        newtonUnsteadyNSTurbPPE(int Nx, int Ny,
+        newtonUnsteadyNSTurbPPE(label Nx, label Ny,
                                 UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
@@ -95,14 +95,14 @@ struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
             gNut(problem.nNutModes)
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         UnsteadyNSTurb* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label nphiNut;
+        label Nphi_p;
+        label N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -117,7 +117,7 @@ struct newtonUnsteadyNSTurbSUPAve: public newton_argument<double>
 {
     public:
         newtonUnsteadyNSTurbSUPAve() {}
-        newtonUnsteadyNSTurbSUPAve(int Nx, int Ny,
+        newtonUnsteadyNSTurbSUPAve(label Nx, label Ny,
                                    UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
@@ -128,14 +128,14 @@ struct newtonUnsteadyNSTurbSUPAve: public newton_argument<double>
             gNutAve(problem.nutAve.size())
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         UnsteadyNSTurb* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label nphiNut;
+        label Nphi_p;
+        label N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -151,7 +151,7 @@ struct newtonUnsteadyNSTurbPPEAve: public newton_argument<double>
 {
     public:
         newtonUnsteadyNSTurbPPEAve() {}
-        newtonUnsteadyNSTurbPPEAve(int Nx, int Ny,
+        newtonUnsteadyNSTurbPPEAve(label Nx, label Ny,
                                    UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
@@ -163,14 +163,14 @@ struct newtonUnsteadyNSTurbPPEAve: public newton_argument<double>
 
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
         UnsteadyNSTurb* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label nphiNut;
+        label Nphi_p;
+        label N_BC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
@@ -211,10 +211,10 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         UnsteadyNSTurb* problem;
 
         /// Number of viscosity modes
-        int nphiNut;
+        label nphiNut;
 
         /// Dimension of the interpolation independent variable
-        int dimA;
+        label dimA;
 
         /// List of pointers to store the modes for the eddy viscosity
         PtrList<volScalarField> nutModes;
@@ -247,7 +247,7 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         Eigen::VectorXd gNutAve;
 
         /// Interpolation independent variable choice
-        int interChoice = 1;
+        label interChoice = 1;
 
         /// Interpolation boolean variable to skip lifting functions
         bool skipLift = false;

@@ -85,7 +85,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
               snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
               word fieldName,
-              bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
+              bool podex, bool supex = 0, bool sup = 0, label nmodes = 0);
 
 //------------------------------------------------------------------------------
 /// @brief      Gets the bases for a scalar field using SVD instead of the
@@ -112,7 +112,7 @@ void getModesSVD(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>&
     snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
     word fieldName,
-    bool podex, bool supex = 0, bool sup = 0, int nmodes = 0);
+    bool podex, bool supex = 0, bool sup = 0, label nmodes = 0);
 
 
 //------------------------------------------------------------------------------
@@ -136,8 +136,8 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 void getNestedSnapshotMatrix(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-    word fieldName, int Npar,
-    int NnestedOut);
+    word fieldName, label Npar,
+    label NnestedOut);
 
 
 //------------------------------------------------------------------------------
@@ -166,7 +166,7 @@ void getWeightedModes(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
     word fieldName, bool podex,
     bool supex = 0, bool sup = 0,
-    int nmodes = 0);
+    label nmodes = 0);
 
 //------------------------------------------------------------------------------
 /// @brief      Performs GrammSchmidt orthonormalization on an Eigen Matrix
@@ -255,7 +255,7 @@ void exportcumEigenvalues(scalarField cumEigenvalues,  fileName name,
 template<typename Type>
 PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
             PtrList<GeometricField<Type, fvPatchField, volMesh>>& SnapShotsMatrix,
-            int nmodes,
+            label nmodes,
             word FunctionName);
 
 //------------------------------------------------------------------------------
@@ -275,7 +275,7 @@ PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
 ///
 template<typename type_matrix>
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-        DEIMmodes(PtrList<type_matrix>& MatrixList, int nmodesA, int nmodesB,
+        DEIMmodes(PtrList<type_matrix>& MatrixList, label nmodesA, label nmodesB,
                   word MatrixName = "Matrix");
 
 //------------------------------------------------------------------------------
@@ -296,7 +296,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 ///
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
         DEIMmodes(List<Eigen::SparseMatrix<double>>& A, List<Eigen::VectorXd>& b,
-                  int nmodesA, int nmodesB, word MatrixName = "Matrix");
+                  label nmodesA, label nmodesB, word MatrixName = "Matrix");
 
 
 //------------------------------------------------------------------------------
@@ -324,7 +324,7 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
               PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
               PtrList<volScalarField>& Volumes, word fieldName, bool podex, bool supex = 0,
               bool sup = 0,
-              int nmodes = 0);
+              label nmodes = 0);
 
 //------------------------------------------------------------------------------
 /// @brief      Gets Modes based on eigenvalue decomposition of another Field
@@ -342,7 +342,7 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
 ///                           function is reading them) 0 elsewhere.
 /// @param[in]  sup           boolean variable 1 if you want to compute the
 ///                           supremizer modes 0 elsewhere.
-/// @param[in]  nmodes        int variable to set the number of modes to be
+/// @param[in]  nmodes        label variable to set the number of modes to be
 ///                           stored, if set to 0 the maximum number of modes
 ///                           will computed.
 ///
@@ -353,7 +353,7 @@ template<class Field_type, class Field_type_2>
 void getModes(PtrList<Field_type>& snapshots, PtrList<Field_type>& modes,
               PtrList<Field_type_2>& fields2, word fieldName, bool podex, bool supex = 0,
               bool sup = 0,
-              int nmodes = 0);
+              label nmodes = 0);
 
 };
 

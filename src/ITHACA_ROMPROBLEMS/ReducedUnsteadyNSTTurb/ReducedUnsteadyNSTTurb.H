@@ -58,7 +58,7 @@ struct newton_unsteadyNSTTurb_sup: public newton_argument<double>
 {
     public:
         newton_unsteadyNSTTurb_sup() {}
-        newton_unsteadyNSTTurb_sup(int Nx, int Ny,
+        newton_unsteadyNSTTurb_sup(label Nx, label Ny,
                                    UnsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
@@ -68,15 +68,15 @@ struct newton_unsteadyNSTTurb_sup: public newton_argument<double>
             nu_c(problem.Nnutmodes)
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
         UnsteadyNSTTurb* problem;
-        int Nphi_u;
-        int Nphi_nut;
-        int Nphi_p;
-        int N_BC;
+        label Nphi_u;
+        label Nphi_nut;
+        label Nphi_p;
+        label N_BC;
         Eigen::VectorXd nu_c;
-        int count_online_solve = 0;
+        label count_online_solve = 0;
         Eigen::VectorXd mu_now;
         scalar nu;
         scalar dt;
@@ -89,7 +89,7 @@ struct newton_unsteadyNSTTurb_sup_t: public newton_argument<double>
 {
     public:
         newton_unsteadyNSTTurb_sup_t() {}
-        newton_unsteadyNSTTurb_sup_t(int Nx, int Ny,
+        newton_unsteadyNSTTurb_sup_t(label Nx, label Ny,
                                      UnsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
@@ -97,13 +97,13 @@ struct newton_unsteadyNSTTurb_sup_t: public newton_argument<double>
             nu_c(problem.Nnutmodes)
         {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+        label operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        label df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
         UnsteadyNSTTurb* problem;
-        int Nphi_t;
-        int N_BC_t;
-        int Nphi_u;
-        int Nphi_nut;
+        label Nphi_t;
+        label N_BC_t;
+        label Nphi_u;
+        label Nphi_nut;
         Eigen::VectorXd nu_c;
         scalar nu;
         scalar DT;
@@ -183,7 +183,7 @@ class ReducedUnsteadyNSTTurb: public reducedUnsteadyNST
         UnsteadyNSTTurb* problem;
 
         /// Number of nut field modes
-        int Nphi_nut;
+        label Nphi_nut;
 
         // Functions
         /// Method to perform an online solve using a supremizer stabilisation method
@@ -208,7 +208,7 @@ class ReducedUnsteadyNSTTurb: public reducedUnsteadyNST
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
         void reconstructSup(fileName folder = "./ITHACAOutput/online_rec",
-                            int printevery = 1);
+                            label printevery = 1);
 
         /// Method to reconstruct a solution for temperature from an online solve with a supremizer stabilisation technique.
         /// stabilisation method
@@ -217,7 +217,7 @@ class ReducedUnsteadyNSTTurb: public reducedUnsteadyNST
         /// @param[in]  printevery  Variable to recover only every printevery online solutions default is 1.
         ///
         void reconstructSupt(fileName folder = "./ITHACAOutput/online_rec",
-                             int printevery = 1);
+                             label printevery = 1);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

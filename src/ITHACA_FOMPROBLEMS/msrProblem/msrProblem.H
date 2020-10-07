@@ -182,8 +182,8 @@ class msrProblem: public reductionProblem
         /// boolean variable to decide if apply prec inlet BC
         bool precInBool = false;
         /// indexes of inlet and outlet to adopt for precursors boundary conditions
-        int precinIndex;
-        int precoutIndex;
+        label precinIndex;
+        label precoutIndex;
         /// matrix to store the values of precursors BC inlet conditions
         Eigen::MatrixXd bc_prec;
 
@@ -685,7 +685,7 @@ class msrProblem: public reductionProblem
         /// if field==prec then ith can range from 1 to 8 included
         /// else ith can range from 1 to 3
 
-        PtrList<volScalarField> choose_group(string field, int ith);
+        PtrList<volScalarField> choose_group(string field, label ith);
 
         //--------------------------------------------------------------------------
         /// method to save matrices for precs and decs M can be an Eigen::MatrixXd or
@@ -695,7 +695,7 @@ class msrProblem: public reductionProblem
         /// folder is the folder in which the matrix is stored
 
         template<typename M>
-        void savegroupMatrix(string nome, int n, word folder, M matrice);
+        void savegroupMatrix(string nome, label n, word folder, M matrice);
 
         ///note: these methods are protected since they are very peculiar and problem
         ///dependent, in this way the user cannot use it in the main of the programm causing

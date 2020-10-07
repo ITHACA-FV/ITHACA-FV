@@ -112,7 +112,7 @@ void UnsteadyNSTurbIntrusive::truthSolve(List<scalar> mu_now)
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
     // Initialize Nsnapshots
-    int nsnapshots = 0;
+    label nsnapshots = 0;
 
     // Start the time loop
     while (runTime.run())
@@ -164,7 +164,7 @@ void UnsteadyNSTurbIntrusive::truthSolve(List<scalar> mu_now)
             mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
             mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
 
-            for (int i = 0; i < mu_now.size(); i++)
+            for (label i = 0; i < mu_now.size(); i++)
             {
                 mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
             }

@@ -29,7 +29,7 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
 {
     N_BF = 0;
 
-    for (int i = 0; i < mesh.boundaryMesh().size(); i++)
+    for (label i = 0; i < mesh.boundaryMesh().size(); i++)
     {
         if (mesh.boundaryMesh()[i].type() != "processor")
         {
@@ -71,19 +71,19 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
                );
     // Calculate total number of cells
     N_IF_glob = (mesh.C().size());
-    reduce(N_IF_glob, sumOp<int>());
+    reduce(N_IF_glob, sumOp<label>());
     // BF construction
     Gsize_BF = autoPtr<labelList>(new labelList (N_BF, label(0)));
     IndFaceLocal = autoPtr< List<labelList>> (new List<labelList> (N_BF,
                    labelList(label(0), label(0))));
 
-    for (int i = 0; i < N_BF; i++)
+    for (label i = 0; i < N_BF; i++)
     {
         Gsize_BF()[i] = mesh.boundaryMesh()[i].size();
         reduce(Gsize_BF()[i], sumOp<label>());
         IndFaceLocal()[i].resize(mesh.boundaryMesh()[i].size());
 
-        for (int k = 0; k < mesh.boundaryMesh()[i].size(); k++)
+        for (label k = 0; k < mesh.boundaryMesh()[i].size(); k++)
         {
             IndFaceLocal()[i][k] = indicesF()[mesh.boundaryMesh()[i].start() + k];
         }
@@ -91,7 +91,7 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
 
     Start = autoPtr<labelList> (new labelList(N_BF, 0));
 
-    for (int i = 0; i < N_BF; i++)
+    for (label i = 0; i < N_BF; i++)
     {
         if (IndFaceLocal()[i].size() == 0)
         {
@@ -136,7 +136,7 @@ List<Field <scalar>> ITHACAparallel::combineFields(
     GlobField[0] = GlobField[0] * 0;
 
     // Assemble internalField
-    for (int i = 0; i < field.size(); i++)
+    for (label i = 0; i < field.size(); i++)
     {
         GlobField[0][indices()[i]] = field[i];
     }
@@ -144,16 +144,16 @@ List<Field <scalar>> ITHACAparallel::combineFields(
     reduce(GlobField[0], sumOp<Field<scalar>>());
 
     // Assemble BoundariField
-    for (int i = 0; i < N_BF; i++)
+    for (label i = 0; i < N_BF; i++)
     {
         GlobField[i + 1].resize(Gsize_BF()[i]);
         Field<scalar> zero(Gsize_BF()[i], 0.0);
         GlobField[i + 1] = zero;
     }
 
-    for (int i = 0; i < N_BF; i++)
+    for (label i = 0; i < N_BF; i++)
     {
-        for (int k = 0; k < field.boundaryFieldRef()[i].size(); k++)
+        for (label k = 0; k < field.boundaryFieldRef()[i].size(); k++)
         {
             if (IndFaceLocal()[i].size() > 0
                     && field.boundaryFieldRef()[i].type() != "zeroGradient"
@@ -179,7 +179,7 @@ List<Field <vector>> ITHACAparallel::combineFields(
     GlobField[0] = GlobField[0] * 0;
 
     // Assemble internalField
-    for (int i = 0; i < field.size(); i++)
+    for (label i = 0; i < field.size(); i++)
     {
         GlobField[0][indices()[i]] = field[i];
     }
@@ -187,16 +187,16 @@ List<Field <vector>> ITHACAparallel::combineFields(
     reduce(GlobField[0], sumOp<Field<vector>>());
 
     // Assemble BoundariField
-    for (int i = 0; i < N_BF; i++)
+    for (label i = 0; i < N_BF; i++)
     {
         GlobField[i + 1].resize(Gsize_BF()[i]);
         Field<vector> zero(Gsize_BF()[i], vector(0.0, 0.0, 0.0));
         GlobField[i + 1] = zero;
     }
 
-    for (int i = 0; i < N_BF; i++)
+    for (label i = 0; i < N_BF; i++)
     {
-        for (int k = 0; k < field.boundaryFieldRef()[i].size(); k++)
+        for (label k = 0; k < field.boundaryFieldRef()[i].size(); k++)
         {
             if (IndFaceLocal()[i].size() > 0
                     && field.boundaryFieldRef()[i].type() != "zeroGradient"

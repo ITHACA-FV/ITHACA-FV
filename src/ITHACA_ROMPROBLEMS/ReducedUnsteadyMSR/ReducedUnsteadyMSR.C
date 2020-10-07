@@ -182,8 +182,8 @@ reducedusMSR::reducedusMSR(usmsrProblem& FOMproblem)
                                      Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3, FOMproblem);
 }
 
-int newton_usmsr_fd::operator()(const Eigen::VectorXd& x,
-                                Eigen::VectorXd& fvec) const
+label newton_usmsr_fd::operator()(const Eigen::VectorXd& x,
+                                  Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_tmp(Nphi_u);
     Eigen::VectorXd b_tmp(Nphi_p);
@@ -231,8 +231,8 @@ int newton_usmsr_fd::operator()(const Eigen::VectorXd& x,
     return 0;
 }
 
-int newton_usmsr_fd::df(const Eigen::VectorXd& x,
-                        Eigen::MatrixXd& fjac) const
+label newton_usmsr_fd::df(const Eigen::VectorXd& x,
+                          Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_usmsr_fd> numDiff(*this);
     numDiff.df(x, fjac);
@@ -240,8 +240,8 @@ int newton_usmsr_fd::df(const Eigen::VectorXd& x,
 }
 
 
-int newton_usmsr_n::operator()(const Eigen::VectorXd& n,
-                               Eigen::VectorXd& fvecn) const
+label newton_usmsr_n::operator()(const Eigen::VectorXd& n,
+                                 Eigen::VectorXd& fvecn) const
 {
     Eigen::VectorXd c_tmp(Nphi_flux);  //for flux
     Eigen::VectorXd d1_tmp(Nphi_prec1); //for prec1
@@ -253,7 +253,7 @@ int newton_usmsr_n::operator()(const Eigen::VectorXd& n,
     Eigen::VectorXd d7_tmp(Nphi_prec7); //for prec7
     Eigen::VectorXd d8_tmp(Nphi_prec8); //for prec8
     c_tmp = n.head(Nphi_flux);
-    int pos = Nphi_flux;
+    label pos = Nphi_flux;
     d1_tmp = n.segment(pos, Nphi_prec1);
     pos = pos + Nphi_prec1;
     d2_tmp = n.segment(pos, Nphi_prec2);
@@ -452,23 +452,23 @@ int newton_usmsr_n::operator()(const Eigen::VectorXd& n,
     return 0;
 }
 
-int newton_usmsr_n::df(const Eigen::VectorXd& n,
-                       Eigen::MatrixXd& fjacn) const
+label newton_usmsr_n::df(const Eigen::VectorXd& n,
+                         Eigen::MatrixXd& fjacn) const
 {
     Eigen::NumericalDiff<newton_usmsr_n> numDiff(*this);
     numDiff.df(n, fjacn);
     return 0;
 }
 
-int newton_usmsr_t::operator()(const Eigen::VectorXd& t,
-                               Eigen::VectorXd& fvect) const
+label newton_usmsr_t::operator()(const Eigen::VectorXd& t,
+                                 Eigen::VectorXd& fvect) const
 {
     Eigen::VectorXd e_tmp(Nphi_T);  //for T
     Eigen::VectorXd f1_tmp(Nphi_dec1); //for dec1
     Eigen::VectorXd f2_tmp(Nphi_dec2); //for dec2
     Eigen::VectorXd f3_tmp(Nphi_dec3); //for dec3
     e_tmp = t.head(Nphi_T);
-    int pos = Nphi_T;
+    label pos = Nphi_T;
     f1_tmp = t.segment(pos, Nphi_dec1);
     pos += Nphi_dec1;
     f2_tmp = t.segment(pos, Nphi_dec2);
@@ -568,8 +568,8 @@ int newton_usmsr_t::operator()(const Eigen::VectorXd& t,
     return 0;
 }
 
-int newton_usmsr_t::df(const Eigen::VectorXd& t,
-                       Eigen::MatrixXd& fjact) const
+label newton_usmsr_t::df(const Eigen::VectorXd& t,
+                         Eigen::MatrixXd& fjact) const
 {
     Eigen::NumericalDiff<newton_usmsr_t> numDiff(*this);
     numDiff.df(t, fjact);
@@ -588,8 +588,8 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
     w.setZero();
     z.resize(Nphi_T + Nphi_dec1 + Nphi_dec2 + Nphi_dec3, 1); //for t
     z.setZero();
-    int pos_w = 0;
-    int pos_z = 0;
+    label pos_w = 0;
+    label pos_z = 0;
     y.head(Nphi_u) = ITHACAutilities::getCoeffs(Usnapshots[startSnap], Umodes);
     y.tail(Nphi_p) = ITHACAutilities::getCoeffs(Psnapshots[startSnap], Pmodes);
 
@@ -699,7 +699,7 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
     }
 
     // Set number of online solutions
-    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    label Ntsteps = static_cast<int>((finalTime - tstart) / dt);
     online_solution_fd.resize(Ntsteps);
     online_solution_n.resize(Ntsteps);
     online_solution_t.resize(Ntsteps);
@@ -707,7 +707,7 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
     // Set the initial time
     time = tstart;
     // Counting variable
-    int counter = 0;
+    label counter = 0;
     // Create vector to store temporal solution and save initial condition as first solution
     Eigen::MatrixXd tmp_sol_fd(Nphi_u + Nphi_p + 1, 1);
     tmp_sol_fd(0) = time;
@@ -737,7 +737,7 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
     tv0.resize(mu_online.size() + 1);
     tv0[0] = time;
 
-    for (int k = 1; k < tv0.size(); k++)
+    for (label k = 1; k < tv0.size(); k++)
     {
         tv0[k] = mu_online(k - 1);
     }
@@ -752,7 +752,7 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
         txs_c0(i) = problem->rbfsplines_TXS[i]->eval(tv0);
     }
 
-    int pos_c = 1;
+    label pos_c = 1;
     tmp_sol_C.col(0).segment(pos_c, Nphi_const) = v_c0;
     pos_c += Nphi_const;
     tmp_sol_C.col(0).segment(pos_c, Nphi_const) = d_c0;
@@ -784,7 +784,7 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
         tv.resize(mu_online.size() + 1);
         tv[0] = time;
 
-        for (int k = 1; k < tv.size(); k++)
+        for (label k = 1; k < tv.size(); k++)
         {
             tv[k] = mu_online(k - 1);
         }
@@ -945,7 +945,7 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
                                "./ITHACAoutput/red_coeff_C");
 }
 
-void reducedusMSR::reconstructAP(fileName folder, int printevery)
+void reducedusMSR::reconstructAP(fileName folder, label printevery)
 {
     recall = true;
     mkDir(folder);
@@ -956,7 +956,7 @@ void reducedusMSR::reconstructAP(fileName folder, int printevery)
     reconstruct_t(folder, printevery);
 }
 
-void reducedusMSR::reconstruct_fd(fileName folder, int printevery)
+void reducedusMSR::reconstruct_fd(fileName folder, label printevery)
 {
     if (recall == false)
     {
@@ -965,9 +965,9 @@ void reducedusMSR::reconstruct_fd(fileName folder, int printevery)
     }
 
     Info << "Reconstructing online solution | fluid-dynamics" << endl;
-    int counter = 0;
-    int nextwrite = 0;
-    int counter2 = 1;
+    label counter = 0;
+    label nextwrite = 0;
+    label counter2 = 1;
 
     for (label i = 0; i < online_solution_fd.size(); i++)
     {
@@ -1003,7 +1003,7 @@ void reducedusMSR::reconstruct_fd(fileName folder, int printevery)
     Info << "End" << endl;
 }
 
-void reducedusMSR::reconstruct_n(fileName folder, int printevery)
+void reducedusMSR::reconstruct_n(fileName folder, label printevery)
 {
     if (recall == false)
     {
@@ -1012,9 +1012,9 @@ void reducedusMSR::reconstruct_n(fileName folder, int printevery)
     }
 
     Info << "Reconstructing online solution | neutronics" << endl;
-    int counter = 0;
-    int nextwrite = 0;
-    int counter2 = 1;
+    label counter = 0;
+    label nextwrite = 0;
+    label counter2 = 1;
 
     for (label i = 0; i < online_solution_n.size(); i++)
     {
@@ -1121,7 +1121,7 @@ void reducedusMSR::reconstruct_n(fileName folder, int printevery)
     Info << "End" << endl;
 }
 
-void reducedusMSR::reconstruct_t(fileName folder, int printevery)
+void reducedusMSR::reconstruct_t(fileName folder, label printevery)
 {
     if (recall == false)
     {
@@ -1130,9 +1130,9 @@ void reducedusMSR::reconstruct_t(fileName folder, int printevery)
     }
 
     Info << "Reconstructing online solution | thermal" << endl;
-    int counter = 0;
-    int nextwrite = 0;
-    int counter2 = 1;
+    label counter = 0;
+    label nextwrite = 0;
+    label counter2 = 1;
     dimensionedScalar decLam1("decLam1", dimensionSet(0, 0, -1, 0, 0, 0, 0), dl1);
     dimensionedScalar decLam2("decLam2", dimensionSet(0, 0, -1, 0, 0, 0, 0), dl2);
     dimensionedScalar decLam3("decLam3", dimensionSet(0, 0, -1, 0, 0, 0, 0), dl3);
@@ -1199,7 +1199,7 @@ void reducedusMSR::reconstruct_t(fileName folder, int printevery)
     Info << "End" << endl;
 }
 
-void reducedusMSR::reconstruct_C(fileName folder, int printevery)
+void reducedusMSR::reconstruct_C(fileName folder, label printevery)
 {
     if (recall == false)
     {
@@ -1208,9 +1208,9 @@ void reducedusMSR::reconstruct_C(fileName folder, int printevery)
     }
 
     Info << "Reconstructing temperature changing constants" << endl;
-    int counter = 0;
-    int nextwrite = 0;
-    int counter2 = 1;
+    label counter = 0;
+    label nextwrite = 0;
+    label counter2 = 1;
 
     for (label i = 0; i < online_solution_C.size(); i++)
     {

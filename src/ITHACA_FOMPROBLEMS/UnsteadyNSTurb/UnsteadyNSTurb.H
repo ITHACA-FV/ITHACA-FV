@@ -149,7 +149,7 @@ class UnsteadyNSTurb: public unsteadyNS
         label nNutModes;
 
         /// Interpolation independent variable choice
-        int interChoice = 1;
+        label interChoice = 1;
 
         /// Eddy viscosity field
         autoPtr<volScalarField> _nut;

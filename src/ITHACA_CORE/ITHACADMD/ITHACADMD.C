@@ -47,7 +47,7 @@ ITHACADMD<Type, PatchField, GeoMesh>::ITHACADMD(
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACADMD<Type, PatchField, GeoMesh>::getModes(int SVD_rank, bool exact,
+void ITHACADMD<Type, PatchField, GeoMesh>::getModes(label SVD_rank, bool exact,
         bool exportDMDmodes)
 {
     // Check the rank if rank < 0, full rank.
@@ -70,7 +70,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(int SVD_rank, bool exact,
     List<Eigen::MatrixXd> XmBC(SnapEigenBC.size());
     List<Eigen::MatrixXd> YmBC(SnapEigenBC.size());
 
-    for (int i = 0 ; i < SnapEigenBC.size() ; i++)
+    for (label i = 0 ; i < SnapEigenBC.size() ; i++)
     {
         XmBC[i] = SnapEigenBC[i].leftCols(NSnaps - 1);
         YmBC[i] = SnapEigenBC[i].rightCols(NSnaps - 1);
@@ -105,24 +105,24 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(int SVD_rank, bool exact,
     eigenValues = esEg.eigenvalues();
     Eigen::VectorXd ln = eigenValues.array().log().imag().abs();
     // Sort based on The Frequencies
-    typedef std::pair<double, int> mypair;
+    typedef std::pair<double, label> mypair;
     std::vector<mypair> sortedList(ln.size());
 
-    for (int i = 0; i < ln.size(); i++)
+    for (label i = 0; i < ln.size(); i++)
     {
         sortedList[i].first = ln(i);
         sortedList[i].second = i;
     }
 
     std::sort(sortedList.begin(), sortedList.end(),
-              std::less<std::pair<double, int>>());
+              std::less<std::pair<double, label>>());
 
     if (exact)
     {
         DMDEigenModes = Ym * V * S.asDiagonal() * esEg.eigenvectors();
         DMDEigenModesBC.resize(YmBC.size());
 
-        for (int i = 0; i < YmBC.size(); i++)
+        for (label i = 0; i < YmBC.size(); i++)
         {
             DMDEigenModesBC[i] = YmBC[i] * V * S.asDiagonal() * esEg.eigenvectors();
         }
@@ -134,7 +134,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(int SVD_rank, bool exact,
         PODm = (Xm * V) * eigenValueseigLam.asDiagonal();
         PODmBC.resize(XmBC.size());
 
-        for (int i = 0; i < XmBC.size(); i++)
+        for (label i = 0; i < XmBC.size(); i++)
         {
             PODmBC[i] = (XmBC[i] * V) * eigenValueseigLam.asDiagonal();
         }
@@ -142,7 +142,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(int SVD_rank, bool exact,
         DMDEigenModes = PODm * esEg.eigenvectors();
         DMDEigenModesBC.resize(PODmBC.size());
 
-        for (int i = 0; i < PODmBC.size(); i++)
+        for (label i = 0; i < PODmBC.size(); i++)
         {
             DMDEigenModesBC[i] = PODmBC[i] * esEg.eigenvectors();
         }
@@ -167,9 +167,9 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getDynamics(double tStart,
         double tFinal, double dt)
 {
     Eigen::VectorXcd omega = eigenValues.array().log() / originalDT;
-    int ncols = static_cast<int>((tFinal - tStart) / dt ) + 1;
+    label ncols = static_cast<label>((tFinal - tStart) / dt ) + 1;
     dynamics.resize(SVD_rank_public, ncols);
-    int i = 0;
+    label i = 0;
 
     for (double t = tStart; t <= tFinal; t += dt)
     {
@@ -197,7 +197,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::reconstruct(word exportFolder,
 {
     PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshotsrec;
 
-    for (int i = 0; i < dynamics.cols(); i++)
+    for (label i = 0; i < dynamics.cols(); i++)
     {
         Eigen::MatrixXcd col = DMDEigenModes * dynamics.col(i);
         Eigen::VectorXd vec = col.real();
@@ -205,7 +205,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::reconstruct(word exportFolder,
                 snapshotsDMD[0] * 0);
         tmp = Foam2Eigen::Eigen2field(tmp, vec);
 
-        for (int k = 0; k < tmp.boundaryField().size(); k++)
+        for (label k = 0; k < tmp.boundaryField().size(); k++)
         {
             Eigen::VectorXd vecBC = (DMDEigenModesBC[k] * dynamics.col(i)).real();
             ITHACAutilities::assignBC(tmp, k, vecBC);
@@ -234,7 +234,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::convert2Foam()
         tmpImag = Foam2Eigen::Eigen2field(tmpImag, vecImag);
 
         // Adjusting boundary conditions
-        for (int k = 0; k < tmpReal.boundaryField().size(); k++)
+        for (label k = 0; k < tmpReal.boundaryField().size(); k++)
         {
             ITHACAutilities::assignBC(tmpReal, k, DMDEigenModesBC[k].col(i).real());
             ITHACAutilities::assignBC(tmpImag, k, DMDEigenModesBC[k].col(i).imag());

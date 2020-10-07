@@ -58,7 +58,7 @@ void reducedLaplacian::solveOnline(Eigen::MatrixXd mu)
     Eigen::MatrixXd A;
     A.setZero(problem->NTmodes, problem->NTmodes);
 
-    for (int i = 0; i < problem->A_matrices.size() ; i++)
+    for (label i = 0; i < problem->A_matrices.size() ; i++)
     {
         A += problem->A_matrices[i] * mu(0, i);
     }
@@ -72,12 +72,12 @@ void reducedLaplacian::solveOnline(Eigen::MatrixXd mu)
     count_online_solve += 1;
 }
 
-void reducedLaplacian::reconstruct(fileName folder, int printevery)
+void reducedLaplacian::reconstruct(fileName folder, label printevery)
 {
     mkDir(folder);
     ITHACAutilities::createSymLink(folder);
-    int counter = 0;
-    int nextwrite = 0;
+    label counter = 0;
+    label nextwrite = 0;
 
     for (label i = 0; i < online_solution.rows(); i++)
     {

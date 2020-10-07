@@ -75,7 +75,7 @@ TypeField computeAverage(PtrList<TypeField>& fields)
 {
     TypeField av(fields[0]);
 
-    for (int i = 1; i < fields.size(); i++)
+    for (label i = 1; i < fields.size(); i++)
     {
         av += fields[i];
     }
@@ -122,15 +122,15 @@ template void assignIF(GeometricField<vector, fvPatchField, volMesh>& s,
 
 template<typename Type>
 void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
-              Type& value, int index)
+              Type& value, label index)
 {
     s.ref()[index] = value;
 }
 
 template void assignIF(GeometricField<scalar, fvPatchField, volMesh>& field,
-                       scalar& value, int index);
+                       scalar& value, label index);
 template void assignIF(GeometricField<vector, fvPatchField, volMesh>& field,
-                       vector& value, int index);
+                       vector& value, label index);
 
 void assignONE(volScalarField& s, List<label>& L)
 {
@@ -143,7 +143,7 @@ void assignONE(volScalarField& s, List<label>& L)
 void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
               double value)
 {
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     List<double> valueList(sizeBC);
 
     for (label i = 0; i < sizeBC; i++)
@@ -157,7 +157,7 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
 void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
               Eigen::MatrixXd valueVec)
 {
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC == valueVec.size(),
              "The size of the given values matrix has to be equal to the dimension of the boundaryField");
     List<double> valueList(sizeBC);
@@ -175,7 +175,7 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
               List<double> valueList)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
 
@@ -227,7 +227,7 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
 {
     M_Assert(value.size() == 3,
              "The size of the given vector has to be equal to 3 for the 3 components");
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     List<vector> valueList(sizeBC);
 
     for (label i = 0; i < sizeBC; i++)
@@ -241,7 +241,7 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
 void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
               Eigen::MatrixXd valueVec)
 {
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC * 3 == valueVec.size(),
              "The size of the given values matrix has to be equal to 3 times the dimension of the boundaryField");
     List<vector> valueList(sizeBC);
@@ -259,7 +259,7 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
 void assignBC(GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
               label BC_ind, Eigen::MatrixXd valueVec)
 {
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC  == valueVec.rows() && valueVec.cols() == 1,
              "The given matrix must be a column one with the size equal to 3 times the dimension of the boundaryField");
     List<scalar> valueList(sizeBC);
@@ -275,7 +275,7 @@ void assignBC(GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
 void assignBC(GeometricField<vector, fvsPatchField, surfaceMesh>& s,
               label BC_ind, Eigen::MatrixXd valueVec)
 {
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC * 3  == valueVec.rows() && valueVec.cols() == 1,
              "The given matrix must be a column one with the size equal to the dimension of the boundaryField");
     List<vector> valueList(sizeBC);
@@ -295,7 +295,7 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
               List<vector> valueList)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
 
@@ -333,7 +333,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
               List<Type>& valueList)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
 
@@ -386,7 +386,7 @@ template<typename Type>
 void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
               Type& value)
 {
-    int sizeBC = s.boundaryField()[BC_ind].size();
+    label sizeBC = s.boundaryField()[BC_ind].size();
     List<Type> valueList(sizeBC);
 
     for (label i = 0; i < sizeBC; i++)
@@ -461,9 +461,9 @@ void setIndices2Value(labelList& ind2set, List<Type>& value2set,
              "The size of the original list of values must be bigger than the size of the list of values you want to set");
     labelList ind_ok(ind2set);
 
-    for (int i = 0; i < ind2set.size(); i++)
+    for (label i = 0; i < ind2set.size(); i++)
     {
-        for (int k = 0; k < movingIDS.size(); k++)
+        for (label k = 0; k < movingIDS.size(); k++)
         {
             if (ind2set[i] == movingIDS[k])
             {
@@ -473,7 +473,7 @@ void setIndices2Value(labelList& ind2set, List<Type>& value2set,
         }
     }
 
-    for (int i = 0; i < ind2set.size(); i++)
+    for (label i = 0; i < ind2set.size(); i++)
     {
         originalList[ind_ok[i]] = value2set[i];
     }
@@ -561,7 +561,7 @@ void normalizeFields(
         tmp = Foam2Eigen::Eigen2field(tmp, vec);
 
         // Adjusting boundary conditions
-        for (int k = 0; k < tmp.boundaryField().size(); k++)
+        for (label k = 0; k < tmp.boundaryField().size(); k++)
         {
             Eigen::MatrixXd vec = eigenFieldsBC[k].col(i) / norm;
             assignBC(tmp, k, vec);
