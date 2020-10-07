@@ -82,7 +82,7 @@ labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
 ///
 /// @return     The indices.
 ///
-List<label> getIndices(fvMesh& mesh, label index, label layers);
+List<label> getIndices(fvMesh& mesh, int index, int layers);
 
 //--------------------------------------------------------------------------
 /// @brief      Gets the indices of the cells around a certain cell.
@@ -94,8 +94,8 @@ List<label> getIndices(fvMesh& mesh, label index, label layers);
 ///
 /// @return     The indices.
 ///
-List<label> getIndices(fvMesh& mesh, label index_row, label index_col,
-                       label layers);
+List<label> getIndices(fvMesh& mesh, int index_row, int index_col,
+                       int layers);
 
 //--------------------------------------------------------------------------
 /// @brief      Get the polabel coordinates and indices from patch.

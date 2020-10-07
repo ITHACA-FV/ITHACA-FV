@@ -59,7 +59,7 @@ labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
     return boxIndices;
 }
 
-List<label> getIndices(fvMesh& mesh, label index, label layers)
+List<label> getIndices(fvMesh& mesh, int index, int layers)
 {
     List<label> out;
     out.resize(1);
@@ -85,8 +85,8 @@ List<label> getIndices(fvMesh& mesh, label index, label layers)
     return out2;
 }
 
-List<label> getIndices(fvMesh& mesh, label index_row,
-                       label index_col, label layers)
+List<label> getIndices(fvMesh& mesh, int index_row,
+                       int index_col, int layers)
 {
     List<label> out;
     out.resize(2);
@@ -351,7 +351,7 @@ List<label> getIndicesFromBox(
              && Box.cols() == 3,
              "The box must be a 2*3 matrix shaped in this way: \nBox = \t|x0, y0, z0|\n\t|x1, yi, z1|\n");
     List<label> indices(field.internalField().size());
-    label k = 0;
+    int k = 0;
 
     for (label i = 0; i < field.internalField().size(); i++)
     {

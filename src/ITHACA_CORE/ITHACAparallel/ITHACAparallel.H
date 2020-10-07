@@ -109,10 +109,10 @@ class ITHACAparallel
         autoPtr<labelList> Start;
 
         /// ID of the OLD process
-        static List<label> oldProcIDs_;
+        static List<int> oldProcIDs_;
 
         /// ID of the NEW process
-        static List<label> newProcIDs_;
+        static List<int> newProcIDs_;
 
         /// runTime defined locally
         Time& runTime;
