@@ -520,7 +520,7 @@ void ITHACAstream::read_fields(
         timename = timename.substr(0, timename.find_last_of("\\/"));
         timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
         int last_s = numberOfFiles(casename,
-                                     "processor" + name(Pstream::myProcNo()) + "/");
+                                   "processor" + name(Pstream::myProcNo()) + "/");
 
         if (first_snap > last_s)
         {

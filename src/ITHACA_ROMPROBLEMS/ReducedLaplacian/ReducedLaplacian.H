@@ -74,6 +74,9 @@ class reducedLaplacian: public reducedProblem
         /// Counter for online sol
         int count_online_solve = 1;
 
+        /// Reduced reconstructed Solution
+        PtrList<volScalarField> Trec;
+
         /// Function to perform an online solve given a certain mu
         ///
         /// @param[in]  mu    Actual value of the parameters that are multiplying,

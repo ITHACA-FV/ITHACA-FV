@@ -145,7 +145,7 @@ int newtonUnsteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newtonUnsteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
-                                        Eigen::MatrixXd& fjac) const
+                                      Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbIntrusive> numDiff(*this);
     numDiff.df(x, fjac);

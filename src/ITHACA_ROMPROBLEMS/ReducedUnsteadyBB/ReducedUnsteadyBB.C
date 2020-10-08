@@ -89,7 +89,7 @@ ReducedUnsteadyBB::ReducedUnsteadyBB(UnsteadyBB& FOMproblem)
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 //Operator to evaluate the residual for the supremizer approach
 int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
-                                        Eigen::VectorXd& fvec) const
+                                      Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -156,7 +156,7 @@ int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
-                                Eigen::MatrixXd& fjac) const
+                              Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyBB_sup> numDiff(*this);
     numDiff.df(x, fjac);
@@ -167,7 +167,7 @@ int newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
 
 // Operator to evaluate the residual for the supremizer approach
 int newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
-                                        Eigen::VectorXd& fvec) const
+                                      Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -238,7 +238,7 @@ int newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
-                                Eigen::MatrixXd& fjac) const
+                              Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyBB_PPE> numDiff(*this);
     numDiff.df(x, fjac);

@@ -107,7 +107,7 @@ reducedUnsteadyNST::reducedUnsteadyNST(unsteadyNST& FOMproblem)
 // * * * * * * * * * * * * * * * Operators supremizer  * * * * * * * * * * * * * //
 //Operator to evaluate the residual for the supremizer approach
 int newton_unsteadyNST_sup::operator()(const Eigen::VectorXd& x,
-        Eigen::VectorXd& fvec) const
+                                       Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -148,7 +148,7 @@ int newton_unsteadyNST_sup::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newton_unsteadyNST_sup::df(const Eigen::VectorXd& x,
-                                 Eigen::MatrixXd& fjac) const
+                               Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyNST_sup> numDiff(*this);
     numDiff.df(x, fjac);
@@ -183,7 +183,7 @@ int newton_unsteadyNST_sup_t::operator()(const Eigen::VectorXd& t,
     return 0;
 }
 int newton_unsteadyNST_sup_t::df(const Eigen::VectorXd& t,
-                                   Eigen::MatrixXd& fjact) const
+                                 Eigen::MatrixXd& fjact) const
 {
     Eigen::NumericalDiff<newton_unsteadyNST_sup_t> numDiff(*this);
     numDiff.df(t, fjact);

@@ -68,7 +68,7 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
 }
 
 int newton_steadyNS::operator()(const Eigen::VectorXd& x,
-                                  Eigen::VectorXd& fvec) const
+                                Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_tmp(Nphi_u);
     Eigen::VectorXd b_tmp(Nphi_p);
@@ -126,7 +126,7 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
 
 
 int newton_steadyNS::df(const Eigen::VectorXd& x,
-                          Eigen::MatrixXd& fjac) const
+                        Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_steadyNS> numDiff(*this);
     numDiff.df(x, fjac);

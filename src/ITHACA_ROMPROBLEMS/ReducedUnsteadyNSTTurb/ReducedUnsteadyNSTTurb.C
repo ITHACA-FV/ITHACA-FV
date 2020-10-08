@@ -152,7 +152,7 @@ int newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newton_unsteadyNSTTurb_sup::df(const Eigen::VectorXd& x,
-                                     Eigen::MatrixXd& fjac) const
+                                   Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup> numDiff(*this);
     numDiff.df(x, fjac);
@@ -191,7 +191,7 @@ int newton_unsteadyNSTTurb_sup_t::operator()(const Eigen::VectorXd& t,
     return 0;
 }
 int newton_unsteadyNSTTurb_sup_t::df(const Eigen::VectorXd& t,
-                                       Eigen::MatrixXd& fjact) const
+                                     Eigen::MatrixXd& fjact) const
 {
     Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup_t> numDiff(*this);
     numDiff.df(t, fjact);

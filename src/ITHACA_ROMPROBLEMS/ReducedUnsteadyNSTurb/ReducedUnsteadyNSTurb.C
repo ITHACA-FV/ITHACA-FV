@@ -97,7 +97,7 @@ ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
 
 // Operator to evaluate the residual for the supremizer approach
 int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
-        Eigen::VectorXd& fvec) const
+                                        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd aTmp(Nphi_u);
@@ -171,7 +171,7 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newtonUnsteadyNSTurbSUP::df(const Eigen::VectorXd& x,
-                                  Eigen::MatrixXd& fjac) const
+                                Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbSUP> numDiff(*this);
     numDiff.df(x, fjac);
@@ -256,7 +256,7 @@ int newtonUnsteadyNSTurbSUPAve::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newtonUnsteadyNSTurbSUPAve::df(const Eigen::VectorXd& x,
-                                     Eigen::MatrixXd& fjac) const
+                                   Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbSUPAve> numDiff(*this);
     numDiff.df(x, fjac);
@@ -267,7 +267,7 @@ int newtonUnsteadyNSTurbSUPAve::df(const Eigen::VectorXd& x,
 
 // Operator to evaluate the residual for the supremizer approach
 int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
-        Eigen::VectorXd& fvec) const
+                                        Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd aTmp(Nphi_u);
@@ -352,7 +352,7 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newtonUnsteadyNSTurbPPE::df(const Eigen::VectorXd& x,
-                                  Eigen::MatrixXd& fjac) const
+                                Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbPPE> numDiff(*this);
     numDiff.df(x, fjac);
@@ -455,7 +455,7 @@ int newtonUnsteadyNSTurbPPEAve::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the PPE approach
 int newtonUnsteadyNSTurbPPEAve::df(const Eigen::VectorXd& x,
-                                     Eigen::MatrixXd& fjac) const
+                                   Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonUnsteadyNSTurbPPEAve> numDiff(*this);
     numDiff.df(x, fjac);

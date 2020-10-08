@@ -104,7 +104,7 @@ class laplacianProblem: public reductionProblem
 
         //--------------------------------------------------------------------------
         /// Perform a truthsolve
-        void truthSolve(List<scalar> mu_now);
+        void truthSolve(List<scalar> mu_now, word folder = "./ITHACAoutput/Offline/");
 
         //--------------------------------------------------------------------------
         /// Perform a projection onto the POD modes
