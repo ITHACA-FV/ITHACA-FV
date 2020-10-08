@@ -66,7 +66,7 @@ ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
 }
 
 int newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
-                                     Eigen::VectorXd& fvec) const
+                                   Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd aTmp(Nphi_u);
     Eigen::VectorXd bTmp(Nphi_p);
@@ -124,7 +124,7 @@ int newtonSteadyNSTurb::operator()(const Eigen::VectorXd& x,
 }
 
 int newtonSteadyNSTurb::df(const Eigen::VectorXd& x,
-                             Eigen::MatrixXd& fjac) const
+                           Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonSteadyNSTurb> numDiff(*this);
     numDiff.df(x, fjac);

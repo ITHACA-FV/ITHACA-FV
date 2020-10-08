@@ -183,7 +183,7 @@ reducedusMSR::reducedusMSR(usmsrProblem& FOMproblem)
 }
 
 int newton_usmsr_fd::operator()(const Eigen::VectorXd& x,
-                                  Eigen::VectorXd& fvec) const
+                                Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_tmp(Nphi_u);
     Eigen::VectorXd b_tmp(Nphi_p);
@@ -232,7 +232,7 @@ int newton_usmsr_fd::operator()(const Eigen::VectorXd& x,
 }
 
 int newton_usmsr_fd::df(const Eigen::VectorXd& x,
-                          Eigen::MatrixXd& fjac) const
+                        Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_usmsr_fd> numDiff(*this);
     numDiff.df(x, fjac);
@@ -241,7 +241,7 @@ int newton_usmsr_fd::df(const Eigen::VectorXd& x,
 
 
 int newton_usmsr_n::operator()(const Eigen::VectorXd& n,
-                                 Eigen::VectorXd& fvecn) const
+                               Eigen::VectorXd& fvecn) const
 {
     Eigen::VectorXd c_tmp(Nphi_flux);  //for flux
     Eigen::VectorXd d1_tmp(Nphi_prec1); //for prec1
@@ -453,7 +453,7 @@ int newton_usmsr_n::operator()(const Eigen::VectorXd& n,
 }
 
 int newton_usmsr_n::df(const Eigen::VectorXd& n,
-                         Eigen::MatrixXd& fjacn) const
+                       Eigen::MatrixXd& fjacn) const
 {
     Eigen::NumericalDiff<newton_usmsr_n> numDiff(*this);
     numDiff.df(n, fjacn);
@@ -461,7 +461,7 @@ int newton_usmsr_n::df(const Eigen::VectorXd& n,
 }
 
 int newton_usmsr_t::operator()(const Eigen::VectorXd& t,
-                                 Eigen::VectorXd& fvect) const
+                               Eigen::VectorXd& fvect) const
 {
     Eigen::VectorXd e_tmp(Nphi_T);  //for T
     Eigen::VectorXd f1_tmp(Nphi_dec1); //for dec1
@@ -569,7 +569,7 @@ int newton_usmsr_t::operator()(const Eigen::VectorXd& t,
 }
 
 int newton_usmsr_t::df(const Eigen::VectorXd& t,
-                         Eigen::MatrixXd& fjact) const
+                       Eigen::MatrixXd& fjact) const
 {
     Eigen::NumericalDiff<newton_usmsr_t> numDiff(*this);
     numDiff.df(t, fjact);

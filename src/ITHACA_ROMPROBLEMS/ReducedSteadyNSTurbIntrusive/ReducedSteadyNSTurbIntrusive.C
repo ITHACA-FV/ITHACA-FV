@@ -102,7 +102,7 @@ int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
 }
 
 int newtonSteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
-                                      Eigen::MatrixXd& fjac) const
+                                    Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonSteadyNSTurbIntrusive> numDiff(*this);
     numDiff.df(x, fjac);

@@ -61,7 +61,7 @@ laplacianProblem::laplacianProblem(int argc, char* argv[])
 
 // * * * * * * * * * * * * * * Full Order Methods * * * * * * * * * * * * * * //
 // Method to performa a truthSolve
-void laplacianProblem::truthSolve(List<scalar> mu_now)
+void laplacianProblem::truthSolve(List<scalar> mu_now, word folder)
 {
     volScalarField& T = _T();
     volScalarField& S = _S();
@@ -73,7 +73,7 @@ void laplacianProblem::truthSolve(List<scalar> mu_now)
     }
 
     solve(lhs == -S);
-    ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
+    ITHACAstream::exportSolution(T, name(counter), folder);
     Tfield.append(T);
     counter++;
     writeMu(mu_now);
@@ -94,7 +94,7 @@ void laplacianProblem::truthSolve(List<scalar> mu_now)
     if (mu_samples.rows() == mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-                                   "./ITHACAoutput/Offline");
+                                   folder);
     }
 }
 // Perform the projection onto the POD modes

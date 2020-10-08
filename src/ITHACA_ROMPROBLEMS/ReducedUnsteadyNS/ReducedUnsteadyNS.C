@@ -82,7 +82,7 @@ reducedUnsteadyNS::reducedUnsteadyNS(unsteadyNS& FOMproblem)
 
 // Operator to evaluate the residual for the Supremizer approach
 int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
-                                        Eigen::VectorXd& fvec) const
+                                      Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -159,7 +159,7 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newton_unsteadyNS_sup::df(const Eigen::VectorXd& x,
-                                Eigen::MatrixXd& fjac) const
+                              Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyNS_sup> numDiff(*this);
     numDiff.df(x, fjac);
@@ -170,7 +170,7 @@ int newton_unsteadyNS_sup::df(const Eigen::VectorXd& x,
 
 // Operator to evaluate the residual for the Pressure Poisson Equation (PPE) approach
 int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
-                                        Eigen::VectorXd& fvec) const
+                                      Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd a_dot(Nphi_u);
     Eigen::VectorXd a_tmp(Nphi_u);
@@ -259,7 +259,7 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
 
 // Operator to evaluate the Jacobian for the supremizer approach
 int newton_unsteadyNS_PPE::df(const Eigen::VectorXd& x,
-                                Eigen::MatrixXd& fjac) const
+                              Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newton_unsteadyNS_PPE> numDiff(*this);
     numDiff.df(x, fjac);
