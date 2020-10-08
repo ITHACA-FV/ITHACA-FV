@@ -180,20 +180,22 @@ void getModes(
 
         if (eigenValueseig.array().minCoeff() < 0)
         {
+
             eigenValueseig = eigenValueseig.array() + 2 * abs(
                                  eigenValueseig.array().minCoeff());
         }
 
         Info << "####### End of the POD for " << snapshots[0].name() << " #######" <<
              endl;
-        Eigen::VectorXd eigenValueseigLam =
-            eigenValueseig.real().array().abs().cwiseInverse().sqrt() ;
-        Eigen::MatrixXd modesEig = (SnapMatrix * eigenVectoreig) *
-                                   eigenValueseigLam.head(nmodes).asDiagonal();
+        //Eigen::VectorXd eigenValueseigLam =
+        //    eigenValueseig.real().array().abs().cwiseInverse().sqrt() ;
+        //Eigen::MatrixXd modesEig = (SnapMatrix * eigenVectoreig) *
+        //                           eigenValueseigLam.head(nmodes).asDiagonal();
+        Eigen::MatrixXd modesEig = (SnapMatrix * eigenVectoreig);
+
         // Computing Normalization factors of the POD Modes
         Eigen::VectorXd V = ITHACAutilities::getMassMatrixFV(snapshots[0]);
         Eigen::VectorXd normFact(nmodes);
-
         for (label i = 0; i < nmodes; i++)
         {
             if (PODnorm == "L2")
@@ -206,14 +208,14 @@ void getModes(
                 normFact(i) = std::sqrt((modesEig.col(i).transpose() * modesEig.col(i))(0, 0));
             }
         }
-
         List<Eigen::MatrixXd> modesEigBC;
         modesEigBC.resize(NBC);
 
         for (label i = 0; i < NBC; i++)
         {
-            modesEigBC[i] = (SnapMatrixBC[i] * eigenVectoreig) *
-                            eigenValueseigLam.head(nmodes).asDiagonal();
+            //modesEigBC[i] = (SnapMatrixBC[i] * eigenVectoreig) * 
+            //                eigenValueseigLam.head(nmodes).asDiagonal();
+            modesEigBC[i] = (SnapMatrixBC[i] * eigenVectoreig);
         }
 
         for (label i = 0; i < nmodes; i++)
