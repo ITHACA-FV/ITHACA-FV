@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
         // Homogenize the snapshots
         example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
         // Perform POD on the velocity snapshots
-        ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
+        ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
                             example.podex, 0, 0, NmodesUout);
     }
 
