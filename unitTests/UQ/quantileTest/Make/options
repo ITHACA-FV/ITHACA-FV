@@ -1,0 +1,42 @@
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
+    -I$(LIB_ITHACA_SRC)/ITHACA_MUQ \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/EigenFunctions \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen/src \
+    -I$(MUQ_LIBRARIES)/include \
+    -I$(MUQ_EXT_LIBRARIES)/include\
+    -DOFVER=$${WM_PROJECT_VERSION%.*} \
+    -Wno-comment \
+    -g \
+    -std=c++11 \
+    -Wno-maybe-uninitialized \
+    -Wno-sign-compare \
+    -Wno-unknown-pragmas \
+    -Wno-unused-variable \
+    -Wno-unused-local-typedefs \
+    -Wno-old-style-cast \
+    -fopenmp \
+    -pthread \
+    -ldl \
+    -O3 \
+    -msse4 
+
+EXE_LIBS = \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lfvOptions \
+    -lsampling \
+    -lITHACA_THIRD_PARTY \
+    -lITHACA_CORE \
+    -L$(FOAM_USER_LIBBIN) \
+    -L/home/umberto/OpenFOAM/MUQinstall/lib \
+    -lITHACA_MUQ \
+    -lmuqApproximation \
+    -lmuqModeling \
+    -lmuqUtilities 
