@@ -24,17 +24,15 @@ License
 Description
     Test of the implementation of the confidence level function
 SourceFiles
-    quantileTest.C 
+    confidenceLevelTest.C 
 \*---------------------------------------------------------------------------*/
 
 
 #include "MUQ/Modeling/Distributions/Gaussian.h"
 #include "MUQ/Modeling/Distributions/Density.h"
 
-#include <boost/math/special_functions/erf.hpp>
 
 #include <iostream>
-#include <stdio.h>
 #include <Eigen/Dense>
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -43,23 +41,29 @@ SourceFiles
 
 int main(int argc, char* argv[])
 {
-    std::cout << "******************************************************" << std::endl;
-    std::cout << "\nTEST of the function ITHACAmuq::muq2ithaca::quantile" << std::endl;
-    std::cout << "We sample from a Gaussian distribution with mean mu = 0"<< std::endl;
-    std::cout << "and variance sigma = 1.\n "<< std::endl;
-    std::cout << "For this distribution, the p-quantile is given by\n\n" <<
-         "mu + sigma * sqrt(2) * invErf(2 * p - 1)\n" << std::endl;
-    std::cout << "Several methods to approximate the quantile have been implemented and are here tested." << std::endl;
+    word outputFolder = "./ITHACAoutput/";
+    int Nseeds = 1000;
+
+    unsigned dim = 1;
+    double stdDev = 0.2;
+    double mean = 0.0;
+    auto dist = std::make_shared<muq::Modeling::Gaussian>(dim); 
+    Eigen::VectorXd samps(Nseeds);
 
 
+    for(int i = 0; i < Nseeds; i++)
+    {
+        samps(i) = dist->Sample()(0) * stdDev;
+    }
 
-    int nSeeds = 100000;
-    auto density = std::make_shared<muq::Modeling::Gaussian>(nSeeds);
-    Eigen::VectorXd samps = density->Sample();
-    double p = 0.3;
-    std::cout << "\nQuantile method 1 = " << ITHACAmuq::muq2ithaca::quantile(samps, p, 1) << std::endl;
-    std::cout << "Quantile method 2 = " << ITHACAmuq::muq2ithaca::quantile(samps, p, 2) << std::endl;
-    std::cout << "Quantile method 3 = " << ITHACAmuq::muq2ithaca::quantile(samps, p, 3) << std::endl;
-    std::cout << "True quantile = " << std::sqrt(2) * boost::math::erf_inv(2 * p - 1) << std::endl;
+    Eigen::VectorXd sampsNoMean = samps - Eigen::VectorXd::Ones(samps.size()) * samps.mean();
+    double samps_stdDev = std::sqrt(sampsNoMean.dot(sampsNoMean) / (samps.size() - 1));
+
+
+    auto [minConf, maxConf] = ITHACAmuq::muq2ithaca::confidenceLevel(samps, 0.99);
+    std::cout << "Mean = " <<  mean << "   stdDev = " << stdDev << std::endl;
+    std::cout << "Samples mean = " << samps.mean() << "\nSamples stdDev = " << samps_stdDev << std::endl;
+    std::cout << "\nConfidence levels = " << minConf << " , " << maxConf << std::endl ;
+
     return 0;
 }
