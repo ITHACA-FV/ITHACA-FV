@@ -1451,6 +1451,7 @@ void steadyNS::restart()
     _fvOptions.clear();
     argList& args = _args();
     Time& runTime = _runTime();
+    runTime.setTime(0, 1);
     Foam::fvMesh& mesh = _mesh();
     _simple = autoPtr<simpleControl>
               (
