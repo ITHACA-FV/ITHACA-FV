@@ -253,40 +253,6 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     runTime.setTime(runTime.startTime(), 0);
 }
 
-
-fvVectorMatrix reducedSimpleSteadyNS::get_Umatrix_Online(volVectorField& U,
-        volScalarField& p)
-{
-    surfaceScalarField& phi = problem->_phi();
-    fvVectorMatrix Ueqn
-    (
-        fvm::div(phi, U)
-        + problem->turbulence->divDevReff(U)
-        ==
-        -fvc::grad(p)
-    );
-    Ueqn.relax();
-    Ueqn.solve();
-    problem->_phi() = fvc::interpolate(U) & U.mesh().Sf();
-    problem->Ueqn_global = &Ueqn;
-    return Ueqn;
-}
-
-fvScalarMatrix reducedSimpleSteadyNS::get_Pmatrix_Online(volVectorField& U,
-        volScalarField& p)
-{
-    fvScalarMatrix pEqn
-    (
-        fvm::laplacian(1 / problem->Ueqn_global->A(), p) == fvc::div(problem->_phi())
-    );
-    pEqn.setReference(0, 0.0);
-    pEqn.solve();
-    problem->_phi() -= pEqn.flux();
-    p.relax();
-    return pEqn;
-}
-
-
 void reducedSimpleSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
 {
     M_Assert(problem->inletIndex.rows() == vel.size(),
