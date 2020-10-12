@@ -110,27 +110,6 @@ class SteadyNSSimple: public steadyNS
 
         //Functions
         ///
-        /// @brief      Gets the offline velocity matrix and solve the system. Procedure of the SIMPLE algorithm implemented
-        /// in openFOAM is followed with same corrections and iterations.
-        ///
-        /// @param      U     Velocity field at previous step.
-        /// @param      p     Pressure field at previous step.
-        ///
-        /// @return     The velocity matrix.
-        ///
-        fvVectorMatrix get_Umatrix(volVectorField& U, volScalarField& p);
-        ///
-        /// @brief      Gets the offline pressure matrix, solve the system and updates the residual for pressure.
-        /// Procedure of the SIMPLE algorithm implemented in openFOAM is followed with same corrections and iterations.
-        ///
-        /// @param      U     Velocity field at previous step.
-        /// @param      p     Pressure field at previous step.
-        ///
-        /// @return     The velocity matrix.
-        ///
-        fvScalarMatrix get_Pmatrix(volVectorField& U, volScalarField& p,
-                                   scalar& presidual);
-        ///
         /// @brief      Function to calculate RBF weights for turbulence.
         ///
         /// @param[in]  NNutModes  Number of modes to be used for nut.
