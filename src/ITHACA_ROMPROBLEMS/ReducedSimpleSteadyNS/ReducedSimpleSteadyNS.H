@@ -92,27 +92,6 @@ class reducedSimpleSteadyNS: public reducedProblem
                                 int NmodesNut = 0,
                                 int NmodesSup = 0,
                                 word Folder = "./ITHACAoutput/Reconstruct/");
-
-        ///
-        /// @brief      Gets the Umatrix for the online solver: it just assembles the pure matrix.
-        ///
-        /// @param[in]      U     Velocity vector field
-        /// @param[in]      p     Pressure scalar field
-        ///
-        /// @return     Velocity linear system.
-        ///
-        fvVectorMatrix get_Umatrix_Online(volVectorField& U, volScalarField& p);
-
-        ///
-        /// @brief      Gets the Pmatrix for the online solver: it just assembls the pure matrix.
-        ///
-        /// @param[in]      U     Velocity vector field
-        /// @param[in]      p     Pressure scalar field
-        ///
-        /// @return     Pressure linear system.
-        ///
-        fvScalarMatrix get_Pmatrix_Online(volVectorField& U, volScalarField& p);
-
         ///
         /// @brief      It checks if the number of imposed boundary conditions is correct
         /// and set the inlet velocity equal to the given one.
