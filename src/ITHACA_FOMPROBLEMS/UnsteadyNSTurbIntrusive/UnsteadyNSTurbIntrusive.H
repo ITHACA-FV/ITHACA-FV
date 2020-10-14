@@ -80,7 +80,7 @@ class UnsteadyNSTurbIntrusive: public unsteadyNS
         PtrList<volScalarField> nutFields;
 
         /// List of POD modes for eddy viscosity
-        PtrList<volScalarField> nutModes;
+        volScalarModes nutModes;
 
         /// Diffusive matrix
         Eigen::MatrixXd bMatrix;

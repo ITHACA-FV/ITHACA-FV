@@ -139,6 +139,9 @@ class ReducedUnsteadyNSTurbIntrusive: public reducedUnsteadyNS
         /// the degrees of freedom of velocity adn the tail the ones of pressure
         Eigen::MatrixXd initCond;
 
+        /// Reconstructed eddy viscosity fields list
+        PtrList<volScalarField> nutRecFields;
+
         // Functions
 
         //--------------------------------------------------------------------------
@@ -158,18 +161,22 @@ class ReducedUnsteadyNSTurbIntrusive: public reducedUnsteadyNS
         void solveOnlinePPE(Eigen::MatrixXd vel);
 
         //--------------------------------------------------------------------------
-        /// @brief      Method to reconstruct the solutions from an online solve with same number of modes for all variables
+        /// Method to reconstruct the solutions from an online solve with a fully uniform approach
         ///
-        /// @param[in]  folder      The folder where to output the solutions
+        /// @param[in]  exportFields  A boolean variable which determines whether to export fields or not
+        /// @param[in]  folder        The folder where to output the solutions in case on wants to
         ///
-        void reconstruct(fileName folder = "./online_rec");
+        void reconstruct(bool exportFields = false,
+                         fileName folder = "./online_rec");
 
         //--------------------------------------------------------------------------
-        /// @brief      Method to reconstruct the solutions from an online solve with number of modes different for pressure
+        /// Method to reconstruct the solutions from an online solve with a PPE semi-uniform approach
         ///
-        /// @param[in]  folder      The folder where to output the solutions
+        /// @param[in]  exportFields  A boolean variable which determines whether to export fields or not
+        /// @param[in]  folder        The folder where to output the solutions in case on wants to
         ///
-        void reconstructPPE(fileName folder);
+        void reconstructPPE(bool exportFields = false,
+                            fileName folder = "./online_rec");
 
         //--------------------------------------------------------------------------
         /// @brief      Sets the online velocity.
