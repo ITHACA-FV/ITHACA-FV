@@ -545,81 +545,119 @@ void ReducedUnsteadyNSTurbIntrusive::solveOnlinePPE(Eigen::MatrixXd vel)
     count_online_solve += 1;
 }
 
-void ReducedUnsteadyNSTurbIntrusive::reconstruct(fileName folder)
+void ReducedUnsteadyNSTurbIntrusive::reconstruct(bool exportFields,
+        fileName folder)
 {
-    mkDir(folder);
-    ITHACAutilities::createSymLink(folder);
+    if (exportFields)
+    {
+        mkDir(folder);
+        ITHACAutilities::createSymLink(folder);
+    }
+
     int counter = 0;
     int nextWrite = 0;
     int counter2 = 1;
     int exportEveryIndex = round(exportEvery / storeEvery);
+    volScalarField nutAveNow("nutAveNow", nutModes[0] * 0);
+    List < Eigen::MatrixXd> CoeffU;
+    List < Eigen::MatrixXd> CoeffP;
+    List < Eigen::MatrixXd> CoeffNut;
+    CoeffU.resize(0);
+    CoeffP.resize(0);
+    CoeffNut.resize(0);
 
     for (int i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextWrite)
         {
-            volVectorField uRec("uRec", Umodes[0] * 0);
-            volScalarField pRec("pRec", Pmodes[0] * 0);
-            volScalarField nutRec("nutRec", nutModes[0] * 0);
-
-            for (int j = 0; j < Nphi_u; j++)
-            {
-                uRec += Umodes[j] * online_solution[i](j + 1, 0);
-                pRec += Pmodes[j] * online_solution[i](j + 1, 0);
-                nutRec += nutModes[j] * online_solution[i](j + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(uRec,  name(counter2), folder);
-            ITHACAstream::exportSolution(pRec, name(counter2), folder);
-            ITHACAstream::exportSolution(nutRec, name(counter2), folder);
+            Eigen::MatrixXd currentUCoeff;
+            Eigen::MatrixXd currentPCoeff;
+            Eigen::MatrixXd currentNutCoeff;
+            currentUCoeff = online_solution[i].bottomRows(Nphi_u);
+            currentPCoeff = online_solution[i].bottomRows(Nphi_u);
+            currentNutCoeff = online_solution[i].bottomRows(Nphi_u);
+            CoeffU.append(currentUCoeff);
+            CoeffP.append(currentPCoeff);
+            CoeffNut.append(currentNutCoeff);
             nextWrite += exportEveryIndex;
-            double timeNow = online_solution[i](0, 0);
-            std::ofstream of(folder + name(counter2) + "/" + name(timeNow));
-            counter2 ++;
         }
 
         counter++;
     }
+
+    volVectorField uRec("uRec", Umodes[0]);
+    volScalarField pRec("pRec", problem->Pmodes[0]);
+    volScalarField nutRec("nutRec", problem->nutModes[0]);
+    uRecFields = problem->L_U_SUPmodes.reconstruct(uRec, CoeffU, "uRec");
+    pRecFields = problem->Pmodes.reconstruct(pRec, CoeffP, "pRec");
+    nutRecFields = problem->nutModes.reconstruct(nutRec, CoeffNut, "nutRec");
+
+    if (exportFields)
+    {
+        ITHACAstream::exportFields(uRecFields, folder,
+                                   "uRec");
+        ITHACAstream::exportFields(pRecFields, folder,
+                                   "pRec");
+        ITHACAstream::exportFields(nutRecFields, folder,
+                                   "nutRec");
+    }
 }
 
-void ReducedUnsteadyNSTurbIntrusive::reconstructPPE(fileName folder)
+void ReducedUnsteadyNSTurbIntrusive::reconstructPPE(bool exportFields,
+        fileName folder)
 {
-    mkDir(folder);
-    ITHACAutilities::createSymLink(folder);
+    if (exportFields)
+    {
+        mkDir(folder);
+        ITHACAutilities::createSymLink(folder);
+    }
+
     int counter = 0;
     int nextWrite = 0;
     int counter2 = 1;
     int exportEveryIndex = round(exportEvery / storeEvery);
+    volScalarField nutAveNow("nutAveNow", nutModes[0] * 0);
+    List < Eigen::MatrixXd> CoeffU;
+    List < Eigen::MatrixXd> CoeffP;
+    List < Eigen::MatrixXd> CoeffNut;
+    CoeffU.resize(0);
+    CoeffP.resize(0);
+    CoeffNut.resize(0);
 
     for (int i = 0; i < online_solution.size(); i++)
     {
         if (counter == nextWrite)
         {
-            volVectorField uRec("uRec", Umodes[0] * 0);
-            volScalarField pRec("pRec", Pmodes[0] * 0);
-            volScalarField nutRec("nutRec", nutModes[0] * 0);
-
-            for (int j = 0; j < Nphi_u; j++)
-            {
-                uRec += Umodes[j] * online_solution[i](j + 1, 0);
-                nutRec += nutModes[j] * online_solution[i](j + 1, 0);
-            }
-
-            for (int j = 0; j < Nphi_p; j++)
-            {
-                pRec +=  Pmodes[j] * online_solution[i](j + Nphi_u + 1, 0);
-            }
-
-            ITHACAstream::exportSolution(uRec,  name(counter2), folder);
-            ITHACAstream::exportSolution(pRec, name(counter2), folder);
-            ITHACAstream::exportSolution(nutRec, name(counter2), folder);
+            Eigen::MatrixXd currentUCoeff;
+            Eigen::MatrixXd currentPCoeff;
+            Eigen::MatrixXd currentNutCoeff;
+            currentUCoeff = online_solution[i].block(1, 0, Nphi_u, 1);
+            currentPCoeff = online_solution[i].bottomRows(Nphi_p);
+            currentNutCoeff = online_solution[i].block(1, 0, Nphi_u, 1);
+            CoeffU.append(currentUCoeff);
+            CoeffP.append(currentPCoeff);
+            CoeffNut.append(currentNutCoeff);
             nextWrite += exportEveryIndex;
-            double timeNow = online_solution[i](0, 0);
-            std::ofstream of(folder + name(counter2) + "/" + name(timeNow));
-            counter2 ++;
         }
 
         counter++;
+    }
+
+    volVectorField uRec("uRec", Umodes[0]);
+    volScalarField pRec("pRec", problem->Pmodes[0]);
+    volScalarField nutRec("nutRec", problem->nutModes[0]);
+    uRecFields = problem->L_U_SUPmodes.reconstruct(uRec, CoeffU, "uRec");
+    pRecFields = problem->Pmodes.reconstruct(pRec, CoeffP, "pRec");
+    nutRecFields = problem->nutModes.reconstruct(nutRec, CoeffNut, "nutRec");
+
+    if (exportFields)
+    {
+        ITHACAstream::exportFields(uRecFields, folder,
+                                   "uRec");
+        ITHACAstream::exportFields(pRecFields, folder,
+                                   "pRec");
+        ITHACAstream::exportFields(nutRecFields, folder,
+                                   "nutRec");
     }
 }
 
