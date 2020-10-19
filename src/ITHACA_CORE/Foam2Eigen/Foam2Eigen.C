@@ -304,12 +304,24 @@ GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     return field_out;
 }
 
-template volScalarField Foam2Eigen::Eigen2field(
-    volScalarField& field_in,
-    Eigen::VectorXd& eigen_vector);
 template surfaceScalarField Foam2Eigen::Eigen2field(
     surfaceScalarField& field_in,
     Eigen::VectorXd& eigen_vector);
+
+template<>
+volScalarField Foam2Eigen::Eigen2field(
+    volScalarField& field_in,
+    Eigen::VectorXd& eigen_vector)
+{
+    GeometricField<scalar, fvPatchField, volMesh> field_out(field_in);
+
+    for (auto i = 0; i < field_out.size(); i++)
+    {
+        field_out.ref()[i] = eigen_vector(i);
+    }
+    field_out.correctBoundaryConditions();
+    return field_out;
+}
 
 template<>
 Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
