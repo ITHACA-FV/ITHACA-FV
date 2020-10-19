@@ -107,6 +107,36 @@ If you intend to add some new classes or methods please follow the naming conven
     git push origin --delete new_branch_name
     git push origin master
     ```
+**PULL REQUESTS CONVENTIONS*
+
+Use always tags to identify your pull request in order to make the life of maintainers easier:
+
+See how a minor change to your commit message style can make you a better programmer.
+
+Format: `<type>(<scope>): <subject>`
+
+`<scope>` is optional
+
+## Example
+
+```
+feat: add hat wobble
+^--^  ^------------^
+|     |
+|     +-> Summary in present tense.
+|
++-------> Type: chore, docs, feat, fix, refactor, style, or test.
+```
+
+## Type of Pull Requests
+
+- `FEAT`: (new feature for the user, not a new feature for build script)
+- `ENH`: (Enhance existing code without the inclusions of additional features)
+- `FIX`: (bug fix for the user, not a fix to a build script)
+- `DOCS`: (changes to the documentation)
+- `STYLE`: (formatting, missing semi colons, etc; no production code change)
+- `REFACTOR`: (refactoring production code, eg. renaming a variable)
+- `TEST`: (adding missing tests, refactoring tests; no production code change)
 
 **HAVE FUN CODING!!!**
 
