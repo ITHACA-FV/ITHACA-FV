@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      ITHACAdict;
+}
+
+// EigenValue solver, can be eigen or spectra
+EigenSolver eigen;
+
+// Number of modes to output and to use for projection
+NmodesUout 15;
+NmodesUproj 10;
+NmodePUout 15;
+NmodesPproj 10;
+NmodesSUPout 15;
+NmodesSUPproj 10;
+NmodesNutOut 15;
+NmodesNutProj 0;
+
+// Output format to save market vectors.
+OutPrecision 20;
+OutType fixed;
+
+debug 1;
+
+// Specific problem of a stationary case
+tolerance 1e-5;
+
+// Maximum number of iterations
+maxIter 2000;
+maxIterOn 2000;
+
+// Reduced simple cicle parameters
+residualJumpLim 1e-5;
+normalizedResidualLim 1e-5;
+
+// Inlet boundary conditions velocities.
+online_velocities vel.txt;
+
+// Distancing between intermediate snapshots to be exported (for turbulent case only)
+middleStep 100;
+
+
