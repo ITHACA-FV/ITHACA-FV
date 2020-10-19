@@ -21,7 +21,7 @@ for d in applications/* ; do
     cd ../../
 done
 
-cd tutorials
+cd tutorials/CFD
 
 for d in ./*/ ; do   
     echo $d    
@@ -32,6 +32,18 @@ for d in ./*/ ; do
     cd ../
 done
 
+cd ../UQ
+
+for d in ./*/ ; do   
+    echo $d    
+    cd $d
+    if [ -f "Make/files" ]; then
+    wclean
+    fi
+    cd ../
+done
+
+cd ..
 cd ../unitTests
 
 for d in ./*/ ; do   
