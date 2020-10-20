@@ -88,6 +88,9 @@ class tutorial18 : public SteadyNSSimple
                     change_viscosity(mu_now[0]);
                     assignIF(U, Uinl);
                     truthSolve2(mu_now);
+                    nutFields.clear();
+                    auto nut = _mesh().lookupObject<volScalarField>("nut");
+                    ITHACAstream::readConvergedFields(nutFields, nut, "./ITHACAoutput/Offline/");
                 }
             }
         }
