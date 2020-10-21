@@ -28,19 +28,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-/// \file
-/// Source file of the ITHACAstream class, it contains the implementation of
-/// several methods for input output operations.
 
 #include "ITHACAstream.H"
 
 
-// * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
-
+/// \file
+/// Source file of the ITHACAstream namespace.
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+namespace ITHACAstream
+{
+
 template<typename Type>
-void ITHACAstream::exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
+void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
                                   word MatrixName)
 {
     Eigen::SparseMatrix<double> A;
@@ -50,8 +51,8 @@ void ITHACAstream::exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
     SaveDenseMatrix(b, folder + "/", "B_" + MatrixName);
 }
 
-template <typename T>
-void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
+template <typename T, int dim>
+void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
                                 word Name, word type,
                                 word folder)
 {
@@ -124,19 +125,31 @@ void ITHACAstream::exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix,
     }
 }
 
-template void ITHACAstream::exportMatrix(Eigen::Matrix < double, -1,
+template void exportMatrix(Eigen::Matrix < double, -1,
         -1 > & matrix, word Name, word type,
         word folder);
 
-template void ITHACAstream::exportMatrix(Eigen::Matrix < int, -1,
+template void exportMatrix(Eigen::Matrix < int, -1,
         -1 > & matrix, word Name, word type,
         word folder);
 
-template void ITHACAstream::exportMatrix(Eigen::Matrix < float, -1,
+template void exportMatrix(Eigen::Matrix < float, -1,
         -1 > & matrix, word Name, word type,
         word folder);
 
-void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
+template void exportMatrix(Eigen::Matrix < double, -1,
+        1 > & matrix, word Name, word type,
+        word folder);
+
+template void exportMatrix(Eigen::Matrix < int, -1,
+        1 > & matrix, word Name, word type,
+        word folder);
+
+template void exportMatrix(Eigen::Matrix < float, -1,
+        1 > & matrix, word Name, word type,
+        word folder);
+
+void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                                 word type, word folder)
 {
     std::string message = "The extension \"" +  type +
@@ -213,12 +226,12 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
         for (int i = 0; i < matrix.size(); i++)
         {
             word Namei = Name + name(i);
-            ITHACAstream::exportMatrix(matrix[i], Namei, "eigen", folder);
+            exportMatrix(matrix[i], Namei, "eigen", folder);
         }
     }
 }
 
-void ITHACAstream::exportVector(Eigen::VectorXd& vector,
+void exportVector(Eigen::VectorXd& vector,
                                 word Name, word type,
                                 word folder)
 {
@@ -227,7 +240,7 @@ void ITHACAstream::exportVector(Eigen::VectorXd& vector,
 }
 
 template<typename T>
-void ITHACAstream::exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
+void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
                                 word type, word folder)
 {
     std::string message = "The extension \"" +  type +
@@ -323,19 +336,19 @@ void ITHACAstream::exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
 
 
 
-template void ITHACAstream::exportTensor(Eigen::Tensor<double, 3> tensor,
+template void exportTensor(Eigen::Tensor<double, 3> tensor,
         word Name,
         word type, word folder);
 
-template void ITHACAstream::exportTensor(Eigen::Tensor<int, 3> tensor,
+template void exportTensor(Eigen::Tensor<int, 3> tensor,
         word Name,
         word type, word folder);
 
-template void ITHACAstream::exportTensor(Eigen::Tensor<float, 3> tensor,
+template void exportTensor(Eigen::Tensor<float, 3> tensor,
         word Name,
         word type, word folder);
 
-List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
+List<Eigen::MatrixXd> readMatrix(word folder, word mat_name)
 {
     int file_count = 0;
     DIR* dirp;
@@ -363,7 +376,7 @@ List<Eigen::MatrixXd> ITHACAstream::readMatrix(word folder, word mat_name)
     return result;
 }
 
-Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
+Eigen::MatrixXd readMatrix(word filename)
 {
     int cols = 0, rows = 0;
     double buff[MAXBUFSIZE];
@@ -417,7 +430,7 @@ Eigen::MatrixXd ITHACAstream::readMatrix(word filename)
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::read_fields(
+void read_fields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield, word Name,
     fileName casename, int first_snap, int n_snap)
 {
@@ -472,7 +485,7 @@ void ITHACAstream::read_fields(
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::read_fields(
+void read_fields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename, int first_snap, int n_snap)
@@ -566,7 +579,7 @@ void ITHACAstream::read_fields(
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::readMiddleFields(
+void readMiddleFields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field, fileName casename)
 {
@@ -576,13 +589,13 @@ void ITHACAstream::readMiddleFields(
 
     while (ITHACAutilities::check_folder(casename + name(par)))
     {
-        ITHACAstream::read_fields(Lfield, field, casename + name(par) + "/");
+        read_fields(Lfield, field, casename + name(par) + "/");
         par++;
     }
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::readConvergedFields(
+void readConvergedFields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename)
@@ -617,7 +630,7 @@ void ITHACAstream::readConvergedFields(
     }
 }
 
-int ITHACAstream::numberOfFiles(word folder, word MatrixName)
+int numberOfFiles(word folder, word MatrixName)
 {
     int number_of_files = 0;
     std::ifstream in;
@@ -636,7 +649,7 @@ int ITHACAstream::numberOfFiles(word folder, word MatrixName)
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::exportFields(
+void exportFields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& field,
     word folder, word fieldname)
 {
@@ -653,18 +666,18 @@ void ITHACAstream::exportFields(
     std::cout << std::endl;
 }
 
-template void ITHACAstream::exportFields(
+template void exportFields(
     PtrList<GeometricField<scalar, fvPatchField, volMesh>>& field,
     word folder, word fieldname);
-template void ITHACAstream::exportFields(
+template void exportFields(
     PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& field,
     word folder, word fieldname);
-template void ITHACAstream::exportFields(
+template void exportFields(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& field,
     word folder, word fieldname);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
+void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
                                   fileName subfolder, fileName folder,
                                   word fieldName)
 {
@@ -692,21 +705,21 @@ void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
     }
 }
 
-template void ITHACAstream::exportSolution(
+template void exportSolution(
     GeometricField<scalar, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
-template void ITHACAstream::exportSolution(
+template void exportSolution(
     GeometricField<vector, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
-template void ITHACAstream::exportSolution(
+template void exportSolution(
     GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
+void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
                                   fileName subfolder, fileName folder)
 {
     if (!Pstream::parRun())
@@ -730,17 +743,17 @@ void ITHACAstream::exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
     }
 }
 
-template void ITHACAstream::exportSolution(
+template void exportSolution(
     GeometricField<scalar, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder);
-template void ITHACAstream::exportSolution(
+template void exportSolution(
     GeometricField<vector, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder);
-template void ITHACAstream::exportSolution(
+template void exportSolution(
     GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
     fileName subfolder, fileName folder);
 
-void ITHACAstream::writePoints(pointField points, fileName folder,
+void writePoints(pointField points, fileName folder,
                                fileName subfolder)
 {
     if (!Pstream::parRun())
@@ -766,7 +779,7 @@ void ITHACAstream::writePoints(pointField points, fileName folder,
     }
 }
 
-void ITHACAstream::printProgress(double percentage)
+void printProgress(double percentage)
 {
     int val = static_cast<int>(percentage * 100);
     int lpad = static_cast<int> (percentage * PBWIDTH);
@@ -779,45 +792,45 @@ void ITHACAstream::printProgress(double percentage)
     }
 }
 
-template void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
+template void read_fields(PtrList<volScalarField>& Lfield,
                                         word Name,
                                         fileName casename, int first_snap, int n_snap);
-template void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
+template void read_fields(PtrList<volVectorField>& Lfield,
                                         word Name,
                                         fileName casename, int first_snap, int n_snap);
-template void ITHACAstream::read_fields(PtrList<surfaceScalarField>& Lfield,
+template void read_fields(PtrList<surfaceScalarField>& Lfield,
                                         word Name,
                                         fileName casename, int first_snap, int n_snap);
-template void ITHACAstream::read_fields(PtrList<surfaceVectorField>& Lfield,
+template void read_fields(PtrList<surfaceVectorField>& Lfield,
                                         word Name,
                                         fileName casename, int first_snap, int n_snap);
-template void ITHACAstream::read_fields(PtrList<volScalarField>& Lfield,
+template void read_fields(PtrList<volScalarField>& Lfield,
                                         volScalarField& field, fileName casename, int first_snap, int n_snap);
-template void ITHACAstream::read_fields(PtrList<volVectorField>& Lfield,
+template void read_fields(PtrList<volVectorField>& Lfield,
                                         volVectorField& field, fileName casename, int first_snap, int n_snap);
-template void ITHACAstream::read_fields(PtrList<surfaceScalarField>& Lfield,
+template void read_fields(PtrList<surfaceScalarField>& Lfield,
                                         surfaceScalarField& field, fileName casename, int first_snap, int n_snap);
-template void ITHACAstream::read_fields(PtrList<surfaceVectorField>& Lfield,
+template void read_fields(PtrList<surfaceVectorField>& Lfield,
                                         surfaceVectorField& field, fileName casename, int first_snap, int n_snap);
-template void ITHACAstream::readMiddleFields(PtrList<volScalarField>& Lfield,
+template void readMiddleFields(PtrList<volScalarField>& Lfield,
         volScalarField& field, fileName casename);
-template void ITHACAstream::readMiddleFields(PtrList<volVectorField>& Lfield,
+template void readMiddleFields(PtrList<volVectorField>& Lfield,
         volVectorField& field, fileName casename);
-template void ITHACAstream::readMiddleFields(PtrList<surfaceScalarField>&
+template void readMiddleFields(PtrList<surfaceScalarField>&
         Lfield, surfaceScalarField& field, fileName casename);
-template void ITHACAstream::readMiddleFields(PtrList<surfaceVectorField>&
+template void readMiddleFields(PtrList<surfaceVectorField>&
         Lfield, surfaceVectorField& field, fileName casename);
-template void ITHACAstream::readConvergedFields(PtrList<volScalarField>& Lfield,
+template void readConvergedFields(PtrList<volScalarField>& Lfield,
         volScalarField& field, fileName casename);
-template void ITHACAstream::readConvergedFields(PtrList<volVectorField>& Lfield,
+template void readConvergedFields(PtrList<volVectorField>& Lfield,
         volVectorField& field, fileName casename);
-template void ITHACAstream::readConvergedFields(PtrList<surfaceScalarField>&
+template void readConvergedFields(PtrList<surfaceScalarField>&
         Lfield, surfaceScalarField& field, fileName casename);
-template void ITHACAstream::readConvergedFields(PtrList<surfaceVectorField>&
+template void readConvergedFields(PtrList<surfaceVectorField>&
         Lfield, surfaceVectorField& field, fileName casename);
 
 template<typename T>
-void ITHACAstream::exportList(T& list, word folder, word filename)
+void exportList(T& list, word folder, word filename)
 {
     mkDir(folder);
     word fieldname = folder + filename;
@@ -829,12 +842,12 @@ void ITHACAstream::exportList(T& list, word folder, word filename)
     }
 }
 
-template void ITHACAstream::exportList(Field<scalar>& list, word folder,
+template void exportList(Field<scalar>& list, word folder,
                                        word filename);
-template void ITHACAstream::exportList(Field<vector>& list, word folder,
+template void exportList(Field<vector>& list, word folder,
                                        word filename);
 
-
+}
 
 
 

@@ -72,421 +72,408 @@ SourceFiles
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 
 /*---------------------------------------------------------------------------*\
-                        Class reductionProblem Declaration
+                    Namespace ITHACAstream Declaration
 \*---------------------------------------------------------------------------*/
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #include "cnpy.H"
 #pragma GCC diagnostic pop
 
-/// Class for input-output manipulation
-class ITHACAstream
+/// Namespace for input-output manipulation
+namespace ITHACAstream
 {
 
-    public:
+//--------------------------------------------------------------------------
+/// @brief      Export an Fv Matrix to folder together with its source term
+///
+/// @param      Matrix      The matrix
+/// @param[in]  folder      The folder
+/// @param[in]  MatrixName  The fieldname
+///
+/// @tparam     Type        can be scalar or vector
+///
+template<typename Type>
+void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
+                           word MatrixName);
 
-        //--------------------------------------------------------------------------
-        /// @brief      Export an Fv Matrix to folder together with its source term
-        ///
-        /// @param      Matrix      The matrix
-        /// @param[in]  folder      The folder
-        /// @param[in]  MatrixName  The fieldname
-        ///
-        /// @tparam     Type        can be scalar or vector
-        ///
-        template<typename Type>
-        static void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
-                                   word MatrixName);
+//--------------------------------------------------------------------------
+/// Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format
+/// The function is implemented for a second order matrix
+///
+/// @param[in] matrix    Eigen::MatrixXd that you want to export.
+/// @param[in] Name      Name of saved file.
+/// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
+/// @param[in] folder    Directory in which the fali is saved.
+///
+/// @tparam    T         The matrix can be of integers, double or float
+///
+template<typename T, int dim>
+void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix, word Name,
+                         word type = "python", word folder = "./Matrices");
 
-        //--------------------------------------------------------------------------
-        /// Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format
-        /// The function is implemented for a second order matrix
-        ///
-        /// @param[in] matrix    Eigen::MatrixXd that you want to export.
-        /// @param[in] Name      Name of saved file.
-        /// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
-        /// @param[in] folder    Directory in which the fali is saved.
-        ///
-        /// @tparam    T         The matrix can be of integers, double or float
-        ///
-        template<typename T>
-        static void exportMatrix(Eigen::Matrix < T, -1, -1 > & matrix, word Name,
-                                 word type = "python", word folder = "./Matrices");
+//--------------------------------------------------------------------------
+/// Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format
+/// The function is implemented for a third order matrix
+/// The eigen matrix is stored as a set of two dimensional matrices where
+/// each matrix is in a different file
+///
+/// @param[in] matrix    Eigen::MatrixXd that you want to export.
+/// @param[in] Name      Name of saved file.
+/// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
+/// @param[in] folder    Directory in which the file is saved.
+///
+void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
+                         word type = "python", word folder = "./Matrices");
 
-        //--------------------------------------------------------------------------
-        /// Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format
-        /// The function is implemented for a third order matrix
-        /// The eigen matrix is stored as a set of two dimensional matrices where
-        /// each matrix is in a different file
-        ///
-        /// @param[in] matrix    Eigen::MatrixXd that you want to export.
-        /// @param[in] Name      Name of saved file.
-        /// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
-        /// @param[in] folder    Directory in which the file is saved.
-        ///
-        static void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
-                                 word type = "python", word folder = "./Matrices");
-
-        //--------------------------------------------------------------------------
-        /// Export a Eigen vector in numpy, matlab or txt format
-        /// @param[in] vector    Eigen vector that you want to export.
-        /// @param[in] Name      Name of saved file.
-        /// @param[in] tipo      Format of the file: numpy (tipo="python"), matlab (tipo="matlab"), txt (tipo="eigen").
-        /// @param[in] folder    Directory in which the fali is saved.
-        ///
-        static void exportVector(Eigen::VectorXd& vector, word Name,
-                                 word type = "python", word folder = "./Matrices");
-
-
-        //--------------------------------------------------------------------------
-        /// Export the reduced tensor in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format
-        ///
-        /// @param[in]  tensor  The tensor that you want to export.
-        /// @param[in]  Name    Name of saved file.
-        /// @param[in]  type    Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
-        /// @param[in]  folder  Directory in which the fali is saved.
-        /// @param[in]  folder  folder string to identify the folder where you want to save the file.
-        ///
-        /// @tparam     T       The tensor can be of integers, double or float
-        ///
-        template<typename T>
-        static void exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
-                                 word type = "python", word folder = "./Matrices");
+//--------------------------------------------------------------------------
+/// Export the reduced tensor in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format
+///
+/// @param[in]  tensor  The tensor that you want to export.
+/// @param[in]  Name    Name of saved file.
+/// @param[in]  type    Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
+/// @param[in]  folder  Directory in which the fali is saved.
+/// @param[in]  folder  folder string to identify the folder where you want to save the file.
+///
+/// @tparam     T       The tensor can be of integers, double or float
+///
+template<typename T>
+void exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
+                         word type = "python", word folder = "./Matrices");
 
 
-        //----------------------------------------------------------------------
-        /// Function to read a list of fields from the name of the field and
-        /// casename
-        ///
-        /// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
-        ///                         to store the field.
-        /// @param[in]  Name        The name of the field you want to read.
-        /// @param[in]  casename    The folder where the field is stored.
-        /// @param[in]  first_snap  The first snapshots from which you want to
-        ///                         start reading the field.
-        /// @param[in]  n_snap      The number of snapshots you want to read.
-        ///
-        /// @tparam     Type        vector or scalar.
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        static void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-                                Lfield, word Name,
-                                fileName casename, int first_snap = 0, int n_snap = 0);
+//----------------------------------------------------------------------
+/// Function to read a list of fields from the name of the field and
+/// casename
+///
+/// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
+///                         to store the field.
+/// @param[in]  Name        The name of the field you want to read.
+/// @param[in]  casename    The folder where the field is stored.
+/// @param[in]  first_snap  The first snapshots from which you want to
+///                         start reading the field.
+/// @param[in]  n_snap      The number of snapshots you want to read.
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                        Lfield, word Name,
+                        fileName casename, int first_snap = 0, int n_snap = 0);
 
 
 
-        //----------------------------------------------------------------------
-        /// Function to read a list of fields from the name of the field if it is already existing
-        ///
-        /// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
-        ///                         to store the field.
-        /// @param[in]  field       The field used as template to read other
-        ///                         fields.
-        /// @param[in]  casename    The folder where the field is stored.
-        /// @param[in]  first_snap  The first snapshots from which you want to
-        ///                         start reading the field.
-        /// @param[in]  n_snap      The number of snapshots you want to read.
-        ///
-        /// @tparam     Type        vector or scalar.
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        static void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-                                Lfield,
-                                GeometricField<Type, PatchField, GeoMesh>& field,
-                                fileName casename, int first_snap = 0, int n_snap = 0);
+//----------------------------------------------------------------------
+/// Function to read a list of fields from the name of the field if it is already existing
+///
+/// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
+///                         to store the field.
+/// @param[in]  field       The field used as template to read other
+///                         fields.
+/// @param[in]  casename    The folder where the field is stored.
+/// @param[in]  first_snap  The first snapshots from which you want to
+///                         start reading the field.
+/// @param[in]  n_snap      The number of snapshots you want to read.
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                        Lfield,
+                        GeometricField<Type, PatchField, GeoMesh>& field,
+                        fileName casename, int first_snap = 0, int n_snap = 0);
 
-        //----------------------------------------------------------------------
-        /// Funtion to read a list of volVectorField from name of the field including all the intermediate snapshots
-        ///
-        /// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
-        ///                         to store the field.
-        /// @param[in]  field       The field used as template to read other
-        ///                         fields.
-        /// @param[in]  casename    The folder where the field is stored.
-        ///
-        /// @tparam     Type        vector or scalar.
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        static void readMiddleFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-                                     Lfield,
-                                     GeometricField<Type, PatchField, GeoMesh>& field,
-                                     fileName casename);
+//----------------------------------------------------------------------
+/// Funtion to read a list of volVectorField from name of the field including all the intermediate snapshots
+///
+/// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
+///                         to store the field.
+/// @param[in]  field       The field used as template to read other
+///                         fields.
+/// @param[in]  casename    The folder where the field is stored.
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void readMiddleFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                             Lfield,
+                             GeometricField<Type, PatchField, GeoMesh>& field,
+                             fileName casename);
 
-        //----------------------------------------------------------------------
-        /// Function to read a list of volVectorField from name of the field including only converged snapshots
-        ///
-        /// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
-        ///                         to store the field.
-        /// @param[in]  field       The field used as template to read other
-        ///                         fields.
-        /// @param[in]  casename    The folder where the field is stored.
-        ///
-        /// @tparam     Type        vector or scalar.
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        static void readConvergedFields(
-            PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
-            GeometricField<Type, PatchField, GeoMesh>& field,
-            fileName casename);
+//----------------------------------------------------------------------
+/// Function to read a list of volVectorField from name of the field including only converged snapshots
+///
+/// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
+///                         to store the field.
+/// @param[in]  field       The field used as template to read other
+///                         fields.
+/// @param[in]  casename    The folder where the field is stored.
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void readConvergedFields(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
+    GeometricField<Type, PatchField, GeoMesh>& field,
+    fileName casename);
 
-        //--------------------------------------------------------------------------
-        /// Function to export a scalar of vector field
-        ///
-        /// @param[in]  field      The field you want to export.
-        /// @param[in]  folder     The folder where you want to save the field.
-        /// @param[in]  fieldname  The name you want to give to the file.
-        ///
-        /// @tparam     Type        vector or scalar.
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        static void exportFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-                                 field,
-                                 word folder, word fieldname);
+//--------------------------------------------------------------------------
+/// Function to export a scalar of vector field
+///
+/// @param[in]  field      The field you want to export.
+/// @param[in]  folder     The folder where you want to save the field.
+/// @param[in]  fieldname  The name you want to give to the file.
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void exportFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                         field,
+                         word folder, word fieldname);
 
-        //--------------------------------------------------------------------------
-        /// Read a two dimensional matrix from a txt file in Eigen format
-        /* One has to provide the complete filename with the absolute or relative path */
-        ///
-        /// @param[in]  filename  The filename of the matrix.
-        ///
-        /// @return     The Eigen::MatrixXd that contains the imported matrix.
-        ///
-        static Eigen::MatrixXd readMatrix(word filename);
+//--------------------------------------------------------------------------
+/// Read a two dimensional matrix from a txt file in Eigen format
+/* One has to provide the complete filename with the absolute or relative path */
+///
+/// @param[in]  filename  The filename of the matrix.
+///
+/// @return     The Eigen::MatrixXd that contains the imported matrix.
+///
+Eigen::MatrixXd readMatrix(word filename);
 
-        //--------------------------------------------------------------------------
-        /// Read a three dimensional matrix from a txt file in Eigen format
-        /* One has to provide the folder containing the matrix files and the filename of the
-         the matrix. Since it is stored as a List of matrices each matrix must be stored in a
-         different file with the following format:
-         matFileName(i)_mat.txt */
-        ///
-        /// @param[in]  folder    The folder where the txt files are located
-        /// @param[in]  mat_name  The matrix name
-        ///
-        /// @return     List <Eigen::MatrixXd> that contains the imported matrix.
-        ///
-        static List <Eigen::MatrixXd> readMatrix(word folder, word mat_name);
+//--------------------------------------------------------------------------
+/// Read a three dimensional matrix from a txt file in Eigen format
+/* One has to provide the folder containing the matrix files and the filename of the
+ the matrix. Since it is stored as a List of matrices each matrix must be stored in a
+ different file with the following format:
+ matFileName(i)_mat.txt */
+///
+/// @param[in]  folder    The folder where the txt files are located
+/// @param[in]  mat_name  The matrix name
+///
+/// @return     List <Eigen::MatrixXd> that contains the imported matrix.
+///
+List <Eigen::MatrixXd> readMatrix(word folder, word mat_name);
 
-        //--------------------------------------------------------------------------
-        /// Export a field to file in a certain folder and subfolder
-        ///
-        /// @param[in] s          Field
-        /// @param[in] subfolder  Subfolder where the field is stored
-        /// @param[in] folder     Folder where the field is stored
-        /// @param[in] fieldName  Name of the field/file
-        ///
-        /// @tparam     Type        vector or scalar.
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        static void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
-                                   fileName subfolder, fileName folder,
-                                   word fieldName);
+//--------------------------------------------------------------------------
+/// Export a field to file in a certain folder and subfolder
+///
+/// @param[in] s          Field
+/// @param[in] subfolder  Subfolder where the field is stored
+/// @param[in] folder     Folder where the field is stored
+/// @param[in] fieldName  Name of the field/file
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
+                           fileName subfolder, fileName folder,
+                           word fieldName);
 
-        //--------------------------------------------------------------------------
-        /// Export a field to file in a certain folder and subfolder
-        ///
-        /// @param[in] s          Field
-        /// @param[in] subfolder  Subfolder where the field is stored
-        /// @param[in] folder     Folder where the field is stored
-        ///
-        /// @tparam     Type        vector or scalar.
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        static void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
-                                   fileName subfolder, fileName folder);
+//--------------------------------------------------------------------------
+/// Export a field to file in a certain folder and subfolder
+///
+/// @param[in] s          Field
+/// @param[in] subfolder  Subfolder where the field is stored
+/// @param[in] folder     Folder where the field is stored
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
+                           fileName subfolder, fileName folder);
 
-        //--------------------------------------------------------------------------
-        /// Export a list to file
-        ///
-        /// @param[in]  list      The list
-        /// @param[in]  filename  Name of saved file
-        /// @param[in]  folder    Folder where the field is stored
-        ///
-        /// @tparam     T         generic list type object
-        ///
-        template<typename T>
-        static void exportList(T& list, word folder, word filename);
-
-
-        //--------------------------------------------------------------------------
-        /// Export an Eigen sparse matrix into bynary format file
-        ///
-        /// @param      m           Eigen::SparseMatrix
-        /// @param[in]  folder      The folder where you want to save the matrix
-        /// @param[in]  MatrixName  The matrix name for the output file
-        ///
-        /// @tparam     T           type of the matrix, i.e. double, float, ...
-        /// @tparam     Nrows       number of matrix rows
-        /// @tparam     IND         number of matrix cols
-        ///
-        template <typename T, int Nrows, typename IND>
-        static void SaveSparseMatrix(Eigen::SparseMatrix<T, Nrows, IND>& m,
-                                     word folder, word MatrixName);
-
-        //--------------------------------------------------------------------------
-        /// Read an Eigen sparse matrix from a bynary format file
-        ///
-        /// @param[in,out]  m           Eigen::SparseMatrix m
-        /// @param[in]      folder      The folder from where you want to read the matrix
-        /// @param[in]      MatrixName  The matrix name for the input file
-        ///
-        /// @tparam     T           type of the matrix, i.e. double, float, ...
-        /// @tparam     Nrows       number of matrix rows
-        /// @tparam     IND         number of matrix cols
-        ///
-        template <typename T, int Nrows, typename IND>
-        static void ReadSparseMatrix(Eigen::SparseMatrix<T, Nrows, IND>& m,
-                                     word folder, word MatrixName);
-
-        //--------------------------------------------------------------------------
-        /// Save a dense matrix to a binary format file
-        ///
-        /// @param[in]  Matrix      Eigen dense matrix
-        /// @param[in]  folder      Folder where you want to save the matrix
-        /// @param[in]  MatrixName  Name of the output file
-        ///
-        /// @tparam     MatrixType  type of the matrix, i.e. double, float, ...
-        ///
-        template <typename MatrixType>
-        static void SaveDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
-
-        //--------------------------------------------------------------------------
-        /// Read a dense matrix from a binary format file
-        ///
-        /// @param[in,out]  Matrix      Eigen dense matrix
-        /// @param[in]      folder      Folder from where you want to read the matrix
-        /// @param[in]      MatrixName  Name of the input file
-        ///
-        /// @tparam     MatrixType  type of the matrix, i.e. double, float, ...
-        ///
-        template <typename MatrixType>
-        static void ReadDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
+//--------------------------------------------------------------------------
+/// Export a list to file
+///
+/// @param[in]  list      The list
+/// @param[in]  filename  Name of saved file
+/// @param[in]  folder    Folder where the field is stored
+///
+/// @tparam     T         generic list type object
+///
+template<typename T>
+void exportList(T& list, word folder, word filename);
 
 
-        //----------------------------------------------------------------------
-        /// Save a dense tensor to file
-        ///
-        /// @param[in]  Tensor      The tensor
-        /// @param[in]  folder      Folder where you want to save the tensor
-        /// @param[in]  MatrixName  The matrix name
-        ///
-        /// @tparam     TensorType  type of the tensor, i.e. double, float, ...
-        ///
-        template <typename TensorType>
-        static void SaveDenseTensor(TensorType& Tensor, word folder, word MatrixName);
+//--------------------------------------------------------------------------
+/// Export an Eigen sparse matrix into bynary format file
+///
+/// @param      m           Eigen::SparseMatrix
+/// @param[in]  folder      The folder where you want to save the matrix
+/// @param[in]  MatrixName  The matrix name for the output file
+///
+/// @tparam     T           type of the matrix, i.e. double, float, ...
+/// @tparam     Nrows       number of matrix rows
+/// @tparam     IND         number of matrix cols
+///
+template <typename T, int Nrows, typename IND>
+void SaveSparseMatrix(Eigen::SparseMatrix<T, Nrows, IND>& m,
+                             word folder, word MatrixName);
+
+//--------------------------------------------------------------------------
+/// Read an Eigen sparse matrix from a bynary format file
+///
+/// @param[in,out]  m           Eigen::SparseMatrix m
+/// @param[in]      folder      The folder from where you want to read the matrix
+/// @param[in]      MatrixName  The matrix name for the input file
+///
+/// @tparam     T           type of the matrix, i.e. double, float, ...
+/// @tparam     Nrows       number of matrix rows
+/// @tparam     IND         number of matrix cols
+///
+template <typename T, int Nrows, typename IND>
+void ReadSparseMatrix(Eigen::SparseMatrix<T, Nrows, IND>& m,
+                             word folder, word MatrixName);
+
+//--------------------------------------------------------------------------
+/// Save a dense matrix to a binary format file
+///
+/// @param[in]  Matrix      Eigen dense matrix
+/// @param[in]  folder      Folder where you want to save the matrix
+/// @param[in]  MatrixName  Name of the output file
+///
+/// @tparam     MatrixType  type of the matrix, i.e. double, float, ...
+///
+template <typename MatrixType>
+void SaveDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
+
+//--------------------------------------------------------------------------
+/// Read a dense matrix from a binary format file
+///
+/// @param[in,out]  Matrix      Eigen dense matrix
+/// @param[in]      folder      Folder from where you want to read the matrix
+/// @param[in]      MatrixName  Name of the input file
+///
+/// @tparam     MatrixType  type of the matrix, i.e. double, float, ...
+///
+template <typename MatrixType>
+void ReadDenseMatrix(MatrixType& Matrix, word folder, word MatrixName);
 
 
-        //----------------------------------------------------------------------
-        /// Read a dense tensor from file
-        ///
-        /// @param[in/out] Tensor      The tensor
-        /// @param[in]     folder      Folder where you want to read the tensor
-        /// @param[in]     MatrixName  The matrix name
-        ///
-        /// @tparam        TensorType   type of the tensor, i.e. double, float, ...
-        ///
-        template <typename TensorType>
-        static void ReadDenseTensor(TensorType& Tensor, word folder, word MatrixName);
-
-        //--------------------------------------------------------------------------
-        /// Save a sparse matrix list to bynary files
-        ///
-        /// @param[in]  MatrixList  The matrix list
-        /// @param[in]  folder      The folder where you want to save files
-        /// @param[in]  MatrixName  The matrix name prefix, files are the named with an incremental number
-        ///
-        /// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
-        ///
-        template <typename MatrixType>
-        static void SaveSparseMatrixList(List<MatrixType>& MatrixList, word folder,
-                                         word MatrixName);
-
-        //--------------------------------------------------------------------------
-        /// Read a sparse matrix list to bynary files
-        ///
-        /// @param[in,out]  MatrixList  The matrix list
-        /// @param[in]      folder      The folder from where you want to read the files
-        /// @param[in]      MatrixName  The matrix name prefix, files are the named with an incremental number
-        ///
-        /// @tparam     MatrixType  MatrixType  type of the matrix, i.e. double, float, ...
-        /// @tparam     Nrows       number of matrix rows
-        /// @tparam     IND         number of matrix cols
-        ///
-        template <typename T, int Nrows, typename IND>
-        static void ReadSparseMatrixList(List<Eigen::SparseMatrix<T, Nrows, IND>>& m,
-                                         word folder, word MatrixName);
-
-        //--------------------------------------------------------------------------
-        /// Save a dense matrix list to bynary files
-        ///
-        /// @param[in]  MatrixList  The matrix list
-        /// @param[in]  folder      The folder where you want to save files
-        /// @param[in]  MatrixName  The matrix name prefix, files are the named with an incremental number
-        ///
-        /// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
-        ///
-        template <typename MatrixType>
-        static void SaveDenseMatrixList(List<MatrixType>& MatrixList, word folder,
-                                        word MatrixName);
+//----------------------------------------------------------------------
+/// Save a dense tensor to file
+///
+/// @param[in]  Tensor      The tensor
+/// @param[in]  folder      Folder where you want to save the tensor
+/// @param[in]  MatrixName  The matrix name
+///
+/// @tparam     TensorType  type of the tensor, i.e. double, float, ...
+///
+template <typename TensorType>
+void SaveDenseTensor(TensorType& Tensor, word folder, word MatrixName);
 
 
-        //--------------------------------------------------------------------------
-        /// Read a sparse matrix list to bynary files
-        ///
-        /// @param[in,out]  MatrixList  The matrix list
-        /// @param[in]      folder      The folder from where you want to read the files
-        /// @param[in]      MatrixName  The matrix name prefix, files are the named with an incremental number
-        ///
-        /// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
-        ///
-        template <typename MatrixType>
-        static void ReadDenseMatrixList(List<MatrixType>& m, word folder,
-                                        word MatrixName);
+//----------------------------------------------------------------------
+/// Read a dense tensor from file
+///
+/// @param[in/out] Tensor      The tensor
+/// @param[in]     folder      Folder where you want to read the tensor
+/// @param[in]     MatrixName  The matrix name
+///
+/// @tparam        TensorType   type of the tensor, i.e. double, float, ...
+///
+template <typename TensorType>
+void ReadDenseTensor(TensorType& Tensor, word folder, word MatrixName);
 
-        //--------------------------------------------------------------------------
-        /// Count the number of files with a certain name prefix, used by reading functions of list of matrices
-        ///
-        /// @param[in]  folder      The folder
-        /// @param[in]  MatrixName  The matrix name
-        ///
-        /// @return     Number of files matching the request
-        ///
-        static int numberOfFiles(word folder, word MatrixName);
+//--------------------------------------------------------------------------
+/// Save a sparse matrix list to bynary files
+///
+/// @param[in]  MatrixList  The matrix list
+/// @param[in]  folder      The folder where you want to save files
+/// @param[in]  MatrixName  The matrix name prefix, files are the named with an incremental number
+///
+/// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
+///
+template <typename MatrixType>
+void SaveSparseMatrixList(List<MatrixType>& MatrixList, word folder,
+                                 word MatrixName);
 
-        //--------------------------------------------------------------------------
-        /// Write points of a mesh to a file
-        ///
-        /// @param[in]  points     The points you want to write
-        /// @param[in]  folder     The folder where you want to save the file
-        /// @param[in]  subfolder  The subfolder where you want to save the file
-        ///
-        static void writePoints(pointField points, fileName folder, fileName subfolder);
+//--------------------------------------------------------------------------
+/// Read a sparse matrix list to bynary files
+///
+/// @param[in,out]  MatrixList  The matrix list
+/// @param[in]      folder      The folder from where you want to read the files
+/// @param[in]      MatrixName  The matrix name prefix, files are the named with an incremental number
+///
+/// @tparam     MatrixType  MatrixType  type of the matrix, i.e. double, float, ...
+/// @tparam     Nrows       number of matrix rows
+/// @tparam     IND         number of matrix cols
+///
+template <typename T, int Nrows, typename IND>
+void ReadSparseMatrixList(List<Eigen::SparseMatrix<T, Nrows, IND>>& m,
+                                 word folder, word MatrixName);
 
-        //--------------------------------------------------------------------------
-        /// Print progress bar given the percentage
-        ///
-        /// @param[in]  percentage  The percentage
-        ///
-        static void printProgress(double percentage);
+//--------------------------------------------------------------------------
+/// Save a dense matrix list to bynary files
+///
+/// @param[in]  MatrixList  The matrix list
+/// @param[in]  folder      The folder where you want to save files
+/// @param[in]  MatrixName  The matrix name prefix, files are the named with an incremental number
+///
+/// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
+///
+template <typename MatrixType>
+void SaveDenseMatrixList(List<MatrixType>& MatrixList, word folder,
+                                word MatrixName);
+
+
+//--------------------------------------------------------------------------
+/// Read a sparse matrix list to bynary files
+///
+/// @param[in,out]  MatrixList  The matrix list
+/// @param[in]      folder      The folder from where you want to read the files
+/// @param[in]      MatrixName  The matrix name prefix, files are the named with an incremental number
+///
+/// @tparam     MatrixType   MatrixType  type of the matrix, i.e. double, float, ...
+///
+template <typename MatrixType>
+void ReadDenseMatrixList(List<MatrixType>& m, word folder,
+                                word MatrixName);
+
+//--------------------------------------------------------------------------
+/// Count the number of files with a certain name prefix, used by reading functions of list of matrices
+///
+/// @param[in]  folder      The folder
+/// @param[in]  MatrixName  The matrix name
+///
+/// @return     Number of files matching the request
+///
+int numberOfFiles(word folder, word MatrixName);
+
+//--------------------------------------------------------------------------
+/// Write points of a mesh to a file
+///
+/// @param[in]  points     The points you want to write
+/// @param[in]  folder     The folder where you want to save the file
+/// @param[in]  subfolder  The subfolder where you want to save the file
+///
+void writePoints(pointField points, fileName folder, fileName subfolder);
+
+//--------------------------------------------------------------------------
+/// Print progress bar given the percentage
+///
+/// @param[in]  percentage  The percentage
+///
+void printProgress(double percentage);
 
 };
 
