@@ -9,14 +9,15 @@ var searchData=
   ['samples_5fsp',['SAMPLES_SP',['../classmsrProblem.html#a94977824cc7adc445491abfd9274c1fd',1,'msrProblem']]],
   ['samples_5ftxs',['SAMPLES_TXS',['../classmsrProblem.html#abc628192c808fbab05a059a14b396207',1,'msrProblem']]],
   ['samples_5fv',['SAMPLES_v',['../classmsrProblem.html#a0b588b2a2ca910a6a7b3ce852bc3c156',1,'msrProblem']]],
-  ['saver',['saver',['../classSteadyNSSimple.html#a367329cb59ff99aac61388dd9331bba8',1,'SteadyNSSimple']]],
+  ['saver',['saver',['../classSteadyNSSimple.html#aac13b74b6440a5e495d9b3a1b9367b32',1,'SteadyNSSimple']]],
   ['sc',['Sc',['../structnewton__msr__n.html#a780881c4f8d830ceec44132113559310',1,'newton_msr_n::Sc()'],['../structnewton__msr__t.html#a802d5cec055c095e5ff78f81d1beeb8d',1,'newton_msr_t::Sc()'],['../classreducedMSR.html#a6e0eddb07e0b16716d7e047e8364a950',1,'reducedMSR::Sc()'],['../structnewton__usmsr__n.html#a736e5307bf4f2334a12a64cb5bbf20fb',1,'newton_usmsr_n::Sc()'],['../structnewton__usmsr__t.html#a601b0359989277dd67839fd509628309',1,'newton_usmsr_t::Sc()'],['../msrProblem_2readConstants_8H.html#a088b0afc6385f490f1c4d28d57c59cb0',1,'Sc():&#160;readConstants.H'],['../unsteadymsrProblem_2readConstants_8H.html#a088b0afc6385f490f1c4d28d57c59cb0',1,'Sc():&#160;readConstants.H']]],
   ['sct',['Sct',['../msrProblem_2readConstants_8H.html#af7dc3df8205316878854dbd9c3289554',1,'Sct():&#160;readConstants.H'],['../unsteadymsrProblem_2readConstants_8H.html#af7dc3df8205316878854dbd9c3289554',1,'Sct():&#160;readConstants.H']]],
   ['sd1_5fmatrix',['SD1_matrix',['../classmsrProblem.html#a0bb542f623f1263d188f4ad020e4dc1d',1,'msrProblem']]],
   ['sd2_5fmatrix',['SD2_matrix',['../classmsrProblem.html#a940833f5f0a57a7ccb61ffbadc29a4e9',1,'msrProblem']]],
   ['sd3_5fmatrix',['SD3_matrix',['../classmsrProblem.html#a4f276c07a4cf4b86b4f586ea2f1c6ab6',1,'msrProblem']]],
   ['shape',['shape',['../structcnpy_1_1NpyArray.html#ac3cd310552cf405b62de674ebe1d0d87',1,'cnpy::NpyArray']]],
-  ['snapshotsdmd',['snapshotsDMD',['../classITHACADMD.html#a2fb05e53b51a3c355a86e826f1322fda',1,'ITHACADMD']]],
+  ['skiplift',['skipLift',['../classReducedUnsteadyNSTurb.html#a58ceda1ac42b5fd4530420e0fc88e1c8',1,'ReducedUnsteadyNSTurb']]],
+  ['snapshotsdmd',['snapshotsDMD',['../classITHACADMD.html#a24b0ab0908fc1651f54f968175f20592',1,'ITHACADMD']]],
   ['snapshotsmatrix',['SnapShotsMatrix',['../classDEIM.html#adeaaeb890473b18f10b64e808b077e7a',1,'DEIM']]],
   ['source',['source',['../classDEIM.html#a477bea6203323df23db479785633dc19',1,'DEIM::source()'],['../classlaplacianProblem.html#abe844ac55089584af4cb7aed7792f019',1,'laplacianProblem::source()']]],
   ['sp',['SP',['../classmsr.html#a2f912636c32c1dd58bc08be45b142ac4',1,'msr::SP()'],['../classreducedMSR.html#ad7cfc7f1bb432a4003ae926a94e780ba',1,'reducedMSR::sp()'],['../structnewton__usmsr__t.html#a2a91bdd7ec11d750eb0ebd68fef185c3',1,'newton_usmsr_t::sp()'],['../msrProblem_2createConstants_8H.html#a27c891370caad3f250fd5c1e40cdbfdb',1,'SP():&#160;createConstants.H'],['../msrProblem_2updateConsts_8H.html#a62767f04d4235b37fdb9d53601bb9a6d',1,'SP():&#160;updateConsts.H'],['../unsteadymsrProblem_2createConstants_8H.html#a27c891370caad3f250fd5c1e40cdbfdb',1,'SP():&#160;createConstants.H'],['../unsteadymsrProblem_2updateConsts_8H.html#a62767f04d4235b37fdb9d53601bb9a6d',1,'SP():&#160;updateConsts.H']]],
@@ -50,6 +51,6 @@ var searchData=
   ['submeshlistb',['submeshListB',['../classDEIM.html#a3108b52a7736a33a80e83e79f018667e',1,'DEIM']]],
   ['supex',['supex',['../classsteadyNS.html#a1bf99fedc2b7bffafb5dcdc1d9566596',1,'steadyNS']]],
   ['supfield',['supfield',['../classsteadyNS.html#abf270832efeb641ba8d663a8c7c21941',1,'steadyNS']]],
-  ['supmodes',['supmodes',['../classsteadyNS.html#afb0a9b5560ddac76b7eb9dab4a78b861',1,'steadyNS']]],
-  ['svd_5frank_5fpublic',['SVD_rank_public',['../classITHACADMD.html#a50e2943776c8ea03adb79abbf6367349',1,'ITHACADMD']]]
+  ['supmodes',['supmodes',['../classsteadyNS.html#a30e73c971b0ad980e397afdc99ae1744',1,'steadyNS']]],
+  ['svd_5frank_5fpublic',['SVD_rank_public',['../classITHACADMD.html#a0d721eff33280de4f30ce22f84da95a6',1,'ITHACADMD']]]
 ];

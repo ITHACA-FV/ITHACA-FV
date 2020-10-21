@@ -138,9 +138,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ada67e4e6420493f220f61a867e999c89"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedLaplacian.html#ada67e4e6420493f220f61a867e999c89">online_solution</a></td></tr>
 <tr class="memdesc:ada67e4e6420493f220f61a867e999c89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Online solution.  <a href="#ada67e4e6420493f220f61a867e999c89">More...</a><br /></td></tr>
 <tr class="separator:ada67e4e6420493f220f61a867e999c89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33fb3e18257f37582315dfc4ac46658f"><td class="memItemLeft" align="right" valign="top">label&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedLaplacian.html#a33fb3e18257f37582315dfc4ac46658f">count_online_solve</a> = 1</td></tr>
-<tr class="memdesc:a33fb3e18257f37582315dfc4ac46658f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counter for online sol.  <a href="#a33fb3e18257f37582315dfc4ac46658f">More...</a><br /></td></tr>
-<tr class="separator:a33fb3e18257f37582315dfc4ac46658f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a739ed968f0e1c8bbecb7625d101a02d9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedLaplacian.html#a739ed968f0e1c8bbecb7625d101a02d9">count_online_solve</a> = 1</td></tr>
+<tr class="memdesc:a739ed968f0e1c8bbecb7625d101a02d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counter for online sol.  <a href="#a739ed968f0e1c8bbecb7625d101a02d9">More...</a><br /></td></tr>
+<tr class="separator:a739ed968f0e1c8bbecb7625d101a02d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a238b1087ad6d1fcd499ac51435c665fe"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedLaplacian.html#a238b1087ad6d1fcd499ac51435c665fe">Trec</a></td></tr>
+<tr class="memdesc:a238b1087ad6d1fcd499ac51435c665fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduced reconstructed Solution.  <a href="#a238b1087ad6d1fcd499ac51435c665fe">More...</a><br /></td></tr>
+<tr class="separator:a238b1087ad6d1fcd499ac51435c665fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classreducedProblem"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classreducedProblem')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classreducedProblem.html">reducedProblem</a></td></tr>
 <tr class="memitem:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="memItemLeft" align="right" valign="top">scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedProblem.html#a65ad23828d68db181985589b65d3c436">nu</a></td></tr>
 <tr class="memdesc:a65ad23828d68db181985589b65d3c436 inherit pub_attribs_classreducedProblem"><td class="mdescLeft">&#160;</td><td class="mdescRight">Viscosity.  <a href="classreducedProblem.html#a65ad23828d68db181985589b65d3c436">More...</a><br /></td></tr>
@@ -303,14 +306,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a33fb3e18257f37582315dfc4ac46658f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33fb3e18257f37582315dfc4ac46658f">&#9670;&nbsp;</a></span>count_online_solve</h2>
+<a id="a739ed968f0e1c8bbecb7625d101a02d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a739ed968f0e1c8bbecb7625d101a02d9">&#9670;&nbsp;</a></span>count_online_solve</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">label reducedLaplacian::count_online_solve = 1</td>
+          <td class="memname">int reducedLaplacian::count_online_solve = 1</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -354,6 +357,24 @@ Public Attributes</h2></td></tr>
 <p>Problem object. </p>
 
 <p class="definition">Definition at line <a class="el" href="ReducedLaplacian_8H_source.html#l00066">66</a> of file <a class="el" href="ReducedLaplacian_8H_source.html">ReducedLaplacian.H</a>.</p>
+
+</div>
+</div>
+<a id="a238b1087ad6d1fcd499ac51435c665fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a238b1087ad6d1fcd499ac51435c665fe">&#9670;&nbsp;</a></span>Trec</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt;volScalarField&gt; reducedLaplacian::Trec</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reduced reconstructed Solution. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedLaplacian_8H_source.html#l00078">78</a> of file <a class="el" href="ReducedLaplacian_8H_source.html">ReducedLaplacian.H</a>.</p>
 
 </div>
 </div>

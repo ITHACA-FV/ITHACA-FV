@@ -109,9 +109,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8a63d5bf146d83dbd62ad6d72a605e9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#a8a63d5bf146d83dbd62ad6d72a605e9f">solveOnlineSUP</a> (Eigen::MatrixXd velNow)</td></tr>
 <tr class="memdesc:a8a63d5bf146d83dbd62ad6d72a605e9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a supremizer stabilisation method.  <a href="#a8a63d5bf146d83dbd62ad6d72a605e9f">More...</a><br /></td></tr>
 <tr class="separator:a8a63d5bf146d83dbd62ad6d72a605e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a456e6a92abb646a3be4dd580474f2cbb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#a456e6a92abb646a3be4dd580474f2cbb">reconstructSUP</a> (fileName folder=&quot;./ITHACAOutput/online_rec&quot;, int printEvery=1)</td></tr>
-<tr class="memdesc:a456e6a92abb646a3be4dd580474f2cbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.  <a href="#a456e6a92abb646a3be4dd580474f2cbb">More...</a><br /></td></tr>
-<tr class="separator:a456e6a92abb646a3be4dd580474f2cbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa671f5af16b0feee4f9b1132b811b41a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#aa671f5af16b0feee4f9b1132b811b41a">reconstruct</a> (bool exportFields=false, fileName folder=&quot;./ITHACAoutput/online_rec&quot;, int printevery=1)</td></tr>
+<tr class="memdesc:aa671f5af16b0feee4f9b1132b811b41a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve.  <a href="#aa671f5af16b0feee4f9b1132b811b41a">More...</a><br /></td></tr>
+<tr class="separator:aa671f5af16b0feee4f9b1132b811b41a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af43cfbee34ed47b202097194bc3e1258"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#af43cfbee34ed47b202097194bc3e1258">setOnlineVelocity</a> (Eigen::MatrixXd vel)</td></tr>
 <tr class="memdesc:af43cfbee34ed47b202097194bc3e1258"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the online velocity.  <a href="#af43cfbee34ed47b202097194bc3e1258">More...</a><br /></td></tr>
 <tr class="separator:af43cfbee34ed47b202097194bc3e1258"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,12 +130,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2e9605d7acfcca9a66339fdbf930a256 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a2e9605d7acfcca9a66339fdbf930a256">solveOnline_sup</a> (Eigen::MatrixXd <a class="el" href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">vel_now</a>)</td></tr>
 <tr class="memdesc:a2e9605d7acfcca9a66339fdbf930a256 inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a supremizer stabilisation method.  <a href="classreducedSteadyNS.html#a2e9605d7acfcca9a66339fdbf930a256">More...</a><br /></td></tr>
 <tr class="separator:a2e9605d7acfcca9a66339fdbf930a256 inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84023acdb22cdef6fc84de1240979f96 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a84023acdb22cdef6fc84de1240979f96">reconstruct_PPE</a> (fileName folder=&quot;./ITHACAOutput/online_rec&quot;, int printevery=1)</td></tr>
-<tr class="memdesc:a84023acdb22cdef6fc84de1240979f96 inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct a solution from an online solve with a PPE stabilisation technique.  <a href="classreducedSteadyNS.html#a84023acdb22cdef6fc84de1240979f96">More...</a><br /></td></tr>
-<tr class="separator:a84023acdb22cdef6fc84de1240979f96 inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65f70e45d49d5c359d299f397e6fe009 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a65f70e45d49d5c359d299f397e6fe009">reconstruct_sup</a> (fileName folder=&quot;./ITHACAOutput/online_rec&quot;, int printevery=1)</td></tr>
-<tr class="memdesc:a65f70e45d49d5c359d299f397e6fe009 inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.  <a href="classreducedSteadyNS.html#a65f70e45d49d5c359d299f397e6fe009">More...</a><br /></td></tr>
-<tr class="separator:a65f70e45d49d5c359d299f397e6fe009 inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea8d6033ef02096739002b03923e32f5 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#aea8d6033ef02096739002b03923e32f5">reconstruct_PPE</a> (fileName folder=&quot;./ITHACAoutput/online_rec&quot;, int printevery=1)</td></tr>
+<tr class="memdesc:aea8d6033ef02096739002b03923e32f5 inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct a solution from an online solve with a PPE stabilisation technique.  <a href="classreducedSteadyNS.html#aea8d6033ef02096739002b03923e32f5">More...</a><br /></td></tr>
+<tr class="separator:aea8d6033ef02096739002b03923e32f5 inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5705f5b58c5a7f3f7ae68493d98b700 inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#af5705f5b58c5a7f3f7ae68493d98b700">reconstruct</a> (bool exportFields=false, fileName folder=&quot;./ITHACAoutput/online_rec&quot;, int printevery=1)</td></tr>
+<tr class="memdesc:af5705f5b58c5a7f3f7ae68493d98b700 inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve.  <a href="classreducedSteadyNS.html#af5705f5b58c5a7f3f7ae68493d98b700">More...</a><br /></td></tr>
+<tr class="separator:af5705f5b58c5a7f3f7ae68493d98b700 inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61b8a84a932b44fcc28773fb9dfc05fa inherit pub_methods_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a61b8a84a932b44fcc28773fb9dfc05fa">reconstructLiftAndDrag</a> (<a class="el" href="classsteadyNS.html">steadyNS</a> &amp;<a class="el" href="classreducedSteadyNS.html#a7f9a3574d2a7d08fa131a3533f879f29">problem</a>, fileName folder)</td></tr>
 <tr class="memdesc:a61b8a84a932b44fcc28773fb9dfc05fa inherit pub_methods_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to compute the reduced order forces.  <a href="classreducedSteadyNS.html#a61b8a84a932b44fcc28773fb9dfc05fa">More...</a><br /></td></tr>
 <tr class="separator:a61b8a84a932b44fcc28773fb9dfc05fa inherit pub_methods_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,9 +172,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:adeabed12c50e6bd35025eba114fe2559"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#adeabed12c50e6bd35025eba114fe2559">nutModes</a></td></tr>
 <tr class="memdesc:adeabed12c50e6bd35025eba114fe2559"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of POD modes for eddy viscosity.  <a href="#adeabed12c50e6bd35025eba114fe2559">More...</a><br /></td></tr>
 <tr class="separator:adeabed12c50e6bd35025eba114fe2559"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae26b7e64a5c3cf156097e33e8581ac69"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#ae26b7e64a5c3cf156097e33e8581ac69">nutRec</a></td></tr>
-<tr class="memdesc:ae26b7e64a5c3cf156097e33e8581ac69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstructed eddy viscosity field.  <a href="#ae26b7e64a5c3cf156097e33e8581ac69">More...</a><br /></td></tr>
-<tr class="separator:ae26b7e64a5c3cf156097e33e8581ac69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f32d0d4211709fa66be2a3e4c390b7c"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#a7f32d0d4211709fa66be2a3e4c390b7c">rbfCoeffMat</a></td></tr>
+<tr class="memdesc:a7f32d0d4211709fa66be2a3e4c390b7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The matrix of the eddy viscosity RBF interoplated coefficients.  <a href="#a7f32d0d4211709fa66be2a3e4c390b7c">More...</a><br /></td></tr>
+<tr class="separator:a7f32d0d4211709fa66be2a3e4c390b7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac98ac30b528904b94b5a3dd3b19c3911"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#ac98ac30b528904b94b5a3dd3b19c3911">rbfCoeff</a></td></tr>
 <tr class="memdesc:ac98ac30b528904b94b5a3dd3b19c3911"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector of eddy viscosity RBF interoplated coefficients.  <a href="#ac98ac30b528904b94b5a3dd3b19c3911">More...</a><br /></td></tr>
 <tr class="separator:ac98ac30b528904b94b5a3dd3b19c3911"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,6 +187,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a9def82af939787f8d2f080b4dbfc9aa6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSteadyNSTurb.html">SteadyNSTurb</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#a9def82af939787f8d2f080b4dbfc9aa6">problem</a></td></tr>
 <tr class="memdesc:a9def82af939787f8d2f080b4dbfc9aa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to the FOM problem.  <a href="#a9def82af939787f8d2f080b4dbfc9aa6">More...</a><br /></td></tr>
 <tr class="separator:a9def82af939787f8d2f080b4dbfc9aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15b095fcedd22ca01ac93f58d49361dd"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReducedSteadyNSTurb.html#a15b095fcedd22ca01ac93f58d49361dd">nutRecFields</a></td></tr>
+<tr class="memdesc:a15b095fcedd22ca01ac93f58d49361dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstructed eddy viscosity fields list.  <a href="#a15b095fcedd22ca01ac93f58d49361dd">More...</a><br /></td></tr>
+<tr class="separator:a15b095fcedd22ca01ac93f58d49361dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classreducedSteadyNS"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classreducedSteadyNS')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classreducedSteadyNS.html">reducedSteadyNS</a></td></tr>
 <tr class="memitem:a1ef2bf9d83564fbc315d66c577f5a1e4 inherit pub_attribs_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classITHACAparameters.html">ITHACAparameters</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a1ef2bf9d83564fbc315d66c577f5a1e4">para</a></td></tr>
 <tr class="memdesc:a1ef2bf9d83564fbc315d66c577f5a1e4 inherit pub_attribs_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">parameters to be read from the ITHACAdict file  <a href="classreducedSteadyNS.html#a1ef2bf9d83564fbc315d66c577f5a1e4">More...</a><br /></td></tr>
@@ -230,6 +233,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ade80fc6ce4032c56f11de6c5f440af66 inherit pub_attribs_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volVectorField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#ade80fc6ce4032c56f11de6c5f440af66">UREC</a></td></tr>
 <tr class="memdesc:ade80fc6ce4032c56f11de6c5f440af66 inherit pub_attribs_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recontructed velocity field.  <a href="classreducedSteadyNS.html#ade80fc6ce4032c56f11de6c5f440af66">More...</a><br /></td></tr>
 <tr class="separator:ade80fc6ce4032c56f11de6c5f440af66 inherit pub_attribs_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eb1161de150d3d8eed7b892d4f082c6 inherit pub_attribs_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a7eb1161de150d3d8eed7b892d4f082c6">pRecFields</a></td></tr>
+<tr class="memdesc:a7eb1161de150d3d8eed7b892d4f082c6 inherit pub_attribs_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstructed pressure fields list.  <a href="classreducedSteadyNS.html#a7eb1161de150d3d8eed7b892d4f082c6">More...</a><br /></td></tr>
+<tr class="separator:a7eb1161de150d3d8eed7b892d4f082c6 inherit pub_attribs_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd13752a9b58e97bbf3ac0565fcb8b8a inherit pub_attribs_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volVectorField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#acd13752a9b58e97bbf3ac0565fcb8b8a">uRecFields</a></td></tr>
+<tr class="memdesc:acd13752a9b58e97bbf3ac0565fcb8b8a inherit pub_attribs_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recontructed velocity fields list.  <a href="classreducedSteadyNS.html#acd13752a9b58e97bbf3ac0565fcb8b8a">More...</a><br /></td></tr>
+<tr class="separator:acd13752a9b58e97bbf3ac0565fcb8b8a inherit pub_attribs_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5fda4db576cde08dd9ba188a0e10a37 inherit pub_attribs_classreducedSteadyNS"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structnewton__steadyNS.html">newton_steadyNS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#af5fda4db576cde08dd9ba188a0e10a37">newton_object</a></td></tr>
 <tr class="memdesc:af5fda4db576cde08dd9ba188a0e10a37 inherit pub_attribs_classreducedSteadyNS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Newton object used to solve the non linear problem.  <a href="classreducedSteadyNS.html#af5fda4db576cde08dd9ba188a0e10a37">More...</a><br /></td></tr>
 <tr class="separator:af5fda4db576cde08dd9ba188a0e10a37 inherit pub_attribs_classreducedSteadyNS"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -265,7 +274,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Class where it is implemented a reduced problem for the <b> steady turbulent Navier-stokes </b> problem. </p>
 <p class="">In this class are implemented the methods to solve a reduced version of the stationary turbulent Navier-stokes equations. This class must be used together with the <a class="el" href="classsteadyNS.html" title="Implementation of a parametrized full order  steady NS problem  and preparation of the the reduced ma...">steadyNS</a> class </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#_a53">06POD_RBF.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="06POD_RBF_8C-example.html#_a55">06POD_RBF.C</a>.</dd>
 </dl>
 <p class="definition">Definition at line <a class="el" href="ReducedSteadyNSTurb_8H_source.html#l00089">89</a> of file <a class="el" href="ReducedSteadyNSTurb_8H_source.html">ReducedSteadyNSTurb.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -346,23 +355,29 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a456e6a92abb646a3be4dd580474f2cbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a456e6a92abb646a3be4dd580474f2cbb">&#9670;&nbsp;</a></span>reconstructSUP()</h2>
+<a id="aa671f5af16b0feee4f9b1132b811b41a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa671f5af16b0feee4f9b1132b811b41a">&#9670;&nbsp;</a></span>reconstruct()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void ReducedSteadyNSTurb::reconstructSUP </td>
+          <td class="memname">void ReducedSteadyNSTurb::reconstruct </td>
           <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>exportFields</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">fileName&#160;</td>
-          <td class="paramname"><em>folder</em> = <code>&quot;./ITHACAOutput/online_rec&quot;</code>, </td>
+          <td class="paramname"><em>folder</em> = <code>&quot;./ITHACAoutput/online_rec&quot;</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>printEvery</em> = <code>1</code>&#160;</td>
+          <td class="paramname"><em>printevery</em> = <code>1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -372,17 +387,17 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique. </p>
-<p class="">stabilisation method</p>
+<p>Method to reconstruct the solutions from an online solve. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder where to output the solutions </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">printEvery</td><td>The printEvery </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">exportFields</td><td>A boolean variable which determines whether to export fields or not </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder where to output the solutions in case on wants to </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">printevery</td><td>The printevery variabel, when it is 1 the function outputs all stored fields </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNSTurb_8C_source.html#l00226">226</a> of file <a class="el" href="ReducedSteadyNSTurb_8C_source.html">ReducedSteadyNSTurb.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNSTurb_8C_source.html#l00218">218</a> of file <a class="el" href="ReducedSteadyNSTurb_8C_source.html">ReducedSteadyNSTurb.C</a>.</p>
 
 </div>
 </div>
@@ -411,7 +426,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The rescaled velocity vector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNSTurb_8C_source.html#l00262">262</a> of file <a class="el" href="ReducedSteadyNSTurb_8C_source.html">ReducedSteadyNSTurb.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNSTurb_8C_source.html#l00273">273</a> of file <a class="el" href="ReducedSteadyNSTurb_8C_source.html">ReducedSteadyNSTurb.C</a>.</p>
 
 </div>
 </div>
@@ -517,21 +532,21 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae26b7e64a5c3cf156097e33e8581ac69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae26b7e64a5c3cf156097e33e8581ac69">&#9670;&nbsp;</a></span>nutRec</h2>
+<a id="a15b095fcedd22ca01ac93f58d49361dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15b095fcedd22ca01ac93f58d49361dd">&#9670;&nbsp;</a></span>nutRecFields</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">PtrList&lt;volScalarField&gt; ReducedSteadyNSTurb::nutRec</td>
+          <td class="memname">PtrList&lt;volScalarField&gt; ReducedSteadyNSTurb::nutRecFields</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Reconstructed eddy viscosity field. </p>
+<p>Reconstructed eddy viscosity fields list. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNSTurb_8H_source.html#l00113">113</a> of file <a class="el" href="ReducedSteadyNSTurb_8H_source.html">ReducedSteadyNSTurb.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNSTurb_8H_source.html#l00128">128</a> of file <a class="el" href="ReducedSteadyNSTurb_8H_source.html">ReducedSteadyNSTurb.H</a>.</p>
 
 </div>
 </div>
@@ -568,6 +583,24 @@ Public Attributes</h2></td></tr>
 <p>Vector of eddy viscosity RBF interoplated coefficients. </p>
 
 <p class="definition">Definition at line <a class="el" href="ReducedSteadyNSTurb_8H_source.html#l00116">116</a> of file <a class="el" href="ReducedSteadyNSTurb_8H_source.html">ReducedSteadyNSTurb.H</a>.</p>
+
+</div>
+</div>
+<a id="a7f32d0d4211709fa66be2a3e4c390b7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f32d0d4211709fa66be2a3e4c390b7c">&#9670;&nbsp;</a></span>rbfCoeffMat</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXd ReducedSteadyNSTurb::rbfCoeffMat</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The matrix of the eddy viscosity RBF interoplated coefficients. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNSTurb_8H_source.html#l00113">113</a> of file <a class="el" href="ReducedSteadyNSTurb_8H_source.html">ReducedSteadyNSTurb.H</a>.</p>
 
 </div>
 </div>

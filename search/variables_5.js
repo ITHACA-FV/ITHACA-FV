@@ -1,9 +1,9 @@
 var searchData=
 [
   ['e',['e',['../classUnsteadyNSTurb.html#a98a0dae6a8bf3a8736a7edf779bc4d64',1,'UnsteadyNSTurb']]],
-  ['eigenmodes',['EigenModes',['../classModes.html#a44c8d220be701f480453f9e9e4b2e250',1,'Modes']]],
+  ['eigenmodes',['EigenModes',['../classModes.html#a24030e4d03ad8d74368d2f1799dd8b6f',1,'Modes']]],
   ['eigensolver',['eigensolver',['../classITHACAparameters.html#a2d92767262f74bae72e273d4a367e4ae',1,'ITHACAparameters']]],
-  ['eigenvalues',['eigenValues',['../classITHACADMD.html#a025317a9952ec34666f5fe518713ba8c',1,'ITHACADMD']]],
+  ['eigenvalues',['eigenValues',['../classITHACADMD.html#ae25d7e1f8c162d94cf0bf4e504e3ad5f',1,'ITHACADMD']]],
   ['equation',['equation',['../msrProblem_2NLsolve_8H.html#a9effb785c6d4a00b0cc23b50e4f96eb1',1,'NLsolve.H']]],
   ['ex',['EX',['../classLRSensitivity.html#acb8d7ed6258a1361ff3543d4e2a2d054',1,'LRSensitivity']]],
   ['exportevery',['exportEvery',['../classreducedUnsteadyNS.html#a21df4d12ee1c54827a9a0260f5c5bd81',1,'reducedUnsteadyNS']]],

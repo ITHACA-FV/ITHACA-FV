@@ -21,5 +21,5 @@ var searchData=
   ['writeintegratedforcemoment',['writeIntegratedForceMoment',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a20d1fb8371d468af6954c25ebcfbeb21',1,'Foam::functionObjects::ITHACAforces']]],
   ['writeintegratedheader',['writeIntegratedHeader',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#ac85195247e393457935c930fb0711251',1,'Foam::functionObjects::ITHACAforces']]],
   ['writemu',['writeMu',['../classreductionProblem.html#a190ccbfacec0dc99a55f4324f48f4c99',1,'reductionProblem']]],
-  ['writepoints',['writePoints',['../classITHACAstream.html#a0519dc8f17b2d0f7a524518f717a446b',1,'ITHACAstream']]]
+  ['writepoints',['writePoints',['../namespaceITHACAstream.html#a0519dc8f17b2d0f7a524518f717a446b',1,'ITHACAstream']]]
 ];

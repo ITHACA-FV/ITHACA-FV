@@ -108,12 +108,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0b55d6b675fa8c21478f90b6362ba123"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSimpleSteadyNS.html#a0b55d6b675fa8c21478f90b6362ba123">solveOnline_Simple</a> (scalar mu_now, int NmodesUproj, int NmodesPproj, int NmodesNut=0, int NmodesSup=0, word Folder=&quot;./ITHACAoutput/Reconstruct/&quot;)</td></tr>
 <tr class="memdesc:a0b55d6b675fa8c21478f90b6362ba123"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a PPE stabilisation method.  <a href="#a0b55d6b675fa8c21478f90b6362ba123">More...</a><br /></td></tr>
 <tr class="separator:a0b55d6b675fa8c21478f90b6362ba123"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f67ce6fe35bc6e22b4899cbe5600284"><td class="memItemLeft" align="right" valign="top">fvVectorMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSimpleSteadyNS.html#a8f67ce6fe35bc6e22b4899cbe5600284">get_Umatrix_Online</a> (volVectorField &amp;<a class="el" href="UnsteadyNSTurbIntrusive_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, volScalarField &amp;<a class="el" href="src_2ITHACA__FOMPROBLEMS_2UnsteadyNSTurbIntrusive_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)</td></tr>
-<tr class="memdesc:a8f67ce6fe35bc6e22b4899cbe5600284"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Umatrix for the online solver: it just assembles the pure matrix.  <a href="#a8f67ce6fe35bc6e22b4899cbe5600284">More...</a><br /></td></tr>
-<tr class="separator:a8f67ce6fe35bc6e22b4899cbe5600284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4aa06b3d08a0b787cbbf294dd6635ce4"><td class="memItemLeft" align="right" valign="top">fvScalarMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSimpleSteadyNS.html#a4aa06b3d08a0b787cbbf294dd6635ce4">get_Pmatrix_Online</a> (volVectorField &amp;<a class="el" href="UnsteadyNSTurbIntrusive_2pEqn_8H.html#a81cf6107131a3583e2b0b762cb9c2862">U</a>, volScalarField &amp;<a class="el" href="src_2ITHACA__FOMPROBLEMS_2UnsteadyNSTurbIntrusive_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>)</td></tr>
-<tr class="memdesc:a4aa06b3d08a0b787cbbf294dd6635ce4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the Pmatrix for the online solver: it just assembls the pure matrix.  <a href="#a4aa06b3d08a0b787cbbf294dd6635ce4">More...</a><br /></td></tr>
-<tr class="separator:a4aa06b3d08a0b787cbbf294dd6635ce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae05b9c9db878f60d359862d7704ba225"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSimpleSteadyNS.html#ae05b9c9db878f60d359862d7704ba225">setOnlineVelocity</a> (Eigen::MatrixXd vel)</td></tr>
 <tr class="memdesc:ae05b9c9db878f60d359862d7704ba225"><td class="mdescLeft">&#160;</td><td class="mdescRight">It checks if the number of imposed boundary conditions is correct and set the inlet velocity equal to the given one.  <a href="#ae05b9c9db878f60d359862d7704ba225">More...</a><br /></td></tr>
 <tr class="separator:ae05b9c9db878f60d359862d7704ba225"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,9 +132,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a4e98b9f341bd7525dffcf6c397470ba5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModes.html">Modes</a>&lt; vector &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSimpleSteadyNS.html#a4e98b9f341bd7525dffcf6c397470ba5">ULmodes</a></td></tr>
-<tr class="memdesc:a4e98b9f341bd7525dffcf6c397470ba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lifted velocity modes.  <a href="#a4e98b9f341bd7525dffcf6c397470ba5">More...</a><br /></td></tr>
-<tr class="separator:a4e98b9f341bd7525dffcf6c397470ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad851faa6ae39815988f2779d4c7ee29f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="Modes_8H.html#a68154de5b1379ebc341dc38807b1c7f9">volVectorModes</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSimpleSteadyNS.html#ad851faa6ae39815988f2779d4c7ee29f">ULmodes</a></td></tr>
+<tr class="memdesc:ad851faa6ae39815988f2779d4c7ee29f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lifted velocity modes.  <a href="#ad851faa6ae39815988f2779d4c7ee29f">More...</a><br /></td></tr>
+<tr class="separator:ad851faa6ae39815988f2779d4c7ee29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85864d3ef73dd0ff5a4ddc74eb77f14c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSteadyNSSimple.html">SteadyNSSimple</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSimpleSteadyNS.html#a85864d3ef73dd0ff5a4ddc74eb77f14c">problem</a></td></tr>
 <tr class="memdesc:a85864d3ef73dd0ff5a4ddc74eb77f14c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Full problem.  <a href="#a85864d3ef73dd0ff5a4ddc74eb77f14c">More...</a><br /></td></tr>
 <tr class="separator:a85864d3ef73dd0ff5a4ddc74eb77f14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -256,86 +250,6 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4aa06b3d08a0b787cbbf294dd6635ce4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4aa06b3d08a0b787cbbf294dd6635ce4">&#9670;&nbsp;</a></span>get_Pmatrix_Online()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">fvScalarMatrix reducedSimpleSteadyNS::get_Pmatrix_Online </td>
-          <td>(</td>
-          <td class="paramtype">volVectorField &amp;&#160;</td>
-          <td class="paramname"><em>U</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">volScalarField &amp;&#160;</td>
-          <td class="paramname"><em>p</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gets the Pmatrix for the online solver: it just assembls the pure matrix. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">U</td><td>Velocity vector field </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>Pressure scalar field</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Pressure linear system. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8C_source.html#l00274">274</a> of file <a class="el" href="ReducedSimpleSteadyNS_8C_source.html">ReducedSimpleSteadyNS.C</a>.</p>
-
-</div>
-</div>
-<a id="a8f67ce6fe35bc6e22b4899cbe5600284"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f67ce6fe35bc6e22b4899cbe5600284">&#9670;&nbsp;</a></span>get_Umatrix_Online()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">fvVectorMatrix reducedSimpleSteadyNS::get_Umatrix_Online </td>
-          <td>(</td>
-          <td class="paramtype">volVectorField &amp;&#160;</td>
-          <td class="paramname"><em>U</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">volScalarField &amp;&#160;</td>
-          <td class="paramname"><em>p</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gets the Umatrix for the online solver: it just assembles the pure matrix. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">U</td><td>Velocity vector field </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>Pressure scalar field</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Velocity linear system. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8C_source.html#l00256">256</a> of file <a class="el" href="ReducedSimpleSteadyNS_8C_source.html">ReducedSimpleSteadyNS.C</a>.</p>
-
-</div>
-</div>
 <a id="ae05b9c9db878f60d359862d7704ba225"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae05b9c9db878f60d359862d7704ba225">&#9670;&nbsp;</a></span>setOnlineVelocity()</h2>
 
@@ -360,7 +274,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8C_source.html#l00289">289</a> of file <a class="el" href="ReducedSimpleSteadyNS_8C_source.html">ReducedSimpleSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8C_source.html#l00258">258</a> of file <a class="el" href="ReducedSimpleSteadyNS_8C_source.html">ReducedSimpleSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -444,7 +358,7 @@ Public Attributes</h2></td></tr>
 
 <p>Counter. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00142">142</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00121">121</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -462,7 +376,7 @@ Public Attributes</h2></td></tr>
 
 <p>Maximum iterations number for the online step. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00139">139</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00118">118</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -480,7 +394,7 @@ Public Attributes</h2></td></tr>
 
 <p>Full problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00130">130</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00109">109</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -498,25 +412,25 @@ Public Attributes</h2></td></tr>
 
 <p>Projected gradient of the pressure modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00133">133</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00112">112</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
 
 </div>
 </div>
-<a id="a4e98b9f341bd7525dffcf6c397470ba5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e98b9f341bd7525dffcf6c397470ba5">&#9670;&nbsp;</a></span>ULmodes</h2>
+<a id="ad851faa6ae39815988f2779d4c7ee29f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad851faa6ae39815988f2779d4c7ee29f">&#9670;&nbsp;</a></span>ULmodes</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classModes.html">Modes</a>&lt;vector&gt; reducedSimpleSteadyNS::ULmodes</td>
+          <td class="memname"><a class="el" href="Modes_8H.html#a68154de5b1379ebc341dc38807b1c7f9">volVectorModes</a> reducedSimpleSteadyNS::ULmodes</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Lifted velocity modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00127">127</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00106">106</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -534,7 +448,7 @@ Public Attributes</h2></td></tr>
 
 <p>Imposed boundary conditions. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00136">136</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSimpleSteadyNS_8H_source.html#l00115">115</a> of file <a class="el" href="ReducedSimpleSteadyNS_8H_source.html">ReducedSimpleSteadyNS.H</a>.</p>
 
 </div>
 </div>

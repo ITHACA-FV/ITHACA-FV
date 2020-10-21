@@ -77,7 +77,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -86,7 +85,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Header file of the <a class="el" href="classITHACAstream.html" title="Class for input-output manipulation.">ITHACAstream</a> class, it contains the implementation of several methods for input output operations.  
+<p>Header file of the <a class="el" href="namespaceITHACAstream.html" title="Namespace for input-output manipulation.">ITHACAstream</a> class, it contains the implementation of several methods for input output operations.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;fvCFD.H&quot;</code><br />
 <code>#include &quot;IOmanip.H&quot;</code><br />
@@ -106,6 +105,7 @@ $(function() {
 <code>#include &lt;zlib.h&gt;</code><br />
 <code>#include &lt;map&gt;</code><br />
 <code>#include &quot;<a class="el" href="ITHACAassert_8H_source.html">ITHACAassert.H</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ITHACAparameters_8H_source.html">ITHACAparameters.H</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ITHACAutilities_8H_source.html">ITHACAutilities.H</a>&quot;</code><br />
 <code>#include &lt;Eigen/Eigen&gt;</code><br />
 <code>#include &quot;<a class="el" href="EigenFunctions_8H_source.html">EigenFunctions.H</a>&quot;</code><br />
@@ -114,14 +114,11 @@ $(function() {
 </div>
 <p><a href="ITHACAstream_8H_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAstream.html">ITHACAstream</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for input-output manipulation.  <a href="classITHACAstream.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
+<tr class="memitem:namespaceITHACAstream"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html">ITHACAstream</a></td></tr>
+<tr class="memdesc:namespaceITHACAstream"><td class="mdescLeft">&#160;</td><td class="mdescRight">Namespace for input-output manipulation. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceFoam"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceFoam.html">Foam</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -136,27 +133,129 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a8c565c8d41720fa0233695267ff1c6cc"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
+<tr class="memitem:a8c565c8d41720fa0233695267ff1c6cc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a8c565c8d41720fa0233695267ff1c6cc">ITHACAstream::exportFvMatrix</a> (fvMatrix&lt; Type &gt; &amp;Matrix, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:a8c565c8d41720fa0233695267ff1c6cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export an Fv Matrix to folder together with its source term.  <a href="namespaceITHACAstream.html#a8c565c8d41720fa0233695267ff1c6cc">More...</a><br /></td></tr>
+<tr class="separator:a8c565c8d41720fa0233695267ff1c6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a483b7ea851dae940e8651c1fea9e5def"><td class="memTemplParams" colspan="2">template&lt;typename T , int dim&gt; </td></tr>
+<tr class="memitem:a483b7ea851dae940e8651c1fea9e5def"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a483b7ea851dae940e8651c1fea9e5def">ITHACAstream::exportMatrix</a> (Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, dim &gt; &amp;matrix, word Name, word type=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
+<tr class="memdesc:a483b7ea851dae940e8651c1fea9e5def"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format The function is implemented for a second order matrix.  <a href="namespaceITHACAstream.html#a483b7ea851dae940e8651c1fea9e5def">More...</a><br /></td></tr>
+<tr class="separator:a483b7ea851dae940e8651c1fea9e5def"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af348b1639dd0a3de993925877246e072"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#af348b1639dd0a3de993925877246e072">ITHACAstream::exportMatrix</a> (List&lt; Eigen::MatrixXd &gt; &amp;matrix, word Name, word type=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
+<tr class="memdesc:af348b1639dd0a3de993925877246e072"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format The function is implemented for a third order matrix The eigen matrix is stored as a set of two dimensional matrices where each matrix is in a different file.  <a href="namespaceITHACAstream.html#af348b1639dd0a3de993925877246e072">More...</a><br /></td></tr>
+<tr class="separator:af348b1639dd0a3de993925877246e072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab577abdcb2daf8dc9596f4d3a0b84b83"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ab577abdcb2daf8dc9596f4d3a0b84b83"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#ab577abdcb2daf8dc9596f4d3a0b84b83">ITHACAstream::exportTensor</a> (Eigen::Tensor&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, 3 &gt; tensor, word Name, word type=&quot;python&quot;, word folder=&quot;./Matrices&quot;)</td></tr>
+<tr class="memdesc:ab577abdcb2daf8dc9596f4d3a0b84b83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the reduced tensor in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format.  <a href="namespaceITHACAstream.html#ab577abdcb2daf8dc9596f4d3a0b84b83">More...</a><br /></td></tr>
+<tr class="separator:ab577abdcb2daf8dc9596f4d3a0b84b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23375000c57c5151da30c6be9284b764"><td class="memTemplParams" colspan="2">template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </td></tr>
+<tr class="memitem:a23375000c57c5151da30c6be9284b764"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a23375000c57c5151da30c6be9284b764">ITHACAstream::read_fields</a> (PtrList&lt; GeometricField&lt; Type, PatchField, GeoMesh &gt;&gt; &amp;Lfield, word Name, fileName casename, int first_snap=0, int n_snap=0)</td></tr>
+<tr class="memdesc:a23375000c57c5151da30c6be9284b764"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read a list of fields from the name of the field and casename.  <a href="namespaceITHACAstream.html#a23375000c57c5151da30c6be9284b764">More...</a><br /></td></tr>
+<tr class="separator:a23375000c57c5151da30c6be9284b764"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc2aebc576979acece02bed12f10918f"><td class="memTemplParams" colspan="2">template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </td></tr>
+<tr class="memitem:adc2aebc576979acece02bed12f10918f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#adc2aebc576979acece02bed12f10918f">ITHACAstream::read_fields</a> (PtrList&lt; GeometricField&lt; Type, PatchField, GeoMesh &gt;&gt; &amp;Lfield, GeometricField&lt; Type, PatchField, GeoMesh &gt; &amp;field, fileName casename, int first_snap=0, int n_snap=0)</td></tr>
+<tr class="memdesc:adc2aebc576979acece02bed12f10918f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read a list of fields from the name of the field if it is already existing.  <a href="namespaceITHACAstream.html#adc2aebc576979acece02bed12f10918f">More...</a><br /></td></tr>
+<tr class="separator:adc2aebc576979acece02bed12f10918f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30e78e02be74b7d813cbe82ff1301f55"><td class="memTemplParams" colspan="2">template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </td></tr>
+<tr class="memitem:a30e78e02be74b7d813cbe82ff1301f55"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a30e78e02be74b7d813cbe82ff1301f55">ITHACAstream::readMiddleFields</a> (PtrList&lt; GeometricField&lt; Type, PatchField, GeoMesh &gt;&gt; &amp;Lfield, GeometricField&lt; Type, PatchField, GeoMesh &gt; &amp;field, fileName casename)</td></tr>
+<tr class="memdesc:a30e78e02be74b7d813cbe82ff1301f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funtion to read a list of volVectorField from name of the field including all the intermediate snapshots.  <a href="namespaceITHACAstream.html#a30e78e02be74b7d813cbe82ff1301f55">More...</a><br /></td></tr>
+<tr class="separator:a30e78e02be74b7d813cbe82ff1301f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b7de11fdf1ff4e31f6b996dd954b719"><td class="memTemplParams" colspan="2">template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </td></tr>
+<tr class="memitem:a7b7de11fdf1ff4e31f6b996dd954b719"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a7b7de11fdf1ff4e31f6b996dd954b719">ITHACAstream::readConvergedFields</a> (PtrList&lt; GeometricField&lt; Type, PatchField, GeoMesh &gt;&gt; &amp;Lfield, GeometricField&lt; Type, PatchField, GeoMesh &gt; &amp;field, fileName casename)</td></tr>
+<tr class="memdesc:a7b7de11fdf1ff4e31f6b996dd954b719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read a list of volVectorField from name of the field including only converged snapshots.  <a href="namespaceITHACAstream.html#a7b7de11fdf1ff4e31f6b996dd954b719">More...</a><br /></td></tr>
+<tr class="separator:a7b7de11fdf1ff4e31f6b996dd954b719"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dbb939ce5c8b0b3104b07050df0d9cb"><td class="memTemplParams" colspan="2">template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </td></tr>
+<tr class="memitem:a3dbb939ce5c8b0b3104b07050df0d9cb"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a3dbb939ce5c8b0b3104b07050df0d9cb">ITHACAstream::exportFields</a> (PtrList&lt; GeometricField&lt; Type, PatchField, GeoMesh &gt;&gt; &amp;field, word folder, word fieldname)</td></tr>
+<tr class="memdesc:a3dbb939ce5c8b0b3104b07050df0d9cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to export a scalar of vector field.  <a href="namespaceITHACAstream.html#a3dbb939ce5c8b0b3104b07050df0d9cb">More...</a><br /></td></tr>
+<tr class="separator:a3dbb939ce5c8b0b3104b07050df0d9cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b1605dfbed6b82596cbf7749dd6b182"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a1b1605dfbed6b82596cbf7749dd6b182">ITHACAstream::readMatrix</a> (word filename)</td></tr>
+<tr class="memdesc:a1b1605dfbed6b82596cbf7749dd6b182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a two dimensional matrix from a txt file in <a class="el" href="namespaceEigen.html">Eigen</a> format.  <a href="namespaceITHACAstream.html#a1b1605dfbed6b82596cbf7749dd6b182">More...</a><br /></td></tr>
+<tr class="separator:a1b1605dfbed6b82596cbf7749dd6b182"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa259fffbddd2f4a42cc3a4a76f839ef6"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#aa259fffbddd2f4a42cc3a4a76f839ef6">ITHACAstream::readMatrix</a> (word folder, word mat_name)</td></tr>
+<tr class="memdesc:aa259fffbddd2f4a42cc3a4a76f839ef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a three dimensional matrix from a txt file in <a class="el" href="namespaceEigen.html">Eigen</a> format.  <a href="namespaceITHACAstream.html#aa259fffbddd2f4a42cc3a4a76f839ef6">More...</a><br /></td></tr>
+<tr class="separator:aa259fffbddd2f4a42cc3a4a76f839ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36ae0d53d94f890fdfe72086003eacee"><td class="memTemplParams" colspan="2">template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </td></tr>
+<tr class="memitem:a36ae0d53d94f890fdfe72086003eacee"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a36ae0d53d94f890fdfe72086003eacee">ITHACAstream::exportSolution</a> (GeometricField&lt; Type, PatchField, GeoMesh &gt; &amp;s, fileName subfolder, fileName folder, word fieldName)</td></tr>
+<tr class="memdesc:a36ae0d53d94f890fdfe72086003eacee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export a field to file in a certain folder and subfolder.  <a href="namespaceITHACAstream.html#a36ae0d53d94f890fdfe72086003eacee">More...</a><br /></td></tr>
+<tr class="separator:a36ae0d53d94f890fdfe72086003eacee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43b3d5a7a5100a0b5b2a738db205067f"><td class="memTemplParams" colspan="2">template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </td></tr>
+<tr class="memitem:a43b3d5a7a5100a0b5b2a738db205067f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a43b3d5a7a5100a0b5b2a738db205067f">ITHACAstream::exportSolution</a> (GeometricField&lt; Type, PatchField, GeoMesh &gt; &amp;s, fileName subfolder, fileName folder)</td></tr>
+<tr class="memdesc:a43b3d5a7a5100a0b5b2a738db205067f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export a field to file in a certain folder and subfolder.  <a href="namespaceITHACAstream.html#a43b3d5a7a5100a0b5b2a738db205067f">More...</a><br /></td></tr>
+<tr class="separator:a43b3d5a7a5100a0b5b2a738db205067f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d09ae79be293199609de1101e828fc3"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a5d09ae79be293199609de1101e828fc3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a5d09ae79be293199609de1101e828fc3">ITHACAstream::exportList</a> (<a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> &amp;list, word folder, word filename)</td></tr>
+<tr class="memdesc:a5d09ae79be293199609de1101e828fc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export a list to file.  <a href="namespaceITHACAstream.html#a5d09ae79be293199609de1101e828fc3">More...</a><br /></td></tr>
+<tr class="separator:a5d09ae79be293199609de1101e828fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dc1529a0d17a67282b3a06c27b99906"><td class="memTemplParams" colspan="2">template&lt;typename T , int Nrows, typename IND &gt; </td></tr>
+<tr class="memitem:a0dc1529a0d17a67282b3a06c27b99906"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a0dc1529a0d17a67282b3a06c27b99906">ITHACAstream::SaveSparseMatrix</a> (Eigen::SparseMatrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, Nrows, IND &gt; &amp;m, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:a0dc1529a0d17a67282b3a06c27b99906"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix into bynary format file.  <a href="namespaceITHACAstream.html#a0dc1529a0d17a67282b3a06c27b99906">More...</a><br /></td></tr>
+<tr class="separator:a0dc1529a0d17a67282b3a06c27b99906"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acedf3cddcc66d2b8685cabcfea88436a"><td class="memTemplParams" colspan="2">template&lt;typename T , int Nrows, typename IND &gt; </td></tr>
+<tr class="memitem:acedf3cddcc66d2b8685cabcfea88436a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#acedf3cddcc66d2b8685cabcfea88436a">ITHACAstream::ReadSparseMatrix</a> (Eigen::SparseMatrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, Nrows, IND &gt; &amp;m, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:acedf3cddcc66d2b8685cabcfea88436a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an <a class="el" href="namespaceEigen.html">Eigen</a> sparse matrix from a bynary format file.  <a href="namespaceITHACAstream.html#acedf3cddcc66d2b8685cabcfea88436a">More...</a><br /></td></tr>
+<tr class="separator:acedf3cddcc66d2b8685cabcfea88436a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7010b247c96ae01fce8a8ef01d12fa4a"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
+<tr class="memitem:a7010b247c96ae01fce8a8ef01d12fa4a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a7010b247c96ae01fce8a8ef01d12fa4a">ITHACAstream::SaveDenseMatrix</a> (MatrixType &amp;Matrix, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:a7010b247c96ae01fce8a8ef01d12fa4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a dense matrix to a binary format file.  <a href="namespaceITHACAstream.html#a7010b247c96ae01fce8a8ef01d12fa4a">More...</a><br /></td></tr>
+<tr class="separator:a7010b247c96ae01fce8a8ef01d12fa4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1775bc70066cbb3f73a8f013afd12e7d"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
+<tr class="memitem:a1775bc70066cbb3f73a8f013afd12e7d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a1775bc70066cbb3f73a8f013afd12e7d">ITHACAstream::ReadDenseMatrix</a> (MatrixType &amp;Matrix, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:a1775bc70066cbb3f73a8f013afd12e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a dense matrix from a binary format file.  <a href="namespaceITHACAstream.html#a1775bc70066cbb3f73a8f013afd12e7d">More...</a><br /></td></tr>
+<tr class="separator:a1775bc70066cbb3f73a8f013afd12e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad91f47911a1d72753c73cfc224f25998"><td class="memTemplParams" colspan="2">template&lt;typename TensorType &gt; </td></tr>
+<tr class="memitem:ad91f47911a1d72753c73cfc224f25998"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#ad91f47911a1d72753c73cfc224f25998">ITHACAstream::SaveDenseTensor</a> (TensorType &amp;Tensor, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:ad91f47911a1d72753c73cfc224f25998"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a dense tensor to file.  <a href="namespaceITHACAstream.html#ad91f47911a1d72753c73cfc224f25998">More...</a><br /></td></tr>
+<tr class="separator:ad91f47911a1d72753c73cfc224f25998"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76412c34b95d0b5ad46024dab3f60554"><td class="memTemplParams" colspan="2">template&lt;typename TensorType &gt; </td></tr>
+<tr class="memitem:a76412c34b95d0b5ad46024dab3f60554"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a76412c34b95d0b5ad46024dab3f60554">ITHACAstream::ReadDenseTensor</a> (TensorType &amp;Tensor, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:a76412c34b95d0b5ad46024dab3f60554"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a dense tensor from file.  <a href="namespaceITHACAstream.html#a76412c34b95d0b5ad46024dab3f60554">More...</a><br /></td></tr>
+<tr class="separator:a76412c34b95d0b5ad46024dab3f60554"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa37598c28aca085f3d66c51f0cd5785c"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
+<tr class="memitem:aa37598c28aca085f3d66c51f0cd5785c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#aa37598c28aca085f3d66c51f0cd5785c">ITHACAstream::SaveSparseMatrixList</a> (List&lt; MatrixType &gt; &amp;MatrixList, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:aa37598c28aca085f3d66c51f0cd5785c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a sparse matrix list to bynary files.  <a href="namespaceITHACAstream.html#aa37598c28aca085f3d66c51f0cd5785c">More...</a><br /></td></tr>
+<tr class="separator:aa37598c28aca085f3d66c51f0cd5785c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a313cc9e524ee5b0f979a807db6f1b001"><td class="memTemplParams" colspan="2">template&lt;typename T , int Nrows, typename IND &gt; </td></tr>
+<tr class="memitem:a313cc9e524ee5b0f979a807db6f1b001"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a313cc9e524ee5b0f979a807db6f1b001">ITHACAstream::ReadSparseMatrixList</a> (List&lt; Eigen::SparseMatrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, Nrows, IND &gt;&gt; &amp;m, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:a313cc9e524ee5b0f979a807db6f1b001"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a sparse matrix list to bynary files.  <a href="namespaceITHACAstream.html#a313cc9e524ee5b0f979a807db6f1b001">More...</a><br /></td></tr>
+<tr class="separator:a313cc9e524ee5b0f979a807db6f1b001"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95309779e7aae89700ca8ba460628cf8"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
+<tr class="memitem:a95309779e7aae89700ca8ba460628cf8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a95309779e7aae89700ca8ba460628cf8">ITHACAstream::SaveDenseMatrixList</a> (List&lt; MatrixType &gt; &amp;MatrixList, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:a95309779e7aae89700ca8ba460628cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save a dense matrix list to bynary files.  <a href="namespaceITHACAstream.html#a95309779e7aae89700ca8ba460628cf8">More...</a><br /></td></tr>
+<tr class="separator:a95309779e7aae89700ca8ba460628cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b8ce677121762a0d9799ff5e196d25b"><td class="memTemplParams" colspan="2">template&lt;typename MatrixType &gt; </td></tr>
+<tr class="memitem:a0b8ce677121762a0d9799ff5e196d25b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a0b8ce677121762a0d9799ff5e196d25b">ITHACAstream::ReadDenseMatrixList</a> (List&lt; MatrixType &gt; &amp;m, word folder, word MatrixName)</td></tr>
+<tr class="memdesc:a0b8ce677121762a0d9799ff5e196d25b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a sparse matrix list to bynary files.  <a href="namespaceITHACAstream.html#a0b8ce677121762a0d9799ff5e196d25b">More...</a><br /></td></tr>
+<tr class="separator:a0b8ce677121762a0d9799ff5e196d25b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcededcbc11763c5849ae2e5aaee89ee"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#afcededcbc11763c5849ae2e5aaee89ee">ITHACAstream::numberOfFiles</a> (word folder, word MatrixName)</td></tr>
+<tr class="memdesc:afcededcbc11763c5849ae2e5aaee89ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of files with a certain name prefix, used by reading functions of list of matrices.  <a href="namespaceITHACAstream.html#afcededcbc11763c5849ae2e5aaee89ee">More...</a><br /></td></tr>
+<tr class="separator:afcededcbc11763c5849ae2e5aaee89ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0519dc8f17b2d0f7a524518f717a446b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#a0519dc8f17b2d0f7a524518f717a446b">ITHACAstream::writePoints</a> (pointField points, fileName folder, fileName subfolder)</td></tr>
+<tr class="memdesc:a0519dc8f17b2d0f7a524518f717a446b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write points of a mesh to a file.  <a href="namespaceITHACAstream.html#a0519dc8f17b2d0f7a524518f717a446b">More...</a><br /></td></tr>
+<tr class="separator:a0519dc8f17b2d0f7a524518f717a446b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefe7ea63b16d0eec5850bd43570ac7ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAstream.html#aefe7ea63b16d0eec5850bd43570ac7ee">ITHACAstream::printProgress</a> (double percentage)</td></tr>
+<tr class="memdesc:aefe7ea63b16d0eec5850bd43570ac7ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print progress bar given the percentage.  <a href="namespaceITHACAstream.html#aefe7ea63b16d0eec5850bd43570ac7ee">More...</a><br /></td></tr>
+<tr class="separator:aefe7ea63b16d0eec5850bd43570ac7ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a804c5731589b1d77363447b0561c18b6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a804c5731589b1d77363447b0561c18b6"><td class="memTemplItemLeft" align="right" valign="top">Ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#a804c5731589b1d77363447b0561c18b6">Foam::operator&lt;&lt;</a> (Ostream &amp;os, const Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;mat)</td></tr>
+<tr class="memitem:a804c5731589b1d77363447b0561c18b6"><td class="memTemplItemLeft" align="right" valign="top">Ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#a804c5731589b1d77363447b0561c18b6">Foam::operator&lt;&lt;</a> (Ostream &amp;os, const Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;mat)</td></tr>
 <tr class="separator:a804c5731589b1d77363447b0561c18b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a901bd4dc3c014501c4ad364344459ca9"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a901bd4dc3c014501c4ad364344459ca9"><td class="memTemplItemLeft" align="right" valign="top">Istream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#a901bd4dc3c014501c4ad364344459ca9">Foam::operator&gt;&gt;</a> (Istream &amp;is, Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;mat)</td></tr>
+<tr class="memitem:a901bd4dc3c014501c4ad364344459ca9"><td class="memTemplItemLeft" align="right" valign="top">Istream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#a901bd4dc3c014501c4ad364344459ca9">Foam::operator&gt;&gt;</a> (Istream &amp;is, Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;mat)</td></tr>
 <tr class="separator:a901bd4dc3c014501c4ad364344459ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac037773d04427b3c5cfb384501e31927"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ac037773d04427b3c5cfb384501e31927"><td class="memTemplItemLeft" align="right" valign="top">Ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#ac037773d04427b3c5cfb384501e31927">Foam::operator&lt;&lt;</a> (Ostream &amp;os, const Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, 1 &gt; &amp;mat)</td></tr>
+<tr class="memitem:ac037773d04427b3c5cfb384501e31927"><td class="memTemplItemLeft" align="right" valign="top">Ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#ac037773d04427b3c5cfb384501e31927">Foam::operator&lt;&lt;</a> (Ostream &amp;os, const Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, 1 &gt; &amp;mat)</td></tr>
 <tr class="separator:ac037773d04427b3c5cfb384501e31927"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adab28fb753d9d2883f1a922d135891e6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:adab28fb753d9d2883f1a922d135891e6"><td class="memTemplItemLeft" align="right" valign="top">Istream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#adab28fb753d9d2883f1a922d135891e6">Foam::operator&gt;&gt;</a> (Istream &amp;is, Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, 1 &gt; &amp;mat)</td></tr>
+<tr class="memitem:adab28fb753d9d2883f1a922d135891e6"><td class="memTemplItemLeft" align="right" valign="top">Istream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#adab28fb753d9d2883f1a922d135891e6">Foam::operator&gt;&gt;</a> (Istream &amp;is, Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, 1 &gt; &amp;mat)</td></tr>
 <tr class="separator:adab28fb753d9d2883f1a922d135891e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8f9472142814035745d1526f5bc7681"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ab8f9472142814035745d1526f5bc7681"><td class="memTemplItemLeft" align="right" valign="top">Ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#ab8f9472142814035745d1526f5bc7681">Foam::operator&lt;&lt;</a> (Ostream &amp;os, const Eigen::Tensor&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, 3 &gt; &amp;tens)</td></tr>
+<tr class="memitem:ab8f9472142814035745d1526f5bc7681"><td class="memTemplItemLeft" align="right" valign="top">Ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#ab8f9472142814035745d1526f5bc7681">Foam::operator&lt;&lt;</a> (Ostream &amp;os, const Eigen::Tensor&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, 3 &gt; &amp;tens)</td></tr>
 <tr class="separator:ab8f9472142814035745d1526f5bc7681"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2e9f8a20a2d86fb26c62a38547c51f8"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ae2e9f8a20a2d86fb26c62a38547c51f8"><td class="memTemplItemLeft" align="right" valign="top">Istream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#ae2e9f8a20a2d86fb26c62a38547c51f8">Foam::operator&gt;&gt;</a> (Istream &amp;is, Eigen::Tensor&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, 3 &gt; &amp;tens)</td></tr>
+<tr class="memitem:ae2e9f8a20a2d86fb26c62a38547c51f8"><td class="memTemplItemLeft" align="right" valign="top">Istream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceFoam.html#ae2e9f8a20a2d86fb26c62a38547c51f8">Foam::operator&gt;&gt;</a> (Istream &amp;is, Eigen::Tensor&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, 3 &gt; &amp;tens)</td></tr>
 <tr class="separator:ae2e9f8a20a2d86fb26c62a38547c51f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p class="">Header file of the <a class="el" href="classITHACAstream.html" title="Class for input-output manipulation.">ITHACAstream</a> class, it contains the implementation of several methods for input output operations. </p>
+<div class="textblock"><p class="">Header file of the <a class="el" href="namespaceITHACAstream.html" title="Namespace for input-output manipulation.">ITHACAstream</a> class, it contains the implementation of several methods for input output operations. </p>
 
 <p class="definition">Definition in file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
@@ -172,7 +271,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00070">70</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00071">71</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -188,7 +287,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00071">71</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00072">72</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
@@ -204,7 +303,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00072">72</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACAstream_8H_source.html#l00073">73</a> of file <a class="el" href="ITHACAstream_8H_source.html">ITHACAstream.H</a>.</p>
 
 </div>
 </div>
