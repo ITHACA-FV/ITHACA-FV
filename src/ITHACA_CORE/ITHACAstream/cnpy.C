@@ -380,8 +380,8 @@ cnpy::NpyArray cnpy::npy_load(std::string fname)
     return arr;
 }
 
-template<class typeNumber>
-void cnpy::save(const Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic>&
+template<class typeNumber, int dim>
+void cnpy::save(const Eigen::Matrix<typeNumber, Eigen::Dynamic, dim>&
                 mat, const std::string fname)
 {
     std::vector<typeNumber> matvec(mat.rows() * mat.cols());
@@ -398,9 +398,9 @@ void cnpy::save(const Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic>&
     npy_save(fname, matvec.data(), shape, 2);
 }
 
-template<class typeNumber>
-Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic> cnpy::load(
-    Eigen::Matrix<typeNumber, Eigen::Dynamic, Eigen::Dynamic>& mat,
+template<class typeNumber, int dim>
+Eigen::Matrix<typeNumber, Eigen::Dynamic, dim> cnpy::load(
+    Eigen::Matrix<typeNumber, Eigen::Dynamic, dim>& mat,
     const std::string fname, std::string order)
 {
     M_Assert(order == "rowMajor" ||
@@ -449,6 +449,22 @@ template Eigen::MatrixXf cnpy::load(Eigen::MatrixXf& mat,
 
 template void cnpy::save(const Eigen::MatrixXcd& mat, const std::string fname);
 template Eigen::MatrixXcd cnpy::load(Eigen::MatrixXcd& mat,
+                                     const std::string fname, std::string order);
+
+template void cnpy::save(const Eigen::VectorXi& mat, const std::string fname);
+template Eigen::VectorXi cnpy::load(Eigen::VectorXi& mat,
+                                    const std::string fname, std::string order);
+
+template void cnpy::save(const Eigen::VectorXd& mat, const std::string fname);
+template Eigen::VectorXd cnpy::load(Eigen::VectorXd& mat,
+                                    const std::string fname, std::string order);
+
+template void cnpy::save(const Eigen::VectorXf& mat, const std::string fname);
+template Eigen::VectorXf cnpy::load(Eigen::VectorXf& mat,
+                                    const std::string fname, std::string order);
+
+template void cnpy::save(const Eigen::VectorXcd& mat, const std::string fname);
+template Eigen::VectorXcd cnpy::load(Eigen::VectorXcd& mat,
                                      const std::string fname, std::string order);
 
 

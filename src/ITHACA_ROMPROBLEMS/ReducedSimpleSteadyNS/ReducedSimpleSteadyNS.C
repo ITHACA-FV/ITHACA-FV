@@ -164,7 +164,8 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     projGradModP = ULmodes.project(gradModP, NmodesUproj);
 
     while ((residual_jump > residualJumpLim
-            || std::max(U_norm_res, P_norm_res) > normalizedResidualLim) && iter < maxIterOn)
+            || std::max(U_norm_res, P_norm_res) > normalizedResidualLim)
+            && iter < maxIterOn)
     {
         iter++;
         std::cout << "Iteration " << iter << std::endl;

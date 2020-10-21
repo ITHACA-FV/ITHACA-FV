@@ -42,7 +42,7 @@ namespace ITHACAstream
 
 template<typename Type>
 void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
-                                  word MatrixName)
+                    word MatrixName)
 {
     Eigen::SparseMatrix<double> A;
     Eigen::VectorXd b;
@@ -53,8 +53,8 @@ void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
 
 template <typename T, int dim>
 void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
-                                word Name, word type,
-                                word folder)
+                  word Name, word type,
+                  word folder)
 {
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
@@ -126,31 +126,31 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
 }
 
 template void exportMatrix(Eigen::Matrix < double, -1,
-        -1 > & matrix, word Name, word type,
-        word folder);
+                           -1 > & matrix, word Name, word type,
+                           word folder);
 
 template void exportMatrix(Eigen::Matrix < int, -1,
-        -1 > & matrix, word Name, word type,
-        word folder);
+                           -1 > & matrix, word Name, word type,
+                           word folder);
 
 template void exportMatrix(Eigen::Matrix < float, -1,
-        -1 > & matrix, word Name, word type,
-        word folder);
+                           -1 > & matrix, word Name, word type,
+                           word folder);
 
 template void exportMatrix(Eigen::Matrix < double, -1,
-        1 > & matrix, word Name, word type,
-        word folder);
+                           1 > & matrix, word Name, word type,
+                           word folder);
 
 template void exportMatrix(Eigen::Matrix < int, -1,
-        1 > & matrix, word Name, word type,
-        word folder);
+                           1 > & matrix, word Name, word type,
+                           word folder);
 
 template void exportMatrix(Eigen::Matrix < float, -1,
-        1 > & matrix, word Name, word type,
-        word folder);
+                           1 > & matrix, word Name, word type,
+                           word folder);
 
 void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
-                                word type, word folder)
+                  word type, word folder)
 {
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
@@ -232,8 +232,8 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
 }
 
 void exportVector(Eigen::VectorXd& vector,
-                                word Name, word type,
-                                word folder)
+                  word Name, word type,
+                  word folder)
 {
     Eigen::MatrixXd matrix = vector;
     exportMatrix(matrix, Name, type, folder);
@@ -241,7 +241,7 @@ void exportVector(Eigen::VectorXd& vector,
 
 template<typename T>
 void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
-                                word type, word folder)
+                  word type, word folder)
 {
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
@@ -337,16 +337,16 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
 
 
 template void exportTensor(Eigen::Tensor<double, 3> tensor,
-        word Name,
-        word type, word folder);
+                           word Name,
+                           word type, word folder);
 
 template void exportTensor(Eigen::Tensor<int, 3> tensor,
-        word Name,
-        word type, word folder);
+                           word Name,
+                           word type, word folder);
 
 template void exportTensor(Eigen::Tensor<float, 3> tensor,
-        word Name,
-        word type, word folder);
+                           word Name,
+                           word type, word folder);
 
 List<Eigen::MatrixXd> readMatrix(word folder, word mat_name)
 {
@@ -678,8 +678,8 @@ template void exportFields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
-                                  fileName subfolder, fileName folder,
-                                  word fieldName)
+                    fileName subfolder, fileName folder,
+                    word fieldName)
 {
     if (!Pstream::parRun())
     {
@@ -720,7 +720,7 @@ template void exportSolution(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
-                                  fileName subfolder, fileName folder)
+                    fileName subfolder, fileName folder)
 {
     if (!Pstream::parRun())
     {
@@ -754,7 +754,7 @@ template void exportSolution(
     fileName subfolder, fileName folder);
 
 void writePoints(pointField points, fileName folder,
-                               fileName subfolder)
+                 fileName subfolder)
 {
     if (!Pstream::parRun())
     {
@@ -793,41 +793,41 @@ void printProgress(double percentage)
 }
 
 template void read_fields(PtrList<volScalarField>& Lfield,
-                                        word Name,
-                                        fileName casename, int first_snap, int n_snap);
+                          word Name,
+                          fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<volVectorField>& Lfield,
-                                        word Name,
-                                        fileName casename, int first_snap, int n_snap);
+                          word Name,
+                          fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<surfaceScalarField>& Lfield,
-                                        word Name,
-                                        fileName casename, int first_snap, int n_snap);
+                          word Name,
+                          fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<surfaceVectorField>& Lfield,
-                                        word Name,
-                                        fileName casename, int first_snap, int n_snap);
+                          word Name,
+                          fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<volScalarField>& Lfield,
-                                        volScalarField& field, fileName casename, int first_snap, int n_snap);
+                          volScalarField& field, fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<volVectorField>& Lfield,
-                                        volVectorField& field, fileName casename, int first_snap, int n_snap);
+                          volVectorField& field, fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<surfaceScalarField>& Lfield,
-                                        surfaceScalarField& field, fileName casename, int first_snap, int n_snap);
+                          surfaceScalarField& field, fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<surfaceVectorField>& Lfield,
-                                        surfaceVectorField& field, fileName casename, int first_snap, int n_snap);
+                          surfaceVectorField& field, fileName casename, int first_snap, int n_snap);
 template void readMiddleFields(PtrList<volScalarField>& Lfield,
-        volScalarField& field, fileName casename);
+                               volScalarField& field, fileName casename);
 template void readMiddleFields(PtrList<volVectorField>& Lfield,
-        volVectorField& field, fileName casename);
+                               volVectorField& field, fileName casename);
 template void readMiddleFields(PtrList<surfaceScalarField>&
-        Lfield, surfaceScalarField& field, fileName casename);
+                               Lfield, surfaceScalarField& field, fileName casename);
 template void readMiddleFields(PtrList<surfaceVectorField>&
-        Lfield, surfaceVectorField& field, fileName casename);
+                               Lfield, surfaceVectorField& field, fileName casename);
 template void readConvergedFields(PtrList<volScalarField>& Lfield,
-        volScalarField& field, fileName casename);
+                                  volScalarField& field, fileName casename);
 template void readConvergedFields(PtrList<volVectorField>& Lfield,
-        volVectorField& field, fileName casename);
+                                  volVectorField& field, fileName casename);
 template void readConvergedFields(PtrList<surfaceScalarField>&
-        Lfield, surfaceScalarField& field, fileName casename);
+                                  Lfield, surfaceScalarField& field, fileName casename);
 template void readConvergedFields(PtrList<surfaceVectorField>&
-        Lfield, surfaceVectorField& field, fileName casename);
+                                  Lfield, surfaceVectorField& field, fileName casename);
 
 template<typename T>
 void exportList(T& list, word folder, word filename)
@@ -843,9 +843,9 @@ void exportList(T& list, word folder, word filename)
 }
 
 template void exportList(Field<scalar>& list, word folder,
-                                       word filename);
+                         word filename);
 template void exportList(Field<vector>& list, word folder,
-                                       word filename);
+                         word filename);
 
 }
 
