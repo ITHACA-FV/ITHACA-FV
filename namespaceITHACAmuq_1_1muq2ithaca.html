@@ -76,10 +76,231 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">ITHACAmuq::muq2ithaca Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a89f897049668ee183c5e422b7bbe35df"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAmuq_1_1muq2ithaca.html#a89f897049668ee183c5e422b7bbe35df">EnsembleKalmanFilter</a> (Eigen::MatrixXd prior, Eigen::VectorXd measurements, Eigen::MatrixXd measurementsCov, Eigen::MatrixXd observedState)</td></tr>
+<tr class="memdesc:a89f897049668ee183c5e422b7bbe35df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensemble Kalman Filter.  <a href="#a89f897049668ee183c5e422b7bbe35df">More...</a><br /></td></tr>
+<tr class="separator:a89f897049668ee183c5e422b7bbe35df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5272d0f6ed3cc5a3aadba584028aad76"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAmuq_1_1muq2ithaca.html#a5272d0f6ed3cc5a3aadba584028aad76">EnsembleKalmanFilter</a> (PtrList&lt; volScalarField &gt; &amp;prior, Eigen::VectorXd measurements, Eigen::MatrixXd measurementsCov, Eigen::MatrixXd observedState)</td></tr>
+<tr class="memdesc:a5272d0f6ed3cc5a3aadba584028aad76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensemble Kalman Filter.  <a href="#a5272d0f6ed3cc5a3aadba584028aad76">More...</a><br /></td></tr>
+<tr class="separator:a5272d0f6ed3cc5a3aadba584028aad76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab99ee6a3122982183cd5908c87cf81e9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAmuq_1_1muq2ithaca.html#ab99ee6a3122982183cd5908c87cf81e9">quantile</a> (Eigen::VectorXd samps, double <a class="el" href="src_2ITHACA__FOMPROBLEMS_2UnsteadyNSTurbIntrusive_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, int method=1)</td></tr>
+<tr class="memdesc:ab99ee6a3122982183cd5908c87cf81e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns quantile for a vector of samples.  <a href="#ab99ee6a3122982183cd5908c87cf81e9">More...</a><br /></td></tr>
+<tr class="separator:ab99ee6a3122982183cd5908c87cf81e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b7fb4dfb134e3ece7a6b8296c6467e4"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAmuq_1_1muq2ithaca.html#a7b7fb4dfb134e3ece7a6b8296c6467e4">quantile</a> (Eigen::MatrixXd samps, double <a class="el" href="src_2ITHACA__FOMPROBLEMS_2UnsteadyNSTurbIntrusive_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, int method=1)</td></tr>
+<tr class="memdesc:a7b7fb4dfb134e3ece7a6b8296c6467e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns quantile for a matrix of samples.  <a href="#a7b7fb4dfb134e3ece7a6b8296c6467e4">More...</a><br /></td></tr>
+<tr class="separator:a7b7fb4dfb134e3ece7a6b8296c6467e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a89f897049668ee183c5e422b7bbe35df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89f897049668ee183c5e422b7bbe35df">&#9670;&nbsp;</a></span>EnsembleKalmanFilter() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXd ITHACAmuq::muq2ithaca::EnsembleKalmanFilter </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>prior</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::VectorXd&#160;</td>
+          <td class="paramname"><em>measurements</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>measurementsCov</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>observedState</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Ensemble Kalman Filter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">prior</td><td>Samples of the prior </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">measurements</td><td>Measured data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">measurementsCov</td><td>Covariance matrix for the measurements, gaussian noise with zero mean is assumed </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">observedState</td><td>Ensemble of the observed state</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Ensamble of the posterior </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="muq2ithaca_8C_source.html#l00007">7</a> of file <a class="el" href="muq2ithaca_8C_source.html">muq2ithaca.C</a>.</p>
+
+</div>
+</div>
+<a id="a5272d0f6ed3cc5a3aadba584028aad76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5272d0f6ed3cc5a3aadba584028aad76">&#9670;&nbsp;</a></span>EnsembleKalmanFilter() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::MatrixXd ITHACAmuq::muq2ithaca::EnsembleKalmanFilter </td>
+          <td>(</td>
+          <td class="paramtype">PtrList&lt; volScalarField &gt; &amp;&#160;</td>
+          <td class="paramname"><em>prior</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::VectorXd&#160;</td>
+          <td class="paramname"><em>measurements</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>measurementsCov</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>observedState</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Ensemble Kalman Filter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">prior</td><td>Samples of the prior </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">measurements</td><td>Measured data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">measurementsCov</td><td>Covariance matrix for the measurements, gaussian noise with zero mean is assumed </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">observedState</td><td>Ensemble of the observed state</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Ensamble of the posterior </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="muq2ithaca_8C_source.html#l00070">70</a> of file <a class="el" href="muq2ithaca_8C_source.html">muq2ithaca.C</a>.</p>
+
+</div>
+</div>
+<a id="ab99ee6a3122982183cd5908c87cf81e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab99ee6a3122982183cd5908c87cf81e9">&#9670;&nbsp;</a></span>quantile() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double ITHACAmuq::muq2ithaca::quantile </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::VectorXd&#160;</td>
+          <td class="paramname"><em>samps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>method</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns quantile for a vector of samples. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">samps</td><td>Samples </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>Quantile parameter </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">method</td><td>Method used to compute quantile according to Hyndman and Fan (1986)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Quantile </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="muq2ithaca_8C_source.html#l00134">134</a> of file <a class="el" href="muq2ithaca_8C_source.html">muq2ithaca.C</a>.</p>
+
+</div>
+</div>
+<a id="a7b7fb4dfb134e3ece7a6b8296c6467e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b7fb4dfb134e3ece7a6b8296c6467e4">&#9670;&nbsp;</a></span>quantile() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Eigen::VectorXd ITHACAmuq::muq2ithaca::quantile </td>
+          <td>(</td>
+          <td class="paramtype">Eigen::MatrixXd&#160;</td>
+          <td class="paramname"><em>samps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>method</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns quantile for a matrix of samples. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">samps</td><td>Samples, each variable on a row </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>Quantile parameter </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">method</td><td>Method used to compute quantile according to Hyndman and Fan (1986)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Quantile </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="muq2ithaca_8C_source.html#l00191">191</a> of file <a class="el" href="muq2ithaca_8C_source.html">muq2ithaca.C</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.14-->
 <!-- start footer part -->

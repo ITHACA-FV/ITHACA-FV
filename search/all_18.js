@@ -17,6 +17,8 @@ var searchData=
   ['vfields',['vFields',['../classmsrProblem.html#a31fe044ebe02a855e5570d2c1723f659',1,'msrProblem']]],
   ['visccoeff',['viscCoeff',['../classSteadyNSTurb.html#ae711666610b7bfb8fd30ad305028837b',1,'SteadyNSTurb']]],
   ['vmodes',['vmodes',['../classmsrProblem.html#a841202b719f20d5ee4bca21103843ba3',1,'msrProblem::vmodes()'],['../classreducedMSR.html#ab17921e4b4cd2fa4517d6a46f1f5fab3',1,'reducedMSR::vmodes()']]],
+  ['volscalarmodes',['volScalarModes',['../Modes_8H.html#ac69d781ac4be9ecfcd6c246888dcd0db',1,'Modes.H']]],
+  ['volvectormodes',['volVectorModes',['../Modes_8H.html#a68154de5b1379ebc341dc38807b1c7f9',1,'Modes.H']]],
   ['vptrfield',['Vptrfield',['../classFofM.html#aea74f521ba15b81b9b96fca0374422ec',1,'FofM']]],
   ['vrec',['vREC',['../classreducedMSR.html#a0ec1c740620e83ca9e16f3f120ae2253',1,'reducedMSR']]],
   ['vsnapshots',['vsnapshots',['../classreducedMSR.html#a3e5fa271690669cba90ca2358bae53b4',1,'reducedMSR']]],

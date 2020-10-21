@@ -77,7 +77,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">muq2ithaca.H File Reference</div>  </div>
 </div><!--header-->
@@ -88,6 +89,7 @@ $(function() {
 <div class="textblock"><code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;Eigen/Eigen&gt;</code><br />
 <code>#include &quot;<a class="el" href="ITHACAassert_8H_source.html">ITHACAassert.H</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Foam2Eigen_8H_source.html">Foam2Eigen.H</a>&quot;</code><br />
 <code>#include &quot;MUQ/Modeling/Distributions/Gaussian.h&quot;</code><br />
 <code>#include &quot;MUQ/Modeling/Distributions/Density.h&quot;</code><br />
 <code>#include &quot;MUQ/SamplingAlgorithms/SamplingProblem.h&quot;</code><br />
@@ -103,6 +105,21 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceITHACAmuq_1_1muq2ithaca"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAmuq_1_1muq2ithaca.html">ITHACAmuq::muq2ithaca</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a89f897049668ee183c5e422b7bbe35df"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAmuq_1_1muq2ithaca.html#a89f897049668ee183c5e422b7bbe35df">ITHACAmuq::muq2ithaca::EnsembleKalmanFilter</a> (Eigen::MatrixXd prior, Eigen::VectorXd measurements, Eigen::MatrixXd measurementsCov, Eigen::MatrixXd observedState)</td></tr>
+<tr class="memdesc:a89f897049668ee183c5e422b7bbe35df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensemble Kalman Filter.  <a href="namespaceITHACAmuq_1_1muq2ithaca.html#a89f897049668ee183c5e422b7bbe35df">More...</a><br /></td></tr>
+<tr class="separator:a89f897049668ee183c5e422b7bbe35df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5272d0f6ed3cc5a3aadba584028aad76"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAmuq_1_1muq2ithaca.html#a5272d0f6ed3cc5a3aadba584028aad76">ITHACAmuq::muq2ithaca::EnsembleKalmanFilter</a> (PtrList&lt; volScalarField &gt; &amp;prior, Eigen::VectorXd measurements, Eigen::MatrixXd measurementsCov, Eigen::MatrixXd observedState)</td></tr>
+<tr class="memdesc:a5272d0f6ed3cc5a3aadba584028aad76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensemble Kalman Filter.  <a href="namespaceITHACAmuq_1_1muq2ithaca.html#a5272d0f6ed3cc5a3aadba584028aad76">More...</a><br /></td></tr>
+<tr class="separator:a5272d0f6ed3cc5a3aadba584028aad76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab99ee6a3122982183cd5908c87cf81e9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAmuq_1_1muq2ithaca.html#ab99ee6a3122982183cd5908c87cf81e9">ITHACAmuq::muq2ithaca::quantile</a> (Eigen::VectorXd samps, double <a class="el" href="src_2ITHACA__FOMPROBLEMS_2UnsteadyNSTurbIntrusive_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, int method=1)</td></tr>
+<tr class="memdesc:ab99ee6a3122982183cd5908c87cf81e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns quantile for a vector of samples.  <a href="namespaceITHACAmuq_1_1muq2ithaca.html#ab99ee6a3122982183cd5908c87cf81e9">More...</a><br /></td></tr>
+<tr class="separator:ab99ee6a3122982183cd5908c87cf81e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b7fb4dfb134e3ece7a6b8296c6467e4"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceITHACAmuq_1_1muq2ithaca.html#a7b7fb4dfb134e3ece7a6b8296c6467e4">ITHACAmuq::muq2ithaca::quantile</a> (Eigen::MatrixXd samps, double <a class="el" href="src_2ITHACA__FOMPROBLEMS_2UnsteadyNSTurbIntrusive_2createFields_8H.html#a334650304cdcdff41898bee9eaf2e3db">p</a>, int method=1)</td></tr>
+<tr class="memdesc:a7b7fb4dfb134e3ece7a6b8296c6467e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns quantile for a matrix of samples.  <a href="namespaceITHACAmuq_1_1muq2ithaca.html#a7b7fb4dfb134e3ece7a6b8296c6467e4">More...</a><br /></td></tr>
+<tr class="separator:a7b7fb4dfb134e3ece7a6b8296c6467e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Header file of the muq2ithaca namespace. </p>

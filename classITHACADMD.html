@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ITHACA-FV: ITHACADMD&lt; Field_type &gt; Class Template Reference</title>
+<title>ITHACA-FV: ITHACADMD&lt; Type, PatchField, GeoMesh &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -77,7 +77,7 @@ $(function() {
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classITHACADMD-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">ITHACADMD&lt; Field_type &gt; Class Template Reference</div>  </div>
+<div class="title">ITHACADMD&lt; Type, PatchField, GeoMesh &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -85,172 +85,76 @@ $(function() {
  <a href="classITHACADMD.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ITHACADMD_8H_source.html">ITHACADMD.H</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for ITHACADMD&lt; Field_type &gt;:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classITHACADMD.png" usemap="#ITHACADMD_3C_20Field_5Ftype_20_3E_map" alt=""/>
-  <map id="ITHACADMD_3C_20Field_5Ftype_20_3E_map" name="ITHACADMD_3C_20Field_5Ftype_20_3E_map">
-<area href="classITHACAPOD.html" title="Class of the computation of the POD, it exploits the method of snapshots." alt="ITHACAPOD" shape="rect" coords="0,0,170,24"/>
-</map>
- </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8a64d94429b1271b628d20a4dc695eb0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a8a64d94429b1271b628d20a4dc695eb0">ITHACADMD</a> (PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;snapshots, double dt)</td></tr>
-<tr class="memdesc:a8a64d94429b1271b628d20a4dc695eb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the object.  <a href="#a8a64d94429b1271b628d20a4dc695eb0">More...</a><br /></td></tr>
-<tr class="separator:a8a64d94429b1271b628d20a4dc695eb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73d5f4a97ca4fc3fa30b5b7bb30bcc5d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a73d5f4a97ca4fc3fa30b5b7bb30bcc5d">getModes</a> (int SVD_rank=-1, bool exact=true, bool exportDMDmodes=false)</td></tr>
-<tr class="memdesc:a73d5f4a97ca4fc3fa30b5b7bb30bcc5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the DMD modes.  <a href="#a73d5f4a97ca4fc3fa30b5b7bb30bcc5d">More...</a><br /></td></tr>
-<tr class="separator:a73d5f4a97ca4fc3fa30b5b7bb30bcc5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5605754bee363e370dcea6412511b289"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a5605754bee363e370dcea6412511b289">convert2Foam</a> ()</td></tr>
-<tr class="memdesc:a5605754bee363e370dcea6412511b289"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the EigenModes in Matrix form into OpenFOAM GeometricFields.  <a href="#a5605754bee363e370dcea6412511b289">More...</a><br /></td></tr>
-<tr class="separator:a5605754bee363e370dcea6412511b289"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a401192c6f771db8c603de253ae3123d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a401192c6f771db8c603de253ae3123d2">exportEigs</a> (word exportFolder)</td></tr>
-<tr class="memdesc:a401192c6f771db8c603de253ae3123d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the eigenvalues in numpy format.  <a href="#a401192c6f771db8c603de253ae3123d2">More...</a><br /></td></tr>
-<tr class="separator:a401192c6f771db8c603de253ae3123d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73d0128da503c23231c0612a422432f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a73d0128da503c23231c0612a422432f6">getDynamics</a> (double tStart, double tFinal, double dt)</td></tr>
-<tr class="memdesc:a73d0128da503c23231c0612a422432f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the dynamics of DMD given an initial time step, a final one and a time step.  <a href="#a73d0128da503c23231c0612a422432f6">More...</a><br /></td></tr>
-<tr class="separator:a73d0128da503c23231c0612a422432f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff0078a10a6e7f4028912766a8a823ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#aff0078a10a6e7f4028912766a8a823ef">reconstruct</a> (word exportFolder, word fieldName)</td></tr>
-<tr class="memdesc:aff0078a10a6e7f4028912766a8a823ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstruct and export the solution using the computed dynamics.  <a href="#aff0078a10a6e7f4028912766a8a823ef">More...</a><br /></td></tr>
-<tr class="separator:aff0078a10a6e7f4028912766a8a823ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classITHACAPOD"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classITHACAPOD')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classITHACAPOD.html">ITHACAPOD</a></td></tr>
-<tr class="memitem:ae56091ed10d093d2d5d91ead313d34f5 inherit pub_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:ae56091ed10d093d2d5d91ead313d34f5 inherit pub_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#ae56091ed10d093d2d5d91ead313d34f5">corMatrix</a> (PtrList&lt; volScalarField &gt; &amp;snapshots)</td></tr>
-<tr class="memdesc:ae56091ed10d093d2d5d91ead313d34f5 inherit pub_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the Correlation Matrix for Scalar Field.  <a href="classITHACAPOD.html#ae56091ed10d093d2d5d91ead313d34f5">More...</a><br /></td></tr>
-<tr class="separator:ae56091ed10d093d2d5d91ead313d34f5 inherit pub_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2e66d0a2cc7d0daf14827d1e4458385 inherit pub_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:aa2e66d0a2cc7d0daf14827d1e4458385 inherit pub_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#aa2e66d0a2cc7d0daf14827d1e4458385">corMatrix</a> (PtrList&lt; volVectorField &gt; &amp;snapshots)</td></tr>
-<tr class="memdesc:aa2e66d0a2cc7d0daf14827d1e4458385 inherit pub_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the Correlation Matrix for Vector Field.  <a href="classITHACAPOD.html#aa2e66d0a2cc7d0daf14827d1e4458385">More...</a><br /></td></tr>
-<tr class="separator:aa2e66d0a2cc7d0daf14827d1e4458385 inherit pub_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a026fa9666138ce73367d40d5cab8a306 inherit pub_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a026fa9666138ce73367d40d5cab8a306 inherit pub_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a026fa9666138ce73367d40d5cab8a306">corMatrix</a> (List&lt; Eigen::SparseMatrix&lt; double &gt;&gt; &amp;snapshots)</td></tr>
-<tr class="memdesc:a026fa9666138ce73367d40d5cab8a306 inherit pub_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the Correlation Matrix for Vector Field.  <a href="classITHACAPOD.html#a026fa9666138ce73367d40d5cab8a306">More...</a><br /></td></tr>
-<tr class="separator:a026fa9666138ce73367d40d5cab8a306 inherit pub_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ec9b2fdef88d44fc576855a75077cf9 inherit pub_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a9ec9b2fdef88d44fc576855a75077cf9 inherit pub_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">Eigen::MatrixXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a9ec9b2fdef88d44fc576855a75077cf9">corMatrix</a> (List&lt; Eigen::VectorXd &gt; &amp;snapshots)</td></tr>
-<tr class="memdesc:a9ec9b2fdef88d44fc576855a75077cf9 inherit pub_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the Correlation Matrix for Vector Field.  <a href="classITHACAPOD.html#a9ec9b2fdef88d44fc576855a75077cf9">More...</a><br /></td></tr>
-<tr class="separator:a9ec9b2fdef88d44fc576855a75077cf9 inherit pub_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a109d723e5179dac601e37acd362b6f76 inherit pub_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a109d723e5179dac601e37acd362b6f76 inherit pub_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a109d723e5179dac601e37acd362b6f76">exportBases</a> (PtrList&lt; volVectorField &gt; &amp;s, PtrList&lt; volVectorField &gt; &amp;bases, word fieldName, bool sup)</td></tr>
-<tr class="memdesc:a109d723e5179dac601e37acd362b6f76 inherit pub_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the Bases.  <a href="classITHACAPOD.html#a109d723e5179dac601e37acd362b6f76">More...</a><br /></td></tr>
-<tr class="separator:a109d723e5179dac601e37acd362b6f76 inherit pub_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5bcf3000e3c9db08698e1731d1d7c5a inherit pub_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:af5bcf3000e3c9db08698e1731d1d7c5a inherit pub_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#af5bcf3000e3c9db08698e1731d1d7c5a">exportBases</a> (PtrList&lt; volScalarField &gt; &amp;s, PtrList&lt; volScalarField &gt; &amp;bases, word fieldName, bool sup)</td></tr>
-<tr class="memdesc:af5bcf3000e3c9db08698e1731d1d7c5a inherit pub_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the Bases.  <a href="classITHACAPOD.html#af5bcf3000e3c9db08698e1731d1d7c5a">More...</a><br /></td></tr>
-<tr class="separator:af5bcf3000e3c9db08698e1731d1d7c5a inherit pub_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5c017f5e65a4826fa2245283e248cf6 inherit pub_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:ab5c017f5e65a4826fa2245283e248cf6 inherit pub_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#ab5c017f5e65a4826fa2245283e248cf6">getModes</a> (PtrList&lt; volScalarField &gt; &amp;snapshots, PtrList&lt; volScalarField &gt; &amp;modes, PtrList&lt; volScalarField &gt; &amp;Volumes, word fieldName, bool podex, bool supex, bool sup, int nmodes)</td></tr>
-<tr class="separator:ab5c017f5e65a4826fa2245283e248cf6 inherit pub_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab02b7ddcdafba24941fe35b71754e8e5 inherit pub_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:ab02b7ddcdafba24941fe35b71754e8e5 inherit pub_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#ab02b7ddcdafba24941fe35b71754e8e5">getModes</a> (PtrList&lt; volVectorField &gt; &amp;snapshots, PtrList&lt; volVectorField &gt; &amp;modes, PtrList&lt; volScalarField &gt; &amp;Volumes, word fieldName, bool podex, bool supex, bool sup, int nmodes)</td></tr>
-<tr class="separator:ab02b7ddcdafba24941fe35b71754e8e5 inherit pub_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a954f636226a3dd07e6c96390a8cefce2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a954f636226a3dd07e6c96390a8cefce2">ITHACADMD</a> (PtrList&lt; GeometricField&lt; Type, PatchField, GeoMesh &gt;&gt; &amp;snapshots, double dt)</td></tr>
+<tr class="memdesc:a954f636226a3dd07e6c96390a8cefce2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the object.  <a href="#a954f636226a3dd07e6c96390a8cefce2">More...</a><br /></td></tr>
+<tr class="separator:a954f636226a3dd07e6c96390a8cefce2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac890dffa76fd38fa3742da1cf549edf2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#ac890dffa76fd38fa3742da1cf549edf2">getModes</a> (label SVD_rank=-1, bool exact=true, bool exportDMDmodes=false)</td></tr>
+<tr class="memdesc:ac890dffa76fd38fa3742da1cf549edf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the DMD modes.  <a href="#ac890dffa76fd38fa3742da1cf549edf2">More...</a><br /></td></tr>
+<tr class="separator:ac890dffa76fd38fa3742da1cf549edf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a037f88aff4528feafd7fd378d2e99764"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a037f88aff4528feafd7fd378d2e99764">convert2Foam</a> ()</td></tr>
+<tr class="memdesc:a037f88aff4528feafd7fd378d2e99764"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the EigenModes in Matrix form into OpenFOAM GeometricFields.  <a href="#a037f88aff4528feafd7fd378d2e99764">More...</a><br /></td></tr>
+<tr class="separator:a037f88aff4528feafd7fd378d2e99764"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e9c1b314d52139e293fdb5039628c4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a9e9c1b314d52139e293fdb5039628c4c">exportEigs</a> (word exportFolder)</td></tr>
+<tr class="memdesc:a9e9c1b314d52139e293fdb5039628c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the eigenvalues in numpy format.  <a href="#a9e9c1b314d52139e293fdb5039628c4c">More...</a><br /></td></tr>
+<tr class="separator:a9e9c1b314d52139e293fdb5039628c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a545151062b89d2137253395accd185db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a545151062b89d2137253395accd185db">getDynamics</a> (double tStart, double tFinal, double dt)</td></tr>
+<tr class="memdesc:a545151062b89d2137253395accd185db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the dynamics of DMD given an initial time step, a final one and a time step.  <a href="#a545151062b89d2137253395accd185db">More...</a><br /></td></tr>
+<tr class="separator:a545151062b89d2137253395accd185db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69344a7fc856a367be4d99abe3af56d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a69344a7fc856a367be4d99abe3af56d6">reconstruct</a> (word exportFolder, word fieldName)</td></tr>
+<tr class="memdesc:a69344a7fc856a367be4d99abe3af56d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstruct and export the solution using the computed dynamics.  <a href="#a69344a7fc856a367be4d99abe3af56d6">More...</a><br /></td></tr>
+<tr class="separator:a69344a7fc856a367be4d99abe3af56d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a2fb05e53b51a3c355a86e826f1322fda"><td class="memItemLeft" align="right" valign="top">PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a2fb05e53b51a3c355a86e826f1322fda">snapshotsDMD</a></td></tr>
-<tr class="memdesc:a2fb05e53b51a3c355a86e826f1322fda"><td class="mdescLeft">&#160;</td><td class="mdescRight">PtrList of OpenFOAM GeoometricFields where the snapshots are stored.  <a href="#a2fb05e53b51a3c355a86e826f1322fda">More...</a><br /></td></tr>
-<tr class="separator:a2fb05e53b51a3c355a86e826f1322fda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6485fb7696e135c2c3737e4cb9d0677e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModes.html">Modes</a>&lt; Field_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a6485fb7696e135c2c3737e4cb9d0677e">DMDmodesReal</a></td></tr>
-<tr class="memdesc:a6485fb7696e135c2c3737e4cb9d0677e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classModes.html" title="Implementation of a container class derived from PtrList.">Modes</a> object used to store the Real part of the DMD modes.  <a href="#a6485fb7696e135c2c3737e4cb9d0677e">More...</a><br /></td></tr>
-<tr class="separator:a6485fb7696e135c2c3737e4cb9d0677e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5105dd1139c22b891d7d04d7c5488d68"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModes.html">Modes</a>&lt; Field_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a5105dd1139c22b891d7d04d7c5488d68">DMDmodesImag</a></td></tr>
-<tr class="memdesc:a5105dd1139c22b891d7d04d7c5488d68"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classModes.html" title="Implementation of a container class derived from PtrList.">Modes</a> object used to store the Imaginary part of the DMD modes.  <a href="#a5105dd1139c22b891d7d04d7c5488d68">More...</a><br /></td></tr>
-<tr class="separator:a5105dd1139c22b891d7d04d7c5488d68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a025317a9952ec34666f5fe518713ba8c"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXcd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a025317a9952ec34666f5fe518713ba8c">eigenValues</a></td></tr>
-<tr class="memdesc:a025317a9952ec34666f5fe518713ba8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Eigenvalues of the dynamics mode decomposition.  <a href="#a025317a9952ec34666f5fe518713ba8c">More...</a><br /></td></tr>
-<tr class="separator:a025317a9952ec34666f5fe518713ba8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff3fc8234cf5868a7368d84a1144ffff"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXcd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#aff3fc8234cf5868a7368d84a1144ffff">DMDEigenModes</a></td></tr>
-<tr class="memdesc:aff3fc8234cf5868a7368d84a1144ffff"><td class="mdescLeft">&#160;</td><td class="mdescRight">DMD modes stored in a complex Eigen::Matrix, it is the object used for computations.  <a href="#aff3fc8234cf5868a7368d84a1144ffff">More...</a><br /></td></tr>
-<tr class="separator:aff3fc8234cf5868a7368d84a1144ffff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeba8289c48776b4afe5dfcfb691f2f14"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXcd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#aeba8289c48776b4afe5dfcfb691f2f14">DMDEigenModesBC</a></td></tr>
-<tr class="memdesc:aeba8289c48776b4afe5dfcfb691f2f14"><td class="mdescLeft">&#160;</td><td class="mdescRight">DMD modes on the boundary stored in a List of complex Eigen::Matrix, it is the object used for computations.  <a href="#aeba8289c48776b4afe5dfcfb691f2f14">More...</a><br /></td></tr>
-<tr class="separator:aeba8289c48776b4afe5dfcfb691f2f14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeda9e9303573855ec8ab8373a7ffc2c4"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXcd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#aeda9e9303573855ec8ab8373a7ffc2c4">PODm</a></td></tr>
-<tr class="memdesc:aeda9e9303573855ec8ab8373a7ffc2c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Complex matrix used to store the POD modes, used only for compution in the projected approach.  <a href="#aeda9e9303573855ec8ab8373a7ffc2c4">More...</a><br /></td></tr>
-<tr class="separator:aeda9e9303573855ec8ab8373a7ffc2c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad84ce7bdc1ed02654a780db4b2b52c23"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXcd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#ad84ce7bdc1ed02654a780db4b2b52c23">PODmBC</a></td></tr>
-<tr class="memdesc:ad84ce7bdc1ed02654a780db4b2b52c23"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of complex matrices used to store the POD modes on the boundaries, used only for compution in the projected approach.  <a href="#ad84ce7bdc1ed02654a780db4b2b52c23">More...</a><br /></td></tr>
-<tr class="separator:ad84ce7bdc1ed02654a780db4b2b52c23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a620d61d6c622282c8e6b5aaa6c45fd01"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a620d61d6c622282c8e6b5aaa6c45fd01">Amplitudes</a></td></tr>
-<tr class="memdesc:a620d61d6c622282c8e6b5aaa6c45fd01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Amplitudes of DMD.  <a href="#a620d61d6c622282c8e6b5aaa6c45fd01">More...</a><br /></td></tr>
-<tr class="separator:a620d61d6c622282c8e6b5aaa6c45fd01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d93d8f01d541622c746803c425eb0c4"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXcd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a2d93d8f01d541622c746803c425eb0c4">dynamics</a></td></tr>
-<tr class="memdesc:a2d93d8f01d541622c746803c425eb0c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Complex Eigen::Matrix used to store the Dynamics of the DMD modes.  <a href="#a2d93d8f01d541622c746803c425eb0c4">More...</a><br /></td></tr>
-<tr class="separator:a2d93d8f01d541622c746803c425eb0c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac1a24991f7e7a0fc91158381602c163"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#aac1a24991f7e7a0fc91158381602c163">NSnaps</a></td></tr>
-<tr class="memdesc:aac1a24991f7e7a0fc91158381602c163"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of snapshots.  <a href="#aac1a24991f7e7a0fc91158381602c163">More...</a><br /></td></tr>
-<tr class="separator:aac1a24991f7e7a0fc91158381602c163"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50e2943776c8ea03adb79abbf6367349"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a50e2943776c8ea03adb79abbf6367349">SVD_rank_public</a></td></tr>
-<tr class="memdesc:a50e2943776c8ea03adb79abbf6367349"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rank of the DMD.  <a href="#a50e2943776c8ea03adb79abbf6367349">More...</a><br /></td></tr>
-<tr class="separator:a50e2943776c8ea03adb79abbf6367349"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a814e968e2f3d69571842704d6dcf4256"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a814e968e2f3d69571842704d6dcf4256">originalDT</a></td></tr>
-<tr class="memdesc:a814e968e2f3d69571842704d6dcf4256"><td class="mdescLeft">&#160;</td><td class="mdescRight">Original time step used to acquire the snapshots.  <a href="#a814e968e2f3d69571842704d6dcf4256">More...</a><br /></td></tr>
-<tr class="separator:a814e968e2f3d69571842704d6dcf4256"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a071bf994411c8fd3df95e9e6e8bb8bc1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a071bf994411c8fd3df95e9e6e8bb8bc1">redSVD</a></td></tr>
-<tr class="memdesc:a071bf994411c8fd3df95e9e6e8bb8bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, it uses the Randomized SVD.  <a href="#a071bf994411c8fd3df95e9e6e8bb8bc1">More...</a><br /></td></tr>
-<tr class="separator:a071bf994411c8fd3df95e9e6e8bb8bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_static_methods_classITHACAPOD"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classITHACAPOD')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classITHACAPOD.html">ITHACAPOD</a></td></tr>
-<tr class="memitem:ac5d304f7d53e7a05588558c7f92638cf inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;class Field_type &gt; </td></tr>
-<tr class="memitem:ac5d304f7d53e7a05588558c7f92638cf inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#ac5d304f7d53e7a05588558c7f92638cf">getModes</a> (PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;snapshots, PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;modes, word fieldName, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
-<tr class="memdesc:ac5d304f7d53e7a05588558c7f92638cf inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the bases or reads them for a vector field.  <a href="classITHACAPOD.html#ac5d304f7d53e7a05588558c7f92638cf">More...</a><br /></td></tr>
-<tr class="separator:ac5d304f7d53e7a05588558c7f92638cf inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e3e2344f3d40be2c95c1201d0f3ddfe inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;class Field_type &gt; </td></tr>
-<tr class="memitem:a3e3e2344f3d40be2c95c1201d0f3ddfe inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a3e3e2344f3d40be2c95c1201d0f3ddfe">getModesSVD</a> (PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;snapshots, PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;modes, word fieldName, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
-<tr class="memdesc:a3e3e2344f3d40be2c95c1201d0f3ddfe inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the bases for a scalar field using SVD instead of the method of snapshots.  <a href="classITHACAPOD.html#a3e3e2344f3d40be2c95c1201d0f3ddfe">More...</a><br /></td></tr>
-<tr class="separator:a3e3e2344f3d40be2c95c1201d0f3ddfe inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6ff99544ec600e461f19118a956818a inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;class Field_type &gt; </td></tr>
-<tr class="memitem:af6ff99544ec600e461f19118a956818a inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#af6ff99544ec600e461f19118a956818a">getNestedSnapshotMatrix</a> (PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;snapshots, PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;modes, word fieldName, int Npar, int NnestedOut)</td></tr>
-<tr class="memdesc:af6ff99544ec600e461f19118a956818a inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nested-POD approach.  <a href="classITHACAPOD.html#af6ff99544ec600e461f19118a956818a">More...</a><br /></td></tr>
-<tr class="separator:af6ff99544ec600e461f19118a956818a inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0f31df28250604feb101e2e53d5c115 inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;class Field_type &gt; </td></tr>
-<tr class="memitem:ab0f31df28250604feb101e2e53d5c115 inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#ab0f31df28250604feb101e2e53d5c115">getWeightedModes</a> (PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;snapshots, PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;modes, word fieldName, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
-<tr class="memdesc:ab0f31df28250604feb101e2e53d5c115 inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the weighted bases (using the nested-pod approach) or read them for a vector field.  <a href="classITHACAPOD.html#ab0f31df28250604feb101e2e53d5c115">More...</a><br /></td></tr>
-<tr class="separator:ab0f31df28250604feb101e2e53d5c115 inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1f7a7f3ad12d646ca134207a4e53ea3 inherit pub_static_methods_classITHACAPOD"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#af1f7a7f3ad12d646ca134207a4e53ea3">GrammSchmidt</a> (Eigen::MatrixXd &amp;Matrix)</td></tr>
-<tr class="memdesc:af1f7a7f3ad12d646ca134207a4e53ea3 inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs GrammSchmidt orthonormalization on an <a class="el" href="namespaceEigen.html">Eigen</a> Matrix.  <a href="classITHACAPOD.html#af1f7a7f3ad12d646ca134207a4e53ea3">More...</a><br /></td></tr>
-<tr class="separator:af1f7a7f3ad12d646ca134207a4e53ea3 inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c5f4ee355448a8ef146083a43ca1048 inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;class Field_type &gt; </td></tr>
-<tr class="memitem:a5c5f4ee355448a8ef146083a43ca1048 inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static Eigen::MatrixXd&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a5c5f4ee355448a8ef146083a43ca1048">corMatrix</a> (Field_type &amp;snapshots)</td></tr>
-<tr class="memdesc:a5c5f4ee355448a8ef146083a43ca1048 inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the correlation matrix given a vector field snapshot Matrix using different norms depending on the input snapshots.  <a href="classITHACAPOD.html#a5c5f4ee355448a8ef146083a43ca1048">More...</a><br /></td></tr>
-<tr class="separator:a5c5f4ee355448a8ef146083a43ca1048 inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b7c227fec79032d37a87c19c6f6bbc7 inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;class Field_type &gt; </td></tr>
-<tr class="memitem:a5b7c227fec79032d37a87c19c6f6bbc7 inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a5b7c227fec79032d37a87c19c6f6bbc7">exportBases</a> (PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;snapshots, PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;bases, word fieldName, bool sup=0)</td></tr>
-<tr class="memdesc:a5b7c227fec79032d37a87c19c6f6bbc7 inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exports the basis for an OpenFOAM GeometricField into the ITHACAOutput/POD or ITHACAOutput/supremizer.  <a href="classITHACAPOD.html#a5b7c227fec79032d37a87c19c6f6bbc7">More...</a><br /></td></tr>
-<tr class="separator:a5b7c227fec79032d37a87c19c6f6bbc7 inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5dd4960283ca1775fb3bd37c22208569 inherit pub_static_methods_classITHACAPOD"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a5dd4960283ca1775fb3bd37c22208569">exportEigenvalues</a> (scalarField Eigenvalues, fileName name, bool sup=0)</td></tr>
-<tr class="memdesc:a5dd4960283ca1775fb3bd37c22208569 inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exports the eigenvalues as a txt file.  <a href="classITHACAPOD.html#a5dd4960283ca1775fb3bd37c22208569">More...</a><br /></td></tr>
-<tr class="separator:a5dd4960283ca1775fb3bd37c22208569 inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a370b697919ab26098067f6f39c06b6ed inherit pub_static_methods_classITHACAPOD"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a370b697919ab26098067f6f39c06b6ed">exportcumEigenvalues</a> (scalarField cumEigenvalues, fileName name, bool sup=0)</td></tr>
-<tr class="memdesc:a370b697919ab26098067f6f39c06b6ed inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export the cumulative eigenvalues as a txt file.  <a href="classITHACAPOD.html#a370b697919ab26098067f6f39c06b6ed">More...</a><br /></td></tr>
-<tr class="separator:a370b697919ab26098067f6f39c06b6ed inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2aad8a3bcd7e604067f67afe8faebfd inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ad2aad8a3bcd7e604067f67afe8faebfd inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#ad2aad8a3bcd7e604067f67afe8faebfd">DEIMmodes</a> (PtrList&lt; GeometricField&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, fvPatchField, volMesh &gt;&gt; &amp;SnapShotsMatrix, int nmodes, word FunctionName)</td></tr>
-<tr class="memdesc:ad2aad8a3bcd7e604067f67afe8faebfd inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classDEIM.html">DEIM</a> modes for a generic non linear function.  <a href="classITHACAPOD.html#ad2aad8a3bcd7e604067f67afe8faebfd">More...</a><br /></td></tr>
-<tr class="separator:ad2aad8a3bcd7e604067f67afe8faebfd inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8152c2a92d5f6e0b44f1ef57ac2d5d2b inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;typename type_matrix &gt; </td></tr>
-<tr class="memitem:a8152c2a92d5f6e0b44f1ef57ac2d5d2b inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static std::tuple&lt; List&lt; Eigen::SparseMatrix&lt; double &gt; &gt;, List&lt; Eigen::VectorXd &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a8152c2a92d5f6e0b44f1ef57ac2d5d2b">DEIMmodes</a> (PtrList&lt; type_matrix &gt; &amp;MatrixList, int nmodesA, int nmodesB, word MatrixName=&quot;Matrix&quot;)</td></tr>
-<tr class="memdesc:a8152c2a92d5f6e0b44f1ef57ac2d5d2b inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classDEIM.html">DEIM</a> modes for a generic non-parametrized matrix coming from a differential operator function.  <a href="classITHACAPOD.html#a8152c2a92d5f6e0b44f1ef57ac2d5d2b">More...</a><br /></td></tr>
-<tr class="separator:a8152c2a92d5f6e0b44f1ef57ac2d5d2b inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf69b9e6587aa1fa08c896c1f5948bbf inherit pub_static_methods_classITHACAPOD"><td class="memItemLeft" align="right" valign="top">static std::tuple&lt; List&lt; Eigen::SparseMatrix&lt; double &gt; &gt;, List&lt; Eigen::VectorXd &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#abf69b9e6587aa1fa08c896c1f5948bbf">DEIMmodes</a> (List&lt; Eigen::SparseMatrix&lt; double &gt;&gt; &amp;<a class="el" href="unsteadymsrProblem_2updateConsts_8H.html#a3b98e2dffc6cb06a89dcb0d5c60a0206">A</a>, List&lt; Eigen::VectorXd &gt; &amp;b, int nmodesA, int nmodesB, word MatrixName=&quot;Matrix&quot;)</td></tr>
-<tr class="memdesc:abf69b9e6587aa1fa08c896c1f5948bbf inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="classDEIM.html">DEIM</a> modes for a generic non a parametrized matrix coming from a differential operator function.  <a href="classITHACAPOD.html#abf69b9e6587aa1fa08c896c1f5948bbf">More...</a><br /></td></tr>
-<tr class="separator:abf69b9e6587aa1fa08c896c1f5948bbf inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa626cc82b0049cc252326824c36439d2 inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;class Field_type &gt; </td></tr>
-<tr class="memitem:aa626cc82b0049cc252326824c36439d2 inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#aa626cc82b0049cc252326824c36439d2">getModes</a> (PtrList&lt; Field_type &gt; &amp;snapshots, PtrList&lt; Field_type &gt; &amp;modes, PtrList&lt; volScalarField &gt; &amp;Volumes, word fieldName, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
-<tr class="memdesc:aa626cc82b0049cc252326824c36439d2 inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the modes.  <a href="classITHACAPOD.html#aa626cc82b0049cc252326824c36439d2">More...</a><br /></td></tr>
-<tr class="separator:aa626cc82b0049cc252326824c36439d2 inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bcd1b480ba477aa59ffc5714f358b95 inherit pub_static_methods_classITHACAPOD"><td class="memTemplParams" colspan="2">template&lt;class Field_type , class Field_type_2 &gt; </td></tr>
-<tr class="memitem:a8bcd1b480ba477aa59ffc5714f358b95 inherit pub_static_methods_classITHACAPOD"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classITHACAPOD.html#a8bcd1b480ba477aa59ffc5714f358b95">getModes</a> (PtrList&lt; Field_type &gt; &amp;snapshots, PtrList&lt; Field_type &gt; &amp;modes, PtrList&lt; Field_type_2 &gt; &amp;fields2, word fieldName, bool podex, bool supex=0, bool sup=0, int nmodes=0)</td></tr>
-<tr class="memdesc:a8bcd1b480ba477aa59ffc5714f358b95 inherit pub_static_methods_classITHACAPOD"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets <a class="el" href="classModes.html" title="Implementation of a container class derived from PtrList.">Modes</a> based on eigenvalue decomposition of another Field.  <a href="classITHACAPOD.html#a8bcd1b480ba477aa59ffc5714f358b95">More...</a><br /></td></tr>
-<tr class="separator:a8bcd1b480ba477aa59ffc5714f358b95 inherit pub_static_methods_classITHACAPOD"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24b0ab0908fc1651f54f968175f20592"><td class="memItemLeft" align="right" valign="top">PtrList&lt; GeometricField&lt; Type, PatchField, GeoMesh &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a24b0ab0908fc1651f54f968175f20592">snapshotsDMD</a></td></tr>
+<tr class="memdesc:a24b0ab0908fc1651f54f968175f20592"><td class="mdescLeft">&#160;</td><td class="mdescRight">PtrList of OpenFOAM GeoometricFields where the snapshots are stored.  <a href="#a24b0ab0908fc1651f54f968175f20592">More...</a><br /></td></tr>
+<tr class="separator:a24b0ab0908fc1651f54f968175f20592"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad93ce0b97e7db49f39c97b95514f7fb0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModes.html">Modes</a>&lt; Type, PatchField, GeoMesh &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#ad93ce0b97e7db49f39c97b95514f7fb0">DMDmodesReal</a></td></tr>
+<tr class="memdesc:ad93ce0b97e7db49f39c97b95514f7fb0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classModes.html" title="Implementation of a container class derived from PtrList.">Modes</a> object used to store the Real part of the DMD modes.  <a href="#ad93ce0b97e7db49f39c97b95514f7fb0">More...</a><br /></td></tr>
+<tr class="separator:ad93ce0b97e7db49f39c97b95514f7fb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa30f716242b730956a64ded19fedfaa5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModes.html">Modes</a>&lt; Type, PatchField, GeoMesh &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#aa30f716242b730956a64ded19fedfaa5">DMDmodesImag</a></td></tr>
+<tr class="memdesc:aa30f716242b730956a64ded19fedfaa5"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classModes.html" title="Implementation of a container class derived from PtrList.">Modes</a> object used to store the Imaginary part of the DMD modes.  <a href="#aa30f716242b730956a64ded19fedfaa5">More...</a><br /></td></tr>
+<tr class="separator:aa30f716242b730956a64ded19fedfaa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae25d7e1f8c162d94cf0bf4e504e3ad5f"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXcd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#ae25d7e1f8c162d94cf0bf4e504e3ad5f">eigenValues</a></td></tr>
+<tr class="memdesc:ae25d7e1f8c162d94cf0bf4e504e3ad5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Eigenvalues of the dynamics mode decomposition.  <a href="#ae25d7e1f8c162d94cf0bf4e504e3ad5f">More...</a><br /></td></tr>
+<tr class="separator:ae25d7e1f8c162d94cf0bf4e504e3ad5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec3616526b830eed9c510df8257ccd38"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXcd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#aec3616526b830eed9c510df8257ccd38">DMDEigenModes</a></td></tr>
+<tr class="memdesc:aec3616526b830eed9c510df8257ccd38"><td class="mdescLeft">&#160;</td><td class="mdescRight">DMD modes stored in a complex Eigen::Matrix, it is the object used for computations.  <a href="#aec3616526b830eed9c510df8257ccd38">More...</a><br /></td></tr>
+<tr class="separator:aec3616526b830eed9c510df8257ccd38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab46288a16dfd5a53659af5f3829d9184"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXcd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#ab46288a16dfd5a53659af5f3829d9184">DMDEigenModesBC</a></td></tr>
+<tr class="memdesc:ab46288a16dfd5a53659af5f3829d9184"><td class="mdescLeft">&#160;</td><td class="mdescRight">DMD modes on the boundary stored in a List of complex Eigen::Matrix, it is the object used for computations.  <a href="#ab46288a16dfd5a53659af5f3829d9184">More...</a><br /></td></tr>
+<tr class="separator:ab46288a16dfd5a53659af5f3829d9184"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb8294c5d48b85d980b28484fb0abd17"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXcd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#aeb8294c5d48b85d980b28484fb0abd17">PODm</a></td></tr>
+<tr class="memdesc:aeb8294c5d48b85d980b28484fb0abd17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Complex matrix used to store the POD modes, used only for compution in the projected approach.  <a href="#aeb8294c5d48b85d980b28484fb0abd17">More...</a><br /></td></tr>
+<tr class="separator:aeb8294c5d48b85d980b28484fb0abd17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a960e3245854f62a373183e20ad7b0181"><td class="memItemLeft" align="right" valign="top">List&lt; Eigen::MatrixXcd &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a960e3245854f62a373183e20ad7b0181">PODmBC</a></td></tr>
+<tr class="memdesc:a960e3245854f62a373183e20ad7b0181"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of complex matrices used to store the POD modes on the boundaries, used only for compution in the projected approach.  <a href="#a960e3245854f62a373183e20ad7b0181">More...</a><br /></td></tr>
+<tr class="separator:a960e3245854f62a373183e20ad7b0181"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bcbcf64703a370ae47c8ff8bc6b9e99"><td class="memItemLeft" align="right" valign="top">Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a3bcbcf64703a370ae47c8ff8bc6b9e99">Amplitudes</a></td></tr>
+<tr class="memdesc:a3bcbcf64703a370ae47c8ff8bc6b9e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Amplitudes of DMD.  <a href="#a3bcbcf64703a370ae47c8ff8bc6b9e99">More...</a><br /></td></tr>
+<tr class="separator:a3bcbcf64703a370ae47c8ff8bc6b9e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84ee82dd9d557abdb089e3925204ec48"><td class="memItemLeft" align="right" valign="top">Eigen::MatrixXcd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a84ee82dd9d557abdb089e3925204ec48">dynamics</a></td></tr>
+<tr class="memdesc:a84ee82dd9d557abdb089e3925204ec48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Complex Eigen::Matrix used to store the Dynamics of the DMD modes.  <a href="#a84ee82dd9d557abdb089e3925204ec48">More...</a><br /></td></tr>
+<tr class="separator:a84ee82dd9d557abdb089e3925204ec48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abea7a5e04a0fd28d892f6ee1793a7628"><td class="memItemLeft" align="right" valign="top">label&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#abea7a5e04a0fd28d892f6ee1793a7628">NSnaps</a></td></tr>
+<tr class="memdesc:abea7a5e04a0fd28d892f6ee1793a7628"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of snapshots.  <a href="#abea7a5e04a0fd28d892f6ee1793a7628">More...</a><br /></td></tr>
+<tr class="separator:abea7a5e04a0fd28d892f6ee1793a7628"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d721eff33280de4f30ce22f84da95a6"><td class="memItemLeft" align="right" valign="top">label&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a0d721eff33280de4f30ce22f84da95a6">SVD_rank_public</a></td></tr>
+<tr class="memdesc:a0d721eff33280de4f30ce22f84da95a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rank of the DMD.  <a href="#a0d721eff33280de4f30ce22f84da95a6">More...</a><br /></td></tr>
+<tr class="separator:a0d721eff33280de4f30ce22f84da95a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57759a63e0d78f1c1c87239ab4b83af0"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#a57759a63e0d78f1c1c87239ab4b83af0">originalDT</a></td></tr>
+<tr class="memdesc:a57759a63e0d78f1c1c87239ab4b83af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Original time step used to acquire the snapshots.  <a href="#a57759a63e0d78f1c1c87239ab4b83af0">More...</a><br /></td></tr>
+<tr class="separator:a57759a63e0d78f1c1c87239ab4b83af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae83b1b8085f9dd319bc26c59f5f69087"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classITHACADMD.html#ae83b1b8085f9dd319bc26c59f5f69087">redSVD</a></td></tr>
+<tr class="memdesc:ae83b1b8085f9dd319bc26c59f5f69087"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, it uses the Randomized SVD.  <a href="#ae83b1b8085f9dd319bc26c59f5f69087">More...</a><br /></td></tr>
+<tr class="separator:ae83b1b8085f9dd319bc26c59f5f69087"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Field_type&gt;<br />
-class ITHACADMD&lt; Field_type &gt;</h3>
+<div class="textblock"><h3>template&lt;class Type, template&lt; class &gt; class PatchField, class GeoMesh&gt;<br />
+class ITHACADMD&lt; Type, PatchField, GeoMesh &gt;</h3>
 
 <p class="">Class of the computation of the DMD, it exploits the SVD methods. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -262,18 +166,18 @@ class ITHACADMD&lt; Field_type &gt;</h3>
 
 <p class="definition">Definition at line <a class="el" href="ITHACADMD_8H_source.html#l00069">69</a> of file <a class="el" href="ITHACADMD_8H_source.html">ITHACADMD.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a8a64d94429b1271b628d20a4dc695eb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a64d94429b1271b628d20a4dc695eb0">&#9670;&nbsp;</a></span>ITHACADMD()</h2>
+<a id="a954f636226a3dd07e6c96390a8cefce2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a954f636226a3dd07e6c96390a8cefce2">&#9670;&nbsp;</a></span>ITHACADMD()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; FieldType &gt;::<a class="el" href="classITHACADMD.html">ITHACADMD</a> </td>
+          <td class="memname"><a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::<a class="el" href="classITHACADMD.html">ITHACADMD</a> </td>
           <td>(</td>
-          <td class="paramtype">PtrList&lt; GeometricField&lt; Field_type, fvPatchField, volMesh &gt;&gt; &amp;&#160;</td>
+          <td class="paramtype">PtrList&lt; GeometricField&lt; Type, PatchField, GeoMesh &gt;&gt; &amp;&#160;</td>
           <td class="paramname"><em>snapshots</em>, </td>
         </tr>
         <tr>
@@ -304,16 +208,16 @@ template&lt;class Field_type&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5605754bee363e370dcea6412511b289"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5605754bee363e370dcea6412511b289">&#9670;&nbsp;</a></span>convert2Foam()</h2>
+<a id="a037f88aff4528feafd7fd378d2e99764"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a037f88aff4528feafd7fd378d2e99764">&#9670;&nbsp;</a></span>convert2Foam()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class FieldType &gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; FieldType &gt;::convert2Foam </td>
+          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::convert2Foam </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -323,20 +227,20 @@ template&lt;class FieldType &gt; </div>
 
 <p>Convert the EigenModes in Matrix form into OpenFOAM GeometricFields. </p>
 
-<p class="definition">Definition at line <a class="el" href="ITHACADMD_8C_source.html#l00218">218</a> of file <a class="el" href="ITHACADMD_8C_source.html">ITHACADMD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACADMD_8C_source.html#l00220">220</a> of file <a class="el" href="ITHACADMD_8C_source.html">ITHACADMD.C</a>.</p>
 
 </div>
 </div>
-<a id="a401192c6f771db8c603de253ae3123d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a401192c6f771db8c603de253ae3123d2">&#9670;&nbsp;</a></span>exportEigs()</h2>
+<a id="a9e9c1b314d52139e293fdb5039628c4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e9c1b314d52139e293fdb5039628c4c">&#9670;&nbsp;</a></span>exportEigs()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class FieldType &gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; FieldType &gt;::exportEigs </td>
+          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::exportEigs </td>
           <td>(</td>
           <td class="paramtype">word&#160;</td>
           <td class="paramname"><em>exportFolder</em></td><td>)</td>
@@ -353,20 +257,20 @@ template&lt;class FieldType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ITHACADMD_8C_source.html#l00183">183</a> of file <a class="el" href="ITHACADMD_8C_source.html">ITHACADMD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACADMD_8C_source.html#l00184">184</a> of file <a class="el" href="ITHACADMD_8C_source.html">ITHACADMD.C</a>.</p>
 
 </div>
 </div>
-<a id="a73d0128da503c23231c0612a422432f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73d0128da503c23231c0612a422432f6">&#9670;&nbsp;</a></span>getDynamics()</h2>
+<a id="a545151062b89d2137253395accd185db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a545151062b89d2137253395accd185db">&#9670;&nbsp;</a></span>getDynamics()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class FieldType &gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; FieldType &gt;::getDynamics </td>
+          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::getDynamics </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>tStart</em>, </td>
@@ -405,18 +309,18 @@ template&lt;class FieldType &gt; </div>
 
 </div>
 </div>
-<a id="a73d5f4a97ca4fc3fa30b5b7bb30bcc5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73d5f4a97ca4fc3fa30b5b7bb30bcc5d">&#9670;&nbsp;</a></span>getModes()</h2>
+<a id="ac890dffa76fd38fa3742da1cf549edf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac890dffa76fd38fa3742da1cf549edf2">&#9670;&nbsp;</a></span>getModes()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class FieldType &gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; FieldType &gt;::getModes </td>
+          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::getModes </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">label&#160;</td>
           <td class="paramname"><em>SVD_rank</em> = <code>-1</code>, </td>
         </tr>
         <tr>
@@ -453,16 +357,16 @@ template&lt;class FieldType &gt; </div>
 
 </div>
 </div>
-<a id="aff0078a10a6e7f4028912766a8a823ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff0078a10a6e7f4028912766a8a823ef">&#9670;&nbsp;</a></span>reconstruct()</h2>
+<a id="a69344a7fc856a367be4d99abe3af56d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69344a7fc856a367be4d99abe3af56d6">&#9670;&nbsp;</a></span>reconstruct()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class FieldType &gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; FieldType &gt;::reconstruct </td>
+          <td class="memname">void <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::reconstruct </td>
           <td>(</td>
           <td class="paramtype">word&#160;</td>
           <td class="paramname"><em>exportFolder</em>, </td>
@@ -483,21 +387,21 @@ template&lt;class FieldType &gt; </div>
 
 <p>Reconstruct and export the solution using the computed dynamics. </p>
 
-<p class="definition">Definition at line <a class="el" href="ITHACADMD_8C_source.html#l00194">194</a> of file <a class="el" href="ITHACADMD_8C_source.html">ITHACADMD.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ITHACADMD_8C_source.html#l00195">195</a> of file <a class="el" href="ITHACADMD_8C_source.html">ITHACADMD.C</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a620d61d6c622282c8e6b5aaa6c45fd01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a620d61d6c622282c8e6b5aaa6c45fd01">&#9670;&nbsp;</a></span>Amplitudes</h2>
+<a id="a3bcbcf64703a370ae47c8ff8bc6b9e99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bcbcf64703a370ae47c8ff8bc6b9e99">&#9670;&nbsp;</a></span>Amplitudes</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::VectorXd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::Amplitudes</td>
+          <td class="memname">Eigen::VectorXd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::Amplitudes</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -508,16 +412,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="aff3fc8234cf5868a7368d84a1144ffff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff3fc8234cf5868a7368d84a1144ffff">&#9670;&nbsp;</a></span>DMDEigenModes</h2>
+<a id="aec3616526b830eed9c510df8257ccd38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec3616526b830eed9c510df8257ccd38">&#9670;&nbsp;</a></span>DMDEigenModes</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::MatrixXcd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::DMDEigenModes</td>
+          <td class="memname">Eigen::MatrixXcd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::DMDEigenModes</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -528,16 +432,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="aeba8289c48776b4afe5dfcfb691f2f14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeba8289c48776b4afe5dfcfb691f2f14">&#9670;&nbsp;</a></span>DMDEigenModesBC</h2>
+<a id="ab46288a16dfd5a53659af5f3829d9184"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab46288a16dfd5a53659af5f3829d9184">&#9670;&nbsp;</a></span>DMDEigenModesBC</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">List&lt;Eigen::MatrixXcd&gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::DMDEigenModesBC</td>
+          <td class="memname">List&lt;Eigen::MatrixXcd&gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::DMDEigenModesBC</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -548,16 +452,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="a5105dd1139c22b891d7d04d7c5488d68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5105dd1139c22b891d7d04d7c5488d68">&#9670;&nbsp;</a></span>DMDmodesImag</h2>
+<a id="aa30f716242b730956a64ded19fedfaa5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa30f716242b730956a64ded19fedfaa5">&#9670;&nbsp;</a></span>DMDmodesImag</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classModes.html">Modes</a>&lt;Field_type&gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::DMDmodesImag</td>
+          <td class="memname"><a class="el" href="classModes.html">Modes</a>&lt;Type, PatchField, GeoMesh&gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::DMDmodesImag</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -568,16 +472,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="a6485fb7696e135c2c3737e4cb9d0677e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6485fb7696e135c2c3737e4cb9d0677e">&#9670;&nbsp;</a></span>DMDmodesReal</h2>
+<a id="ad93ce0b97e7db49f39c97b95514f7fb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad93ce0b97e7db49f39c97b95514f7fb0">&#9670;&nbsp;</a></span>DMDmodesReal</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classModes.html">Modes</a>&lt;Field_type&gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::DMDmodesReal</td>
+          <td class="memname"><a class="el" href="classModes.html">Modes</a>&lt;Type, PatchField, GeoMesh&gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::DMDmodesReal</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -588,16 +492,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="a2d93d8f01d541622c746803c425eb0c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d93d8f01d541622c746803c425eb0c4">&#9670;&nbsp;</a></span>dynamics</h2>
+<a id="a84ee82dd9d557abdb089e3925204ec48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84ee82dd9d557abdb089e3925204ec48">&#9670;&nbsp;</a></span>dynamics</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::MatrixXcd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::dynamics</td>
+          <td class="memname">Eigen::MatrixXcd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::dynamics</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -608,16 +512,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="a025317a9952ec34666f5fe518713ba8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a025317a9952ec34666f5fe518713ba8c">&#9670;&nbsp;</a></span>eigenValues</h2>
+<a id="ae25d7e1f8c162d94cf0bf4e504e3ad5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae25d7e1f8c162d94cf0bf4e504e3ad5f">&#9670;&nbsp;</a></span>eigenValues</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::VectorXcd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::eigenValues</td>
+          <td class="memname">Eigen::VectorXcd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::eigenValues</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -628,16 +532,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="aac1a24991f7e7a0fc91158381602c163"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac1a24991f7e7a0fc91158381602c163">&#9670;&nbsp;</a></span>NSnaps</h2>
+<a id="abea7a5e04a0fd28d892f6ee1793a7628"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abea7a5e04a0fd28d892f6ee1793a7628">&#9670;&nbsp;</a></span>NSnaps</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::NSnaps</td>
+          <td class="memname">label <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::NSnaps</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -648,16 +552,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="a814e968e2f3d69571842704d6dcf4256"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a814e968e2f3d69571842704d6dcf4256">&#9670;&nbsp;</a></span>originalDT</h2>
+<a id="a57759a63e0d78f1c1c87239ab4b83af0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57759a63e0d78f1c1c87239ab4b83af0">&#9670;&nbsp;</a></span>originalDT</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">double <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::originalDT</td>
+          <td class="memname">double <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::originalDT</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -668,16 +572,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="aeda9e9303573855ec8ab8373a7ffc2c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeda9e9303573855ec8ab8373a7ffc2c4">&#9670;&nbsp;</a></span>PODm</h2>
+<a id="aeb8294c5d48b85d980b28484fb0abd17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb8294c5d48b85d980b28484fb0abd17">&#9670;&nbsp;</a></span>PODm</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::MatrixXcd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::PODm</td>
+          <td class="memname">Eigen::MatrixXcd <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::PODm</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -688,16 +592,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="ad84ce7bdc1ed02654a780db4b2b52c23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad84ce7bdc1ed02654a780db4b2b52c23">&#9670;&nbsp;</a></span>PODmBC</h2>
+<a id="a960e3245854f62a373183e20ad7b0181"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a960e3245854f62a373183e20ad7b0181">&#9670;&nbsp;</a></span>PODmBC</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">List&lt;Eigen::MatrixXcd&gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::PODmBC</td>
+          <td class="memname">List&lt;Eigen::MatrixXcd&gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::PODmBC</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -708,16 +612,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="a071bf994411c8fd3df95e9e6e8bb8bc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a071bf994411c8fd3df95e9e6e8bb8bc1">&#9670;&nbsp;</a></span>redSVD</h2>
+<a id="ae83b1b8085f9dd319bc26c59f5f69087"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae83b1b8085f9dd319bc26c59f5f69087">&#9670;&nbsp;</a></span>redSVD</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::redSVD</td>
+          <td class="memname">bool <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::redSVD</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -728,16 +632,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="a2fb05e53b51a3c355a86e826f1322fda"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2fb05e53b51a3c355a86e826f1322fda">&#9670;&nbsp;</a></span>snapshotsDMD</h2>
+<a id="a24b0ab0908fc1651f54f968175f20592"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24b0ab0908fc1651f54f968175f20592">&#9670;&nbsp;</a></span>snapshotsDMD</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">PtrList&lt;GeometricField&lt;Field_type, fvPatchField, volMesh&gt; &gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::snapshotsDMD</td>
+          <td class="memname">PtrList&lt;GeometricField&lt;Type, PatchField, GeoMesh&gt; &gt; <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::snapshotsDMD</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -748,16 +652,16 @@ template&lt;class Field_type&gt; </div>
 
 </div>
 </div>
-<a id="a50e2943776c8ea03adb79abbf6367349"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50e2943776c8ea03adb79abbf6367349">&#9670;&nbsp;</a></span>SVD_rank_public</h2>
+<a id="a0d721eff33280de4f30ce22f84da95a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d721eff33280de4f30ce22f84da95a6">&#9670;&nbsp;</a></span>SVD_rank_public</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Field_type&gt; </div>
+template&lt;class Type , template&lt; class &gt; class PatchField, class GeoMesh &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Field_type &gt;::SVD_rank_public</td>
+          <td class="memname">label <a class="el" href="classITHACADMD.html">ITHACADMD</a>&lt; Type, PatchField, GeoMesh &gt;::SVD_rank_public</td>
         </tr>
       </table>
 </div><div class="memdoc">

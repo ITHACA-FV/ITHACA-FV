@@ -94,7 +94,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a569c852a9455b0b0c2a6ffc358155127"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a569c852a9455b0b0c2a6ffc358155127">map_type</a> (const std::type_info &amp;t)</td></tr>
 <tr class="separator:a569c852a9455b0b0c2a6ffc358155127"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6133e9f6046ed283eaeebb98b3c3c2d"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aa6133e9f6046ed283eaeebb98b3c3c2d"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; char &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#aa6133e9f6046ed283eaeebb98b3c3c2d">create_npy_header</a> (const <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *data, const unsigned int *shape, const unsigned int ndims)</td></tr>
+<tr class="memitem:aa6133e9f6046ed283eaeebb98b3c3c2d"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; char &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#aa6133e9f6046ed283eaeebb98b3c3c2d">create_npy_header</a> (const <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *data, const unsigned int *shape, const unsigned int ndims)</td></tr>
 <tr class="separator:aa6133e9f6046ed283eaeebb98b3c3c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3999ff22822bcad303275861d0c7a5e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a3999ff22822bcad303275861d0c7a5e0">parse_npy_header</a> (FILE *fp, unsigned int &amp;word_size, unsigned int *&amp;shape, unsigned int &amp;ndims, bool &amp;fortran_order)</td></tr>
 <tr class="separator:a3999ff22822bcad303275861d0c7a5e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,14 +106,14 @@ Functions</h2></td></tr>
 <tr class="separator:abfeb43960d51a799dbe718b3d73e8b52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abffb25587a54473fbe1d3c86fa4df4fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcnpy_1_1NpyArray.html">NpyArray</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#abffb25587a54473fbe1d3c86fa4df4fb">npy_load</a> (std::string fname)</td></tr>
 <tr class="separator:abffb25587a54473fbe1d3c86fa4df4fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6892e83125505fe3fd55c771074a15fb"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a6892e83125505fe3fd55c771074a15fb"><td class="memTemplItemLeft" align="right" valign="top">Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a6892e83125505fe3fd55c771074a15fb">load</a> (Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;mat, const std::string fname, std::string order=&quot;rowMajor&quot;)</td></tr>
-<tr class="separator:a6892e83125505fe3fd55c771074a15fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a528c1ccec30f21b2e0da91f0a7ace71c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a528c1ccec30f21b2e0da91f0a7ace71c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a528c1ccec30f21b2e0da91f0a7ace71c">save</a> (const Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;mat, const std::string fname)</td></tr>
-<tr class="separator:a528c1ccec30f21b2e0da91f0a7ace71c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84077040e108dd824e49cbadbacb2ae2"><td class="memTemplParams" colspan="2">template&lt;typename T , int dim&gt; </td></tr>
+<tr class="memitem:a84077040e108dd824e49cbadbacb2ae2"><td class="memTemplItemLeft" align="right" valign="top">Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, dim &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a84077040e108dd824e49cbadbacb2ae2">load</a> (Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, dim &gt; &amp;mat, const std::string fname, std::string order=&quot;rowMajor&quot;)</td></tr>
+<tr class="separator:a84077040e108dd824e49cbadbacb2ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b84198191c111214de4cea8083f7bdb"><td class="memTemplParams" colspan="2">template&lt;typename T , int dim&gt; </td></tr>
+<tr class="memitem:a1b84198191c111214de4cea8083f7bdb"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a1b84198191c111214de4cea8083f7bdb">save</a> (const Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, dim &gt; &amp;mat, const std::string fname)</td></tr>
+<tr class="separator:a1b84198191c111214de4cea8083f7bdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8daa2ff90ad9f02b13e8a6f6b88bca6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ac8daa2ff90ad9f02b13e8a6f6b88bca6"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; char &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#ac8daa2ff90ad9f02b13e8a6f6b88bca6">operator+=</a> (std::vector&lt; char &gt; &amp;lhs, const <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> rhs)</td></tr>
+<tr class="memitem:ac8daa2ff90ad9f02b13e8a6f6b88bca6"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; char &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#ac8daa2ff90ad9f02b13e8a6f6b88bca6">operator+=</a> (std::vector&lt; char &gt; &amp;lhs, const <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> rhs)</td></tr>
 <tr class="separator:ac8daa2ff90ad9f02b13e8a6f6b88bca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a357cd39fe2f4327eb08495b48544d47e"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
 <tr class="memitem:a357cd39fe2f4327eb08495b48544d47e"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; char &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a357cd39fe2f4327eb08495b48544d47e">operator+=</a> (std::vector&lt; char &gt; &amp;lhs, const std::string rhs)</td></tr>
@@ -122,13 +122,13 @@ Functions</h2></td></tr>
 <tr class="memitem:adde4f7c4e52778f1e28effe4ae80bef3"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; char &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#adde4f7c4e52778f1e28effe4ae80bef3">operator+=</a> (std::vector&lt; char &gt; &amp;lhs, const char *rhs)</td></tr>
 <tr class="separator:adde4f7c4e52778f1e28effe4ae80bef3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad7bb7ba8f03afa8b7e43218bb131a93"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aad7bb7ba8f03afa8b7e43218bb131a93"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#aad7bb7ba8f03afa8b7e43218bb131a93">tostring</a> (<a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> <a class="el" href="SteadyNSTurbIntrusive_2pEqn_8H.html#acb559820d9ca11295b4500f179ef6392">i</a>, int pad=0, char padval=' ')</td></tr>
+<tr class="memitem:aad7bb7ba8f03afa8b7e43218bb131a93"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#aad7bb7ba8f03afa8b7e43218bb131a93">tostring</a> (<a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> <a class="el" href="SteadyNSTurbIntrusive_2pEqn_8H.html#ac23c63c7750d8829a77f4ebe1d961c48">i</a>, int pad=0, char padval=' ')</td></tr>
 <tr class="separator:aad7bb7ba8f03afa8b7e43218bb131a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f7df976d41618c66df12259e91444d6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a8f7df976d41618c66df12259e91444d6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a8f7df976d41618c66df12259e91444d6">npy_save</a> (std::string fname, const <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *data, const unsigned int *shape, const unsigned int ndims, std::string mode=&quot;w&quot;)</td></tr>
+<tr class="memitem:a8f7df976d41618c66df12259e91444d6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a8f7df976d41618c66df12259e91444d6">npy_save</a> (std::string fname, const <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *data, const unsigned int *shape, const unsigned int ndims, std::string mode=&quot;w&quot;)</td></tr>
 <tr class="separator:a8f7df976d41618c66df12259e91444d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48c2a4c71a92ac5f0f88a417f123a58d"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a48c2a4c71a92ac5f0f88a417f123a58d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a48c2a4c71a92ac5f0f88a417f123a58d">npz_save</a> (std::string zipname, std::string fname, const <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *data, const unsigned int *shape, const unsigned int ndims, std::string mode=&quot;w&quot;)</td></tr>
+<tr class="memitem:a48c2a4c71a92ac5f0f88a417f123a58d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecnpy.html#a48c2a4c71a92ac5f0f88a417f123a58d">npz_save</a> (std::string zipname, std::string fname, const <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *data, const unsigned int *shape, const unsigned int ndims, std::string mode=&quot;w&quot;)</td></tr>
 <tr class="separator:a48c2a4c71a92ac5f0f88a417f123a58d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -162,7 +162,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">std::vector&lt; char &gt; cnpy::create_npy_header </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
@@ -189,18 +189,18 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a6892e83125505fe3fd55c771074a15fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6892e83125505fe3fd55c771074a15fb">&#9670;&nbsp;</a></span>load()</h2>
+<a id="a84077040e108dd824e49cbadbacb2ae2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84077040e108dd824e49cbadbacb2ae2">&#9670;&nbsp;</a></span>load()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T &gt; </div>
+template&lt;typename T , int dim&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; cnpy::load </td>
+          <td class="memname">Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, dim &gt; cnpy::load </td>
           <td>(</td>
-          <td class="paramtype">Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;&#160;</td>
+          <td class="paramtype">Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, dim &gt; &amp;&#160;</td>
           <td class="paramname"><em>mat</em>, </td>
         </tr>
         <tr>
@@ -282,7 +282,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
@@ -388,7 +388,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a> *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
@@ -438,7 +438,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>&#160;</td>
           <td class="paramname"><em>rhs</em>&#160;</td>
         </tr>
         <tr>
@@ -607,18 +607,18 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a528c1ccec30f21b2e0da91f0a7ace71c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a528c1ccec30f21b2e0da91f0a7ace71c">&#9670;&nbsp;</a></span>save()</h2>
+<a id="a1b84198191c111214de4cea8083f7bdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b84198191c111214de4cea8083f7bdb">&#9670;&nbsp;</a></span>save()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T &gt; </div>
+template&lt;typename T , int dim&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void cnpy::save </td>
           <td>(</td>
-          <td class="paramtype">const Eigen::Matrix&lt; <a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, -1 &gt; &amp;&#160;</td>
+          <td class="paramtype">const Eigen::Matrix&lt; <a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>, -1, dim &gt; &amp;&#160;</td>
           <td class="paramname"><em>mat</em>, </td>
         </tr>
         <tr>
@@ -648,7 +648,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">std::string cnpy::tostring </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="tutorials_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="tutorials_2CFD_202thermalBlock_2createFields_8H.html#ad0a617f9d93307a01585e4039991c23f">T</a>&#160;</td>
           <td class="paramname"><em>i</em>, </td>
         </tr>
         <tr>

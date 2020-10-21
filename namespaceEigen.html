@@ -81,16 +81,16 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a26ff8eaebc2532433557944b083d3e82"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
-<tr class="memitem:a26ff8eaebc2532433557944b083d3e82"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceEigen.html#a26ff8eaebc2532433557944b083d3e82">saveMarketVector</a> (const VectorType &amp;vec, const std::string &amp;filename, int prec, std::_Ios_Fmtflags outytpe=std::ios_base::scientific)</td></tr>
-<tr class="separator:a26ff8eaebc2532433557944b083d3e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd89cbb8c477c3bf4b606f401765a998"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
-<tr class="memitem:afd89cbb8c477c3bf4b606f401765a998"><td class="memTemplItemLeft" align="right" valign="top">Matrix&lt; VectorType, Dynamic, Dynamic &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceEigen.html#afd89cbb8c477c3bf4b606f401765a998">SliceFromTensor</a> (Eigen::Tensor&lt; VectorType, 3 &gt; &amp;tensor, int dim, int index1)</td></tr>
-<tr class="separator:afd89cbb8c477c3bf4b606f401765a998"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bdd998abe4120f0c81f1431612dbab2"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
+<tr class="memitem:a5bdd998abe4120f0c81f1431612dbab2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceEigen.html#a5bdd998abe4120f0c81f1431612dbab2">saveMarketVector</a> (const VectorType &amp;vec, const std::string &amp;filename, label prec, std::_Ios_Fmtflags outytpe=std::ios_base::scientific)</td></tr>
+<tr class="separator:a5bdd998abe4120f0c81f1431612dbab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a861007c337db5759a69909263c693a"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
+<tr class="memitem:a6a861007c337db5759a69909263c693a"><td class="memTemplItemLeft" align="right" valign="top">Matrix&lt; VectorType, Dynamic, Dynamic &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceEigen.html#a6a861007c337db5759a69909263c693a">SliceFromTensor</a> (Eigen::Tensor&lt; VectorType, 3 &gt; &amp;tensor, label dim, label index1)</td></tr>
+<tr class="separator:a6a861007c337db5759a69909263c693a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a26ff8eaebc2532433557944b083d3e82"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26ff8eaebc2532433557944b083d3e82">&#9670;&nbsp;</a></span>saveMarketVector()</h2>
+<a id="a5bdd998abe4120f0c81f1431612dbab2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bdd998abe4120f0c81f1431612dbab2">&#9670;&nbsp;</a></span>saveMarketVector()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -112,7 +112,7 @@ template&lt;typename VectorType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">label&#160;</td>
           <td class="paramname"><em>prec</em>, </td>
         </tr>
         <tr>
@@ -129,12 +129,12 @@ template&lt;typename VectorType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EigenFunctions_8H_source.html#l00411">411</a> of file <a class="el" href="EigenFunctions_8H_source.html">EigenFunctions.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EigenFunctions_8H_source.html#l00413">413</a> of file <a class="el" href="EigenFunctions_8H_source.html">EigenFunctions.H</a>.</p>
 
 </div>
 </div>
-<a id="afd89cbb8c477c3bf4b606f401765a998"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd89cbb8c477c3bf4b606f401765a998">&#9670;&nbsp;</a></span>SliceFromTensor()</h2>
+<a id="a6a861007c337db5759a69909263c693a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a861007c337db5759a69909263c693a">&#9670;&nbsp;</a></span>SliceFromTensor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -150,13 +150,13 @@ template&lt;typename VectorType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">label&#160;</td>
           <td class="paramname"><em>dim</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">label&#160;</td>
           <td class="paramname"><em>index1</em>&#160;</td>
         </tr>
         <tr>
@@ -167,7 +167,7 @@ template&lt;typename VectorType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="EigenFunctions_8H_source.html#l00447">447</a> of file <a class="el" href="EigenFunctions_8H_source.html">EigenFunctions.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="EigenFunctions_8H_source.html#l00449">449</a> of file <a class="el" href="EigenFunctions_8H_source.html">EigenFunctions.H</a>.</p>
 
 </div>
 </div>

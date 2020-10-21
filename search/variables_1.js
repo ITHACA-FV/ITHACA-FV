@@ -15,7 +15,7 @@ var searchData=
   ['alphat',['alphat',['../msrProblem_2createConstants_8H.html#abdcf0c0691d6d9f9aefafb8834c3fbe4',1,'alphat():&#160;createConstants.H'],['../src_2ITHACA__FOMPROBLEMS_2UnsteadyBB_2createFields_8H.html#abdcf0c0691d6d9f9aefafb8834c3fbe4',1,'alphat():&#160;createFields.H'],['../unsteadymsrProblem_2createConstants_8H.html#abdcf0c0691d6d9f9aefafb8834c3fbe4',1,'alphat():&#160;createConstants.H'],['../src_2ITHACA__FOMPROBLEMS_2UnsteadyNSTTurb_2createFields_8H.html#abdcf0c0691d6d9f9aefafb8834c3fbe4',1,'alphat():&#160;createFields.H']]],
   ['alphatfield',['alphatfield',['../classUnsteadyNSTTurb.html#a8ca188131226f7f1d9c3e326db6f70c8',1,'UnsteadyNSTTurb']]],
   ['amodes',['Amodes',['../classmsrProblem.html#aea75a1a1912cf26ef8fbc1cf7b0127e2',1,'msrProblem::Amodes()'],['../classreducedMSR.html#a7a4d44f7cec11faa3fc3f963bbd5fbb5',1,'reducedMSR::Amodes()']]],
-  ['amplitudes',['Amplitudes',['../classITHACADMD.html#a620d61d6c622282c8e6b5aaa6c45fd01',1,'ITHACADMD']]],
+  ['amplitudes',['Amplitudes',['../classITHACADMD.html#a3bcbcf64703a370ae47c8ff8bc6b9e99',1,'ITHACADMD']]],
   ['arec',['AREC',['../classreducedMSR.html#ab059a02508c12b8d8bbf8161e4cdf430',1,'reducedMSR']]],
   ['args',['args',['../classtutorial03.html#a85810bbfaa779ddd68e1127aaa61de71',1,'tutorial03']]],
   ['asnapshots',['Asnapshots',['../classreducedMSR.html#a96ae031cc99bad800d23299ff8cbbe84',1,'reducedMSR']]]

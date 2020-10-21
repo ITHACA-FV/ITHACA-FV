@@ -17,6 +17,5 @@ var searchData=
   ['tutorial12',['tutorial12',['../classtutorial12.html',1,'']]],
   ['tutorial14',['tutorial14',['../classtutorial14.html',1,'']]],
   ['tutorial17',['tutorial17',['../classtutorial17.html',1,'']]],
-  ['tutorial18',['tutorial18',['../classtutorial18.html',1,'']]],
-  ['tutorial19',['tutorial19',['../classtutorial19.html',1,'']]]
+  ['tutorial18',['tutorial18',['../classtutorial18.html',1,'']]]
 ];

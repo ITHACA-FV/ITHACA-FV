@@ -119,12 +119,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2e9605d7acfcca9a66339fdbf930a256"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a2e9605d7acfcca9a66339fdbf930a256">solveOnline_sup</a> (Eigen::MatrixXd <a class="el" href="classreducedSteadyNS.html#aae9f458b646baf5c1760047e9b08eed6">vel_now</a>)</td></tr>
 <tr class="memdesc:a2e9605d7acfcca9a66339fdbf930a256"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to perform an online solve using a supremizer stabilisation method.  <a href="#a2e9605d7acfcca9a66339fdbf930a256">More...</a><br /></td></tr>
 <tr class="separator:a2e9605d7acfcca9a66339fdbf930a256"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84023acdb22cdef6fc84de1240979f96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a84023acdb22cdef6fc84de1240979f96">reconstruct_PPE</a> (fileName folder=&quot;./ITHACAOutput/online_rec&quot;, int printevery=1)</td></tr>
-<tr class="memdesc:a84023acdb22cdef6fc84de1240979f96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct a solution from an online solve with a PPE stabilisation technique.  <a href="#a84023acdb22cdef6fc84de1240979f96">More...</a><br /></td></tr>
-<tr class="separator:a84023acdb22cdef6fc84de1240979f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65f70e45d49d5c359d299f397e6fe009"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a65f70e45d49d5c359d299f397e6fe009">reconstruct_sup</a> (fileName folder=&quot;./ITHACAOutput/online_rec&quot;, int printevery=1)</td></tr>
-<tr class="memdesc:a65f70e45d49d5c359d299f397e6fe009"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique.  <a href="#a65f70e45d49d5c359d299f397e6fe009">More...</a><br /></td></tr>
-<tr class="separator:a65f70e45d49d5c359d299f397e6fe009"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea8d6033ef02096739002b03923e32f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#aea8d6033ef02096739002b03923e32f5">reconstruct_PPE</a> (fileName folder=&quot;./ITHACAoutput/online_rec&quot;, int printevery=1)</td></tr>
+<tr class="memdesc:aea8d6033ef02096739002b03923e32f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct a solution from an online solve with a PPE stabilisation technique.  <a href="#aea8d6033ef02096739002b03923e32f5">More...</a><br /></td></tr>
+<tr class="separator:aea8d6033ef02096739002b03923e32f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5705f5b58c5a7f3f7ae68493d98b700"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#af5705f5b58c5a7f3f7ae68493d98b700">reconstruct</a> (bool exportFields=false, fileName folder=&quot;./ITHACAoutput/online_rec&quot;, int printevery=1)</td></tr>
+<tr class="memdesc:af5705f5b58c5a7f3f7ae68493d98b700"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to reconstruct the solutions from an online solve.  <a href="#af5705f5b58c5a7f3f7ae68493d98b700">More...</a><br /></td></tr>
+<tr class="separator:af5705f5b58c5a7f3f7ae68493d98b700"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61b8a84a932b44fcc28773fb9dfc05fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a61b8a84a932b44fcc28773fb9dfc05fa">reconstructLiftAndDrag</a> (<a class="el" href="classsteadyNS.html">steadyNS</a> &amp;<a class="el" href="classreducedSteadyNS.html#a7f9a3574d2a7d08fa131a3533f879f29">problem</a>, fileName folder)</td></tr>
 <tr class="memdesc:a61b8a84a932b44fcc28773fb9dfc05fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to compute the reduced order forces.  <a href="#a61b8a84a932b44fcc28773fb9dfc05fa">More...</a><br /></td></tr>
 <tr class="separator:a61b8a84a932b44fcc28773fb9dfc05fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -197,6 +197,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ade80fc6ce4032c56f11de6c5f440af66"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volVectorField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#ade80fc6ce4032c56f11de6c5f440af66">UREC</a></td></tr>
 <tr class="memdesc:ade80fc6ce4032c56f11de6c5f440af66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recontructed velocity field.  <a href="#ade80fc6ce4032c56f11de6c5f440af66">More...</a><br /></td></tr>
 <tr class="separator:ade80fc6ce4032c56f11de6c5f440af66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eb1161de150d3d8eed7b892d4f082c6"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volScalarField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#a7eb1161de150d3d8eed7b892d4f082c6">pRecFields</a></td></tr>
+<tr class="memdesc:a7eb1161de150d3d8eed7b892d4f082c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstructed pressure fields list.  <a href="#a7eb1161de150d3d8eed7b892d4f082c6">More...</a><br /></td></tr>
+<tr class="separator:a7eb1161de150d3d8eed7b892d4f082c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd13752a9b58e97bbf3ac0565fcb8b8a"><td class="memItemLeft" align="right" valign="top">PtrList&lt; volVectorField &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#acd13752a9b58e97bbf3ac0565fcb8b8a">uRecFields</a></td></tr>
+<tr class="memdesc:acd13752a9b58e97bbf3ac0565fcb8b8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recontructed velocity fields list.  <a href="#acd13752a9b58e97bbf3ac0565fcb8b8a">More...</a><br /></td></tr>
+<tr class="separator:acd13752a9b58e97bbf3ac0565fcb8b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5fda4db576cde08dd9ba188a0e10a37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structnewton__steadyNS.html">newton_steadyNS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classreducedSteadyNS.html#af5fda4db576cde08dd9ba188a0e10a37">newton_object</a></td></tr>
 <tr class="memdesc:af5fda4db576cde08dd9ba188a0e10a37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Newton object used to solve the non linear problem.  <a href="#af5fda4db576cde08dd9ba188a0e10a37">More...</a><br /></td></tr>
 <tr class="separator:af5fda4db576cde08dd9ba188a0e10a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,9 +238,9 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Class where it is implemented a reduced problem for the <b> steady Navier-stokes </b> problem. </p>
 <p class="">In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes equations. This class must be used together with the <a class="el" href="classsteadyNS.html" title="Implementation of a parametrized full order  steady NS problem  and preparation of the the reduced ma...">steadyNS</a> class </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#_a27">03steadyNS.C</a>, and <a class="el" href="06POD_RBF_8C-example.html#_a42">06POD_RBF.C</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="03steadyNS_8C-example.html#_a28">03steadyNS.C</a>, and <a class="el" href="06POD_RBF_8C-example.html#_a42">06POD_RBF.C</a>.</dd>
 </dl>
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00083">83</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00084">84</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9d1552e4e26f805478e1076c6a23eef3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9d1552e4e26f805478e1076c6a23eef3">&#9670;&nbsp;</a></span>reducedSteadyNS() <span class="overload">[1/2]</span></h2>
@@ -317,7 +323,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00099">99</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00100">100</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -340,12 +346,58 @@ Public Attributes</h2></td></tr>
 <p>Method to evaluate the online inf-sup constant. </p>
 <dl class="section return"><dt>Returns</dt><dd>return the reduced version of the inf-sup constant. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00279">279</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00290">290</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
-<a id="a84023acdb22cdef6fc84de1240979f96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84023acdb22cdef6fc84de1240979f96">&#9670;&nbsp;</a></span>reconstruct_PPE()</h2>
+<a id="af5705f5b58c5a7f3f7ae68493d98b700"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5705f5b58c5a7f3f7ae68493d98b700">&#9670;&nbsp;</a></span>reconstruct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reducedSteadyNS::reconstruct </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>exportFields</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">fileName&#160;</td>
+          <td class="paramname"><em>folder</em> = <code>&quot;./ITHACAoutput/online_rec&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>printevery</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Method to reconstruct the solutions from an online solve. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">exportFields</td><td>A boolean variable which determines whether to export fields or not </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder where to output the solutions in case on wants to </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">printevery</td><td>The printevery variabel, when it is 1 the function outputs all stored fields </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00244">244</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
+
+</div>
+</div>
+<a id="aea8d6033ef02096739002b03923e32f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea8d6033ef02096739002b03923e32f5">&#9670;&nbsp;</a></span>reconstruct_PPE()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -354,7 +406,7 @@ Public Attributes</h2></td></tr>
           <td class="memname">void reducedSteadyNS::reconstruct_PPE </td>
           <td>(</td>
           <td class="paramtype">fileName&#160;</td>
-          <td class="paramname"><em>folder</em> = <code>&quot;./ITHACAOutput/online_rec&quot;</code>, </td>
+          <td class="paramname"><em>folder</em> = <code>&quot;./ITHACAoutput/online_rec&quot;</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -380,47 +432,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00209">209</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
-
-</div>
-</div>
-<a id="a65f70e45d49d5c359d299f397e6fe009"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65f70e45d49d5c359d299f397e6fe009">&#9670;&nbsp;</a></span>reconstruct_sup()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void reducedSteadyNS::reconstruct_sup </td>
-          <td>(</td>
-          <td class="paramtype">fileName&#160;</td>
-          <td class="paramname"><em>folder</em> = <code>&quot;./ITHACAOutput/online_rec&quot;</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>printevery</em> = <code>1</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Method to reconstruct the solutions from an online solve with a supremizer stabilisation technique. </p>
-<p class="">stabilisation method</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">folder</td><td>The folder where to output the solutions </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">printevery</td><td>The printevery </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00243">243</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00210">210</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -459,7 +471,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00301">301</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00312">312</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -488,7 +500,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The rescaled velocity vector </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00363">363</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00374">374</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -516,7 +528,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00138">138</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00139">139</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -544,7 +556,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00145">145</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8C_source.html#l00146">146</a> of file <a class="el" href="ReducedSteadyNS_8C_source.html">ReducedSteadyNS.C</a>.</p>
 
 </div>
 </div>
@@ -563,7 +575,7 @@ Public Attributes</h2></td></tr>
 
 <p>Counter to count the online solutions. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00162">162</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00169">169</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -581,7 +593,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reduced matrix for normal forces. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00111">111</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00112">112</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -599,7 +611,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reduced matrix for tangent forces. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00108">108</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00109">109</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -617,7 +629,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of parametrized boundary conditions. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00159">159</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00166">166</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -635,7 +647,7 @@ Public Attributes</h2></td></tr>
 
 <p>Newton object used to solve the non linear problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00144">144</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00151">151</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -653,7 +665,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of pressure modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00153">153</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00160">160</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -671,7 +683,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of supremizer modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00156">156</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00163">163</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -689,7 +701,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of velocity modes. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00150">150</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00157">157</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -707,7 +719,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reduced viscosity in case of parametrized viscosity. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00120">120</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00121">121</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -725,7 +737,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of <a class="el" href="namespaceEigen.html">Eigen</a> matrices to store the online solution. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00123">123</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00124">124</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -743,7 +755,7 @@ Public Attributes</h2></td></tr>
 
 <p>parameters to be read from the ITHACAdict file </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00099">99</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00100">100</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -761,7 +773,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the modes for pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00129">129</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00130">130</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -779,7 +791,25 @@ Public Attributes</h2></td></tr>
 
 <p>Reconstructed pressure field. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00138">138</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00139">139</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+
+</div>
+</div>
+<a id="a7eb1161de150d3d8eed7b892d4f082c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7eb1161de150d3d8eed7b892d4f082c6">&#9670;&nbsp;</a></span>pRecFields</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt;volScalarField&gt; reducedSteadyNS::pRecFields</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reconstructed pressure fields list. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00145">145</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -797,7 +827,7 @@ Public Attributes</h2></td></tr>
 
 <p>Pointer to the FOM problem. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00147">147</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00154">154</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -815,7 +845,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the snapshots for pressure. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00135">135</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00136">136</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -833,7 +863,7 @@ Public Attributes</h2></td></tr>
 
 <p>Penalty Factor. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00165">165</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00172">172</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -851,7 +881,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the modes for velocity. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00126">126</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00127">127</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -869,7 +899,25 @@ Public Attributes</h2></td></tr>
 
 <p>Recontructed velocity field. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00141">141</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00142">142</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+
+</div>
+</div>
+<a id="acd13752a9b58e97bbf3ac0565fcb8b8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd13752a9b58e97bbf3ac0565fcb8b8a">&#9670;&nbsp;</a></span>uRecFields</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PtrList&lt;volVectorField&gt; reducedSteadyNS::uRecFields</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Recontructed velocity fields list. </p>
+
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00148">148</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -887,7 +935,7 @@ Public Attributes</h2></td></tr>
 
 <p>List of pointers to store the snapshots for velocity. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00132">132</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00133">133</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -905,7 +953,7 @@ Public Attributes</h2></td></tr>
 
 <p>Online inlet velocity vector. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00105">105</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00106">106</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -923,7 +971,7 @@ Public Attributes</h2></td></tr>
 
 <p>Vector to store the solution during the Newton procedure. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00117">117</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00118">118</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
@@ -941,7 +989,7 @@ Public Attributes</h2></td></tr>
 
 <p>Vector to store the previous solution during the Newton procedure. </p>
 
-<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00114">114</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ReducedSteadyNS_8H_source.html#l00115">115</a> of file <a class="el" href="ReducedSteadyNS_8H_source.html">ReducedSteadyNS.H</a>.</p>
 
 </div>
 </div>
