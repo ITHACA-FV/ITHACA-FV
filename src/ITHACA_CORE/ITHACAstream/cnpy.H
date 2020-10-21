@@ -47,12 +47,12 @@ npz_t npz_load(std::string fname);
 NpyArray npz_load(std::string fname, std::string varname);
 NpyArray npy_load(std::string fname);
 
-template<typename T>
-Eigen::Matrix < T, -1, -1 > load(Eigen::Matrix < T, -1, -1 > & mat,
+template<typename T, int dim>
+Eigen::Matrix < T, -1, dim > load(Eigen::Matrix < T, -1, dim > & mat,
                                  const std::string fname, std::string order = "rowMajor");
 
-template<typename T>
-void save(const Eigen::Matrix < T, -1, -1 > & mat, const std::string fname);
+template<typename T, int dim>
+void save(const Eigen::Matrix < T, -1, dim > & mat, const std::string fname);
 
 
 template<typename T> std::vector<char>& operator+=(std::vector<char>& lhs,

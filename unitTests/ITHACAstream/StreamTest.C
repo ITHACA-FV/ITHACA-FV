@@ -48,10 +48,26 @@ bool ReadAndWriteNPYMatrix()
     Eigen::MatrixXf MF_out = Eigen::MatrixXf::Random(5, 5);
     cnpy::save(MF_out, "arr_flo.npy");
     Eigen::MatrixXf MF_inp;
-    cnpy::load(MI_inp, "arr_flo.npy");
-    float difference_F = (MD_out - MD_inp).sum();
+    cnpy::load(MF_inp, "arr_flo.npy");
+    float difference_F = (MF_out - MF_inp).sum();
 
-    if (difference_I == 0 && difference_D == 0 && difference_F == 0)
+    Eigen::VectorXi VI_out = Eigen::VectorXi::Random(5);
+    cnpy::save(VI_out, "vec_int.npy");
+    Eigen::VectorXi VI_inp;
+    cnpy::load(VI_inp, "vec_int.npy");
+    int difference_IV = (VI_out - VI_inp).sum();
+    Eigen::VectorXd VD_out = Eigen::VectorXd::Random(5);
+    cnpy::save(VD_out, "vec_dou.npy");
+    Eigen::VectorXd VD_inp;
+    cnpy::load(VD_inp, "vec_dou.npy");
+    double difference_DV = (VD_out - VD_inp).sum();
+    Eigen::VectorXf VF_out = Eigen::VectorXf::Random(5);
+    cnpy::save(VF_out, "vec_flo.npy");
+    Eigen::VectorXf VF_inp;
+    cnpy::load(VF_inp, "vec_flo.npy");
+    float difference_FV = (VF_out - VF_inp).sum();
+
+    if (difference_I == 0 && difference_D == 0 && difference_F == 0 && difference_IV == 0 && difference_DV == 0 && difference_FV == 0)
     {
         esit = true;
         std::cout << "> Read And Write NPY matrix succeeded!" << std::endl;
