@@ -24,41 +24,22 @@ License
 Description
     Test of the Ensemble Kalman filter implementation
 SourceFiles
-    EnKFtest_stateRec.C 
+    01enKF.C 
 \*---------------------------------------------------------------------------*/
 
 
 #include "MUQ/Modeling/Distributions/Gaussian.h"
-#include "MUQ/Modeling/Distributions/DensityProduct.h"
-#include "MUQ/Modeling/Distributions/InverseGamma.h"
 #include "MUQ/Modeling/Distributions/Density.h"
 
-#include "MUQ/Utilities/AnyHelpers.h"
-#include "MUQ/Utilities/RandomGenerator.h"
-#include "MUQ/Utilities/StringUtilities.h"
-
-#include  <boost/property_tree/ptree.hpp>
-
 #include <iostream>
-#include "interpolation.H"
 #include "fvCFD.H"
-#include "fvOptions.H"
-#include "simpleControl.H"
 #include "IOmanip.H"
-#include "Time.H"
-#include "laplacianProblem.H"
-#include "inverseLaplacianProblem.H"
-#include "reducedInverseLaplacian.H"
-#include "ITHACAPOD.H"
 #include "ITHACAutilities.H"
 #include <Eigen/Dense>
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include "Foam2Eigen.H"
 #include "muq2ithaca.H"
-#include "mixedFvPatchFields.H"
-#include "cellDistFuncs.H"
-
 
 int main(int argc, char* argv[])
 {
@@ -113,7 +94,7 @@ int main(int argc, char* argv[])
     }
     M_Assert(Nsamples == sampleI, "Something went wrong in the sampling");
 
-    ITHACAstream::exportVector(time, "time", "eigen", outputFolder);
+    ITHACAstream::exportMatrix(time, "time", "eigen", outputFolder);
     ITHACAstream::exportMatrix(X, "X", "eigen", outputFolder);
 
     Eigen::VectorXd x = x0;
