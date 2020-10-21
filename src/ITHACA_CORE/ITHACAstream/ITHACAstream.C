@@ -218,6 +218,14 @@ void ITHACAstream::exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
     }
 }
 
+void ITHACAstream::exportVector(Eigen::VectorXd& vector,
+                                word Name, word type,
+                                word folder)
+{
+    Eigen::MatrixXd matrix = vector;
+    exportMatrix(matrix, Name, type, folder);
+}
+
 template<typename T>
 void ITHACAstream::exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
                                 word type, word folder)

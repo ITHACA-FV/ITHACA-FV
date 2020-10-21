@@ -132,6 +132,16 @@ class ITHACAstream
         static void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                                  word type = "python", word folder = "./Matrices");
 
+        //--------------------------------------------------------------------------
+        /// Export a Eigen vector in numpy, matlab or txt format
+        /// @param[in] vector    Eigen vector that you want to export.
+        /// @param[in] Name      Name of saved file.
+        /// @param[in] tipo      Format of the file: numpy (tipo="python"), matlab (tipo="matlab"), txt (tipo="eigen").
+        /// @param[in] folder    Directory in which the fali is saved.
+        ///
+        static void exportVector(Eigen::VectorXd& vector, word Name,
+                                 word type = "python", word folder = "./Matrices");
+
 
         //--------------------------------------------------------------------------
         /// Export the reduced tensor in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format
