@@ -319,6 +319,7 @@ volScalarField Foam2Eigen::Eigen2field(
     {
         field_out.ref()[i] = eigen_vector(i);
     }
+
     field_out.correctBoundaryConditions();
     return field_out;
 }

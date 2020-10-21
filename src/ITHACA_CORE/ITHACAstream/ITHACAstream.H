@@ -99,7 +99,7 @@ namespace ITHACAstream
 ///
 template<typename Type>
 void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
-                           word MatrixName);
+                    word MatrixName);
 
 //--------------------------------------------------------------------------
 /// Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format
@@ -114,7 +114,7 @@ void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
 ///
 template<typename T, int dim>
 void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix, word Name,
-                         word type = "python", word folder = "./Matrices");
+                  word type = "python", word folder = "./Matrices");
 
 //--------------------------------------------------------------------------
 /// Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format
@@ -128,7 +128,7 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix, word Name,
 /// @param[in] folder    Directory in which the file is saved.
 ///
 void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
-                         word type = "python", word folder = "./Matrices");
+                  word type = "python", word folder = "./Matrices");
 
 //--------------------------------------------------------------------------
 /// Export the reduced tensor in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format
@@ -143,7 +143,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
 ///
 template<typename T>
 void exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
-                         word type = "python", word folder = "./Matrices");
+                  word type = "python", word folder = "./Matrices");
 
 
 //----------------------------------------------------------------------
@@ -164,8 +164,8 @@ void exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-                        Lfield, word Name,
-                        fileName casename, int first_snap = 0, int n_snap = 0);
+                 Lfield, word Name,
+                 fileName casename, int first_snap = 0, int n_snap = 0);
 
 
 
@@ -187,9 +187,9 @@ void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-                        Lfield,
-                        GeometricField<Type, PatchField, GeoMesh>& field,
-                        fileName casename, int first_snap = 0, int n_snap = 0);
+                 Lfield,
+                 GeometricField<Type, PatchField, GeoMesh>& field,
+                 fileName casename, int first_snap = 0, int n_snap = 0);
 
 //----------------------------------------------------------------------
 /// Funtion to read a list of volVectorField from name of the field including all the intermediate snapshots
@@ -206,9 +206,9 @@ void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readMiddleFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-                             Lfield,
-                             GeometricField<Type, PatchField, GeoMesh>& field,
-                             fileName casename);
+                      Lfield,
+                      GeometricField<Type, PatchField, GeoMesh>& field,
+                      fileName casename);
 
 //----------------------------------------------------------------------
 /// Function to read a list of volVectorField from name of the field including only converged snapshots
@@ -242,8 +242,8 @@ void readConvergedFields(
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-                         field,
-                         word folder, word fieldname);
+                  field,
+                  word folder, word fieldname);
 
 //--------------------------------------------------------------------------
 /// Read a two dimensional matrix from a txt file in Eigen format
@@ -283,8 +283,8 @@ List <Eigen::MatrixXd> readMatrix(word folder, word mat_name);
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
-                           fileName subfolder, fileName folder,
-                           word fieldName);
+                    fileName subfolder, fileName folder,
+                    word fieldName);
 
 //--------------------------------------------------------------------------
 /// Export a field to file in a certain folder and subfolder
@@ -299,7 +299,7 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
-                           fileName subfolder, fileName folder);
+                    fileName subfolder, fileName folder);
 
 //--------------------------------------------------------------------------
 /// Export a list to file
@@ -327,7 +327,7 @@ void exportList(T& list, word folder, word filename);
 ///
 template <typename T, int Nrows, typename IND>
 void SaveSparseMatrix(Eigen::SparseMatrix<T, Nrows, IND>& m,
-                             word folder, word MatrixName);
+                      word folder, word MatrixName);
 
 //--------------------------------------------------------------------------
 /// Read an Eigen sparse matrix from a bynary format file
@@ -342,7 +342,7 @@ void SaveSparseMatrix(Eigen::SparseMatrix<T, Nrows, IND>& m,
 ///
 template <typename T, int Nrows, typename IND>
 void ReadSparseMatrix(Eigen::SparseMatrix<T, Nrows, IND>& m,
-                             word folder, word MatrixName);
+                      word folder, word MatrixName);
 
 //--------------------------------------------------------------------------
 /// Save a dense matrix to a binary format file
@@ -405,7 +405,7 @@ void ReadDenseTensor(TensorType& Tensor, word folder, word MatrixName);
 ///
 template <typename MatrixType>
 void SaveSparseMatrixList(List<MatrixType>& MatrixList, word folder,
-                                 word MatrixName);
+                          word MatrixName);
 
 //--------------------------------------------------------------------------
 /// Read a sparse matrix list to bynary files
@@ -420,7 +420,7 @@ void SaveSparseMatrixList(List<MatrixType>& MatrixList, word folder,
 ///
 template <typename T, int Nrows, typename IND>
 void ReadSparseMatrixList(List<Eigen::SparseMatrix<T, Nrows, IND>>& m,
-                                 word folder, word MatrixName);
+                          word folder, word MatrixName);
 
 //--------------------------------------------------------------------------
 /// Save a dense matrix list to bynary files
@@ -433,7 +433,7 @@ void ReadSparseMatrixList(List<Eigen::SparseMatrix<T, Nrows, IND>>& m,
 ///
 template <typename MatrixType>
 void SaveDenseMatrixList(List<MatrixType>& MatrixList, word folder,
-                                word MatrixName);
+                         word MatrixName);
 
 
 //--------------------------------------------------------------------------
@@ -447,7 +447,7 @@ void SaveDenseMatrixList(List<MatrixType>& MatrixList, word folder,
 ///
 template <typename MatrixType>
 void ReadDenseMatrixList(List<MatrixType>& m, word folder,
-                                word MatrixName);
+                         word MatrixName);
 
 //--------------------------------------------------------------------------
 /// Count the number of files with a certain name prefix, used by reading functions of list of matrices
