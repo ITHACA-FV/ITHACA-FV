@@ -6,7 +6,7 @@
 
 ## ITHACA-FV - In real Time Highly Advanced Computational Applications for Finite Volumes - ROMs for OpenFOAM ##
 
-[![YourActionName Actions Status](https://github.com/mathLab/ITHACA-FV/workflows/compilation/badge.svg)](https://github.com/mathLab/%22C%2FC%2B%2B+CI%22/actions)
+[![YourActionName Actions Status](https://github.com/mathLab/ITHACA-FV/workflows/compilation/badge.svg)](https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3Acompilation)
 
 <p align="center">
 <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3A%22C%2FC%2B%2B+CI%22"><img alt="CI" src="https://github.com/mathLab/ITHACA-FV/workflows/%22C%2FC%2B%2B+CI%22/badge.svg"></a>
