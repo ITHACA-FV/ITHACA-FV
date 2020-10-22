@@ -26,6 +26,6 @@ jobs:
 
     steps:
     - name: install OF
-      run: ${install}
+      run: ${{ matrix.install}}
     - name: make
-      run: ${compile}
+      run: ${{ matrix.compile}}
