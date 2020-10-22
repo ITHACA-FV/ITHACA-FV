@@ -26,6 +26,6 @@ jobs:
 
     steps:
     - name: install OF
-      run: ${{ matrix.install}}
+      run: pwd
     - name: make
-      run: ${{ matrix.compile}}
+      run: ls -l
