@@ -25,6 +25,8 @@ jobs:
             compile: sh .compileOF1812.sh
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: install OF
       run: ${{ matrix.install}}
     - name: make
