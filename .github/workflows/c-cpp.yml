@@ -15,17 +15,17 @@ jobs:
       matrix:
         include:
           - name: "OpenFOAM 6"
-            install: ./.installOF6.sh
-            compile: ./.compileOF6.sh
+            install: sh .installOF6.sh
+            compile: sh .compileOF6.sh
           - name: "OpenFOAM 5"
-            install: ./.installOF5.sh
-            compile: ./.compileOF5.sh
+            install: sh .installOF5.sh
+            compile: sh .compileOF5.sh
           - name: "OpenFOAM 1812"
             install: "cd ."
-            compile: ./.compileOF1812.sh
+            compile: sh .compileOF1812.sh
 
     steps:
     - name: install OF
-      run: cd .. && pwd
+      run: ${{ matrix.install}}
     - name: make
       run: ls -l
