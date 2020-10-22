@@ -15,8 +15,8 @@
   <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="OF1812" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1812/badge.svg">
 </a>  
     </a>
-    <a href="https://www.codacy.com/project/mathlab/ITHACA-FV/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/ITHACA-FV&amp;utm_campaign=Badge_Grade_Dashboard">
-        <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/d7ff770dfb954819a0e691ea03de281b">
+    <a href="https://www.codacy.com/gh/mathLab/ITHACA-FV/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/ITHACA-FV&amp;utm_campaign=Badge_Grade">
+        <img alt="Codacy Badge" src="https://app.codacy.com/project/badge/Grade/f51e1de0fd7c42a6a0be13889cbd4b0e">
     </a>
 </p>
 
