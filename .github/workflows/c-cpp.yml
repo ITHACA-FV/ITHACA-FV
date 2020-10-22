@@ -30,4 +30,4 @@ jobs:
     - name: install OF
       run: ${{ matrix.install}}
     - name: make
-      run: ls -l
+      run: ${{ matrix.compile}}
