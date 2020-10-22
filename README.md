@@ -6,6 +6,8 @@
 
 ## ITHACA-FV - In real Time Highly Advanced Computational Applications for Finite Volumes - ROMs for OpenFOAM ##
 
+<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3A%22C%2FC%2B%2B+CI%22"><img alt="Toolkit unit tests status" src="https://github.com/mathLab/ITHACA-FV/workflows/%3A%22C%2FC%2B%2B+CI%22/badge.svg"></a>
+
 <p align="center">
     <a href="https://www.gnu.org/licenses/lgpl-3.0" target="_blank">
         <img alt="Software License" src="https://img.shields.io/badge/License-LGPL%20v3-blue.svg">
