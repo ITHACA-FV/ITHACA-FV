@@ -15,14 +15,14 @@ jobs:
       matrix:
         include:
           - name: "OpenFOAM 6"
-            install: sh .installOF6.sh
-            compile: sh .compileOF6.sh
+            install: ./.installOF6.sh
+            compile: ./.compileOF6.sh
           - name: "OpenFOAM 5"
-            install: sh .installOF5.sh
-            compile: sh .compileOF5.sh
+            install: ./.installOF5.sh
+            compile: ./.compileOF5.sh
           - name: "OpenFOAM 1812"
             install: "cd ."
-            compile: sh .compileOF1812.sh
+            compile: ./.compileOF1812.sh
 
     steps:
     - name: Checkout
