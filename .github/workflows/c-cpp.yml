@@ -26,6 +26,6 @@ jobs:
 
     steps:
     - name: install OF
-      run: pwd
+      run: cd .. && pwd
     - name: make
       run: ls -l
