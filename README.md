@@ -9,10 +9,6 @@
 [![YourActionName Actions Status](https://github.com/mathLab/ITHACA-FV/workflows/compilation/badge.svg)](https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3Acompilation)
 
 <p align="center">
-<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3A%22C%2FC%2B%2B+CI%22"><img alt="CI" src="https://github.com/mathLab/ITHACA-FV/workflows/%22C%2FC%2B%2B+CI%22/badge.svg"></a>
-</p>
-
-<p align="center">
     <a href="https://www.gnu.org/licenses/lgpl-3.0" target="_blank">
         <img alt="Software License" src="https://img.shields.io/badge/License-LGPL%20v3-blue.svg">
     </a> <b> <font size="1"> OpenFOAM 6</font></b>  
