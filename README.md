@@ -12,7 +12,7 @@
     <a href="https://www.gnu.org/licenses/lgpl-3.0" target="_blank">
         <img alt="Software License" src="https://img.shields.io/badge/License-LGPL%20v3-blue.svg">
     </a> 
-  [![YourActionName Actions Status](https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg)](https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5)
+    <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5"><img alt="OF5" src="https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg"></a>  
     <a href="https://travis-ci.org/mathLab/ITHACA-FV" target="_blank">
         <img alt="Build Status" src="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5">
     </a> 
