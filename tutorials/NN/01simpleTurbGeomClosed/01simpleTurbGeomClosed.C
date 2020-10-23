@@ -48,7 +48,15 @@ class SteadyNSSimpleNN : public SteadyNSSimple
         SteadyNSSimpleNN(int argc, char* argv[])
             :
             SteadyNSSimple(argc, argv)
-        {};
+        {
+            Net->push_back(torch::nn::Linear(NUmodes, 128));
+            Net->push_back(torch::nn::ReLU());
+            Net->push_back(torch::nn::Linear(128, 64));
+            Net->push_back(torch::nn::ReLU());
+            Net->push_back(torch::nn::Linear(64, NNutModes));
+            optimizer = new torch::optim::Adam(Net->parameters(),
+                                               torch::optim::AdamOptions(2e-2));
+        };
 
         Eigen::MatrixXd bias_inp;
         Eigen::MatrixXd scale_inp;
@@ -112,13 +120,6 @@ class SteadyNSSimpleNN : public SteadyNSSimple
 
                 coeffL2U_tensor = eigenMatrix2torchTensor(coeffL2U);
                 coeffL2Nut_tensor = eigenMatrix2torchTensor(coeffL2Nut);
-                Net->push_back(torch::nn::Linear(NUmodes, 128));
-                Net->push_back(torch::nn::ReLU());
-                Net->push_back(torch::nn::Linear(128, 64));
-                Net->push_back(torch::nn::ReLU());
-                Net->push_back(torch::nn::Linear(64, NNutModes));
-                optimizer = new torch::optim::Adam(Net->parameters(),
-                                                   torch::optim::AdamOptions(2e-2));
                 ITHACAparameters* para = ITHACAparameters::getInstance();
                 int epochs = para->ITHACAdict->lookupOrDefault<int>("epochs", 20000);
 
@@ -154,11 +155,6 @@ class SteadyNSSimpleNN : public SteadyNSSimple
             // If the NN already exists, all the weights are just read
             else
             {
-                Net->push_back(torch::nn::Linear(NUmodes, 128));
-                Net->push_back(torch::nn::ReLU());
-                Net->push_back(torch::nn::Linear(128, 64));
-                Net->push_back(torch::nn::ReLU());
-                Net->push_back(torch::nn::Linear(64, NNutModes));
                 torch::load(Net, "./ITHACAoutput/Offline/NN/Net.pt");
                 ITHACAstream::ReadDenseMatrix(bias_inp, "./ITHACAoutput/Offline/NN/",
                                               "bias_inp");
@@ -433,8 +429,7 @@ class tutorial01cl : public SteadyNSSimpleNN
             }
             else if (!offline)
             {
-                Vector<double> Uinl(1, 0, 0);
-
+                //Vector<double> Uinl(1, 0, 0);
                 for (label i = 0; i < mu.rows(); i++)
                 {
                     _mesh().movePoints(point0);
@@ -453,7 +448,7 @@ class tutorial01cl : public SteadyNSSimpleNN
                     _mesh().movePoints(curXV);
                     ITHACAstream::writePoints(_mesh().points(), folder,
                                               name(i + 1) + "/polyMesh/");
-                    assignIF(U, Uinl);
+                    //assignIF(U, Uinl);
                     truthSolve2(mu_now, folder);
                     int middleF = 1;
 
@@ -468,6 +463,8 @@ class tutorial01cl : public SteadyNSSimpleNN
                         std::cout.clear();
                         middleF++;
                     }
+
+                    restart();
                 }
             }
         }
