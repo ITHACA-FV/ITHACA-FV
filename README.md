@@ -19,10 +19,9 @@
   <p align="center">
   <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5"><img alt="OF5" src="https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg"></a>
   <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF6"><img alt="OF6" src="https://github.com/mathLab/ITHACA-FV/workflows/OF6/badge.svg"></a>
-  <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="OF1812" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1812/badge.svg">
+  <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOFv1812"><img alt="OF1812" src="https://github.com/mathLab/ITHACA-FV/workflows/OFv1812/badge.svg">
 </a>
 </p>
-
 
 ### 0. Introduction
 **ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM 6.0**](https://openfoam.org/version/6), [**OpenFOAM 5.0**](https://openfoam.org/version/5-0) and [**OpenFOAM v1812**](https://www.openfoam.com/releases/openfoam-v1812/) but it can be easily adapted also to other versions of OpenFOAM. 
