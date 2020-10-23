@@ -4,6 +4,8 @@
   </a>
 </p>
 
+[![Android-master Actions Status](https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg](https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5)
+
 ## ITHACA-FV - In real Time Highly Advanced Computational Applications for Finite Volumes - ROMs for OpenFOAM ##
 
 <p align="center">
