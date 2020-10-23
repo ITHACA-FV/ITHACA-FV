@@ -4,23 +4,20 @@
   </a>
 </p>
 
-[![Android-master Actions Status](https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg)](https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5)
-
 ## ITHACA-FV - In real Time Highly Advanced Computational Applications for Finite Volumes - ROMs for OpenFOAM ##
 
 <p align="center">
 <a href="https://www.gnu.org/licenses/lgpl-3.0" target="_blank">
-        <img alt="Software License" src="https://img.shields.io/badge/License-LGPL%20v3-blue.svg">
+<img alt="Software License" src="https://img.shields.io/badge/License-LGPL%20v3-blue.svg">
 </a>
-    <a href="https://www.codacy.com/gh/mathLab/ITHACA-FV/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/ITHACA-FV&amp;utm_campaign=Badge_Grade">
-        <img alt="Codacy Badge" src="https://app.codacy.com/project/badge/Grade/f51e1de0fd7c42a6a0be13889cbd4b0e">
+<a href="https://www.codacy.com/gh/mathLab/ITHACA-FV/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/ITHACA-FV&amp;utm_campaign=Badge_Grade">
+<img alt="Codacy Badge" src="https://app.codacy.com/project/badge/Grade/f51e1de0fd7c42a6a0be13889cbd4b0e">
 </a>
-  </p>
-  <p align="center">
-  <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5"><img alt="OF5" src="https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg"></a>
-  <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF6"><img alt="OF6" src="https://github.com/mathLab/ITHACA-FV/workflows/OF6/badge.svg"></a>
-  <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOFv1812"><img alt="OF1812" src="https://github.com/mathLab/ITHACA-FV/workflows/OFv1812/badge.svg">
-</a>
+</p>
+<p align="center">
+<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5"><img alt="OF5" src="https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg"></a>
+<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF6"><img alt="OF6" src="https://github.com/mathLab/ITHACA-FV/workflows/OF6/badge.svg"></a>
+<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="OF1812" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1812/badge.svg"></a>
 </p>
 
 ### 0. Introduction
