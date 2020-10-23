@@ -17,7 +17,7 @@
   <p align="center">
   <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5"><img alt="OF5" src="https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg"></a>
   <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF6"><img alt="OF6" src="https://github.com/mathLab/ITHACA-FV/workflows/OF6/badge.svg"></a>
-  <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="OF1812" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1812/badge.svg">
+  <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="kkkOF1812" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1812/badge.svg">
 </a>
 </p>
 
