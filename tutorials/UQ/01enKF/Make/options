@@ -46,6 +46,6 @@ EXE_LIBS = \
     -lITHACA_THIRD_PARTY \
     -lITHACA_CORE \
     -L$(FOAM_USER_LIBBIN) \
-    -L/home/umberto/OpenFOAM/MUQinstall/lib \
+    -L$(MUQ_LIBRARIES)/lib \
     -lITHACA_MUQ \
     -lmuqModeling 
