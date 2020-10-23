@@ -267,33 +267,37 @@ int main(int argc, char* argv[])
     ITHACAstream::exportMatrix(pod_normal.online_solution, "red_coeffnew", "eigen",
                                "./ITHACAoutput/red_coeffnew");
     // Reconstruct and export the solution
-    pod_normal.reconstruct(true,"./ITHACAoutput/Lam_Rec/");
+    pod_normal.reconstruct(true, "./ITHACAoutput/Lam_Rec/");
     // Solve the full order problem for the online velocity values for the purpose of comparison
     // if (ITHACAutilities::check_folder("./ITHACAoutput/Offline_check") == false)
     // {
     //     example.offlineSolve(par_online, "./ITHACAoutput/Offline_check/");
     //     ITHACAutilities::createSymLink("./ITHACAoutput/Offline_check");
     // }
-    Eigen::MatrixXd errFrobU = ITHACAutilities::errorFrobRel(example.Ufield, pod_rbf.uRecFields);
-    Eigen::MatrixXd errFrobP =  ITHACAutilities::errorFrobRel(example.Pfield, pod_rbf.pRecFields);
-    Eigen::MatrixXd errFrobNut =  ITHACAutilities::errorFrobRel(example.nutFields, pod_rbf.nutRecFields);
+    Eigen::MatrixXd errFrobU = ITHACAutilities::errorFrobRel(example.Ufield,
+                               pod_rbf.uRecFields);
+    Eigen::MatrixXd errFrobP =  ITHACAutilities::errorFrobRel(example.Pfield,
+                                pod_rbf.pRecFields);
+    Eigen::MatrixXd errFrobNut =  ITHACAutilities::errorFrobRel(example.nutFields,
+                                  pod_rbf.nutRecFields);
     ITHACAstream::exportMatrix(errFrobU, "errFrobU", "matlab",
-        "./ITHACAoutput/ErrorsFrob/");
+                               "./ITHACAoutput/ErrorsFrob/");
     ITHACAstream::exportMatrix(errFrobP, "errFrobP", "matlab",
-        "./ITHACAoutput/ErrorsFrob/");
+                               "./ITHACAoutput/ErrorsFrob/");
     ITHACAstream::exportMatrix(errFrobNut, "errFrobNut", "matlab",
-        "./ITHACAoutput/ErrorsFrob/");
-
-
-    Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(example.Ufield, pod_rbf.uRecFields);
-    Eigen::MatrixXd errL2P =  ITHACAutilities::errorL2Rel(example.Pfield, pod_rbf.pRecFields);
-    Eigen::MatrixXd errL2Nut =  ITHACAutilities::errorL2Rel(example.nutFields, pod_rbf.nutRecFields);
+                               "./ITHACAoutput/ErrorsFrob/");
+    Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(example.Ufield,
+                             pod_rbf.uRecFields);
+    Eigen::MatrixXd errL2P =  ITHACAutilities::errorL2Rel(example.Pfield,
+                              pod_rbf.pRecFields);
+    Eigen::MatrixXd errL2Nut =  ITHACAutilities::errorL2Rel(example.nutFields,
+                                pod_rbf.nutRecFields);
     ITHACAstream::exportMatrix(errL2U, "errL2U", "matlab",
-        "./ITHACAoutput/ErrorsL2/");
+                               "./ITHACAoutput/ErrorsL2/");
     ITHACAstream::exportMatrix(errL2P, "errL2P", "matlab",
-        "./ITHACAoutput/ErrorsL2/");
+                               "./ITHACAoutput/ErrorsL2/");
     ITHACAstream::exportMatrix(errL2Nut, "errL2Nut", "matlab",
-    "./ITHACAoutput/ErrorsL2/");
+                               "./ITHACAoutput/ErrorsL2/");
     exit(0);
 }
 
