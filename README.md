@@ -18,6 +18,9 @@
 <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5"><img alt="OF5" src="https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg"></a>
 <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF6"><img alt="OF6" src="https://github.com/mathLab/ITHACA-FV/workflows/OF6/badge.svg"></a>
 <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="OF1812" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1812/badge.svg"></a>
+<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1906"><img alt="OF1906" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1906/badge.svg"></a>
+<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1912"><img alt="OF1912" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1912/badge.svg"></a>
+<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF2006"><img alt="OF2006" src="https://github.com/mathLab/ITHACA-FV/workflows/OF2006/badge.svg"></a>
 </p>
 
 ### 0. Introduction
