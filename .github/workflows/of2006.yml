@@ -1,0 +1,27 @@
+name: OF2006
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        include:
+          - name: "OpenFOAM 2006"
+            install: "cd ."
+            compile: ./.compileOF2006.sh
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: install OF
+      run: ${{ matrix.install}}
+    - name: make
+      run: ${{ matrix.compile}}
