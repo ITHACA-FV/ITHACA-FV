@@ -129,6 +129,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     folderN = 0;
     saver = 0;
     middleStep = para->ITHACAdict->lookupOrDefault<label>("middleStep", 20);
+    middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
 #if OFVER == 6
 
     while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
@@ -215,7 +216,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         laminarTransport.correct();
         turbulence->correct();
 
-        if (saver == middleStep)
+        if (saver == middleStep && middleExport)
         {
             saver = 0;
             folderN++;
@@ -236,9 +237,16 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     res_os << residual << std::endl;
     res_os.close();
     runTime.setTime(runTime.startTime(), 0);
-    ITHACAstream::exportSolution(U, name(folderN + 1), Folder + name(counter));
-    ITHACAstream::exportSolution(p, name(folderN + 1), Folder + name(counter));
-
+    if(middleExport)
+    {
+        ITHACAstream::exportSolution(U, name(folderN + 1), Folder + name(counter));
+        ITHACAstream::exportSolution(p, name(folderN + 1), Folder + name(counter));
+    }
+    else
+    {
+        ITHACAstream::exportSolution(U, name(counter), Folder);
+        ITHACAstream::exportSolution(p, name(counter), Folder);
+    }
     if (ITHACAutilities::isTurbulent())
     {
         auto nut = mesh.lookupObject<volScalarField>("nut");
