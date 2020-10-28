@@ -416,7 +416,6 @@ class tutorial01cl : public SteadyNSSimpleNN
             if (offline && ITHACAutilities::isTurbulent() &&
                     !ITHACAutilities::check_folder("./ITHACAoutput/POD/1"))
             {
-                std::cout << "giusto" << std::endl;
                 ITHACAstream::readMiddleFields(Ufield, U, folder);
                 ITHACAstream::readMiddleFields(Pfield, p, folder);
                 auto nut = _mesh().lookupObject<volScalarField>("nut");
