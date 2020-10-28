@@ -39,4 +39,5 @@ normalizedResidualLim 1e-5;
 // Inlet boundary conditions velocities.
 online_velocities vel.txt;
 
-
+// Do not export middle fields for this case
+middleExport false;

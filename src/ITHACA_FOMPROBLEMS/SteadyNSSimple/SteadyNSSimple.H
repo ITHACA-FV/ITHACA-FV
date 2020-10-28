@@ -96,6 +96,9 @@ class SteadyNSSimple: public steadyNS
         /// Distancing between intermediate steps (for turbulent case only)
         label middleStep;
 
+        /// Export also intermediate fields
+        bool middleExport;
+
         /// Counter to check if the middleStep has been reached or not (for turbulent case only)
         label saver;
 
