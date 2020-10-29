@@ -1,4 +1,5 @@
-docker pull openfoamplus/of_v1906_centos73
-docker run -ti -d --name foam1906 -v ${PWD}:/home/ofuser/app:rw openfoamplus/of_v1906_centos73 /bin/sh
-docker exec foam1906 /bin/sh -c "cd /home/ofuser/app; ls"
-docker exec foam1906 /bin/sh -c "source /opt/OpenFOAM/setImage_v1906.sh; cd /home/ofuser/app; source etc/bashrc; ./Allwmake -tau"
+docker pull ithacafv/openfoam1906-muq2-pytorch
+docker run -ti -d --name foam1906 -v "${PWD}":/home/ofuser/app:rw ithacafv/openfoam1906-muq2-pytorch /bin/bash
+docker exec foam1906 /bin/bash -c "cd /home/ofuser/app; ls"
+docker exec foam1906 /bin/bash -c "export MUQ_LIBRARIES=/home/Installations/MUQ_INSTALL; export MUQ_EXT_LIBRARIES=/home/Installations/MUQ_INSTALL/muq_external; export TORCH_LIBRARIES=/pytorch/torch; cd /home/ofuser/app; source /root/OpenFOAM/OpenFOAM-v1906/etc/bashrc; source etc/bashrc; ./Allwmake -taumq"
+
