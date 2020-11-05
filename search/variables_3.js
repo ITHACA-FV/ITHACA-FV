@@ -5,6 +5,10 @@ var searchData=
   ['c_5ftmp',['c_tmp',['../structnewton__msr__t.html#a5f35b4371846a73f21178d2653f25815',1,'newton_msr_t::c_tmp()'],['../structnewton__usmsr__t.html#a3aa1a2f9162f964c1eea7026bf1803e8',1,'newton_usmsr_t::c_tmp()']]],
   ['c_5ftotal_5fmatrix',['C_total_matrix',['../classUnsteadyNSTTurb.html#a4bd8443191ef3a0d47b079764f314dd0',1,'UnsteadyNSTTurb']]],
   ['coeffl2',['coeffL2',['../classSteadyNSSimple.html#a8a12b75587cb5fc02b927c4813b1675b',1,'SteadyNSSimple::coeffL2()'],['../classSteadyNSTurb.html#a0ef3b517b57211d367dc18dd8b506344',1,'SteadyNSTurb::coeffL2()'],['../classUnsteadyNSTurb.html#a7e87d1d649c7ca9bc0b517e6b321e518',1,'UnsteadyNSTurb::coeffL2()']]],
+  ['coeffl2nut',['coeffL2Nut',['../classSteadyNSSimpleNN.html#a4769f3f37420be2631dc4fb4800ad5cd',1,'SteadyNSSimpleNN']]],
+  ['coeffl2nut_5ftensor',['coeffL2Nut_tensor',['../classSteadyNSSimpleNN.html#aa0bb3b4be035c37517a73380c4e3d907',1,'SteadyNSSimpleNN']]],
+  ['coeffl2u',['coeffL2U',['../classSteadyNSSimpleNN.html#a7ef4b59951af5332c97d0e898a697471',1,'SteadyNSSimpleNN']]],
+  ['coeffl2u_5ftensor',['coeffL2U_tensor',['../classSteadyNSSimpleNN.html#a3830d01fb3b0b1b8f9cfd1a18f697675',1,'SteadyNSSimpleNN']]],
   ['convtensor',['convTensor',['../classSteadyNSTurbIntrusive.html#a50abbbae3c1baedc8faf25fceefc04f7',1,'SteadyNSTurbIntrusive::convTensor()'],['../classUnsteadyNSTurbIntrusive.html#a8352496b0ef142fea81eb98bf6c6e5e8',1,'UnsteadyNSTurbIntrusive::convTensor()']]],
   ['coordsys_5f',['coordSys_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#aed67f96dd314bae0595e82c4ac7ec413',1,'Foam::functionObjects::ITHACAforces::coordSys_()'],['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a00a5f48537f355adcd0964f59e0d1412',1,'Foam::functionObjects::ITHACAforces::coordSys_()']]],
   ['count_5fonline_5fsolve',['count_online_solve',['../classreducedLaplacian.html#a739ed968f0e1c8bbecb7625d101a02d9',1,'reducedLaplacian::count_online_solve()'],['../classreducedMSR.html#aac8b52a1afa4be88d9e149b888b2025b',1,'reducedMSR::count_online_solve()'],['../classreducedSteadyNS.html#a8c3ed2317079057b5ecbb62078cd389e',1,'reducedSteadyNS::count_online_solve()'],['../structnewton__unsteadyNSTTurb__sup.html#a94b42bf1935407a5ef30b4de46a48c6d',1,'newton_unsteadyNSTTurb_sup::count_online_solve()']]],
@@ -30,5 +34,6 @@ var searchData=
   ['ctotalppeavetensor',['cTotalPPEAveTensor',['../classUnsteadyNSTurb.html#a90fe868cbe03c3703b163f7997cbd13f',1,'UnsteadyNSTurb']]],
   ['ctotalppetensor',['cTotalPPETensor',['../classUnsteadyNSTurb.html#ac06b6cf23ac89e7a85e8869b575e8934',1,'UnsteadyNSTurb::cTotalPPETensor()'],['../classUnsteadyNSTurbIntrusive.html#a9c40b5743d85c4ea2590aa08a88b1dfb',1,'UnsteadyNSTurbIntrusive::cTotalPPETensor()']]],
   ['ctotaltensor',['cTotalTensor',['../classSteadyNSTurb.html#ab3a9ccfd128626b30372319b22a1eaeb',1,'SteadyNSTurb::cTotalTensor()'],['../classSteadyNSTurbIntrusive.html#a599d45a884fbeab67ae4d4bd0e6b673d',1,'SteadyNSTurbIntrusive::cTotalTensor()'],['../classUnsteadyNSTurb.html#a37e39b474c5126030d152bc6183e4793',1,'UnsteadyNSTurb::cTotalTensor()'],['../classUnsteadyNSTurbIntrusive.html#a25d29feb07be8bcd5474c4d8db4c1852',1,'UnsteadyNSTurbIntrusive::cTotalTensor()']]],
-  ['cumulativeconterr',['cumulativeContErr',['../classmsrProblem.html#a8578c191185fa643d4abb7674e1840d1',1,'msrProblem::cumulativeContErr()'],['../classsteadyNS.html#af957442b957adafa1f6603fc4c5578e3',1,'steadyNS::cumulativeContErr()']]]
+  ['cumulativeconterr',['cumulativeContErr',['../classmsrProblem.html#a8578c191185fa643d4abb7674e1840d1',1,'msrProblem::cumulativeContErr()'],['../classsteadyNS.html#af957442b957adafa1f6603fc4c5578e3',1,'steadyNS::cumulativeContErr()']]],
+  ['curx',['curX',['../classtutorial01cl.html#a066fb7b09fdb1f75b9b1b6a6c98b938f',1,'tutorial01cl']]]
 ];

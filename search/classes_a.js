@@ -6,6 +6,7 @@ var searchData=
   ['reducedlaplacian',['reducedLaplacian',['../classreducedLaplacian.html',1,'']]],
   ['reducedmsr',['reducedMSR',['../classreducedMSR.html',1,'']]],
   ['reducedproblem',['reducedProblem',['../classreducedProblem.html',1,'']]],
+  ['reducedsimplesteadynn',['reducedSimpleSteadyNN',['../classreducedSimpleSteadyNN.html',1,'']]],
   ['reducedsimplesteadyns',['reducedSimpleSteadyNS',['../classreducedSimpleSteadyNS.html',1,'']]],
   ['reducedsteadyns',['reducedSteadyNS',['../classreducedSteadyNS.html',1,'']]],
   ['reducedsteadynsturb',['ReducedSteadyNSTurb',['../classReducedSteadyNSTurb.html',1,'']]],
