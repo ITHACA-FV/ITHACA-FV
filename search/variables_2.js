@@ -35,6 +35,8 @@ var searchData=
   ['betas',['betas',['../classLRSensitivity.html#aa0049ae5e85f0ca0c9ffea9834dea1f6',1,'LRSensitivity']]],
   ['betate',['betaTE',['../msrProblem_2readConstants_8H.html#a5527a6a47fc3c1407fbf5b38d0fd3b23',1,'betaTE():&#160;readConstants.H'],['../unsteadymsrProblem_2readConstants_8H.html#a5527a6a47fc3c1407fbf5b38d0fd3b23',1,'betaTE():&#160;readConstants.H']]],
   ['betatot',['betaTot',['../msrProblem_2createConstants_8H.html#a4f9aad0b66997ebeb34e0b6b8292628b',1,'betaTot():&#160;createConstants.H'],['../unsteadymsrProblem_2createConstants_8H.html#a4f9aad0b66997ebeb34e0b6b8292628b',1,'betaTot():&#160;createConstants.H']]],
+  ['bias_5finp',['bias_inp',['../classSteadyNSSimpleNN.html#a1d253cdf681090e7425bd78b7b17e73c',1,'SteadyNSSimpleNN']]],
+  ['bias_5fout',['bias_out',['../classSteadyNSSimpleNN.html#a0e2af2cd2ee3e36f82a3f09410a232b4',1,'SteadyNSSimpleNN']]],
   ['bincumulative_5f',['binCumulative_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a3bd84a6c6acfa3706a92e989db877cbc',1,'Foam::functionObjects::ITHACAforces']]],
   ['bindir_5f',['binDir_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#ae683a3caad59248ef198a66d4d114fa7',1,'Foam::functionObjects::ITHACAforces']]],
   ['bindx_5f',['binDx_',['../classFoam_1_1functionObjects_1_1ITHACAforces.html#a71aaba6c4f029c04eb8b31f3bf34a82a',1,'Foam::functionObjects::ITHACAforces']]],

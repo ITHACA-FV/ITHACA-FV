@@ -73,6 +73,7 @@ var searchData=
   ['reducedproblem',['reducedProblem',['../classreducedProblem.html',1,'reducedProblem'],['../classreducedProblem.html#ae576badd6fdb3f709ade763c14ab91bc',1,'reducedProblem::reducedProblem()'],['../classreducedProblem.html#a2ae33639221dfc9914d8955f88f9aacd',1,'reducedProblem::reducedProblem(reductionProblem &amp;problem)']]],
   ['reducedproblem_2ec',['ReducedProblem.C',['../ReducedProblem_8C.html',1,'']]],
   ['reducedproblem_2eh',['ReducedProblem.H',['../ReducedProblem_8H.html',1,'']]],
+  ['reducedsimplesteadynn',['reducedSimpleSteadyNN',['../classreducedSimpleSteadyNN.html',1,'reducedSimpleSteadyNN'],['../classreducedSimpleSteadyNN.html#a4f6c5f69badc998ea925590cc5a559fd',1,'reducedSimpleSteadyNN::reducedSimpleSteadyNN()']]],
   ['reducedsimplesteadyns',['reducedSimpleSteadyNS',['../classreducedSimpleSteadyNS.html',1,'reducedSimpleSteadyNS'],['../classreducedSimpleSteadyNS.html#a9f5ce464366c1d989bad2acb46612292',1,'reducedSimpleSteadyNS::reducedSimpleSteadyNS()'],['../classreducedSimpleSteadyNS.html#a687a8fde6690d86ae87f01c78947c585',1,'reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple &amp;problem)']]],
   ['reducedsimplesteadyns_2ec',['ReducedSimpleSteadyNS.C',['../ReducedSimpleSteadyNS_8C.html',1,'']]],
   ['reducedsimplesteadyns_2eh',['ReducedSimpleSteadyNS.H',['../ReducedSimpleSteadyNS_8H.html',1,'']]],

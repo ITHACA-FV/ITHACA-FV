@@ -91,10 +91,12 @@ Inheritance diagram for SteadyNSSimple:</div>
  <div class="center">
   <img src="classSteadyNSSimple.png" usemap="#SteadyNSSimple_map" alt=""/>
   <map id="SteadyNSSimple_map" name="SteadyNSSimple_map">
-<area href="classsteadyNS.html" title="Implementation of a parametrized full order  steady NS problem  and preparation of the the reduced ma..." alt="steadyNS" shape="rect" coords="60,56,171,80"/>
-<area href="classreductionProblem.html" title="A general class for the implementation of a full order parametrized problem." alt="reductionProblem" shape="rect" coords="60,0,171,24"/>
-<area href="classtutorial12.html" alt="tutorial12" shape="rect" coords="0,168,111,192"/>
-<area href="classtutorial18.html" alt="tutorial18" shape="rect" coords="121,168,232,192"/>
+<area href="classsteadyNS.html" title="Implementation of a parametrized full order  steady NS problem  and preparation of the the reduced ma..." alt="steadyNS" shape="rect" coords="133,56,256,80"/>
+<area href="classreductionProblem.html" title="A general class for the implementation of a full order parametrized problem." alt="reductionProblem" shape="rect" coords="133,0,256,24"/>
+<area href="classSteadyNSSimpleNN.html" alt="SteadyNSSimpleNN" shape="rect" coords="0,168,123,192"/>
+<area href="classtutorial12.html" alt="tutorial12" shape="rect" coords="133,168,256,192"/>
+<area href="classtutorial18.html" alt="tutorial18" shape="rect" coords="266,168,389,192"/>
+<area href="classtutorial01cl.html" alt="tutorial01cl" shape="rect" coords="0,224,123,248"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -287,6 +289,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ac9169e670596b7195334b3956a8cb4d8"><td class="memItemLeft" align="right" valign="top">label&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSteadyNSSimple.html#ac9169e670596b7195334b3956a8cb4d8">middleStep</a></td></tr>
 <tr class="memdesc:ac9169e670596b7195334b3956a8cb4d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distancing between intermediate steps (for turbulent case only)  <a href="#ac9169e670596b7195334b3956a8cb4d8">More...</a><br /></td></tr>
 <tr class="separator:ac9169e670596b7195334b3956a8cb4d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a838f4638a633e65116e614d79edc1757"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSteadyNSSimple.html#a838f4638a633e65116e614d79edc1757">middleExport</a></td></tr>
+<tr class="memdesc:a838f4638a633e65116e614d79edc1757"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export also intermediate fields.  <a href="#a838f4638a633e65116e614d79edc1757">More...</a><br /></td></tr>
+<tr class="separator:a838f4638a633e65116e614d79edc1757"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac13b74b6440a5e495d9b3a1b9367b32"><td class="memItemLeft" align="right" valign="top">label&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSteadyNSSimple.html#aac13b74b6440a5e495d9b3a1b9367b32">saver</a></td></tr>
 <tr class="memdesc:aac13b74b6440a5e495d9b3a1b9367b32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counter to check if the middleStep has been reached or not (for turbulent case only)  <a href="#aac13b74b6440a5e495d9b3a1b9367b32">More...</a><br /></td></tr>
 <tr class="separator:aac13b74b6440a5e495d9b3a1b9367b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -710,7 +715,25 @@ Public Attributes</h2></td></tr>
 
 <p>Counter to save intermediate steps in the correct folder (for turbulent case only) </p>
 
-<p class="definition">Definition at line <a class="el" href="SteadyNSSimple_8H_source.html#l00103">103</a> of file <a class="el" href="SteadyNSSimple_8H_source.html">SteadyNSSimple.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SteadyNSSimple_8H_source.html#l00106">106</a> of file <a class="el" href="SteadyNSSimple_8H_source.html">SteadyNSSimple.H</a>.</p>
+
+</div>
+</div>
+<a id="a838f4638a633e65116e614d79edc1757"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a838f4638a633e65116e614d79edc1757">&#9670;&nbsp;</a></span>middleExport</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SteadyNSSimple::middleExport</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Export also intermediate fields. </p>
+
+<p class="definition">Definition at line <a class="el" href="SteadyNSSimple_8H_source.html#l00100">100</a> of file <a class="el" href="SteadyNSSimple_8H_source.html">SteadyNSSimple.H</a>.</p>
 
 </div>
 </div>
@@ -782,7 +805,7 @@ Public Attributes</h2></td></tr>
 
 <p>Initialization for the full pressure linear system. </p>
 
-<p class="definition">Definition at line <a class="el" href="SteadyNSSimple_8H_source.html#l00109">109</a> of file <a class="el" href="SteadyNSSimple_8H_source.html">SteadyNSSimple.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SteadyNSSimple_8H_source.html#l00112">112</a> of file <a class="el" href="SteadyNSSimple_8H_source.html">SteadyNSSimple.H</a>.</p>
 
 </div>
 </div>
@@ -836,7 +859,7 @@ Public Attributes</h2></td></tr>
 
 <p>Counter to check if the middleStep has been reached or not (for turbulent case only) </p>
 
-<p class="definition">Definition at line <a class="el" href="SteadyNSSimple_8H_source.html#l00100">100</a> of file <a class="el" href="SteadyNSSimple_8H_source.html">SteadyNSSimple.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SteadyNSSimple_8H_source.html#l00103">103</a> of file <a class="el" href="SteadyNSSimple_8H_source.html">SteadyNSSimple.H</a>.</p>
 
 </div>
 </div>
@@ -854,7 +877,7 @@ Public Attributes</h2></td></tr>
 
 <p>Initialization for the full velocity linear system. </p>
 
-<p class="definition">Definition at line <a class="el" href="SteadyNSSimple_8H_source.html#l00107">107</a> of file <a class="el" href="SteadyNSSimple_8H_source.html">SteadyNSSimple.H</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SteadyNSSimple_8H_source.html#l00110">110</a> of file <a class="el" href="SteadyNSSimple_8H_source.html">SteadyNSSimple.H</a>.</p>
 
 </div>
 </div>

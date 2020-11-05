@@ -26,6 +26,10 @@ var searchData=
   ['cnpy_2eh',['cnpy.H',['../cnpy_8H.html',1,'']]],
   ['code',['Code',['../namespaceColor.html#a20a7b04657c1d83fae5d54514d3f1622',1,'Color']]],
   ['coeffl2',['coeffL2',['../classSteadyNSSimple.html#a8a12b75587cb5fc02b927c4813b1675b',1,'SteadyNSSimple::coeffL2()'],['../classSteadyNSTurb.html#a0ef3b517b57211d367dc18dd8b506344',1,'SteadyNSTurb::coeffL2()'],['../classUnsteadyNSTurb.html#a7e87d1d649c7ca9bc0b517e6b321e518',1,'UnsteadyNSTurb::coeffL2()']]],
+  ['coeffl2nut',['coeffL2Nut',['../classSteadyNSSimpleNN.html#a4769f3f37420be2631dc4fb4800ad5cd',1,'SteadyNSSimpleNN']]],
+  ['coeffl2nut_5ftensor',['coeffL2Nut_tensor',['../classSteadyNSSimpleNN.html#aa0bb3b4be035c37517a73380c4e3d907',1,'SteadyNSSimpleNN']]],
+  ['coeffl2u',['coeffL2U',['../classSteadyNSSimpleNN.html#a7ef4b59951af5332c97d0e898a697471',1,'SteadyNSSimpleNN']]],
+  ['coeffl2u_5ftensor',['coeffL2U_tensor',['../classSteadyNSSimpleNN.html#a3830d01fb3b0b1b8f9cfd1a18f697675',1,'SteadyNSSimpleNN']]],
   ['color',['Color',['../namespaceColor.html',1,'']]],
   ['colormod_2eh',['colormod.H',['../colormod_8H.html',1,'']]],
   ['combinefields',['combineFields',['../classITHACAparallel.html#a00d0aef65b77f369d121588442c03789',1,'ITHACAparallel::combineFields(GeometricField&lt; Type, fvPatchField, volMesh &gt; &amp;field)'],['../classITHACAparallel.html#ab12550d7e28d7a417ef94d10b03f708a',1,'ITHACAparallel::combineFields(GeometricField&lt; scalar, fvPatchField, volMesh &gt; &amp;field)'],['../classITHACAparallel.html#a1e4cdbaf8be60013ceff9fb08bddeb66',1,'ITHACAparallel::combineFields(GeometricField&lt; vector, fvPatchField, volMesh &gt; &amp;field)']]],
@@ -91,5 +95,6 @@ var searchData=
   ['ctotalppetensor',['cTotalPPETensor',['../classUnsteadyNSTurb.html#ac06b6cf23ac89e7a85e8869b575e8934',1,'UnsteadyNSTurb::cTotalPPETensor()'],['../classUnsteadyNSTurbIntrusive.html#a9c40b5743d85c4ea2590aa08a88b1dfb',1,'UnsteadyNSTurbIntrusive::cTotalPPETensor()']]],
   ['ctotaltensor',['cTotalTensor',['../classSteadyNSTurb.html#ab3a9ccfd128626b30372319b22a1eaeb',1,'SteadyNSTurb::cTotalTensor()'],['../classSteadyNSTurbIntrusive.html#a599d45a884fbeab67ae4d4bd0e6b673d',1,'SteadyNSTurbIntrusive::cTotalTensor()'],['../classUnsteadyNSTurb.html#a37e39b474c5126030d152bc6183e4793',1,'UnsteadyNSTurb::cTotalTensor()'],['../classUnsteadyNSTurbIntrusive.html#a25d29feb07be8bcd5474c4d8db4c1852',1,'UnsteadyNSTurbIntrusive::cTotalTensor()']]],
   ['cumulativeconterr',['cumulativeContErr',['../classmsrProblem.html#a8578c191185fa643d4abb7674e1840d1',1,'msrProblem::cumulativeContErr()'],['../classsteadyNS.html#af957442b957adafa1f6603fc4c5578e3',1,'steadyNS::cumulativeContErr()']]],
-  ['curpoints',['curPoints',['../classFoam_1_1RBFMotionSolver.html#a75bc36bd89e20fe39b1559752b9cae31',1,'Foam::RBFMotionSolver']]]
+  ['curpoints',['curPoints',['../classFoam_1_1RBFMotionSolver.html#a75bc36bd89e20fe39b1559752b9cae31',1,'Foam::RBFMotionSolver']]],
+  ['curx',['curX',['../classtutorial01cl.html#a066fb7b09fdb1f75b9b1b6a6c98b938f',1,'tutorial01cl']]]
 ];

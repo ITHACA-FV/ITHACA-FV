@@ -9,6 +9,7 @@ var searchData=
   ['online_5fsolution_5ft',['online_solution_t',['../classreducedMSR.html#ac38eb0bf15f82d0556021ec5b5863e38',1,'reducedMSR']]],
   ['online_5fsolutiont',['online_solutiont',['../classReducedUnsteadyBB.html#a70abf0bbf420efed830bc48ca9e239ab',1,'ReducedUnsteadyBB::online_solutiont()'],['../classreducedUnsteadyNST.html#a613941d85ff624432173b270b2c912c0',1,'reducedUnsteadyNST::online_solutiont()']]],
   ['operator_5flist',['operator_list',['../classlaplacianProblem.html#a5d4f69f6a52cee59791fa9a3fcb4d159',1,'laplacianProblem']]],
+  ['optimizer',['optimizer',['../classSteadyNSSimpleNN.html#a8c2e32ad66444d273de541f03cd359f1',1,'SteadyNSSimpleNN']]],
   ['originaldt',['originalDT',['../classITHACADMD.html#a57759a63e0d78f1c1c87239ab4b83af0',1,'ITHACADMD']]],
   ['outytpe',['outytpe',['../classITHACAparameters.html#aee6b78be3329c6cc3d0aa25c9fa87e28',1,'ITHACAparameters']]]
 ];
