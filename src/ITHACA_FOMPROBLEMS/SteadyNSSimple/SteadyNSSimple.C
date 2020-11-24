@@ -124,8 +124,10 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     scalar presidual = 1;
     scalar csolve = 0;
     turbulence->read();
-    std::ofstream res_os;
-    res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
+    std::ofstream res_os;    
+    std::ofstream snaps_os;
+    res_os.open(Folder+"/residuals", std::ios_base::app);
+    snaps_os.open(Folder+"/snaps", std::ios_base::app);
     folderN = 0;
     saver = 0;
     middleStep = para->ITHACAdict->lookupOrDefault<label>("middleStep", 20);
@@ -235,7 +237,9 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     }
 
     res_os << residual << std::endl;
+    snaps_os << folderN+1 << std::endl;
     res_os.close();
+    snaps_os.close();
     runTime.setTime(runTime.startTime(), 0);
     if(middleExport)
     {
