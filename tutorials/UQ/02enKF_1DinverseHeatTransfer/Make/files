@@ -1,0 +1,3 @@
+02enKF_1DinverseHeatTransfer.C
+
+EXE = $(FOAM_USER_APPBIN)/02enKF_1DinverseHeatTransfer
