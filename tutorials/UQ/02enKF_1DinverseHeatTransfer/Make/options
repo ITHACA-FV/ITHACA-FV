@@ -1,0 +1,57 @@
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/reductionProblem \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/laplacianProblem \
+    -I$(LIB_ITHACA_SRC)/ITHACA_MUQ \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAregularization \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAparallel \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAPOD \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/EigenFunctions \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen/src \
+    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
+    -I$(MUQ_LIBRARIES)/include \
+    -I$(MUQ_EXT_LIBRARIES)/include\
+    -DOFVER=$${WM_PROJECT_VERSION%.*} \
+    -Wno-comment \
+    -g \
+    -std=c++11 \
+    -Wno-maybe-uninitialized \
+    -Wno-sign-compare \
+    -Wno-unknown-pragmas \
+    -Wno-unused-variable \
+    -Wno-unused-local-typedefs \
+    -Wno-old-style-cast \
+    -fopenmp \
+    -pthread \
+    -ldl \
+    -O3 \
+    -msse4 
+
+EXE_LIBS = \
+    -lITHACA_ROMPROBLEMS \
+    -lITHACA_FOMPROBLEMS \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lfvOptions \
+    -lsampling \
+    -lfluidThermophysicalModels \
+    -lradiationModels \
+    -lspecie \
+    -lforces \
+    -lfileFormats \
+    -lITHACA_THIRD_PARTY \
+    -lITHACA_CORE \
+    -L$(FOAM_USER_LIBBIN) \
+    -L$(MUQ_LIBRARIES)/lib \
+    -lITHACA_MUQ \
+    -lmuqModeling 
