@@ -33,6 +33,7 @@ var searchData=
   ['unsteadynsturbintrusive_2ec',['UnsteadyNSTurbIntrusive.C',['../UnsteadyNSTurbIntrusive_8C.html',1,'']]],
   ['unsteadynsturbintrusive_2eh',['UnsteadyNSTurbIntrusive.H',['../UnsteadyNSTurbIntrusive_8H.html',1,'']]],
   ['uomfield',['Uomfield',['../classmsrProblem.html#a2d1aca07b9bb8b82dc70e266b787fcb7',1,'msrProblem::Uomfield()'],['../classsteadyNS.html#a90ad18c91dc2643525fa5197317d8cfb',1,'steadyNS::Uomfield()']]],
+  ['updatebc',['updateBC',['../classEnKF__1DinverseHeatTransfer.html#a8b394737d82068399dceb2294916af3a',1,'EnKF_1DinverseHeatTransfer']]],
   ['updatecoeffs',['updateCoeffs',['../classFoam_1_1incompressible_1_1turbulentHeatFluxTemperatureFvPatchScalarField.html#acf093732c6307a7062cb4df23c72b22d',1,'Foam::incompressible::turbulentHeatFluxTemperatureFvPatchScalarField']]],
   ['updateconsts_2eh',['updateConsts.H',['../msrProblem_2updateConsts_8H.html',1,'(Global Namespace)'],['../unsteadymsrProblem_2updateConsts_8H.html',1,'(Global Namespace)']]],
   ['updatek_2eh',['updateK.H',['../msrProblem_2updateK_8H.html',1,'(Global Namespace)'],['../unsteadymsrProblem_2updateK_8H.html',1,'(Global Namespace)']]],
