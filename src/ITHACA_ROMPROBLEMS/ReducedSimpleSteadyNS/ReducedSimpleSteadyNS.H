@@ -115,7 +115,7 @@ class reducedSimpleSteadyNS: public reducedProblem
         Eigen::MatrixXd vel_now;
 
         /// Maximum iterations number for the online step
-        int maxIterOn;
+        int maxIterOn = 1000;
 
         /// Counter.
         int counter = 0;

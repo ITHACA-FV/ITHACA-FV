@@ -141,6 +141,7 @@ void steadyNS::solvesupremizer(word type)
     {
         P_sup = Pmodes;
     }
+
     else if (type == "snapshots")
     {
         P_sup = Pfield;
@@ -167,11 +168,13 @@ void steadyNS::solvesupremizer(word type)
         {
             ITHACAstream::read_fields(supfield, Usup, "./ITHACAoutput/supfield/");
         }
+
         else
         {
             ITHACAstream::read_fields(supmodes, Usup, "./ITHACAoutput/supremizer/");
         }
     }
+
     else
     {
         volVectorField U = _U();
@@ -224,6 +227,7 @@ void steadyNS::solvesupremizer(word type)
 
             ITHACAutilities::createSymLink("./ITHACAoutput/supfield");
         }
+
         else
         {
             for (label i = 0; i < Pmodes.size(); i++)
@@ -272,10 +276,12 @@ void steadyNS::liftSolve()
             {
                 assignBC(Ulift, j, v1);
             }
+
             else if (U.boundaryField()[BCind].type() == "fixedValue")
             {
                 assignBC(Ulift, j, v0);
             }
+
             else
             {
             }
@@ -379,6 +385,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/", B_str);
         }
+
         else
         {
             B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
@@ -391,6 +398,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(K_matrix, "./ITHACAoutput/Matrices/", K_str);
         }
+
         else
         {
             K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
@@ -403,6 +411,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/", M_str);
         }
+
         else
         {
             M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
@@ -414,6 +423,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(D_matrix, "./ITHACAoutput/Matrices/", D_str);
         }
+
         else
         {
             D_matrix = laplacian_pressure(NPmodes);
@@ -426,6 +436,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(BC3_matrix, "./ITHACAoutput/Matrices/", bc3_str);
         }
+
         else
         {
             BC3_matrix = pressure_BC3(NUmodes, NPmodes);
@@ -438,6 +449,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(BC4_matrix, "./ITHACAoutput/Matrices/", bc4_str);
         }
+
         else
         {
             BC4_matrix = pressure_BC4(NUmodes, NPmodes);
@@ -450,6 +462,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseTensor(C_tensor, "./ITHACAoutput/Matrices/", C_str);
         }
+
         else
         {
             C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
@@ -462,6 +475,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseTensor(gTensor, "./ITHACAoutput/Matrices/", G_str);
         }
+
         else
         {
             gTensor = divMomentum(NUmodes, NPmodes);
@@ -473,6 +487,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
     }
+
     else
     {
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
@@ -577,6 +592,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/", B_str);
         }
+
         else
         {
             B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
@@ -589,6 +605,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(K_matrix, "./ITHACAoutput/Matrices/", K_str);
         }
+
         else
         {
             K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
@@ -601,6 +618,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(P_matrix, "./ITHACAoutput/Matrices/", P_str);
         }
+
         else
         {
             P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
@@ -613,6 +631,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/", M_str);
         }
+
         else
         {
             M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
@@ -625,6 +644,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         {
             ITHACAstream::ReadDenseTensor(C_tensor, "./ITHACAoutput/Matrices/", C_str);
         }
+
         else
         {
             C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
@@ -636,6 +656,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
     }
+
     else
     {
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
@@ -1214,11 +1235,11 @@ List <Eigen::MatrixXd> steadyNS::pressure_BC2(label NUmodes, label NPmodes)
     return BC2_matrix;
 }
 
-Eigen::Tensor<double, 3 > steadyNS::pressureBC2(label NUmodes, label NPmodes)
+Eigen::Tensor<double, 3> steadyNS::pressureBC2(label NUmodes, label NPmodes)
 {
     label pressureBC1Size = NPmodes;
     label pressureBC2Size = NUmodes + NSUPmodes + liftfield.size();
-    Eigen::Tensor<double, 3 > bc2Tensor;
+    Eigen::Tensor<double, 3> bc2Tensor;
     fvMesh& mesh = _mesh();
     bc2Tensor.resize(pressureBC1Size, pressureBC2Size, pressureBC2Size);
 
@@ -1327,11 +1348,11 @@ Eigen::MatrixXd steadyNS::pressure_BC4(label NUmodes, label NPmodes)
     return BC4_matrix;
 }
 
-List< Eigen::MatrixXd > steadyNS::bcVelocityVec(label NUmodes,
+List<Eigen::MatrixXd> steadyNS::bcVelocityVec(label NUmodes,
         label NSUPmodes)
 {
     label BCsize = NUmodes + NSUPmodes;
-    List < Eigen::MatrixXd > bcVelVec(inletIndex.rows());
+    List <Eigen::MatrixXd> bcVelVec(inletIndex.rows());
 
     for (label j = 0; j < inletIndex.rows(); j++)
     {
@@ -1355,12 +1376,12 @@ List< Eigen::MatrixXd > steadyNS::bcVelocityVec(label NUmodes,
     return bcVelVec;
 }
 
-List< Eigen::MatrixXd > steadyNS::bcVelocityMat(label NUmodes,
+List<Eigen::MatrixXd> steadyNS::bcVelocityMat(label NUmodes,
         label NSUPmodes)
 {
     label BCsize = NUmodes + NSUPmodes;
     label BCUsize = inletIndex.rows();
-    List < Eigen::MatrixXd > bcVelMat(BCUsize);
+    List <Eigen::MatrixXd> bcVelMat(BCUsize);
 
     for (label j = 0; j < inletIndex.rows(); j++)
     {
@@ -1775,11 +1796,11 @@ void steadyNS::forcesMatrices(label nModes)
 
 void steadyNS::restart()
 {
-    _runTime().objectRegistry::clear();
-    _mesh().objectRegistry::clear();
+    //_runTime().objectRegistry::clear();
+    //_mesh().objectRegistry::clear();
     // _mesh.clear();
     // _runTime.clear();
-    _simple.clear();
+    //_simple.clear();
     _p.clear();
     _U.clear();
     _phi.clear();
@@ -1789,13 +1810,13 @@ void steadyNS::restart()
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
     Foam::fvMesh& mesh = _mesh();
-    _simple = autoPtr<simpleControl>
-              (
-                  new simpleControl
-                  (
-                      mesh
-                  )
-              );
+    // _simple = autoPtr<simpleControl>
+    //           (
+    //               new simpleControl
+    //               (
+    //                   mesh
+    //               )
+    //           );
     simpleControl& simple = _simple();
     Info << "ReReading field p\n" << endl;
     _p = autoPtr<volScalarField>

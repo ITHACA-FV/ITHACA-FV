@@ -20,3 +20,4 @@ tutorials_dev
 **/UtilitiesTest
 *~
 *.foam
+**/__pycache__
