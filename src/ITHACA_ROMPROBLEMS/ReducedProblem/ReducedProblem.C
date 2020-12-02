@@ -137,6 +137,18 @@ Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys,
     return y;
 }
 
+Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys, 
+	Eigen::MatrixXd RHS, Eigen::MatrixXd x, Eigen::VectorXd& residual, 
+	const std::string solverType)
+{
+    const Eigen::MatrixXd& bc = Eigen::MatrixXd::Zero(0, 0);
+    LinSys[1] =  LinSys[1] + RHS;	
+    Eigen::MatrixXd y = reducedProblem::solveLinearSys(LinSys, x, residual, bc,
+                        solverType);
+    return y;
+}
+
+
 // ****************** //
 // class onlineInterp //
 // ****************** //

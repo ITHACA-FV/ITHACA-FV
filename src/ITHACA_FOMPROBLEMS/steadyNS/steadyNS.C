@@ -78,8 +78,8 @@ steadyNS::steadyNS(int argc, char* argv[])
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
-    M_Assert(bcMethod == "lift" || bcMethod == "penalty",
-             "The BC method must be set to lift or penalty in ITHACAdict");
+    M_Assert(bcMethod == "lift" || bcMethod == "penalty"|| bcMethod == "penalty",
+             "The BC method must be set to lift or penalty or none in ITHACAdict");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -681,6 +681,150 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     }
 }
 
+void steadyNS::discretizeThenProject(fileName folder, label NU, label NP, label NSUP)
+{
+    NUmodes = NU;
+    NPmodes = NP;
+    NSUPmodes = 0;
+    L_U_SUPmodes.resize(0);
+
+    if (liftfield.size() != 0)
+    {
+        for (label k = 0; k < liftfield.size(); k++)
+        {
+            L_U_SUPmodes.append(liftfield[k]);
+        }
+    }
+
+    if (NUmodes != 0)
+    {
+        for (label k = 0; k < NUmodes; k++)
+        {
+            L_U_SUPmodes.append(Umodes[k]);
+        }
+    }
+
+    if (bcMethod == "none")
+    {
+	for (label j = 0; j < NUmodes; j++)
+        {
+	    forAll( L_U_SUPmodes[j].boundaryFieldRef()[0], l)
+	    {
+		L_U_SUPmodes[j].boundaryFieldRef()[0][l].component(vector::X) = 0;
+		L_U_SUPmodes[j].boundaryFieldRef()[0][l].component(vector::Y) = 0;
+	       	L_U_SUPmodes[j].boundaryFieldRef()[0][l].component(vector::Z) = 0;
+	    }
+	}	    
+    }
+
+
+
+    if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
+    {
+      
+        word B_str = "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + B_str))
+        {
+            ITHACAstream::ReadDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/", B_str);
+        }
+        else
+        {
+            B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word K_str = "K_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_" + name(NPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + K_str))
+        {
+            ITHACAstream::ReadDenseMatrix(K_matrix, "./ITHACAoutput/Matrices/", K_str);
+        }
+        else
+        {
+            K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
+        }
+        
+        word P_str = "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_" + name(NPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + P_str))
+        {
+            ITHACAstream::ReadDenseMatrix(P_matrix, "./ITHACAoutput/Matrices/", P_str);
+        }
+        else
+        {
+            P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
+        }
+
+        word C_str = "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + C_str))
+        {
+            ITHACAstream::ReadDenseTensor(C_tensor, "./ITHACAoutput/Matrices/", C_str);
+        }
+        else
+        {
+            C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+        }
+        
+        word Cf_str = "Cf_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes) + "_t";
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + Cf_str))
+        {
+            ITHACAstream::ReadDenseTensor(Cf_tensor, "./ITHACAoutput/Matrices/", Cf_str);
+        }
+        else
+        {
+            Cf_tensor = convective_term_flux_tens(NUmodes, NPmodes, NSUPmodes);
+        }
+        
+        word BP_str = "BP_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + BP_str))
+        {
+            ITHACAstream::ReadDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/", BP_str);
+        }
+        else
+        {
+            BP_matrix = diffusive_term_flux_method(NUmodes, NPmodes, NSUPmodes);
+        }
+        
+        word BC_str = "BC_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                         NSUPmodes);
+
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + BC_str))
+        {
+            ITHACAstream::ReadDenseMatrix(BC_matrix, "./ITHACAoutput/Matrices/", BC_str);
+        }
+        else
+        {
+            BC_matrix = boundary_term_flux_method(NUmodes, NPmodes, NSUPmodes);
+        }
+        
+        LinSysDiv = pressure_gradient_term_linsys_div(NPmodes);
+	LinSysDiff = pressure_gradient_term_linsys_diff(NPmodes);
+	LinSysConv = pressure_gradient_term_linsys_conv(NPmodes);             
+    }
+    else
+    {
+        B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
+        C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+        K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
+	P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
+	BP_matrix = diffusive_term_flux_method(NUmodes, NPmodes, NSUPmodes);
+	BC_matrix = boundary_term_flux_method(NUmodes, NPmodes, NSUPmodes);
+        Cf_tensor = convective_term_flux_tens(NUmodes, NPmodes, NSUPmodes);
+	LinSysDiv = pressure_gradient_term_linsys_div(NPmodes);
+	LinSysDiff = pressure_gradient_term_linsys_diff(NPmodes);
+	LinSysConv = pressure_gradient_term_linsys_conv(NPmodes);
+    }
+}
+
 // * * * * * * * * * * * * * * Momentum Eq. Methods * * * * * * * * * * * * * //
 
 Eigen::MatrixXd steadyNS::diffusive_term(label NUmodes, label NPmodes,
@@ -1224,6 +1368,235 @@ List< Eigen::MatrixXd > steadyNS::bcVelocityMat(label NUmodes,
     ITHACAstream::exportMatrix(bcVelMat, "bcVelMat", "eigen",
                                "./ITHACAoutput/Matrices/bcVelMat");
     return bcVelMat;
+}
+
+Eigen::MatrixXd steadyNS::diffusive_term_flux_method(label NUmodes, label NPmodes, label NSUPmodes)
+{
+    label BPsize1 = NPmodes;
+    label BPsize2 = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::MatrixXd BP_matrix(BPsize1, BPsize2);
+
+    dimensionedScalar dt_fake
+    (
+        "dt_fake",
+        dimensionSet(0, 0, 1, 0, 0, 0, 0),
+        scalar(1.0)
+    );
+    dimensionedScalar nu_fake
+    (
+        "nu_fake",
+        dimensionSet(0, 2, -1, 0, 0, 0, 0),
+        scalar(1.0)
+    );
+
+    volVectorField L_U_SUPmodesaux(L_U_SUPmodes[0]);
+    for (label i = 0; i < BPsize1; i++)
+    {
+        for (label j = 0; j < BPsize2; j++)
+        {
+	    L_U_SUPmodesaux = dt_fake*fvc::laplacian(
+                    nu_fake, L_U_SUPmodes[j]);
+
+            BP_matrix(i, j) = fvc::domainIntegrate(Pmodes[i]*
+		   fvc::div(L_U_SUPmodesaux)).value();
+        }
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(BP_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    ITHACAstream::SaveDenseMatrix(BP_matrix, "./ITHACAoutput/Matrices/",
+                                  "BP_" + name(NPmodes));
+    return BP_matrix;
+}
+
+Eigen::MatrixXd steadyNS::boundary_term_flux_method(label NUmodes, label NPmodes, label NSUPmodes)
+{
+    label BCsize = NUmodes + NSUPmodes + liftfield.size();
+    word bw_str = "bw";
+    word matname = "./ITHACAoutput/BCvector/" + bw_str + "0" + "_mat.txt";
+    Eigen::MatrixXd bw = ITHACAstream::readMatrix(matname);
+
+    Eigen::MatrixXd BC_matrix(BCsize,1);
+    Eigen::VectorXd ModeVector;
+ 
+    for (label i = 0; i < BCsize; i++)
+    {
+	ModeVector = Foam2Eigen::field2Eigen(L_U_SUPmodes[i]);
+	BC_matrix(i,0) = ModeVector.dot(bw.col(0));
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(BC_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    ITHACAstream::SaveDenseMatrix(BC_matrix, "./ITHACAoutput/Matrices/",
+                                  "BC_" + name(liftfield.size()) + "_" + 
+                                  name(NUmodes) + "_" + name(NSUPmodes));
+    return BC_matrix;
+}
+
+Eigen::Tensor<double, 3> steadyNS::convective_term_flux_tens(label NUmodes,
+        label NPmodes, label NSUPmodes)
+{
+    dimensionedScalar dt_fake
+    (
+        "dt_fake",
+        dimensionSet(0, 0, 1, 0, 0, 0, 0),
+        scalar(1.0)
+    );
+
+    label Csize1 = NUmodes + NSUPmodes + liftfield.size();
+    label Csize2 = NPmodes;
+    Eigen::Tensor<double, 3> Cf_tensor;
+    volVectorField L_U_SUPmodesaux(L_U_SUPmodes[0]);
+
+    Cf_tensor.resize(Csize2, Csize1, Csize1);
+    for (label i = 0; i < Csize2; i++)
+    {
+        for (label j = 0; j < Csize1; j++)
+        {
+            for (label k = 0; k < Csize1; k++)
+            {
+	        L_U_SUPmodesaux = dt_fake*(fvc::div(
+                                      fvc::flux(L_U_SUPmodes[j]),
+                                      L_U_SUPmodes[k]));
+
+		Cf_tensor(i, j, k) = fvc::domainIntegrate(Pmodes[i] 
+					* fvc::div(L_U_SUPmodesaux)).value();
+	    }
+	}
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(Cf_tensor, sumOp<Eigen::Tensor<double, 3>>());
+    }
+
+    ITHACAstream::SaveDenseTensor(Cf_tensor, "./ITHACAoutput/Matrices/",
+                                  "Cf_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                      NSUPmodes) + "_t");
+    return Cf_tensor;
+}
+
+List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_div(label NPmodes)
+{
+    dimensionedScalar dt_fake
+    (
+        "dt_fake",
+        dimensionSet(0, 0, 1, 0, 0, 0, 0),
+        scalar(1.0)
+    );
+    dimensionedScalar nu_fake
+    (
+        "nu_fake",
+        dimensionSet(0, 2, -1, 0, 0, 0, 0),
+        scalar(1.0)
+    );
+
+    volVectorField Uinl("Uinl",_U());
+    Vector<double> inl(0, 0, 0);
+    assignIF(Uinl, inl);
+    forAll( Uinl.mesh().boundary(), l)
+    {
+	if ( Uinl.boundaryField()[l].type() == "zeroGradient" ||  
+		    Uinl.boundaryField()[l].type() ==  "fixedGradient")
+	{
+	    ITHACAutilities::changeBCtype(Uinl,"fixedValue",l);
+	    assignBC(Uinl,l,inl);
+	}
+    }
+  
+    volScalarField p(_p);
+    fvScalarMatrix pEqn
+    (
+	fvm::laplacian(p) == (1/dt_fake)*fvc::div(Uinl)
+    );
+    pEqn.setReference(0, 0);
+    LinSysDiv = Pmodes.project(pEqn,NPmodes);
+
+    return LinSysDiv;
+}
+
+List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_conv(label NPmodes)
+{ 
+    dimensionedScalar dt_fake
+    (
+        "dt_fake",
+        dimensionSet(0, 0, 1, 0, 0, 0, 0),
+        scalar(1.0)
+    );
+ 
+    volVectorField Uinl("Uinl",_U());
+    Vector<double> inl(0, 0, 0);
+    assignIF(Uinl, inl);
+    forAll(Uinl.mesh().boundary(),l)
+    {
+	if (Uinl.boundaryField()[l].type() == "zeroGradient" ||  
+		    Uinl.boundaryField()[l].type() ==  "fixedGradient")
+	{
+	    ITHACAutilities::changeBCtype(Uinl,"fixedValue",l);
+	    assignBC(Uinl,l,inl);
+	}
+    }
+
+    volVectorField Caux(L_U_SUPmodes[0]);
+    Caux = dt_fake * (-fvc::div(fvc::flux(Uinl),Uinl));
+ 
+    volScalarField p(_p); 	
+    fvScalarMatrix pEqn
+    (
+	 fvm::laplacian(p) == (1/dt_fake)*fvc::div(Caux)
+    );
+    pEqn.setReference(0, 0);
+    LinSysConv = Pmodes.project(pEqn,NPmodes);
+
+    return LinSysConv;
+}
+
+List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_diff(label NPmodes)
+{
+    dimensionedScalar nu_fake
+    (
+        "nu_fake",
+        dimensionSet(0, 2, -1, 0, 0, 0, 0),
+        scalar(1.0)
+    );
+    dimensionedScalar dt_fake
+    (
+        "dt_fake",
+        dimensionSet(0, 0, 1, 0, 0, 0, 0),
+        scalar(1.0)
+    );
+
+    volVectorField Uinl("Uinl",_U());
+    Vector<double> inl(0, 0, 0);
+    assignIF(Uinl, inl);
+    forAll(Uinl.mesh().boundary(),l)
+    {
+	if (Uinl.boundaryField()[l].type() == "zeroGradient" ||  
+		    Uinl.boundaryField()[l].type() ==  "fixedGradient")
+	{
+	    ITHACAutilities::changeBCtype(Uinl,"fixedValue",l);
+	    assignBC(Uinl,l,inl);
+	}
+    }
+
+    volVectorField Daux(L_U_SUPmodes[0]);
+    Daux = dt_fake * fvc::laplacian(nu_fake,Uinl);
+
+    volScalarField p(_p);
+    fvScalarMatrix pEqn
+    (
+         fvm::laplacian(p) == (1/dt_fake)*fvc::div(Daux)
+    );
+    pEqn.setReference(0, 0);
+    LinSysDiff = Pmodes.project(pEqn,NPmodes);
+
+    return LinSysDiff;
 }
 
 void steadyNS::change_viscosity(double mu)

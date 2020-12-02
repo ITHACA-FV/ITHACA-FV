@@ -88,6 +88,9 @@ class steadyNS: public reductionProblem
         /// List of pointers used to form the velocity snapshots matrix
         PtrList<volVectorField> Ufield;
 
+	/// List of pointers used to form the velocity snapshots matrix
+        PtrList<surfaceScalarField> Phifield;
+
         /// List of pointers used to form the supremizer snapshots matrix
         PtrList<volVectorField> supfield;
 
@@ -139,6 +142,7 @@ class steadyNS: public reductionProblem
         /// Number of nut modes used for the projection
         label NNutModes;
 
+
         /** @name Reduced Matrices
         *
         */
@@ -156,6 +160,7 @@ class steadyNS: public reductionProblem
         /// Non linear term
         List <Eigen::MatrixXd> C_matrix;
         Eigen::Tensor<double, 3 > C_tensor;
+	Eigen::Tensor<double, 3 > Cf_tensor;
 
         /// Div of velocity
         Eigen::MatrixXd P_matrix;
@@ -197,6 +202,17 @@ class steadyNS: public reductionProblem
 
         /// Boundary term for penalty method - matrix
         List <Eigen::MatrixXd> bcVelMat;
+
+	/// Diffusion term for flux method
+        Eigen::MatrixXd BP_matrix;
+
+	/// Boundary term for flux method
+        Eigen::MatrixXd BC_matrix;
+
+	/// Projection Peqn onto Pressure modes
+	List<Eigen::MatrixXd> LinSysDiv;
+	List<Eigen::MatrixXd> LinSysDiff;
+	List<Eigen::MatrixXd> LinSysConv;
 
 
         // Other Variables
@@ -259,6 +275,9 @@ class steadyNS: public reductionProblem
         /// Boundary Method
         word bcMethod;
 
+	/// Flux Method
+        word fluxMethod;
+
         // Functions
 
         //--------------------------------------------------------------------------
@@ -301,6 +320,17 @@ class steadyNS: public reductionProblem
         /// @param[in]  NSUPmodes  The number of supremizer modes.
         ///
         void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes);
+
+	//--------------------------------------------------------------------------
+        /// Project using the Discretize-then-project approach
+        ///
+        /// @param[in]  folder     The folder used to save the reduced matrices.
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes, 0 by default and it must remain always zero.
+        ///
+        void discretizeThenProject(fileName folder, label NUmodes, label NPmodes,
+                        label NSUPmodes = 0);
 
         //--------------------------------------------------------------------------
         //  Projection Methods Momentum Equation
@@ -461,6 +491,55 @@ class steadyNS: public reductionProblem
         /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the penalty method.
         ///
         List< Eigen::MatrixXd > bcVelocityMat(label NUmodes, label NSUPmodes);
+
+	//--------------------------------------------------------------------------
+        //  Projection Methods Momentum Equation
+        /// Diffusive Flux Method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
+        ///
+        Eigen::MatrixXd diffusive_term_flux_method(label NUmodes, label NPmodes, label NSUPmodes);
+
+	//--------------------------------------------------------------------------
+        //  Projection Methods Momentum Equation
+        /// Boundary Flux Method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the boundary term.
+        ///
+        Eigen::MatrixXd boundary_term_flux_method(label NUmodes, label NPmodes, label NSUPmodes);
+
+	//--------------------------------------------------------------------------
+        /// Convective Term
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the convective term.
+        ///
+        Eigen::Tensor<double, 3 >  convective_term_flux_tens(label NUmodes, label NPmodes,
+                label NSUPmodes);
+
+	//--------------------------------------------------------------------------
+        /// Laplacian of pressure Linear System
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the Laplacian of pressure Linear System.
+        ///
+	List < Eigen::MatrixXd > pressure_gradient_term_linsys_div(label NPmodes);
+	List < Eigen::MatrixXd > pressure_gradient_term_linsys_diff(label NPmodes);
+	List < Eigen::MatrixXd > pressure_gradient_term_linsys_conv(label NPmodes);
 
         //--------------------------------------------------------------------------
         /// Function to change the viscosity
