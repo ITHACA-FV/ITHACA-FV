@@ -78,7 +78,7 @@ steadyNS::steadyNS(int argc, char* argv[])
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
-    M_Assert(bcMethod == "lift" || bcMethod == "penalty"|| bcMethod == "penalty",
+    M_Assert(bcMethod == "lift" || bcMethod == "penalty"|| bcMethod == "none",
              "The BC method must be set to lift or penalty or none in ITHACAdict");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();

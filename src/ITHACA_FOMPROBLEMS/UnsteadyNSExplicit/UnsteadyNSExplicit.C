@@ -108,16 +108,19 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
     volVectorField Uinl = _U();
     Vector<double> inl(0, 0, 0);
     assignIF(Uinl, inl);
-    for (label i = 0; i < indexNeumannBC.size(); i++)
+    forAll(Uinl.mesh().boundary(),l)
     {
-	label BCind = indexNeumannBC(i, 0);
-        ITHACAutilities::changeBCtype(Uinl,"fixedValue",BCind);
-        assignBC(Uinl,BCind,inl);
+	if (Uinl.boundaryField()[l].type() == "zeroGradient" ||  
+		    Uinl.boundaryField()[l].type() ==  "fixedGradient")
+	{
+	    ITHACAutilities::changeBCtype(Uinl,"fixedValue",l);
+	    assignBC(Uinl,l,inl);
+	}
     }
     // Determine boundary vector
     fvVectorMatrix UEqn
     (
-	-fvm::laplacian(nu, Uinl)
+	-fvm::laplacian(nu,Uinl)
 	+fvm::div(fvc::flux(Uinl),Uinl)
     );     
     Eigen::MatrixXd A;

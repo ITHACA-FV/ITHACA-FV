@@ -87,12 +87,12 @@ class steadyNS: public reductionProblem
 
         /// List of pointers used to form the velocity snapshots matrix
         PtrList<volVectorField> Ufield;
-
-	/// List of pointers used to form the velocity snapshots matrix
-        PtrList<surfaceScalarField> Phifield;
-
-        /// List of pointers used to form the supremizer snapshots matrix
-        PtrList<volVectorField> supfield;
+	
+	/// List of pointers used to form the supremizer snapshots matrix
+	PtrList<volVectorField> supfield;
+	
+	/// List of pointers used to form the flux snapshots matrix
+	PtrList<surfaceScalarField> Phifield;
 
         /// List of pointers used to form the pressure modes
         volScalarModes Pmodes;
@@ -160,7 +160,6 @@ class steadyNS: public reductionProblem
         /// Non linear term
         List <Eigen::MatrixXd> C_matrix;
         Eigen::Tensor<double, 3 > C_tensor;
-	Eigen::Tensor<double, 3 > Cf_tensor;
 
         /// Div of velocity
         Eigen::MatrixXd P_matrix;
@@ -208,10 +207,17 @@ class steadyNS: public reductionProblem
 
 	/// Boundary term for flux method
         Eigen::MatrixXd BC_matrix;
+	
+	/// Convection term for flux methid
+	Eigen::Tensor<double, 3 > Cf_tensor;
 
-	/// Projection Peqn onto Pressure modes
+	/// Projection Peqn onto Pressure modes - Divergence term
 	List<Eigen::MatrixXd> LinSysDiv;
+	
+	/// Projection Peqn onto Pressure modes - Diffusion term
 	List<Eigen::MatrixXd> LinSysDiff;
+	
+	/// Projection Peqn onto Pressure modes - Convection term
 	List<Eigen::MatrixXd> LinSysConv;
 
 
