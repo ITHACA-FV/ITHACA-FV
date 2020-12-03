@@ -69,12 +69,6 @@ class ReducedUnsteadyNSExplicit: public reducedUnsteadyNS
 
         ~ReducedUnsteadyNSExplicit() {};
 
-	/// number of flux modes
-	int Nphi_phi;
-
-	/// list of phi modes
-	PtrList<surfaceScalarField> Phimodes;
-
         /// Pointer to the FOM problem
         UnsteadyNSExplicit* problem;
 

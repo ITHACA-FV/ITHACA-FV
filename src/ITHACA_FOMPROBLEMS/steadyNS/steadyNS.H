@@ -7,7 +7,7 @@
      ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
 
  * In real Time Highly Advanced Computational Applications for Finite Volumes
- * Copyright (C) 2017 by the ITHACA-FV authors
+ * Copyright (C) 2020 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 License
     This file is part of ITHACA-FV
@@ -87,12 +87,12 @@ class steadyNS: public reductionProblem
 
         /// List of pointers used to form the velocity snapshots matrix
         PtrList<volVectorField> Ufield;
-	
-	/// List of pointers used to form the supremizer snapshots matrix
-	PtrList<volVectorField> supfield;
-	
-	/// List of pointers used to form the flux snapshots matrix
-	PtrList<surfaceScalarField> Phifield;
+
+        /// List of pointers used to form the supremizer snapshots matrix
+        PtrList<volVectorField> supfield;
+
+        /// List of pointers used to form the flux snapshots matrix
+        PtrList<surfaceScalarField> Phifield;
 
         /// List of pointers used to form the pressure modes
         volScalarModes Pmodes;
@@ -141,7 +141,6 @@ class steadyNS: public reductionProblem
 
         /// Number of nut modes used for the projection
         label NNutModes;
-
 
         /** @name Reduced Matrices
         *
@@ -202,23 +201,26 @@ class steadyNS: public reductionProblem
         /// Boundary term for penalty method - matrix
         List <Eigen::MatrixXd> bcVelMat;
 
-	/// Diffusion term for flux method
+        /// Diffusion term for flux method
         Eigen::MatrixXd BP_matrix;
 
-	/// Boundary term for flux method
-        Eigen::MatrixXd BC_matrix;
-	
-	/// Convection term for flux methid
-	Eigen::Tensor<double, 3 > Cf_tensor;
+        /// Boundary term for diffusion term
+        Eigen::MatrixXd RD_matrix;
 
-	/// Projection Peqn onto Pressure modes - Divergence term
-	List<Eigen::MatrixXd> LinSysDiv;
-	
-	/// Projection Peqn onto Pressure modes - Diffusion term
-	List<Eigen::MatrixXd> LinSysDiff;
-	
-	/// Projection Peqn onto Pressure modes - Convection term
-	List<Eigen::MatrixXd> LinSysConv;
+        /// Boundary vector for convection term
+        Eigen::MatrixXd RC_matrix;
+
+        /// Convection term for flux methid
+        Eigen::Tensor<double, 3 > Cf_tensor;
+
+        /// Projection Peqn onto Pressure modes - Divergence term
+        List<Eigen::MatrixXd> LinSysDiv;
+
+        /// Projection Peqn onto Pressure modes - Diffusion term
+        List<Eigen::MatrixXd> LinSysDiff;
+
+        /// Projection Peqn onto Pressure modes - Convection term
+        List<Eigen::MatrixXd> LinSysConv;
 
 
         // Other Variables
@@ -240,6 +242,9 @@ class steadyNS: public reductionProblem
 
         /// Initial Velocity field (for restart purposes)
         autoPtr<volVectorField> _U0;
+        
+        /// Initial dummy field with all Dirichlet boundary conditions
+        autoPtr<volVectorField> Uinl;
 
 
         /// Mesh
@@ -510,19 +515,29 @@ class steadyNS: public reductionProblem
         ///
         Eigen::MatrixXd diffusive_term_flux_method(label NUmodes, label NPmodes, label NSUPmodes);
 
-	//--------------------------------------------------------------------------
-        //  Projection Methods Momentum Equation
-        /// Boundary Flux Method
+        //--------------------------------------------------------------------------
+        /// Boundary vector diffusion term
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NPmodes    The number of pressure modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
         ///
-        /// @return     reduced matrix in Eigen::MatrixXd format for the boundary term.
+        /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
         ///
-        Eigen::MatrixXd boundary_term_flux_method(label NUmodes, label NPmodes, label NSUPmodes);
+        Eigen::MatrixXd boundary_vector_diffusion(label NUmodes, label NPmodes, label NSUPmodes);
 
-	//--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+        /// Boundary vector convection term
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
+        ///
+        Eigen::MatrixXd boundary_vector_convection(label NUmodes, label NPmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
         /// Convective Term
         ///
         /// @param[in]  NUmodes    The number of velocity modes.

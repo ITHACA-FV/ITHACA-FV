@@ -7,7 +7,7 @@
      ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
 
  * In real Time Highly Advanced Computational Applications for Finite Volumes
- * Copyright (C) 2017 by the ITHACA-FV authors
+ * Copyright (C) 2020 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 
   License
@@ -103,32 +103,6 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
-    // Dummy field with all Neumann Boundary conditions converted to homogeneous 
-    // Dirichlet boundary conditions
-    volVectorField Uinl = _U();
-    Vector<double> inl(0, 0, 0);
-    assignIF(Uinl, inl);
-    forAll(Uinl.mesh().boundary(),l)
-    {
-	if (Uinl.boundaryField()[l].type() == "zeroGradient" ||  
-		    Uinl.boundaryField()[l].type() ==  "fixedGradient")
-	{
-	    ITHACAutilities::changeBCtype(Uinl,"fixedValue",l);
-	    assignBC(Uinl,l,inl);
-	}
-    }
-    // Determine boundary vector
-    fvVectorMatrix UEqn
-    (
-	-fvm::laplacian(nu,Uinl)
-	+fvm::div(fvc::flux(Uinl),Uinl)
-    );     
-    Eigen::MatrixXd A;
-    Eigen::VectorXd b;
-    Foam2Eigen::fvMatrix2Eigen(UEqn, A, b);
-    Eigen::MatrixXd bw = b;
-    ITHACAstream::exportMatrix(bw, "bw0", "eigen",
-                               "./ITHACAoutput/BCvector/");
     // Export and store the initial conditions for velocity, pressure and flux
     ITHACAstream::exportSolution(U, name(counter), folder);
     ITHACAstream::exportSolution(p, name(counter), folder);

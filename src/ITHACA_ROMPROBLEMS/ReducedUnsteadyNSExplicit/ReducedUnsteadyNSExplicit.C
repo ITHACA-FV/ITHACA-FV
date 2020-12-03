@@ -117,8 +117,8 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
     	    }
 
 	    List<Eigen::MatrixXd> RedLinSysP = problem->LinSysDiv;
-	    RedLinSysP[1] = (1/dt)*problem->LinSysDiv[1]+ nu * problem->LinSysDiff[1]+ problem->LinSysConv[1];
-	    b = reducedProblem::solveLinearSys(RedLinSysP, RHS, x, presidual);
+	    RedLinSysP[1] = (1/dt)*problem->LinSysDiv[1]+ nu * problem->LinSysDiff[1]+ problem->LinSysConv[1] + RHS;
+	    b = reducedProblem::solveLinearSys(RedLinSysP, x, presidual);
 
 	    // Momentum Equation
 	    // Convective term
@@ -127,13 +127,15 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
     	    Eigen::VectorXd M5 = problem->B_matrix * a_o * nu ;
 	    // Pressure Gradient Term
 	    Eigen::VectorXd M3 = problem->K_matrix * b;
-	    // Boundary Vector
-	    Eigen::VectorXd M4 = problem->BC_matrix;
+	    // Boundary Vector - Diffusion
+	    Eigen::VectorXd M4 = problem->RD_matrix * nu;
+	    // Boundary Vector - Convection
+	    Eigen::VectorXd M6 = problem->RC_matrix;
             for (label l = 0; l < Nphi_u; l++)
     	    {
        	    	cc = a_o.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
               		l) * a_o;
-            	a_n(l) = a_o(l) + (M5(l) - cc(0,0) - M3(l)+ problem->BC_matrix(l,0))*dt;
+            	a_n(l) = a_o(l) + (M5(l) - cc(0,0) - M3(l)+ M4(l,0)+M6(l,0))*dt;
     	    }	
     	    tmp_sol(0) = time;
     	    tmp_sol.col(0).segment(1, Nphi_u) = a_n;

@@ -7,7 +7,7 @@
      ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
 
  * In real Time Highly Advanced Computational Applications for Finite Volumes
- * Copyright (C) 2017 by the ITHACA-FV authors
+ * Copyright (C) 2020 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 License
     This file is part of ITHACA-FV
@@ -67,20 +67,17 @@ class UnsteadyNSExplicit: public unsteadyNS
         /// Construct with argc and argv
         UnsteadyNSExplicit(int argc, char* argv[]);
 
-       ///dimensionedScalar nu;
+        ///dimensionedScalar nu;
         autoPtr<dimensionedScalar> _nu;
 
-	///dimensionedScalar dt;
+        ///dimensionedScalar dt;
         autoPtr<dimensionedScalar> _dt;
 
-	/// Reference pressure cell
+        /// Reference pressure cell
         label pRefCell;
 
         /// Reference pressure value
         scalar pRefValue;
-
-	// matrix containing the numbers of the boundary patches that are set to a Neumann bc
-	Eigen::MatrixXi indexNeumannBC;
 
         // Functions
 

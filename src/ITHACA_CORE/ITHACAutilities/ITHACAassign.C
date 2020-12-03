@@ -405,6 +405,26 @@ template void assignBC(
     vector& valueList);
 
 template<typename Type>
+void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>& field,
+              Type& value)
+{
+    forAll(field.mesh().boundary(),i)
+    {
+        if (field.boundaryField()[i].type() == "zeroGradient" ||  
+            field.boundaryField()[i].type() ==  "fixedGradient")
+        {
+            ITHACAutilities::changeBCtype(field,"fixedValue",i);
+            assignBC(field,i,value);
+        }
+    }
+}
+
+template void changeNeumann2Dirichlet(
+    GeometricField<scalar, fvPatchField, volMesh>& field, scalar& value);
+template void changeNeumann2Dirichlet(
+    GeometricField<vector, fvPatchField, volMesh>& field, vector& value);
+    
+template<typename Type>
 void setBoxToValue(GeometricField<Type, fvPatchField, volMesh>& field,
                    Eigen::MatrixXd Box, Type value)
 {
