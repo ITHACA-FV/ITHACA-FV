@@ -7,7 +7,7 @@
      ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
 
  * In real Time Highly Advanced Computational Applications for Finite Volumes
- * Copyright (C) 2020 by the ITHACA-FV authors
+ * Copyright (C) 2017 by the ITHACA-FV authors
 -------------------------------------------------------------------------------
 License
     This file is part of ITHACA-FV
@@ -245,7 +245,12 @@ class steadyNS: public reductionProblem
         
         /// Initial dummy field with all Dirichlet boundary conditions
         autoPtr<volVectorField> Uinl;
-
+	
+	/// Dummy time step including unit
+        autoPtr<dimensionedScalar> dt_dummy;
+	
+	/// Dummy viscocity including unit
+        autoPtr<dimensionedScalar> nu_dummy;
 
         /// Mesh
         mutable autoPtr<fvMesh> _mesh;
@@ -332,7 +337,7 @@ class steadyNS: public reductionProblem
         ///
         void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes);
 
-	//--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
         /// Project using the Discretize-then-project approach
         ///
         /// @param[in]  folder     The folder used to save the reduced matrices.
@@ -503,7 +508,7 @@ class steadyNS: public reductionProblem
         ///
         List< Eigen::MatrixXd > bcVelocityMat(label NUmodes, label NSUPmodes);
 
-	//--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
         //  Projection Methods Momentum Equation
         /// Diffusive Flux Method
         ///
@@ -549,8 +554,8 @@ class steadyNS: public reductionProblem
         Eigen::Tensor<double, 3 >  convective_term_flux_tens(label NUmodes, label NPmodes,
                 label NSUPmodes);
 
-	//--------------------------------------------------------------------------
-        /// Laplacian of pressure Linear System
+        //--------------------------------------------------------------------------
+        /// Laplacian of pressure Linear System - Divergence term
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NPmodes    The number of pressure modes.
@@ -558,9 +563,29 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the Laplacian of pressure Linear System.
         ///
-	List < Eigen::MatrixXd > pressure_gradient_term_linsys_div(label NPmodes);
-	List < Eigen::MatrixXd > pressure_gradient_term_linsys_diff(label NPmodes);
-	List < Eigen::MatrixXd > pressure_gradient_term_linsys_conv(label NPmodes);
+        List < Eigen::MatrixXd > pressure_gradient_term_linsys_div(label NPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Laplacian of pressure Linear System - Diffusion term
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the Laplacian of pressure Linear System.
+        ///
+        List < Eigen::MatrixXd > pressure_gradient_term_linsys_diff(label NPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Laplacian of pressure Linear System - Convection term
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the Laplacian of pressure Linear System.
+        ///
+        List < Eigen::MatrixXd > pressure_gradient_term_linsys_conv(label NPmodes);
 
         //--------------------------------------------------------------------------
         /// Function to change the viscosity
