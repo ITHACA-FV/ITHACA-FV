@@ -710,19 +710,19 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP, label 
     ITHACAutilities::changeNeumann2Dirichlet(Uinl(),inl);
     
     // dummy variables
-    dt_dummy = new dimensionedScalar
+    dt_dummy = autoPtr<dimensionedScalar> (new dimensionedScalar
     (
         "dt_dummy",
         dimensionSet(0, 0, 1, 0, 0, 0, 0),
         scalar(1.0)
-    );
+    ));
     
-    nu_dummy = new dimensionedScalar
+    nu_dummy = autoPtr<dimensionedScalar> (new dimensionedScalar
     (
         "nu_dummy",
         dimensionSet(0, 2, -1, 0, 0, 0, 0),
         scalar(1.0)
-    );
+    ));
     
     if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
     {
