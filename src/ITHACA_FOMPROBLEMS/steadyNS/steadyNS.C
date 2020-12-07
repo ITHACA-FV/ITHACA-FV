@@ -705,8 +705,7 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP, label 
     
     // Dummy field with all Neumann Boundary conditions converted to homogeneous 
     // Dirichlet boundary conditions
-    volVectorField Uinl_cp(_U());
-    Uinl = new volVectorField(Uinl_cp);
+    Uinl = autoPtr<volVectorField> (new volVectorField(_U()));
     assignIF(Uinl(), inl);
     ITHACAutilities::changeNeumann2Dirichlet(Uinl(),inl);
     
