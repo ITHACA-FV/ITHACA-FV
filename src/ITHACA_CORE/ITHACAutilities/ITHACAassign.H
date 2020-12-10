@@ -239,6 +239,19 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& field,
 template<typename Type>
 void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& field,
               label BC_ind, Type& value);
+      
+      
+//--------------------------------------------------------------------------
+/// Change all Neumann boundary conditions to Dirichlet boundary conditions
+///
+/// @param[in,out]  field  Field of which the BCs need to be changed
+/// @param          value  The value you want to assign
+///
+/// @tparam         Type   Type of field vector or scalar
+///
+template<typename Type>
+void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>& field,
+              Type& value);	      
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"

@@ -12,6 +12,7 @@ SteadyNSSimple/SteadyNSSimple.C
 laplacianProblem/laplacianProblem.C
 msrProblem/msrProblem.C
 unsteadymsrProblem/usmsrProblem.C
+UnsteadyNSExplicit/UnsteadyNSExplicit.C
 
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_FOMPROBLEMS
