@@ -121,6 +121,8 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     float normalizedResidualLim =
         problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim",
                 1e-5);
+    maxIterOn = problem->para->ITHACAdict->lookupOrDefault<int>("maxIterOn",
+                1000);
     scalar residual_jump(1 + residualJumpLim);
     //problem->restart();
     volScalarField& P = problem->_p();

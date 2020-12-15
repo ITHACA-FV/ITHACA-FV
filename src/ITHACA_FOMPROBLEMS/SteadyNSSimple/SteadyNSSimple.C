@@ -90,6 +90,7 @@ void SteadyNSSimple::getTurbRBF(label NNutModes)
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
+
         else
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
@@ -124,10 +125,16 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     scalar presidual = 1;
     scalar csolve = 0;
     turbulence->read();
-    std::ofstream res_os;    
+    std::ofstream res_os;
     std::ofstream snaps_os;
-    res_os.open(Folder+"/residuals", std::ios_base::app);
-    snaps_os.open(Folder+"/snaps", std::ios_base::app);
+    std::ofstream iters;
+    std::ofstream res_U;
+    std::ofstream res_P;
+    res_os.open(Folder + "/residuals", std::ios_base::app);
+    snaps_os.open(Folder + "/snaps", std::ios_base::app);
+    iters.open(Folder + "/iters", std::ios_base::app);
+    res_U.open(Folder + name(counter) + "/res_U", std::ios_base::app);
+    res_P.open(Folder + name(counter) + "/res_P", std::ios_base::app);
     folderN = 0;
     saver = 0;
     middleStep = para->ITHACAdict->lookupOrDefault<label>("middleStep", 20);
@@ -156,6 +163,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             uresidual_v = solve(UEqn == - fvc::grad(p)).initialResidual();
         }
 
+        volVectorField U2(U);
         scalar C = 0;
 
         for (label i = 0; i < 3; i++)
@@ -195,6 +203,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             {
                 presidual = pEqn.solve().initialResidual();
             }
+
             else
             {
                 pEqn.solve().initialResidual();
@@ -222,35 +231,50 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         {
             saver = 0;
             folderN++;
+            // if (folderN % 2 == 0)
+            // {
             ITHACAstream::exportSolution(U, name(folderN), Folder + name(counter));
+            // }
+            // else
+            // {
+            // ITHACAstream::exportSolution(U2, name(folderN), Folder + name(counter));
+            // }
             ITHACAstream::exportSolution(p, name(folderN), Folder + name(counter));
             Ufield.append(U);
             Pfield.append(p);
+            res_U << uresidual << std::endl;
+            res_P << presidual << std::endl;
 
             if (ITHACAutilities::isTurbulent())
             {
                 auto nut = mesh.lookupObject<volScalarField>("nut");
-                ITHACAstream::exportSolution(nut, name(folderN), Folder + name(counter));
-                nutFields.append(nut);
+                ITHACAstream::exportSolution(nut, name(folderN), Folder + name(counter));                nutFields.append(nut);
             }
         }
     }
 
+    snaps_os << folderN + 1 << std::endl;
+    iters << csolve << std::endl;
     res_os << residual << std::endl;
-    snaps_os << folderN+1 << std::endl;
     res_os.close();
+    res_U.close();
+    res_P.close();
     snaps_os.close();
+    iters.close();
     runTime.setTime(runTime.startTime(), 0);
-    if(middleExport)
+
+    if (middleExport)
     {
         ITHACAstream::exportSolution(U, name(folderN + 1), Folder + name(counter));
         ITHACAstream::exportSolution(p, name(folderN + 1), Folder + name(counter));
     }
+
     else
     {
         ITHACAstream::exportSolution(U, name(counter), Folder);
         ITHACAstream::exportSolution(p, name(counter), Folder);
     }
+
     if (ITHACAutilities::isTurbulent())
     {
         auto nut = mesh.lookupObject<volScalarField>("nut");
