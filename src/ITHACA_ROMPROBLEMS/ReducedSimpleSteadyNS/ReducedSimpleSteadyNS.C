@@ -81,8 +81,6 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     }
 
     counter++;
-    scalar UprojN;
-    scalar PprojN;
 
     if (NmodesUproj == 0)
     {

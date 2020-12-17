@@ -119,6 +119,9 @@ class reducedSimpleSteadyNS: public reducedProblem
 
         /// Counter.
         int counter = 0;
+
+        int UprojN;
+        int PprojN;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
