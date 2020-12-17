@@ -1,0 +1,13 @@
+EXE_INC = \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/OptimLib \
+    -w \
+    -std=c++11
+
+EXE_LIBS = \
+    -L$(FOAM_USER_LIBBIN) \
+    -lITHACA_THIRD_PARTY \
+
+
+
+ 
