@@ -141,15 +141,15 @@ class tutorial02: public laplacianProblem
             ITHACAutilities::setBoxToValue(nu7, Box7, 1.0);
             ITHACAutilities::setBoxToValue(nu8, Box8, 1.0);
             ITHACAutilities::setBoxToValue(nu9, Box9, 1.0);
-            nu_list.set(0, nu1);
-            nu_list.set(1, nu2);
-            nu_list.set(2, nu3);
-            nu_list.set(3, nu4);
-            nu_list.set(4, nu5);
-            nu_list.set(5, nu6);
-            nu_list.set(6, nu7);
-            nu_list.set(7, nu8);
-            nu_list.set(8, nu9);
+            nu_list.set(0, tmp<volScalarField>(nu1));
+            nu_list.set(1, tmp<volScalarField>(nu2));
+            nu_list.set(2, tmp<volScalarField>(nu3));
+            nu_list.set(3, tmp<volScalarField>(nu4));
+            nu_list.set(4, tmp<volScalarField>(nu5));
+            nu_list.set(5, tmp<volScalarField>(nu6));
+            nu_list.set(6, tmp<volScalarField>(nu7));
+            nu_list.set(7, tmp<volScalarField>(nu8));
+            nu_list.set(8, tmp<volScalarField>(nu9));
         }
 
         /// Construct the operator_list where each term of the affine decomposition is stored

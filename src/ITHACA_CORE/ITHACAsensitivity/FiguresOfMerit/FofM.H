@@ -42,7 +42,7 @@ class FofM
         //constructors
         FofM();
         FofM(int argc, char* argv[], label Nsampled);
-        ~FofM() {};
+        //~FofM() {};
 
         //Members:
         /// Vector to store the desired output of the model, i.e. the figure of merit
