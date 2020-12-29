@@ -78,6 +78,7 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
                 {
                     str << "[" << setprecision(10) << matrix(i, j);
                 }
+
                 else
                 {
                     str << "," << setprecision(10) << matrix(i, j);
@@ -180,6 +181,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                     {
                         str << "[" << setprecision(10) << matrix[i](j, k);
                     }
+
                     else
                     {
                         str << "," << setprecision(10) << matrix[i](j, k);
@@ -195,6 +197,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
             str << "]])\n" << endl;
         }
     }
+
     // Matlab case
     else if (type == "matlab")
     {
@@ -221,6 +224,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
             str << "];" << endl;
         }
     }
+
     else if (type == "eigen")
     {
         for (int i = 0; i < matrix.size(); i++)
@@ -276,6 +280,7 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
                         str << "[" << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
                                 i)(j, k);
                     }
+
                     else
                     {
                         str << "," << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
@@ -293,6 +298,7 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
             str << "]])\n" << endl;
         }
     }
+
     // Matlab case
     else if (type == "matlab")
     {
@@ -323,6 +329,7 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
             str << "];" << endl;
         }
     }
+
     else if (type == "eigen")
     {
         for (int i = 0; i < tensor.dimension(0); i++)
@@ -455,6 +462,7 @@ void read_fields(
         {
             last_s = runTime2.times().size();
         }
+
         else
         {
             last_s = min(runTime2.times().size(), n_snap + 2);
@@ -472,12 +480,13 @@ void read_fields(
                 ),
                 mesh
             );
-            Lfield.append(tmp_field);
+            Lfield.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp_field));
             printProgress(double(i + 1) / (last_s + first_snap));
         }
 
         std::cout << std::endl;
     }
+
     else
     {
         std::cerr << "File: ITHACAstream.C, Line: 343" << std::endl;
@@ -509,6 +518,7 @@ void read_fields(
         {
             last_s = runTime2.times().size();
         }
+
         else
         {
             last_s = min(runTime2.times().size(), n_snap + 2);
@@ -526,12 +536,13 @@ void read_fields(
                 ),
                 field.mesh()
             );
-            Lfield.append(tmp_field);
+            Lfield.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp_field));
             printProgress(double(i + 1) / (last_s + first_snap));
         }
 
         std::cout << std::endl;
     }
+
     else
     {
         Info << "######### Reading the Data for " << field.name() << " #########" <<
@@ -570,7 +581,7 @@ void read_fields(
                 ),
                 field.mesh()
             );
-            Lfield.append(tmp_field);
+            Lfield.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp_field));
             printProgress(double(i + 1) / (last_s + first_snap));
         }
 
@@ -625,7 +636,7 @@ void readConvergedFields(
             ),
             field.mesh()
         );
-        Lfield.append(tmpField);
+        Lfield.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmpField));
         par++;
     }
 }
@@ -691,6 +702,7 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         act.writeHeader(os);
         os << act << endl;
     }
+
     else
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
@@ -731,6 +743,7 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         s.writeHeader(os);
         os << s << endl;
     }
+
     else
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
@@ -766,6 +779,7 @@ void writePoints(pointField points, fileName folder,
            << endl;
         os << points << endl;
     }
+
     else
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);

@@ -201,17 +201,17 @@ void ITHACADMD<Type, PatchField, GeoMesh>::reconstruct(word exportFolder,
     {
         Eigen::MatrixXcd col = DMDEigenModes * dynamics.col(i);
         Eigen::VectorXd vec = col.real();
-        GeometricField<Type, PatchField, GeoMesh> tmp("TMP",
+        GeometricField<Type, PatchField, GeoMesh> tmp2("TMP",
                 snapshotsDMD[0] * 0);
-        tmp = Foam2Eigen::Eigen2field(tmp, vec);
+        tmp2 = Foam2Eigen::Eigen2field(tmp2, vec);
 
-        for (label k = 0; k < tmp.boundaryField().size(); k++)
+        for (label k = 0; k < tmp2.boundaryField().size(); k++)
         {
             Eigen::VectorXd vecBC = (DMDEigenModesBC[k] * dynamics.col(i)).real();
-            ITHACAutilities::assignBC(tmp, k, vecBC);
+            ITHACAutilities::assignBC(tmp2, k, vecBC);
         }
 
-        snapshotsrec.append(tmp);
+        snapshotsrec.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2));
     }
 
     ITHACAstream::exportFields(snapshotsrec, exportFolder, fieldName);
@@ -221,27 +221,27 @@ void ITHACADMD<Type, PatchField, GeoMesh>::convert2Foam()
 {
     DMDmodesReal.resize(DMDEigenModes.cols());
     DMDmodesImag.resize(DMDEigenModes.cols());
-    GeometricField<Type, PatchField, GeoMesh> tmpReal(
+    GeometricField<Type, PatchField, GeoMesh> tmp2Real(
         snapshotsDMD[0].name(), snapshotsDMD[0] * 0);
-    GeometricField<Type, PatchField, GeoMesh> tmpImag(
+    GeometricField<Type, PatchField, GeoMesh> tmp2Imag(
         snapshotsDMD[0].name(), snapshotsDMD[0] * 0);
 
     for (label i = 0; i < DMDmodesReal.size(); i++)
     {
         Eigen::VectorXd vecReal = DMDEigenModes.col(i).real();
         Eigen::VectorXd vecImag = DMDEigenModes.col(i).imag();
-        tmpReal = Foam2Eigen::Eigen2field(tmpReal, vecReal);
-        tmpImag = Foam2Eigen::Eigen2field(tmpImag, vecImag);
+        tmp2Real = Foam2Eigen::Eigen2field(tmp2Real, vecReal);
+        tmp2Imag = Foam2Eigen::Eigen2field(tmp2Imag, vecImag);
 
         // Adjusting boundary conditions
-        for (label k = 0; k < tmpReal.boundaryField().size(); k++)
+        for (label k = 0; k < tmp2Real.boundaryField().size(); k++)
         {
-            ITHACAutilities::assignBC(tmpReal, k, DMDEigenModesBC[k].col(i).real());
-            ITHACAutilities::assignBC(tmpImag, k, DMDEigenModesBC[k].col(i).imag());
+            ITHACAutilities::assignBC(tmp2Real, k, DMDEigenModesBC[k].col(i).real());
+            ITHACAutilities::assignBC(tmp2Imag, k, DMDEigenModesBC[k].col(i).imag());
         }
 
-        DMDmodesReal.set(i, tmpReal);
-        DMDmodesImag.set(i, tmpImag);
+        DMDmodesReal.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2Real));
+        DMDmodesImag.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2Imag));
     }
 }
 template class ITHACADMD<scalar, fvPatchField, volMesh>;

@@ -47,7 +47,7 @@ PtrList<TypeField> averageSubtract(PtrList<TypeField>
         }
 
         aveTemp /= newInd(i + 1) - newInd(i);
-        ave.append(aveTemp);
+        ave.append(tmp<TypeField>(aveTemp));
     }
 
     for (label i = 0; i < ind.size(); i++)
@@ -56,7 +56,7 @@ PtrList<TypeField> averageSubtract(PtrList<TypeField>
         {
             TypeField newfield("nut", fields[0] * 0);
             newfield = fields[j] - ave[i];
-            aveSubtracted.append(newfield);
+            aveSubtracted.append(tmp<TypeField>(newfield));
         }
     }
 
@@ -189,6 +189,7 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
+
     else if (typeBC == "fixedGradient")
     {
         fixedGradientFvPatchScalarField& Tpatch =
@@ -200,6 +201,7 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
             gradTpatch[faceI] = value;
         }
     }
+
     else if (typeBC == "freestream")
     {
         for (label i = 0; i < sizeBC; i++)
@@ -217,6 +219,7 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
             gradTpatch[faceI] = value;
         }
     }
+
     else if (typeBC == "empty")
     {
     }
@@ -306,11 +309,13 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = valueList[i];
         }
     }
+
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         Info << "This Feature is not implemented for this boundary condition" << endl;
         exit(0);
     }
+
     else if (s.boundaryField()[BC_ind].type() == "freestream")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -345,6 +350,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = valueList[i];
         }
     }
+
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         fixedGradientFvPatchField<Type>& Tpatch =
@@ -355,6 +361,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
             gradTpatch[faceI] = valueList[faceI];
         }
     }
+
     else if (s.boundaryField()[BC_ind].type() == "freestream")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -370,6 +377,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
             gradTpatch[faceI] = valueList[faceI];
         }
     }
+
     else if (s.boundaryField()[BC_ind].type() == "empty")
     {
     }
@@ -406,15 +414,15 @@ template void assignBC(
 
 template<typename Type>
 void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>& field,
-              Type& value)
+                             Type& value)
 {
-    forAll(field.mesh().boundary(),i)
+    forAll(field.mesh().boundary(), i)
     {
-        if (field.boundaryField()[i].type() == "zeroGradient" ||  
-            field.boundaryField()[i].type() ==  "fixedGradient")
+        if (field.boundaryField()[i].type() == "zeroGradient" ||
+                field.boundaryField()[i].type() ==  "fixedGradient")
         {
-            ITHACAutilities::changeBCtype(field,"fixedValue",i);
-            assignBC(field,i,value);
+            ITHACAutilities::changeBCtype(field, "fixedValue", i);
+            assignBC(field, i, value);
         }
     }
 }
@@ -423,7 +431,7 @@ template void changeNeumann2Dirichlet(
     GeometricField<scalar, fvPatchField, volMesh>& field, scalar& value);
 template void changeNeumann2Dirichlet(
     GeometricField<vector, fvPatchField, volMesh>& field, vector& value);
-    
+
 template<typename Type>
 void setBoxToValue(GeometricField<Type, fvPatchField, volMesh>& field,
                    Eigen::MatrixXd Box, Type value)
@@ -570,24 +578,25 @@ void normalizeFields(
         {
             norm = L2Norm(fields[i]);
         }
+
         else if (normType == "Frobenius")
         {
             norm = frobNorm(fields[i]);
         }
 
-        GeometricField<Type, fvPatchField, volMesh> tmp(fields[0].name(),
+        GeometricField<Type, fvPatchField, volMesh> tmp2(fields[0].name(),
                 fields[0] * 0);
         Eigen::VectorXd vec = eigenFields.col(i) / norm;
-        tmp = Foam2Eigen::Eigen2field(tmp, vec);
+        tmp2 = Foam2Eigen::Eigen2field(tmp2, vec);
 
         // Adjusting boundary conditions
-        for (label k = 0; k < tmp.boundaryField().size(); k++)
+        for (label k = 0; k < tmp2.boundaryField().size(); k++)
         {
             Eigen::MatrixXd vec = eigenFieldsBC[k].col(i) / norm;
-            assignBC(tmp, k, vec);
+            assignBC(tmp2, k, vec);
         }
 
-        fields.set(i, tmp);
+        fields.set(i, tmp<GeometricField<Type, fvPatchField, volMesh> > (tmp2));
     }
 }
 

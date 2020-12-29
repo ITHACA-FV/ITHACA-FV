@@ -56,7 +56,8 @@ void getNestedSnapshotMatrix(
 
         for (label j = 0; j < Nt; j++)
         {
-            SnapMatrixNested[i].set(j, snapshots[j + Nt * i]);
+            SnapMatrixNested[i].set(j,
+                                    tmp<GeometricField<Type, PatchField, GeoMesh>>(snapshots[j + Nt * i]));
         }
     }
 
@@ -76,7 +77,7 @@ void getNestedSnapshotMatrix(
 
         for (label j = 0; j < y.size(); j++)
         {
-            ModesGlobal.append(y[j]);
+            ModesGlobal.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(y[j]));
         }
     }
 }
@@ -114,6 +115,7 @@ void getModes(
             M_Assert(nmodes <= snapshots.size() - 2,
                      "The number of requested modes cannot be bigger than the number of Snapshots - 2");
         }
+
         else
         {
             if (nmodes == 0)
@@ -134,6 +136,7 @@ void getModes(
         {
             _corMatrix = ITHACAutilities::getMassMatrix(snapshots);
         }
+
         else if (PODnorm == "Frobenius")
         {
             _corMatrix = ITHACAutilities::getMassMatrix(snapshots, false);
@@ -167,6 +170,7 @@ void getModes(
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
+
         else if (para->eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -202,6 +206,7 @@ void getModes(
                 normFact(i) = std::sqrt((modesEig.col(i).transpose() * V.asDiagonal() *
                                          modesEig.col(i))(0, 0));
             }
+
             else if (PODnorm == "Frobenius")
             {
                 normFact(i) = std::sqrt((modesEig.col(i).transpose() * modesEig.col(i))(0, 0));
@@ -230,17 +235,17 @@ void getModes(
 
         for (label i = 0; i < modes.size(); i++)
         {
-            GeometricField<Type, PatchField, GeoMesh>  tmp(snapshots[0].name(),
+            GeometricField<Type, PatchField, GeoMesh>  tmp2(snapshots[0].name(),
                     snapshots[0]);
             Eigen::VectorXd vec = modesEig.col(i);
-            tmp = Foam2Eigen::Eigen2field(tmp, vec);
+            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec);
 
             for (label k = 0; k < NBC; k++)
             {
-                ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i));
+                ITHACAutilities::assignBC(tmp2, k, modesEigBC[k].col(i));
             }
 
-            modes.set(i, tmp);
+            modes.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2));
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -259,6 +264,7 @@ void getModes(
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
                                        snapshots[0].name());
         }
+
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshots[0].name());
@@ -271,6 +277,7 @@ void getModes(
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
     }
+
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -280,6 +287,7 @@ void getModes(
             ITHACAstream::read_fields(modes, fieldName + "sup",
                                       "./ITHACAoutput/supremizer/");
         }
+
         else
         {
             ITHACAstream::read_fields(modes, fieldName, "./ITHACAoutput/POD/");
@@ -342,6 +350,7 @@ void getWeightedModes(
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
+
         else if (para->eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -373,17 +382,17 @@ void getWeightedModes(
 
         for (label i = 0; i < modes.size(); i++)
         {
-            GeometricField<Type, PatchField, GeoMesh> tmp(snapshots[0].name(),
+            GeometricField<Type, PatchField, GeoMesh> tmp2(snapshots[0].name(),
                     snapshots[0]);
             Eigen::VectorXd vec = modesEig.col(i);
-            tmp = Foam2Eigen::Eigen2field(tmp, vec);
+            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec);
 
-            for (label k = 0; k < tmp.boundaryField().size(); k++)
+            for (label k = 0; k < tmp2.boundaryField().size(); k++)
             {
-                ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i));
+                ITHACAutilities::assignBC(tmp2, k, modesEigBC[k].col(i));
             }
 
-            modes.set(i, tmp);
+            modes.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2));
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -403,6 +412,7 @@ void getWeightedModes(
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
                                        snapshots[0].name());
         }
+
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshots[0].name());
@@ -415,6 +425,7 @@ void getWeightedModes(
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
     }
+
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -424,6 +435,7 @@ void getWeightedModes(
             ITHACAstream::read_fields(modes, fieldName + "sup",
                                       "./ITHACAoutput/supremizer/");
         }
+
         else
         {
             ITHACAstream::read_fields(modes, fieldName, "./ITHACAoutput/POD/");
@@ -477,7 +489,7 @@ void getModesSVD(
         {
             Eigen::VectorXd vec = modesEig.col(i);
             tmb_bu = Foam2Eigen::Eigen2field(tmb_bu, vec);
-            modes.set(i, tmb_bu);
+            modes.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmb_bu));
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -496,6 +508,7 @@ void getModesSVD(
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
                                        snapshots[0].name());
         }
+
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshots[0].name());
@@ -509,6 +522,7 @@ void getModesSVD(
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
     }
+
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -518,6 +532,7 @@ void getModesSVD(
             ITHACAstream::read_fields(modes, fieldName + "sup",
                                       "./ITHACAoutput/supremizer/");
         }
+
         else
         {
             ITHACAstream::read_fields(modes, fieldName, "./ITHACAoutput/POD/");
@@ -673,6 +688,7 @@ void exportBases(PtrList<GeometricField<Type, PatchField, GeoMesh>>& s,
             os << s[i] << endl;
         }
     }
+
     else
     {
         fileName fieldname;
@@ -707,6 +723,7 @@ void exportEigenvalues(scalarField Eigenvalues, fileName name,
             os << Eigenvalues[i] << endl;
         }
     }
+
     else
     {
         fileName fieldname;
@@ -736,6 +753,7 @@ void exportcumEigenvalues(scalarField cumEigenvalues, fileName name,
             os << cumEigenvalues[i] << endl;
         }
     }
+
     else
     {
         fileName fieldname;
@@ -820,6 +838,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 eigenValueseigB = esB.eigenvalues().real();
                 eigenVectorseigB = esB.eigenvectors().real();
             }
+
             else if (nmodesB == 1)
             {
                 eigenValueseigB.resize(1);
@@ -828,6 +847,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 eigenVectorseigB = eigenVectorseigB * 0;
                 eigenVectorseigB(0, 0) = 1;
             }
+
             else
             {
                 Info << "The Eigenvalue solver in ITHACAPOD.H did not converge, exiting the code"
@@ -835,6 +855,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 exit(0);
             }
         }
+
         else
         {
             Info << "The Eigenvalue solver in ITHACAPOD.H did not converge, exiting the code"
@@ -929,6 +950,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                                           "./ITHACAoutput/DEIM/" + MatrixName + "/", "B_" + MatrixName + name(i));
         }
     }
+
     else
     {
         for (label i = 0; i < nmodesA; i++)
@@ -1046,6 +1068,7 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
+
         else if (para->eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -1074,18 +1097,18 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
 
         for (label i = 0; i < modes.size(); i++)
         {
-            GeometricField<Type, PatchField, GeoMesh> tmp(snapshots[0].name(),
+            GeometricField<Type, PatchField, GeoMesh> tmp2(snapshots[0].name(),
                     snapshots[0] * 0);
             Eigen::VectorXd vec = modesEig.col(i);
-            tmp = Foam2Eigen::Eigen2field(tmp, vec);
+            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec);
 
             // Adjusting boundary conditions
-            for (label k = 0; k < tmp.boundaryField().size(); k++)
+            for (label k = 0; k < tmp2.boundaryField().size(); k++)
             {
-                ITHACAutilities::assignBC(tmp, k, modesEigBC[k].col(i));
+                ITHACAutilities::assignBC(tmp2, k, modesEigBC[k].col(i));
             }
 
-            modes.set(i, tmp);
+            modes.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2));
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -1106,6 +1129,7 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
     }
+
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -1114,6 +1138,7 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
         {
             ITHACAstream::read_fields(modes, "Usup", "./ITHACAoutput/supremizer/");
         }
+
         else
         {
             ITHACAstream::read_fields(modes, fieldName, "./ITHACAoutput/POD/");
@@ -1188,6 +1213,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 eigenValueseigB = esB.eigenvalues().real();
                 eigenVectorseigB = esB.eigenvectors().real();
             }
+
             else
             {
                 eigenValueseigB.resize(1);
@@ -1197,6 +1223,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 eigenVectorseigB(0, 0) = 1;
             }
         }
+
         else if (para->eigensolver == "eigen")
         {
             Info << "####### Performing the POD decomposition for the Matrix List using Eigen #######"
@@ -1284,6 +1311,7 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                                 "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesB", para->precision,
                                 para->outytpe);
     }
+
     else
     {
         for (label i = 0; i < nmodesA; i++)
@@ -1388,7 +1416,7 @@ PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
         }
     }
 
-    auto tmb_bu = SnapShotsMatrix[0];
+    GeometricField<Type, fvPatchField, volMesh> tmb_bu = SnapShotsMatrix[0];
     tmb_bu.rename(SnapShotsMatrix[0].name());
 
     for (label i = 0; i < nmodes; i++)
@@ -1400,7 +1428,7 @@ PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
             tmb_bu += eigenVector[i][k] * SnapShotsMatrix[k];
         }
 
-        Bases.set(i, tmb_bu);
+        Bases.set(i, tmp<GeometricField<Type, fvPatchField, volMesh>>(tmb_bu));
         Info << "creating the bases " << i << " for " << SnapShotsMatrix[0].name() <<
              endl;
     }
@@ -1409,9 +1437,9 @@ PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
 
     for (label i = 0; i < Bases.size(); i++)
     {
-        auto tmp(Bases[i]);
-        tmp.rename(SnapShotsMatrix[0].name());
-        modes.set(i, tmp);
+        auto tmp2(Bases[i]);
+        tmp2.rename(SnapShotsMatrix[0].name());
+        modes.set(i, tmp<GeometricField<Type, fvPatchField, volMesh>>(tmp2));
     }
 
     Info << "####### Saving the POD bases for " << SnapShotsMatrix[0].name() <<
@@ -1451,6 +1479,7 @@ void getModes(PtrList<Field_type>& snapshots,
             M_Assert(nmodes <= snapshots.size() - 2,
                      "The number of requested modes cannot be bigger than the number of Snapshots - 2");
         }
+
         else
         {
             if (nmodes == 0)
@@ -1497,6 +1526,7 @@ void getModes(PtrList<Field_type>& snapshots,
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
         }
+
         else if (para->eigensolver == "eigen")
         {
             std::cout << "Using Eigen EigenSolver " << std::endl;
@@ -1519,14 +1549,14 @@ void getModes(PtrList<Field_type>& snapshots,
 
         for (label i = 0; i < modes.size(); i++)
         {
-            Field_type tmp(snapshots[0].name(), snapshots[0] * 0);
+            Field_type tmp2(snapshots[0].name(), snapshots[0] * 0);
 
             for (label j = 0; j < snapshots.size(); j++)
             {
-                tmp += eigenValueseigLam(i) * eigenVectoreig.col(i)(j) * snapshots[j];
+                tmp2 += eigenValueseigLam(i) * eigenVectoreig.col(i)(j) * snapshots[j];
             }
 
-            modes.set(i, tmp);
+            modes.set(i, tmp<Field_type>(tmp2));
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -1545,6 +1575,7 @@ void getModes(PtrList<Field_type>& snapshots,
             ITHACAstream::exportFields(modes, "./ITHACAoutput/supremizer/",
                                        snapshots[0].name());
         }
+
         else
         {
             ITHACAstream::exportFields(modes, "./ITHACAoutput/POD/", snapshots[0].name());
@@ -1557,6 +1588,7 @@ void getModes(PtrList<Field_type>& snapshots,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
     }
+
     else
     {
         Info << "Reading the existing modes" << endl;
@@ -1565,6 +1597,7 @@ void getModes(PtrList<Field_type>& snapshots,
         {
             ITHACAstream::read_fields(modes, fieldName, "./ITHACAoutput/supremizer/");
         }
+
         else
         {
             ITHACAstream::read_fields(modes, fieldName, "./ITHACAoutput/POD/");
