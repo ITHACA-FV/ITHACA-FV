@@ -239,7 +239,7 @@ PtrList<S> DEIM<T>::generateSubmeshes(label layers, fvMesh& mesh, S field,
         submesh->subMesh().fvSolution::read();
         std::cout.clear();
         S f = submesh->interpolate(field);
-        fields.append(f);
+        fields.append(tmp<S>(f));
 
         if (!secondTime)
         {
@@ -311,7 +311,7 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(label layers, fvMesh& mesh, S field,
         submesh->subMesh().fvSolution::read();
         std::cout.clear();
         S f = submesh->interpolate(field);
-        fieldsA.append(f);
+        fieldsA.append(tmp<S>(f));
 
         if (!secondTime)
         {
@@ -391,7 +391,7 @@ PtrList<S> DEIM<T>::generateSubmeshesVector(label layers, fvMesh& mesh, S field,
         submesh->subMesh().fvSolution::read();
         std::cout.clear();
         S f = submesh->interpolate(field);
-        fieldsB.append(f);
+        fieldsB.append(tmp<S>(f));
 
         if (!secondTime)
         {
@@ -535,7 +535,7 @@ PtrList<F> DEIM<T>::generateSubFieldsMatrix(F& field)
     for (label i = 0; i < submeshListA.size(); i++)
     {
         F f = submeshListA[i].interpolate(field);
-        fields.append(f);
+        fields.append(tmp<F>(f));
     }
 
     return fields;
@@ -552,7 +552,7 @@ PtrList<F> DEIM<T>::generateSubFieldsVector(F& field)
     for (label i = 0; i < submeshListB.size(); i++)
     {
         F f = submeshListB[i].interpolate(field);
-        fields.append(f);
+        fields.append(tmp<F>(f));
     }
 
     return fields;
