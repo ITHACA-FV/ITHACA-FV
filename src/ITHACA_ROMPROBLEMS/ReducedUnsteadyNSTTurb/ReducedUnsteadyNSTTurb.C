@@ -57,46 +57,46 @@ ReducedUnsteadyNSTTurb::ReducedUnsteadyNSTTurb(UnsteadyNSTTurb& FOMproblem)
     // Create locally the velocity modes
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
-        Umodes.append(problem->liftfield[k]);
+        Umodes.append(tmp<volVectorField>(problem->liftfield[k]));
     }
 
     for (int k = 0; k < problem->NUmodes; k++)
     {
-        Umodes.append(problem->Umodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->Umodes[k]));
     }
 
     for (int k = 0; k < problem->NSUPmodes; k++)
     {
-        Umodes.append(problem->supmodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->supmodes[k]));
     }
 
     // Create locally the pressure modes
     for (int k = 0; k < problem->NPmodes; k++)
     {
-        Pmodes.append(problem->Pmodes[k]);
+        Pmodes.append(tmp<volScalarField>(problem->Pmodes[k]));
     }
 
     for (int k = 0; k < problem->liftfieldT.size(); k++)
     {
-        Tmodes.append(problem->liftfieldT[k]);
+        Tmodes.append(tmp<volScalarField>(problem->liftfieldT[k]));
     }
 
     // Create locally the temperature modes
     for (int k = 0; k < problem->NTmodes; k++)
     {
-        Tmodes.append(problem->Tmodes[k]);
+        Tmodes.append(tmp<volScalarField>(problem->Tmodes[k]));
     }
 
     // Store locally the snapshots for projections
     for (int k = 0; k < problem->Ufield.size(); k++)
     {
-        Usnapshots.append(problem->Ufield[k]);
-        Psnapshots.append(problem->Pfield[k]);
+        Usnapshots.append(tmp<volVectorField>(problem->Ufield[k]));
+        Psnapshots.append(tmp<volScalarField>(problem->Pfield[k]));
     }
 
     for (int k = 0; k < problem->Tfield.size(); k++)
     {
-        Tsnapshots.append(problem->Tfield[k]);
+        Tsnapshots.append(tmp<volScalarField>(problem->Tfield[k]));
     }
 
     newton_object_sup = newton_unsteadyNSTTurb_sup(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
@@ -313,7 +313,7 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
             nut_rec += problem->nuTmodes[j] * newton_object_sup.nu_c(j);
         }
 
-        nutREC.append(nut_rec);
+        nutREC.append(tmp<volScalarField>(nut_rec));
         newton_object_sup_t.nu_c = newton_object_sup.nu_c;
         Eigen::VectorXd res(y);
         Eigen::VectorXd rest(z);
@@ -430,8 +430,8 @@ void ReducedUnsteadyNSTTurb::reconstructSup(fileName folder, int printevery)
             ITHACAstream::exportSolution(nutREC[nextwrite], name(counter2), folder);
             nextwrite += printevery;
             counter2 ++;
-            UREC.append(U_rec);
-            PREC.append(P_rec);
+            UREC.append(tmp<volVectorField>(U_rec));
+            PREC.append(tmp<volScalarField>(P_rec));
         }
 
         counter++;
@@ -462,7 +462,7 @@ void ReducedUnsteadyNSTTurb::reconstructSupt(fileName folder, int printevery)
             ITHACAstream::exportSolution(T_rec,  name(counter2), folder);
             nextwrite += printevery;
             counter2 ++;
-            TREC.append(T_rec);
+            TREC.append(tmp<volScalarField>(T_rec));
         }
 
         counter++;

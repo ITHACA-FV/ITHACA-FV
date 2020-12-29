@@ -55,29 +55,29 @@ ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
     // Create locally the velocity modes
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
-        Umodes.append(problem->liftfield[k]);
+        Umodes.append(tmp<volVectorField>(problem->liftfield[k]));
     }
 
     for (int k = 0; k < problem->NUmodes; k++)
     {
-        Umodes.append(problem->Umodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->Umodes[k]));
     }
 
     for (int k = 0; k < problem->NSUPmodes; k++)
     {
-        Umodes.append(problem->supmodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->supmodes[k]));
     }
 
     // Create locally the pressure modes
     for (int k = 0; k < problem->NPmodes; k++)
     {
-        Pmodes.append(problem->Pmodes[k]);
+        Pmodes.append(tmp<volScalarField>(problem->Pmodes[k]));
     }
 
     // Create locally the eddy viscosity modes
     for (int k = 0; k < problem->nNutModes; k++)
     {
-        nutModes.append(problem->nutModes[k]);
+        nutModes.append(tmp<volScalarField>(problem->nutModes[k]));
     }
 
     newtonObjectSUP = newtonUnsteadyNSTurbSUP(Nphi_u + Nphi_p, Nphi_u + Nphi_p,

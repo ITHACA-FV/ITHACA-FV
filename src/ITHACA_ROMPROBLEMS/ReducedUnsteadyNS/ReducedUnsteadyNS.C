@@ -53,23 +53,23 @@ reducedUnsteadyNS::reducedUnsteadyNS(unsteadyNS& FOMproblem)
     // Create locally the velocity modes
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
-        Umodes.append(problem->liftfield[k]);
+        Umodes.append(tmp<volVectorField>(problem->liftfield[k]));
     }
 
     for (int k = 0; k < problem->NUmodes; k++)
     {
-        Umodes.append(problem->Umodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->Umodes[k]));
     }
 
     for (int k = 0; k < problem->NSUPmodes; k++)
     {
-        Umodes.append(problem->supmodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->supmodes[k]));
     }
 
     // Create locally the pressure modes
     for (int k = 0; k < problem->NPmodes; k++)
     {
-        Pmodes.append(problem->Pmodes[k]);
+        Pmodes.append(tmp<volScalarField>(problem->Pmodes[k]));
     }
 
     newton_object_sup = newton_unsteadyNS_sup(Nphi_u + Nphi_p, Nphi_u + Nphi_p,

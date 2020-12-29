@@ -47,12 +47,12 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
     // Create a new Umodes set where the first ones are the lift functions
     for (int i = 0; i < problem->inletIndex.rows(); i++)
     {
-        ULmodes.append(problem->liftfield[i]);
+        ULmodes.append(tmp<volVectorField>(problem->liftfield[i]));
     }
 
     for (int i = 0; i < problem->Umodes.size(); i++)
     {
-        ULmodes.append(problem->Umodes.toPtrList()[i]);
+        ULmodes.append(tmp<volVectorField>(problem->Umodes.toPtrList()[i]));
     }
 }
 
@@ -67,17 +67,17 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
 
     for (int i = 0; i < problem->inletIndex.rows(); i++)
     {
-        ULmodes.append(problem->liftfield[i]);
+        ULmodes.append(tmp<volVectorField>(problem->liftfield[i]));
     }
 
     for (int i = 0; i < NmodesUproj; i++)
     {
-        ULmodes.append(problem->Umodes.toPtrList()[i]);
+        ULmodes.append(tmp<volVectorField>(problem->Umodes.toPtrList()[i]));
     }
 
     for (int i = 0; i < NmodesSup; i++)
     {
-        ULmodes.append(problem->supmodes.toPtrList()[i]);
+        ULmodes.append(tmp<volVectorField>(problem->supmodes.toPtrList()[i]));
     }
 
     counter++;
@@ -158,7 +158,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
 
     for (int i = 0; i < NmodesPproj; i++)
     {
-        gradModP.append(fvc::grad(problem->Pmodes[i]));
+        gradModP.append(tmp<volVectorField>(fvc::grad(problem->Pmodes[i])));
     }
 
     projGradModP = ULmodes.project(gradModP, NmodesUproj);

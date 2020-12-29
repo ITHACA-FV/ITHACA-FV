@@ -47,7 +47,7 @@ ReducedSteadyNSTurbIntrusive::ReducedSteadyNSTurbIntrusive(
 
     for (int k = 0; k < Nphi_u; k++)
     {
-        Umodes.append(problem->Umodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->Umodes[k]));
     }
 
     newtonObject = newtonSteadyNSTurbIntrusive(Nphi_u, Nphi_u,
@@ -197,9 +197,9 @@ void ReducedSteadyNSTurbIntrusive::reconstruct(fileName folder,
             ITHACAstream::exportSolution(uRec, name(online_solution[i](0, 0)), folder);
             ITHACAstream::exportSolution(pRec, name(online_solution[i](0, 0)), folder);
             nextWrite += printEvery;
-            UREC.append(uRec);
-            PREC.append(pRec);
-            nutRec.append(nutTemp);
+            UREC.append(tmp<volVectorField>(uRec));
+            PREC.append(tmp<volScalarField>(pRec));
+            nutRec.append(tmp<volScalarField>(nutTemp));
         }
 
         counter++;

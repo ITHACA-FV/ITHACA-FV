@@ -56,28 +56,28 @@ ReducedUnsteadyBB::ReducedUnsteadyBB(UnsteadyBB& FOMproblem)
     // Create locally the velocity modes
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
-        LUmodes.append(problem->liftfield[k]);
+        LUmodes.append(tmp<volVectorField>(problem->liftfield[k]));
     }
 
     for (int k = 0; k < problem->NUmodes; k++)
     {
-        LUmodes.append(problem->Umodes[k]);
+        LUmodes.append(tmp<volVectorField>(problem->Umodes[k]));
     }
 
     for (int k = 0; k < problem->NSUPmodes; k++)
     {
-        LUmodes.append(problem->supmodes[k]);
+        LUmodes.append(tmp<volVectorField>(problem->supmodes[k]));
     }
 
     // Create locally the temperature modes including BC with liftfield
     for (int k = 0; k < problem->liftfieldT.size(); k++)
     {
-        LTmodes.append(problem->liftfieldT[k]);
+        LTmodes.append(tmp<volScalarField>(problem->liftfieldT[k]));
     }
 
     for (int k = 0; k < problem->NTmodes; k++)
     {
-        LTmodes.append(problem->Tmodes[k]);
+        LTmodes.append(tmp<volScalarField>(problem->Tmodes[k]));
     }
 
     newton_object_sup = newton_unsteadyBB_sup(Nphi_u + Nphi_prgh + Nphi_t,
@@ -587,7 +587,7 @@ void ReducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
                 }
 
                 ITHACAstream::exportSolution(P_rec,  name(counter2), folder);
-                PREC.append(P_rec);
+                PREC.append(tmp<volScalarField>(P_rec));
             }
 
             volScalarField T_rec("T_rec", LTmodes[0] * 0);
@@ -602,8 +602,8 @@ void ReducedUnsteadyBB::reconstruct_sup(fileName folder, int printevery)
             double timenow = online_solutiont(0, i);
             std::ofstream of(folder + name(counter2) + "/" + name(timenow));
             counter2 ++;
-            UREC.append(U_rec);
-            TREC.append(T_rec);
+            UREC.append(tmp<volVectorField>(U_rec));
+            TREC.append(tmp<volScalarField>(T_rec));
         }
 
         counter++;

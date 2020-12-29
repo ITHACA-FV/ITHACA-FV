@@ -51,17 +51,17 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
 
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
-        Umodes.append(problem->liftfield[k]);
+        Umodes.append(tmp<volVectorField>(problem->liftfield[k]));
     }
 
     for (int k = 0; k < problem->NUmodes; k++)
     {
-        Umodes.append(problem->Umodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->Umodes[k]));
     }
 
     for (int k = 0; k < problem->NSUPmodes; k++)
     {
-        Umodes.append(problem->supmodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->supmodes[k]));
     }
 
     newton_object = newton_steadyNS(Nphi_u + Nphi_p, Nphi_u + Nphi_p, FOMproblem);

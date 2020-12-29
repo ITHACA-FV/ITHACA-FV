@@ -53,123 +53,123 @@ reducedusMSR::reducedusMSR(usmsrProblem& FOMproblem)
     //load the modes function
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
-        Umodes.append(problem->liftfield[k]);
+        Umodes.append(tmp<volVectorField>(problem->liftfield[k]));
     }
 
     for (int k = 0; k < problem->NUmodes; k++)
     {
-        Umodes.append(problem->Umodes[k]);
+        Umodes.append(tmp<volVectorField>(problem->Umodes[k]));
     }
 
     for (int k = 0; k < problem->NPmodes; k++)
     {
-        Pmodes.append(problem->Pmodes[k]);
+        Pmodes.append(tmp<volScalarField>(problem->Pmodes[k]));
     }
 
     for (int k = 0; k < problem->NFluxmodes; k++)
     {
-        Fluxmodes.append(problem->Fluxmodes[k]);
+        Fluxmodes.append(tmp<volScalarField>(problem->Fluxmodes[k]));
     }
 
     for (int k = 0; k < Nphi_prec1; k++)
     {
-        Prec1modes.append(problem->Prec1modes[k]);
+        Prec1modes.append(tmp<volScalarField>(problem->Prec1modes[k]));
     }
 
     for (int k = 0; k < Nphi_prec2; k++)
     {
-        Prec2modes.append(problem->Prec2modes[k]);
+        Prec2modes.append(tmp<volScalarField>(problem->Prec2modes[k]));
     }
 
     for (int k = 0; k < Nphi_prec3; k++)
     {
-        Prec3modes.append(problem->Prec3modes[k]);
+        Prec3modes.append(tmp<volScalarField>(problem->Prec3modes[k]));
     }
 
     for (int k = 0; k < Nphi_prec4; k++)
     {
-        Prec4modes.append(problem->Prec4modes[k]);
+        Prec4modes.append(tmp<volScalarField>(problem->Prec4modes[k]));
     }
 
     for (int k = 0; k < Nphi_prec5; k++)
     {
-        Prec5modes.append(problem->Prec5modes[k]);
+        Prec5modes.append(tmp<volScalarField>(problem->Prec5modes[k]));
     }
 
     for (int k = 0; k < Nphi_prec6; k++)
     {
-        Prec6modes.append(problem->Prec6modes[k]);
+        Prec6modes.append(tmp<volScalarField>(problem->Prec6modes[k]));
     }
 
     for (int k = 0; k < Nphi_prec7; k++)
     {
-        Prec7modes.append(problem->Prec7modes[k]);
+        Prec7modes.append(tmp<volScalarField>(problem->Prec7modes[k]));
     }
 
     for (int k = 0; k < Nphi_prec8; k++)
     {
-        Prec8modes.append(problem->Prec8modes[k]);
+        Prec8modes.append(tmp<volScalarField>(problem->Prec8modes[k]));
     }
 
     for (int k = 0; k < problem->liftfieldT.size(); k++)
     {
-        Tmodes.append(problem->liftfieldT[k]);
+        Tmodes.append(tmp<volScalarField>(problem->liftfieldT[k]));
     }
 
     for (int k = 0; k < problem->NTmodes; k++)
     {
-        Tmodes.append(problem->Tmodes[k]);
+        Tmodes.append(tmp<volScalarField>(problem->Tmodes[k]));
     }
 
     for (int k = 0; k < Nphi_dec1; k++)
     {
-        Dec1modes.append(problem->Dec1modes[k]);
+        Dec1modes.append(tmp<volScalarField>(problem->Dec1modes[k]));
     }
 
     for (int k = 0; k < Nphi_dec2; k++)
     {
-        Dec2modes.append(problem->Dec2modes[k]);
+        Dec2modes.append(tmp<volScalarField>(problem->Dec2modes[k]));
     }
 
     for (int k = 0; k < Nphi_dec3; k++)
     {
-        Dec3modes.append(problem->Dec3modes[k]);
+        Dec3modes.append(tmp<volScalarField>(problem->Dec3modes[k]));
     }
 
     for (int k = 0; k < Nphi_const; k++)
     {
-        vmodes.append(problem->vmodes[k]);
-        Dmodes.append(problem->Dmodes[k]);
-        NSFmodes.append(problem->NSFmodes[k]);
-        Amodes.append(problem->Amodes[k]);
-        SPmodes.append(problem->SPmodes[k]);
-        TXSmodes.append(problem->TXSmodes[k]);
+        vmodes.append(tmp<volScalarField>(problem->vmodes[k]));
+        Dmodes.append(tmp<volScalarField>(problem->Dmodes[k]));
+        NSFmodes.append(tmp<volScalarField>(problem->NSFmodes[k]));
+        Amodes.append(tmp<volScalarField>(problem->Amodes[k]));
+        SPmodes.append(tmp<volScalarField>(problem->SPmodes[k]));
+        TXSmodes.append(tmp<volScalarField>(problem->TXSmodes[k]));
     }
 
     //load the snapshots
     for (int k = 0; k < problem->Ufield.size(); k++)
     {
-        Usnapshots.append(problem->Ufield[k]);
-        Psnapshots.append(problem->Pfield[k]);
-        Fluxsnapshots.append(problem->Fluxfield[k]);
-        Prec1snapshots.append(problem->Prec1field[k]);
-        Prec2snapshots.append(problem->Prec2field[k]);
-        Prec3snapshots.append(problem->Prec3field[k]);
-        Prec4snapshots.append(problem->Prec4field[k]);
-        Prec5snapshots.append(problem->Prec5field[k]);
-        Prec6snapshots.append(problem->Prec6field[k]);
-        Prec7snapshots.append(problem->Prec7field[k]);
-        Prec8snapshots.append(problem->Prec8field[k]);
-        Tsnapshots.append(problem->Tfield[k]);
-        Dec1snapshots.append(problem->Dec1field[k]);
-        Dec2snapshots.append(problem->Dec2field[k]);
-        Dec3snapshots.append(problem->Dec3field[k]);
-        vsnapshots.append(problem->vFields[k]);
-        Dsnapshots.append(problem->DFields[k]);
-        NSFsnapshots.append(problem->NSFFields[k]);
-        Asnapshots.append(problem->AFields[k]);
-        SPsnapshots.append(problem->SPFields[k]);
-        TXSsnapshots.append(problem->TXSFields[k]);
+        Usnapshots.append(tmp<volVectorField>(problem->Ufield[k]));
+        Psnapshots.append(tmp<volScalarField>(problem->Pfield[k]));
+        Fluxsnapshots.append(tmp<volScalarField>(problem->Fluxfield[k]));
+        Prec1snapshots.append(tmp<volScalarField>(problem->Prec1field[k]));
+        Prec2snapshots.append(tmp<volScalarField>(problem->Prec2field[k]));
+        Prec3snapshots.append(tmp<volScalarField>(problem->Prec3field[k]));
+        Prec4snapshots.append(tmp<volScalarField>(problem->Prec4field[k]));
+        Prec5snapshots.append(tmp<volScalarField>(problem->Prec5field[k]));
+        Prec6snapshots.append(tmp<volScalarField>(problem->Prec6field[k]));
+        Prec7snapshots.append(tmp<volScalarField>(problem->Prec7field[k]));
+        Prec8snapshots.append(tmp<volScalarField>(problem->Prec8field[k]));
+        Tsnapshots.append(tmp<volScalarField>(problem->Tfield[k]));
+        Dec1snapshots.append(tmp<volScalarField>(problem->Dec1field[k]));
+        Dec2snapshots.append(tmp<volScalarField>(problem->Dec2field[k]));
+        Dec3snapshots.append(tmp<volScalarField>(problem->Dec3field[k]));
+        vsnapshots.append(tmp<volScalarField>(problem->vFields[k]));
+        Dsnapshots.append(tmp<volScalarField>(problem->DFields[k]));
+        NSFsnapshots.append(tmp<volScalarField>(problem->NSFFields[k]));
+        Asnapshots.append(tmp<volScalarField>(problem->AFields[k]));
+        SPsnapshots.append(tmp<volScalarField>(problem->SPFields[k]));
+        TXSsnapshots.append(tmp<volScalarField>(problem->TXSFields[k]));
     }
 
     newton_object_fd = newton_usmsr_fd(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
@@ -993,8 +993,8 @@ void reducedusMSR::reconstruct_fd(fileName folder, int printevery)
                                  online_solution_fd[i](0)));
             nextwrite += printevery;
             counter2 ++;
-            UREC.append(U_rec);
-            PREC.append(P_rec);
+            UREC.append(tmp<volVectorField>(U_rec));
+            PREC.append(tmp<volScalarField>(P_rec));
         }
 
         counter++;
@@ -1104,15 +1104,15 @@ void reducedusMSR::reconstruct_n(fileName folder, int printevery)
                                  online_solution_n[i](0)));
             nextwrite += printevery;
             counter2 ++;
-            FLUXREC.append(Flux_rec);
-            PREC1REC.append(Prec1_rec);
-            PREC2REC.append(Prec2_rec);
-            PREC3REC.append(Prec3_rec);
-            PREC4REC.append(Prec4_rec);
-            PREC5REC.append(Prec5_rec);
-            PREC6REC.append(Prec6_rec);
-            PREC7REC.append(Prec7_rec);
-            PREC8REC.append(Prec8_rec);
+            FLUXREC.append(tmp<volScalarField>(Flux_rec));
+            PREC1REC.append(tmp<volScalarField>(Prec1_rec));
+            PREC2REC.append(tmp<volScalarField>(Prec2_rec));
+            PREC3REC.append(tmp<volScalarField>(Prec3_rec));
+            PREC4REC.append(tmp<volScalarField>(Prec4_rec));
+            PREC5REC.append(tmp<volScalarField>(Prec5_rec));
+            PREC6REC.append(tmp<volScalarField>(Prec6_rec));
+            PREC7REC.append(tmp<volScalarField>(Prec7_rec));
+            PREC8REC.append(tmp<volScalarField>(Prec8_rec));
         }
 
         counter++;
@@ -1186,11 +1186,11 @@ void reducedusMSR::reconstruct_t(fileName folder, int printevery)
                                  online_solution_t[i](0)));
             nextwrite += printevery;
             counter2 ++;
-            TREC.append(T_rec);
-            DEC1REC.append(Dec1_rec);
-            DEC2REC.append(Dec2_rec);
-            DEC3REC.append(Dec3_rec);
-            POWERDENSREC.append(PowerDens_rec);
+            TREC.append(tmp<volScalarField>(T_rec));
+            DEC1REC.append(tmp<volScalarField>(Dec1_rec));
+            DEC2REC.append(tmp<volScalarField>(Dec2_rec));
+            DEC3REC.append(tmp<volScalarField>(Dec3_rec));
+            POWERDENSREC.append(tmp<volScalarField>(PowerDens_rec));
         }
 
         counter++;
@@ -1273,12 +1273,12 @@ void reducedusMSR::reconstruct_C(fileName folder, int printevery)
                                  online_solution_C[i](0)));
             nextwrite += printevery;
             counter2 ++;
-            vREC.append(v_rec);
-            DREC.append(D_rec);
-            NSFREC.append(NSF_rec);
-            AREC.append(A_rec);
-            SPREC.append(SP_rec);
-            TXSREC.append(TXS_rec);
+            vREC.append(tmp<volScalarField>(v_rec));
+            DREC.append(tmp<volScalarField>(D_rec));
+            NSFREC.append(tmp<volScalarField>(NSF_rec));
+            AREC.append(tmp<volScalarField>(A_rec));
+            SPREC.append(tmp<volScalarField>(SP_rec));
+            TXSREC.append(tmp<volScalarField>(TXS_rec));
         }
 
         counter++;
