@@ -111,9 +111,9 @@ void SteadyNSTurb::truthSolve(List<scalar> mu_now)
     ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     volScalarField _nut(turbulence->nut());
     ITHACAstream::exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
-    Ufield.append(U);
-    Pfield.append(p);
-    nutFields.append(_nut);
+    Ufield.append(tmp<volVectorField>(U));
+    Pfield.append(tmp<volScalarField>(p));
+    nutFields.append(tmp<volScalarField>(_nut));
     counter++;
     writeMu(mu_now);
     // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points
@@ -313,7 +313,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            L_U_SUPmodes.append(liftfield[k]);
+            L_U_SUPmodes.append(tmp<volVectorField>(liftfield[k]));
         }
     }
 
@@ -321,7 +321,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            L_U_SUPmodes.append(Umodes[k]);
+            L_U_SUPmodes.append(tmp<volVectorField>(Umodes[k]));
         }
     }
 
@@ -329,7 +329,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     {
         for (label k = 0; k < NSUPmodes; k++)
         {
-            L_U_SUPmodes.append(supmodes[k]);
+            L_U_SUPmodes.append(tmp<volVectorField>(supmodes[k]));
         }
     }
 
@@ -447,7 +447,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         {
             for (label k = 0; k < liftfield.size(); k++)
             {
-                L_U_SUPmodes.append(liftfield[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(liftfield[k]));
             }
         }
 
@@ -455,7 +455,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         {
             for (label k = 0; k < NUmodes; k++)
             {
-                L_U_SUPmodes.append(Umodes[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(Umodes[k]));
             }
         }
 
@@ -463,7 +463,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         {
             for (label k = 0; k < NSUPmodes; k++)
             {
-                L_U_SUPmodes.append(supmodes[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(supmodes[k]));
             }
         }
 

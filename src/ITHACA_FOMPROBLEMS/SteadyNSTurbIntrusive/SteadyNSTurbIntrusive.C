@@ -110,9 +110,9 @@ void SteadyNSTurbIntrusive::truthSolve(List<scalar> mu_now)
     ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     volScalarField _nut(turbulence->nut());
     ITHACAstream::exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
-    Ufield.append(U);
-    Pfield.append(p);
-    nutFields.append(_nut);
+    Ufield.append(tmp<volVectorField>(U));
+    Pfield.append(tmp<volScalarField>(p));
+    nutFields.append(tmp<volScalarField>(_nut));
     counter++;
     writeMu(mu_now);
     // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points

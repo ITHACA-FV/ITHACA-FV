@@ -141,9 +141,9 @@ void unsteadyNST::truthSolve(List<scalar> mu_now)
             ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                              runTime.timeName());
-            Ufield.append(U);
-            Pfield.append(p);
-            Tfield.append(T);
+            Ufield.append(tmp<volVectorField>(U));
+            Pfield.append(tmp<volScalarField>(p));
+            Tfield.append(tmp<volScalarField>(T));
             counter++;
             nextWrite += writeEvery;
             writeMu(mu_now);
@@ -231,7 +231,7 @@ void unsteadyNST::liftSolveT()
             Tlift[i] = (totalTime * Tlift[i] + dt * Tlift[i] ) / (totalTime + dt);
         }
         Tlift.write();
-        liftfieldT.append(Tlift);
+        liftfieldT.append(tmp<volScalarField>(Tlift));
     }
 }
 
@@ -339,7 +339,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < liftfield.size(); k++)
             {
-                L_U_SUPmodes.append(liftfield[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(liftfield[k]));
             }
         }
 
@@ -347,7 +347,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < NUmodes; k++)
             {
-                L_U_SUPmodes.append(Umodes[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(Umodes[k]));
             }
         }
 
@@ -355,7 +355,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < NSUPmodes; k++)
             {
-                L_U_SUPmodes.append(supmodes[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(supmodes[k]));
             }
         }
 
@@ -365,7 +365,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < liftfieldT.size(); k++)
             {
-                L_T_modes.append(liftfieldT[k]);
+                L_T_modes.append(tmp<volScalarField>(liftfieldT[k]));
             }
         }
 
@@ -373,7 +373,7 @@ void unsteadyNST::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < NTmodes; k++)
             {
-                L_T_modes.append(Tmodes[k]);
+                L_T_modes.append(tmp<volScalarField>(Tmodes[k]));
             }
         }
 
@@ -563,7 +563,7 @@ void unsteadyNST::liftSolve()
                  / sum(mesh.magSf())).value()
              << endl;
         Ulift.write();
-        liftfield.append(Ulift);
+        liftfield.append(tmp<volVectorField>(Ulift));
     }
 }
 

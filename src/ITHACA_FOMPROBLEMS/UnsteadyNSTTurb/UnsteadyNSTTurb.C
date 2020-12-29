@@ -133,10 +133,10 @@ void UnsteadyNSTTurb::truthSolve(List<scalar> mu_now)
             ITHACAstream::exportSolution(alphat, name(counter), "./ITHACAoutput/Offline/");
             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                              runTime.timeName());
-            Ufield.append(U);
-            Pfield.append(p);
-            nutFields.append(_nut);
-            Tfield.append(T);
+            Ufield.append(tmp<volVectorField>(U));
+            Pfield.append(tmp<volScalarField>(p));
+            nutFields.append(tmp<volScalarField>(_nut));
+            Tfield.append(tmp<volScalarField>(T));
             counter++;
             nextWrite += writeEvery;
             writeMu(mu_now);
@@ -227,7 +227,7 @@ void UnsteadyNSTTurb::liftSolveT()
             Tlift[i] = (totalTime * Tlift[i] + dt * Tlift[i] ) / (totalTime + dt);
         }
         Tlift.write();
-        liftfieldT.append(Tlift);
+        liftfieldT.append(tmp<volScalarField>(Tlift));
     }
 }
 
@@ -252,7 +252,7 @@ List <Eigen::MatrixXd> UnsteadyNSTTurb::turbulenceTerm1(label NUmodes,
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(liftfield[k]);
+            Together.append(tmp<volVectorField>(liftfield[k]));
         }
     }
 
@@ -260,7 +260,7 @@ List <Eigen::MatrixXd> UnsteadyNSTTurb::turbulenceTerm1(label NUmodes,
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(Umodes[k]);
+            Together.append(tmp<volVectorField>(Umodes[k]));
         }
     }
 
@@ -268,7 +268,7 @@ List <Eigen::MatrixXd> UnsteadyNSTTurb::turbulenceTerm1(label NUmodes,
     {
         for (label k = 0; k < NSUPmodes; k++)
         {
-            Together.append(supmodes[k]);
+            Together.append(tmp<volVectorField>(supmodes[k]));
         }
     }
 
@@ -317,7 +317,7 @@ List <Eigen::MatrixXd> UnsteadyNSTTurb::turbulenceTerm2(label NUmodes,
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(liftfield[k]);
+            Together.append(tmp<volVectorField>(liftfield[k]));
         }
     }
 
@@ -325,7 +325,7 @@ List <Eigen::MatrixXd> UnsteadyNSTTurb::turbulenceTerm2(label NUmodes,
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(Umodes[k]);
+            Together.append(tmp<volVectorField>(Umodes[k]));
         }
     }
 
@@ -333,7 +333,7 @@ List <Eigen::MatrixXd> UnsteadyNSTTurb::turbulenceTerm2(label NUmodes,
     {
         for (label k = 0; k < NSUPmodes; k++)
         {
-            Together.append(supmodes[k]);
+            Together.append(tmp<volVectorField>(supmodes[k]));
         }
     }
 
@@ -373,7 +373,7 @@ Eigen::MatrixXd UnsteadyNSTTurb::BTturbulence(label NUmodes, label NSUPmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(liftfield[k]);
+            Together.append(tmp<volVectorField>(liftfield[k]));
         }
     }
 
@@ -381,7 +381,7 @@ Eigen::MatrixXd UnsteadyNSTTurb::BTturbulence(label NUmodes, label NSUPmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(Umodes[k]);
+            Together.append(tmp<volVectorField>(Umodes[k]));
         }
     }
 
@@ -389,7 +389,7 @@ Eigen::MatrixXd UnsteadyNSTTurb::BTturbulence(label NUmodes, label NSUPmodes)
     {
         for (label k = 0; k < NSUPmodes; k++)
         {
-            Together.append(supmodes[k]);
+            Together.append(tmp<volVectorField>(supmodes[k]));
         }
     }
 
@@ -433,7 +433,7 @@ List <Eigen::MatrixXd> UnsteadyNSTTurb::temperatureTurbulenceTerm(
     {
         for (label k = 0; k < liftfieldT.size(); k++)
         {
-            Together.append(liftfieldT[k]);
+            Together.append(tmp<volScalarField>(liftfieldT[k]));
         }
     }
 
@@ -441,7 +441,7 @@ List <Eigen::MatrixXd> UnsteadyNSTTurb::temperatureTurbulenceTerm(
     {
         for (label k = 0; k < NTmodes; k++)
         {
-            Together.append(Tmodes[k]);
+            Together.append(tmp<volScalarField>(Tmodes[k]));
         }
     }
 

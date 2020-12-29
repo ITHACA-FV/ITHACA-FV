@@ -110,10 +110,10 @@ void UnsteadyBB::truthSolve(List<scalar> mu_now)
     ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
     std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                      runTime.timeName());
-    Ufield.append(U);
-    Pfield.append(p);
-    Prghfield.append(p_rgh);
-    Tfield.append(T);
+    Ufield.append(tmp<volVectorField>(U));
+    Pfield.append(tmp<volScalarField>(p));
+    Prghfield.append(tmp<volScalarField>(p_rgh));
+    Tfield.append(tmp<volScalarField>(T));
     counter++;
     nextWrite += writeEvery;
 
@@ -157,10 +157,10 @@ void UnsteadyBB::truthSolve(List<scalar> mu_now)
             ITHACAstream::exportSolution(T, name(counter), "./ITHACAoutput/Offline/");
             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                              runTime.timeName());
-            Ufield.append(U);
-            Pfield.append(p);
-            Prghfield.append(p_rgh);
-            Tfield.append(T);
+            Ufield.append(tmp<volVectorField>(U));
+            Pfield.append(tmp<volScalarField>(p));
+            Prghfield.append(tmp<volScalarField>(p_rgh));
+            Tfield.append(tmp<volScalarField>(T));
             counter++;
             nextWrite += writeEvery;
             writeMu(mu_now);
@@ -369,7 +369,7 @@ void UnsteadyBB::solvesupremizer(word type)
                 (
                     u_sup_eqn == fvc::grad(P_sup[i])
                 );
-                supfield.append(Usup);
+                supfield.append(tmp<volVectorField>(Usup));
                 ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
             }
 
@@ -396,7 +396,7 @@ void UnsteadyBB::solvesupremizer(word type)
                 (
                     u_sup_eqn == fvc::grad(Prghmodes[i])
                 );
-                supmodes.append(Usup);
+                supmodes.append(tmp<volVectorField>(Usup));
                 ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
             }
 
@@ -479,7 +479,7 @@ void UnsteadyBB::liftSolveT()
         }
 
         Tlift.write();
-        liftfieldT.append(Tlift);
+        liftfieldT.append(tmp<volScalarField>(Tlift));
     }
 }
 
@@ -598,7 +598,7 @@ void UnsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < liftfield.size(); k++)
             {
-                L_U_SUPmodes.append(liftfield[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(liftfield[k]));
             }
         }
 
@@ -606,7 +606,7 @@ void UnsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < NUmodes; k++)
             {
-                L_U_SUPmodes.append(Umodes[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(Umodes[k]));
             }
         }
 
@@ -614,7 +614,7 @@ void UnsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < NSUPmodes; k++)
             {
-                L_U_SUPmodes.append(supmodes[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(supmodes[k]));
             }
         }
 
@@ -624,7 +624,7 @@ void UnsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < liftfieldT.size(); k++)
             {
-                L_T_modes.append(liftfieldT[k]);
+                L_T_modes.append(tmp<volScalarField>(liftfieldT[k]));
             }
         }
 
@@ -632,7 +632,7 @@ void UnsteadyBB::projectSUP(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < NTmodes; k++)
             {
-                L_T_modes.append(Tmodes[k]);
+                L_T_modes.append(tmp<volScalarField>(Tmodes[k]));
             }
         }
 
@@ -776,7 +776,7 @@ void UnsteadyBB::projectPPE(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < liftfield.size(); k++)
             {
-                L_U_SUPmodes.append(liftfield[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(liftfield[k]));
             }
         }
 
@@ -784,7 +784,7 @@ void UnsteadyBB::projectPPE(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < NUmodes; k++)
             {
-                L_U_SUPmodes.append(Umodes[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(Umodes[k]));
             }
         }
 
@@ -792,7 +792,7 @@ void UnsteadyBB::projectPPE(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < NSUPmodes; k++)
             {
-                L_U_SUPmodes.append(supmodes[k]);
+                L_U_SUPmodes.append(tmp<volVectorField>(supmodes[k]));
             }
         }
 
@@ -802,7 +802,7 @@ void UnsteadyBB::projectPPE(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < liftfieldT.size(); k++)
             {
-                L_T_modes.append(liftfieldT[k]);
+                L_T_modes.append(tmp<volScalarField>(liftfieldT[k]));
             }
         }
 
@@ -810,7 +810,7 @@ void UnsteadyBB::projectPPE(fileName folder, label NU, label NP, label NT,
         {
             for (label k = 0; k < NTmodes; k++)
             {
-                L_T_modes.append(Tmodes[k]);
+                L_T_modes.append(tmp<volScalarField>(Tmodes[k]));
             }
         }
 
@@ -1130,7 +1130,7 @@ void UnsteadyBB::liftSolve()
                  / sum(mesh.magSf())).value()
              << endl;
         Ulift.write();
-        liftfield.append(Ulift);
+        liftfield.append(tmp<volVectorField>(Ulift));
     }
 }
 
