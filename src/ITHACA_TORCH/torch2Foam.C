@@ -121,7 +121,7 @@ PtrList<Field<type_f>> torch2PtrList(torch::Tensor& tTensor)
     for (auto i = 0; i < tTensor.size(0); i++)
     {
         torch::Tensor t = tTensor.slice(0, i, i + 1);
-        out.append(torch2Field<type_f>(t));
+        out.append(tmp<Field<type_f>>(torch2Field<type_f>(t)));
     }
 
     return out;
