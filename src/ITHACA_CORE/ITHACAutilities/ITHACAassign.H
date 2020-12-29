@@ -99,7 +99,7 @@ TypeField computeAverage(PtrList<TypeField>& fields);
 ///
 template<typename Type>
 void assignIF(GeometricField<Type, fvPatchField, volMesh>& field,
-              Type& value);
+              Type value);
 
 //--------------------------------------------------------------------------
 /// Assign internal field

@@ -92,7 +92,7 @@ template volScalarField computeAverage(
 
 template<typename Type>
 void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
-              Type& value)
+              Type value)
 {
     for (label i = 0; i < s.internalField().size(); i++)
     {
@@ -101,9 +101,9 @@ void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
 }
 
 template void assignIF(
-    GeometricField<scalar, fvPatchField, volMesh>& field, scalar& value);
+    GeometricField<scalar, fvPatchField, volMesh>& field, scalar value);
 template void assignIF(
-    GeometricField<vector, fvPatchField, volMesh>& field, vector& value);
+    GeometricField<vector, fvPatchField, volMesh>& field, vector value);
 
 template<typename Type>
 void assignIF(GeometricField<Type, fvPatchField, volMesh>& s,
