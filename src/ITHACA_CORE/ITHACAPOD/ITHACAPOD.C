@@ -56,7 +56,7 @@ void getNestedSnapshotMatrix(
 
         for (label j = 0; j < Nt; j++)
         {
-            SnapMatrixNested[i].set(j,snapshots[j + Nt * i].clone());
+            SnapMatrixNested[i].set(j, snapshots[j + Nt * i].clone());
         }
     }
 
@@ -210,6 +210,13 @@ void getModes(
             {
                 normFact(i) = std::sqrt((modesEig.col(i).transpose() * modesEig.col(i))(0, 0));
             }
+        }
+
+        if (Pstream::parRun())
+        {
+            List<double> vec(normFact.data(), normFact.data() + normFact.size());
+            reduce(vec, sumOp<List<double>>());
+            std::memcpy(normFact.data(), &vec[0], sizeof (double)*vec.size());
         }
 
         List<Eigen::MatrixXd> modesEigBC;
