@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
                     ),
                     mesh
                 );
-                Vfield.append(tmp<volVectorField>(*vector_field));
+                Vfield.append(*vector_field.clone());
             }
 
             if (field_type == "scalar")
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
                     ),
                     mesh
                 );
-                Sfield.append(tmp<volScalarField>(*scalar_field));
+                Sfield.append(*scalar_field.clone());
             }
         }
 
