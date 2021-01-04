@@ -527,19 +527,17 @@ int main(int argc, char* argv[])
         angOn = Eigen::VectorXd::LinSpaced(20, 5, 70);
         ITHACAstream::exportMatrix(angOn, "angOn", "eigen", "./");
     }
+
     //Set the box including the step
     Eigen::MatrixXd Box(2, 3);
     Box << 1.98, 0.01, 0.11,
         7.02, -0.666669, -0.01;
-
     //Select the patches to be moved
     List<label> movPat;
     movPat.append(3);
     movPat.append(5);
-
     // Set the maximum iterations number for the offline phase
     example.maxIter = para->ITHACAdict->lookupOrDefault<int>("maxIter", 2000);
-    
     // Perform the offline solve
     example.offlineSolve(Box, movPat);
     List<vector> points2Move;

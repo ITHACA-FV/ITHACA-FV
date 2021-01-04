@@ -90,7 +90,7 @@ class UnsteadyNSExplicit: public unsteadyNS
         void truthSolve(List<scalar> mu_now,
                         fileName folder = "./ITHACAoutput/Offline/");
 
-  
+
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

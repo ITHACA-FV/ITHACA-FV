@@ -239,8 +239,8 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& field,
 template<typename Type>
 void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& field,
               label BC_ind, Type& value);
-      
-      
+
+
 //--------------------------------------------------------------------------
 /// Change all Neumann boundary conditions to Dirichlet boundary conditions
 ///
@@ -251,7 +251,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& field,
 ///
 template<typename Type>
 void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>& field,
-              Type& value);	      
+                             Type& value);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"

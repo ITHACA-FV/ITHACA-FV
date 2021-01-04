@@ -48,7 +48,6 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
     for (int i = 0; i < problem->inletIndex.rows(); i++)
     {
         ULmodes.append((problem->liftfield[i]).clone());
-
     }
 
     for (int i = 0; i < problem->Umodes.size(); i++)

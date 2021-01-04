@@ -69,10 +69,10 @@ UnsteadyNSExplicit::UnsteadyNSExplicit(int argc, char* argv[])
 #include "createFields.H"
     para = ITHACAparameters::getInstance(mesh, runTime);
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "none");
-    M_Assert(bcMethod == "lift" || bcMethod == "penalty"|| bcMethod == "none",
+    M_Assert(bcMethod == "lift" || bcMethod == "penalty" || bcMethod == "none",
              "The BC method must be set to lift or penalty or none in ITHACAdict");
     fluxMethod = ITHACAdict->lookupOrDefault<word>("fluxMethod", "inconsistent");
-    M_Assert(fluxMethod == "inconsistent" || fluxMethod == "consistent", 
+    M_Assert(fluxMethod == "inconsistent" || fluxMethod == "consistent",
              "The flux method must be set to inconsistent or consistent in ITHACAdict");
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -88,13 +88,15 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
     volScalarField& p = _p();
     volVectorField& U = _U();
     surfaceScalarField phi = _phi();
+
     if (fluxMethod == "inconsistent")
     {
-	phi = fvc::flux(U);
+        phi = fvc::flux(U);
     }
-    #include "initContinuityErrs.H"
+
+#include "initContinuityErrs.H"
     dimensionedScalar nu = _nu();
-    dimensionedScalar dt = timeStep*_dt();
+    dimensionedScalar dt = timeStep * _dt();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
     instantList Times = runTime.times();
@@ -125,14 +127,14 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
         runTime++;
         Info << "Time = " << runTime.timeName() << nl << endl;
 
-	if (fluxMethod == "inconsistent")
-	{
+        if (fluxMethod == "inconsistent")
+        {
 #include "IFM.H"
-	}
-	else if (fluxMethod == "consistent")
-	{
+        }
+        else if (fluxMethod == "consistent")
+        {
 #include "CFM.H"
-	}
+        }
 
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
              << "  ClockTime = " << runTime.elapsedClockTime() << " s"
@@ -142,18 +144,16 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
         {
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(p, name(counter), folder);
-	    ITHACAstream::exportSolution(phi, name(counter), folder);
+            ITHACAstream::exportSolution(phi, name(counter), folder);
             std::ofstream of(folder + name(counter) + "/" +
                              runTime.timeName());
             Ufield.append(U.clone());
             Pfield.append(p.clone());
-	    Phifield.append(phi.clone());
+            Phifield.append(phi.clone());
             counter++;
             nextWrite += writeEvery;
-            
         }
     }
-
 }
 
 

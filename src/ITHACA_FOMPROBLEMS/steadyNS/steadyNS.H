@@ -242,14 +242,14 @@ class steadyNS: public reductionProblem
 
         /// Initial Velocity field (for restart purposes)
         autoPtr<volVectorField> _U0;
-        
+
         /// Initial dummy field with all Dirichlet boundary conditions
         autoPtr<volVectorField> Uinl;
-	
-	/// Dummy time step including unit
+
+        /// Dummy time step including unit
         autoPtr<dimensionedScalar> dt_dummy;
-	
-	/// Dummy viscocity including unit
+
+        /// Dummy viscocity including unit
         autoPtr<dimensionedScalar> nu_dummy;
 
         /// Mesh
@@ -291,7 +291,7 @@ class steadyNS: public reductionProblem
         /// Boundary Method
         word bcMethod;
 
-	/// Flux Method
+        /// Flux Method
         word fluxMethod;
 
         // Functions
@@ -346,7 +346,7 @@ class steadyNS: public reductionProblem
         /// @param[in]  NSUPmodes  The number of supremizer modes, 0 by default and it must remain always zero.
         ///
         void discretizeThenProject(fileName folder, label NUmodes, label NPmodes,
-                        label NSUPmodes = 0);
+                                   label NSUPmodes = 0);
 
         //--------------------------------------------------------------------------
         //  Projection Methods Momentum Equation
@@ -518,7 +518,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
         ///
-        Eigen::MatrixXd diffusive_term_flux_method(label NUmodes, label NPmodes, label NSUPmodes);
+        Eigen::MatrixXd diffusive_term_flux_method(label NUmodes, label NPmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Boundary vector diffusion term
@@ -529,7 +530,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
         ///
-        Eigen::MatrixXd boundary_vector_diffusion(label NUmodes, label NPmodes, label NSUPmodes);
+        Eigen::MatrixXd boundary_vector_diffusion(label NUmodes, label NPmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Boundary vector convection term
@@ -540,7 +542,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
         ///
-        Eigen::MatrixXd boundary_vector_convection(label NUmodes, label NPmodes, label NSUPmodes);
+        Eigen::MatrixXd boundary_vector_convection(label NUmodes, label NPmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Convective Term
@@ -551,7 +554,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the convective term.
         ///
-        Eigen::Tensor<double, 3 >  convective_term_flux_tens(label NUmodes, label NPmodes,
+        Eigen::Tensor<double, 3 >  convective_term_flux_tens(label NUmodes,
+                label NPmodes,
                 label NSUPmodes);
 
         //--------------------------------------------------------------------------
