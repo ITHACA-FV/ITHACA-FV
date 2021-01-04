@@ -109,9 +109,9 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
     ITHACAstream::exportSolution(phi, name(counter), folder);
     std::ofstream of(folder + name(counter) + "/" +
                      runTime.timeName());
-    Ufield.append(U);
-    Pfield.append(p);
-    Phifield.append(phi);
+    Ufield.append(U.clone());
+    Pfield.append(p.clone());
+    Phifield.append(phi.clone());
     counter++;
     nextWrite += writeEvery;
 
@@ -145,9 +145,9 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
 	    ITHACAstream::exportSolution(phi, name(counter), folder);
             std::ofstream of(folder + name(counter) + "/" +
                              runTime.timeName());
-            Ufield.append(U);
-            Pfield.append(p);
-	    Phifield.append(phi);
+            Ufield.append(U.clone());
+            Pfield.append(p.clone());
+	    Phifield.append(phi.clone());
             counter++;
             nextWrite += writeEvery;
             

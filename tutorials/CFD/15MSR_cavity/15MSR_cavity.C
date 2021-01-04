@@ -486,7 +486,7 @@ int main(int argc, char* argv[])
     TmediaSA.buildMO(folder);
     PtotSA.buildMO(folder);
     //assign FofM to LRSensitivity object, first figure of merit considered is the average temperature
-    analisi.M = TmediaSA;
+    analisi.M = autoPtr<FofM>(&TmediaSA);
     //load the model output in the LRSensitivity object
     analisi.load_output();
     //compute output statistics
@@ -519,7 +519,7 @@ int main(int argc, char* argv[])
     coeffsT.row(3) = analisi.betas;
     ITHACAstream::exportMatrix(coeffsT, "coeffsT", "eigen", "./ITHACAoutput");
     //assign FofM object to LRSensitivity object
-    analisi.M = PtotSA;
+    analisi.M = autoPtr<FofM>(&PtotSA);
     //load the model output in the LRSensitivity object, repeat all the previous step
     // for the total power
     analisi.load_output();

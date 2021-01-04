@@ -55,7 +55,7 @@ class LRSensitivity
         /// Matrices storing the independent variables' normalized values
         Eigen::MatrixXd MatXn;
         /// Figure of merit object
-        FofM M;
+        autoPtr<FofM> M;
         /// Number of parameters used for the analysis
         label No_parameters;
         /// Number of points used for Monte Carlo sampling

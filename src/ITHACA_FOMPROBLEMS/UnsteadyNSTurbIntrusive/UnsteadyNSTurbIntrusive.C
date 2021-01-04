@@ -154,9 +154,9 @@ void UnsteadyNSTurbIntrusive::truthSolve(List<scalar> mu_now)
             ITHACAstream::exportSolution(nut, name(counter), "./ITHACAoutput/Offline/");
             std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
                              runTime.timeName());
-            Ufield.append(U);
-            Pfield.append(p);
-            nutFields.append(nut);
+            Ufield.append(U.clone());
+            Pfield.append(p.clone());
+            nutFields.append(nut.clone());
             counter++;
             nextWrite += writeEvery;
             writeMu(mu_now);
@@ -275,7 +275,7 @@ void UnsteadyNSTurbIntrusive::project(fileName folder, label nModes)
     {
         for (label k = 0; k < nModes; k++)
         {
-            L_U_SUPmodes.append(Umodes[k]);
+            L_U_SUPmodes.append(Umodes[k].clone());
         }
     }
 
@@ -427,7 +427,7 @@ void UnsteadyNSTurbIntrusive::projectPPE(fileName folder, label nUModes,
     {
         for (label k = 0; k < nUModes; k++)
         {
-            L_U_SUPmodes.append(Umodes[k]);
+            L_U_SUPmodes.append(Umodes[k].clone());
         }
     }
 

@@ -142,9 +142,9 @@ class tutorial06 : public SteadyNSTurb
             ITHACAstream::exportSolution(p, name(counter), folder);
             volScalarField _nut(turbulence->nut());
             ITHACAstream::exportSolution(_nut, name(counter), folder);
-            Ufield.append(U);
-            Pfield.append(p);
-            nutFields.append(_nut);
+            Ufield.append((U).clone());
+            Pfield.append((p).clone());
+            nutFields.append((_nut).clone());
             counter++;
         }
 };
