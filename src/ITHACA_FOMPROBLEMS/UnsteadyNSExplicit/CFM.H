@@ -26,11 +26,11 @@ License
 
 volVectorField U1aux(U);
 volVectorField Faux(U);
-Faux = dt * (-fvc::div(phi,U)+ fvc::laplacian(nu,U));
+Faux = dt * (-fvc::div(phi, U) + fvc::laplacian(nu, U));
 U1aux = U + Faux;
 fvScalarMatrix pEqn = fvm::laplacian(p);
 pEqn.setReference(pRefCell, pRefValue);
-solve(pEqn ==  (1/dt)*fvc::div(U1aux)); 
-U = U1aux - dt*fvc::grad(p);
-phi = fvc::flux(U1aux) - dt*fvc::snGrad(p)*mag(mesh.magSf());
+solve(pEqn ==  (1 / dt)*fvc::div(U1aux));
+U = U1aux - dt * fvc::grad(p);
+phi = fvc::flux(U1aux) - dt * fvc::snGrad(p) * mag(mesh.magSf());
 

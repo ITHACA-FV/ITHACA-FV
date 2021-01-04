@@ -189,7 +189,6 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
-
     else if (typeBC == "fixedGradient")
     {
         fixedGradientFvPatchScalarField& Tpatch =
@@ -201,7 +200,6 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
             gradTpatch[faceI] = value;
         }
     }
-
     else if (typeBC == "freestream")
     {
         for (label i = 0; i < sizeBC; i++)
@@ -219,7 +217,6 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
             gradTpatch[faceI] = value;
         }
     }
-
     else if (typeBC == "empty")
     {
     }
@@ -309,13 +306,11 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = valueList[i];
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         Info << "This Feature is not implemented for this boundary condition" << endl;
         exit(0);
     }
-
     else if (s.boundaryField()[BC_ind].type() == "freestream")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -350,7 +345,6 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = valueList[i];
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         fixedGradientFvPatchField<Type>& Tpatch =
@@ -361,7 +355,6 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
             gradTpatch[faceI] = valueList[faceI];
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "freestream")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -377,7 +370,6 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
             gradTpatch[faceI] = valueList[faceI];
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "empty")
     {
     }
@@ -578,7 +570,6 @@ void normalizeFields(
         {
             norm = L2Norm(fields[i]);
         }
-
         else if (normType == "Frobenius")
         {
             norm = frobNorm(fields[i]);

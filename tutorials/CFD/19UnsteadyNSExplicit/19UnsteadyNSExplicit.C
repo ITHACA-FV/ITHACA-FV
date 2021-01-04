@@ -116,10 +116,9 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                         example.podex, 0, 0,
                         NmodesPout);
-      
     // Galerkin Projection
-    example.discretizeThenProject("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
-
+    example.discretizeThenProject("./Matrices", NmodesUproj, NmodesPproj,
+                                  NmodesSUPproj);
     ReducedUnsteadyNSExplicit reduced(example);
     // Set values of the reduced order model
     reduced.nu = 0.01;
@@ -133,8 +132,7 @@ int main(int argc, char* argv[])
     vel_now(0, 0) = 1;
     reduced.solveOnline(vel_now, 1);
     // Reconstruct the solution and export it
-    reduced.reconstruct(false,"./ITHACAoutput/Reconstruction/");
-
+    reduced.reconstruct(false, "./ITHACAoutput/Reconstruction/");
     exit(0);
 }
 

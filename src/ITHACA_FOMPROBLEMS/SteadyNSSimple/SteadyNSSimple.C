@@ -90,7 +90,6 @@ void SteadyNSSimple::getTurbRBF(label NNutModes)
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
-
         else
         {
             samples[i] = new SPLINTER::DataTable(1, 1);
@@ -203,7 +202,6 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             {
                 presidual = pEqn.solve().initialResidual();
             }
-
             else
             {
                 pEqn.solve().initialResidual();
@@ -248,7 +246,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             if (ITHACAutilities::isTurbulent())
             {
                 auto nut = mesh.lookupObject<volScalarField>("nut");
-                ITHACAstream::exportSolution(nut, name(folderN), Folder + name(counter));                
+                ITHACAstream::exportSolution(nut, name(folderN), Folder + name(counter));
                 nutFields.append(nut.clone());
             }
         }
@@ -269,7 +267,6 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         ITHACAstream::exportSolution(U, name(folderN + 1), Folder + name(counter));
         ITHACAstream::exportSolution(p, name(folderN + 1), Folder + name(counter));
     }
-
     else
     {
         ITHACAstream::exportSolution(U, name(counter), Folder);
