@@ -74,7 +74,7 @@ void laplacianProblem::truthSolve(List<scalar> mu_now, word folder)
 
     solve(lhs == -S);
     ITHACAstream::exportSolution(T, name(counter), folder);
-    Tfield.append(tmp<volScalarField>(T));
+    Tfield.append(T.clone());
     counter++;
     writeMu(mu_now);
     // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points

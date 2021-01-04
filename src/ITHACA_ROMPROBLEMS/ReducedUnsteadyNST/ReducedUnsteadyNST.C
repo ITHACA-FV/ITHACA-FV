@@ -56,46 +56,46 @@ reducedUnsteadyNST::reducedUnsteadyNST(unsteadyNST& FOMproblem)
     // Create locally the velocity modes
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
-        Umodes.append(tmp<volVectorField>(problem->liftfield[k]));
+        Umodes.append((problem->liftfield[k]).clone());
     }
 
     for (int k = 0; k < problem->NUmodes; k++)
     {
-        Umodes.append(tmp<volVectorField>(problem->Umodes[k]));
+        Umodes.append((problem->Umodes[k]).clone());
     }
 
     for (int k = 0; k < problem->NSUPmodes; k++)
     {
-        Umodes.append(tmp<volVectorField>(problem->supmodes[k]));
+        Umodes.append((problem->supmodes[k]).clone());
     }
 
     // Create locally the pressure modes
     for (int k = 0; k < problem->NPmodes; k++)
     {
-        Pmodes.append(tmp<volScalarField>(problem->Pmodes[k]));
+        Pmodes.append((problem->Pmodes[k]).clone());
     }
 
     for (int k = 0; k < problem->liftfieldT.size(); k++)
     {
-        Tmodes.append(tmp<volScalarField>(problem->liftfieldT[k]));
+        Tmodes.append((problem->liftfieldT[k]).clone());
     }
 
     // Create locally the temperature modes
     for (int k = 0; k < problem->NTmodes; k++)
     {
-        Tmodes.append(tmp<volScalarField>(problem->Tmodes[k]));
+        Tmodes.append((problem->Tmodes[k]).clone());
     }
 
     // Store locally the snapshots for projections
     for (int k = 0; k < problem->Ufield.size(); k++)
     {
-        Usnapshots.append(tmp<volVectorField>(problem->Ufield[k]));
-        Psnapshots.append(tmp<volScalarField>(problem->Pfield[k]));
+        Usnapshots.append((problem->Ufield[k]).clone());
+        Psnapshots.append((problem->Pfield[k]).clone());
     }
 
     for (int k = 0; k < problem->Tfield.size(); k++)
     {
-        Tsnapshots.append(tmp<volScalarField>(problem->Tfield[k]));
+        Tsnapshots.append((problem->Tfield[k]).clone());
     }
 
     newton_object_sup = newton_unsteadyNST_sup(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
@@ -392,8 +392,8 @@ void reducedUnsteadyNST::reconstruct_sup(fileName folder, int printevery)
             ITHACAstream::exportSolution(P_rec, name(counter2), folder);
             nextwrite += printevery;
             counter2 ++;
-            UREC.append(tmp<volVectorField>(U_rec));
-            PREC.append(tmp<volScalarField>(P_rec));
+            UREC.append((U_rec).clone());
+            PREC.append((P_rec).clone());
         }
 
         counter++;
@@ -424,7 +424,7 @@ void reducedUnsteadyNST::reconstruct_supt(fileName folder, int printevery)
             ITHACAstream::exportSolution(T_rec,  name(counter2), folder);
             nextwrite += printevery;
             counter2 ++;
-            TREC.append(tmp<volScalarField>(T_rec));
+            TREC.append((T_rec).clone());
         }
 
         counter++;

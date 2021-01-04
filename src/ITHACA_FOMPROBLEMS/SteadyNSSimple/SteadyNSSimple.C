@@ -240,8 +240,8 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             // ITHACAstream::exportSolution(U2, name(folderN), Folder + name(counter));
             // }
             ITHACAstream::exportSolution(p, name(folderN), Folder + name(counter));
-            Ufield.append(tmp<volVectorField>(U));
-            Pfield.append(tmp<volScalarField>(p));
+            Ufield.append(U.clone());
+            Pfield.append(p.clone());
             res_U << uresidual << std::endl;
             res_P << presidual << std::endl;
 
@@ -249,7 +249,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             {
                 auto nut = mesh.lookupObject<volScalarField>("nut");
                 ITHACAstream::exportSolution(nut, name(folderN), Folder + name(counter));                
-                nutFields.append(tmp<volScalarField>(nut));
+                nutFields.append(nut.clone());
             }
         }
     }
@@ -280,11 +280,11 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
     {
         auto nut = mesh.lookupObject<volScalarField>("nut");
         ITHACAstream::exportSolution(nut, name(folderN + 1), Folder + name(counter));
-        nutFields.append(tmp<volScalarField>(nut));
+        nutFields.append(nut.clone());
     }
 
-    Ufield.append(tmp<volVectorField>(U));
-    Pfield.append(tmp<volScalarField>(p));
+    Ufield.append(U.clone());
+    Pfield.append(p.clone());
     counter++;
     writeMu(mu_now);
     // --- Fill in the mu_samples with parameters (mu) to be used for the POD sample points

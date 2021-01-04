@@ -47,7 +47,7 @@ PtrList<TypeField> averageSubtract(PtrList<TypeField>
         }
 
         aveTemp /= newInd(i + 1) - newInd(i);
-        ave.append(tmp<TypeField>(aveTemp));
+        ave.append(aveTemp.clone());
     }
 
     for (label i = 0; i < ind.size(); i++)
@@ -56,7 +56,7 @@ PtrList<TypeField> averageSubtract(PtrList<TypeField>
         {
             TypeField newfield("nut", fields[0] * 0);
             newfield = fields[j] - ave[i];
-            aveSubtracted.append(tmp<TypeField>(newfield));
+            aveSubtracted.append(newfield.clone());
         }
     }
 
@@ -596,7 +596,7 @@ void normalizeFields(
             assignBC(tmp2, k, vec);
         }
 
-        fields.set(i, tmp<GeometricField<Type, fvPatchField, volMesh> > (tmp2));
+        fields.set(i, tmp2.clone());
     }
 }
 

@@ -133,8 +133,8 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
     ITHACAstream::exportSolution(p, name(counter), folder);
     std::ofstream of(folder + name(counter) + "/" +
                      runTime.timeName());
-    Ufield.append(tmp<volVectorField>(U));
-    Pfield.append(tmp<volScalarField>(p));
+    Ufield.append(U.clone());
+    Pfield.append(p.clone());
     counter++;
     nextWrite += writeEvery;
 
@@ -194,8 +194,8 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
             ITHACAstream::exportSolution(p, name(counter), folder);
             std::ofstream of(folder + name(counter) + "/" +
                              runTime.timeName());
-            Ufield.append(tmp<volVectorField>(U));
-            Pfield.append(tmp<volScalarField>(p));
+            Ufield.append(U.clone());
+            Pfield.append(p.clone());
             counter++;
             nextWrite += writeEvery;
             writeMu(mu_now);

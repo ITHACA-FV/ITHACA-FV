@@ -480,7 +480,7 @@ void read_fields(
                 ),
                 mesh
             );
-            Lfield.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp_field));
+            Lfield.append(tmp_field.clone());
             printProgress(double(i + 1) / (last_s + first_snap));
         }
 
@@ -536,7 +536,7 @@ void read_fields(
                 ),
                 field.mesh()
             );
-            Lfield.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp_field));
+            Lfield.append(tmp_field.clone());
             printProgress(double(i + 1) / (last_s + first_snap));
         }
 
@@ -581,7 +581,7 @@ void read_fields(
                 ),
                 field.mesh()
             );
-            Lfield.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp_field));
+            Lfield.append(tmp_field.clone());
             printProgress(double(i + 1) / (last_s + first_snap));
         }
 
@@ -636,7 +636,7 @@ void readConvergedFields(
             ),
             field.mesh()
         );
-        Lfield.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmpField));
+        Lfield.append(tmpField.clone());
         par++;
     }
 }

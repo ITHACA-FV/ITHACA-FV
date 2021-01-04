@@ -211,7 +211,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::reconstruct(word exportFolder,
             ITHACAutilities::assignBC(tmp2, k, vecBC);
         }
 
-        snapshotsrec.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2));
+        snapshotsrec.append(tmp2.clone());
     }
 
     ITHACAstream::exportFields(snapshotsrec, exportFolder, fieldName);
@@ -240,8 +240,8 @@ void ITHACADMD<Type, PatchField, GeoMesh>::convert2Foam()
             ITHACAutilities::assignBC(tmp2Imag, k, DMDEigenModesBC[k].col(i).imag());
         }
 
-        DMDmodesReal.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2Real));
-        DMDmodesImag.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2Imag));
+        DMDmodesReal.set(i, tmp2Real.clone());
+        DMDmodesImag.set(i, tmp2Imag.clone());
     }
 }
 template class ITHACADMD<scalar, fvPatchField, volMesh>;

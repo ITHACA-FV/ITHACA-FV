@@ -383,7 +383,7 @@ void msrProblem::liftSolve()
                  / sum(mesh.magSf())).value()
              << endl;
         Ulift.write();
-        liftfield.append(tmp<volVectorField>(Ulift));
+        liftfield.append(Ulift.clone());
     }
 }
 
@@ -515,7 +515,7 @@ Eigen::MatrixXd msrProblem::diffusive_term(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -523,7 +523,7 @@ Eigen::MatrixXd msrProblem::diffusive_term(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -554,7 +554,7 @@ Eigen::MatrixXd msrProblem::pressure_gradient_term(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -562,7 +562,7 @@ Eigen::MatrixXd msrProblem::pressure_gradient_term(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -600,7 +600,7 @@ List <Eigen::MatrixXd> msrProblem::convective_term(label NUmodes,
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -608,7 +608,7 @@ List <Eigen::MatrixXd> msrProblem::convective_term(label NUmodes,
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -640,7 +640,7 @@ Eigen::MatrixXd msrProblem::mass_term(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -648,7 +648,7 @@ Eigen::MatrixXd msrProblem::mass_term(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -680,7 +680,7 @@ Eigen::MatrixXd msrProblem::divergence_term(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -688,7 +688,7 @@ Eigen::MatrixXd msrProblem::divergence_term(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -727,7 +727,7 @@ List <Eigen::MatrixXd> msrProblem::div_momentum(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -735,7 +735,7 @@ List <Eigen::MatrixXd> msrProblem::div_momentum(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -790,7 +790,7 @@ Eigen::MatrixXd msrProblem::pressure_BC1(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -798,7 +798,7 @@ Eigen::MatrixXd msrProblem::pressure_BC1(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -844,7 +844,7 @@ List <Eigen::MatrixXd> msrProblem::pressure_BC2(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -852,7 +852,7 @@ List <Eigen::MatrixXd> msrProblem::pressure_BC2(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -894,7 +894,7 @@ Eigen::MatrixXd msrProblem::pressure_BC3(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -902,7 +902,7 @@ Eigen::MatrixXd msrProblem::pressure_BC3(label NUmodes, label NPmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -1096,7 +1096,7 @@ List<Eigen::MatrixXd> msrProblem::stream_term(label NUmodes, label NPrecmodes,
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -1104,7 +1104,7 @@ List<Eigen::MatrixXd> msrProblem::stream_term(label NUmodes, label NPrecmodes,
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -1227,7 +1227,7 @@ List<Eigen::MatrixXd> msrProblem::stream_dec(label NUmodes, label NDecmodes,
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -1235,7 +1235,7 @@ List<Eigen::MatrixXd> msrProblem::stream_dec(label NUmodes, label NDecmodes,
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -1347,7 +1347,7 @@ Eigen::MatrixXd msrProblem::mass_temp(label NTmodes)
     {
         for (label k = 0; k < liftfieldT.size(); k++)
         {
-            TogetherT.append(tmp<volScalarField>(liftfieldT[k]));
+            TogetherT.append(liftfieldT[k].clone());
         }
     }
 
@@ -1355,7 +1355,7 @@ Eigen::MatrixXd msrProblem::mass_temp(label NTmodes)
     {
         for (label k = 0; k < NTmodes; k++)
         {
-            TogetherT.append(tmp<volScalarField>(Tmodes[k]));
+            TogetherT.append(Tmodes[k].clone());
         }
     }
 
@@ -1393,7 +1393,7 @@ List<Eigen::MatrixXd> msrProblem::temp_stream(label NUmodes, label NTmodes)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            Together.append(tmp<volVectorField>(liftfield[k]));
+            Together.append(liftfield[k].clone());
         }
     }
 
@@ -1401,7 +1401,7 @@ List<Eigen::MatrixXd> msrProblem::temp_stream(label NUmodes, label NTmodes)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            Together.append(tmp<volVectorField>(Umodes[k]));
+            Together.append(Umodes[k].clone());
         }
     }
 
@@ -1411,7 +1411,7 @@ List<Eigen::MatrixXd> msrProblem::temp_stream(label NUmodes, label NTmodes)
     {
         for (label k = 0; k < liftfieldT.size(); k++)
         {
-            TogetherT.append(tmp<volScalarField>(liftfieldT[k]));
+            TogetherT.append(liftfieldT[k].clone());
         }
     }
 
@@ -1419,7 +1419,7 @@ List<Eigen::MatrixXd> msrProblem::temp_stream(label NUmodes, label NTmodes)
     {
         for (label k = 0; k < NTmodes; k++)
         {
-            TogetherT.append(tmp<volScalarField>(Tmodes[k]));
+            TogetherT.append(Tmodes[k].clone());
         }
     }
 
@@ -1454,7 +1454,7 @@ Eigen::MatrixXd msrProblem::laplacian_temp(label NTmodes)
     {
         for (label k = 0; k < liftfieldT.size(); k++)
         {
-            TogetherT.append(tmp<volScalarField>(liftfieldT[k]));
+            TogetherT.append(liftfieldT[k].clone());
         }
     }
 
@@ -1462,7 +1462,7 @@ Eigen::MatrixXd msrProblem::laplacian_temp(label NTmodes)
     {
         for (label k = 0; k < NTmodes; k++)
         {
-            TogetherT.append(tmp<volScalarField>(Tmodes[k]));
+            TogetherT.append(Tmodes[k].clone());
         }
     }
 
@@ -1501,7 +1501,7 @@ List<Eigen::MatrixXd> msrProblem::temp_XSfluxsource(label NTmodes,
     {
         for (label k = 0; k < liftfieldT.size(); k++)
         {
-            TogetherT.append(tmp<volScalarField>(liftfieldT[k]));
+            TogetherT.append(liftfieldT[k].clone());
         }
     }
 
@@ -1509,7 +1509,7 @@ List<Eigen::MatrixXd> msrProblem::temp_XSfluxsource(label NTmodes,
     {
         for (label k = 0; k < NTmodes; k++)
         {
-            TogetherT.append(tmp<volScalarField>(Tmodes[k]));
+            TogetherT.append(Tmodes[k].clone());
         }
     }
 
@@ -1552,7 +1552,7 @@ List<Eigen::MatrixXd> msrProblem::temp_heatsource(label NTmodes,
     {
         for (label k = 0; k < liftfieldT.size(); k++)
         {
-            TogetherT.append(tmp<volScalarField>(liftfieldT[k]));
+            TogetherT.append(liftfieldT[k].clone());
         }
     }
 
@@ -1560,7 +1560,7 @@ List<Eigen::MatrixXd> msrProblem::temp_heatsource(label NTmodes,
     {
         for (label k = 0; k < NTmodes; k++)
         {
-            TogetherT.append(tmp<volScalarField>(Tmodes[k]));
+            TogetherT.append(Tmodes[k].clone());
         }
     }
 
@@ -2007,7 +2007,7 @@ void msrProblem::liftSolveT()
         }
 
         Tlift.write();
-        liftfieldT.append(tmp<volScalarField>(Tlift));
+        liftfieldT.append(Tlift.clone());
     }
 }
 

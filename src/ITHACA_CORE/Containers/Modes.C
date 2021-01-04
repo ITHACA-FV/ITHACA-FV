@@ -279,7 +279,7 @@ PtrList<GeometricField<Type, PatchField, GeoMesh>>
     for (label i = 0; i < Coeff.size(); i++)
     {
         inputField = reconstruct(inputField, Coeff[i], Name);
-        inputFields.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(inputField));
+        inputFields.append(inputField.clone());
     }
 
     return inputFields;
@@ -349,7 +349,7 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
 
         projSnapCoeff = M.fullPivLu().solve(projSnapI);
         reconstruct(Fr, projSnapCoeff, "projSnap");
-        projSnapshots.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(Fr));
+        projSnapshots.set(i, Fr.clone());
     }
 }
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -419,7 +419,7 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
         projSnapI = Modes.transpose() * M_vol.asDiagonal() * F_eigen;
         projSnapCoeff = M.fullPivLu().solve(projSnapI);
         reconstruct(Fr, projSnapCoeff, "projSnap");
-        projSnapshots.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(Fr));
+        projSnapshots.set(i, Fr.clone());
     }
 }
 template<class Type, template<class> class PatchField, class GeoMesh>

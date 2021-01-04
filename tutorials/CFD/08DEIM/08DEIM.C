@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < 100; i++)
     {
         DEIM_function::evaluate_expression(S, pars.row(i));
-        Sp.append(tmp<volScalarField>(S));
+        Sp.append((S).clone());
         ITHACAstream::exportSolution(S, name(i + 1), "./ITHACAoutput/Offline/");
     }
 

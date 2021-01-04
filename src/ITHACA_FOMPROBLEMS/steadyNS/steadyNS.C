@@ -104,8 +104,8 @@ void steadyNS::truthSolve(List<scalar> mu_now)
 #include "NLsolve.H"
     ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
     ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-    Ufield.append(tmp<volVectorField>(U));
-    Pfield.append(tmp<volScalarField>(p));
+    Ufield.append(U.clone());
+    Pfield.append(p.clone());
     counter++;
     writeMu(mu_now);
     // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points
@@ -221,7 +221,7 @@ void steadyNS::solvesupremizer(word type)
                 (
                     u_sup_eqn == fvc::grad(P_sup[i])
                 );
-                supfield.append(tmp<volVectorField>(Usup));
+                supfield.append(Usup.clone());
                 ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
             }
 
@@ -240,7 +240,7 @@ void steadyNS::solvesupremizer(word type)
                 (
                     u_sup_eqn == fvc::grad(Pmodes[i])
                 );
-                supmodes.append(tmp<volVectorField>(Usup));
+                supmodes.append(Usup.clone());
                 ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
             }
 
@@ -347,7 +347,7 @@ void steadyNS::liftSolve()
                  / sum(mesh.magSf())).value()
              << endl;
         Ulift.write();
-        liftfield.append(tmp<volVectorField>(Ulift));
+        liftfield.append(Ulift.clone());
     }
 }
 
@@ -364,7 +364,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            L_U_SUPmodes.append(tmp<volVectorField>(liftfield[k]));
+            L_U_SUPmodes.append(liftfield[k].clone());
         }
     }
 
@@ -372,7 +372,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            L_U_SUPmodes.append(tmp<volVectorField>(Umodes[k]));
+            L_U_SUPmodes.append(Umodes[k].clone());
         }
     }
 
@@ -563,7 +563,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     {
         for (label k = 0; k < liftfield.size(); k++)
         {
-            L_U_SUPmodes.append(tmp<volVectorField>(liftfield[k]));
+            L_U_SUPmodes.append(liftfield[k].clone());
         }
     }
 
@@ -571,7 +571,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            L_U_SUPmodes.append(tmp<volVectorField>(Umodes[k]));
+            L_U_SUPmodes.append(Umodes[k].clone());
         }
     }
 
@@ -579,7 +579,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     {
         for (label k = 0; k < NSUPmodes; k++)
         {
-            L_U_SUPmodes.append(tmp<volVectorField>(supmodes[k]));
+            L_U_SUPmodes.append(supmodes[k].clone());
         }
     }
 
@@ -714,7 +714,7 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP, label 
     {
         for (label k = 0; k < NUmodes; k++)
         {
-            L_U_SUPmodes.append(tmp<volVectorField>(Umodes[k]));
+            L_U_SUPmodes.append(Umodes[k].clone());
 	    
 	    // set homogenous boundary conditions
 	    forAll(L_U_SUPmodes[k].mesh().boundary(), l)

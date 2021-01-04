@@ -165,7 +165,7 @@ class tutorial10: public UnsteadyBB
                 }
 
                 Tlift.write();
-                liftfieldT.append(tmp<volScalarField>(Tlift));
+                liftfieldT.append((Tlift).clone());
             }
         }
 };
@@ -240,12 +240,12 @@ int main(int argc, char* argv[])
 
     for (label k = 0; k < example.liftfieldT.size(); k++)
     {
-        TLmodes.append(tmp<volScalarField>(example.liftfieldT[k]));
+        TLmodes.append((example.liftfieldT[k]).clone());
     }
 
     for (label k = 0; k < List_of_modes.size(); k++)
     {
-        TLmodes.append(tmp<volScalarField>(example.Tmodes[k]));
+        TLmodes.append((example.Tmodes[k]).clone());
     }
 
     // Perform the projection for all number of modes in list List_of_modes

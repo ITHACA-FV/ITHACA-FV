@@ -174,7 +174,7 @@ class tutorial11: public UnsteadyBB
                 }
 
                 Tlift.write();
-                liftfieldT.append(tmp<volScalarField>(Tlift));
+                liftfieldT.append((Tlift).clone());
             }
         }
 
@@ -267,12 +267,12 @@ int main(int argc, char* argv[])
 
     for (label k = 0; k < example.liftfieldT.size(); k++)
     {
-        TLmodes.append(tmp<volScalarField>(example.liftfieldT[k]));
+        TLmodes.append((example.liftfieldT[k]).clone());
     }
 
     for (label k = 0; k < List_of_modes.size(); k++)
     {
-        TLmodes.append(tmp<volScalarField>(example.Tmodes[k]));
+        TLmodes.append((example.Tmodes[k]).clone());
     }
 
     // Create locally the velocity modes
@@ -280,17 +280,17 @@ int main(int argc, char* argv[])
 
     for (label k = 0; k < example.liftfield.size(); k++)
     {
-        ULmodes.append(tmp<volVectorField>(example.liftfield[k]));
+        ULmodes.append((example.liftfield[k]).clone());
     }
 
     for (label k = 0; k < List_of_modes.size(); k++)
     {
-        ULmodes.append(tmp<volVectorField>(example.Umodes[k]));
+        ULmodes.append((example.Umodes[k]).clone());
     }
 
     for (label k = 0; k < NmodesSUPproj; k++)
     {
-        ULmodes.append(tmp<volVectorField>(example.supmodes[k]));
+        ULmodes.append((example.supmodes[k]).clone());
     }
 
     // Perform the projection for all number of modes in List_of_modes for temperature and velocity

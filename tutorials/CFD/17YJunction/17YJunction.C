@@ -183,11 +183,11 @@ class tutorial17: public unsteadyNS
                 volVectorField Uliftx("Uliftx" + name(k), Uzero);
                 Uliftx.replace(0, Ulift.component(0));
                 Uliftx.write();
-                liftfield.append(tmp<volVectorField>(Uliftx));
+                liftfield.append((Uliftx).clone());
                 volVectorField Ulifty("Ulifty" + name(k), Uzero);
                 Ulifty.replace(1, Ulift.component(1));
                 Ulifty.write();
-                liftfield.append(tmp<volVectorField>(Ulifty));
+                liftfield.append((Ulifty).clone());
             }
         }
 

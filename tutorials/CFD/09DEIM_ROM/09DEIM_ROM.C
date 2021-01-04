@@ -166,9 +166,9 @@ class DEIMLaplacian: public laplacianProblem
                 {
                     fvScalarMatrix Teqn = DEIMmatrice->evaluate_expression(T, par.row(i));
                     Teqn.solve();
-                    Mlist.append(tmp<fvScalarMatrix>(Teqn));
+                    Mlist.append((Teqn).clone());
                     ITHACAstream::exportSolution(T, name(i + 1), "./ITHACAoutput/" + Folder);
-                    Tfield.append(tmp<volScalarField>(T));
+                    Tfield.append((T).clone());
                 }
             }
         };
@@ -190,7 +190,7 @@ class DEIMLaplacian: public laplacianProblem
                 time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
                 time_full += time_span.count();
                 ITHACAstream::exportSolution(T, name(i + 1), "./ITHACAoutput/" + Folder);
-                Tfield.append(tmp<volScalarField>(T));
+                Tfield.append((T).clone());
             }
         };
 
@@ -249,7 +249,7 @@ class DEIMLaplacian: public laplacianProblem
                 volScalarField Tred("Tred", T);
                 Tred = Foam2Eigen::Eigen2field(Tred, full);
                 ITHACAstream::exportSolution(Tred, name(i + 1), "./ITHACAoutput/" + Folder);
-                Tonline.append(tmp<volScalarField>(Tred));
+                Tonline.append((Tred).clone());
             }
         }
 };

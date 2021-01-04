@@ -50,9 +50,9 @@ void LRSensitivity::setAll()
 
 void LRSensitivity::load_output()
 {
-    if (M.MObuilt == true)
+    if (M().MObuilt == true)
     {
-        y = M.modelOutput;
+        y = M().modelOutput;
     }
     else
     {

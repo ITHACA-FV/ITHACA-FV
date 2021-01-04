@@ -53,26 +53,26 @@ ReducedUnsteadyNSTurbIntrusive::ReducedUnsteadyNSTurbIntrusive(
     // Create locally the velocity modes
     for (int k = 0; k < Nphi_u; k++)
     {
-        Umodes.append(tmp<volVectorField>(problem->Umodes[k]));
+        Umodes.append((problem->Umodes[k]).clone());
     }
 
     // Create locally the pressure modes
     for (int k = 0; k < Nphi_p; k++)
     {
-        Pmodes.append(tmp<volScalarField>(problem->Pmodes[k]));
+        Pmodes.append((problem->Pmodes[k]).clone());
     }
 
     // Create locally the eddy viscosity modes
     for (int k = 0; k < Nphi_u; k++)
     {
-        nutModes.append(tmp<volScalarField>(problem->nutModes[k]));
+        nutModes.append((problem->nutModes[k]).clone());
     }
 
     // Store locally the snapshots for projections
     for (int k = 0; k < problem->Ufield.size(); k++)
     {
-        Usnapshots.append(tmp<volVectorField>(problem->Ufield[k]));
-        Psnapshots.append(tmp<volScalarField>(problem->Pfield[k]));
+        Usnapshots.append((problem->Ufield[k]).clone());
+        Psnapshots.append((problem->Pfield[k]).clone());
     }
 
     newtonObject = newtonUnsteadyNSTurbIntrusive(Nphi_u, Nphi_u, fomProblem);

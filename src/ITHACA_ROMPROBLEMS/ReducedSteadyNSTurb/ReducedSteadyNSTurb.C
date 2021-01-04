@@ -48,17 +48,17 @@ ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
 
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
-        Umodes.append(tmp<volVectorField>(problem->liftfield[k]));
+        Umodes.append((problem->liftfield[k]).clone());
     }
 
     for (int k = 0; k < problem->NUmodes; k++)
     {
-        Umodes.append(tmp<volVectorField>(problem->Umodes[k]));
+        Umodes.append((problem->Umodes[k]).clone());
     }
 
     for (int k = 0; k < problem->NSUPmodes; k++)
     {
-        Umodes.append(tmp<volVectorField>(problem->supmodes[k]));
+        Umodes.append((problem->supmodes[k]).clone());
     }
 
     newtonObject = newtonSteadyNSTurb(Nphi_u + Nphi_p, Nphi_u + Nphi_p,

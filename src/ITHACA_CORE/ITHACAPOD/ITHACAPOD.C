@@ -56,8 +56,7 @@ void getNestedSnapshotMatrix(
 
         for (label j = 0; j < Nt; j++)
         {
-            SnapMatrixNested[i].set(j,
-                                    tmp<GeometricField<Type, PatchField, GeoMesh>>(snapshots[j + Nt * i]));
+            SnapMatrixNested[i].set(j,snapshots[j + Nt * i].clone());
         }
     }
 
@@ -77,7 +76,7 @@ void getNestedSnapshotMatrix(
 
         for (label j = 0; j < y.size(); j++)
         {
-            ModesGlobal.append(tmp<GeometricField<Type, PatchField, GeoMesh>>(y[j]));
+            ModesGlobal.append(y[j].clone());
         }
     }
 }
@@ -245,7 +244,7 @@ void getModes(
                 ITHACAutilities::assignBC(tmp2, k, modesEigBC[k].col(i));
             }
 
-            modes.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2));
+            modes.set(i, tmp2.clone());
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -392,7 +391,7 @@ void getWeightedModes(
                 ITHACAutilities::assignBC(tmp2, k, modesEigBC[k].col(i));
             }
 
-            modes.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2));
+            modes.set(i, tmp2.clone());
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -489,7 +488,7 @@ void getModesSVD(
         {
             Eigen::VectorXd vec = modesEig.col(i);
             tmb_bu = Foam2Eigen::Eigen2field(tmb_bu, vec);
-            modes.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmb_bu));
+            modes.set(i, tmb_bu.clone());
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -1108,7 +1107,7 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
                 ITHACAutilities::assignBC(tmp2, k, modesEigBC[k].col(i));
             }
 
-            modes.set(i, tmp<GeometricField<Type, PatchField, GeoMesh>>(tmp2));
+            modes.set(i, tmp2.clone());
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();
@@ -1428,7 +1427,7 @@ PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
             tmb_bu += eigenVector[i][k] * SnapShotsMatrix[k];
         }
 
-        Bases.set(i, tmp<GeometricField<Type, fvPatchField, volMesh>>(tmb_bu));
+        Bases.set(i, tmb_bu.clone());
         Info << "creating the bases " << i << " for " << SnapShotsMatrix[0].name() <<
              endl;
     }
@@ -1439,7 +1438,7 @@ PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
     {
         auto tmp2(Bases[i]);
         tmp2.rename(SnapShotsMatrix[0].name());
-        modes.set(i, tmp<GeometricField<Type, fvPatchField, volMesh>>(tmp2));
+        modes.set(i, tmp2.clone());
     }
 
     Info << "####### Saving the POD bases for " << SnapShotsMatrix[0].name() <<
@@ -1556,7 +1555,7 @@ void getModes(PtrList<Field_type>& snapshots,
                 tmp2 += eigenValueseigLam(i) * eigenVectoreig.col(i)(j) * snapshots[j];
             }
 
-            modes.set(i, tmp<Field_type>(tmp2));
+            modes.set(i, tmp2.clone());
         }
 
         eigenValueseig = eigenValueseig / eigenValueseig.sum();

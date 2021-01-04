@@ -90,7 +90,7 @@ void reducedLaplacian::reconstruct(fileName folder, int printevery)
                 T_rec += problem->Tmodes[j] * online_solution(i, j + 1);
             }
 
-            Trec.append(tmp<volScalarField>(T_rec));
+            Trec.append((T_rec).clone());
             ITHACAstream::exportSolution(T_rec, name(online_solution(i, 0)), folder);
             nextwrite += printevery;
         }
