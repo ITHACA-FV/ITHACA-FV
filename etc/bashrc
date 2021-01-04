@@ -1,8 +1,24 @@
-#!/bin/bash
-export LIB_ITHACA_ETC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-export LIB_ITHACA="$(dirname "${LIB_ITHACA_ETC}")"
-export LIB_ITHACA_SRC="$LIB_ITHACA/src"
-export PYTHONPATH=$PYTHONPATH:${LIB_ITHACA_SRC}/python
-export PATH=$PATH:${LIB_ITHACA}/bin
-alias ithaca="cd $LIB_ITHACA" 
+#----------------------------------*-sh-*--------------------------------------
+# ITHACA-FV:
+# In real Time Highly Advanced Computational Applications for Finite Volumes
+#------------------------------------------------------------------------------
+# Copyright (C) 2020 by the ITHACA-FV authors
+# SPDX-License-Identifier: (GPL-3.0+)
+#------------------------------------------------------------------------------
+# File
+#     etc/bashrc
+#
+# -----------------------------------------------------------------------------
 
+ithacaDir="${BASH_SOURCE:-${ZSH_NAME:+$0}}";
+[ -n "$ithacaDir" ] && ithacaDir="$(\cd $(dirname $ithacaDir)/.. && \pwd -L)"
+
+export LIB_ITHACA="$ithacaDir"
+export LIB_ITHACA_SRC="$ithacaDir/src"
+export PYTHONPATH="$PYTHONPATH:${PYTHONPATH:+:}${LIB_ITHACA_SRC}"/python
+export PATH="$PATH:${LIB_ITHACA}"/bin
+alias ithaca='cd ${LIB_ITHACA:?}'
+
+unset ithacaDir
+
+# ------------------------------------------------------------------------
