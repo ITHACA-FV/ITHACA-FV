@@ -69,8 +69,6 @@ int main(int argc, char *argv[])
     PtrList<volScalarField> Sfield;
     PtrList<volVectorField> Vmodes;
     PtrList<volScalarField> Smodes;
-    volVectorField * vector_field;
-    volScalarField * scalar_field;
 
     ITHACAparameters* para = ITHACAparameters::getInstance(mesh,
                              runTime);
@@ -186,7 +184,7 @@ int main(int argc, char *argv[])
             if (field_type == "vector")
             {
 
-                vector_field = new volVectorField
+                volVectorField vector_field
                 (
                     IOobject
                     (
@@ -197,12 +195,12 @@ int main(int argc, char *argv[])
                     ),
                     mesh
                 );
-                Vfield.append(*vector_field.clone());
+                Vfield.append(vector_field.clone());
             }
 
             if (field_type == "scalar")
             {
-                scalar_field = new volScalarField
+                volScalarField scalar_field
                 (
                     IOobject
                     (
@@ -213,7 +211,7 @@ int main(int argc, char *argv[])
                     ),
                     mesh
                 );
-                Sfield.append(*scalar_field.clone());
+                Sfield.append(scalar_field.clone());
             }
         }
 
