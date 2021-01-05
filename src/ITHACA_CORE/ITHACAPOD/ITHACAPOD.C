@@ -200,13 +200,11 @@ void getModes(
             if (PODnorm == "L2")
             {
                 normFact(i) = std::sqrt((modesEig.col(i).transpose() * V.asDiagonal() *
-                                         V.asDiagonal() *
                                          modesEig.col(i))(0, 0));
 
                 if (Pstream::parRun())
                 {
                     normFact(i) = (modesEig.col(i).transpose() * V.asDiagonal() *
-                                   V.asDiagonal() *
                                    modesEig.col(i))(0, 0);
                 }
             }
