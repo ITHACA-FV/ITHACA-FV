@@ -200,11 +200,24 @@ void getModes(
             if (PODnorm == "L2")
             {
                 normFact(i) = std::sqrt((modesEig.col(i).transpose() * V.asDiagonal() *
+                                         V.asDiagonal() *
                                          modesEig.col(i))(0, 0));
+
+                if (Pstream::parRun())
+                {
+                    normFact(i) = (modesEig.col(i).transpose() * V.asDiagonal() *
+                                   V.asDiagonal() *
+                                   modesEig.col(i))(0, 0);
+                }
             }
             else if (PODnorm == "Frobenius")
             {
                 normFact(i) = std::sqrt((modesEig.col(i).transpose() * modesEig.col(i))(0, 0));
+
+                if (Pstream::parRun())
+                {
+                    normFact(i) = (modesEig.col(i).transpose() * modesEig.col(i))(0, 0);
+                }
             }
         }
 
@@ -213,6 +226,7 @@ void getModes(
             List<double> vec(normFact.data(), normFact.data() + normFact.size());
             reduce(vec, sumOp<List<double>>());
             std::memcpy(normFact.data(), &vec[0], sizeof (double)*vec.size());
+            normFact = normFact.cwiseSqrt();
         }
 
         List<Eigen::MatrixXd> modesEigBC;
