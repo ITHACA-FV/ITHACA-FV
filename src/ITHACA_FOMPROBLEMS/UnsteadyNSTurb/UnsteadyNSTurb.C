@@ -205,11 +205,6 @@ Eigen::Tensor<double, 3> UnsteadyNSTurb::turbulenceTensor1(label NUmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(ct1Tensor, sumOp<Eigen::Tensor<double, 3>>());
-    }
-
     // Export the tensor
     ITHACAstream::SaveDenseTensor(ct1Tensor, "./ITHACAoutput/Matrices/",
                                   "ct1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
@@ -236,11 +231,6 @@ Eigen::Tensor<double, 3> UnsteadyNSTurb::turbulenceAveTensor1(label NUmodes,
                                             nutAve[j], L_U_SUPmodes[k])).value();
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(ct1AveTensor, sumOp<Eigen::Tensor<double, 3>>());
     }
 
     // Export the tensor
@@ -273,11 +263,6 @@ Eigen::Tensor<double, 3> UnsteadyNSTurb::turbulencePPETensor1(label NUmodes,
                                                 nutModes[j], L_U_SUPmodes[k]))).value();
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(ct1PPETensor, sumOp<Eigen::Tensor<double, 3>>());
     }
 
     // Export the tensor
@@ -313,11 +298,6 @@ Eigen::Tensor<double, 3> UnsteadyNSTurb::turbulencePPEAveTensor1(label NUmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(ct1PPEAveTensor, sumOp<Eigen::Tensor<double, 3>>());
-    }
-
     // Export the tensor
     ITHACAstream::SaveDenseTensor(ct1PPEAveTensor, "./ITHACAoutput/Matrices/",
                                   "ct1PPEAve_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
@@ -342,11 +322,6 @@ Eigen::Tensor<double, 3> UnsteadyNSTurb::turbulenceTensor2(label NUmodes,
                                          nutModes[j] * dev2((fvc::grad(L_U_SUPmodes[k]))().T())))).value();
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(ct2Tensor, sumOp<Eigen::Tensor<double, 3>>());
     }
 
     // Export the tensor
@@ -374,11 +349,6 @@ Eigen::Tensor<double, 3> UnsteadyNSTurb::turbulenceAveTensor2(label NUmodes,
                                             nutAve[j] * dev2((fvc::grad(L_U_SUPmodes[k]))().T())))).value();
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(ct2AveTensor, sumOp<Eigen::Tensor<double, 3>>());
     }
 
     // Export the tensor
@@ -410,11 +380,6 @@ Eigen::Tensor<double, 3> UnsteadyNSTurb::turbulencePPETensor2(label NUmodes,
                                             nutModes[j] * dev2((fvc::grad(L_U_SUPmodes[k]))().T()))))).value();
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(ct2PPETensor, sumOp<Eigen::Tensor<double, 3>>());
     }
 
     // Export the tensor
@@ -449,11 +414,6 @@ Eigen::Tensor<double, 3> UnsteadyNSTurb::turbulencePPEAveTensor2(label NUmodes,
                                                    nutAve[j] * dev2((fvc::grad(L_U_SUPmodes[k]))().T()))))).value();
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(ct2PPEAveTensor, sumOp<Eigen::Tensor<double, 3>>());
     }
 
     // Export the tensor
