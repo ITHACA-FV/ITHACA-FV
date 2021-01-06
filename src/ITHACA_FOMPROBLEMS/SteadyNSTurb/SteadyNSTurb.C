@@ -193,11 +193,6 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor1(label NUmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(ct1Tensor, sumOp<Eigen::Tensor<double, 3>>());
-    }
-
     // Export the tensor
     ITHACAstream::SaveDenseTensor(ct1Tensor, "./ITHACAoutput/Matrices/",
                                   "ct1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
@@ -263,11 +258,6 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2(label NUmodes,
                                          nutModes[j] * dev((fvc::grad(L_U_SUPmodes[k]))().T())))).value();
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(ct2Tensor, sumOp<Eigen::Tensor<double, 3>>());
     }
 
     // Export the tensor
