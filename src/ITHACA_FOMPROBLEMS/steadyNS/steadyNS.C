@@ -1638,7 +1638,55 @@ void steadyNS::forcesMatrices(label nModes)
     }
 }
 
+void steadyNS::reconstructLiftAndDrag(const Eigen::MatrixXd& velCoeffs,
+                                      const Eigen::MatrixXd& pressureCoeffs, fileName folder)
+{
+    M_Assert(velCoeffs.cols() == tauMatrix.rows(),
+             "The number of velocity modes in the coefficients matrix is not equal to the number of modes in the viscous forces matrix.");
+    M_Assert(pressureCoeffs.cols() == nMatrix.rows(),
+             "The number of pressure modes in the coefficients matrix is not equal to the number of modes in the pressure forces matrix.");
+    mkDir(folder);
+    system("ln -s ../../constant " + folder + "/constant");
+    system("ln -s ../../0 " + folder + "/0");
+    system("ln -s ../../system " + folder + "/system");
+    //Read FORCESdict
+    IOdictionary FORCESdict
+    (
+        IOobject
+        (
+            "FORCESdict",
+            "./system",
+            Umodes[0].mesh(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
+    Eigen::MatrixXd fTau;
+    Eigen::MatrixXd fN;
+    fTau.setZero(velCoeffs.rows(), 3);
+    fN.setZero(pressureCoeffs.rows(), 3);
+    fTau = velCoeffs * tauMatrix;
+    fN = pressureCoeffs * nMatrix;
 
+    // Export the matrices
+    if (para->exportPython)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "python", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "python", folder);
+    }
+
+    if (para->exportMatlab)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "matlab", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "matlab", folder);
+    }
+
+    if (para->exportTxt)
+    {
+        ITHACAstream::exportMatrix(fTau, "fTau", "eigen", folder);
+        ITHACAstream::exportMatrix(fN, "fN", "eigen", folder);
+    }
+}
 
 void steadyNS::restart()
 {

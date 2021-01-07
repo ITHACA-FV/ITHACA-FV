@@ -615,6 +615,17 @@ class steadyNS: public reductionProblem
         ///
         void forcesMatrices(label nModes);
 
+
+        //--------------------------------------------------------------------------
+        /// @brief      Method to reconstruct the forces using velocity and pressure coefficients
+        ///
+        /// @param[in]  velCoeffs       The velocity coefficients matrix
+        /// @param[in]  pressureCoeffs  The pressure coefficients matrix
+        /// @param[in]  folder          The folder where to output the forces matrices
+        ///
+        void reconstructLiftAndDrag(const Eigen::MatrixXd& velCoeffs,
+                                    const Eigen::MatrixXd& pressureCoeffs, fileName folder);
+
         //--------------------------------------------------------------------------
         /// @brief      Export convective term as a tensor
         ///
