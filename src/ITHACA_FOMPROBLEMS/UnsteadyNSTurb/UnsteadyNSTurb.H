@@ -142,6 +142,9 @@ class UnsteadyNSTurb: public unsteadyNS
         /// Velocity coefficients for RBF interpolation
         Eigen::MatrixXd velRBF;
 
+        /// RBF shape parameters vector
+        Eigen::VectorXd radii;
+
         /// RBF functions radius
         double e = 1;
 
@@ -271,7 +274,7 @@ class UnsteadyNSTurb: public unsteadyNS
         ///
         void truthSolve(List<scalar> mu_now);
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         /// Project using a supremizer approach
         ///
         /// @param[in]  folder     The folder name
@@ -279,21 +282,24 @@ class UnsteadyNSTurb: public unsteadyNS
         /// @param[in]  NPmodes    The number of pressure modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
         /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        /// @param[in]  rbfInterp  A boolean variable that determines whether to carry out the RBF interpolation or not
         ///
         void projectSUP(fileName folder, label NUmodes, label NPmodes, label NSUPmodes,
-                        label nNutModes);
+                        label nNutModes, bool rbfInterp = true);
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         /// Project using the Poisson Equation for pressure
         ///
         /// @param[in]  folder     The folder name
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NPmodes    The number of pressure modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes which will be set to zero.
+        /// @param[in]  NSUPmodes  The number of supremizer modes which will be
+        ///                        set to zero.
         /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        /// @param[in]  rbfInterp  A boolean variable that determines whether to carry out the RBF interpolation or not
         ///
         void projectPPE(fileName folder, label NUmodes, label NPmodes, label NSUPmodes,
-                        label nNutModes);
+                        label nNutModes, bool rbfInterp = true);
 
         //--------------------------------------------------------------------------
         /// @brief      A method to compute the two matrices needed for the RBF interpolation by combining

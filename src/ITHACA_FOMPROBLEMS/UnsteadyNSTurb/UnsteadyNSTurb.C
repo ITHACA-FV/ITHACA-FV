@@ -447,7 +447,7 @@ Eigen::MatrixXd UnsteadyNSTurb::btTurbulence(label NUmodes, label NSUPmodes)
 }
 
 void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
-                                label Nnut)
+                                label Nnut, bool rbfInterp)
 {
     NUmodes = NU;
     NPmodes = NP;
@@ -696,47 +696,60 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     cTotalTensor = ct1Tensor + ct2Tensor;
     cTotalAveTensor.resize(cSize, nutAve.size(), cSize);
     cTotalAveTensor = ct1AveTensor + ct2AveTensor;
-    // Export the matrix
-    ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
-                                  "coeffL2_nut_" + name(nNutModes));
-    samples.resize(nNutModes);
-    rbfSplines.resize(nNutModes);
-    Eigen::MatrixXd weights;
 
-    for (label i = 0; i < nNutModes; i++)
+    if (rbfInterp == true && (!Pstream::parRun()))
     {
-        word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
-                          + name(NUmodes) + "_" + name(NSUPmodes) ;
-
-        if (ITHACAutilities::check_file("./ITHACAoutput/weightsSUP/" + weightName))
+        if (ITHACAutilities::check_file("./radii.txt"))
         {
-            samples[i] = new SPLINTER::DataTable(1, 1);
-
-            for (label j = 0; j < coeffL2.cols(); j++)
-            {
-                samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
-            }
-
-            ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsSUP/",
-                                          weightName);
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, e);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            radii = ITHACAstream::readMatrix("./radii.txt");
+            M_Assert(radii.size() == nNutModes,
+                     "Thes size of the shape parameters vector must be equal to the number of eddy viscosity modes nNutModes");
         }
         else
         {
-            samples[i] = new SPLINTER::DataTable(1, 1);
+            radii = Eigen::MatrixXd::Ones(nNutModes,
+                                          1) * e;
+        }
 
-            for (label j = 0; j < coeffL2.cols(); j++)
+        samples.resize(nNutModes);
+        rbfSplines.resize(nNutModes);
+        Eigen::MatrixXd weights;
+
+        for (label i = 0; i < nNutModes; i++)
+        {
+            word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
+                              + name(NUmodes) + "_" + name(NSUPmodes) ;
+
+            if (ITHACAutilities::check_file("./ITHACAoutput/weightsSUP/" + weightName))
             {
-                samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
-            }
+                samples[i] = new SPLINTER::DataTable(1, 1);
 
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, e);
-            ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
-                                          "./ITHACAoutput/weightsSUP/", weightName);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+                for (label j = 0; j < coeffL2.cols(); j++)
+                {
+                    samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
+                }
+
+                ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsSUP/",
+                                              weightName);
+                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                                                        SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, radii(i));
+                std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            }
+            else
+            {
+                samples[i] = new SPLINTER::DataTable(1, 1);
+
+                for (label j = 0; j < coeffL2.cols(); j++)
+                {
+                    samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
+                }
+
+                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                                                        SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, radii(i));
+                ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
+                                              "./ITHACAoutput/weightsSUP/", weightName);
+                std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            }
         }
     }
 }
@@ -744,7 +757,7 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
 
 void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
-                                label Nnut)
+                                label Nnut, bool rbfInterp)
 {
     NUmodes = NU;
     NPmodes = NP;
@@ -1144,47 +1157,60 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
     cTotalPPETensor = ct1PPETensor + ct2PPETensor;
     cTotalPPEAveTensor.resize(NPmodes, nutAve.size(), cSize);
     cTotalPPEAveTensor = ct1PPEAveTensor + ct2PPEAveTensor;
-    // Export the matrix
-    ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
-                                  "coeffL2_nut_" + name(nNutModes));
-    samples.resize(nNutModes);
-    rbfSplines.resize(nNutModes);
-    Eigen::MatrixXd weights;
 
-    for (label i = 0; i < nNutModes; i++)
+    if (rbfInterp == true && (!Pstream::parRun()))
     {
-        word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
-                          + name(NUmodes) + "_" + name(NSUPmodes) ;
-
-        if (ITHACAutilities::check_file("./ITHACAoutput/weightsPPE/" + weightName))
+        if (ITHACAutilities::check_file("./radii.txt"))
         {
-            samples[i] = new SPLINTER::DataTable(1, 1);
-
-            for (label j = 0; j < coeffL2.cols(); j++)
-            {
-                samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
-            }
-
-            ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsPPE/",
-                                          weightName);
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, e);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            radii = ITHACAstream::readMatrix("./radii.txt");
+            M_Assert(radii.size() ==  nNutModes,
+                     "Thes size of the shape parameters vector must be equal to the number of eddy viscosity modes nNutModes");
         }
         else
         {
-            samples[i] = new SPLINTER::DataTable(1, 1);
+            radii = Eigen::MatrixXd::Ones(nNutModes,
+                                          1) * e;
+        }
 
-            for (label j = 0; j < coeffL2.cols(); j++)
+        samples.resize(nNutModes);
+        rbfSplines.resize(nNutModes);
+        Eigen::MatrixXd weights;
+
+        for (label i = 0; i < nNutModes; i++)
+        {
+            word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
+                              + name(NUmodes) + "_" + name(NSUPmodes) ;
+
+            if (ITHACAutilities::check_file("./ITHACAoutput/weightsPPE/" + weightName))
             {
-                samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
-            }
+                samples[i] = new SPLINTER::DataTable(1, 1);
 
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, e);
-            ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
-                                          "./ITHACAoutput/weightsPPE/", weightName);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+                for (label j = 0; j < coeffL2.cols(); j++)
+                {
+                    samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
+                }
+
+                ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsPPE/",
+                                              weightName);
+                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                                                        SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, radii(i));
+                std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            }
+            else
+            {
+                samples[i] = new SPLINTER::DataTable(1, 1);
+
+                for (label j = 0; j < coeffL2.cols(); j++)
+                {
+                    samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
+                }
+
+                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                                                        SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, radii(i));
+                ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
+                                              "./ITHACAoutput/weightsPPE/", weightName);
+                std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            }
         }
     }
 }
