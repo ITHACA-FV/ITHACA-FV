@@ -64,3 +64,20 @@ void EigenFunctions::sortEigenvalues(Eigen::VectorXd& eigenvalues,
 
     eigenvectors = eigenvectors2;
 }
+
+Eigen::MatrixXd vectorTensorProduct(const Eigen::VectorXd& g,
+                                    const Eigen::Tensor<double, 3 >& c,
+                                    const Eigen::VectorXd& a)
+{
+    int prodDim = c.dimension(0);
+    Eigen::MatrixXd prod;
+    prod.resize(prodDim, 1);
+
+    for (int i = 0; i < prodDim; i++)
+    {
+        prod(i, 0) = g.transpose() *
+                     SliceFromTensor(c, 0, i) * a;
+    }
+
+    return prod;
+}

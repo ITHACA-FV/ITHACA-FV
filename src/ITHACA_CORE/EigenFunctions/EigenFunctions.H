@@ -221,6 +221,18 @@ class EigenFunctions
         template <typename T>
         static T condNumber(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& A);
 
+        ///
+        /// @brief      A function that computes the product of  g.T c a, where c is a third dim tensor
+        ///
+        /// @param[in]  g     The first vector
+        /// @param[in]  c     The three dim tensor
+        /// @param[in]  a     The second vector
+        ///
+        /// @return     The vector which corresponds to the product g.T c a
+        ///
+        Eigen::MatrixXd vectorTensorProduct(const Eigen::VectorXd& g,
+                                            const Eigen::Tensor<double, 3 >& c,
+                                            const Eigen::VectorXd& a);
 };
 
 template <typename T>
