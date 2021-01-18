@@ -293,7 +293,7 @@ class EnKF_1DinverseHeatTransfer: public laplacianProblem
                         volScalarField& T = _T();
                         Eigen::VectorXd internalField = posteriorSamples.col(i);
                         assignIF(T, internalField);
-                        Tensemble.set(i, T);
+                        Tensemble.Foam::PtrList<volScalarField>::set(i, T.clone());
                     }
                 }
                 else
@@ -378,7 +378,7 @@ class EnKF_1DinverseHeatTransfer: public laplacianProblem
                     observationMat.col(i) = observationForCheck;
                 }
 
-                Tensemble.set(i, T);
+                Tensemble.set(i, T.clone());
             }
 
             return observationMat;
