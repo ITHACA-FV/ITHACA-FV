@@ -88,6 +88,20 @@ UnsteadyNSTurb::UnsteadyNSTurb(int argc, char* argv[])
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();
+    /// Number of velocity modes to be calculated
+    NUmodesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesUout", 15);
+    /// Number of pressure modes to be calculated
+    NPmodesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesPout", 15);
+    /// Number of nut modes to be calculated
+    NNutModesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesNutOut", 15);
+    /// Number of velocity modes used for the projection
+    NUmodes = para->ITHACAdict->lookupOrDefault<label>("NmodesUproj", 10);
+    /// Number of supremizers modes used for the projection
+    NSUPmodes = para->ITHACAdict->lookupOrDefault<label>("NmodesSUPproj", 10);
+    /// Number of pressure modes used for the projection
+    NPmodes = para->ITHACAdict->lookupOrDefault<label>("NmodesPproj", 10);
+    /// Number of nut modes used for the projection
+    NNutModes = para->ITHACAdict->lookupOrDefault<label>("NmodesNutProj", 0);
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
