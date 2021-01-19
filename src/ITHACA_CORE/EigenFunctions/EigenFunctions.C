@@ -64,3 +64,40 @@ void EigenFunctions::sortEigenvalues(Eigen::VectorXd& eigenvalues,
 
     eigenvectors = eigenvectors2;
 }
+
+template <typename T>
+Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>
+EigenFunctions::vectorTensorProduct(const Eigen::Matrix<T, Eigen::Dynamic, 1>&
+                                    g,
+                                    const Eigen::Tensor<T, 3 >& c,
+                                    const Eigen::Matrix<T, Eigen::Dynamic, 1>& a)
+{
+    int prodDim = c.dimension(0);
+    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> prod;
+    prod.resize(prodDim, 1);
+
+    for (int i = 0; i < prodDim; i++)
+    {
+        prod(i, 0) = g.transpose() *
+                     SliceFromTensor(c, 0, i) * a;
+    }
+
+    return prod;
+}
+
+template Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
+EigenFunctions::vectorTensorProduct<>(
+    const Eigen::Matrix<double, Eigen::Dynamic, 1>& g,
+    const Eigen::Tensor<double, 3 >& c,
+    const Eigen::Matrix<double, Eigen::Dynamic, 1>& a);
+
+template Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>
+EigenFunctions::vectorTensorProduct(
+    const Eigen::Matrix<int, Eigen::Dynamic, 1>& g, const Eigen::Tensor<int, 3 >& c,
+    const Eigen::Matrix<int, Eigen::Dynamic, 1>& a);
+
+template Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>
+EigenFunctions::vectorTensorProduct(
+    const Eigen::Matrix<float, Eigen::Dynamic, 1>& g,
+    const Eigen::Tensor<float, 3 >& c,
+    const Eigen::Matrix<float, Eigen::Dynamic, 1>& a);
