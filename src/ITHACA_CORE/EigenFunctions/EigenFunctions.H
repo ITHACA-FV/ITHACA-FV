@@ -221,6 +221,23 @@ class EigenFunctions
         template <typename T>
         static T condNumber(Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& A);
 
+
+
+        //--------------------------------------------------------------------------
+        /// @brief      A function that computes the product of  g.T c a, where c is a third dim tensor
+        ///
+        /// @param[in]  g     The first vector
+        /// @param[in]  c     The three dim tensor
+        /// @param[in]  a     The second vector
+        ///
+        /// @return     The vector which corresponds to the product g.T c a
+        ///
+        template <typename T>
+        static Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> vectorTensorProduct(
+            const Eigen::Matrix<T, Eigen::Dynamic, 1>& g,
+            const Eigen::Tensor<T, 3 >& c,
+            const Eigen::Matrix<T, Eigen::Dynamic, 1>& a);
+
 };
 
 template <typename T>
@@ -448,6 +465,22 @@ bool saveMarketVector (const VectorType& vec, const std::string& filename,
 template<typename VectorType>
 Matrix<VectorType, Dynamic, Dynamic> SliceFromTensor(
     Eigen::Tensor<VectorType, 3>& tensor, label dim, label index1)
+{
+    Eigen::Tensor<VectorType, 2> t2 = tensor.chip(index1, dim);
+    Matrix<VectorType, Dynamic, Dynamic> m = Eigen::Map<Eigen::Matrix<
+            VectorType,           /* scalar element type */
+            Eigen::Dynamic,  /* num_rows is a run-time value */
+            Eigen::Dynamic,  /* num_cols is a run-time value */
+            Eigen::ColMajor  /* tensorflow::Tensor is always row-major */>>(
+                t2.data(),  /* ptr to data */
+                t2.dimensions()[0],           /* num_rows */
+                t2.dimensions()[1]            /* num_cols */);
+    return m;
+}
+
+template<typename VectorType>
+Matrix<VectorType, Dynamic, Dynamic> SliceFromTensor(
+    const Eigen::Tensor<VectorType, 3>& tensor, label dim, label index1)
 {
     Eigen::Tensor<VectorType, 2> t2 = tensor.chip(index1, dim);
     Matrix<VectorType, Dynamic, Dynamic> m = Eigen::Map<Eigen::Matrix<
