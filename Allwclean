@@ -54,6 +54,17 @@ for d in ./*/ ; do
     cd ../
 done
 
+cd ../inverseHeatTransfer
+
+for d in ./*/ ; do   
+    echo $d    
+    cd $d
+    if [ -f "Make/files" ]; then
+    wclean
+    fi
+    cd ../
+done
+
 cd ..
 cd ../unitTests
 

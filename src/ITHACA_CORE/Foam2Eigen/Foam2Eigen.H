@@ -393,6 +393,30 @@ class Foam2Eigen
         static std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 LFvMatrix2LSM(PtrList<fvMatrix<Type>>& MatrixList);
 
+        //--------------------------------------------------------------------------
+        /// @brief      Convert a Foam List into an Eigen matrix with one column
+        ///
+        /// @param[in]  list        The Foam List
+        ///
+        /// @tparam     type_matrix The type of data in the List (int or double)
+        ///
+        /// @return     The Eigen matrix
+        ///
+        template <class type_matrix>
+        static Eigen::Matrix<type_matrix, Eigen::Dynamic, Eigen::Dynamic>
+        List2EigenMatrix ( List<type_matrix> list );
 
+        //--------------------------------------------------------------------------
+        /// @brief      Convert an Eigen matrix with one column into a Foam List
+        ///
+        /// @param[in]  matrix       The Eigen matrix
+        ///
+        /// @tparam     type_matrix The type of data in the List (int or double)
+        ///
+        /// @return     The Foam List
+        ///
+        template <class type_matrix>
+        static List<type_matrix> EigenMatrix2List (
+            Eigen::Matrix<type_matrix, Eigen::Dynamic, Eigen::Dynamic> matrix );
 };
 #endif

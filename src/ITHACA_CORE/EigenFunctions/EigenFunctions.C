@@ -33,8 +33,11 @@ License
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-void EigenFunctions::sortEigenvalues(Eigen::VectorXd& eigenvalues,
-                                     Eigen::MatrixXd& eigenvectors)
+
+namespace EigenFunctions
+{
+void sortEigenvalues(Eigen::VectorXd& eigenvalues,
+                     Eigen::MatrixXd& eigenvectors)
 {
     labelList order;
     scalarField eigenValues(eigenvalues.size());
@@ -65,12 +68,28 @@ void EigenFunctions::sortEigenvalues(Eigen::VectorXd& eigenvalues,
     eigenvectors = eigenvectors2;
 }
 
+
+Eigen::VectorXd ExpSpaced(double first, double last, int n)
+{
+    Eigen::VectorXd vector(n);
+    double m = (double) 1 / (n * 1.0 - 1);
+    double quotient = std::pow(last / first, m);
+    vector(0) = first;
+
+    for (int i = 1; i < n; i++)
+    {
+        vector(i) = vector(i - 1) * quotient;
+    }
+
+    return vector;
+}
+
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>
-EigenFunctions::vectorTensorProduct(const Eigen::Matrix<T, Eigen::Dynamic, 1>&
-                                    g,
-                                    const Eigen::Tensor<T, 3 >& c,
-                                    const Eigen::Matrix<T, Eigen::Dynamic, 1>& a)
+vectorTensorProduct(const Eigen::Matrix<T, Eigen::Dynamic, 1>&
+                    g,
+                    const Eigen::Tensor<T, 3 >& c,
+                    const Eigen::Matrix<T, Eigen::Dynamic, 1>& a)
 {
     int prodDim = c.dimension(0);
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> prod;
@@ -86,18 +105,19 @@ EigenFunctions::vectorTensorProduct(const Eigen::Matrix<T, Eigen::Dynamic, 1>&
 }
 
 template Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
-EigenFunctions::vectorTensorProduct<>(
+vectorTensorProduct<>(
     const Eigen::Matrix<double, Eigen::Dynamic, 1>& g,
     const Eigen::Tensor<double, 3 >& c,
     const Eigen::Matrix<double, Eigen::Dynamic, 1>& a);
 
 template Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>
-EigenFunctions::vectorTensorProduct(
+vectorTensorProduct(
     const Eigen::Matrix<int, Eigen::Dynamic, 1>& g, const Eigen::Tensor<int, 3 >& c,
     const Eigen::Matrix<int, Eigen::Dynamic, 1>& a);
 
 template Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>
-EigenFunctions::vectorTensorProduct(
+vectorTensorProduct(
     const Eigen::Matrix<float, Eigen::Dynamic, 1>& g,
     const Eigen::Tensor<float, 3 >& c,
     const Eigen::Matrix<float, Eigen::Dynamic, 1>& a);
+}
