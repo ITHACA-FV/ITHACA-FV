@@ -593,32 +593,35 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
             ct2Tensor = turbulenceTensor2(NUmodes, NSUPmodes, nNutModes);
         }
 
-        word ct1AveStr = "ct1Ave_" + name(liftfield.size()) + "_" + name(
-                             NUmodes) + "_" + name(
-                             NSUPmodes) + "_t";
+        if (nutAve.size() != 0)
+        {
+            word ct1AveStr = "ct1Ave_" + name(liftfield.size()) + "_" + name(
+                                 NUmodes) + "_" + name(
+                                 NSUPmodes) + "_t";
 
-        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct1AveStr))
-        {
-            ITHACAstream::ReadDenseTensor(ct1AveTensor, "./ITHACAoutput/Matrices/",
-                                          ct1AveStr);
-        }
-        else
-        {
-            ct1AveTensor = turbulenceAveTensor1(NUmodes, NSUPmodes);
-        }
+            if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct1AveStr))
+            {
+                ITHACAstream::ReadDenseTensor(ct1AveTensor, "./ITHACAoutput/Matrices/",
+                                              ct1AveStr);
+            }
+            else
+            {
+                ct1AveTensor = turbulenceAveTensor1(NUmodes, NSUPmodes);
+            }
 
-        word ct2AveStr = "ct2Ave_" + name(liftfield.size()) + "_" + name(
-                             NUmodes) + "_" + name(
-                             NSUPmodes) + "_t";
+            word ct2AveStr = "ct2Ave_" + name(liftfield.size()) + "_" + name(
+                                 NUmodes) + "_" + name(
+                                 NSUPmodes) + "_t";
 
-        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct2AveStr))
-        {
-            ITHACAstream::ReadDenseTensor(ct2AveTensor, "./ITHACAoutput/Matrices/",
-                                          ct2AveStr);
-        }
-        else
-        {
-            ct2AveTensor = turbulenceAveTensor2(NUmodes, NSUPmodes);
+            if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct2AveStr))
+            {
+                ITHACAstream::ReadDenseTensor(ct2AveTensor, "./ITHACAoutput/Matrices/",
+                                              ct2AveStr);
+            }
+            else
+            {
+                ct2AveTensor = turbulenceAveTensor2(NUmodes, NSUPmodes);
+            }
         }
 
         if (bcMethod == "penalty")
@@ -637,8 +640,12 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         btMatrix = btTurbulence(NUmodes, NSUPmodes);
         ct1Tensor = turbulenceTensor1(NUmodes, NSUPmodes, nNutModes);
         ct2Tensor = turbulenceTensor2(NUmodes, NSUPmodes, nNutModes);
-        ct1AveTensor = turbulenceAveTensor1(NUmodes, NSUPmodes);
-        ct2AveTensor = turbulenceAveTensor2(NUmodes, NSUPmodes);
+
+        if (nutAve.size() != 0)
+        {
+            ct1AveTensor = turbulenceAveTensor1(NUmodes, NSUPmodes);
+            ct2AveTensor = turbulenceAveTensor2(NUmodes, NSUPmodes);
+        }
 
         if (bcMethod == "penalty")
         {
@@ -648,25 +655,6 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     }
 
     // Export the matrices
-    if (para->exportPython)
-    {
-        ITHACAstream::exportMatrix(B_matrix, "B", "python", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(K_matrix, "K", "python", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(P_matrix, "P", "python", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(M_matrix, "M", "python", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(btMatrix, "bt", "python",
-                                   "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(C_tensor, "C", "python", "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct1Tensor, "ct1", "python",
-                                   "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct2Tensor, "ct2", "python",
-                                   "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave", "python",
-                                   "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave", "python",
-                                   "./ITHACAoutput/Matrices/");
-    }
-
     if (para->exportMatlab)
     {
         ITHACAstream::exportMatrix(B_matrix, "B", "matlab", "./ITHACAoutput/Matrices/");
@@ -680,10 +668,14 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(ct2Tensor, "ct2", "matlab",
                                    "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave", "matlab",
-                                   "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave", "matlab",
-                                   "./ITHACAoutput/Matrices/");
+
+        if (nutAve.size() != 0)
+        {
+            ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+        }
     }
 
     if (para->exportTxt)
@@ -698,18 +690,26 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                                    "./ITHACAoutput/Matrices/ct1");
         ITHACAstream::exportTensor(ct2Tensor, "ct2_", "eigen",
                                    "./ITHACAoutput/Matrices/ct2");
-        ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave_", "eigen",
-                                   "./ITHACAoutput/Matrices/ct1Ave");
-        ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave_", "eigen",
-                                   "./ITHACAoutput/Matrices/ct2Ave");
+
+        if (nutAve.size() != 0)
+        {
+            ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave_", "eigen",
+                                       "./ITHACAoutput/Matrices/ct1Ave");
+            ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave_", "eigen",
+                                       "./ITHACAoutput/Matrices/ct2Ave");
+        }
     }
 
     bTotalMatrix = B_matrix + btMatrix;
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     cTotalTensor.resize(cSize, nNutModes, cSize);
     cTotalTensor = ct1Tensor + ct2Tensor;
-    cTotalAveTensor.resize(cSize, nutAve.size(), cSize);
-    cTotalAveTensor = ct1AveTensor + ct2AveTensor;
+
+    if (nutAve.size() != 0)
+    {
+        cTotalAveTensor.resize(cSize, nutAve.size(), cSize);
+        cTotalAveTensor = ct1AveTensor + ct2AveTensor;
+    }
 
     if (rbfInterp == true && (!Pstream::parRun()))
     {
@@ -943,32 +943,35 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
             gTensor = divMomentum(NUmodes, NPmodes);
         }
 
-        word ct1AveStr = "ct1Ave_" + name(liftfield.size()) + "_" + name(
-                             NUmodes) + "_" + name(
-                             NSUPmodes) + "_t";
+        if (nutAve.size() != 0)
+        {
+            word ct1AveStr = "ct1Ave_" + name(liftfield.size()) + "_" + name(
+                                 NUmodes) + "_" + name(
+                                 NSUPmodes) + "_t";
 
-        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct1AveStr))
-        {
-            ITHACAstream::ReadDenseTensor(ct1AveTensor, "./ITHACAoutput/Matrices/",
-                                          ct1AveStr);
-        }
-        else
-        {
-            ct1AveTensor = turbulenceAveTensor1(NUmodes, NSUPmodes);
-        }
+            if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct1AveStr))
+            {
+                ITHACAstream::ReadDenseTensor(ct1AveTensor, "./ITHACAoutput/Matrices/",
+                                              ct1AveStr);
+            }
+            else
+            {
+                ct1AveTensor = turbulenceAveTensor1(NUmodes, NSUPmodes);
+            }
 
-        word ct2AveStr = "ct2Ave_" + name(liftfield.size()) + "_" + name(
-                             NUmodes) + "_" + name(
-                             NSUPmodes) + "_t";
+            word ct2AveStr = "ct2Ave_" + name(liftfield.size()) + "_" + name(
+                                 NUmodes) + "_" + name(
+                                 NSUPmodes) + "_t";
 
-        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct2AveStr))
-        {
-            ITHACAstream::ReadDenseTensor(ct2AveTensor, "./ITHACAoutput/Matrices/",
-                                          ct2AveStr);
-        }
-        else
-        {
-            ct2AveTensor = turbulenceAveTensor2(NUmodes, NSUPmodes);
+            if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct2AveStr))
+            {
+                ITHACAstream::ReadDenseTensor(ct2AveTensor, "./ITHACAoutput/Matrices/",
+                                              ct2AveStr);
+            }
+            else
+            {
+                ct2AveTensor = turbulenceAveTensor2(NUmodes, NSUPmodes);
+            }
         }
 
         word ct1PPEStr = "ct1PPE_" + name(liftfield.size()) + "_" + name(
@@ -999,32 +1002,35 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
             ct2PPETensor = turbulencePPETensor2(NUmodes, NSUPmodes, NPmodes, nNutModes);
         }
 
-        word ct1PPEAveStr = "ct1PPEAve_" + name(liftfield.size()) + "_" + name(
-                                NUmodes) + "_" + name(
-                                NSUPmodes) + "_" + name(NPmodes) + "_t";
+        if (nutAve.size() != 0)
+        {
+            word ct1PPEAveStr = "ct1PPEAve_" + name(liftfield.size()) + "_" + name(
+                                    NUmodes) + "_" + name(
+                                    NSUPmodes) + "_" + name(NPmodes) + "_t";
 
-        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct1PPEAveStr))
-        {
-            ITHACAstream::ReadDenseTensor(ct1PPEAveTensor, "./ITHACAoutput/Matrices/",
-                                          ct1PPEAveStr);
-        }
-        else
-        {
-            ct1PPEAveTensor = turbulencePPEAveTensor1(NUmodes, NSUPmodes, NPmodes);
-        }
+            if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct1PPEAveStr))
+            {
+                ITHACAstream::ReadDenseTensor(ct1PPEAveTensor, "./ITHACAoutput/Matrices/",
+                                              ct1PPEAveStr);
+            }
+            else
+            {
+                ct1PPEAveTensor = turbulencePPEAveTensor1(NUmodes, NSUPmodes, NPmodes);
+            }
 
-        word ct2PPEAveStr = "ct2PPEAve_" + name(liftfield.size()) + "_" + name(
-                                NUmodes) + "_" + name(
-                                NSUPmodes) + "_" + name(NPmodes) + "_t";
+            word ct2PPEAveStr = "ct2PPEAve_" + name(liftfield.size()) + "_" + name(
+                                    NUmodes) + "_" + name(
+                                    NSUPmodes) + "_" + name(NPmodes) + "_t";
 
-        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct2PPEAveStr))
-        {
-            ITHACAstream::ReadDenseTensor(ct2PPEAveTensor, "./ITHACAoutput/Matrices/",
-                                          ct2PPEAveStr);
-        }
-        else
-        {
-            ct2PPEAveTensor = turbulencePPEAveTensor2(NUmodes, NSUPmodes, NPmodes);
+            if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct2PPEAveStr))
+            {
+                ITHACAstream::ReadDenseTensor(ct2PPEAveTensor, "./ITHACAoutput/Matrices/",
+                                              ct2PPEAveStr);
+            }
+            else
+            {
+                ct2PPEAveTensor = turbulencePPEAveTensor2(NUmodes, NSUPmodes, NPmodes);
+            }
         }
 
         if (bcMethod == "penalty")
@@ -1047,12 +1053,16 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         btMatrix = btTurbulence(NUmodes, NSUPmodes);
         ct1Tensor = turbulenceTensor1(NUmodes, NSUPmodes, nNutModes);
         ct2Tensor = turbulenceTensor2(NUmodes, NSUPmodes, nNutModes);
-        ct1AveTensor = turbulenceAveTensor1(NUmodes, NSUPmodes);
-        ct2AveTensor = turbulenceAveTensor2(NUmodes, NSUPmodes);
         ct1PPETensor = turbulencePPETensor1(NUmodes, NSUPmodes, NPmodes, nNutModes);
         ct2PPETensor = turbulencePPETensor2(NUmodes, NSUPmodes, NPmodes, nNutModes);
-        ct1PPEAveTensor = turbulencePPEAveTensor1(NUmodes, NSUPmodes, NPmodes);
-        ct2PPEAveTensor = turbulencePPEAveTensor2(NUmodes, NSUPmodes, NPmodes);
+
+        if (nutAve.size() != 0)
+        {
+            ct1AveTensor = turbulenceAveTensor1(NUmodes, NSUPmodes);
+            ct2AveTensor = turbulenceAveTensor2(NUmodes, NSUPmodes);
+            ct1PPEAveTensor = turbulencePPEAveTensor1(NUmodes, NSUPmodes, NPmodes);
+            ct2PPEAveTensor = turbulencePPEAveTensor2(NUmodes, NSUPmodes, NPmodes);
+        }
 
         if (bcMethod == "penalty")
         {
@@ -1080,18 +1090,22 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(ct2Tensor, "ct2", "python",
                                    "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave", "python",
-                                   "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave", "python",
-                                   "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(ct1PPETensor, "ct1PPE", "python",
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(ct2PPETensor, "ct2PPE", "python",
                                    "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct1PPEAveTensor, "ct1PPEAve", "python",
-                                   "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct2PPEAveTensor, "ct2PPEAve", "python",
-                                   "./ITHACAoutput/Matrices/");
+
+        if (nutAve.size() != 0)
+        {
+            ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave", "python",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave", "python",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportTensor(ct1PPEAveTensor, "ct1PPEAve", "python",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportTensor(ct2PPEAveTensor, "ct2PPEAve", "python",
+                                       "./ITHACAoutput/Matrices/");
+        }
     }
 
     if (para->exportMatlab)
@@ -1112,18 +1126,22 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(ct2Tensor, "ct2", "matlab",
                                    "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave", "matlab",
-                                   "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave", "matlab",
-                                   "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(ct1PPETensor, "ct1PPE", "matlab",
                                    "./ITHACAoutput/Matrices/");
         ITHACAstream::exportTensor(ct2PPETensor, "ct2PPE", "matlab",
                                    "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct1PPEAveTensor, "ct1PPEAve", "matlab",
-                                   "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportTensor(ct2PPEAveTensor, "ct2PPEAve", "matlab",
-                                   "./ITHACAoutput/Matrices/");
+
+        if (nutAve.size() != 0)
+        {
+            ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportTensor(ct1PPEAveTensor, "ct1PPEAve", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportTensor(ct2PPEAveTensor, "ct2PPEAve", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+        }
     }
 
     if (para->exportTxt)
@@ -1147,30 +1165,38 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                                    "./ITHACAoutput/Matrices/ct1");
         ITHACAstream::exportTensor(ct2Tensor, "ct2_", "eigen",
                                    "./ITHACAoutput/Matrices/ct2");
-        ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave_", "eigen",
-                                   "./ITHACAoutput/Matrices/ct1Ave");
-        ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave_", "eigen",
-                                   "./ITHACAoutput/Matrices/ct2Ave");
         ITHACAstream::exportTensor(ct1PPETensor, "ct1PPE_", "eigen",
                                    "./ITHACAoutput/Matrices/ct1PPE");
         ITHACAstream::exportTensor(ct2PPETensor, "ct2PPE_", "eigen",
                                    "./ITHACAoutput/Matrices/ct2PPE");
-        ITHACAstream::exportTensor(ct1PPEAveTensor, "ct1PPEAve_", "eigen",
-                                   "./ITHACAoutput/Matrices/ct1PPEAve");
-        ITHACAstream::exportTensor(ct2PPEAveTensor, "ct2PPEAve_", "eigen",
-                                   "./ITHACAoutput/Matrices/ct2PPEAve");
+
+        if (nutAve.size() != 0)
+        {
+            ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave_", "eigen",
+                                       "./ITHACAoutput/Matrices/ct1Ave");
+            ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave_", "eigen",
+                                       "./ITHACAoutput/Matrices/ct2Ave");
+            ITHACAstream::exportTensor(ct1PPEAveTensor, "ct1PPEAve_", "eigen",
+                                       "./ITHACAoutput/Matrices/ct1PPEAve");
+            ITHACAstream::exportTensor(ct2PPEAveTensor, "ct2PPEAve_", "eigen",
+                                       "./ITHACAoutput/Matrices/ct2PPEAve");
+        }
     }
 
     bTotalMatrix = B_matrix + btMatrix;
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     cTotalTensor.resize(cSize, nNutModes, cSize);
     cTotalTensor = ct1Tensor + ct2Tensor;
-    cTotalAveTensor.resize(cSize, nutAve.size(), cSize);
-    cTotalAveTensor = ct1AveTensor + ct2AveTensor;
     cTotalPPETensor.resize(NPmodes, nNutModes, cSize);
     cTotalPPETensor = ct1PPETensor + ct2PPETensor;
-    cTotalPPEAveTensor.resize(NPmodes, nutAve.size(), cSize);
-    cTotalPPEAveTensor = ct1PPEAveTensor + ct2PPEAveTensor;
+
+    if (nutAve.size() != 0)
+    {
+        cTotalAveTensor.resize(cSize, nutAve.size(), cSize);
+        cTotalAveTensor = ct1AveTensor + ct2AveTensor;
+        cTotalPPEAveTensor.resize(NPmodes, nutAve.size(), cSize);
+        cTotalPPEAveTensor = ct1PPEAveTensor + ct2PPEAveTensor;
+    }
 
     if (rbfInterp == true && (!Pstream::parRun()))
     {
