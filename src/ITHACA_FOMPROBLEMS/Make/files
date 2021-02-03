@@ -13,6 +13,10 @@ laplacianProblem/laplacianProblem.C
 msrProblem/msrProblem.C
 unsteadymsrProblem/usmsrProblem.C
 UnsteadyNSExplicit/UnsteadyNSExplicit.C
+inverseLaplacianProblem/inverseLaplacianProblem.C
+inverseLaplacianProblem_CG/inverseLaplacianProblem_CG.C
+inverseLaplacianProblem_paramBC/inverseLaplacianProblem_paramBC.C
+
 
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_FOMPROBLEMS

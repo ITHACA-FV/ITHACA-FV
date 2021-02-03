@@ -83,6 +83,20 @@ double errorL2Rel(GeometricField<T, fvPatchField, volMesh>& field1,
                   GeometricField<T, fvPatchField, volMesh>& field2);
 
 //--------------------------------------------------------------------------
+/// Computes the relative error between two geometric Fields in Linf norm
+///
+/// @param[in]  field1  The field 1
+/// @param[in]  field2  The field 2
+///
+/// @tparam     TypeField   type of field
+///
+/// @return     Linf norm of the relative error.
+///
+template<typename T>
+double errorLinfRel(GeometricField<T, fvPatchField, volMesh>& field1,
+                    GeometricField<T, fvPatchField, volMesh>& field2);
+
+//--------------------------------------------------------------------------
 /// Computes the relative error between two geometric Fields in
 /// L2 norm, given the mesh volumes field
 ///
@@ -187,7 +201,17 @@ Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh>>&
 template<class T>
 double L2Norm(GeometricField<T, fvPatchField, volMesh>& field);
 
-
+//------------------------------------------------------------------------------
+/// Evaluate the Linf norm of a geometric field
+///
+/// @param[in]  field  The field.
+///
+/// @tparam     T      Type of field, scalar or vector
+///
+/// @return     Linf norm of the volVectorField.
+///
+template<class T>
+double LinfNorm(GeometricField<T, fvPatchField, volMesh>& field);
 
 //------------------------------------------------------------------------------
 /// Evaluate the H1 seminorm of a geoemtri
@@ -212,6 +236,64 @@ double H1Seminorm(GeometricField<T, fvPatchField, volMesh>& field);
 ///
 template<class T>
 double frobNorm(GeometricField<T, fvPatchField, volMesh>& field);
+
+//--------------------------------------------------------------------------
+/// Evaluate the L2 norm of a field on a boundary patch
+///
+/// @param[in]  mesh   The mesh.
+/// @param[in]  field  The field.
+/// @param[in]  patch  Name of the patch.
+///
+/// @return     L2 norm of the field on the patch.
+///
+double L2normOnPatch(fvMesh& mesh, volScalarField& field, word patch);
+
+//--------------------------------------------------------------------------
+/// Evaluate the L2 inner product between two scalarLists
+///
+/// @param[in]  mesh   The mesh.
+/// @param[in]  field1 The first field.
+/// @param[in]  field2 The second field.
+/// @param[in]  patch  Name of the patch.
+///
+/// @return     L2 norm of the field on the patch.
+///
+double L2productOnPatch(fvMesh& mesh, List<scalar>& field1,
+                        List<scalar>& field2, word patch);
+
+//--------------------------------------------------------------------------
+/// Evaluate the Linf norm of a field on a boundary patch
+///
+/// @param[in]  mesh   The mesh.
+/// @param[in]  field  The field.
+/// @param[in]  patch  Name of the patch.
+///
+/// @return     Linf norm of the field on the patch.
+///
+double LinfNormOnPatch(fvMesh& mesh, volScalarField& field, word patch);
+
+//--------------------------------------------------------------------------
+/// Evaluate the integral on a patch
+///
+/// @param[in]  mesh   The mesh.
+/// @param[in]  field  The field.
+/// @param[in]  patch  Name of the patch.
+///
+/// @return     Integral of the field on the patch.
+///
+double integralOnPatch(fvMesh& mesh, volScalarField& field, word patch);
+
+//--------------------------------------------------------------------------
+/// Evaluate the integral on a patch
+///
+/// @param[in]  mesh   The mesh.
+/// @param[in]  field  A list of values of the field on the patch.
+/// @param[in]  patch  Name of the patch.
+///
+/// @return     Integral of the field on the patch.
+///
+double integralOnPatch(fvMesh& mesh, List<scalar> field, word patch);
+
 }
 
 

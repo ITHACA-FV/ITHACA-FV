@@ -951,3 +951,50 @@ Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<scalar>>& MatrixList);
 template std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<vector>>& MatrixList);
 
+template<class type_matrix>
+Eigen::Matrix<type_matrix, Eigen::Dynamic, Eigen::Dynamic>
+Foam2Eigen::List2EigenMatrix ( List<type_matrix> list )
+{
+    Eigen::Matrix<type_matrix, Eigen::Dynamic, Eigen::Dynamic> matrix(list.size(),
+            1);
+
+    for (label i = 0; i < matrix.rows(); i++)
+    {
+        matrix(i, 0) = list[i];
+    }
+
+    return matrix;
+}
+
+template Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>
+Foam2Eigen::List2EigenMatrix ( List<int> list );
+template Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
+Foam2Eigen::List2EigenMatrix ( List<double> list );
+
+template<class type_matrix>
+List<type_matrix> Foam2Eigen::EigenMatrix2List (
+    Eigen::Matrix<type_matrix, Eigen::Dynamic, Eigen::Dynamic> matrix )
+{
+    if (matrix.cols() == 1)
+    {
+        List<type_matrix> list(matrix.rows());
+
+        for (label i = 0; i < matrix.rows(); i++)
+        {
+            list[i] = matrix(i, 0);
+        }
+
+        return list;
+    }
+    else
+    {
+        Info << "Foam2Eigen::EigenMatrix2List only accepts matrices with 1 column, exiting"
+             << endl;
+        exit(11);
+    }
+}
+
+template List<int> Foam2Eigen::EigenMatrix2List (
+    Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic> matrix );
+template List<double> Foam2Eigen::EigenMatrix2List (
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix );

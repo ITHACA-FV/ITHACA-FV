@@ -21,6 +21,7 @@ ITHACAsensitivity/FiguresOfMerit/Tm.C
 ITHACAsensitivity/FiguresOfMerit/Ptot.C
 ITHACAsensitivity/FiguresOfMerit/Ptot_time.C
 ITHACAsensitivity/FiguresOfMerit/Tm_time.C
+ITHACAregularization/ITHACAregularization.C
 
 
 
