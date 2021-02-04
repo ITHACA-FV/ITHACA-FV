@@ -179,17 +179,7 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
 
-    if (typeBC == "fixedValue" || typeBC == "calculated"
-            || typeBC == "fixedFluxPressure" ||  typeBC == "processor"
-            || typeBC == "nutkWallFunction")
-    {
-        for (label i = 0; i < sizeBC; i++)
-        {
-            double value = valueList[i];
-            s.boundaryFieldRef()[BC_ind][i] = value;
-        }
-    }
-    else if (typeBC == "fixedGradient")
+    if (typeBC == "fixedGradient")
     {
         fixedGradientFvPatchScalarField& Tpatch =
             refCast<fixedGradientFvPatchScalarField>(s.boundaryFieldRef()[BC_ind]);
@@ -218,7 +208,14 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
         }
     }
     else if (typeBC == "empty")
+    {}
+    else
     {
+        for (label i = 0; i < sizeBC; i++)
+        {
+            double value = valueList[i];
+            s.boundaryFieldRef()[BC_ind][i] = value;
+        }
     }
 }
 
@@ -299,14 +296,7 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
 
-    if (typeBC == "fixedValue" || typeBC == "calculated" || typeBC == "processor")
-    {
-        for (label i = 0; i < sizeBC; i++)
-        {
-            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
-        }
-    }
-    else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         Info << "This Feature is not implemented for this boundary condition" << endl;
         exit(0);
@@ -326,6 +316,13 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
             gradTpatch[faceI] = valueList[faceI];
         }
     }
+    else
+    {
+        for (label i = 0; i < sizeBC; i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
+        }
+    }
 }
 
 template<typename Type>
@@ -337,15 +334,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
 
-    if (typeBC == "fixedValue" || typeBC == "calculated"
-            || typeBC == "fixedFluxPressure" ||  typeBC == "processor")
-    {
-        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
-        {
-            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
-        }
-    }
-    else if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         fixedGradientFvPatchField<Type>& Tpatch =
             refCast<fixedGradientFvPatchField<Type>>(s.boundaryFieldRef()[BC_ind]);
@@ -371,7 +360,13 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
         }
     }
     else if (s.boundaryField()[BC_ind].type() == "empty")
+    {}
+    else
     {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
+        }
     }
 }
 
