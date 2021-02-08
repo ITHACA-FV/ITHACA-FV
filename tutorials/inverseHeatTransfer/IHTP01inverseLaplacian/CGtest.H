@@ -20,7 +20,8 @@ if (example_CG.conjugateGradient())
     PtrList<volScalarField> heatFluxField;
     forAll(example_CG.gList, solutionI)
     {
-        heatFluxField.append(example_CG.list2Field(example_CG.gList[solutionI]).clone());
+        heatFluxField.append(example_CG.list2Field(
+                                 example_CG.gList[solutionI]).clone());
         ITHACAstream::exportSolution(heatFluxField[solutionI],
                                      std::to_string(solutionI + 1), outputFolder,
                                      "g_CG");

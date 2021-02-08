@@ -86,7 +86,6 @@ int main(int argc, char* argv[])
         para->ITHACAdict->lookupOrDefault<int>("thermocouplesNumberTest_CG", 0);
     label thermocouplesNumberTest_paramBC =
         para->ITHACAdict->lookupOrDefault<int>("thermocouplesNumberTest_paramBC", 0);
-
     // Reading parameters from ITHACAdict
     example_CG.cgIterMax = para->ITHACAdict->lookupOrDefault<int>("cgIterMax", 100);
     example_CG.Jtol =  para->ITHACAdict->lookupOrDefault<double>("Jtolerance",
