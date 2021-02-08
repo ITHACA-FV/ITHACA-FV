@@ -207,22 +207,6 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
             gradTpatch[faceI] = value;
         }
     }
-    else if (typeBC == "nutUSpaldingWallFunction")
-    {
-        for (label i = 0; i < sizeBC; i++)
-        {
-            double value = valueList[i];
-
-            if (value > 0)
-            {
-                s.boundaryFieldRef()[BC_ind][i] = value;
-            }
-            else
-            {
-                s.boundaryFieldRef()[BC_ind][i] = 0.0;
-            }
-        }
-    }
     else if (typeBC == "empty")
     {}
     else
