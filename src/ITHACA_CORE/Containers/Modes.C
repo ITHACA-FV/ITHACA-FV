@@ -255,12 +255,24 @@ Modes<Type, PatchField, GeoMesh>::reconstruct(
 
     label Nmodes = Coeff.rows();
     Eigen::VectorXd InField = EigenModes[0].leftCols(Nmodes) * Coeff;
+
+    if (inputField.name() == "nut")
+    {
+        InField = (InField.array() < 0).select(0, InField);
+    }
+
     inputField = Foam2Eigen::Eigen2field(inputField, InField);
     inputField.rename(Name);
 
     for (label i = 0; i < NBC; i++)
     {
         Eigen::VectorXd BF = EigenModes[i + 1].leftCols(Nmodes) * Coeff;
+
+        if (inputField.name() == "nut")
+        {
+            BF = (BF.array() < 0).select(0, BF);
+        }
+
         ITHACAutilities::assignBC(inputField, i, BF);
     }
 
