@@ -655,6 +655,29 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     }
 
     // Export the matrices
+    if (para->exportPython)
+    {
+        ITHACAstream::exportMatrix(B_matrix, "B", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(K_matrix, "K", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(P_matrix, "P", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(M_matrix, "M", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(btMatrix, "bt", "python",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(C_tensor, "C", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct1Tensor, "ct1", "python",
+                                   "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportTensor(ct2Tensor, "ct2", "python",
+                                   "./ITHACAoutput/Matrices/");
+
+        if (nutAve.size() != 0)
+        {
+            ITHACAstream::exportTensor(ct1AveTensor, "ct1Ave", "python",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportTensor(ct2AveTensor, "ct2Ave", "python",
+                                       "./ITHACAoutput/Matrices/");
+        }
+    }
+    
     if (para->exportMatlab)
     {
         ITHACAstream::exportMatrix(B_matrix, "B", "matlab", "./ITHACAoutput/Matrices/");
