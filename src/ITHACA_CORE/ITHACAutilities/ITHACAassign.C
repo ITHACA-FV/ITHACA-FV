@@ -211,6 +211,22 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
     {}
     else
     {
+        try
+        {
+            if (typeBC != "fixedValue" && typeBC != "calculated"
+                    && typeBC != "fixedFluxPressure" && typeBC != "processor"
+                    && typeBC != "nutkWallFunction" && typeBC != "mixedEnergy")
+            {
+                word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
+                               " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                throw (message);
+            }
+        }
+        catch (const word message)
+        {
+            std::cerr << "WARNING: " << message << endl;
+        }
+
         for (label i = 0; i < sizeBC; i++)
         {
             double value = valueList[i];
@@ -318,6 +334,20 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
     }
     else
     {
+        try
+        {
+            if (typeBC != "fixedValue" && typeBC != "calculated" &&  typeBC != "processor")
+            {
+                word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
+                               " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                throw (message);
+            }
+        }
+        catch (const word message)
+        {
+            cerr << "WARNING: " << message << endl;
+        }
+
         for (label i = 0; i < sizeBC; i++)
         {
             s.boundaryFieldRef()[BC_ind][i] = valueList[i];
@@ -363,6 +393,21 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
     {}
     else
     {
+        try
+        {
+            if (typeBC != "fixedValue" && typeBC != "calculated"
+                    && typeBC != "fixedFluxPressure" &&  typeBC != "processor")
+            {
+                word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
+                               " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                throw (message);
+            }
+        }
+        catch (const word message)
+        {
+            cerr << "WARNING: " << message << endl;
+        }
+
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
         {
             s.boundaryFieldRef()[BC_ind][i] = valueList[i];
