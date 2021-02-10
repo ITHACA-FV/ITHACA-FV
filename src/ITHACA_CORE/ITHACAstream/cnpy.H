@@ -51,8 +51,15 @@ template<typename T, int dim>
 Eigen::Matrix < T, -1, dim > load(Eigen::Matrix < T, -1, dim > & mat,
                                   const std::string fname, std::string order = "rowMajor");
 
+template<typename T>
+Eigen::Tensor<T, 3> load(Eigen::Tensor<T, 3>& tens,
+                         const std::string fname, std::string order = "rowMajor");
+
 template<typename T, int dim>
 void save(const Eigen::Matrix < T, -1, dim > & mat, const std::string fname);
+
+template<typename T>
+void save(const Eigen::Tensor<T, 3>& tensor, const std::string fname);
 
 
 template<typename T> std::vector<char>& operator+=(std::vector<char>& lhs,

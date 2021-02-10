@@ -35,39 +35,67 @@ bool ReadAndWriteTensor()
 bool ReadAndWriteNPYMatrix()
 {
     bool esit = false;
+    //
     Eigen::MatrixXi MI_out = Eigen::MatrixXi::Random(5, 5);
     cnpy::save(MI_out, "arr_int.npy");
     Eigen::MatrixXi MI_inp;
     cnpy::load(MI_inp, "arr_int.npy");
     int difference_I = (MI_out - MI_inp).sum();
+    //
     Eigen::MatrixXd MD_out = Eigen::MatrixXd::Random(5, 5);
     cnpy::save(MD_out, "arr_dou.npy");
     Eigen::MatrixXd MD_inp;
     cnpy::load(MD_inp, "arr_dou.npy");
     double difference_D = (MD_out - MD_inp).sum();
+    //
     Eigen::MatrixXf MF_out = Eigen::MatrixXf::Random(5, 5);
     cnpy::save(MF_out, "arr_flo.npy");
     Eigen::MatrixXf MF_inp;
     cnpy::load(MF_inp, "arr_flo.npy");
     float difference_F = (MF_out - MF_inp).sum();
-
+    //
     Eigen::VectorXi VI_out = Eigen::VectorXi::Random(5);
     cnpy::save(VI_out, "vec_int.npy");
     Eigen::VectorXi VI_inp;
     cnpy::load(VI_inp, "vec_int.npy");
     int difference_IV = (VI_out - VI_inp).sum();
+    //
     Eigen::VectorXd VD_out = Eigen::VectorXd::Random(5);
     cnpy::save(VD_out, "vec_dou.npy");
     Eigen::VectorXd VD_inp;
     cnpy::load(VD_inp, "vec_dou.npy");
     double difference_DV = (VD_out - VD_inp).sum();
+    //
     Eigen::VectorXf VF_out = Eigen::VectorXf::Random(5);
     cnpy::save(VF_out, "vec_flo.npy");
     Eigen::VectorXf VF_inp;
     cnpy::load(VF_inp, "vec_flo.npy");
     float difference_FV = (VF_out - VF_inp).sum();
+    //
+    Eigen::Tensor<int, 3> TI_inp(2, 3, 4);
+    TI_inp.setRandom();
+    cnpy::save(TI_inp, "ten_int.npy");
+    Eigen::Tensor<int, 3> TI_out(2, 3, 4);
+    cnpy::load(TI_out, "ten_int.npy");
+    double difference_TI = ((Eigen::Tensor<int, 0>)(TI_out-TI_inp).sum())(0);
+    //
+    Eigen::Tensor<double, 3> TD_inp(2, 3, 4);
+    TD_inp.setRandom();
+    cnpy::save(TD_inp, "ten_dou.npy");
+    Eigen::Tensor<double, 3> TD_out(2, 3, 4);
+    cnpy::load(TD_out, "ten_dou.npy");
+    double difference_TD = ((Eigen::Tensor<double, 0>)(TD_out-TD_inp).sum())(0);
+    //
+    Eigen::Tensor<float, 3> TF_inp(2, 3, 4);
+    TF_inp.setRandom();
+    cnpy::save(TF_inp, "ten_flo.npy");
+    Eigen::Tensor<float, 3> TF_out(2, 3, 4);
+    cnpy::load(TF_out, "ten_flo.npy");
+    double difference_TF = ((Eigen::Tensor<float, 0>)(TF_out-TF_inp).sum())(0);
 
-    if (difference_I == 0 && difference_D == 0 && difference_F == 0 && difference_IV == 0 && difference_DV == 0 && difference_FV == 0)
+    if (difference_I == 0 && difference_D == 0 && difference_F == 0 &&
+            difference_IV == 0 && difference_DV == 0 && difference_FV == 0
+            && difference_TI == 0 && difference_TD == 0 && difference_TF == 0)
     {
         esit = true;
         std::cout << "> Read And Write NPY matrix succeeded!" << std::endl;
