@@ -59,11 +59,20 @@ using namespace std::placeholders;
 namespace ITHACAutilities
 {
 //--------------------------------------------------------------------------
-/// @brief      Creates a symbolic links to 0, system and constant
+/// @brief      Creates symbolic links to 0, system and constant
 ///
 /// @param[in]  folder  The folder where to create the symbolic links
 ///
 void createSymLink(word folder);
+
+//--------------------------------------------------------------------------
+/// @brief      Creates a symbolic link to linkFolder into the destFolder
+///
+/// @param[in]  linkFolder  The folder to be linked
+///
+/// @param[in]  destFolder  The folder where to create the symbolic link
+///
+void createSymLink(word linkFolder, word destFolder);
 
 //--------------------------------------------------------------------------
 /// Checks if a folder exists
