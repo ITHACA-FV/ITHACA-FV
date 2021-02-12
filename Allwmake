@@ -168,7 +168,18 @@ for d in ./*/ ; do
     echo $d    
     cd $d
     if [ -f "Make/files" ]; then
-    wmake $parallel_flag 
+        if [[ $d == './libTorch/' ]]; then
+            if [[ $torch_flag == 'true' ]]; then 
+                echo $d 
+                wmake $parallel_flag
+            else
+                cd ..
+                continue 2
+            fi
+        else
+            echo $d  
+            wmake $parallel_flag
+        fi
     if [ $? -ne 0 ]
     then
      echo $d "did not compile"
