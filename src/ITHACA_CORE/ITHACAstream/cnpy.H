@@ -4,6 +4,11 @@
 //Released under MIT License
 //license available in LICENSE file, or at http://www.opensource.org/licenses/mit-license.php
 
+#include <Eigen/Eigen>
+#include <unsupported/Eigen/CXX11/Tensor>
+#include <zlib.h>
+
+
 #ifndef LIBCNPY_H_
 #define LIBCNPY_H_
 

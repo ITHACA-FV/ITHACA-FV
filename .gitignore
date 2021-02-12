@@ -21,3 +21,4 @@ tutorials_dev
 *~
 *.foam
 **/__pycache__
+*.npy
