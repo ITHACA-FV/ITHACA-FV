@@ -939,6 +939,23 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_tens(label NUmodes,
             }
         }
     }
+    
+    /*volVectorField L_U_SUPmodesaux(L_U_SUPmodes[0]);
+
+    C_tensor.resize(Csize, Csize, Csize);
+    for (label i = 0; i < Csize; i++)
+    {
+        for (label j = 0; j < Csize; j++)
+        {
+            for (label k = 0; k < Csize; k++)
+            {
+                L_U_SUPmodesaux =  dt_dummy*fvc::div(fvc::flux(L_U_SUPmodes[j]),L_U_SUPmodes[k]);
+
+                C_tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] &
+                                      L_U_SUPmodesaux).value();
+            }
+        }
+    }*/
 
     // Export the tensor
     ITHACAstream::SaveDenseTensor(C_tensor, "./ITHACAoutput/Matrices/",
@@ -986,6 +1003,17 @@ Eigen::MatrixXd steadyNS::divergence_term(label NUmodes, label NPmodes,
                     L_U_SUPmodes[j])).value();
         }
     }
+    /*volVectorField L_U_SUPmodesaux(L_U_SUPmodes[0]);
+    for (label i = 0; i < P1size; i++)
+    {
+        for (label j = 0; j < P2size; j++)
+        {
+            L_U_SUPmodesaux =  L_U_SUPmodes[j];
+
+            P_matrix(i, j) = fvc::domainIntegrate(Pmodes[i]*
+                   fvc::div(L_U_SUPmodesaux)).value();
+        }
+    }*/
 
     ITHACAstream::SaveDenseMatrix(P_matrix, "./ITHACAoutput/Matrices/",
                                   "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
