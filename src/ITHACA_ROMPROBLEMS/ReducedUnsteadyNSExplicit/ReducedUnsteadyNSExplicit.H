@@ -72,10 +72,6 @@ class ReducedUnsteadyNSExplicit: public reducedUnsteadyNS
         /// Pointer to the FOM problem
         UnsteadyNSExplicit* problem;
 
-        /// Initial condition parametric case
-        PtrList<volVectorField> U_IC;
-	PtrList<volScalarField> P_IC;
-
         // Functions
 
         /// Method to perform an online solve without a pressure stabilisation method

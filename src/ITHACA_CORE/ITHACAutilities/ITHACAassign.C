@@ -446,6 +446,38 @@ template void assignBC(
     GeometricField<vector, fvsPatchField, surfaceMesh>& s, label BC_ind,
     vector& valueList);
 
+void assignZeroDirichlet(GeometricField<vector, fvPatchField, volMesh>& field)
+{
+    Vector<double> v(0, 0, 0);
+    assignIF(field, v);
+    
+    forAll(field.mesh().boundary(), i)	
+    {
+        if (field.boundaryField()[i].type() == "fixedValue")
+        {
+            assignBC(field, i, v);
+        }
+    }
+   
+    changeNeumann2Dirichlet(field, v);
+}
+
+void assignZeroDirichlet(GeometricField<scalar, fvPatchField, volMesh>& field)
+{
+    scalar v = 0;
+    assignIF(field, v);
+    
+    forAll(field.mesh().boundary(), i)	
+    {
+        if (field.boundaryField()[i].type() == "fixedValue")
+        {
+            assignBC(field, i, v);
+        }
+    }
+   
+    changeNeumann2Dirichlet(field, v);
+}
+
 template<typename Type>
 void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>& field,
                              Type& value)
