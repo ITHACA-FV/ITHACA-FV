@@ -205,10 +205,10 @@ class steadyNS: public reductionProblem
         Eigen::MatrixXd BP_matrix;
 
         /// Boundary term for diffusion term
-        List<Eigen::MatrixXd> RD_matrix;
+        Eigen::MatrixXd RD_matrix;
 
         /// Boundary vector for convection term
-        List<Eigen::MatrixXd> RC_matrix;
+        Eigen::MatrixXd RC_matrix;
 
         /// Convection term for flux methid
         Eigen::Tensor<double, 3 > Cf_tensor;
@@ -530,7 +530,7 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
         ///
-        List<Eigen::MatrixXd> boundary_vector_diffusion(label NUmodes, label NPmodes,
+        Eigen::MatrixXd boundary_vector_diffusion(label NUmodes, label NPmodes,
                 label NSUPmodes);
 
         //--------------------------------------------------------------------------
@@ -542,7 +542,7 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
         ///
-        List<Eigen::MatrixXd> boundary_vector_convection(label NUmodes, label NPmodes,
+        Eigen::MatrixXd boundary_vector_convection(label NUmodes, label NPmodes,
                 label NSUPmodes);
 
         //--------------------------------------------------------------------------
