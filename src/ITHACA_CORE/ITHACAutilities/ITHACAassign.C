@@ -466,6 +466,38 @@ template void changeNeumann2Dirichlet(
 template void changeNeumann2Dirichlet(
     GeometricField<vector, fvPatchField, volMesh>& field, vector& value);
 
+void assignZeroDirichlet(GeometricField<vector, fvPatchField, volMesh>& field)
+{
+    Vector<double> v(0, 0, 0);
+    assignIF(field, v);
+    
+    forAll(field.mesh().boundary(), i)	
+    {
+        if (field.boundaryField()[i].type() == "fixedValue")
+        {
+            assignBC(field, i, v);
+        }
+    }
+   
+    changeNeumann2Dirichlet(field, v);
+}
+
+void assignZeroDirichlet(GeometricField<scalar, fvPatchField, volMesh>& field)
+{
+    scalar v = 0;
+    assignIF(field, v);
+    
+    forAll(field.mesh().boundary(), i)	
+    {
+        if (field.boundaryField()[i].type() == "fixedValue")
+        {
+            assignBC(field, i, v);
+        }
+    }
+   
+    changeNeumann2Dirichlet(field, v);
+}
+
 template<typename Type>
 void setBoxToValue(GeometricField<Type, fvPatchField, volMesh>& field,
                    Eigen::MatrixXd Box, Type value)

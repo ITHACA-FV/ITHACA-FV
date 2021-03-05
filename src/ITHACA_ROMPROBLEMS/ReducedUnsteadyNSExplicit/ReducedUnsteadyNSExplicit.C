@@ -113,10 +113,18 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
                         l) * a_o;
                 RHS(l) = (1 / dt) * M2(l, 0) - cf(0, 0) + M1(l, 0);
             }
-
+            // Boundary Term
             List<Eigen::MatrixXd> RedLinSysP = problem->LinSysDiv;
-            RedLinSysP[1] = (1 / dt) * problem->LinSysDiv[1] + nu * problem->LinSysDiff[1] +
-                            problem->LinSysConv[1] + RHS;
+            if (problem->bcMethod == "none")
+            {
+                for (int i = 0; i < N_BC; i++)
+                {
+                    RedLinSysP[1] = vel(i, 0) * ((1/dt)*problem->LinSysDiv[i+1] +
+                            nu * problem->LinSysDiff[i+1] + 
+                            vel(i, 0) *problem->LinSysConv[i+1]);
+                }
+            }
+            RedLinSysP[1] += RHS;
             b = reducedProblem::solveLinearSys(RedLinSysP, x, presidual);
             // Momentum Equation
             // Convective term
@@ -125,16 +133,30 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
             Eigen::VectorXd M5 = problem->B_matrix * a_o * nu ;
             // Pressure Gradient Term
             Eigen::VectorXd M3 = problem->K_matrix * b;
-            // Boundary Vector - Diffusion
-            Eigen::VectorXd M4 = problem->RD_matrix * nu;
-            // Boundary Vector - Convection
-            Eigen::VectorXd M6 = problem->RC_matrix;
+            // Boundary Term Diffusion + Convection
+            Eigen::MatrixXd boundaryTerm = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+            if (problem->bcMethod == "none")
+            {
+                for (int i = 0; i < N_BC; i++)
+                {
+                    boundaryTerm.col(i) = (vel(i, 0) *(problem->RD_matrix[i]*nu +
+                            vel(i, 0)*problem->RC_matrix[i]));
+                }
+            }
 
             for (label l = 0; l < Nphi_u; l++)
             {
                 cc = a_o.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
                         l) * a_o;
-                a_n(l) = a_o(l) + (M5(l) - cc(0, 0) - M3(l) + M4(l, 0) + M6(l, 0)) * dt;
+                a_n(l) = a_o(l) + (M5(l) - cc(0, 0) - M3(l))*dt;
+
+                if (problem->bcMethod == "none")
+                {
+                    for (int j = 0; j < N_BC; j++)
+                    {
+                        a_n(l) += boundaryTerm(l, j)*dt;
+                    }
+                }
             }
 
             tmp_sol(0) = time;
