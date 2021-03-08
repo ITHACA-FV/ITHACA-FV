@@ -113,19 +113,17 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
                         l) * a_o;
                 RHS(l) = (1 / dt) * M2(l, 0) - cf(0, 0) + M1(l, 0);
             }
-            // Boundary Term
+            // Boundary Term (divergence + diffusion + convection)
             List<Eigen::MatrixXd> RedLinSysP = problem->LinSysDiv;
-            if (problem->bcMethod == "none")
+            RedLinSysP[1] = RHS;
+            for (label i = 0; i < N_BC; i++)
             {
-                for (int i = 0; i < N_BC; i++)
-                {
-                    RedLinSysP[1] = vel(i, 0) * ((1/dt)*problem->LinSysDiv[i+1] +
-                            nu * problem->LinSysDiff[i+1] + 
-                            vel(i, 0) *problem->LinSysConv[i+1]);
-                }
+                RedLinSysP[1] += vel(i, 0) * ((1 / dt) * problem->LinSysDiv[i+1] +
+                        nu * problem->LinSysDiff[i+1] + 
+                        vel(i, 0) * problem->LinSysConv[i+1]);
             }
-            RedLinSysP[1] += RHS;
             b = reducedProblem::solveLinearSys(RedLinSysP, x, presidual);
+
             // Momentum Equation
             // Convective term
             Eigen::MatrixXd cc(1, 1);
@@ -135,13 +133,10 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
             Eigen::VectorXd M3 = problem->K_matrix * b;
             // Boundary Term Diffusion + Convection
             Eigen::MatrixXd boundaryTerm = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
-            if (problem->bcMethod == "none")
+            for (label i = 0; i < N_BC; i++)
             {
-                for (int i = 0; i < N_BC; i++)
-                {
-                    boundaryTerm.col(i) = (vel(i, 0) *(problem->RD_matrix[i]*nu +
-                            vel(i, 0)*problem->RC_matrix[i]));
-                }
+                boundaryTerm.col(i) = (vel(i, 0) *(problem->RD_matrix[i]*nu +
+                        vel(i, 0)*problem->RC_matrix[i]));
             }
 
             for (label l = 0; l < Nphi_u; l++)
@@ -150,15 +145,11 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
                         l) * a_o;
                 a_n(l) = a_o(l) + (M5(l) - cc(0, 0) - M3(l))*dt;
 
-                if (problem->bcMethod == "none")
+                for (label j = 0; j < N_BC; j++)
                 {
-                    for (int j = 0; j < N_BC; j++)
-                    {
-                        a_n(l) += boundaryTerm(l, j)*dt;
-                    }
+                    a_n(l) += boundaryTerm(l, j)*dt;
                 }
             }
-
             tmp_sol(0) = time;
             tmp_sol.col(0).segment(1, Nphi_u) = a_n;
             tmp_sol.col(0).tail(b.rows()) = b;

@@ -795,14 +795,11 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP,
             BP_matrix = diffusive_term_flux_method(NUmodes, NPmodes, NSUPmodes);
         }
 
-        if (bcMethod == "none")
-        {
-            RD_matrix = boundary_vector_diffusion(NUmodes, NPmodes, NSUPmodes);
-            RC_matrix = boundary_vector_convection(NUmodes, NPmodes, NSUPmodes);
-            LinSysDiv = pressure_gradient_term_linsys_div(NPmodes);
-            LinSysDiff = pressure_gradient_term_linsys_diff(NPmodes);
+        RD_matrix = boundary_vector_diffusion(NUmodes, NPmodes, NSUPmodes);
+        RC_matrix = boundary_vector_convection(NUmodes, NPmodes, NSUPmodes);
+        LinSysDiv = pressure_gradient_term_linsys_div(NPmodes);
+        LinSysDiff = pressure_gradient_term_linsys_diff(NPmodes);
             LinSysConv = pressure_gradient_term_linsys_conv(NPmodes);
-        }
     }
     else
     {
@@ -812,14 +809,11 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP,
         P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
         BP_matrix = diffusive_term_flux_method(NUmodes, NPmodes, NSUPmodes);
         Cf_tensor = convective_term_flux_tens(NUmodes, NPmodes, NSUPmodes);
-        if (bcMethod == "none")
-        {
-            RD_matrix = boundary_vector_diffusion(NUmodes, NPmodes, NSUPmodes);
-            RC_matrix = boundary_vector_convection(NUmodes, NPmodes, NSUPmodes);
-            LinSysDiv = pressure_gradient_term_linsys_div(NPmodes);
-            LinSysDiff = pressure_gradient_term_linsys_diff(NPmodes);
-            LinSysConv = pressure_gradient_term_linsys_conv(NPmodes);
-        }
+        RD_matrix = boundary_vector_diffusion(NUmodes, NPmodes, NSUPmodes);
+        RC_matrix = boundary_vector_convection(NUmodes, NPmodes, NSUPmodes);
+        LinSysDiv = pressure_gradient_term_linsys_div(NPmodes);
+        LinSysDiff = pressure_gradient_term_linsys_diff(NPmodes);
+        LinSysConv = pressure_gradient_term_linsys_conv(NPmodes);
     }
 }
 
@@ -1411,7 +1405,7 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_flux_tens(label NUmodes,
 List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_div(label NPmodes)
 {
     label BCsize = inletIndex.rows();
-    List <Eigen::MatrixXd> LinSysDivDummy;
+    List<Eigen::MatrixXd> LinSysDivDummy;
     LinSysDiv.resize(BCsize+1);
     volScalarField p(_p);
 
@@ -1424,7 +1418,7 @@ List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_div(label NPmodes)
         assignBC(Upara,BCind,v);
         fvScalarMatrix pEqn
         (
-            fvm::laplacian(p) == (1 / dt_dummy)*fvc::div(Upara)
+            fvm::laplacian(p) == (1.0 / dt_dummy)*fvc::div(Upara)
         );
         pEqn.setReference(0, 0);
         LinSysDivDummy = Pmodes.project(pEqn, NPmodes);
@@ -1442,7 +1436,7 @@ List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_conv(
     label NPmodes)
 {
     label BCsize = inletIndex.rows();
-    List <Eigen::MatrixXd> LinSysConvDummy;
+    List<Eigen::MatrixXd> LinSysConvDummy;
     LinSysConv.resize(BCsize+1);
     volScalarField p(_p);
 
@@ -1457,7 +1451,7 @@ List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_conv(
         Caux = dt_dummy * (-fvc::div(fvc::flux(Upara), Upara));
         fvScalarMatrix pEqn
         (
-            fvm::laplacian(p) == (1 / dt_dummy)*fvc::div(Caux)
+            fvm::laplacian(p) == (1.0 / dt_dummy)*fvc::div(Caux)
         );
         pEqn.setReference(0, 0);
         LinSysConvDummy = Pmodes.project(pEqn, NPmodes);
@@ -1474,9 +1468,8 @@ List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_conv(
 List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_diff(
     label NPmodes)
 {
-
     label BCsize = inletIndex.rows();
-    List <Eigen::MatrixXd> LinSysDiffDummy;
+    List<Eigen::MatrixXd> LinSysDiffDummy;
     LinSysDiff.resize(BCsize+1);
     volScalarField p(_p);
 
@@ -1491,7 +1484,7 @@ List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_diff(
         Daux = dt_dummy * fvc::laplacian(nu_dummy(), Upara);
         fvScalarMatrix pEqn
         (
-            fvm::laplacian(p) == (1 / dt_dummy)*fvc::div(Daux)
+            fvm::laplacian(p) == (1.0 / dt_dummy)*fvc::div(Daux)
         );
         pEqn.setReference(0, 0);
         LinSysDiffDummy = Pmodes.project(pEqn, NPmodes);
