@@ -353,6 +353,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
     NPmodes = NP;
     NSUPmodes = 0;
     L_U_SUPmodes.resize(0);
+    Vector<double> inl(0, 0, 0);
 
     if (liftfield.size() != 0)
     {
@@ -543,6 +544,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     NPmodes = NP;
     NSUPmodes = NSUP;
     L_U_SUPmodes.resize(0);
+    Vector<double> inl(0, 0, 0);
 
     if (liftfield.size() != 0)
     {
@@ -703,8 +705,8 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP,
         }
     }
 
-    // Dummy fields with all Neumann Boundary conditions converted to homogeneous
-    // and parametric Dirichlet boundary conditions with unit value. 
+    // Dummy field of which all boundary conditions converted to homogenous 
+    // Dirichlet boundary conditions.
     Uinl = autoPtr<volVectorField> (new volVectorField(_U()));
     ITHACAutilities::assignZeroDirichlet(Uinl());
     // dummy variables
@@ -799,7 +801,7 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP,
         RC_matrix = boundary_vector_convection(NUmodes, NPmodes, NSUPmodes);
         LinSysDiv = pressure_gradient_term_linsys_div(NPmodes);
         LinSysDiff = pressure_gradient_term_linsys_diff(NPmodes);
-            LinSysConv = pressure_gradient_term_linsys_conv(NPmodes);
+        LinSysConv = pressure_gradient_term_linsys_conv(NPmodes);
     }
     else
     {
@@ -1365,7 +1367,7 @@ List<Eigen::MatrixXd> steadyNS::boundary_vector_convection(label NUmodes,
             ModeVector = Foam2Eigen::field2Eigen(L_U_SUPmodes[j]);
             RC_matrix[i](j, 0) = ModeVector.dot(b.col(0));
         }
-        ITHACAstream::SaveDenseMatrix(RD_matrix[i], "./ITHACAoutput/Matrices/RC/",
+        ITHACAstream::SaveDenseMatrix(RC_matrix[i], "./ITHACAoutput/Matrices/RC/",
                       "RC"+ name(i) +"_" + name(NUmodes) + "_" + name(NSUPmodes));
     }
 

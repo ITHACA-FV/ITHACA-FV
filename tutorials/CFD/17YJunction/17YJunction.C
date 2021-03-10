@@ -66,7 +66,6 @@ class tutorial17: public unsteadyNS
                 p = P0;
                 mu_now[0] = mu(0, 0);
                 truthSolve(mu_now);
-                restart();
             }
         }
 
@@ -202,7 +201,14 @@ int main(int argc, char* argv[])
     tutorial17 example(argc, argv);
     // the offline samples for the boundary conditions
     word par_offline_BC("./timeBCoff");
-    example.timeBCoff = ITHACAstream::readMatrix(par_offline_BC);
+    // Convert boundary values x-direction and y-direction to x,y,z 
+    Eigen::MatrixXd timeBCoff2D = ITHACAstream::readMatrix(par_offline_BC);
+    Eigen::MatrixXd timeBCoff3D = Eigen::MatrixXd::Zero(6, timeBCoff2D.cols());
+    timeBCoff3D.row(0) = timeBCoff2D.row(0);
+    timeBCoff3D.row(1) = timeBCoff2D.row(1);
+    timeBCoff3D.row(3) = timeBCoff2D.row(2);
+    timeBCoff3D.row(4) = timeBCoff2D.row(3);
+    example.timeBCoff = timeBCoff3D;
     Eigen::MatrixXd par_on_BC;
     word par_online_BC("./timeBCon");
     par_on_BC = ITHACAstream::readMatrix(par_online_BC);
@@ -335,7 +341,8 @@ int main(int argc, char* argv[])
     std::cout << "elapsed_ROM: " << elapsed_ROM.count() << " seconds.";
     std::cout << std::endl;
     auto start_ROM_REC = std::chrono::high_resolution_clock::now();
-    reduced.reconstruct_PPE("./ITHACAoutput/ReconstructionPPE");
+    //reduced.reconstruct_PPE("./ITHACAoutput/ReconstructionPPE");
+    reduced.reconstruct(false, "./ITHACAoutput/ReconstructionPPE/");
     auto finish_ROM_REC = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_ROM_REC = finish_ROM_REC - start_ROM_REC;
     std::cout << "elapsed_ROM_REC: " << elapsed_ROM_REC.count() << " seconds.";

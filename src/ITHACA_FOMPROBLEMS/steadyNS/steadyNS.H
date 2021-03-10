@@ -142,6 +142,7 @@ class steadyNS: public reductionProblem
         /// Number of nut modes used for the projection
         label NNutModes;
 
+
         /** @name Reduced Matrices
         *
         */
