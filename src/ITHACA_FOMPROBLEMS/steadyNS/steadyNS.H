@@ -103,6 +103,9 @@ class steadyNS: public reductionProblem
         /// List of pointers used to form the supremizer modes
         volVectorModes supmodes;
 
+        /// List of pointers used to form the flux modes
+        surfaceScalarModes Phimodes;
+
         /// List of pointers used to form the list of lifting functions
         PtrList<volVectorField> liftfield;
 
@@ -111,6 +114,9 @@ class steadyNS: public reductionProblem
 
         /// List of pointers containing the total number of lift, supremizer and velocity modes
         volVectorModes L_U_SUPmodes;
+
+        /// List of pointers containing the total number of flux modes
+        surfaceScalarModes L_PHImodes;
 
         /// Tolerance for the residual of the stationary problems, there is the same tolerance for velocity and pressure
         scalar tolerance;
@@ -141,7 +147,6 @@ class steadyNS: public reductionProblem
 
         /// Number of nut modes used for the projection
         label NNutModes;
-
 
         /** @name Reduced Matrices
         *
@@ -187,6 +192,19 @@ class steadyNS: public reductionProblem
 
         /// PPE BC4
         Eigen::MatrixXd BC4_matrix;
+
+        /// Mass Matrix New Time Step - Consistent Flux Method 
+        Eigen::MatrixXd W_matrix;
+
+        /// Mass Matrix Old Time Step - Consistent Flux Method
+        Eigen::MatrixXd I_matrix;
+
+        /// Diffusion Term - Consistent Flux Method
+        Eigen::MatrixXd DF_matrix;
+
+        /// Pressure Gradient Term - Consistent Flux Method	
+        Eigen::MatrixXd KF_matrix;
+
         ///@}
         //
 
@@ -202,7 +220,7 @@ class steadyNS: public reductionProblem
         /// Boundary term for penalty method - matrix
         List <Eigen::MatrixXd> bcVelMat;
 
-        /// Diffusion term for flux method
+        /// Diffusion term for flux method PPE
         Eigen::MatrixXd BP_matrix;
 
         /// Boundary term for diffusion term
@@ -211,8 +229,17 @@ class steadyNS: public reductionProblem
         /// Boundary vector for convection term
         List<Eigen::MatrixXd> RC_matrix;
 
-        /// Convection term for flux methid
+        /// Boundary term for diffusion term - Consistent Flux Method
+        List<Eigen::MatrixXd> SD_matrix;
+ 
+        /// Boundary term for convection term - Consistent Flux Method
+        List<Eigen::MatrixXd> SC_matrix;
+
+        /// Convection term for flux method
         Eigen::Tensor<double, 3 > Cf_tensor;
+
+        /// Convection term - Consistent Flux Method
+        Eigen::Tensor<double, 3 > Ci_tensor;
 
         /// Projection Peqn onto Pressure modes - Divergence term
         List<Eigen::MatrixXd> LinSysDiv;
@@ -591,6 +618,84 @@ class steadyNS: public reductionProblem
         /// @return     reduced matrix in Eigen::MatrixXd format for the Laplacian of pressure Linear System.
         ///
         List < Eigen::MatrixXd > pressure_gradient_term_linsys_conv(label NPmodes);
+
+        //--------------------------------------------------------------------------
+        //  Projection Methods Flux Equation
+        /// Diffusion Term (consistent flux method)
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the interpolation term.
+        ///
+        Eigen::MatrixXd diffusive_term_consistent(label NUmodes, label NPmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Boundary vector diffusion term (consistent flux method)
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
+        ///
+        List < Eigen::MatrixXd > boundary_vector_diffusion_consistent(label NUmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Boundary vector convection term - Consistent Flux Method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
+        ///
+        List < Eigen::MatrixXd > boundary_vector_convection_consistent(label NUmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Mass Matrix new time step (consistent flux method)
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the divergence term.
+        ///
+        Eigen::MatrixXd mass_matrix_newtime_consistent(label NUmodes, label NPmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Mass Matrix old time step (consistent flux method)
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the divergence term.
+        ///
+        Eigen::MatrixXd mass_matrix_oldtime_consistent(label NUmodes, label NPmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Pressure Gradient Term (consistent flux method)
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the divergence term.
+        ///
+        Eigen::MatrixXd pressure_gradient_term_consistent(label NUmodes, label NPmodes,
+                                               label NSUPmodes);
+        //--------------------------------------------------------------------------
+        /// Convective Term (consistent flux method)
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the convective term.
+        ///
+        Eigen::Tensor<double, 3 >  convective_term_consistent_tens(label NUmodes,
+                label NPmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Function to change the viscosity

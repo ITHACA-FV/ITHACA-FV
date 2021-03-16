@@ -80,6 +80,9 @@ steadyNS::steadyNS(int argc, char* argv[])
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
     M_Assert(bcMethod == "lift" || bcMethod == "penalty" || bcMethod == "none",
              "The BC method must be set to lift or penalty or none in ITHACAdict");
+    fluxMethod = ITHACAdict->lookupOrDefault<word>("fluxMethod", "inconsistent");
+    M_Assert(fluxMethod == "inconsistent" || bcMethod == "consistent",
+             "The flux method must be set to inconsistent or consistent in ITHACAdict");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -353,7 +356,6 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
     NPmodes = NP;
     NSUPmodes = 0;
     L_U_SUPmodes.resize(0);
-    Vector<double> inl(0, 0, 0);
 
     if (liftfield.size() != 0)
     {
@@ -544,7 +546,6 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     NPmodes = NP;
     NSUPmodes = NSUP;
     L_U_SUPmodes.resize(0);
-    Vector<double> inl(0, 0, 0);
 
     if (liftfield.size() != 0)
     {
@@ -705,6 +706,20 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP,
         }
     }
 
+   if (fluxMethod == "consistent")
+   {
+	L_PHImodes.resize(0);
+        for (label k = 0; k < NUmodes; k++)
+        {
+            L_PHImodes.append(Phimodes[k].clone());
+
+            forAll(L_PHImodes[k].boundaryFieldRef()[0], l)
+            {
+		 L_PHImodes[k].boundaryFieldRef()[0][l] = 0;
+            }
+         }
+    }
+
     // Dummy field of which all boundary conditions converted to homogenous 
     // Dirichlet boundary conditions.
     Uinl = autoPtr<volVectorField> (new volVectorField(_U()));
@@ -802,6 +817,17 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP,
         LinSysDiv = pressure_gradient_term_linsys_div(NPmodes);
         LinSysDiff = pressure_gradient_term_linsys_diff(NPmodes);
         LinSysConv = pressure_gradient_term_linsys_conv(NPmodes);
+
+        if (fluxMethod == "consistent")
+        {
+            I_matrix = mass_matrix_oldtime_consistent(NUmodes,NPmodes, NSUPmodes);
+            W_matrix = mass_matrix_newtime_consistent(NUmodes,NPmodes, NSUPmodes);
+            DF_matrix = diffusive_term_consistent(NUmodes,NPmodes, NSUPmodes);
+            Ci_tensor = convective_term_consistent_tens(NUmodes, NPmodes, NSUPmodes);
+            SD_matrix = boundary_vector_diffusion_consistent(NUmodes, NSUPmodes);
+            SC_matrix = boundary_vector_convection_consistent(NUmodes, NSUPmodes);
+            KF_matrix = pressure_gradient_term_consistent(NUmodes, NPmodes, NSUPmodes);
+        }
     }
     else
     {
@@ -816,7 +842,19 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP,
         LinSysDiv = pressure_gradient_term_linsys_div(NPmodes);
         LinSysDiff = pressure_gradient_term_linsys_diff(NPmodes);
         LinSysConv = pressure_gradient_term_linsys_conv(NPmodes);
+
+        if (fluxMethod == "consistent")
+        {
+            I_matrix = mass_matrix_oldtime_consistent(NUmodes,NPmodes, NSUPmodes);
+            W_matrix = mass_matrix_newtime_consistent(NUmodes,NPmodes, NSUPmodes);
+            DF_matrix = diffusive_term_consistent(NUmodes,NPmodes, NSUPmodes);
+            Ci_tensor = convective_term_consistent_tens(NUmodes, NPmodes, NSUPmodes);
+            SD_matrix = boundary_vector_diffusion_consistent(NUmodes, NSUPmodes);
+            SC_matrix = boundary_vector_convection_consistent(NUmodes, NSUPmodes);
+            KF_matrix = pressure_gradient_term_consistent(NUmodes, NPmodes, NSUPmodes);
+        }
     }
+
 }
 
 // * * * * * * * * * * * * * * Momentum Eq. Methods * * * * * * * * * * * * * //
@@ -912,9 +950,19 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_tens(label NUmodes,
         {
             for (label k = 0; k < Csize; k++)
             {
-                C_tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::div(
+
+                if (fluxMethod == "consistent")
+                {
+                    C_tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::div(
+                                        L_PHImodes[j],
+                                        L_U_SUPmodes[k])).value();
+                }
+                else
+                {
+                    C_tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::div(
                                         linearInterpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf(),
                                         L_U_SUPmodes[k])).value();
+                }
             }
         }
     }
@@ -1389,9 +1437,18 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_flux_tens(label NUmodes,
         {
             for (label k = 0; k < Csize1; k++)
             {
-                L_U_SUPmodesaux = dt_dummy * (fvc::div(
+                if (fluxMethod == "consistent")
+                {
+                    L_U_SUPmodesaux = dt_dummy * (fvc::div(
+                                                  L_PHImodes[j],
+                                                  L_U_SUPmodes[k]));
+                }
+                else
+                {
+                    L_U_SUPmodesaux = dt_dummy * (fvc::div(
                                                   fvc::flux(L_U_SUPmodes[j]),
                                                   L_U_SUPmodes[k]));
+                } 
                 Cf_tensor(i, j, k) = fvc::domainIntegrate(Pmodes[i]
                                      * fvc::div(L_U_SUPmodesaux)).value();
             }
@@ -1499,6 +1556,211 @@ List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_diff(
 
     return LinSysDiff;
 }
+
+Eigen::MatrixXd steadyNS::mass_matrix_oldtime_consistent(label NUmodes, label NPmodes,
+        label NSUPmodes)
+{
+    label Isize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::MatrixXd I_matrix;
+    I_matrix.resize(NUmodes, Isize);
+
+    for (label i = 0; i < NUmodes; i++)
+    {
+        volVectorField CoeffA = fvc::reconstruct(L_PHImodes[i]);
+        for (label j = 0; j < Isize; j++)
+        {
+            surfaceScalarField B = fvc::flux(L_U_SUPmodes[j]);
+            volVectorField CoeffB = fvc::reconstruct(B);
+            I_matrix(i,j) = fvc::domainIntegrate(CoeffA &  CoeffB).value();
+        }
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(I_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    ITHACAstream::SaveDenseMatrix(I_matrix, "./ITHACAoutput/Matrices/",
+                                  "I_" + name(NUmodes));
+
+    return I_matrix;
+}
+
+Eigen::MatrixXd steadyNS::diffusive_term_consistent(label NUmodes, label NPmodes,
+        label NSUPmodes)
+{
+    label DFsize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::MatrixXd DF_matrix;
+    DF_matrix.resize(DFsize, NUmodes);
+
+    surfaceScalarField phi_tmp("Phi_tmp", _phi);
+
+    for (label i = 0; i < NUmodes; i++)
+    {
+        for (label j = 0; j < DFsize; j++)
+        {
+
+            phi_tmp = dt_dummy*nu_dummy()*fvc::flux(fvc::laplacian(
+                        dimensionedScalar("1", dimless, 1), 
+                        L_U_SUPmodes[j]));
+
+            volVectorField CoeffB = fvc::reconstruct(phi_tmp);
+            volVectorField CoeffA = fvc::reconstruct(L_PHImodes[i]);
+            DF_matrix(i,j) = fvc::domainIntegrate(CoeffA & CoeffB).value();
+        }
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(DF_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    ITHACAstream::SaveDenseMatrix(DF_matrix, "./ITHACAoutput/Matrices/",
+                                  "DF_" + name(NUmodes)+ "_" + name(
+                                      NSUPmodes));
+
+    return DF_matrix;
+}
+
+Eigen::MatrixXd steadyNS::pressure_gradient_term_consistent(label NUmodes, label NPmodes,
+        label NSUPmodes)
+{
+    label KF1size = NUmodes ;
+    label KF2size = NPmodes;
+    Eigen::MatrixXd KF_matrix(KF1size, KF2size);
+
+    for (label i = 0; i < KF1size; i++)
+    {
+        for (label j = 0; j < KF2size; j++)
+        {
+            volVectorField CoeffA = fvc::reconstruct(dt_dummy*fvc::snGrad(Pmodes[j])*mag(Pmodes[j].mesh().magSf()));
+            volVectorField CoeffB = fvc::reconstruct(L_PHImodes[i]);
+            KF_matrix(i,j) = fvc::domainIntegrate(CoeffA &  CoeffB).value();
+        }
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(KF_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    ITHACAstream::SaveDenseMatrix(KF_matrix, "./ITHACAoutput/Matrices/",
+                                  "KF_" + name(NUmodes)+ "_" + name(
+                                      NSUPmodes));
+
+    return KF_matrix;
+}
+
+Eigen::Tensor<double, 3> steadyNS::convective_term_consistent_tens(label NUmodes,
+        label NPmodes, label NSUPmodes)
+{
+    label Csize1 = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> Ci_tensor;
+    volVectorField L_U_SUPmodesaux(L_U_SUPmodes[0]);
+    Ci_tensor.resize(NUmodes, Csize1, Csize1);
+    surfaceScalarField phi_tmp("Phi_tmp", _phi);
+    for (label i = 0; i < NUmodes; i++)
+    {
+        for (label j = 0; j < Csize1; j++)
+        {
+            for (label k = 0; k < Csize1; k++)
+            {
+                phi_tmp = dt_dummy*fvc::flux(fvc::div(L_PHImodes[i],L_U_SUPmodes[k]));
+                volVectorField CoeffA = fvc::reconstruct(phi_tmp);
+                volVectorField CoeffB = fvc::reconstruct(L_PHImodes[j]);
+                Ci_tensor(i, j, k) = fvc::domainIntegrate(CoeffB &  CoeffA).value();
+            }
+        }
+    }
+
+    ITHACAstream::SaveDenseTensor(Ci_tensor, "./ITHACAoutput/Matrices/",
+                                  "Ci_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                      NSUPmodes) + "_t");
+    return Ci_tensor;
+}
+
+List <Eigen::MatrixXd> steadyNS::boundary_vector_diffusion_consistent(label NUmodes,
+        label NSUPmodes)
+{
+    label BCsize = inletIndex.rows();
+    label SDsize = NUmodes + NSUPmodes;
+    List <Eigen::MatrixXd> SD_matrix(BCsize);
+        surfaceScalarField phi_tmp("Phi_tmp", _phi);
+    for (label i = 0; i < BCsize; i++)
+    {
+        label BCind = inletIndex(i, 0);
+        Vector<double> v(0, 0, 0);
+        v[inletIndex(i, 1)] = 1;
+        volVectorField Upara(Uinl);
+        assignBC(Upara,BCind,v);
+        SD_matrix[i].resize(SDsize, 1);
+        // Project everything
+        for (label j = 0; j < SDsize; j++)
+        {
+            volVectorField CoeffB = fvc::reconstruct(L_PHImodes[j]);
+            phi_tmp = dt_dummy*fvc::flux(fvc::laplacian(nu_dummy(),Upara));
+            volVectorField CoeffA = fvc::reconstruct(phi_tmp);
+            SD_matrix[i](j, 0) = fvc::domainIntegrate(CoeffA &  CoeffB).value();
+        }
+        ITHACAstream::SaveDenseMatrix(SD_matrix[i], "./ITHACAoutput/Matrices/SD/",
+                      "SD"+ name(i) +"_" + name(NUmodes) + "_" + name(NSUPmodes));
+    }
+
+    return SD_matrix;
+}
+
+List <Eigen::MatrixXd> steadyNS::boundary_vector_convection_consistent(label NUmodes,
+        label NSUPmodes)
+{
+    label BCsize = inletIndex.rows();
+    label SCsize = NUmodes + NSUPmodes;
+    List <Eigen::MatrixXd> SC_matrix(BCsize);
+    surfaceScalarField phi_tmp("Phi_tmp", _phi);
+    for (label i = 0; i < BCsize; i++)
+    {
+        label BCind = inletIndex(i, 0);
+        Vector<double> v(0, 0, 0);
+        v[inletIndex(i, 1)] = 1;
+        volVectorField Upara(Uinl);
+        assignBC(Upara,BCind,v);
+        SC_matrix[i].resize(SCsize, 1);
+        // Project everything
+        for (label j = 0; j < SCsize; j++)
+        {
+            volVectorField CoeffB = fvc::reconstruct(L_PHImodes[j]);
+            phi_tmp = dt_dummy*fvc::flux(fvc::div(fvc::flux(Upara),Upara));
+            volVectorField CoeffA = fvc::reconstruct(phi_tmp);
+            SC_matrix[i](j, 0) = fvc::domainIntegrate(CoeffA &  CoeffB).value();
+        }
+        ITHACAstream::SaveDenseMatrix(SC_matrix[i], "./ITHACAoutput/Matrices/SC/",
+                      "SD"+ name(i) +"_" + name(NUmodes) + "_" + name(NSUPmodes));
+    }
+
+    return SC_matrix;
+}
+
+Eigen::MatrixXd steadyNS::mass_matrix_newtime_consistent(label NUmodes, label NPmodes,
+        label NSUPmodes)
+{
+    Eigen::MatrixXd W_matrix;
+    W_matrix.resize(NUmodes,NUmodes);
+
+    for (label i = 0; i < NUmodes; i++)
+    {
+        volVectorField A = fvc::reconstruct(L_PHImodes[i]);
+        for (label j = 0; j < NUmodes; j++)
+        {
+            volVectorField B = fvc::reconstruct(L_PHImodes[j]);
+            W_matrix(i, j) = fvc::domainIntegrate(A & B).value();
+        }
+    }
+
+    ITHACAstream::SaveDenseMatrix(W_matrix, "./ITHACAoutput/Matrices/",
+                                  "W_" + name(NUmodes));
+
+    return W_matrix;
+}
+
 
 void steadyNS::change_viscosity(double mu)
 {
