@@ -319,7 +319,6 @@ int main(int argc, char* argv[])
     reduced.tolerancePenalty = 1e-5;
     reduced.timeStepPenalty = 5;
     auto start_penalty = std::chrono::high_resolution_clock::now();
-
     if (example.bcMethod == "penalty")
     {
         // Set initial quess for penalty factors
@@ -328,7 +327,6 @@ int main(int argc, char* argv[])
         // Solve for the penalty factors with the iterative solver
         reduced.tauU = reduced.penalty_PPE(vel_now, reduced.tauIter);
     }
-
     auto finish_penalty = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_penalty = finish_penalty - start_penalty;
     std::cout << "elapsed_penalty: " << elapsed_penalty.count() << " seconds.";
@@ -341,8 +339,7 @@ int main(int argc, char* argv[])
     std::cout << "elapsed_ROM: " << elapsed_ROM.count() << " seconds.";
     std::cout << std::endl;
     auto start_ROM_REC = std::chrono::high_resolution_clock::now();
-    //reduced.reconstruct_PPE("./ITHACAoutput/ReconstructionPPE");
-    reduced.reconstruct(false, "./ITHACAoutput/ReconstructionPPE/");
+    reduced.reconstruct(false, "./ITHACAoutput/Reconstruction/");
     auto finish_ROM_REC = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_ROM_REC = finish_ROM_REC - start_ROM_REC;
     std::cout << "elapsed_ROM_REC: " << elapsed_ROM_REC.count() << " seconds.";

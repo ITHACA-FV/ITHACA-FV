@@ -263,11 +263,10 @@ void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>& field,
 ///
 /// @tparam         Type   Type of field (vector or scalar)
 ///
-void assignZeroDirichlet(GeometricField<vector, fvPatchField, 
+template<typename Type>
+void assignZeroDirichlet(GeometricField<Type, fvPatchField, 
               volMesh>& field);
 
-void assignZeroDirichlet(GeometricField<scalar, fvPatchField, 
-              volMesh>& field);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
