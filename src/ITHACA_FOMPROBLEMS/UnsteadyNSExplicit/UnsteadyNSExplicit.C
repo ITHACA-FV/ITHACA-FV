@@ -95,7 +95,7 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
     }
 
 #include "initContinuityErrs.H"
-    dimensionedScalar nu = _nu();
+    dimensionedScalar nu = _nu() * mu_now[0];
     dimensionedScalar dt = timeStep * _dt();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
