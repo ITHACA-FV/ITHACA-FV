@@ -136,7 +136,7 @@ void getModes(
         }
         else if (PODnorm == "Frobenius")
         {
-            _corMatrix = ITHACAutilities::getMassMatrix(snapshots, false);
+            _corMatrix = ITHACAutilities::getMassMatrix(snapshots, 0, false);
         }
 
         if (Pstream::parRun())

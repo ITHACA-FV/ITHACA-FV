@@ -253,6 +253,21 @@ template<typename Type>
 void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>& field,
                              Type& value);
 
+
+//--------------------------------------------------------------------------
+/// Assign zero internal field.
+/// Change all non-zero Dirichlet boundary condition values to zero.
+/// Change all Neumann boundary conditions to Dirichlet boundary conditions.
+///
+/// @param[in,out]  field  Field of which the BCs need to be changed
+///
+/// @tparam         Type   Type of field (vector or scalar)
+///
+template<typename Type>
+void assignZeroDirichlet(GeometricField<Type, fvPatchField, 
+              volMesh>& field);
+
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
 //------------------------------------------------------------------------------

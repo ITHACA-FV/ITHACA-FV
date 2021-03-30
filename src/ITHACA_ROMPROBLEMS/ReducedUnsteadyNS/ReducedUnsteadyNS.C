@@ -745,6 +745,7 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_PPE(Eigen::MatrixXd& vel_now,
         // Set some properties of the newton object
         newton_object_PPE.nu = nu;
         newton_object_PPE.y_old = y;
+        newton_object_PPE.yOldOld = newton_object_PPE.y_old;
         newton_object_PPE.dt = dt;
         newton_object_PPE.BC.resize(N_BC);
         newton_object_PPE.tauU = tauIter;
@@ -785,6 +786,7 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_PPE(Eigen::MatrixXd& vel_now,
             res.setZero();
             hnls.solve(y);
             newton_object_PPE.operator()(y, res);
+            newton_object_PPE.yOldOld = newton_object_PPE.y_old;
             newton_object_PPE.y_old = y;
 
             if (res.norm() < 1e-5)

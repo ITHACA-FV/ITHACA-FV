@@ -87,7 +87,7 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
     fvMesh& mesh = _mesh();
     volScalarField& p = _p();
     volVectorField& U = _U();
-    surfaceScalarField phi = _phi();
+    surfaceScalarField& phi = _phi();
 
     if (fluxMethod == "inconsistent")
     {
@@ -95,7 +95,7 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
     }
 
 #include "initContinuityErrs.H"
-    dimensionedScalar nu = _nu();
+    dimensionedScalar nu = _nu() * mu_now[0];
     dimensionedScalar dt = timeStep * _dt();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
@@ -135,7 +135,7 @@ void UnsteadyNSExplicit::truthSolve(List<scalar> mu_now, fileName folder)
         {
 #include "CFM.H"
         }
-
+#include "initContinuityErrs.H"
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
              << "  ClockTime = " << runTime.elapsedClockTime() << " s"
              << nl << endl;

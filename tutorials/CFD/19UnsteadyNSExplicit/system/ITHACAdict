@@ -22,8 +22,6 @@ NmodesUout 10;
 NmodesUproj 10;
 NmodesPout 10;
 NmodesPproj 10;
-NmodesPhiout 0;
-NmodesPhiproj 0;
 
 // Output format to save market vectors.
 OutPrecision 20;
@@ -38,5 +36,6 @@ normalizedResidualLim 1e-10;
 
 bcMethod none;
 fluxMethod inconsistent;
+POD_phi Frobenius;
 
 debug 1;

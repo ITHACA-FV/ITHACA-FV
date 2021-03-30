@@ -122,7 +122,7 @@ _phi = autoPtr<surfaceScalarField>
                mesh
            )
        );
-surfaceScalarField phi = _phi();
+surfaceScalarField& phi = _phi();
 
 surfaceScalarField phi0(phi);
 
