@@ -49,7 +49,8 @@ class DEIM
         /// @param[in]  MaxModes         The maximum number of modes
         /// @param[in]  FunctionName     The function name
         ///
-        DEIM (PtrList<T>& SnapShotsMatrix, label MaxModes, word FunctionName, word FieldName);
+        DEIM (PtrList<T>& SnapShotsMatrix, label MaxModes, word FunctionName,
+              word FieldName);
 
         ///
         /// @brief      Construct DEIM for matrix with non-linear dependency

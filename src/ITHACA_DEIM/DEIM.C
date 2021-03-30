@@ -43,7 +43,8 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
     Eigen::VectorXd c;
     Eigen::VectorXd r;
     Eigen::VectorXd rho(1);
-    modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModes, FunctionName, FieldName);
+    modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModes, FunctionName,
+                                 FieldName);
     MatrixModes = Foam2Eigen::PtrList2Eigen(modes);
     label ind_max, c1;
     double max = MatrixModes.cwiseAbs().col(0).maxCoeff(&ind_max, &c1);

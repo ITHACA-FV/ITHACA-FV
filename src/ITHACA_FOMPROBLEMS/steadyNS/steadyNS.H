@@ -193,7 +193,7 @@ class steadyNS: public reductionProblem
         /// PPE BC4
         Eigen::MatrixXd BC4_matrix;
 
-        /// Mass Matrix New Time Step - Consistent Flux Method 
+        /// Mass Matrix New Time Step - Consistent Flux Method
         Eigen::MatrixXd W_matrix;
 
         /// Mass Matrix Old Time Step - Consistent Flux Method
@@ -202,7 +202,7 @@ class steadyNS: public reductionProblem
         /// Diffusion Term - Consistent Flux Method
         Eigen::MatrixXd DF_matrix;
 
-        /// Pressure Gradient Term - Consistent Flux Method	
+        /// Pressure Gradient Term - Consistent Flux Method
         Eigen::MatrixXd KF_matrix;
 
         ///@}
@@ -231,7 +231,7 @@ class steadyNS: public reductionProblem
 
         /// Boundary term for diffusion term - Consistent Flux Method
         List<Eigen::MatrixXd> SD_matrix;
- 
+
         /// Boundary term for convection term - Consistent Flux Method
         List<Eigen::MatrixXd> SC_matrix;
 
@@ -629,7 +629,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the interpolation term.
         ///
-        Eigen::MatrixXd diffusive_term_consistent(label NUmodes, label NPmodes, label NSUPmodes);
+        Eigen::MatrixXd diffusive_term_consistent(label NUmodes, label NPmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Boundary vector diffusion term (consistent flux method)
@@ -639,7 +640,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
         ///
-        List < Eigen::MatrixXd > boundary_vector_diffusion_consistent(label NUmodes, label NSUPmodes);
+        List < Eigen::MatrixXd > boundary_vector_diffusion_consistent(label NUmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Boundary vector convection term - Consistent Flux Method
@@ -649,7 +651,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the boundary vector.
         ///
-        List < Eigen::MatrixXd > boundary_vector_convection_consistent(label NUmodes, label NSUPmodes);
+        List < Eigen::MatrixXd > boundary_vector_convection_consistent(label NUmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Mass Matrix new time step (consistent flux method)
@@ -660,7 +663,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the divergence term.
         ///
-        Eigen::MatrixXd mass_matrix_newtime_consistent(label NUmodes, label NPmodes, label NSUPmodes);
+        Eigen::MatrixXd mass_matrix_newtime_consistent(label NUmodes, label NPmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Mass Matrix old time step (consistent flux method)
@@ -671,7 +675,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the divergence term.
         ///
-        Eigen::MatrixXd mass_matrix_oldtime_consistent(label NUmodes, label NPmodes, label NSUPmodes);
+        Eigen::MatrixXd mass_matrix_oldtime_consistent(label NUmodes, label NPmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Pressure Gradient Term (consistent flux method)
@@ -683,7 +688,7 @@ class steadyNS: public reductionProblem
         /// @return     reduced matrix in Eigen::MatrixXd format for the divergence term.
         ///
         Eigen::MatrixXd pressure_gradient_term_consistent(label NUmodes, label NPmodes,
-                                               label NSUPmodes);
+                label NSUPmodes);
         //--------------------------------------------------------------------------
         /// Convective Term (consistent flux method)
         ///
