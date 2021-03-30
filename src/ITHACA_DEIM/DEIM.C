@@ -32,7 +32,7 @@ License
 
 // Template function constructor
 template<typename T>
-DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName)
+DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
     :
     SnapShotsMatrix(s),
     MaxModes(MaxModes),
@@ -43,7 +43,7 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName)
     Eigen::VectorXd c;
     Eigen::VectorXd r;
     Eigen::VectorXd rho(1);
-    modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModes, FunctionName);
+    modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModes, FunctionName, FieldName);
     MatrixModes = Foam2Eigen::PtrList2Eigen(modes);
     label ind_max, c1;
     double max = MatrixModes.cwiseAbs().col(0).maxCoeff(&ind_max, &c1);
@@ -579,9 +579,9 @@ template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix>& s,
                                      label MaxModesA,
                                      label MaxModesB, word MatrixName);
 template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, label MaxModes,
-                                    word FunctionName);
+                                    word FunctionName, word FieldName);
 template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, label MaxModes,
-                                    word FunctionName);
+                                    word FunctionName, word FieldName);
 
 // Specialization for generateSubFieldsMatrix
 template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubFieldsMatrix(

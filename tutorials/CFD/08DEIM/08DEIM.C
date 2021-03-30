@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
     }
 
     // Create DEIM object with given number of basis functions
-    DEIM_function c(Sp, NDEIM, "Gaussian_function");
+    DEIM_function c(Sp, NDEIM, "Gaussian_function", S.name());
     // Generate the submeshes with the depth of the layer
     c.fields = c.generateSubmeshes(2, mesh, S);
     // Define a new online parameter
