@@ -77,11 +77,13 @@ void createSymLink(word folder)
 
 void createSymLink(word linkFolder, word destFolder)
 {
-	if(!check_folder(destFolder))
-	{
-		mkDir(destFolder);
-	}
-	system("ln -s  $(readlink -f " + linkFolder + ") " + destFolder + " >/dev/null 2>&1");
+    if (!check_folder(destFolder))
+    {
+        mkDir(destFolder);
+    }
+
+    system("ln -s  $(readlink -f " + linkFolder + ") " + destFolder +
+           " >/dev/null 2>&1");
 }
 
 bool check_folder(word folder)

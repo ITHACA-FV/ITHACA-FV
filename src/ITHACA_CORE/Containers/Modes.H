@@ -246,6 +246,8 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
                               snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
                               PtrList<volScalarField> Volumes,
                               word innerProduct);
+
+        void operator=(const PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes);
 };
 
 typedef Modes<scalar, fvPatchField, volMesh> volScalarModes;

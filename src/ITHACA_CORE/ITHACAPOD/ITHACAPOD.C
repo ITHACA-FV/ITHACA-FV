@@ -1337,116 +1337,127 @@ template<typename Type>
 PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
             PtrList<GeometricField<Type, fvPatchField, volMesh>>& SnapShotsMatrix,
             label nmodes,
-            word FunctionName)
+            word FunctionName, word FieldName)
 {
-    if (nmodes == 0)
-    {
-        nmodes = SnapShotsMatrix.size() - 2;
-    }
-
-    M_Assert(nmodes <= SnapShotsMatrix.size() - 2,
-             "The number of requested modes cannot be bigger than the number of Snapshots - 2");
-
-    if (nmodes > SnapShotsMatrix.size() - 2)
-    {
-        std::cout <<
-                  "The number of requested modes cannot be bigger than the number of Snapshots - 2"
-                  << std::endl;
-        exit(0);
-    }
-
-    PtrList<GeometricField<Type, fvPatchField, volMesh>> Bases;
+    ITHACAparameters* para(ITHACAparameters::getInstance());
     PtrList<GeometricField<Type, fvPatchField, volMesh>> modes;
-    Bases.resize(nmodes);
-    modes.resize(nmodes);
-    Eigen::MatrixXd _corMatrix;
-    scalarField eigenValues(nmodes);
-    scalarField cumEigenValues(nmodes);
-    List<scalarField> eigenVector(nmodes);
 
-    for (label i = 0; i < nmodes; i++)
+    if (!ITHACAutilities::check_folder("./ITHACAoutput/DEIM/" + FunctionName))
     {
-        eigenVector[i].setSize(SnapShotsMatrix.size());
-    }
-
-    _corMatrix = corMatrix(SnapShotsMatrix);
-    Info << "####### Performing the POD decomposition for " <<
-         SnapShotsMatrix[0].name() << " #######" << endl;
-    label ncv = SnapShotsMatrix.size();
-    Spectra::DenseGenMatProd<double> op(_corMatrix);
-    Spectra::GenEigsSolver<double, Spectra::LARGEST_REAL, Spectra::DenseGenMatProd<double>>
-            es(&op, nmodes, ncv);
-    es.init();
-    es.compute(1000, 1e-10, Spectra::LARGEST_REAL);
-    Info << "####### End of the POD decomposition for " << SnapShotsMatrix[0].name()
-         << " #######" << endl;
-    Eigen::VectorXd eigenValueseig;
-    Eigen::MatrixXd eigenVectoreig;
-
-    if (es.info() == Spectra::SUCCESSFUL)
-    {
-        eigenValueseig = es.eigenvalues().real();
-        eigenVectoreig = es.eigenvectors().real();
-    }
-
-    cumEigenValues[0] = eigenValueseig(0) / eigenValueseig.sum();
-    eigenValues[0] = eigenValueseig(0) / eigenValueseig.sum();
-
-    for (label i = 1; i < nmodes; i++)
-    {
-        cumEigenValues[i] = cumEigenValues[i - 1] + eigenValueseig(
-                                i) / eigenValueseig.sum();
-        eigenValues[i] = eigenValueseig(i) / eigenValueseig.sum();
-    }
-
-    for (label i = 0; i < nmodes; i++)
-    {
-        for (label k = 0; k < SnapShotsMatrix.size(); k++)
+        if (nmodes == 0)
         {
-            eigenVector[i][k] = eigenVectoreig(k, i);
-        }
-    }
-
-    GeometricField<Type, fvPatchField, volMesh> tmb_bu = SnapShotsMatrix[0];
-    tmb_bu.rename(SnapShotsMatrix[0].name());
-
-    for (label i = 0; i < nmodes; i++)
-    {
-        tmb_bu = eigenVector[i][0] * SnapShotsMatrix[0];
-
-        for (label k = 1; k < SnapShotsMatrix.size(); k++)
-        {
-            tmb_bu += eigenVector[i][k] * SnapShotsMatrix[k];
+            nmodes = SnapShotsMatrix.size() - 2;
         }
 
-        Bases.set(i, tmb_bu.clone());
-        Info << "creating the bases " << i << " for " << SnapShotsMatrix[0].name() <<
-             endl;
+        M_Assert(nmodes <= SnapShotsMatrix.size() - 2,
+                 "The number of requested modes cannot be bigger than the number of Snapshots - 2");
+
+        if (nmodes > SnapShotsMatrix.size() - 2)
+        {
+            std::cout <<
+                      "The number of requested modes cannot be bigger than the number of Snapshots - 2"
+                      << std::endl;
+            exit(0);
+        }
+
+        PtrList<GeometricField<Type, fvPatchField, volMesh>> Bases;
+        Bases.resize(nmodes);
+        modes.resize(nmodes);
+        Eigen::MatrixXd _corMatrix;
+        scalarField eigenValues(nmodes);
+        scalarField cumEigenValues(nmodes);
+        List<scalarField> eigenVector(nmodes);
+
+        for (label i = 0; i < nmodes; i++)
+        {
+            eigenVector[i].setSize(SnapShotsMatrix.size());
+        }
+
+        _corMatrix = corMatrix(SnapShotsMatrix);
+        Info << "####### Performing the POD decomposition for " <<
+             SnapShotsMatrix[0].name() << " #######" << endl;
+        label ncv = SnapShotsMatrix.size();
+        Spectra::DenseGenMatProd<double> op(_corMatrix);
+        Spectra::GenEigsSolver<double, Spectra::LARGEST_REAL, Spectra::DenseGenMatProd<double>>
+                es(&op, nmodes, ncv);
+        es.init();
+        es.compute(1000, 1e-10, Spectra::LARGEST_REAL);
+        Info << "####### End of the POD decomposition for " << SnapShotsMatrix[0].name()
+             << " #######" << endl;
+        Eigen::VectorXd eigenValueseig;
+        Eigen::MatrixXd eigenVectoreig;
+
+        if (es.info() == Spectra::SUCCESSFUL)
+        {
+            eigenValueseig = es.eigenvalues().real();
+            eigenVectoreig = es.eigenvectors().real();
+        }
+
+        cumEigenValues[0] = eigenValueseig(0) / eigenValueseig.sum();
+        eigenValues[0] = eigenValueseig(0) / eigenValueseig.sum();
+
+        for (label i = 1; i < nmodes; i++)
+        {
+            cumEigenValues[i] = cumEigenValues[i - 1] + eigenValueseig(
+                                    i) / eigenValueseig.sum();
+            eigenValues[i] = eigenValueseig(i) / eigenValueseig.sum();
+        }
+
+        for (label i = 0; i < nmodes; i++)
+        {
+            for (label k = 0; k < SnapShotsMatrix.size(); k++)
+            {
+                eigenVector[i][k] = eigenVectoreig(k, i);
+            }
+        }
+
+        GeometricField<Type, fvPatchField, volMesh> tmb_bu = SnapShotsMatrix[0];
+        tmb_bu.rename(SnapShotsMatrix[0].name());
+
+        for (label i = 0; i < nmodes; i++)
+        {
+            tmb_bu = eigenVector[i][0] * SnapShotsMatrix[0];
+
+            for (label k = 1; k < SnapShotsMatrix.size(); k++)
+            {
+                tmb_bu += eigenVector[i][k] * SnapShotsMatrix[k];
+            }
+
+            Bases.set(i, tmb_bu.clone());
+            Info << "creating the bases " << i << " for " << SnapShotsMatrix[0].name() <<
+                 endl;
+        }
+
+        ITHACAutilities::normalizeFields(Bases);
+
+        for (label i = 0; i < Bases.size(); i++)
+        {
+            auto tmp2(Bases[i]);
+            tmp2.rename(SnapShotsMatrix[0].name());
+            modes.set(i, tmp2.clone());
+        }
+
+        Info << "####### Saving the POD bases for " << SnapShotsMatrix[0].name() <<
+             " #######" << endl;
+        ITHACAutilities::createSymLink("./ITHACAoutput/DEIM");
+
+        for (label i = 0; i < modes.size(); i++)
+        {
+            ITHACAstream::exportSolution(modes[i], name(i + 1), "./ITHACAoutput/DEIM",
+                                         modes[i].name());
+        }
+
+        ITHACAstream::exportList(eigenValues, "./ITHACAoutput/DEIM/",
+                                 "eigenValues_" + SnapShotsMatrix[0].name());
+        ITHACAstream::exportList(cumEigenValues, "./ITHACAoutput/DEIM/",
+                                 "cumEigenValues_" + SnapShotsMatrix[0].name());
     }
-
-    ITHACAutilities::normalizeFields(Bases);
-
-    for (label i = 0; i < Bases.size(); i++)
+    else
     {
-        auto tmp2(Bases[i]);
-        tmp2.rename(SnapShotsMatrix[0].name());
-        modes.set(i, tmp2.clone());
+        Info << "Reading the existing modes" << endl;
+        ITHACAstream::read_fields(modes, FieldName, "./ITHACAoutput/DEIM/");
     }
 
-    Info << "####### Saving the POD bases for " << SnapShotsMatrix[0].name() <<
-         " #######" << endl;
-    ITHACAutilities::createSymLink("./ITHACAoutput/DEIM");
-
-    for (label i = 0; i < modes.size(); i++)
-    {
-        ITHACAstream::exportSolution(modes[i], name(i + 1), "./ITHACAoutput/DEIM",
-                                     modes[i].name());
-    }
-
-    ITHACAstream::exportList(eigenValues, "./ITHACAoutput/DEIM/",
-                             "eigenValues_" + SnapShotsMatrix[0].name());
-    ITHACAstream::exportList(cumEigenValues, "./ITHACAoutput/DEIM/",
-                             "cumEigenValues_" + SnapShotsMatrix[0].name());
     return modes;
 }
 
@@ -1607,12 +1618,12 @@ template PtrList<GeometricField<scalar, fvPatchField, volMesh>>
 DEIMmodes(
     PtrList<GeometricField<scalar, fvPatchField, volMesh>>& SnapShotsMatrix,
     label nmodes,
-    word FunctionName);
+    word FunctionName, word FieldName);
 
 template PtrList<GeometricField<vector, fvPatchField, volMesh>>
 DEIMmodes(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& SnapShotsMatrix,
     label nmodes,
-    word FunctionName);
+    word FunctionName, word FieldName);
 
 }

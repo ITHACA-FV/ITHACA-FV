@@ -61,6 +61,7 @@ class tutorial19: public UnsteadyNSExplicit
             {
                 ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+
                 if (fluxMethod == "consistent")
                 {
                     ITHACAstream::read_fields(Phifield, phi, "./ITHACAoutput/Offline/");
@@ -122,11 +123,14 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                         example.podex, 0, 0,
                         NmodesPout);
+
     if (example.fluxMethod == "consistent")
     {
-        ITHACAPOD::getModes(example.Phifield, example.Phimodes,  example._phi().name(), example.podex, 0, 0,
-                        NmodesUout);
+        ITHACAPOD::getModes(example.Phifield, example.Phimodes,  example._phi().name(),
+                            example.podex, 0, 0,
+                            NmodesUout);
     }
+
     // Galerkin Projection
     example.discretizeThenProject("./Matrices", NmodesUproj, NmodesPproj,
                                   NmodesSUPproj);
@@ -154,15 +158,15 @@ int main(int argc, char* argv[])
 /// \example 19UnsteadyNSExplicit.C
 /// \section intro_UnsteadyNSExplicit Introduction to tutorial 19
 /// In this tutorial we contruct a reduced order model for the classical lid driven cavity benchmark, which is a closed flow problem.
-/// The length of the two-dimensional square cavity is \f$L\f$ = 1.0 m. A (64 \f$\times\f$ 64) structured mesh with quadrilateral cells is constructed on the domain. 
+/// The length of the two-dimensional square cavity is \f$L\f$ = 1.0 m. A (64 \f$\times\f$ 64) structured mesh with quadrilateral cells is constructed on the domain.
 /// A tangential uniform velocity \f$U_{lid}\f$ = 1.0 m/s is prescribed at the top wall and non-slip conditions are applied to the other walls.
 ///
 /// The following image depicts a sketch of the geometry of the two-dimensional lid driven cavity problem.
 /// \image html lidDrivenCavityGrid.png
 ///
-/// The Reynolds number based on the velocity of the lid and the cavity characteristic length is 100 and the flow is considered laminar. 
-/// The initial condition for the cell-centered velocity is a zero field. 
-/// A full order simulation is performed for a constant time step of 0.005 s and for a total simulation time of 1.0 s in the offline stage. 
+/// The Reynolds number based on the velocity of the lid and the cavity characteristic length is 100 and the flow is considered laminar.
+/// The initial condition for the cell-centered velocity is a zero field.
+/// A full order simulation is performed for a constant time step of 0.005 s and for a total simulation time of 1.0 s in the offline stage.
 ///
 /// In this tutorial, we employ explicit time integration methods at the full order and the reduced order level.
 /// We derive the reduced order model via the projection of the fully discrete system.
@@ -189,8 +193,8 @@ int main(int argc, char* argv[])
 ///
 /// We define the tutorial19 class as a child of the UnsteadyNSExplicit class.
 /// The constructor is defined with members that are the fields need to be manipulated
-/// during the resolution of the full order problem using either a inconsistent flux method 
-/// or a consistent flux method. Such fields are also initialized with the same initial conditions 
+/// during the resolution of the full order problem using either a inconsistent flux method
+/// or a consistent flux method. Such fields are also initialized with the same initial conditions
 /// in the solver.
 /// \skipline tutorial19
 /// \until surfaceScalarField& phi;
@@ -282,7 +286,7 @@ int main(int argc, char* argv[])
 ///
 /// \skipline solveOnline
 ///
-/// Finally the ROM solution is reconstructed. 
+/// Finally the ROM solution is reconstructed.
 /// In the case the solution should be exported and exported, put true instead of false in the function:
 ///
 /// \skipline reconstruct

@@ -213,7 +213,8 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
     {
         try
         {
-            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty" && typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated"
+            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty"
+                    && typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated"
                     && typeBC != "fixedFluxPressure" && typeBC != "processor"
                     && typeBC != "nutkWallFunction" && typeBC != "mixedEnergy")
             {
@@ -332,13 +333,16 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
             gradTpatch[faceI] = valueList[faceI];
         }
     }
-    else if (s.boundaryField()[BC_ind].type() == "empty" || s.boundaryField()[BC_ind].type() == "zeroGradient")
+    else if (s.boundaryField()[BC_ind].type() == "empty"
+             || s.boundaryField()[BC_ind].type() == "zeroGradient")
     {}
     else
     {
         try
         {
-            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty" && typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated" &&  typeBC != "processor")
+            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty"
+                    && typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated"
+                    &&  typeBC != "processor")
             {
                 word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
                                " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
@@ -391,13 +395,15 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
             gradTpatch[faceI] = valueList[faceI];
         }
     }
-    else if (s.boundaryField()[BC_ind].type() == "empty" || s.boundaryField()[BC_ind].type() == "zeroGradient")
+    else if (s.boundaryField()[BC_ind].type() == "empty"
+             || s.boundaryField()[BC_ind].type() == "zeroGradient")
     {}
     else
     {
         try
         {
-            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty" || typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated"
+            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty"
+                    || typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated"
                     && typeBC != "fixedFluxPressure" &&  typeBC != "processor")
             {
                 word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
@@ -469,18 +475,16 @@ template void changeNeumann2Dirichlet(
 template<typename Type>
 void assignZeroDirichlet(GeometricField<Type, fvPatchField, volMesh>& field)
 {
-    Type v; 
-    v = v*0;
+    Type v;
+    v = v * 0;
     assignIF(field, v);
-    
-    forAll(field.mesh().boundary(), i)	
+    forAll(field.mesh().boundary(), i)
     {
         if (field.boundaryField()[i].type() == "fixedValue")
         {
             assignBC(field, i, v);
         }
     }
-   
     changeNeumann2Dirichlet(field, v);
 }
 template void assignZeroDirichlet(

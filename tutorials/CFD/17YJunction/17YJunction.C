@@ -201,7 +201,7 @@ int main(int argc, char* argv[])
     tutorial17 example(argc, argv);
     // the offline samples for the boundary conditions
     word par_offline_BC("./timeBCoff");
-    // Convert boundary values x-direction and y-direction to x,y,z 
+    // Convert boundary values x-direction and y-direction to x,y,z
     Eigen::MatrixXd timeBCoff2D = ITHACAstream::readMatrix(par_offline_BC);
     Eigen::MatrixXd timeBCoff3D = Eigen::MatrixXd::Zero(6, timeBCoff2D.cols());
     timeBCoff3D.row(0) = timeBCoff2D.row(0);
@@ -253,6 +253,7 @@ int main(int argc, char* argv[])
     example.writeEvery = 0.03;
     // Perform The Offline Solve;
     example.offlineSolve();
+
     // Perform POD
     if (example.bcMethod == "lift")
     {
@@ -286,6 +287,7 @@ int main(int argc, char* argv[])
                             example.podex, 0, 0,
                             NmodesPout);
     }
+
     // Reduced Matrices
     example.projectPPE("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
     reducedUnsteadyNS reduced(example);
@@ -298,6 +300,7 @@ int main(int argc, char* argv[])
     reduced.exportEvery = 0.03;
     // Set values velocity boundary conditions of the online phase
     Eigen::MatrixXd vel_now = par_on_BC;
+
     if (example.bcMethod == "penalty")
     {
         // Set values of the iterative penalty method
@@ -310,6 +313,7 @@ int main(int argc, char* argv[])
         // Solve for the penalty factors with the iterative solver
         reduced.tauU = reduced.penalty_PPE(vel_now, reduced.tauIter);
     }
+
     // Set the online temperature BC and solve reduced model
     reduced.solveOnline_PPE(vel_now);
     reduced.reconstruct(false, "./ITHACAoutput/Reconstruction/");
@@ -322,15 +326,15 @@ int main(int argc, char* argv[])
 ///
 /// \example 17YJunction.C
 /// \section intro_UnsteadyNS Introduction to tutorial 17
-/// In this tutorial, we contruct a reduced order model for a Y-junction flow problem. 
+/// In this tutorial, we contruct a reduced order model for a Y-junction flow problem.
 /// The Y-junction consists of two inlets and one outlet channel whose time-dependent
-/// inlet boundary conditions are controlled. The angle between each inlet and the horizontal axis is 60 degrees. 
-/// The length of the channels is 2 m. The two inlets, \f$\Gamma_{i1}\f$ and \f$\Gamma_{i2}\f$, have a width of 0.5 m, while the outlet, 
-/// \f$\Gamma_{o}\f$, has a width of 1 m. The kinematic viscosity is equal to \f$\nu\f$ = 0.01 m\f$^2\f$/s and the flow is considered laminar. 
+/// inlet boundary conditions are controlled. The angle between each inlet and the horizontal axis is 60 degrees.
+/// The length of the channels is 2 m. The two inlets, \f$\Gamma_{i1}\f$ and \f$\Gamma_{i2}\f$, have a width of 0.5 m, while the outlet,
+/// \f$\Gamma_{o}\f$, has a width of 1 m. The kinematic viscosity is equal to \f$\nu\f$ = 0.01 m\f$^2\f$/s and the flow is considered laminar.
 /// As initial conditions the steady state solution, obtained with the simpleFOAM-solver, for a velocity magnitude of 1 m/s at both inlets is chosen.
-/// In this tutorial, new values of the velocity magnitude of the flow at the inlets are imposed in the reduced order model with either an 
-/// iterative penalty method or a lifting function method. 
-/// The reduced order model is constructed using Galerkin projection approach together with an exploitation of a pressure Poisson equation 
+/// In this tutorial, new values of the velocity magnitude of the flow at the inlets are imposed in the reduced order model with either an
+/// iterative penalty method or a lifting function method.
+/// The reduced order model is constructed using Galerkin projection approach together with an exploitation of a pressure Poisson equation
 /// during the projection stage.
 ///
 ///
@@ -370,7 +374,7 @@ int main(int argc, char* argv[])
 /// \until }
 /// \skipline }
 ///
-/// We also define a liftSolve method, which will be needed to construct the lifting functions 
+/// We also define a liftSolve method, which will be needed to construct the lifting functions
 /// if the lifting function method is used:
 ///
 /// \skipline liftSolve
@@ -390,13 +394,13 @@ int main(int argc, char* argv[])
 ///
 /// \skipline par_offline_BC
 ///
-/// The input file only contains the boundary values at inlet 1 and 2 in the x-direction and y-direction. 
+/// The input file only contains the boundary values at inlet 1 and 2 in the x-direction and y-direction.
 /// We are storing these values in an matrix together with zero velocity in the z-direction since it is required to specify the
 /// velocity in the x,y and z direction even though the problem is two-dimensional.
 ///
 /// \skipline timeBCoff2D
 /// \until example.timeBCoff
-/// 
+///
 /// We also load the new inlet velocities for the reduced order solver from a text file and store the values in a matrix.
 ///
 /// \skipline  Eigen::MatrixXd par_on_BC
@@ -416,7 +420,7 @@ int main(int argc, char* argv[])
 /// \skipline example.Pnumber
 /// \until example.genEquiPar()
 ///
-/// After that we set the inlet boundaries where we have the non homogeneous BC 
+/// After that we set the inlet boundaries where we have the non homogeneous BC
 ///
 /// \skipline example.inlet
 /// \until example.inletIndex(3, 1) = 1;
@@ -435,15 +439,15 @@ int main(int argc, char* argv[])
 ///
 /// \skipline Solve()
 ///
-/// After that, the modes for the velocity and pressure are obtained. 
-/// The lifting function method requires the velocity modes to be homogeneous. 
-/// Therefore we differentiate here between the lifting function method and the penalty method. 
+/// After that, the modes for the velocity and pressure are obtained.
+/// The lifting function method requires the velocity modes to be homogeneous.
+/// Therefore we differentiate here between the lifting function method and the penalty method.
 /// Which bcMethod to be used can be specified in the ITHACAdict file.
 ///
 /// In the case of the lifting function method, we specify first a unit value onto the inlet patches in the x- and y-direction
 /// \skipline if
 /// \until BCs(1, 1) = 1
-/// 
+///
 /// Then we solve for the lifting functions; one lifting function for each inlet boundary condition and direction
 /// \skipline liftSolve
 ///
@@ -452,8 +456,8 @@ int main(int argc, char* argv[])
 ///
 /// and the velocity snapshots are homogenized by subtracting the normalized lifting functions from the velocity snapshots.
 /// \skipline computeLift
-/// 
-/// Finally, we obtain the homogeneous velocity modes 
+///
+/// Finally, we obtain the homogeneous velocity modes
 /// \skipline getModes
 /// \until NmodesUout
 ///
@@ -465,7 +469,7 @@ int main(int argc, char* argv[])
 /// \skipline bcMethod
 /// \until }
 ///
-/// Then the projection onto the POD modes is performed using the Pressure Poisson Equation (PPE) approach. 
+/// Then the projection onto the POD modes is performed using the Pressure Poisson Equation (PPE) approach.
 /// \skipline projectPPE
 ///
 /// Now that we obtained all the necessary information from the POD decomposition and the reduced matrices,
@@ -475,9 +479,9 @@ int main(int argc, char* argv[])
 /// \skipline reducedUnsteadyNS
 ///
 /// And then we can use the constructed ROM to perform the online procedure, from which we can simulate the
-/// problem for new values of the inlet velocities that vary linearly over time. 
-/// We are keeping the time stepping the same as for the offline stage, 
-/// but the ROM simulation (online stage) is performed for a longer time period. 
+/// problem for new values of the inlet velocities that vary linearly over time.
+/// We are keeping the time stepping the same as for the offline stage,
+/// but the ROM simulation (online stage) is performed for a longer time period.
 ///
 /// \skipline reduced.nu
 /// \until exportEvery
@@ -491,11 +495,11 @@ int main(int argc, char* argv[])
 /// \skipline if (example.bcMethod == "penalty")
 /// \until }
 ///
-/// and then the online solve is performed. 
+/// and then the online solve is performed.
 ///
 /// \skipline solveOnline
 ///
-/// Finally the ROM solution is reconstructed. 
+/// Finally the ROM solution is reconstructed.
 /// In the case the solution should be exported and exported, put true instead of false in the function:
 ///
 /// \skipline reconstruct
