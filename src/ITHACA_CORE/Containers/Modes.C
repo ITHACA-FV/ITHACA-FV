@@ -443,6 +443,18 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
     label numberOfModes = 0;
     projectSnapshots(snapshots, projSnapshots, numberOfModes, innerProduct);
 }
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Modes<Type, PatchField, GeoMesh>::operator=(const PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes)
+{
+    this->resize(modes.size());
+    for(label i = 0; i < modes.size(); i++)
+    {
+        (*this).set(i, modes[i].clone());
+    }
+}
+
+
 template class Modes<scalar, fvPatchField, volMesh>;
 template class Modes<vector, fvPatchField, volMesh>;
 template class Modes<scalar, fvsPatchField, surfaceMesh>;
