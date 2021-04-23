@@ -215,8 +215,6 @@ int main(int argc, char *argv[])
             }
         }
 
-        std::cerr << "File: perform_POD.C, Line: 217"<< std::endl;
-
         if (field_type == "vector")
         {
             ITHACAPOD::getModes(Vfield, Vmodes, field_name, 0, 0, 0, nmodes);
