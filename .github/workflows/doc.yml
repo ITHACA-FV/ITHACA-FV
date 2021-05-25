@@ -1,0 +1,37 @@
+name: 'Doxygen Action'
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+description: 'Generate documentation on a commented project using doxygen'
+branding:
+  icon: 'book-open'
+  color: 'gray-dark'
+inputs:
+  doxyfile-path:
+    description: 'Path to Doxyfile'
+    required: true
+    default: './docs/Doxyfile'
+  working-directory:
+    description: 'Working directory'
+    required: true
+    default: './docs'
+  enable-latex:
+    description: 'Generate latex documentation'
+    required: false
+    default: false
+  additional-packages:
+    description: 'Extra alpine packages for the build environment'
+    required: false
+    default: ''
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.doxyfile-path }}
+    - ${{ inputs.working-directory }}
+    - ${{ inputs.enable-latex }}
+    - ${{ inputs.additional-packages }}
