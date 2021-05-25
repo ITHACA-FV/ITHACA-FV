@@ -138,6 +138,8 @@ class DEIM
 
         /// List of submeshes
         autoPtr<fvMeshSubset> submesh;
+        autoPtr<fvMeshSubset> submeshA;
+        autoPtr<fvMeshSubset> submeshB;
         PtrList<fvMeshSubset> submeshList;
         PtrList<fvMeshSubset> submeshListA;
         PtrList<fvMeshSubset> submeshListB;
@@ -165,6 +167,17 @@ class DEIM
         ///
         template <class S>
         PtrList<S> generateSubmeshesMatrix(label layers, fvMesh& mesh, S field,
+                                           label secondTime = 0);
+
+        ///
+        /// @brief      { function_description }
+        ///
+        /// @param[in]  layers  The layers
+        /// @param      mesh    The mesh
+        /// @param[in]  field   The field
+        ///
+        template <class S>
+        S generateSubmeshesMatrix2(label layers, fvMesh& mesh, S field,
                                            label secondTime = 0);
 
         ///

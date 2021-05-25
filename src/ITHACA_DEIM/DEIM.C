@@ -414,6 +414,88 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(label layers, fvMesh& mesh, S field,
 
 template<typename T>
 template<typename S>
+S DEIM<T>::generateSubmeshesMatrix2(label layers, fvMesh& mesh, S field,
+        label secondTime)
+{
+    fvMeshSubset* submesh;
+    PtrList<S> fieldsA;
+    List<label> indices;
+    volScalarField Indici
+    (
+        IOobject
+        (
+            MatrixName + "_A_indices",
+            mesh.time().timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        mesh,
+        dimensionedScalar(MatrixName + "_A_indices", dimensionSet(0, 0, 0, 0, 0, 0, 0),
+                          Foam::scalar(0))
+    );
+
+    if (!secondTime)
+    {
+        Indici = Indici * 0;
+    }
+
+    fieldsA.resize(0);
+
+    for (label i = 0; i < magicPointsA.size(); i++)
+    {
+        submesh = new fvMeshSubset(mesh);
+        indices = ITHACAutilities::getIndices(mesh, magicPointsA[i].first(), layers);
+        indices.append(ITHACAutilities::getIndices(mesh, magicPointsA[i].second(),
+                       layers));
+
+        if (!secondTime)
+        {
+            ITHACAutilities::assignONE(Indici, indices);
+        }
+
+        std::cout.setstate(std::ios_base::failbit);
+#if OPENFOAM >= 1812
+        submesh->setCellSubset(indices);
+#else
+        submesh->setLargeCellSubset(indices);
+#endif
+        submesh->subMesh().fvSchemes::readOpt() = mesh.fvSchemes::readOpt();
+        submesh->subMesh().fvSolution::readOpt() = mesh.fvSolution::readOpt();
+        submesh->subMesh().fvSchemes::read();
+        submesh->subMesh().fvSolution::read();
+        std::cout.clear();
+        S f = submesh->interpolate(field);
+        fieldsA.append(tmp<S>(f));
+
+        if (!secondTime)
+        {
+            submeshListA.append(submesh);
+        }
+    }
+
+    if (!secondTime)
+    {
+        for (label i = 0; i < magicPointsA.size(); i++)
+        {
+            Indici.ref()[magicPointsA[i].first()] = 10;
+            Indici.ref()[magicPointsA[i].second()] = 10;
+        }
+    }
+
+    if (!secondTime)
+    {
+        localMagicPointsA = global2local(magicPointsA, submeshListA);
+        ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + MatrixName
+                                    );
+    }
+
+    runSubMeshA = true;
+    return field;
+}
+
+template<typename T>
+template<typename S>
 PtrList<S> DEIM<T>::generateSubmeshesVector(label layers, fvMesh& mesh, S field,
         label secondTime)
 {
@@ -754,13 +836,13 @@ DEIM<fvVectorMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
 template PtrList<surfaceVectorField>
 DEIM<fvVectorMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
         surfaceVectorField field, label secondTime);
+
+// Specialization for generateSubmeshesMatrix
 template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
     label layers, fvMesh& mesh, volScalarField field, label secondTime);
 template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
     label layers, fvMesh& mesh, volVectorField field, label secondTime);
 template PtrList<surfaceScalarField>
-
-// Specialization for generateSubmeshesMatrix
 DEIM<fvScalarMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
         surfaceScalarField field, label secondTime);
 template PtrList<surfaceVectorField>
@@ -775,5 +857,27 @@ DEIM<fvVectorMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
         surfaceScalarField field, label secondTime);
 template PtrList<surfaceVectorField>
 DEIM<fvVectorMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
+        surfaceVectorField field, label secondTime);
+
+// Specialization for generateSubmeshesMatrix
+template volScalarField DEIM<fvScalarMatrix>::generateSubmeshesMatrix2(
+    label layers, fvMesh& mesh, volScalarField field, label secondTime);
+template volVectorField DEIM<fvScalarMatrix>::generateSubmeshesMatrix2(
+    label layers, fvMesh& mesh, volVectorField field, label secondTime);
+template surfaceScalarField
+DEIM<fvScalarMatrix>::generateSubmeshesMatrix2(label layers, fvMesh& mesh,
+        surfaceScalarField field, label secondTime);
+template surfaceVectorField
+DEIM<fvScalarMatrix>::generateSubmeshesMatrix2(label layers, fvMesh& mesh,
+        surfaceVectorField field, label secondTime);
+template volScalarField DEIM<fvVectorMatrix>::generateSubmeshesMatrix2(
+    label layers, fvMesh& mesh, volScalarField field, label secondTime);
+template volVectorField DEIM<fvVectorMatrix>::generateSubmeshesMatrix2(
+    label layers, fvMesh& mesh, volVectorField field, label secondTime);
+template surfaceScalarField
+DEIM<fvVectorMatrix>::generateSubmeshesMatrix2(label layers, fvMesh& mesh,
+        surfaceScalarField field, label secondTime);
+template surfaceVectorField
+DEIM<fvVectorMatrix>::generateSubmeshesMatrix2(label layers, fvMesh& mesh,
         surfaceVectorField field, label secondTime);
 
