@@ -13,7 +13,6 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/EigenFunctions \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
     -Wno-comment \
-    -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11 
 

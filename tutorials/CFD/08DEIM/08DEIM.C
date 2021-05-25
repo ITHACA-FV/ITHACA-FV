@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
     // Create DEIM object with given number of basis functions
     DEIM_function c(Sp, NDEIM, "Gaussian_function", S.name());
     // Generate the submeshes with the depth of the layer
-    c.subField = autoPtr<volScalarField>(new volScalarField(c.generateSubmeshes(2,
+    c.subField = autoPtr<volScalarField>(new volScalarField(c.generateSubmesh(2,
                                          mesh, S)));
     // Define a new online parameter
     Eigen::MatrixXd par_new(2, 1);

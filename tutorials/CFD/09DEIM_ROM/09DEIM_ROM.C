@@ -46,8 +46,8 @@ SourceFiles
 
 class DEIM_function : public DEIM<fvScalarMatrix>
 {
-    public:
         using DEIM::DEIM;
+    public:
         static fvScalarMatrix evaluate_expression(volScalarField& T, Eigen::MatrixXd mu)
         {
             volScalarField yPos = T.mesh().C().component(vector::Y);
@@ -70,18 +70,18 @@ class DEIM_function : public DEIM<fvScalarMatrix>
 
         Eigen::MatrixXd onlineCoeffsA(Eigen::MatrixXd mu)
         {
-            Eigen::MatrixXd theta(fieldsA.size(), 1);
+            Eigen::MatrixXd theta(magicPointsAcol().size(), 1);
+            fvScalarMatrix Aof = evaluate_expression(fieldA(), mu);
+            Eigen::SparseMatrix<double> Mr;
+            Eigen::VectorXd br;
+            Foam2Eigen::fvMatrix2Eigen(Aof, Mr, br);
 
-            for (int i = 0; i < fieldsA.size(); i++)
+            for (int i = 0; i < magicPointsAcol().size(); i++)
             {
-                Eigen::SparseMatrix<double> Mr;
-                Eigen::VectorXd br;
-                fvScalarMatrix Aof = evaluate_expression(fieldsA[i], mu);
-                Foam2Eigen::fvMatrix2Eigen(Aof, Mr, br);
-                int ind_row = localMagicPointsA[i].first() + xyz_A[i].first() *
-                              fieldsA[i].size();
-                int ind_col = localMagicPointsA[i].second() + xyz_A[i].second() *
-                              fieldsA[i].size();
+                int ind_row = localMagicPointsArow[i] + xyz_Arow()[i] *
+                              fieldA().size();
+                int ind_col = localMagicPointsAcol[i] + xyz_Acol()[i] *
+                              fieldA().size();
                 theta(i) = Mr.coeffRef(ind_row, ind_col);
             }
 
@@ -90,15 +90,15 @@ class DEIM_function : public DEIM<fvScalarMatrix>
 
         Eigen::MatrixXd onlineCoeffsB(Eigen::MatrixXd mu)
         {
-            Eigen::MatrixXd theta(fieldsB.size(), 1);
+            Eigen::MatrixXd theta(magicPointsB().size(), 1);
+            fvScalarMatrix Aof = evaluate_expression(fieldB(), mu);
+            Eigen::SparseMatrix<double> Mr;
+            Eigen::VectorXd br;
+            Foam2Eigen::fvMatrix2Eigen(Aof, Mr, br);
 
-            for (int i = 0; i < fieldsB.size(); i++)
+            for (int i = 0; i < magicPointsB().size(); i++)
             {
-                Eigen::SparseMatrix<double> Mr;
-                Eigen::VectorXd br;
-                fvScalarMatrix Aof = evaluate_expression(fieldsB[i], mu);
-                Foam2Eigen::fvMatrix2Eigen(Aof, Mr, br);
-                int ind_row = localMagicPointsB[i] + xyz_B[i] * fieldsB[i].size();
+                int ind_row = localMagicPointsB[i] + xyz_B()[i] * fieldB().size();
                 theta(i) = br(ind_row);
             }
 
@@ -106,6 +106,8 @@ class DEIM_function : public DEIM<fvScalarMatrix>
         }
 
         PtrList<volScalarField> fieldsA;
+        autoPtr<volScalarField> fieldA;
+        autoPtr<volScalarField> fieldB;
         PtrList<volScalarField> fieldsB;
 };
 
@@ -160,6 +162,7 @@ class DEIMLaplacian: public laplacianProblem
             {
                 ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
             }
+
             else
             {
                 for (int i = 0; i < par.rows(); i++)
@@ -204,9 +207,11 @@ class DEIMLaplacian: public laplacianProblem
             DEIMmatrice = new DEIM_function(Mlist, NmodesDEIMA, NmodesDEIMB, "T_matrix");
             fvMesh& mesh  =  const_cast<fvMesh&>(T.mesh());
             // Differential Operator
-            DEIMmatrice->fieldsA = DEIMmatrice->generateSubmeshesMatrix(2, mesh, T);
+            DEIMmatrice->fieldA = autoPtr<volScalarField>(new volScalarField(
+                                      DEIMmatrice->generateSubmeshMatrix(2, mesh, T)));
+            DEIMmatrice->fieldB = autoPtr<volScalarField>(new volScalarField(
+                                      DEIMmatrice->generateSubmeshVector(2, mesh, T)));
             // Source Terms
-            DEIMmatrice->fieldsB = DEIMmatrice->generateSubmeshesVector(2, mesh, T);
             ModesTEig = Foam2Eigen::PtrList2Eigen(Tmodes);
             ModesTEig.conservativeResize(ModesTEig.rows(), NmodesT);
             ReducedMatricesA.resize(NmodesDEIMA);
