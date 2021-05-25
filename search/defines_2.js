@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['m_5fassert',['M_Assert',['../ITHACAassert_8H.html#af7024aa78cc4d1ce194c7983285ea1c9',1,'ITHACAassert.H']]],
-  ['maxbufsize',['MAXBUFSIZE',['../ITHACAstream_8H.html#a848bb0e0fe1522d44344445c43d05bec',1,'ITHACAstream.H']]]
+  ['pbstr_4230',['PBSTR',['../ITHACAregularization_8H.html#a93f03159397f25c687840129b18c972d',1,'PBSTR():&#160;ITHACAregularization.H'],['../ITHACAstream_8H.html#a93f03159397f25c687840129b18c972d',1,'PBSTR():&#160;ITHACAstream.H']]],
+  ['pbwidth_4231',['PBWIDTH',['../ITHACAregularization_8H.html#a69793e71975c25754a8236df29896e15',1,'PBWIDTH():&#160;ITHACAregularization.H'],['../ITHACAstream_8H.html#a69793e71975c25754a8236df29896e15',1,'PBWIDTH():&#160;ITHACAstream.H']]]
 ];

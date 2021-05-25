@@ -5,12 +5,12 @@ var indexSectionsWithContent =
   2: "cefis",
   3: "01bcdefgiklmnprstuw",
   4: "_abcdefghiklmnopqrstuvw~",
-  5: "_abcdefghiklmnopqrstuvwxyz",
+  5: "_abcdefghijklmnopqrstuvwxyz",
   6: "ijsv",
   7: "cfh",
   8: "bfhimv",
   9: "o",
-  10: "_cmp",
+  10: "_mp",
   11: "i"
 };
 
