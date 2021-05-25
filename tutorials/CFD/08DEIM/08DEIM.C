@@ -58,18 +58,20 @@ class DEIM_function : public DEIM<volScalarField>
         }
         Eigen::VectorXd onlineCoeffs(Eigen::MatrixXd mu)
         {
-            theta.resize(fields.size());
+            theta.resize(magicPoints().size());
+            auto f = evaluate_expression(subField(), mu);
 
-            for (int i = 0; i < fields.size(); i++)
+            for (int i = 0; i < magicPoints().size(); i++)
             {
-                double on_coeff = evaluate_expression(fields[i], mu)[localMagicPoints[i]];
-                theta(i) = on_coeff;
+                // double on_coeff = f[localMagicPoints[i]];
+                theta(i) = f[localMagicPoints[i]];
             }
 
             return theta;
         }
 
         PtrList<volScalarField> fields;
+        autoPtr<volScalarField> subField;
 };
 
 int main(int argc, char* argv[])
@@ -121,7 +123,8 @@ int main(int argc, char* argv[])
     // Create DEIM object with given number of basis functions
     DEIM_function c(Sp, NDEIM, "Gaussian_function", S.name());
     // Generate the submeshes with the depth of the layer
-    c.fields = c.generateSubmeshes(2, mesh, S);
+    c.subField = autoPtr<volScalarField>(new volScalarField(c.generateSubmeshes(2,
+                                         mesh, S)));
     // Define a new online parameter
     Eigen::MatrixXd par_new(2, 1);
     par_new(0, 0) = 0;
