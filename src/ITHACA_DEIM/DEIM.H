@@ -116,8 +116,11 @@ class DEIM
         List<Eigen::SparseMatrix<double>> UA;
         Eigen::MatrixXd UB;
 
-        /// Indices of the magic points
-        List<label> magicPoints;
+        autoPtr<IOList<label>> magicPoints;
+        autoPtr<IOList<labelList>> totalMagicPoints;
+        autoPtr<IOList<label>> uniqueMagicPoints;
+        word Folder;
+
         List<Pair <label >> magicPointsA;
         List<label> magicPointsB;
         List<Pair<label>> xyz_A;
@@ -134,6 +137,7 @@ class DEIM
         Eigen::SparseMatrix<double> PB;
 
         /// List of submeshes
+        autoPtr<fvMeshSubset> submesh;
         PtrList<fvMeshSubset> submeshList;
         PtrList<fvMeshSubset> submeshListA;
         PtrList<fvMeshSubset> submeshListB;
@@ -149,8 +153,8 @@ class DEIM
         /// @param      mesh    The mesh of the problem
         ///
         template <class S>
-        PtrList<S> generateSubmeshes(label layers, fvMesh& mesh, S field,
-                                     label secondTime = 0);
+        S generateSubmeshes(label layers, fvMesh& mesh, S field,
+                            label secondTime = 0);
 
         ///
         /// @brief      { function_description }
@@ -213,6 +217,17 @@ class DEIM
         ///
         List<label> global2local(List<label>& points,
                                  PtrList<fvMeshSubset>& submeshList);
+
+        ///
+        /// @brief      Get local indices in the submeshe from indices in the global ones
+        ///
+        /// @param      points       The points
+        /// @param      submesh      The submesh
+        ///
+        /// @return     The local indices
+        ///
+        List<label> global2local(List<label>& points,
+                                 fvMeshSubset& submesh);
 
         ///
         /// @brief      Get local indices in the submeshes from indices in the global ones
