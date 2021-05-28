@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <tuple>
 
 const int Nx = 128;
 const int Ny = 64;
@@ -77,21 +78,21 @@ bool ReadAndWriteNPYMatrix()
     cnpy::save(TI_inp, "ten_int.npy");
     Eigen::Tensor<int, 3> TI_out(2, 3, 4);
     cnpy::load(TI_out, "ten_int.npy");
-    double difference_TI = ((Eigen::Tensor<int, 0>)(TI_out-TI_inp).sum())(0);
+    double difference_TI = ((Eigen::Tensor<int, 0>)(TI_out - TI_inp).sum())(0);
     //
     Eigen::Tensor<double, 3> TD_inp(2, 3, 4);
     TD_inp.setRandom();
     cnpy::save(TD_inp, "ten_dou.npy");
     Eigen::Tensor<double, 3> TD_out(2, 3, 4);
     cnpy::load(TD_out, "ten_dou.npy");
-    double difference_TD = ((Eigen::Tensor<double, 0>)(TD_out-TD_inp).sum())(0);
+    double difference_TD = ((Eigen::Tensor<double, 0>)(TD_out - TD_inp).sum())(0);
     //
     Eigen::Tensor<float, 3> TF_inp(2, 3, 4);
     TF_inp.setRandom();
     cnpy::save(TF_inp, "ten_flo.npy");
     Eigen::Tensor<float, 3> TF_out(2, 3, 4);
     cnpy::load(TF_out, "ten_flo.npy");
-    double difference_TF = ((Eigen::Tensor<float, 0>)(TF_out-TF_inp).sum())(0);
+    double difference_TF = ((Eigen::Tensor<float, 0>)(TF_out - TF_inp).sum())(0);
 
     if (difference_I == 0 && difference_D == 0 && difference_F == 0 &&
             difference_IV == 0 && difference_DV == 0 && difference_FV == 0
@@ -164,9 +165,22 @@ int cnpyTEST()
     return 0;
 }
 
+int TestSparseMatrix()
+{
+    Eigen::SparseMatrix<double> mat;
+    cnpy::load(mat,"forCnpy.npz");
+    std::cout << mat << std::endl;
+    cnpy::save(mat,"forNpy.npz");
+    Eigen::SparseMatrix<double> mat2;
+    cnpy::load(mat2,"forNpy.npz");
+    std::cout << mat2 << std::endl;
+    return 0;
+}
+
 int main(int argc, char **argv)
 {
     ReadAndWriteTensor();
     ReadAndWriteNPYMatrix();
+    TestSparseMatrix();
     return 0;
 }

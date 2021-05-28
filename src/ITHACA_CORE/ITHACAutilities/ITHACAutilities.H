@@ -112,5 +112,19 @@ bool isInteger(double ratio);
 /// @return     1 if the case is turbulent
 ///
 bool isTurbulent();
+
+//------------------------------------------------------------------------------
+/// @brief      Combine a list of list into a single list with unique elements
+///
+/// @param      doubleList  The list of list
+///
+/// @tparam     T           type of element label, double, etc...
+///
+/// @return     list in unique order
+///
+template<typename T>
+List<T> combineList(List<List<T>>& doubleList);
+
+
 };
 #endif

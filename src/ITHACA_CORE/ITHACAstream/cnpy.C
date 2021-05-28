@@ -508,6 +508,60 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
     return tens;
 }
 
+template<typename T>
+Eigen::SparseMatrix<T> cnpy::load(Eigen::SparseMatrix<T>& smatrix,
+                                  const std::string fname)
+{
+    auto d1 = cnpy::npz_load(fname, "data");
+    auto d2 = cnpy::npz_load(fname, "indices");
+    auto d3 = cnpy::npz_load(fname, "indptr");
+    auto d4 = cnpy::npz_load(fname, "shape");
+    double* data = reinterpret_cast<double*>(d1.data);
+    int32_t* indices = reinterpret_cast<int32_t*>(d2.data);
+    int32_t* indptr = reinterpret_cast<int32_t*>(d3.data);
+    int* shape = reinterpret_cast<int*>(d4.data);
+    int rows, cols;
+    M_Assert(d4.shape[0] == 2, "Method works only with 2-D matrices");
+    rows = (int) shape[0];
+    cols = (int) d3.shape[0] - 1;
+    int nel = d1.shape[0];
+    smatrix.resize(rows, cols);
+    smatrix.reserve(nel);
+    typedef Eigen::Triplet<T> Trip;
+    std::vector<Trip> tripletList;
+
+    for (int i = 0; i < cols; ++i)
+    {
+        for (int j = indptr[i]; j < indptr[i + 1]; j++)
+        {
+            tripletList.push_back(Trip(indices[j], i, (T) data[j]));
+        }
+    }
+
+    smatrix.setFromTriplets(tripletList.begin(), tripletList.end());
+    return smatrix;
+}
+
+template<typename T>
+void cnpy::save(const Eigen::SparseMatrix<T>& mat, const std::string fname)
+{
+    unsigned int shape1[] = {mat.nonZeros()};
+    unsigned int shape2[] = {mat.outerSize() + 1};
+    unsigned int shape3[] = {2};
+    unsigned int shape4[] = {256};
+    cnpy::npz_save(fname, "data", mat.valuePtr(), shape1, 1, "w");
+    cnpy::npz_save(fname, "indices", mat.innerIndexPtr(), shape1, 1, "a");
+    cnpy::npz_save(fname, "indptr", mat.outerIndexPtr(), shape2, 1, "a");
+    int64_t t1 = mat.rows();
+    int64_t t2 = mat.cols();
+    int64_t* shape = new int64_t[2];
+    shape[0] = mat.rows();
+    shape[1] = mat.cols();
+    cnpy::npz_save(fname, "shape", shape, shape3, 1, "a");
+    char myVar2 = 'abc';
+    cnpy::npz_save(fname, "format", &myVar2, shape4, 1, "a");
+}
+
 template void cnpy::save(const Eigen::MatrixXi& mat, const std::string fname);
 template Eigen::MatrixXi cnpy::load(Eigen::MatrixXi& mat,
                                     const std::string fname, std::string order);
@@ -532,6 +586,10 @@ template Eigen::VectorXf cnpy::load(Eigen::VectorXf& mat,
 template void cnpy::save(const Eigen::VectorXcd& mat, const std::string fname);
 template Eigen::VectorXcd cnpy::load(Eigen::VectorXcd& mat,
                                      const std::string fname, std::string order);
+template void cnpy::save(const Eigen::SparseMatrix<double>& mat,
+                         const std::string fname);
+template Eigen::SparseMatrix<double> cnpy::load(Eigen::SparseMatrix<double>&
+        smatrix, const std::string fname);
 
 template void cnpy::save(const Eigen::Tensor<int, 3>& mat,
                          const std::string fname);
