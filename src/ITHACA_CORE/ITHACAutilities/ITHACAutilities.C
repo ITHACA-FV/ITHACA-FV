@@ -107,4 +107,30 @@ bool isTurbulent()
     return checkTurb;
 }
 
+template<typename T>
+List<T> combineList(List<List<T>>& doubleList)
+{
+    List<T> a = ListListOps::combine<List<T>>(doubleList,
+                accessOp<List<T>>());
+#if OPENFOAM >= 1812
+    inplaceUniqueSort(a);
+#else
+    labelList order;
+    uniqueOrder(a, order);
+    List<T> b(order.size());
+
+    for (label i = 0; i < order.size(); ++i)
+    {
+        b[i] = a[order[i]];
+    }
+
+    a.resize(order.size());
+    a = b;
+#endif
+    return a;
+}
+
+template List<label> combineList(List<List<label>>& doubleList);
+
+
 }
