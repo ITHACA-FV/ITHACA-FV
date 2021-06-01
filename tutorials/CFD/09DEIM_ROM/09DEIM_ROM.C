@@ -162,7 +162,6 @@ class DEIMLaplacian: public laplacianProblem
             {
                 ITHACAstream::read_fields(Tfield, T, "./ITHACAoutput/Offline/");
             }
-
             else
             {
                 for (int i = 0; i < par.rows(); i++)
