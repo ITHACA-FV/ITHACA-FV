@@ -95,7 +95,6 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
         cnpy::save(MatrixOnline, Folder + "/MatrixOnline.npy");
         magicPoints().write();
     }
-
     else
     {
         cnpy::load(MatrixOnline, Folder + "/MatrixOnline.npy");
@@ -304,12 +303,10 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
         {
             MatrixOnlineB = Eigen::MatrixXd::Zero(std::get<1>(Matrix_Modes)[0].rows(), 1);
         }
-
         else if (MaxModesB != 1)
         {
             MatrixOnlineB = UB * ((PB.transpose() * UB).fullPivLu().inverse());
         }
-
         else
         {
             Eigen::MatrixXd aux = PB.transpose() * UB;
@@ -318,7 +315,7 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
 
         mkDir(FolderM + "/lhs");
         mkDir(FolderM + "/rhs");
-        ITHACAstream::save(MatrixOnlineA, FolderM , "/lhs/MatrixOnlineA");
+        ITHACAstream::save(MatrixOnlineA, FolderM, "/lhs/MatrixOnlineA");
         cnpy::save(MatrixOnlineB, FolderM + "/rhs/MatrixOnlineB.npy");
         magicPointsArow().write();
         magicPointsAcol().write();
@@ -327,7 +324,6 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
         xyz_Acol().write();
         xyz_B().write();
     }
-
     else
     {
         ITHACAstream::load(MatrixOnlineA, FolderM, "/lhs/MatrixOnlineA");
@@ -339,7 +335,7 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
 template<typename T>
 template<typename S>
 S DEIM<T>::generateSubmesh(label layers, fvMesh& mesh, S field,
-                             label secondTime)
+                           label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     totalMagicPoints = autoPtr<IOList<labelList>>
@@ -432,7 +428,7 @@ S DEIM<T>::generateSubmesh(label layers, fvMesh& mesh, S field,
 template<typename T>
 template<typename S>
 S DEIM<T>::generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
-                                   label secondTime)
+                                 label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     totalMagicPointsA = autoPtr<IOList<labelList>>
@@ -525,7 +521,7 @@ S DEIM<T>::generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
 template<typename T>
 template<typename S>
 S DEIM<T>::generateSubmeshVector(label layers, fvMesh& mesh, S field,
-                                   label secondTime)
+                                 label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     totalMagicPointsB = autoPtr<IOList<labelList>>
@@ -647,13 +643,11 @@ void DEIM<T>::check3DIndices(label& ind_rowA, label&  ind_colA, label& xyz_rowA,
     {
         xyz_rowA = 0;
     }
-
     else if (ind_rowA < Ncells * 2)
     {
         xyz_rowA = 1;
         ind_rowA = ind_rowA - Ncells;
     }
-
     else
     {
         xyz_rowA = 2;
@@ -664,13 +658,11 @@ void DEIM<T>::check3DIndices(label& ind_rowA, label&  ind_colA, label& xyz_rowA,
     {
         xyz_colA = 0;
     }
-
     else if (ind_colA < Ncells * 2)
     {
         xyz_colA = 1;
         ind_colA = ind_colA - 2 * Ncells;
     }
-
     else
     {
         xyz_colA = 2;
@@ -685,13 +677,11 @@ void DEIM<T>::check3DIndices(label& ind_rowA, label& xyz_rowA)
     {
         xyz_rowA = 0;
     }
-
     else if (ind_rowA < Ncells * 2)
     {
         xyz_rowA = 1;
         ind_rowA = ind_rowA - Ncells;
     }
-
     else
     {
         xyz_rowA = 2;

@@ -78,7 +78,6 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
                 {
                     str << "[" << setprecision(10) << matrix(i, j);
                 }
-
                 else
                 {
                     str << "," << setprecision(10) << matrix(i, j);
@@ -181,7 +180,6 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                     {
                         str << "[" << setprecision(10) << matrix[i](j, k);
                     }
-
                     else
                     {
                         str << "," << setprecision(10) << matrix[i](j, k);
@@ -197,7 +195,6 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
             str << "]])\n" << endl;
         }
     }
-
     // Matlab case
     else if (type == "matlab")
     {
@@ -224,7 +221,6 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
             str << "];" << endl;
         }
     }
-
     else if (type == "eigen")
     {
         for (int i = 0; i < matrix.size(); i++)
@@ -280,7 +276,6 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
                         str << "[" << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
                                 i)(j, k);
                     }
-
                     else
                     {
                         str << "," << setprecision(10) << Eigen::SliceFromTensor(tensor, 0,
@@ -298,7 +293,6 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
             str << "]])\n" << endl;
         }
     }
-
     // Matlab case
     else if (type == "matlab")
     {
@@ -329,7 +323,6 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
             str << "];" << endl;
         }
     }
-
     else if (type == "eigen")
     {
         for (int i = 0; i < tensor.dimension(0); i++)
@@ -462,7 +455,6 @@ void read_fields(
         {
             last_s = runTime2.times().size();
         }
-
         else
         {
             last_s = min(runTime2.times().size(), n_snap + 2);
@@ -486,7 +478,6 @@ void read_fields(
 
         std::cout << std::endl;
     }
-
     else
     {
         Info << "######### Reading the Data for " << Name << " #########" <<
@@ -558,7 +549,6 @@ void read_fields(
         {
             last_s = runTime2.times().size();
         }
-
         else
         {
             last_s = min(runTime2.times().size(), n_snap + 2);
@@ -582,7 +572,6 @@ void read_fields(
 
         std::cout << std::endl;
     }
-
     else
     {
         Info << "######### Reading the Data for " << field.name() << " #########" <<
@@ -685,7 +674,8 @@ int numberOfFiles(word folder, word MatrixName, word ext)
 {
     int number_of_files = 0;
     std::ifstream in;
-    in.open(folder + "/" + MatrixName + name(0) + ext, std::ios::in | std::ios::binary);
+    in.open(folder + "/" + MatrixName + name(0) + ext,
+            std::ios::in | std::ios::binary);
     Info << folder + "/" + MatrixName + name(0) + ext << endl;
 
     while (in.good())
@@ -743,7 +733,6 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         act.writeHeader(os);
         os << act << endl;
     }
-
     else
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
@@ -784,7 +773,6 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         s.writeHeader(os);
         os << s << endl;
     }
-
     else
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
@@ -820,7 +808,6 @@ void writePoints(pointField points, fileName folder,
            << endl;
         os << points << endl;
     }
-
     else
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
@@ -861,7 +848,8 @@ void save(const List<Eigen::SparseMatrix<T>>& MatrixList, word folder,
 }
 
 template<typename T>
-void load(List<Eigen::SparseMatrix<T>>& MatrixList, word folder,word MatrixName)
+void load(List<Eigen::SparseMatrix<T>>& MatrixList, word folder,
+          word MatrixName)
 {
     int number_of_files = numberOfFiles(folder, MatrixName, ".npz");
     std::cout << "Reading the Matrix " + folder + "/" + MatrixName << std::endl;
@@ -935,7 +923,8 @@ template void exportList(Field<vector>& list, word folder,
 template void save(const List<Eigen::SparseMatrix<double>>& MatrixList,
                    word folder, word MatrixName);
 
-template void load(List<Eigen::SparseMatrix<double>>& MatrixList, word folder, word MatrixName);
+template void load(List<Eigen::SparseMatrix<double>>& MatrixList, word folder,
+                   word MatrixName);
 
 }
 

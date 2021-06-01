@@ -196,11 +196,11 @@ class DEIM
         ///
         template <class S>
         S generateSubmesh(label layers, fvMesh& mesh, S field,
-                            label secondTime = 0);
+                          label secondTime = 0);
 
         //----------------------------------------------------------------------
         /// @brief      Function to generate the submesh for the nonlinear matrix function case (RHS)
-        ///             
+        ///
         /// @param[in]  layers      Number of layers used to generate each submesh
         /// @param      mesh        The mesh of the problem
         /// @param[in]  field       The field used for the submesh
@@ -212,11 +212,11 @@ class DEIM
         ///
         template <class S>
         S generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
-                                  label secondTime = 0);
+                                label secondTime = 0);
 
         //----------------------------------------------------------------------
         /// @brief      Function to generate the submesh for the nonlinear matrix function case (LHS)
-        ///             
+        ///
         /// @param[in]  layers      Number of layers used to generate each submesh
         /// @param      mesh        The mesh of the problem
         /// @param[in]  field       The field used for the submesh
@@ -227,7 +227,7 @@ class DEIM
         /// @return     return field in the submesh
         template <class S>
         S generateSubmeshVector(label layers, fvMesh& mesh, S field,
-                                  label secondTime = 0);
+                                label secondTime = 0);
 
         //----------------------------------------------------------------------
         /// @brief      Function to generate a a subfield in the location of the magic points computed for the Matrix (LHS)
