@@ -115,115 +115,230 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
     runSubMeshB(false)
 
 {
-    Eigen::MatrixXd AA;
-    Eigen::VectorXd bA;
-    Eigen::MatrixXd cA;
-    Eigen::SparseMatrix<double> rA;
-    Eigen::VectorXd rhoA(1);
-    Matrix_Modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModesA, MaxModesB,
-                                        MatrixName);
-    Ncells = getNcells(std::get<1>(Matrix_Modes)[0].rows());
-    label ind_rowA, ind_colA, xyz_rowA, xyz_colA;
-    ind_rowA = ind_colA = xyz_rowA = xyz_colA = 0;
-    double maxA = EigenFunctions::max(std::get<0>(Matrix_Modes)[0], ind_rowA,
-                                      ind_colA);
-    label ind_rowAOF = ind_rowA;
-    label ind_colAOF = ind_colA;
-    check3DIndices(ind_rowAOF, ind_colAOF, xyz_rowA, xyz_colA);
-    Pair <label> indA(ind_rowAOF, ind_colAOF);
-    Pair <label> xyzA(xyz_rowA, xyz_colA);
-    xyz_A.append(xyzA);
-    rhoA(0) = maxA;
-    magicPointsA.append(indA);
-    UA.append(std::get<0>(Matrix_Modes)[0]);
-    Eigen::SparseMatrix<double> Pnow(std::get<0>(Matrix_Modes)[0].rows(),
-                                     std::get<0>(Matrix_Modes)[0].cols());
-    Pnow.insert(ind_rowA, ind_colA) = 1;
-    PA.append(Pnow);
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+    FolderM = "ITHACAoutput/DEIM/" + MatrixName;
+    magicPointsArow = autoPtr<IOList<label>>
+                      (
+                          new IOList<label>
+                          (
+                              IOobject
+                              (
+                                  "magicPointsArow",
+                                  para->runTime.time().constant(),
+                                  "../" + FolderM,
+                                  para->mesh,
+                                  IOobject::READ_IF_PRESENT,
+                                  IOobject::NO_WRITE
+                              )
+                          )
+                      );
+    magicPointsAcol = autoPtr<IOList<label>>
+                      (
+                          new IOList<label>
+                          (
+                              IOobject
+                              (
+                                  "magicPointsAcol",
+                                  para->runTime.time().constant(),
+                                  "../" + FolderM,
+                                  para->mesh,
+                                  IOobject::READ_IF_PRESENT,
+                                  IOobject::NO_WRITE
+                              )
+                          )
+                      );
+    magicPointsB = autoPtr<IOList<label>>
+                   (
+                       new IOList<label>
+                       (
+                           IOobject
+                           (
+                               "magicPointsB",
+                               para->runTime.time().constant(),
+                               "../" + FolderM,
+                               para->mesh,
+                               IOobject::READ_IF_PRESENT,
+                               IOobject::NO_WRITE
+                           )
+                       )
+                   );
+    xyz_Arow = autoPtr<IOList<label>>
+               (
+                   new IOList<label>
+                   (
+                       IOobject
+                       (
+                           "xyz_Arow",
+                           para->runTime.time().constant(),
+                           "../" + FolderM,
+                           para->mesh,
+                           IOobject::READ_IF_PRESENT,
+                           IOobject::NO_WRITE
+                       )
+                   )
+               );
+    xyz_Acol = autoPtr<IOList<label>>
+               (
+                   new IOList<label>
+                   (
+                       IOobject
+                       (
+                           "xyz_Acol",
+                           para->runTime.time().constant(),
+                           "../" + FolderM,
+                           para->mesh,
+                           IOobject::READ_IF_PRESENT,
+                           IOobject::NO_WRITE
+                       )
+                   )
+               );
+    xyz_B = autoPtr<IOList<label>>
+            (
+                new IOList<label>
+                (
+                    IOobject
+                    (
+                        "xyz_B",
+                        para->runTime.time().constant(),
+                        "../" + FolderM,
+                        para->mesh,
+                        IOobject::READ_IF_PRESENT,
+                        IOobject::NO_WRITE
+                    )
+                )
+            );
 
-    for (label i = 1; i < MaxModesA; i++)
+    if (!(magicPointsArow().headerOk() && magicPointsAcol().headerOk() &&
+            magicPointsB().headerOk() && xyz_Arow().headerOk() &&
+            xyz_Acol().headerOk() && xyz_B().headerOk()))
     {
-        AA = EigenFunctions::innerProduct(PA, UA);
-        bA = EigenFunctions::innerProduct(PA, std::get<0>(Matrix_Modes)[i]);
-        cA = AA.fullPivLu().solve(bA);
-        rA = std::get<0>(Matrix_Modes)[i] - EigenFunctions::MVproduct(UA, cA);
-        double maxA = EigenFunctions::max(rA, ind_rowA, ind_colA);
-        rhoA.conservativeResize(i + 1);
-        rhoA(i) = maxA;
+        Eigen::MatrixXd AA;
+        Eigen::VectorXd bA;
+        Eigen::MatrixXd cA;
+        Eigen::SparseMatrix<double> rA;
+        Eigen::VectorXd rhoA(1);
+        Matrix_Modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModesA, MaxModesB,
+                                            MatrixName);
+        Ncells = getNcells(std::get<1>(Matrix_Modes)[0].rows());
+        label ind_rowA, ind_colA, xyz_rowA, xyz_colA;
+        ind_rowA = ind_colA = xyz_rowA = xyz_colA = 0;
+        double maxA = EigenFunctions::max(std::get<0>(Matrix_Modes)[0], ind_rowA,
+                                          ind_colA);
         label ind_rowAOF = ind_rowA;
         label ind_colAOF = ind_colA;
         check3DIndices(ind_rowAOF, ind_colAOF, xyz_rowA, xyz_colA);
-        Pair <label> indA(ind_rowAOF, ind_colAOF);
-        Pair <label> xyzA(xyz_rowA, xyz_colA);
-        xyz_A.append(xyzA);
-        magicPointsA.append(indA);
-        UA.append(std::get<0>(Matrix_Modes)[i]);
+        xyz_Arow().append(xyz_rowA);
+        xyz_Acol().append(xyz_colA);
+        rhoA(0) = maxA;
+        magicPointsArow().append(ind_rowAOF);
+        magicPointsAcol().append(ind_colAOF);
+        UA.append(std::get<0>(Matrix_Modes)[0]);
         Eigen::SparseMatrix<double> Pnow(std::get<0>(Matrix_Modes)[0].rows(),
                                          std::get<0>(Matrix_Modes)[0].cols());
         Pnow.insert(ind_rowA, ind_colA) = 1;
         PA.append(Pnow);
-    }
 
-    Eigen::MatrixXd Aaux = EigenFunctions::innerProduct(PA,
-                           UA).fullPivLu().inverse();
-    MatrixOnlineA = EigenFunctions::MMproduct(UA, Aaux);
-    Eigen::MatrixXd AB;
-    Eigen::VectorXd bB;
-    Eigen::VectorXd cB;
-    Eigen::VectorXd rB;
-    Eigen::VectorXd rhoB(1);
-    label ind_rowB, xyz_rowB, c1;
-    double maxB = std::get<1>(Matrix_Modes)[0].cwiseAbs().maxCoeff(&ind_rowB,
-                  &c1);
-    label ind_rowBOF = ind_rowB;
-    check3DIndices(ind_rowBOF, xyz_rowB);
-    rhoB(0) = maxB;
-    xyz_B.append(xyz_rowB);
-    magicPointsB.append(ind_rowBOF);
-    UB = std::get<1>(Matrix_Modes)[0];
-    PB.resize(UB.rows(), 1);
-    PB.insert(ind_rowB, 0) = 1;
+        for (label i = 1; i < MaxModesA; i++)
+        {
+            AA = EigenFunctions::innerProduct(PA, UA);
+            bA = EigenFunctions::innerProduct(PA, std::get<0>(Matrix_Modes)[i]);
+            cA = AA.fullPivLu().solve(bA);
+            rA = std::get<0>(Matrix_Modes)[i] - EigenFunctions::MVproduct(UA, cA);
+            double maxA = EigenFunctions::max(rA, ind_rowA, ind_colA);
+            rhoA.conservativeResize(i + 1);
+            rhoA(i) = maxA;
+            label ind_rowAOF = ind_rowA;
+            label ind_colAOF = ind_colA;
+            check3DIndices(ind_rowAOF, ind_colAOF, xyz_rowA, xyz_colA);
+            xyz_Arow().append(xyz_rowA);
+            xyz_Acol().append(xyz_colA);
+            magicPointsArow().append(ind_rowAOF);
+            magicPointsAcol().append(ind_colAOF);
+            UA.append(std::get<0>(Matrix_Modes)[i]);
+            Eigen::SparseMatrix<double> Pnow(std::get<0>(Matrix_Modes)[0].rows(),
+                                             std::get<0>(Matrix_Modes)[0].cols());
+            Pnow.insert(ind_rowA, ind_colA) = 1;
+            PA.append(Pnow);
+        }
 
-    for (label i = 1; i < MaxModesB; i++)
-    {
-        AB = PB.transpose() * UB;
-        bB = PB.transpose() * std::get<1>(Matrix_Modes)[i];
-        cB = AB.fullPivLu().solve(bB);
-        rB = std::get<1>(Matrix_Modes)[i] - UB * cB;
-        maxB = rB.cwiseAbs().maxCoeff(&ind_rowB, &c1);
-        ind_rowBOF = ind_rowB;
+        Eigen::MatrixXd Aaux = EigenFunctions::innerProduct(PA,
+                               UA).fullPivLu().inverse();
+        MatrixOnlineA = EigenFunctions::MMproduct(UA, Aaux);
+        Eigen::MatrixXd AB;
+        Eigen::VectorXd bB;
+        Eigen::VectorXd cB;
+        Eigen::VectorXd rB;
+        Eigen::VectorXd rhoB(1);
+        label ind_rowB, xyz_rowB, c1;
+        double maxB = std::get<1>(Matrix_Modes)[0].cwiseAbs().maxCoeff(&ind_rowB,
+                      &c1);
+        label ind_rowBOF = ind_rowB;
         check3DIndices(ind_rowBOF, xyz_rowB);
-        xyz_B.append(xyz_rowB);
-        PB.conservativeResize((std::get<1>(Matrix_Modes)[i]).size(), i + 1);
-        PB.insert(ind_rowB, i) = 1;
-        UB.conservativeResize((std::get<1>(Matrix_Modes)[i]).size(), i + 1);
-        UB.col(i) =  std::get<1>(Matrix_Modes)[i];
-        rhoB.conservativeResize(i + 1);
-        rhoB(i) = maxB;
-        magicPointsB.append(ind_rowBOF);
-    }
+        rhoB(0) = maxB;
+        xyz_B().append(xyz_rowB);
+        magicPointsB().append(ind_rowBOF);
+        UB = std::get<1>(Matrix_Modes)[0];
+        PB.resize(UB.rows(), 1);
+        PB.insert(ind_rowB, 0) = 1;
 
-    if (MaxModesB == 1 && std::get<1>(Matrix_Modes)[0].norm() < 1e-8)
-    {
-        MatrixOnlineB = Eigen::MatrixXd::Zero(std::get<1>(Matrix_Modes)[0].rows(), 1);
-    }
+        for (label i = 1; i < MaxModesB; i++)
+        {
+            AB = PB.transpose() * UB;
+            bB = PB.transpose() * std::get<1>(Matrix_Modes)[i];
+            cB = AB.fullPivLu().solve(bB);
+            rB = std::get<1>(Matrix_Modes)[i] - UB * cB;
+            maxB = rB.cwiseAbs().maxCoeff(&ind_rowB, &c1);
+            ind_rowBOF = ind_rowB;
+            check3DIndices(ind_rowBOF, xyz_rowB);
+            xyz_B().append(xyz_rowB);
+            PB.conservativeResize((std::get<1>(Matrix_Modes)[i]).size(), i + 1);
+            PB.insert(ind_rowB, i) = 1;
+            UB.conservativeResize((std::get<1>(Matrix_Modes)[i]).size(), i + 1);
+            UB.col(i) =  std::get<1>(Matrix_Modes)[i];
+            rhoB.conservativeResize(i + 1);
+            rhoB(i) = maxB;
+            magicPointsB().append(ind_rowBOF);
+        }
 
-    else if (MaxModesB != 1)
-    {
-        MatrixOnlineB = UB * ((PB.transpose() * UB).fullPivLu().inverse());
+        if (MaxModesB == 1 && std::get<1>(Matrix_Modes)[0].norm() < 1e-8)
+        {
+            MatrixOnlineB = Eigen::MatrixXd::Zero(std::get<1>(Matrix_Modes)[0].rows(), 1);
+        }
+
+        else if (MaxModesB != 1)
+        {
+            MatrixOnlineB = UB * ((PB.transpose() * UB).fullPivLu().inverse());
+        }
+
+        else
+        {
+            Eigen::MatrixXd aux = PB.transpose() * UB;
+            MatrixOnlineB = UB * 1 / aux(0, 0);
+        }
+
+        mkDir(FolderM + "/lhs");
+        mkDir(FolderM + "/rhs");
+        ITHACAstream::save(MatrixOnlineA, FolderM , "/lhs/MatrixOnlineA");
+        cnpy::save(MatrixOnlineB, FolderM + "/rhs/MatrixOnlineB.npy");
+        magicPointsArow().write();
+        magicPointsAcol().write();
+        magicPointsB().write();
+        xyz_Arow().write();
+        xyz_Acol().write();
+        xyz_B().write();
     }
 
     else
     {
-        Eigen::MatrixXd aux = PB.transpose() * UB;
-        MatrixOnlineB = UB * 1 / aux(0, 0);
+        ITHACAstream::load(MatrixOnlineA, FolderM, "/lhs/MatrixOnlineA");
+        cnpy::load(MatrixOnlineB, FolderM + "/rhs/MatrixOnlineB.npy");
     }
 }
 
 
 template<typename T>
 template<typename S>
-S DEIM<T>::generateSubmeshes(label layers, fvMesh& mesh, S field,
+S DEIM<T>::generateSubmesh(label layers, fvMesh& mesh, S field,
                              label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -283,23 +398,7 @@ S DEIM<T>::generateSubmeshes(label layers, fvMesh& mesh, S field,
             totalMagicPoints().append(indices);
         }
 
-        labelList a = ListListOps::combine<labelList>(totalMagicPoints(),
-                      accessOp<labelList>());
-#if OPENFOAM >= 1812
-        inplaceUniqueSort(a);
-#else
-        labelList order;
-        uniqueOrder(a, order);
-        labelList b(order.size());
-
-        for (label i = 0; i < order.size(); ++i)
-        {
-            b[i] = a[order[i]];
-        }
-        a.resize(order.size());
-        a = b;
-#endif
-        uniqueMagicPoints() = a;
+        uniqueMagicPoints() = ITHACAutilities::combineList(totalMagicPoints());
     }
 
 #if OPENFOAM >= 1812
@@ -332,11 +431,40 @@ S DEIM<T>::generateSubmeshes(label layers, fvMesh& mesh, S field,
 
 template<typename T>
 template<typename S>
-PtrList<S> DEIM<T>::generateSubmeshesMatrix(label layers, fvMesh& mesh, S field,
-        label secondTime)
+S DEIM<T>::generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
+                                   label secondTime)
 {
-    fvMeshSubset* submesh;
-    PtrList<S> fieldsA;
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+    totalMagicPointsA = autoPtr<IOList<labelList>>
+                        (
+                            new IOList<labelList>
+                            (
+                                IOobject
+                                (
+                                    "totalMagicPointsA",
+                                    para->runTime.time().constant(),
+                                    "../" + FolderM,
+                                    para->mesh,
+                                    IOobject::READ_IF_PRESENT,
+                                    IOobject::NO_WRITE
+                                )
+                            )
+                        );
+    uniqueMagicPointsA = autoPtr<IOList<label>>
+                         (
+                             new IOList<label>
+                             (
+                                 IOobject
+                                 (
+                                     "uniqueMagicPointsA",
+                                     para->runTime.time().constant(),
+                                     "../" + FolderM,
+                                     para->mesh,
+                                     IOobject::READ_IF_PRESENT,
+                                     IOobject::NO_WRITE
+                                 )
+                             )
+                         );
     List<label> indices;
     volScalarField Indici
     (
@@ -352,156 +480,85 @@ PtrList<S> DEIM<T>::generateSubmeshesMatrix(label layers, fvMesh& mesh, S field,
         dimensionedScalar(MatrixName + "_A_indices", dimensionSet(0, 0, 0, 0, 0, 0, 0),
                           Foam::scalar(0))
     );
+    submeshA = autoPtr<fvMeshSubset>(new fvMeshSubset(mesh));
 
-    if (!secondTime)
+    for (label i = 0; i < magicPointsArow().size(); i++)
     {
-        Indici = Indici * 0;
-    }
-
-    fieldsA.resize(0);
-
-    for (label i = 0; i < magicPointsA.size(); i++)
-    {
-        submesh = new fvMeshSubset(mesh);
-        indices = ITHACAutilities::getIndices(mesh, magicPointsA[i].first(), layers);
-        indices.append(ITHACAutilities::getIndices(mesh, magicPointsA[i].second(),
+        indices = ITHACAutilities::getIndices(mesh, magicPointsArow()[i], layers);
+        indices.append(ITHACAutilities::getIndices(mesh, magicPointsAcol()[i],
                        layers));
+        totalMagicPointsA().append(indices);
+    }
 
-        if (!secondTime)
-        {
-            ITHACAutilities::assignONE(Indici, indices);
-        }
-
-        std::cout.setstate(std::ios_base::failbit);
+    uniqueMagicPointsA() = ITHACAutilities::combineList(totalMagicPointsA());
 #if OPENFOAM >= 1812
-        submesh->setCellSubset(indices);
+    submeshA->setCellSubset(uniqueMagicPointsA());
 #else
-        submesh->setLargeCellSubset(indices);
+    submeshA->setLargeCellSubset(uniqueMagicPointsA());
 #endif
-        submesh->subMesh().fvSchemes::readOpt() = mesh.fvSchemes::readOpt();
-        submesh->subMesh().fvSolution::readOpt() = mesh.fvSolution::readOpt();
-        submesh->subMesh().fvSchemes::read();
-        submesh->subMesh().fvSolution::read();
-        std::cout.clear();
-        S f = submesh->interpolate(field);
-        fieldsA.append(tmp<S>(f));
-
-        if (!secondTime)
-        {
-            submeshListA.append(submesh);
-        }
-    }
+    submeshA->subMesh().fvSchemes::readOpt() = mesh.fvSchemes::readOpt();
+    submeshA->subMesh().fvSolution::readOpt() = mesh.fvSolution::readOpt();
+    submeshA->subMesh().fvSchemes::read();
+    submeshA->subMesh().fvSolution::read();
+    std::cout.clear();
+    S f = submeshA->interpolate(field);
+    scalar zerodot25 = 0.25;
+    ITHACAutilities::assignIF(Indici, zerodot25,
+                              uniqueMagicPointsA().List<label>::clone()());
+    ITHACAutilities::assignONE(Indici, magicPointsArow());
+    ITHACAutilities::assignONE(Indici, magicPointsAcol());
 
     if (!secondTime)
     {
-        for (label i = 0; i < magicPointsA.size(); i++)
-        {
-            Indici.ref()[magicPointsA[i].first()] = 10;
-            Indici.ref()[magicPointsA[i].second()] = 10;
-        }
-    }
-
-    if (!secondTime)
-    {
-        localMagicPointsA = global2local(magicPointsA, submeshListA);
+        localMagicPointsArow = global2local(magicPointsArow(), submeshA());
+        localMagicPointsAcol = global2local(magicPointsAcol(), submeshA());
         ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + MatrixName
                                     );
+        totalMagicPointsA().write();
+        uniqueMagicPointsA().write();
     }
 
     runSubMeshA = true;
-    return fieldsA;
+    return f;
 }
 
 template<typename T>
 template<typename S>
-S DEIM<T>::generateSubmeshesMatrix2(label layers, fvMesh& mesh, S field,
-        label secondTime)
+S DEIM<T>::generateSubmeshVector(label layers, fvMesh& mesh, S field,
+                                   label secondTime)
 {
-    fvMeshSubset* submesh;
-    PtrList<S> fieldsA;
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+    totalMagicPointsB = autoPtr<IOList<labelList>>
+                        (
+                            new IOList<labelList>
+                            (
+                                IOobject
+                                (
+                                    "totalMagicPointsB",
+                                    para->runTime.time().constant(),
+                                    "../" + FolderM,
+                                    para->mesh,
+                                    IOobject::READ_IF_PRESENT,
+                                    IOobject::NO_WRITE
+                                )
+                            )
+                        );
+    uniqueMagicPointsB = autoPtr<IOList<label>>
+                         (
+                             new IOList<label>
+                             (
+                                 IOobject
+                                 (
+                                     "uniqueMagicPointsB",
+                                     para->runTime.time().constant(),
+                                     "../" + FolderM,
+                                     para->mesh,
+                                     IOobject::READ_IF_PRESENT,
+                                     IOobject::NO_WRITE
+                                 )
+                             )
+                         );
     List<label> indices;
-    volScalarField Indici
-    (
-        IOobject
-        (
-            MatrixName + "_A_indices",
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionedScalar(MatrixName + "_A_indices", dimensionSet(0, 0, 0, 0, 0, 0, 0),
-                          Foam::scalar(0))
-    );
-
-    if (!secondTime)
-    {
-        Indici = Indici * 0;
-    }
-
-    fieldsA.resize(0);
-
-    for (label i = 0; i < magicPointsA.size(); i++)
-    {
-        submesh = new fvMeshSubset(mesh);
-        indices = ITHACAutilities::getIndices(mesh, magicPointsA[i].first(), layers);
-        indices.append(ITHACAutilities::getIndices(mesh, magicPointsA[i].second(),
-                       layers));
-
-        if (!secondTime)
-        {
-            ITHACAutilities::assignONE(Indici, indices);
-        }
-
-        std::cout.setstate(std::ios_base::failbit);
-#if OPENFOAM >= 1812
-        submesh->setCellSubset(indices);
-#else
-        submesh->setLargeCellSubset(indices);
-#endif
-        submesh->subMesh().fvSchemes::readOpt() = mesh.fvSchemes::readOpt();
-        submesh->subMesh().fvSolution::readOpt() = mesh.fvSolution::readOpt();
-        submesh->subMesh().fvSchemes::read();
-        submesh->subMesh().fvSolution::read();
-        std::cout.clear();
-        S f = submesh->interpolate(field);
-        fieldsA.append(tmp<S>(f));
-
-        if (!secondTime)
-        {
-            submeshListA.append(submesh);
-        }
-    }
-
-    if (!secondTime)
-    {
-        for (label i = 0; i < magicPointsA.size(); i++)
-        {
-            Indici.ref()[magicPointsA[i].first()] = 10;
-            Indici.ref()[magicPointsA[i].second()] = 10;
-        }
-    }
-
-    if (!secondTime)
-    {
-        localMagicPointsA = global2local(magicPointsA, submeshListA);
-        ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + MatrixName
-                                    );
-    }
-
-    runSubMeshA = true;
-    return field;
-}
-
-template<typename T>
-template<typename S>
-PtrList<S> DEIM<T>::generateSubmeshesVector(label layers, fvMesh& mesh, S field,
-        label secondTime)
-{
-    fvMeshSubset* submesh;
-    List<label> indices;
-    PtrList<S> fieldsB;
     volScalarField Indici
     (
         IOobject
@@ -513,87 +570,53 @@ PtrList<S> DEIM<T>::generateSubmeshesVector(label layers, fvMesh& mesh, S field,
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar(MatrixName + "_A_indices", dimensionSet(0, 0, 0, 0, 0, 0, 0),
+        dimensionedScalar(MatrixName + "_B_indices", dimensionSet(0, 0, 0, 0, 0, 0, 0),
                           Foam::scalar(0))
     );
+    submeshB = autoPtr<fvMeshSubset>(new fvMeshSubset(mesh));
 
-    if (!secondTime)
+    for (label i = 0; i < magicPointsB().size(); i++)
     {
-        Indici = Indici * 0;
-    }
-
-    fieldsB.resize(0);
-
-    for (label i = 0; i < magicPointsB.size(); i++)
-    {
-        submesh = new fvMeshSubset(mesh);
-        indices = ITHACAutilities::getIndices(mesh, magicPointsB[i], layers);
+        indices = ITHACAutilities::getIndices(mesh, magicPointsB()[i], layers);
+        totalMagicPointsB().append(indices);
 
         if (!secondTime)
         {
             ITHACAutilities::assignONE(Indici, indices);
         }
+    }
 
-        std::cout.setstate(std::ios_base::failbit);
+    uniqueMagicPointsB() = ITHACAutilities::combineList(totalMagicPointsB());
+    std::cout.setstate(std::ios_base::failbit);
 #if OPENFOAM >= 1812
-        submesh->setCellSubset(indices);
+    submeshB->setCellSubset(uniqueMagicPointsB());
 #else
-        submesh->setLargeCellSubset(indices);
+    submeshB->setLargeCellSubset(uniqueMagicPointsB());
 #endif
-        submesh->subMesh().fvSchemes::readOpt() = mesh.fvSchemes::readOpt();
-        submesh->subMesh().fvSolution::readOpt() = mesh.fvSolution::readOpt();
-        submesh->subMesh().fvSchemes::read();
-        submesh->subMesh().fvSolution::read();
-        std::cout.clear();
-        S f = submesh->interpolate(field);
-        fieldsB.append(tmp<S>(f));
-
-        if (!secondTime)
-        {
-            submeshListB.append(submesh);
-        }
-    }
+    submeshB->subMesh().fvSchemes::readOpt() = mesh.fvSchemes::readOpt();
+    submeshB->subMesh().fvSolution::readOpt() = mesh.fvSolution::readOpt();
+    submeshB->subMesh().fvSchemes::read();
+    submeshB->subMesh().fvSolution::read();
+    std::cout.clear();
+    S f = submeshB->interpolate(field);
+    scalar zerodot25 = 0.25;
+    ITHACAutilities::assignIF(Indici, zerodot25,
+                              uniqueMagicPointsB().List<label>::clone()());
+    ITHACAutilities::assignONE(Indici, magicPointsB());
 
     if (!secondTime)
     {
-        for (label i = 0; i < magicPointsB.size(); i++)
-        {
-            Indici.ref()[magicPointsB[i]] = 10;
-        }
-    }
-
-    if (!secondTime)
-    {
-        localMagicPointsB = global2local(magicPointsB, submeshListB);
+        localMagicPointsB = global2local(magicPointsB(), submeshB());
         ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + MatrixName
                                     );
+        totalMagicPointsB().write();
+        uniqueMagicPointsB().write();
     }
 
     runSubMeshB = true;
-    return fieldsB;
+    return f;
 }
 
-
-template<typename T>
-List<label> DEIM<T>::global2local(List<label>& points,
-                                  PtrList<fvMeshSubset>& submeshList)
-{
-    List<label> localPoints;
-
-    for (label i = 0; i < points.size(); i++)
-    {
-        for (label j = 0; j < submeshList[i].cellMap().size(); j++)
-        {
-            if (submeshList[i].cellMap()[j] == points[i])
-            {
-                localPoints.append(j);
-                break;
-            }
-        }
-    }
-
-    return localPoints;
-}
 
 template<typename T>
 List<label> DEIM<T>::global2local(List<label>& points,
@@ -608,36 +631,6 @@ List<label> DEIM<T>::global2local(List<label>& points,
             if (submesh.cellMap()[j] == points[i])
             {
                 localPoints.append(j);
-                break;
-            }
-        }
-    }
-
-    return localPoints;
-}
-
-template<typename T>
-List<Pair <label>> DEIM<T>::global2local(List<Pair <label>>& points,
-                PtrList<fvMeshSubset>& submeshList)
-{
-    List<Pair <label>> localPoints(points.size());
-
-    for (label i = 0; i < points.size(); i++)
-    {
-        for (label j = 0; j < submeshList[i].cellMap().size(); j++)
-        {
-            if (submeshList[i].cellMap()[j] == points[i].first())
-            {
-                localPoints[i].first() = j;
-                break;
-            }
-        }
-
-        for (label j = 0; j < submeshList[i].cellMap().size(); j++)
-        {
-            if (submeshList[i].cellMap()[j] == points[i].second())
-            {
-                localPoints[i].second() = j;
                 break;
             }
         }
@@ -708,43 +701,29 @@ void DEIM<T>::check3DIndices(label& ind_rowA, label& xyz_rowA)
 
 template<class T>
 template <class F>
-PtrList<F> DEIM<T>::generateSubFieldsMatrix(F& field)
+F DEIM<T>::generateSubFieldMatrix(F& field)
 {
-    PtrList<F> fields;
     M_Assert(runSubMeshA == true,
-             "You have to compute the magicPointsA before calling this function, try to rerun generateSubmeshesMatrix");
-
-    for (label i = 0; i < submeshListA.size(); i++)
-    {
-        F f = submeshListA[i].interpolate(field);
-        fields.append(tmp<F>(f));
-    }
-
-    return fields;
+             "You have to compute the magicPointsA before calling this function, try to rerun generateSubmeshMatrix");
+    F f = submeshA().interpolate(field);
+    return f;
 }
 
 template<typename T>
 template <class F>
-PtrList<F> DEIM<T>::generateSubFieldsVector(F& field)
+F DEIM<T>::generateSubFieldVector(F& field)
 {
     M_Assert(runSubMeshB == true,
-             "You have to compute the magicPointsB before calling this function, try to rerun generateSubmeshesVector");
-    PtrList<F> fields;
-
-    for (label i = 0; i < submeshListB.size(); i++)
-    {
-        F f = submeshListB[i].interpolate(field);
-        fields.append(tmp<F>(f));
-    }
-
-    return fields;
+             "You have to compute the magicPointsB before calling this function, try to rerun generateSubmeshVector");
+    F f = submeshB().interpolate(field);
+    return f;
 }
 
 
 template<> label DEIM<fvScalarMatrix>::getNcells(label sizeM)
 {
     label Ncells = sizeM;
-    return sizeM;
+    return Ncells;
 }
 
 template<> label DEIM<fvVectorMatrix>::getNcells(label sizeM)
@@ -765,119 +744,97 @@ template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, label MaxModes,
 template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, label MaxModes,
                                     word FunctionName, word FieldName);
 
-// Specialization for generateSubFieldsMatrix
-template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubFieldsMatrix(
+// Specialization for generateSubFieldMatrix
+template volScalarField DEIM<fvScalarMatrix>::generateSubFieldMatrix(
     volScalarField& field);
-template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubFieldsMatrix(
+template volVectorField DEIM<fvScalarMatrix>::generateSubFieldMatrix(
     volVectorField& field);
-template PtrList<surfaceScalarField>
-DEIM<fvScalarMatrix>::generateSubFieldsMatrix(surfaceScalarField& field);
-template PtrList<surfaceVectorField>
-DEIM<fvScalarMatrix>::generateSubFieldsMatrix(surfaceVectorField& field);
-template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubFieldsMatrix(
+template surfaceScalarField
+DEIM<fvScalarMatrix>::generateSubFieldMatrix(surfaceScalarField& field);
+template surfaceVectorField
+DEIM<fvScalarMatrix>::generateSubFieldMatrix(surfaceVectorField& field);
+template volScalarField DEIM<fvVectorMatrix>::generateSubFieldMatrix(
     volScalarField& field);
-template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubFieldsMatrix(
+template volVectorField DEIM<fvVectorMatrix>::generateSubFieldMatrix(
     volVectorField& field);
-template PtrList<surfaceScalarField>
-DEIM<fvVectorMatrix>::generateSubFieldsMatrix(surfaceScalarField& field);
-template PtrList<surfaceVectorField>
-DEIM<fvVectorMatrix>::generateSubFieldsMatrix(surfaceVectorField& field);
+template surfaceScalarField
+DEIM<fvVectorMatrix>::generateSubFieldMatrix(surfaceScalarField& field);
+template surfaceVectorField
+DEIM<fvVectorMatrix>::generateSubFieldMatrix(surfaceVectorField& field);
 
-// Specialization for generateSubFieldsVector
-template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubFieldsVector(
+// Specialization for generateSubFieldVector
+template volScalarField DEIM<fvScalarMatrix>::generateSubFieldVector(
     volScalarField& field);
-template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubFieldsVector(
+template volVectorField DEIM<fvScalarMatrix>::generateSubFieldVector(
     volVectorField& field);
-template PtrList<surfaceScalarField>
-DEIM<fvScalarMatrix>::generateSubFieldsVector(surfaceScalarField& field);
-template PtrList<surfaceVectorField>
-DEIM<fvScalarMatrix>::generateSubFieldsVector(surfaceVectorField& field);
-template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubFieldsVector(
+template surfaceScalarField
+DEIM<fvScalarMatrix>::generateSubFieldVector(surfaceScalarField& field);
+template surfaceVectorField
+DEIM<fvScalarMatrix>::generateSubFieldVector(surfaceVectorField& field);
+template volScalarField DEIM<fvVectorMatrix>::generateSubFieldVector(
     volScalarField& field);
-template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubFieldsVector(
+template volVectorField DEIM<fvVectorMatrix>::generateSubFieldVector(
     volVectorField& field);
-template PtrList<surfaceScalarField>
-DEIM<fvVectorMatrix>::generateSubFieldsVector(surfaceScalarField& field);
-template PtrList<surfaceVectorField>
-DEIM<fvVectorMatrix>::generateSubFieldsVector(surfaceVectorField& field);
+template surfaceScalarField
+DEIM<fvVectorMatrix>::generateSubFieldVector(surfaceScalarField& field);
+template surfaceVectorField
+DEIM<fvVectorMatrix>::generateSubFieldVector(surfaceVectorField& field);
 
-// Specialization for generateSubmeshes
-template volScalarField DEIM<volScalarField>::generateSubmeshes(
+// Specialization for generateSubmesh
+template volScalarField DEIM<volScalarField>::generateSubmesh(
     label layers, fvMesh& mesh, volScalarField field,
     label secondTime);
-template volVectorField DEIM<volVectorField>::generateSubmeshes(
+template volVectorField DEIM<volVectorField>::generateSubmesh(
     label layers, fvMesh& mesh, volVectorField field,
     label secondTime);
-template volScalarField DEIM<volVectorField>::generateSubmeshes(
+template volScalarField DEIM<volVectorField>::generateSubmesh(
     label layers, fvMesh& mesh, volScalarField field,
     label secondTime);
-template volVectorField DEIM<volScalarField>::generateSubmeshes(
+template volVectorField DEIM<volScalarField>::generateSubmesh(
     label layers, fvMesh& mesh, volVectorField field,
     label secondTime);
 
-// Specialization for generateSubmeshesVector
-template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubmeshesVector(
+// Specialization for generateSubmeshVector
+template volScalarField DEIM<fvScalarMatrix>::generateSubmeshVector(
     label layers, fvMesh& mesh, volScalarField field, label secondTime);
-template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubmeshesVector(
-    label layers, fvMesh& mesh, volVectorField field, label secondTime);
-template PtrList<surfaceScalarField>
-DEIM<fvScalarMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
-        surfaceScalarField field, label secondTime);
-template PtrList<surfaceVectorField>
-DEIM<fvScalarMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
-        surfaceVectorField field, label secondTime);
-template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubmeshesVector(
-    label layers, fvMesh& mesh, volScalarField field, label secondTime);
-template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubmeshesVector(
-    label layers, fvMesh& mesh, volVectorField field, label secondTime);
-template PtrList<surfaceScalarField>
-DEIM<fvVectorMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
-        surfaceScalarField field, label secondTime);
-template PtrList<surfaceVectorField>
-DEIM<fvVectorMatrix>::generateSubmeshesVector(label layers, fvMesh& mesh,
-        surfaceVectorField field, label secondTime);
-
-// Specialization for generateSubmeshesMatrix
-template PtrList<volScalarField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
-    label layers, fvMesh& mesh, volScalarField field, label secondTime);
-template PtrList<volVectorField> DEIM<fvScalarMatrix>::generateSubmeshesMatrix(
-    label layers, fvMesh& mesh, volVectorField field, label secondTime);
-template PtrList<surfaceScalarField>
-DEIM<fvScalarMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
-        surfaceScalarField field, label secondTime);
-template PtrList<surfaceVectorField>
-DEIM<fvScalarMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
-        surfaceVectorField field, label secondTime);
-template PtrList<volScalarField> DEIM<fvVectorMatrix>::generateSubmeshesMatrix(
-    label layers, fvMesh& mesh, volScalarField field, label secondTime);
-template PtrList<volVectorField> DEIM<fvVectorMatrix>::generateSubmeshesMatrix(
-    label layers, fvMesh& mesh, volVectorField field, label secondTime);
-template PtrList<surfaceScalarField>
-DEIM<fvVectorMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
-        surfaceScalarField field, label secondTime);
-template PtrList<surfaceVectorField>
-DEIM<fvVectorMatrix>::generateSubmeshesMatrix(label layers, fvMesh& mesh,
-        surfaceVectorField field, label secondTime);
-
-// Specialization for generateSubmeshesMatrix
-template volScalarField DEIM<fvScalarMatrix>::generateSubmeshesMatrix2(
-    label layers, fvMesh& mesh, volScalarField field, label secondTime);
-template volVectorField DEIM<fvScalarMatrix>::generateSubmeshesMatrix2(
+template volVectorField DEIM<fvScalarMatrix>::generateSubmeshVector(
     label layers, fvMesh& mesh, volVectorField field, label secondTime);
 template surfaceScalarField
-DEIM<fvScalarMatrix>::generateSubmeshesMatrix2(label layers, fvMesh& mesh,
+DEIM<fvScalarMatrix>::generateSubmeshVector(label layers, fvMesh& mesh,
         surfaceScalarField field, label secondTime);
 template surfaceVectorField
-DEIM<fvScalarMatrix>::generateSubmeshesMatrix2(label layers, fvMesh& mesh,
+DEIM<fvScalarMatrix>::generateSubmeshVector(label layers, fvMesh& mesh,
         surfaceVectorField field, label secondTime);
-template volScalarField DEIM<fvVectorMatrix>::generateSubmeshesMatrix2(
+template volScalarField DEIM<fvVectorMatrix>::generateSubmeshVector(
     label layers, fvMesh& mesh, volScalarField field, label secondTime);
-template volVectorField DEIM<fvVectorMatrix>::generateSubmeshesMatrix2(
+template volVectorField DEIM<fvVectorMatrix>::generateSubmeshVector(
     label layers, fvMesh& mesh, volVectorField field, label secondTime);
 template surfaceScalarField
-DEIM<fvVectorMatrix>::generateSubmeshesMatrix2(label layers, fvMesh& mesh,
+DEIM<fvVectorMatrix>::generateSubmeshVector(label layers, fvMesh& mesh,
         surfaceScalarField field, label secondTime);
 template surfaceVectorField
-DEIM<fvVectorMatrix>::generateSubmeshesMatrix2(label layers, fvMesh& mesh,
+DEIM<fvVectorMatrix>::generateSubmeshVector(label layers, fvMesh& mesh,
+        surfaceVectorField field, label secondTime);
+
+// Specialization for generateSubmeshMatrix
+template volScalarField DEIM<fvScalarMatrix>::generateSubmeshMatrix(
+    label layers, fvMesh& mesh, volScalarField field, label secondTime);
+template volVectorField DEIM<fvScalarMatrix>::generateSubmeshMatrix(
+    label layers, fvMesh& mesh, volVectorField field, label secondTime);
+template surfaceScalarField
+DEIM<fvScalarMatrix>::generateSubmeshMatrix(label layers, fvMesh& mesh,
+        surfaceScalarField field, label secondTime);
+template surfaceVectorField
+DEIM<fvScalarMatrix>::generateSubmeshMatrix(label layers, fvMesh& mesh,
+        surfaceVectorField field, label secondTime);
+template volScalarField DEIM<fvVectorMatrix>::generateSubmeshMatrix(
+    label layers, fvMesh& mesh, volScalarField field, label secondTime);
+template volVectorField DEIM<fvVectorMatrix>::generateSubmeshMatrix(
+    label layers, fvMesh& mesh, volVectorField field, label secondTime);
+template surfaceScalarField
+DEIM<fvVectorMatrix>::generateSubmeshMatrix(label layers, fvMesh& mesh,
+        surfaceScalarField field, label secondTime);
+template surfaceVectorField
+DEIM<fvVectorMatrix>::generateSubmeshMatrix(label layers, fvMesh& mesh,
         surfaceVectorField field, label secondTime);
 

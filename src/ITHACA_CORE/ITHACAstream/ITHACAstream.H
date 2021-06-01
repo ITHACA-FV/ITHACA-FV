@@ -457,7 +457,7 @@ void ReadDenseMatrixList(List<MatrixType>& m, word folder,
 ///
 /// @return     Number of files matching the request
 ///
-int numberOfFiles(word folder, word MatrixName);
+int numberOfFiles(word folder, word MatrixName, word ext="");
 
 //--------------------------------------------------------------------------
 /// Write points of a mesh to a file
@@ -474,6 +474,12 @@ void writePoints(pointField points, fileName folder, fileName subfolder);
 /// @param[in]  percentage  The percentage
 ///
 void printProgress(double percentage);
+
+template<typename T>
+void save(const List<Eigen::SparseMatrix<T>>& MatrixList, word folder, word MatrixName);
+
+template<typename T>
+void load(List<Eigen::SparseMatrix<T>>& MatrixList, word folder, word MatrixName);
 
 };
 

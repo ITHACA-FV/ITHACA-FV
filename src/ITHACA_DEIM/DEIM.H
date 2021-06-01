@@ -41,24 +41,24 @@ class DEIM
 {
     public:
 
-
-        ///
+        //----------------------------------------------------------------------
         /// @brief      Construct DEIM for non-linear function
         ///
         /// @param[in]  SnapShotsMatrix  The snapshots matrix
         /// @param[in]  MaxModes         The maximum number of modes
-        /// @param[in]  FunctionName     The function name
+        /// @param[in]  FunctionName     The function name, used to save the results
+        /// @param[in]  FieldName        The field name
         ///
         DEIM (PtrList<T>& SnapShotsMatrix, label MaxModes, word FunctionName,
               word FieldName);
 
-        ///
+        //----------------------------------------------------------------------
         /// @brief      Construct DEIM for matrix with non-linear dependency
         ///
         /// @param      SnapShotsMatrix  The snapshots matrix
         /// @param[in]  MaxModesA        The maximum number of modes for the Matrix A
         /// @param[in]  MaxModesB        The maximum number of modes for the source term b
-        /// @param[in]  MatrixName       The matrix name
+        /// @param[in]  MatrixName       The matrix name, used to save the results
         ///
         DEIM (PtrList<T>& SnapShotsMatrix, label MaxModesA, label MaxModesB,
               word MatrixName);
@@ -73,11 +73,6 @@ class DEIM
         std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
                 Matrix_Modes;
 
-        /// Field used to evaluate the online non linear function
-        //PtrList<S> fields;
-        //PtrList<S> fieldsA;
-        //PtrList<S> fieldsB;
-
         /// The maximum number of modes to be considered
         label MaxModes;
         label MaxModesA;
@@ -90,9 +85,11 @@ class DEIM
         double tolerance;
 
         /// Online vector
+        ///@{
         Eigen::VectorXd theta;
         Eigen::VectorXd thetaA;
         Eigen::VectorXd thetaB;
+        ///@}
 
         /// Int Number of Cells;
         label Ncells;
@@ -106,132 +103,162 @@ class DEIM
         /// The matrix containing the modes
         Eigen::MatrixXd MatrixModes;
 
-        /// Online Matrix
+        /// Online Matrices
+        ///@{
         Eigen::MatrixXd MatrixOnline;
         List<Eigen::SparseMatrix<double>> MatrixOnlineA;
         Eigen::MatrixXd MatrixOnlineB;
+        ///@}
 
         /// The U matrix of the DEIM method
+        ///@{
         Eigen::MatrixXd U;
         List<Eigen::SparseMatrix<double>> UA;
         Eigen::MatrixXd UB;
+        ///@}
 
+        /// Magic points in the case of the a nonlinear function
         autoPtr<IOList<label>> magicPoints;
-        autoPtr<IOList<labelList>> totalMagicPoints;
-        autoPtr<IOList<label>> uniqueMagicPoints;
-        word Folder;
+        /// Magic points in the case of the a matrix function (rows indices)
+        autoPtr<IOList<label>> magicPointsArow;
+        /// Magic points in the case of the a matrix function (cols indices)
+        autoPtr<IOList<label>> magicPointsAcol;
+        /// Magic points in the case of the a matrix function, right hand side
+        autoPtr<IOList<label>> magicPointsB;
 
-        List<Pair <label >> magicPointsA;
-        List<label> magicPointsB;
-        List<Pair<label>> xyz_A;
-        List<label> xyz_B;
+        /// Magic points and indices of the surrounding layers
+        ///@{
+        autoPtr<IOList<labelList>> totalMagicPoints;
+        autoPtr<IOList<labelList>> totalMagicPointsA;
+        autoPtr<IOList<labelList>> totalMagicPointsB;
+        ///@}
+
+        /// List of unique indices that define the submesh
+        ///@{
+        autoPtr<IOList<label>> uniqueMagicPoints;
+        autoPtr<IOList<label>> uniqueMagicPointsA;
+        autoPtr<IOList<label>> uniqueMagicPointsB;
+        ///@}
+
+        /// Folder for nonlinear functions
+        word Folder;
+        ///Folder in the matrix case
+        word FolderM;
+
+        /// Definition of the x, y, z coordinate of the identified element in the matrix or source term
+        /// 0 for x, 1 for y, 2 for z
+        ///@{
+        autoPtr<IOList<label>> xyz_Arow;
+        autoPtr<IOList<label>> xyz_Acol;
+        autoPtr<IOList<label>> xyz_B;
+        ///@}
 
         /// Indices of the local magic points in the subMesh
+        ///@{
         List<label> localMagicPoints;
-        List<Pair <label>> localMagicPointsA;
+        List<label> localMagicPointsArow;
+        List<label> localMagicPointsAcol;
         List<label> localMagicPointsB;
+        ///@}
 
         /// The P matrix of the DEIM method
+        ///@{
         Eigen::SparseMatrix<double> P;
         List<Eigen::SparseMatrix<double>> PA;
         Eigen::SparseMatrix<double> PB;
+        ///@}
 
-        /// List of submeshes
+        /// Submesh of the DEIM method
+        ///@{
         autoPtr<fvMeshSubset> submesh;
         autoPtr<fvMeshSubset> submeshA;
         autoPtr<fvMeshSubset> submeshB;
-        PtrList<fvMeshSubset> submeshList;
-        PtrList<fvMeshSubset> submeshListA;
-        PtrList<fvMeshSubset> submeshListB;
+        ///@}
 
-        /// List of bool variables to check if the SubMeshes are available
+        /// Bool variable to check if the SubMesh is available
+        ///@{
         bool runSubMesh;
         bool runSubMeshA;
         bool runSubMeshB;
+        ///@}
 
-        /// @brief      Function to generate the submeshes
+        //----------------------------------------------------------------------
+        /// @brief      Function to generate the submesh for the nonlinear function case
         ///
-        /// @param[in]  layers  Number of layers used to generate each submesh
-        /// @param      mesh    The mesh of the problem
+        /// @param[in]  layers      Number of layers used to generate each submesh
+        /// @param      mesh        The mesh of the problem
+        /// @param[in]  field       The field used for the submesh
+        /// @param[in]  secondTime  If the function is called for the second one must be set to 1
+        ///
+        /// @tparam     S           Type of object can be volscalarfield, volvectorfield etc...
+        ///
+        /// @return     return field in the submesh
         ///
         template <class S>
-        S generateSubmeshes(label layers, fvMesh& mesh, S field,
+        S generateSubmesh(label layers, fvMesh& mesh, S field,
                             label secondTime = 0);
 
+        //----------------------------------------------------------------------
+        /// @brief      Function to generate the submesh for the nonlinear matrix function case (RHS)
+        ///             
+        /// @param[in]  layers      Number of layers used to generate each submesh
+        /// @param      mesh        The mesh of the problem
+        /// @param[in]  field       The field used for the submesh
+        /// @param[in]  secondTime  If the function is called for the second one must be set to 1
         ///
-        /// @brief      { function_description }
+        /// @tparam     S           Type of object can be volscalarfield, volvectorfield etc...
         ///
-        /// @param[in]  layers  The layers
-        /// @param      mesh    The mesh
-        /// @param[in]  field   The field
-        ///
-        template <class S>
-        PtrList<S> generateSubmeshesMatrix(label layers, fvMesh& mesh, S field,
-                                           label secondTime = 0);
-
-        ///
-        /// @brief      { function_description }
-        ///
-        /// @param[in]  layers  The layers
-        /// @param      mesh    The mesh
-        /// @param[in]  field   The field
+        /// @return     return field in the submesh
         ///
         template <class S>
-        S generateSubmeshesMatrix2(label layers, fvMesh& mesh, S field,
-                                           label secondTime = 0);
+        S generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
+                                  label secondTime = 0);
 
+        //----------------------------------------------------------------------
+        /// @brief      Function to generate the submesh for the nonlinear matrix function case (LHS)
+        ///             
+        /// @param[in]  layers      Number of layers used to generate each submesh
+        /// @param      mesh        The mesh of the problem
+        /// @param[in]  field       The field used for the submesh
+        /// @param[in]  secondTime  If the function is called for the second one must be set to 1
         ///
-        /// @brief      { function_description }
+        /// @tparam     S           Type of object can be volscalarfield, volvectorfield etc...
         ///
-        /// @param[in]  layers  The layers
-        /// @param      mesh    The mesh
-        /// @param[in]  field   The field
-        ///
+        /// @return     return field in the submesh
         template <class S>
-        PtrList<S> generateSubmeshesVector(label layers, fvMesh& mesh, S field,
-                                           label secondTime = 0);
+        S generateSubmeshVector(label layers, fvMesh& mesh, S field,
+                                  label secondTime = 0);
 
-        ///
-        /// @brief      Function to generate a PtrList of subfield in the location of the magic points computed for the Matrix (LHS)
+        //----------------------------------------------------------------------
+        /// @brief      Function to generate a a subfield in the location of the magic points computed for the Matrix (LHS)
         ///
         /// @param      field  For which you want the create the submeshes
         ///
         /// @tparam     F      type of field (can be volVectorField, volScalarField, surfaceScalar and surfaceVector)
         ///
-        /// @return     a PtrList with the fields
+        /// @return     a the interpolated field in the submesh
         ///
         template <class F>
-        PtrList<F> generateSubFieldsMatrix(F& field);
+        F generateSubFieldMatrix(F& field);
 
-        ///
-        /// @brief      Function to generate a PtrList of subfield in the location of the magic points computed for the Vector (RHS)
+        //----------------------------------------------------------------------
+        /// @brief      Function to generate a a subfield in the location of the magic points computed for the Matrix (RHS)
         ///
         /// @param      field  For which you want the create the submeshes
         ///
         /// @tparam     F      type of field (can be volVectorField, volScalarField, surfaceScalar and surfaceVector)
         ///
-        /// @return     a PtrList with the fields
+        /// @return     a the interpolated field in the submesh
         ///
         template <class F>
-        PtrList<F> generateSubFieldsVector(F& field);
+        F generateSubFieldVector(F& field);
 
-        ///
+        //----------------------------------------------------------------------
         /// @brief      Function to get the onlineCoeffs of the DEIM approx. It is problem dependent so it must be overridden.
         ///
         void onlineCoeffs();
 
-        ///
-        /// @brief      Get local indices in the submeshes from indices in the global ones
-        ///
-        /// @param      points       The points
-        /// @param      submeshList  The submesh list
-        ///
-        /// @return     The local indices
-        ///
-        List<label> global2local(List<label>& points,
-                                 PtrList<fvMeshSubset>& submeshList);
-
-        ///
+        //----------------------------------------------------------------------
         /// @brief      Get local indices in the submeshe from indices in the global ones
         ///
         /// @param      points       The points
@@ -242,18 +269,7 @@ class DEIM
         List<label> global2local(List<label>& points,
                                  fvMeshSubset& submesh);
 
-        ///
-        /// @brief      Get local indices in the submeshes from indices in the global ones
-        ///
-        /// @param      points       The points
-        /// @param      submeshList  The submesh list
-        ///
-        /// @return     The local indices
-        ///
-        List<Pair <label >> global2local(List< Pair <label>>& points,
-                                         PtrList<fvMeshSubset>& submeshList);
-
-        ///
+        //----------------------------------------------------------------------
         /// @brief      check3DIndices in case of three dimensional fields
         ///
         /// @param      ind_rowA  The ind row a
@@ -264,7 +280,7 @@ class DEIM
         void check3DIndices(label& ind_rowA, label&  ind_colA, label& xyz_rowA,
                             label& xyz_colA);
 
-        ///
+        //----------------------------------------------------------------------
         /// @brief      check3DIndices in case of three dimensional fields
         ///
         /// @param      ind_rowA  The ind row a
@@ -272,6 +288,7 @@ class DEIM
         ///
         void check3DIndices(label& ind_rowA, label& xyz_rowA);
 
+        //----------------------------------------------------------------------
         /// @brief      get the number of cells from the dimension of a LHS matrix
         ///
         /// @param      sizeM  The number of rows of the original Matrix
