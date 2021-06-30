@@ -10,6 +10,7 @@ ITHACAutilities/ITHACAcoeffsMass.C
 ITHACAparallel/ITHACAparallel.C
 ITHACAutilities/ITHACAforces.C
 ITHACAPOD/ITHACAPOD.C
+ITHACAPOD/incrementalPOD.C
 ITHACADMD/ITHACADMD.C
 Foam2Eigen/Foam2Eigen.C
 EigenFunctions/EigenFunctions.C
