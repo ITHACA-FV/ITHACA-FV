@@ -101,7 +101,7 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
     }
 }
 
-
+// constructor for matrix DEIM
 template<typename T>
 DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
     :
