@@ -400,7 +400,7 @@ template fvMeshSubset* getSubMeshFromBox(
 volScalarField meshNonOrtho(fvMesh& mesh,
                             volScalarField& NonOrtho)
 {
-    scalarField sno = (polyMeshTools::faceOrthogonality(mesh, mesh.Sf(), mesh.C()));
+    scalarField sno = (polyMeshTools::faceOrthogonality(mesh, mesh.Sf(), mesh.C())).ref();
 
     for (label i = 0; i < sno.size(); i++)
     {

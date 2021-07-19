@@ -65,7 +65,7 @@ Foam::scalarField Foam::W2::weights
     const vector& dataPoint
 ) const
 {
-    scalarField dist = mag(controlPoints - dataPoint);
+    scalarField dist = mag(controlPoints - dataPoint).ref();
     scalarField RBF(dist.size());
     RBF = neg(dist - radius_) *
           Foam::max(pow4(1 - (dist / radius_)), scalar(0)) * (1 + 4 * (dist / radius_));

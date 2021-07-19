@@ -407,7 +407,7 @@ S DEIM<T>::generateSubmesh(label layers, fvMesh& mesh, S field,
     submesh->subMesh().fvSchemes::read();
     submesh->subMesh().fvSolution::read();
     std::cout.clear();
-    S f = submesh->interpolate(field);
+    S f = submesh->interpolate(field).ref();
     scalar zerodot25 = 0.25;
     ITHACAutilities::assignIF(Indici, zerodot25,
                               uniqueMagicPoints().List<label>::clone()());
@@ -497,7 +497,7 @@ S DEIM<T>::generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
     submeshA->subMesh().fvSchemes::read();
     submeshA->subMesh().fvSolution::read();
     std::cout.clear();
-    S f = submeshA->interpolate(field);
+    S f = submeshA->interpolate(field).ref();
     scalar zerodot25 = 0.25;
     ITHACAutilities::assignIF(Indici, zerodot25,
                               uniqueMagicPointsA().List<label>::clone()());
@@ -594,7 +594,7 @@ S DEIM<T>::generateSubmeshVector(label layers, fvMesh& mesh, S field,
     submeshB->subMesh().fvSchemes::read();
     submeshB->subMesh().fvSolution::read();
     std::cout.clear();
-    S f = submeshB->interpolate(field);
+    S f = submeshB->interpolate(field).ref();
     scalar zerodot25 = 0.25;
     ITHACAutilities::assignIF(Indici, zerodot25,
                               uniqueMagicPointsB().List<label>::clone()());
@@ -695,7 +695,7 @@ F DEIM<T>::generateSubFieldMatrix(F& field)
 {
     M_Assert(runSubMeshA == true,
              "You have to compute the magicPointsA before calling this function, try to rerun generateSubmeshMatrix");
-    F f = submeshA().interpolate(field);
+    F f = submeshA().interpolate(field).ref();
     return f;
 }
 
@@ -705,7 +705,7 @@ F DEIM<T>::generateSubFieldVector(F& field)
 {
     M_Assert(runSubMeshB == true,
              "You have to compute the magicPointsB before calling this function, try to rerun generateSubmeshVector");
-    F f = submeshB().interpolate(field);
+    F f = submeshB().interpolate(field).ref();
     return f;
 }
 

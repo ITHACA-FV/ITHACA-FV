@@ -67,8 +67,8 @@ Foam::scalarField Foam::IMQB::weights
 ) const
 {
     // Algorithmic improvement, Matteo Lombardi.  21/Mar/2011
-    scalarField sqrDist = magSqr(controlPoints - dataPoint);
-    return 1 / sqrt(sqrDist + sqr(radius_));
+    scalarField sqrDist = magSqr(controlPoints - dataPoint).ref();
+    return (1 / sqrt(sqrDist + sqr(radius_))).ref();
 }
 
 

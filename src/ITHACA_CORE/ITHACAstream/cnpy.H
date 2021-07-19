@@ -213,7 +213,7 @@ template<typename T> void npz_save(std::string zipname, std::string fname,
     std::vector<char> npy_header = create_npy_header(data, shape, ndims);
     unsigned long nels = 1;
 
-    for (int m = 0; m < ndims; m++ )
+    for (unsigned int m = 0; m < ndims; m++ )
     {
         nels *= shape[m];
     }

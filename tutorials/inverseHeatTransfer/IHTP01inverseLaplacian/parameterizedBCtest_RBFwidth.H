@@ -61,7 +61,7 @@ for (int i = 0; i < rbfWidthTest_size; i++)
 
     Info << "Condition number = " << conditionNumber << endl;
     condNumber(i) = conditionNumber;
-    volScalarField gDiffField = gParametrizedField - gTrueField;
+    volScalarField gDiffField = (gParametrizedField - gTrueField).ref();
     scalar EPS = 1e-6;
     volScalarField relativeErrorField(gTrueField);
 

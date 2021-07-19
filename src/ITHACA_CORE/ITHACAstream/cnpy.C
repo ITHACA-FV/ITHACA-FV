@@ -545,8 +545,8 @@ Eigen::SparseMatrix<T> cnpy::load(Eigen::SparseMatrix<T>& smatrix,
 template<typename T>
 void cnpy::save(const Eigen::SparseMatrix<T>& mat, const std::string fname)
 {
-    unsigned int shape1[] = {mat.nonZeros()};
-    unsigned int shape2[] = {mat.outerSize() + 1};
+    unsigned int shape1[] = {static_cast<unsigned int>(mat.nonZeros())};
+    unsigned int shape2[] = {static_cast<unsigned int>(mat.outerSize() + 1)};
     unsigned int shape3[] = {2};
     unsigned int shape4[] = {256};
     cnpy::npz_save(fname, "data", mat.valuePtr(), shape1, 1, "w");

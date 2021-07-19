@@ -65,7 +65,7 @@ Foam::scalarField Foam::TPS::weights
     const vector& dataPoint
 ) const
 {
-    scalarField dist = mag(controlPoints - dataPoint);
+    scalarField dist = mag(controlPoints - dataPoint).ref();
     scalarField RBF(dist.size());
     forAll(RBF, i)
     {

@@ -45,9 +45,7 @@ EXE_INC = \
     -Wno-unused-variable \
     -Wno-unused-local-typedefs \
     -Wno-old-style-cast \
-    -fopenmp \
     -pthread \
-    -ldl \
     -O3 \
     -msse4
 

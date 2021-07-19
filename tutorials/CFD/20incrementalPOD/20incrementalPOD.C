@@ -40,7 +40,7 @@ SourceFiles
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-/// \brief Class where the tutorial number 2 is implemented.
+/// \brief Class where the tutorial number 20 is implemented.
 /// \details It is a child of the laplacianProblem class and some of its
 /// functions are overridden to be adapted to the specific case.
 class tutorialIPOD: public laplacianProblem
@@ -93,8 +93,8 @@ class tutorialIPOD: public laplacianProblem
         /// Define the source term function
         void SetSource()
         {
-            volScalarField yPos = T.mesh().C().component(vector::Y);
-            volScalarField xPos = T.mesh().C().component(vector::X);
+            volScalarField yPos = T.mesh().C().component(vector::Y).ref();
+            volScalarField xPos = T.mesh().C().component(vector::X).ref();
             forAll(S, counter)
             {
                 S[counter] = Foam::sin(xPos[counter] / 0.9 * M_PI) + Foam::sin(

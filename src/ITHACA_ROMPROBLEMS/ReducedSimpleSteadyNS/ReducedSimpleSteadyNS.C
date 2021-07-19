@@ -174,7 +174,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
 #else
         simple.loop();
 #endif
-        volScalarField nueff = problem->turbulence->nuEff();
+        volScalarField nueff = problem->turbulence->nuEff().ref();
         fvVectorMatrix UEqn
         (
             fvm::div(phi, U)

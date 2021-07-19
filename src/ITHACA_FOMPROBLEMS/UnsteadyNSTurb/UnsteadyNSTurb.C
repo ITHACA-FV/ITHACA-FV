@@ -162,7 +162,7 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now)
         if (checkWrite(runTime))
         {
             nsnapshots += 1;
-            volScalarField nut = turbulence->nut();
+            volScalarField nut = turbulence->nut().ref();
             ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
             ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
             ITHACAstream::exportSolution(nut, name(counter), "./ITHACAoutput/Offline/");

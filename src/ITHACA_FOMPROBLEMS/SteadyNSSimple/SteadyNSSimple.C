@@ -148,7 +148,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         csolve++;
         saver++;
         Info << "Time = " << runTime.timeName() << nl << endl;
-        volScalarField nueff = turbulence->nuEff();
+        volScalarField nueff = turbulence->nuEff().ref();
         fvVectorMatrix UEqn
         (
             fvm::div(phi, U)

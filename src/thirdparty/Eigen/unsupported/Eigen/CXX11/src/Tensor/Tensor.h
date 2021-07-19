@@ -263,7 +263,7 @@ class Tensor : public TensorBase<Tensor<Scalar_, NumIndices_, Options_, IndexTyp
     {
       // The number of indices used to access a tensor coefficient must be equal to the rank of the tensor.
       EIGEN_STATIC_ASSERT(sizeof...(otherIndices) + 2 == NumIndices, YOU_MADE_A_PROGRAMMING_MISTAKE)
-      return operator()(array<Index, NumIndices>{{firstIndex, secondIndex, otherIndices...}});
+      return operator()(array<Index, NumIndices>{{firstIndex, secondIndex, static_cast<long>(otherIndices)...}});
     }
 #else
     EIGEN_DEVICE_FUNC

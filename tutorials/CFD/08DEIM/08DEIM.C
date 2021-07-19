@@ -45,8 +45,8 @@ class DEIM_function : public DEIM<volScalarField>
         using DEIM::DEIM;
         static volScalarField evaluate_expression(volScalarField& S, Eigen::MatrixXd mu)
         {
-            volScalarField yPos = S.mesh().C().component(vector::Y);
-            volScalarField xPos = S.mesh().C().component(vector::X);
+            volScalarField yPos = S.mesh().C().component(vector::Y).ref();
+            volScalarField xPos = S.mesh().C().component(vector::X).ref();
 
             for (auto i = 0; i < S.size(); i++)
             {
