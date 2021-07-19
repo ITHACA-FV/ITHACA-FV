@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
     Info << "Exporting analytical solution" << endl;
     ITHACAstream::exportSolution(T_true, "1", "./ITHACAoutput/true/",
                                  "analyticalSol");
-    volScalarField error = T_true - T;
+    volScalarField error = (T_true - T).ref();
     ITHACAstream::exportSolution(error, "1", "./ITHACAoutput/true/", "error");
     Info << "L2 norm of the relative error = " << ITHACAutilities::errorL2Rel(
              T_true, T) << endl;

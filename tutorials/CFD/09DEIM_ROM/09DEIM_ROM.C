@@ -50,8 +50,8 @@ class DEIM_function : public DEIM<fvScalarMatrix>
     public:
         static fvScalarMatrix evaluate_expression(volScalarField& T, Eigen::MatrixXd mu)
         {
-            volScalarField yPos = T.mesh().C().component(vector::Y);
-            volScalarField xPos = T.mesh().C().component(vector::X);
+            volScalarField yPos = T.mesh().C().component(vector::Y).ref();
+            volScalarField xPos = T.mesh().C().component(vector::X).ref();
             volScalarField nu(T);
 
             for (auto i = 0; i < nu.size(); i++)

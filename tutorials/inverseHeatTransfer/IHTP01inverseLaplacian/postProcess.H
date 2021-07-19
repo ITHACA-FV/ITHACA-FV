@@ -12,7 +12,7 @@ Eigen::VectorXd relativeErrorNorm_Linf(Nsolutions);
 
 forAll(gField, solutionI)
 {
-    volScalarField gDiffField = gField[solutionI] - gTrueField;
+    volScalarField gDiffField = (gField[solutionI] - gTrueField).ref();
     ITHACAstream::exportSolution(gDiffField,
                                  std::to_string(solutionI + 1), folder,
                                  "gDiffField");

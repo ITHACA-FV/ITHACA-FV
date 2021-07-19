@@ -1213,9 +1213,9 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
     {
         for (label j = 0; j < P3_BC2size; j++)
         {
-            surfaceVectorField BC3 = fvc::interpolate(fvc::curl(L_U_SUPmodes[j]));
-            surfaceVectorField BC4 = n ^ fvc::interpolate(fvc::grad(Pmodes[i]));
-            surfaceScalarField BC5 = (BC3 & BC4) * mesh.magSf();
+            surfaceVectorField BC3 = fvc::interpolate(fvc::curl(L_U_SUPmodes[j])).ref();
+            surfaceVectorField BC4 = (n ^ fvc::interpolate(fvc::grad(Pmodes[i]))).ref();
+            surfaceScalarField BC5 = ((BC3 & BC4) * mesh.magSf()).ref();
             double s = 0;
 
             for (label k = 0; k < BC5.boundaryField().size(); k++)
@@ -1244,9 +1244,9 @@ Eigen::MatrixXd steadyNS::pressure_BC4(label NUmodes, label NPmodes)
     {
         for (label j = 0; j < P4_BC2size; j++)
         {
-            surfaceScalarField BC3 = fvc::interpolate(Pmodes[i]);
-            surfaceScalarField BC4 = n & fvc::interpolate(L_U_SUPmodes[j]);
-            surfaceScalarField BC5 = (BC3 * BC4) * mesh.magSf();
+            surfaceScalarField BC3 = fvc::interpolate(Pmodes[i]).ref();
+            surfaceScalarField BC4 = (n & fvc::interpolate(L_U_SUPmodes[j])).ref();
+            surfaceScalarField BC5 = ((BC3 * BC4) * mesh.magSf()).ref();
             double s = 0;
 
             for (label k = 0; k < BC5.boundaryField().size(); k++)
@@ -1576,12 +1576,12 @@ Eigen::MatrixXd steadyNS::mass_matrix_oldtime_consistent(label NUmodes,
 
     for (label i = 0; i < NUmodes; i++)
     {
-        volVectorField CoeffA = fvc::reconstruct(L_PHImodes[i]);
+        volVectorField CoeffA = (fvc::reconstruct(L_PHImodes[i])).ref();
 
         for (label j = 0; j < Isize; j++)
         {
-            surfaceScalarField B = fvc::flux(L_U_SUPmodes[j]);
-            volVectorField CoeffB = fvc::reconstruct(B);
+            surfaceScalarField B = fvc::flux(L_U_SUPmodes[j]).ref();
+            volVectorField CoeffB = fvc::reconstruct(B).ref();
             I_matrix(i, j) = fvc::domainIntegrate(CoeffA &  CoeffB).value();
         }
     }
@@ -1612,8 +1612,8 @@ Eigen::MatrixXd steadyNS::diffusive_term_consistent(label NUmodes,
             phi_tmp = dt_dummy * nu_dummy() * fvc::flux(fvc::laplacian(
                           dimensionedScalar("1", dimless, 1),
                           L_U_SUPmodes[j]));
-            volVectorField CoeffB = fvc::reconstruct(phi_tmp);
-            volVectorField CoeffA = fvc::reconstruct(L_PHImodes[i]);
+            volVectorField CoeffB = fvc::reconstruct(phi_tmp).ref();
+            volVectorField CoeffA = fvc::reconstruct(L_PHImodes[i]).ref();
             DF_matrix(i, j) = fvc::domainIntegrate(CoeffA & CoeffB).value();
         }
     }
@@ -1641,9 +1641,9 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term_consistent(label NUmodes,
     {
         for (label j = 0; j < KF2size; j++)
         {
-            volVectorField CoeffA = fvc::reconstruct(dt_dummy * fvc::snGrad(
-                                        Pmodes[j]) * mag(Pmodes[j].mesh().magSf()));
-            volVectorField CoeffB = fvc::reconstruct(L_PHImodes[i]);
+            volVectorField CoeffA = (fvc::reconstruct(dt_dummy * fvc::snGrad(
+                                        Pmodes[j]) * mag(Pmodes[j].mesh().magSf()))).ref();
+            volVectorField CoeffB = fvc::reconstruct(L_PHImodes[i]).ref();
             KF_matrix(i, j) = fvc::domainIntegrate(CoeffA &  CoeffB).value();
         }
     }
@@ -1676,8 +1676,8 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_consistent_tens(
             for (label k = 0; k < Csize1; k++)
             {
                 phi_tmp = dt_dummy * fvc::flux(fvc::div(L_PHImodes[i], L_U_SUPmodes[k]));
-                volVectorField CoeffA = fvc::reconstruct(phi_tmp);
-                volVectorField CoeffB = fvc::reconstruct(L_PHImodes[j]);
+                volVectorField CoeffA = fvc::reconstruct(phi_tmp).ref();
+                volVectorField CoeffB = fvc::reconstruct(L_PHImodes[j]).ref();
                 Ci_tensor(i, j, k) = fvc::domainIntegrate(CoeffB &  CoeffA).value();
             }
         }
@@ -1710,9 +1710,9 @@ List <Eigen::MatrixXd> steadyNS::boundary_vector_diffusion_consistent(
         // Project everything
         for (label j = 0; j < SDsize; j++)
         {
-            volVectorField CoeffB = fvc::reconstruct(L_PHImodes[j]);
+            volVectorField CoeffB = fvc::reconstruct(L_PHImodes[j]).ref();
             phi_tmp = dt_dummy * fvc::flux(fvc::laplacian(nu_dummy(), Upara));
-            volVectorField CoeffA = fvc::reconstruct(phi_tmp);
+            volVectorField CoeffA = fvc::reconstruct(phi_tmp).ref();
             SD_matrix[i](j, 0) = fvc::domainIntegrate(CoeffA &  CoeffB).value();
         }
 
@@ -1744,9 +1744,9 @@ List <Eigen::MatrixXd> steadyNS::boundary_vector_convection_consistent(
         // Project everything
         for (label j = 0; j < SCsize; j++)
         {
-            volVectorField CoeffB = fvc::reconstruct(L_PHImodes[j]);
+            volVectorField CoeffB = fvc::reconstruct(L_PHImodes[j]).ref();
             phi_tmp = dt_dummy * fvc::flux(fvc::div(fvc::flux(Upara), Upara));
-            volVectorField CoeffA = fvc::reconstruct(phi_tmp);
+            volVectorField CoeffA = fvc::reconstruct(phi_tmp).ref();
             SC_matrix[i](j, 0) = fvc::domainIntegrate(CoeffA &  CoeffB).value();
         }
 
@@ -1766,11 +1766,11 @@ Eigen::MatrixXd steadyNS::mass_matrix_newtime_consistent(label NUmodes,
 
     for (label i = 0; i < NUmodes; i++)
     {
-        volVectorField A = fvc::reconstruct(L_PHImodes[i]);
+        volVectorField A = fvc::reconstruct(L_PHImodes[i]).ref();
 
         for (label j = 0; j < NUmodes; j++)
         {
-            volVectorField B = fvc::reconstruct(L_PHImodes[j]);
+            volVectorField B = fvc::reconstruct(L_PHImodes[j]).ref();
             W_matrix(i, j) = fvc::domainIntegrate(A & B).value();
         }
     }

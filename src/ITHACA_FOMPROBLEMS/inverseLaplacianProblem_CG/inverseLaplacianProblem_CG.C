@@ -122,7 +122,7 @@ volScalarField inverseLaplacianProblem_CG::assignAdjointBCandSource()
         }
     }
 
-    return f * sourceDim;
+    return (f * sourceDim).ref();
 }
 
 void inverseLaplacianProblem_CG::assignSensitivityBC()

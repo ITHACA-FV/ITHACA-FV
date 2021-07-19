@@ -37,12 +37,47 @@ License
 namespace ITHACAutilities
 {
 
+template<>
+double L2Norm(GeometricField<scalar, fvPatchField, volMesh>& field)
+{
+    double a;
+    a = Foam::sqrt(fvc::domainIntegrate(field * field).value());
+    return a;
+}
+
+template<>
+double L2Norm(GeometricField<vector, fvPatchField, volMesh>& field)
+{
+    double a;
+    a = Foam::sqrt(fvc::domainIntegrate(field & field).value());
+    return a;
+}
+
+template<>
+double LinfNorm(GeometricField<scalar, fvPatchField, volMesh>& field)
+{
+    double a;
+    a = Foam::max(Foam::sqrt(field.internalField() *
+                             field.internalField())).value();
+    return a;
+}
+
+template<>
+double LinfNorm(GeometricField<vector, fvPatchField, volMesh>& field)
+{
+    double a;
+    Info << "LinfNorm(GeometricField<vector, fvPatchField, volMesh>& field) is still to be implemented"
+         << endl;
+    exit(12);
+    return a;
+}
+
 template<typename T>
 double errorFrobRel(GeometricField<T, fvPatchField, volMesh>& field1,
                     GeometricField<T, fvPatchField, volMesh>& field2)
 {
     double err;
-    GeometricField<T, fvPatchField, volMesh> errField = field1 - field2;
+    GeometricField<T, fvPatchField, volMesh> errField = (field1 - field2).ref();
 
     if (frobNorm(field1) <= 1e-6)
     {
@@ -63,32 +98,6 @@ template double errorFrobRel(GeometricField<vector, fvPatchField, volMesh>&
                              field1,
                              GeometricField<vector, fvPatchField, volMesh>& field2);
 
-template<typename T>
-double errorL2Rel(GeometricField<T, fvPatchField, volMesh>& field1,
-                  GeometricField<T, fvPatchField, volMesh>& field2)
-{
-    double err;
-    GeometricField<T, fvPatchField, volMesh> errField = field1 - field2;
-
-    if (L2Norm(field1) <= 1e-6)
-    {
-        err = 0;
-    }
-    else
-    {
-        err = L2Norm(errField) / L2Norm(
-                  field1);
-    }
-
-    return err;
-}
-
-template double errorL2Rel(GeometricField<scalar, fvPatchField, volMesh>&
-                           field1,
-                           GeometricField<scalar, fvPatchField, volMesh>& field2);
-template double errorL2Rel(GeometricField<vector, fvPatchField, volMesh>&
-                           field1,
-                           GeometricField<vector, fvPatchField, volMesh>& field2);
 
 template<typename T>
 double errorLinfRel(GeometricField<T, fvPatchField, volMesh>& field1,
@@ -102,7 +111,7 @@ double errorLinfRel(GeometricField<T, fvPatchField, volMesh>& field1,
     }
     else
     {
-        GeometricField<T, fvPatchField, volMesh> fieldDiff = field1 - field2;
+        GeometricField<T, fvPatchField, volMesh> fieldDiff = (field1 - field2).ref();
         err = LinfNorm(fieldDiff) / LinfNorm(field1);
     }
 
@@ -122,7 +131,7 @@ double errorL2Abs(GeometricField<vector, fvPatchField, volMesh>& field1,
                   GeometricField<vector, fvPatchField, volMesh>& field2, volScalarField& Volumes)
 
 {
-    volScalarField diffFields2 = ((field1 - field2) & (field1 - field2)) * Volumes;
+    volScalarField diffFields2 = (((field1 - field2) & (field1 - field2)) * Volumes).ref();
     double err = Foam::sqrt(gSum(diffFields2));
     return err;
 }
@@ -132,7 +141,7 @@ double errorL2Abs(GeometricField<scalar, fvPatchField, volMesh>& field1,
                   GeometricField<scalar, fvPatchField, volMesh>& field2, volScalarField& Volumes)
 
 {
-    volScalarField diffFields2 = ((field1 - field2) * (field1 - field2)) * Volumes;
+    volScalarField diffFields2 = (((field1 - field2) * (field1 - field2)) * Volumes).ref();
     double err = Foam::sqrt(gSum(diffFields2));
     return err;
 }
@@ -141,7 +150,7 @@ template<typename T>
 double errorL2Abs(GeometricField<T, fvPatchField, volMesh>& field1,
                   GeometricField<T, fvPatchField, volMesh>& field2)
 {
-    GeometricField<T, fvPatchField, volMesh> errField = field1 - field2;
+    GeometricField<T, fvPatchField, volMesh> errField = (field1 - field2).ref();
     double err = L2Norm(errField);
     return err;
 }
@@ -152,36 +161,6 @@ template double errorL2Abs(GeometricField<scalar, fvPatchField, volMesh>&
 template double errorL2Abs(GeometricField<vector, fvPatchField, volMesh>&
                            field1,
                            GeometricField<vector, fvPatchField, volMesh>& field2);
-
-template<typename T>
-Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh>>&
-                           fields1, PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2)
-{
-    Eigen::VectorXd err;
-
-    if (fields1.size() != fields2.size())
-    {
-        Info << "The two fields do not have the same size, code will abort" << endl;
-        exit(0);
-    }
-
-    err.resize(fields1.size(), 1);
-
-    for (label k = 0; k < fields1.size(); k++)
-    {
-        err(k, 0) = errorL2Rel(fields1[k], fields2[k]);
-        Info << " Error is " << err[k] << endl;
-    }
-
-    return err;
-}
-
-template Eigen::MatrixXd errorL2Rel(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields1,
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields2);
-template Eigen::MatrixXd errorL2Rel(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields1,
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields2);
 
 template<typename T>
 Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, fvPatchField, volMesh>>&
@@ -277,40 +256,62 @@ template Eigen::MatrixXd errorL2Abs(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields1,
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields2);
 
-template<>
-double L2Norm(GeometricField<scalar, fvPatchField, volMesh>& field)
+template<typename T>
+double errorL2Rel(GeometricField<T, fvPatchField, volMesh>& field1,
+                  GeometricField<T, fvPatchField, volMesh>& field2)
 {
-    double a;
-    a = Foam::sqrt(fvc::domainIntegrate(field * field).value());
-    return a;
+    double err;
+    GeometricField<T, fvPatchField, volMesh> errField = (field1 - field2).ref();
+
+    if (L2Norm(field1) <= 1e-6)
+    {
+        err = 0;
+    }
+    else
+    {
+        err = L2Norm(errField) / L2Norm(
+                  field1);
+    }
+
+    return err;
 }
 
-template<>
-double L2Norm(GeometricField<vector, fvPatchField, volMesh>& field)
+template double errorL2Rel(GeometricField<scalar, fvPatchField, volMesh>&
+                           field1,
+                           GeometricField<scalar, fvPatchField, volMesh>& field2);
+template double errorL2Rel(GeometricField<vector, fvPatchField, volMesh>&
+                           field1,
+                           GeometricField<vector, fvPatchField, volMesh>& field2);
+
+template<typename T>
+Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh>>&
+                           fields1, PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2)
 {
-    double a;
-    a = Foam::sqrt(fvc::domainIntegrate(field & field).value());
-    return a;
+    Eigen::VectorXd err;
+
+    if (fields1.size() != fields2.size())
+    {
+        Info << "The two fields do not have the same size, code will abort" << endl;
+        exit(0);
+    }
+
+    err.resize(fields1.size(), 1);
+
+    for (label k = 0; k < fields1.size(); k++)
+    {
+        err(k, 0) = errorL2Rel(fields1[k], fields2[k]);
+        Info << " Error is " << err[k] << endl;
+    }
+
+    return err;
 }
 
-template<>
-double LinfNorm(GeometricField<scalar, fvPatchField, volMesh>& field)
-{
-    double a;
-    a = Foam::max(Foam::sqrt(field.internalField() *
-                             field.internalField())).value();
-    return a;
-}
-
-template<>
-double LinfNorm(GeometricField<vector, fvPatchField, volMesh>& field)
-{
-    double a;
-    Info << "LinfNorm(GeometricField<vector, fvPatchField, volMesh>& field) is still to be implemented"
-         << endl;
-    exit(12);
-    return a;
-}
+template Eigen::MatrixXd errorL2Rel(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields1,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields2);
+template Eigen::MatrixXd errorL2Rel(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields1,
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields2);
 
 template<>
 double H1Seminorm(GeometricField<scalar, fvPatchField, volMesh>& field)

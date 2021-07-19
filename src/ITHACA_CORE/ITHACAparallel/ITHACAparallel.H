@@ -30,9 +30,9 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 #ifndef ITHACAparallel_H
 #define ITHACAparallel_H
-
 #include "fvCFD.H"
 #include "ITHACAassert.H"
+
 
 /// Class for parallel handling, it has several functions to deal
 /// with parallel problems, the class is implemented as a singletone
@@ -77,7 +77,7 @@ class ITHACAparallel
 
         /// Function to get a global field from a parallel one
         template<class Type>
-        List<Field <Type>> combineFields(GeometricField<Type, fvPatchField, volMesh>&
+        List<List <Type>> combineFields(GeometricField<Type, fvPatchField, volMesh>&
                                          field);
 
         template<class type>
@@ -123,7 +123,7 @@ class ITHACAparallel
 };
 
 template<>
-List<Field<scalar>> ITHACAparallel::combineFields(
+List<List<scalar>> ITHACAparallel::combineFields(
                      GeometricField<scalar, fvPatchField, volMesh>& field);
 
 template<class type>

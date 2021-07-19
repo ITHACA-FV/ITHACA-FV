@@ -345,7 +345,7 @@ Foam::tmp<Foam::pointField> Foam::RBFMotionSolver::curPoints() const
     }
     // Call interpolation
     vectorField interpolatedMotion =
-        interpolation_.interpolate(motionOfControl);
+        interpolation_.interpolate(motionOfControl).ref();
     // 3. Insert RBF interpolated motion
     forAll (internalIDs_, i)
     {

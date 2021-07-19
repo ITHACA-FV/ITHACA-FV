@@ -66,8 +66,8 @@ Foam::scalarField Foam::Gauss::weights
 ) const
 {
     // Algorithmic improvement, Matteo Lombardi.  21/Mar/2011
-    scalarField sqrDist = magSqr(controlPoints - dataPoint);
-    return Foam::exp(-sqr(radius_) * sqrDist);
+    scalarField sqrDist = magSqr(controlPoints - dataPoint).ref();
+    return Foam::exp(-sqr(radius_) * sqrDist).ref();
 }
 
 

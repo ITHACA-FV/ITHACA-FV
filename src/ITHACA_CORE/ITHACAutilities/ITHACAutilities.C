@@ -44,7 +44,7 @@ namespace ITHACAutilities
 Eigen::MatrixXd rand(label rows, label cols, double min,
                      double max)
 {
-    std::srand(static_cast<long unsigned label>
+    std::srand(static_cast<long unsigned int>
                (std::chrono::high_resolution_clock::now().time_since_epoch().count()));
     Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);
     matr = (matr.array() + 1) / 2;
@@ -55,7 +55,7 @@ Eigen::MatrixXd rand(label rows, label cols, double min,
 
 Eigen::MatrixXd rand(label rows, Eigen::MatrixXd minMax)
 {
-    std::srand(static_cast<long unsigned label>
+    std::srand(static_cast<long unsigned int>
                (std::chrono::high_resolution_clock::now().time_since_epoch().count()));
     label cols = minMax.rows();
     Eigen::MatrixXd matr = Eigen::MatrixXd::Random(rows, cols);

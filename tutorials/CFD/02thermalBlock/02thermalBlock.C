@@ -92,8 +92,8 @@ class tutorial02: public laplacianProblem
         /// Define the source term function
         void SetSource()
         {
-            volScalarField yPos = T.mesh().C().component(vector::Y);
-            volScalarField xPos = T.mesh().C().component(vector::X);
+            volScalarField yPos = T.mesh().C().component(vector::Y).ref();
+            volScalarField xPos = T.mesh().C().component(vector::X).ref();
             forAll(S, counter)
             {
                 S[counter] = Foam::sin(xPos[counter] / 0.9 * M_PI) + Foam::sin(
