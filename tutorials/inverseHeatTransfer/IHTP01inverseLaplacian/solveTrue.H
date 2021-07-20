@@ -5,8 +5,7 @@ simpleControl simple(mesh);
 Info << "DT = " << DT << endl;
 assignDirectBC();
 
-#if OFVER == 6
-
+#if defined(OFVER) && (OFVER == 6)
 while (simple.loop(runTime))
 #else
 while (simple.loop())

@@ -169,7 +169,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     {
         iter++;
         std::cout << "Iteration " << iter << std::endl;
-#if OFVER == 6
+#if defined(OFVER) && (OFVER == 6)
         simple.loop(runTime);
 #else
         simple.loop();
