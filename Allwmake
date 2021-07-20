@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ${0%/*} || exit 1    # Run from this directory
+cd "${0%/*}" || exit                            # Run from this directory
 
 help_flag=''
 tutorial_flag=''
@@ -8,189 +8,166 @@ muq_flag=''
 applications_flag=''
 unit_tests_flag=''
 
-while getopts 'htmqj:au' flag; do
+has_wmake="$(command -v wmake)"
+
+while getopts 'htmqj:asu' flag; do
   case "${flag}" in
-    h) help_flag='true' ;;
-    t) tutorial_flag='true' ;;
-    m) torch_flag="true" ;;
-    q) muq_flag="true" ;;
-    a) applications_flag="true" ;;
-    u) unit_tests_flag="true" ;;
-    j) parallel_flag="-j ${OPTARG}" ;;
+    h) help_flag=true ;;
+    t) tutorial_flag=true ;;
+    m) torch_flag=true ;;
+    q) muq_flag=true ;;
+    a) applications_flag=true ;;
+    u) unit_tests_flag=true ;;
+    j)
+        export WM_NCOMPPROCS="$OPTARG"
+        echo "Compiling enabled on $WM_NCOMPPROCS cores" 1>&2
+        ;;
+    s) export WM_QUIET=true ;;
+
     *) print_usage
        exit 1 ;;
   esac
 done
 
-if [[ $help_flag == 'true' ]]; then
-    echo "Help of the ITHACA-FV ./Allwmake utility"
-    echo 
+if [ -n "$help_flag" ]
+then
+    echo "==========================="
+    echo "Help for ITHACA-FV Allwmake"
+    echo "==========================="
+    echo
     echo "options:"
-    echo "-h,     show brief help"
-    echo "-t,     enable disable tutorials compilation, False by default"
-    echo "-m,     enable TORCH extension, False by default"
-    echo "-q,     enable MUQ2 extension, False by default"
-    echo "-j,     enable parallel compilation with specified number of cores"
-    echo "-a,     enable application compilation, False by default"
-    echo "-u,     enable unitTests compilation, False by default"    
-    echo 
-    echo "Help for the standard wmake OpenFOAM utility"
-    wmake -h
-    exit
+    echo "  -h     show brief help"
+    echo "  -t     enable tutorials compilation (default: off)"
+    echo "  -m     enable TORCH extension (default: off)"
+    echo "  -q     enable MUQ2 extension (default: off)"
+    echo "  -s     wmake silent mode"
+    echo "  -j N   enable parallel compilation with specified number of cores"
+    echo "  -a     enable application compilation (default: off)"
+    echo "  -u     enable unitTests compilation (default: off)"
+    echo
+    if [ -n "$has_wmake" ]
+    then
+        echo "============================================"
+        echo "Help for the standard wmake OpenFOAM utility"
+        echo "============================================"
+        wmake -h
+    else
+        echo "No wmake - is OPENFOAM enviroment active?"
+    fi
+
+    exit 0  # Clean exit
 fi
 
+[ -n "$has_wmake" ] || {
+    echo "Error: no wmake - is OPENFOAM enviroment active?"
+    exit 2
+}
 
-cd src
-for d in ./*/ ; do     
-    cd $d
-    if [ -f "Make/files" ]; then
-        if [[ $d == './ITHACA_TORCH/' ]]; then
-            if [[ $torch_flag == 'true' ]]; then 
-                echo $d 
-                wmake $parallel_flag
-            else
-                cd ..
-                continue 2
-            fi
-        elif [[ $d == './ITHACA_MUQ/' ]]; then
-            if [[ $muq_flag == 'true' ]]; then 
-                echo $d 
-                wmake $parallel_flag
-            else
-                cd ..
-                continue 2
-            fi
-        else
-            echo $d  
-            wmake $parallel_flag
-        fi
-     if [ $? -ne 0 ]
-     then
-      echo $d "did not compile"
-      exit 1
-     fi
-    fi
-    cd ../
-done
-cd ..
+#------------------------------------------------------------------------------
 
-cd applications
-if [[ $applications_flag == 'true' ]]; then
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wmake $parallel_flag 
+#
+# src
+#
+dir0=src
+echo "[$dir0]"
+for d in "$dir0"/*
+do
+    case "$d" in
+    (*/ITHACA_TORCH)
+        [ -n "$torch_flag" ] || continue
+        ;;
+    (*/ITHACA_MUQ)
+        [ -n "$muq_flag" ] || continue
+        ;;
+    esac
+
+    [ -f "$d/Make/files" ] || continue
+
+    wmake "$d"
     if [ $? -ne 0 ]
     then
-     echo $d "did not compile"
-     exit 1
+        echo "Compile error: $d"
+        exit 1
     fi
-	fi
-    cd ../
 done
-fi
-cd ..
 
 
-cd tutorials
-if [[ $tutorial_flag == 'true' ]]; then
-cd CFD
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wmake $parallel_flag 
-     if [ $? -ne 0 ]
-     then
-      echo $d "did not compile"
-      exit 1
-     fi
-    fi
-    cd ../
-done
-cd ../
-cd inverseHeatTransfer 
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wmake $parallel_flag 
-     if [ $? -ne 0 ]
-     then
-      echo $d "did not compile"
-      exit 1
-     fi
-    fi
-    cd ../
-done
-cd ../
-if [[ $muq_flag == 'true' ]]; then
-cd UQ  
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wmake $parallel_flag 
-     if [ $? -ne 0 ]
-     then
-      echo $d "did not compile"
-      exit 1
-     fi
-    fi
-    cd ../
-done
-cd ../
-fi
-if [[ $torch_flag == 'true' ]]; then
-cd NN  
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wmake $parallel_flag 
-     if [ $? -ne 0 ]
-     then
-      echo $d "did not compile"
-      exit 1
-     fi
-    fi
-    cd ../
-done
-cd ../
-fi
-fi
-cd ..
-
-cd unitTests
-if [[ $unit_tests_flag == 'true' ]]; then
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-        if [[ $d == './libTorch/' ]]; then
-            if [[ $torch_flag == 'true' ]]; then 
-                echo $d 
-                wmake $parallel_flag
-            else
-                cd ..
-                continue 2
-            fi
-        else
-            echo $d  
-            wmake $parallel_flag
+#
+# applications
+#
+dir0=applications
+if [ "$applications_flag" = true ]
+then
+    echo "[$dir0]"
+    for d in "$dir0"/*
+    do
+        [ -f "$d/Make/files" ] || continue
+        wmake "$d"
+        if [ $? -ne 0 ]
+        then
+            echo "Compile error: $d"
+            exit 1
         fi
-    if [ $? -ne 0 ]
-    then
-     echo $d "did not compile"
-     exit 1
-    fi
-    fi
-    cd ../
-done
+    done
+else
+    echo "[skip $dir0]"
 fi
-cd ..
 
 
+#
+# tutorials
+#
+dir0=tutorials
+if [ "$tutorial_flag" = true ]
+then
+    echo "[$dir0]"
+    subdirs="CFD inverseHeatTransfer"
+    [ -n "$muq_flag" ] && subdirs="$subdirs UQ"
+    [ -n "$torch_flag" ] && subdirs="$subdirs NN"
+
+    for subdir in $subdirs
+    do
+        for d in "$dir0/$subdir"/*
+        do
+            [ -f "$d/Make/files" ] || continue
+            wmake "$d"
+            if [ $? -ne 0 ]
+            then
+                echo "Compile error: $d"
+                exit 1
+            fi
+        done
+    done
+else
+    echo "[skip $dir0]"
+fi
+
+
+#
+# unitTests
+#
+dir0=unitTests
+if [ "$unit_tests_flag" = true ]
+then
+    echo "[$dir0]"
+    for d in "$dir0"/*
+    do
+        case "$d" in
+        (*/libTorch)
+            [ -n "$torch_flag" ] || continue
+            ;;
+        esac
+
+        [ -f "$d/Make/files" ] || continue
+        wmake "$d"
+        if [ $? -ne 0 ]
+        then
+            echo "Compile error: $d"
+            exit 1
+        fi
+    done
+else
+    echo "[skip $dir0]"
+fi
 
 #------------------------------------------------------------------------------
