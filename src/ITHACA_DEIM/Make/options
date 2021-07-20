@@ -1,3 +1,13 @@
+sinclude $(GENERAL_RULES)/module-path-user
+
+/* Failsafe - user location */
+ifeq (,$(strip $(FOAM_MODULE_APPBIN)))
+    FOAM_MODULE_APPBIN = $(FOAM_USER_APPBIN)
+endif
+ifeq (,$(strip $(FOAM_MODULE_LIBBIN)))
+    FOAM_MODULE_LIBBIN = $(FOAM_USER_LIBBIN)
+endif
+
 EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
@@ -14,14 +24,11 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
     -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11 
-
-
+    -std=c++11
 
 EXE_LIBS = \
     -lITHACA-CORE \
     -lmeshTools \
     -lsampling \
     -lfileFormats \
-    -lfiniteVolume \
-    
+    -lfiniteVolume

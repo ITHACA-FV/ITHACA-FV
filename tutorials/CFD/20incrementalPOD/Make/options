@@ -15,7 +15,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
-    -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
+    -I$(LIB_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/reductionProblem \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/laplacianProblem \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNS \

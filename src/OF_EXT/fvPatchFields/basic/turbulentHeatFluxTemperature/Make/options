@@ -1,3 +1,13 @@
+sinclude $(GENERAL_RULES)/module-path-user
+
+/* Failsafe - user location */
+ifeq (,$(strip $(FOAM_MODULE_APPBIN)))
+    FOAM_MODULE_APPBIN = $(FOAM_USER_APPBIN)
+endif
+ifeq (,$(strip $(FOAM_MODULE_LIBBIN)))
+    FOAM_MODULE_LIBBIN = $(FOAM_USER_LIBBIN)
+endif
+
 EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
@@ -7,7 +17,7 @@ EXE_INC = \
     -I$(LIB_SRC)/transportModels/incompressible/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -w \
+    -w
 
 EXE_LIBS = \
     -lincompressibleTransportModels \
@@ -16,4 +26,4 @@ EXE_LIBS = \
     -lincompressibleTurbulenceModels \
     -lcompressibleTurbulenceModels \
     -lfiniteVolume \
-    -lmeshTools 
+    -lmeshTools

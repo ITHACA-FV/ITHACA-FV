@@ -4,7 +4,7 @@ EXE_INC = \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
-    -I$(FOAM_SRC)/functionObjects/forces/lnInclude \
+    -I$(LIB_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
     -I$(LIB_ITHACA_SRC)/ITHACA_MUQ \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
