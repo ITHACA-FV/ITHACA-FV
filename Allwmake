@@ -10,6 +10,15 @@ unit_tests_flag=''
 
 has_wmake="$(command -v wmake)"
 
+# ------------
+# Trap recursion flag (eg, if called from wmake -all)
+case "$1" in
+(-no-recurs* | -fromWmake)
+    shift
+    ;;
+esac
+# ------------
+
 while getopts 'htmqj:asu' flag; do
   case "${flag}" in
     h) help_flag=true ;;
