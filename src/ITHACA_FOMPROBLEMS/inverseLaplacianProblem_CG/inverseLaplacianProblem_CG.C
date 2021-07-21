@@ -155,8 +155,8 @@ void inverseLaplacianProblem_CG::solveAdjoint()
     Foam::Time& runTime = _runTime();
     volScalarField f = assignAdjointBCandSource();
     simpleControl& simple = _simple();
-#if OFVER == 6
 
+#if defined(OFVER) && (OFVER == 6)
     while (simple.loop(runTime))
 #else
     while (simple.loop())
@@ -203,8 +203,7 @@ void inverseLaplacianProblem_CG::solve(const char* problemID)
         exit(10);
     }
 
-#if OFVER == 6
-
+#if defined(OFVER) && (OFVER == 6)
     while (simple.loop(runTime))
 #else
     while (simple.loop())

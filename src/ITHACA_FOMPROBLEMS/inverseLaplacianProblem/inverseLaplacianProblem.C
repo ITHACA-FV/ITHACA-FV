@@ -181,8 +181,7 @@ void inverseLaplacianProblem::solve(const char* problemID)
         exit(10);
     }
 
-#if OFVER == 6
-
+#if defined(OFVER) && (OFVER == 6)
     while (simple.loop(runTime))
 #else
     while (simple.loop())

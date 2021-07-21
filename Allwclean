@@ -1,82 +1,23 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # Run from this directory
+cd "${0%/*}" || exit                            # Run from this directory
 
-cd src
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wclean
-    fi
-    cd ../
+for dir0 in \
+    src applications \
+    tutorials/CFD \
+    tutorials/UQ \
+    tutorials/NN \
+    tutorials/inverseHeatTransfer \
+    unitTests \
+;
+do
+    for d in "$dir0"/*
+    do
+        if [ -f "$d/Make/files" ]
+        then
+            wclean "$d"
+        fi
+    done
 done
-cd ..
-
-for d in applications/* ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wclean
-    fi
-    cd ../../
-done
-
-cd tutorials/CFD
-
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wclean
-    fi
-    cd ../
-done
-
-cd ../UQ
-
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wclean
-    fi
-    cd ../
-done
-
-cd ../NN
-
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wclean
-    fi
-    cd ../
-done
-
-cd ../inverseHeatTransfer
-
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wclean
-    fi
-    cd ../
-done
-
-cd ..
-cd ../unitTests
-
-for d in ./*/ ; do   
-    echo $d    
-    cd $d
-    if [ -f "Make/files" ]; then
-    wclean
-    fi
-    cd ../
-done
-
 
 
 #------------------------------------------------------------------------------
