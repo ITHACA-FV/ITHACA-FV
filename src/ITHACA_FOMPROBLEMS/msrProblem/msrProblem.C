@@ -120,7 +120,7 @@ void msrProblem::truthSolve(List<scalar> mu_now)
     volScalarField& alphat = _alphat();
     volScalarField& difft = _difft();
     volScalarField powerDens = ((1 - decbetaTot) * flux * SP +
-                               (decLam1 * dec1 + decLam2 * dec2 + decLam3 * dec3)).ref();
+                                (decLam1 * dec1 + decLam2 * dec2 + decLam3 * dec3)).ref();
     powerDens.rename("powerDens");
 #include "NLsolve.H"
     counter++;
@@ -1685,7 +1685,7 @@ void msrProblem::readMSRfields()
     volScalarField& SP = _SP();
     volScalarField& TXS = _TXS();
     volScalarField powerDens = (flux * (1 - _decbetaTot()) * _SP() + _decLam1() *
-                               dec1 + _decLam2() * dec2 + _decLam3() * dec3).ref();
+                                dec1 + _decLam2() * dec2 + _decLam3() * dec3).ref();
     powerDens.rename("powerDens");
     ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
     ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
@@ -1737,7 +1737,7 @@ void msrProblem::readMSRfields(std::string& dir)
     volScalarField& SP = _SP();
     volScalarField& TXS = _TXS();
     volScalarField powerDens = (flux * (1 - _decbetaTot()) * _SP() + _decLam1() *
-                               dec1 + _decLam2() * dec2 + _decLam3() * dec3).ref();
+                                dec1 + _decLam2() * dec2 + _decLam3() * dec3).ref();
     powerDens.rename("powerDens");
     std::string folder = dir;
 
