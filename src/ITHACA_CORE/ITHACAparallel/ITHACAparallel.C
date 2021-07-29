@@ -131,7 +131,7 @@ void ITHACAparallel::resumeMPI()
 
 template<>
 List<List <scalar>> ITHACAparallel::combineFields(
-                      GeometricField<scalar, fvPatchField, volMesh>& field)
+                     GeometricField<scalar, fvPatchField, volMesh>& field)
 {
     List<List< scalar>> GlobField(field.boundaryFieldRef().size() + 1);
     GlobField[0].resize(N_IF_glob);
@@ -173,7 +173,7 @@ List<List <scalar>> ITHACAparallel::combineFields(
 
 template<>
 List<List <vector>> ITHACAparallel::combineFields(
-                      GeometricField<vector, fvPatchField, volMesh>& field)
+                     GeometricField<vector, fvPatchField, volMesh>& field)
 {
     List<List< vector>> GlobField(field.boundaryFieldRef().size() + 1);
     GlobField[0].resize(N_IF_glob);

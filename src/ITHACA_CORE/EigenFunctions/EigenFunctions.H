@@ -188,7 +188,7 @@ Eigen::SparseMatrix<T> MVproduct(List<Eigen::SparseMatrix<T>>& A,
 ///
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> MVproduct(
-    const std::vector< Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>>& A,
+    const std::vector<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>>& A,
     Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>>& C);
 
 //--------------------------------------------------------------------------
@@ -246,8 +246,19 @@ Eigen::VectorXd ExpSpaced(double first, double last, int n);
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> vectorTensorProduct(
     const Eigen::Matrix<T, Eigen::Dynamic, 1>& g,
-    const Eigen::Tensor<T, 3 >& c,
+    const Eigen::Tensor<T, 3>& c,
     const Eigen::Matrix<T, Eigen::Dynamic, 1>& a);
+
+template <class T>
+struct sumOpEigen
+{
+    Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> operator()(
+        const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& x,
+        const Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& y) const
+    {
+        return x + y;  // does this work?
+    }
+};
 
 };
 
@@ -388,7 +399,7 @@ Eigen::SparseMatrix<T> EigenFunctions::MVproduct(List<Eigen::SparseMatrix<T>>& A
 
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> EigenFunctions::MVproduct(
-    const std::vector< Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>>& A,
+    const std::vector<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>>& A,
     Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>>& C)
 {
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> out;
@@ -506,6 +517,8 @@ Matrix<VectorType, Dynamic, Dynamic> SliceFromTensor(
 }
 
 }
+
+
 
 
 

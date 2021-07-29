@@ -141,7 +141,8 @@ void getModes(
 
         if (Pstream::parRun())
         {
-            UList<double> a(const_cast<Eigen::MatrixXd&> (_corMatrix).data(), _corMatrix.size());
+            UList<double> a(const_cast<Eigen::MatrixXd&> (_corMatrix).data(),
+                            _corMatrix.size());
             List<double> vec(a);
             reduce(vec, sumOp<List<double>>());
             std::memcpy(_corMatrix.data(), &vec[0], sizeof (double)*vec.size());
@@ -222,7 +223,8 @@ void getModes(
 
         if (Pstream::parRun())
         {
-            UList<double> a(const_cast<Eigen::MatrixXd&> (_corMatrix).data(), _corMatrix.size());
+            UList<double> a(const_cast<Eigen::MatrixXd&> (_corMatrix).data(),
+                            _corMatrix.size());
             List<double> vec(a);
             reduce(vec, sumOp<List<double>>());
             std::memcpy(normFact.data(), &vec[0], sizeof (double)*vec.size());
@@ -1503,7 +1505,8 @@ void getModes(PtrList<Field_type>& snapshots,
 
         if (Pstream::parRun())
         {
-            UList<double> a(const_cast<Eigen::MatrixXd&> (_corMatrix).data(), _corMatrix.size());
+            UList<double> a(const_cast<Eigen::MatrixXd&> (_corMatrix).data(),
+                            _corMatrix.size());
             List<double> vec(a);
             reduce(vec, sumOp<List<double>>());
             std::memcpy(_corMatrix.data(), &vec[0], sizeof (double)*vec.size());
