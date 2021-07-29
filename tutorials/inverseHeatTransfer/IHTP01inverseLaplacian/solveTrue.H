@@ -6,7 +6,6 @@ Info << "DT = " << DT << endl;
 assignDirectBC();
 
 #if defined(OFVER) && (OFVER == 6)
-
 while (simple.loop(runTime))
 #else
 while (simple.loop())
