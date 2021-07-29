@@ -43,16 +43,13 @@ autoPtr<RBFFunction> RBFFunction::New
 {
     Info << "Radial Basis Function interpolation: "
          << "Selecting RBF function: " << type << endl;
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(type);
+
+    auto cstrIter = dictionaryConstructorTablePtr_->find(type);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
-        (
-            "RBFFunction::New(const word& type, const dictionary& dict)",
-            dict
-        )   << "Unknown RBFFunction type "
+        FatalIOErrorInFunction(dict)
+            << "Unknown RBFFunction type "
             << type << endl << endl
             << "Valid  RBFFunctions are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

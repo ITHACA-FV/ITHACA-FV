@@ -74,6 +74,19 @@ fi
 
 #------------------------------------------------------------------------------
 
+if [ ! -d "$LIB_ITHACA" ]
+then
+    echo "ITHACA environment not set. Attempting that now..."
+    . "$PWD"/etc/bashrc || false
+fi
+
+[ -d "$LIB_ITHACA" ] || {
+    echo "Error: no ITHACA environment"
+    exit 2
+}
+
+
+#------------------------------------------------------------------------------
 #
 # src
 #
