@@ -109,8 +109,8 @@ class IHTP01inverseLaplacian_paramBC: public inverseLaplacianProblem_paramBC
                     ITHACAutilities::assignBC(Tad, patchI, -heatFlux_gammaEx4);
                 }
             }
-
 #if defined(OFVER) && (OFVER == 6)
+
             while (simple.loop(runTime))
 #else
             while (simple.loop())

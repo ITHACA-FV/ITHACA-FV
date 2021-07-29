@@ -43,17 +43,16 @@ autoPtr<RBFFunction> RBFFunction::New
 {
     Info << "Radial Basis Function interpolation: "
          << "Selecting RBF function: " << type << endl;
-
     auto cstrIter = dictionaryConstructorTablePtr_->find(type);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalIOErrorInFunction(dict)
-            << "Unknown RBFFunction type "
-            << type << endl << endl
-            << "Valid  RBFFunctions are : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
+                << "Unknown RBFFunction type "
+                << type << endl << endl
+                << "Valid  RBFFunctions are : " << endl
+                << dictionaryConstructorTablePtr_->sortedToc()
+                << exit(FatalIOError);
     }
 
     return autoPtr<RBFFunction>(cstrIter()(dict.subDict(type + "Coeffs")));

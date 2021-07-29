@@ -421,8 +421,8 @@ void inverseLaplacianProblem_paramBC::solveAdditional()
             ITHACAutilities::assignBC(Tad, patchI, homogeneousBC);
         }
     }
-
 #if defined(OFVER) && (OFVER == 6)
+
     while (simple.loop(runTime))
 #else
     while (simple.loop())
