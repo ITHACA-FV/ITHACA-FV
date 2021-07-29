@@ -131,7 +131,8 @@ double errorL2Abs(GeometricField<vector, fvPatchField, volMesh>& field1,
                   GeometricField<vector, fvPatchField, volMesh>& field2, volScalarField& Volumes)
 
 {
-    volScalarField diffFields2 = (((field1 - field2) & (field1 - field2)) * Volumes).ref();
+    volScalarField diffFields2 = (((field1 - field2) & (field1 - field2)) *
+                                  Volumes).ref();
     double err = Foam::sqrt(gSum(diffFields2));
     return err;
 }
@@ -141,7 +142,8 @@ double errorL2Abs(GeometricField<scalar, fvPatchField, volMesh>& field1,
                   GeometricField<scalar, fvPatchField, volMesh>& field2, volScalarField& Volumes)
 
 {
-    volScalarField diffFields2 = (((field1 - field2) * (field1 - field2)) * Volumes).ref();
+    volScalarField diffFields2 = (((field1 - field2) * (field1 - field2)) *
+                                  Volumes).ref();
     double err = Foam::sqrt(gSum(diffFields2));
     return err;
 }
