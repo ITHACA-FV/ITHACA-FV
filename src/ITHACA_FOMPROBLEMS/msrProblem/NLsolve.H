@@ -50,7 +50,6 @@ res_os.open("./ITHACAoutput/Offline/residuals", std::ios_base::app);
 std::string equation;
 
 #if defined(OFVER) && (OFVER == 6)
-
 while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
 #else
 while (simple.loop() && residual > tolerance && csolve < maxIter )

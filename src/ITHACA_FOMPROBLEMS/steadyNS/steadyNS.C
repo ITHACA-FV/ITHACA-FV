@@ -1642,7 +1642,7 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term_consistent(label NUmodes,
         for (label j = 0; j < KF2size; j++)
         {
             volVectorField CoeffA = (fvc::reconstruct(dt_dummy * fvc::snGrad(
-                                         Pmodes[j]) * mag(Pmodes[j].mesh().magSf()))).ref();
+                                        Pmodes[j]) * mag(Pmodes[j].mesh().magSf()))).ref();
             volVectorField CoeffB = fvc::reconstruct(L_PHImodes[i]).ref();
             KF_matrix(i, j) = fvc::domainIntegrate(CoeffA &  CoeffB).value();
         }
