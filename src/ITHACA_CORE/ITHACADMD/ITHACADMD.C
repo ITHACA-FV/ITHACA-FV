@@ -90,9 +90,9 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(label SVD_rank, bool exact,
     }
     else
     {
-        Info << "SVD using Divide and Conquer method" << endl;
-        Eigen::BDCSVD<Eigen::MatrixXd> svd(Xm,
-                                           Eigen::ComputeThinU | Eigen::ComputeThinV);
+        Info << "SVD using JacobiSVD" << endl;
+        Eigen::JacobiSVD<Eigen::MatrixXd> svd(Xm,
+                                              Eigen::ComputeThinU | Eigen::ComputeThinV);
         U = svd.matrixU().leftCols(SVD_rank);
         V = svd.matrixV().leftCols(SVD_rank);
         S = svd.singularValues().head(SVD_rank).array().cwiseInverse();
@@ -148,8 +148,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(label SVD_rank, bool exact,
         }
     }
 
-    Amplitudes = DMDEigenModes.real().bdcSvd(Eigen::ComputeThinU |
-                 Eigen::ComputeThinV).solve(Xm.col(0));
+    Amplitudes = DMDEigenModes.real().fullPivLu().solve(Xm.col(0));
 
     if (exportDMDmodes)
     {

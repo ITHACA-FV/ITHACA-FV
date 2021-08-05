@@ -141,7 +141,7 @@ void getModes(
 
         if (Pstream::parRun())
         {
-            reduce(_corMatrix,sumOp<Eigen::MatrixXd>());
+            reduce(_corMatrix, sumOp<Eigen::MatrixXd>());
         }
 
         Eigen::VectorXd eigenValueseig;
@@ -219,7 +219,7 @@ void getModes(
 
         if (Pstream::parRun())
         {
-            reduce(_corMatrix,sumOp<Eigen::MatrixXd>());
+            reduce(_corMatrix, sumOp<Eigen::MatrixXd>());
             normFact = normFact.cwiseSqrt();
         }
 
@@ -1497,7 +1497,7 @@ void getModes(PtrList<Field_type>& snapshots,
 
         if (Pstream::parRun())
         {
-            reduce(_corMatrix,sumOp<Eigen::MatrixXd>());
+            reduce(_corMatrix, sumOp<Eigen::MatrixXd>());
         }
 
         Eigen::VectorXd eigenValueseig;
