@@ -162,7 +162,8 @@ Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh>>&
 /// @return     Column vector, in each row the Frobenius norm of the relative error.
 ///
 template<class T, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh>>& fields1,
+Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh>>&
+                             fields1,
                              PtrList<GeometricField<T, PatchField, GeoMesh>>& fields2,
                              List<label>* labels = NULL);
 //--------------------------------------------------------------------------

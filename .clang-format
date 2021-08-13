@@ -1,0 +1,14 @@
+BasedOnStyle: WebKit
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: true
+  AfterFunction: true
+  AfterNamespace: true
+  SplitEmptyFunction: false
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Custom
+BreakBeforeInheritanceComma: true
+BreakConstructorInitializers: AfterColon
+MaxEmptyLinesToKeep: 2
+SortIncludes: false
+SpaceBeforeCtorInitializerColon: false

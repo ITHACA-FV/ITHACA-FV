@@ -230,17 +230,17 @@ class DEIM
         S generateSubmeshVector(label layers, const fvMesh& mesh, S field,
                                 label secondTime = 0);
 
-         //----------------------------------------------------------------------
-         /// @brief      Function to generate a a subfield in the location of the magic points
-         ///
-         /// @param      field  For which you want the create the submeshes
-         ///
-         /// @tparam     F      type of field (can be volVectorField, volScalarField, surfaceScalar and surfaceVector)
-         ///
-         /// @return     a the interpolated field in the submesh
-         ///
-         template <class F>
-         F generateSubField(F& field);
+        //----------------------------------------------------------------------
+        /// @brief      Function to generate a a subfield in the location of the magic points
+        ///
+        /// @param      field  For which you want the create the submeshes
+        ///
+        /// @tparam     F      type of field (can be volVectorField, volScalarField, surfaceScalar and surfaceVector)
+        ///
+        /// @return     a the interpolated field in the submesh
+        ///
+        template <class F>
+        F generateSubField(F& field);
 
         //----------------------------------------------------------------------
         /// @brief      Function to generate a a subfield in the location of the magic points computed for the Matrix (LHS)

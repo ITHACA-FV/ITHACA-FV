@@ -207,11 +207,13 @@ int main(int argc, char* argv[])
     {
         Info << "Pass '-stage offline', '-stage online'" << endl;
     }
+
 #else
+
     if (argc == 1)
     {
         Info << "Pass 'offline' or 'online' as first arguments."
-                  << endl;
+             << endl;
         exit(0);
     }
 
@@ -248,6 +250,7 @@ int main(int argc, char* argv[])
     {
         Info << "Pass offline, online" << endl;
     }
+
 #endif
     exit(0);
 }

@@ -62,13 +62,13 @@ ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
     }
 
     newtonObjectSUP = newtonSteadyNSTurbSUP(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
-                                         fomProblem);
+                                            fomProblem);
     newtonObjectPPE = newtonSteadyNSTurbPPE(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
-                                         fomProblem);
+                                            fomProblem);
 }
 
 int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
-                                   Eigen::VectorXd& fvec) const
+                                      Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd aTmp(Nphi_u);
     Eigen::VectorXd bTmp(Nphi_p);
@@ -126,7 +126,7 @@ int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
 }
 
 int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
-                                   Eigen::VectorXd& fvec) const
+                                      Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd aTmp(Nphi_u);
     Eigen::VectorXd bTmp(Nphi_p);
@@ -173,7 +173,6 @@ int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
     for (int j = 0; j < Nphi_p; j++)
     {
         int k = j + Nphi_u;
-
         gg = aTmp.transpose() * Eigen::SliceFromTensor(problem->gTensor, 0,
                 j) * aTmp;
         //fvec(k) = m3(j, 0) - gg(0, 0) - m6(j, 0) + bb(0, 0);
@@ -193,7 +192,7 @@ int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
 
 
 int newtonSteadyNSTurbSUP::df(const Eigen::VectorXd& x,
-                           Eigen::MatrixXd& fjac) const
+                              Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonSteadyNSTurbSUP> numDiff(*this);
     numDiff.df(x, fjac);
@@ -201,7 +200,7 @@ int newtonSteadyNSTurbSUP::df(const Eigen::VectorXd& x,
 }
 
 int newtonSteadyNSTurbPPE::df(const Eigen::VectorXd& x,
-                           Eigen::MatrixXd& fjac) const
+                              Eigen::MatrixXd& fjac) const
 {
     Eigen::NumericalDiff<newtonSteadyNSTurbPPE> numDiff(*this);
     numDiff.df(x, fjac);

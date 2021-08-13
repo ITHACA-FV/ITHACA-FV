@@ -76,7 +76,7 @@ Description
 class tutorial22 : public UnsteadyNSTurb
 {
     public:
-        explicit tutorial22(int argc, char *argv[])
+        explicit tutorial22(int argc, char* argv[])
             :
             UnsteadyNSTurb(argc, argv),
             U(_U()),
@@ -101,13 +101,12 @@ class tutorial22 : public UnsteadyNSTurb
                 ITHACAstream::read_fields(Pfield, p, offlinepath);
                 ITHACAstream::read_fields(nutFields, nut, offlinepath);
             }
-
             else
             {
                 truthSolve(mu_now, offlinepath);
             }
         }
-        Eigen::MatrixXd vectorTensorMult(Eigen::VectorXd g, Eigen::Tensor<double, 3> c ,
+        Eigen::MatrixXd vectorTensorMult(Eigen::VectorXd g, Eigen::Tensor<double, 3> c,
                                          Eigen::VectorXd a)
         {
             int prodDim = c.dimension(0);
@@ -132,7 +131,7 @@ void poisson_approach(tutorial22& example);
                                Starting the MAIN
 \*---------------------------------------------------------------------------*/
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     if (argc == 1)
     {
@@ -153,12 +152,12 @@ int main(int argc, char *argv[])
 
     argc--;
     tutorial22 example(argc, argv);
+
     if (std::strcmp(argv[1], "supremizer") == 0)
     {
         // perform the offline stage, extracting the modes from the snapshots' dataset corresponding to parOffline
         supremizer_approach(example);
     }
-
     else if (std::strcmp(argv[1], "poisson") == 0)
     {
         poisson_approach(example);
@@ -204,7 +203,6 @@ void supremizer_approach(tutorial22& example)
     example.writeEvery = 0.004;
     example.offlineSolve("./ITHACAoutput/Offline/");
     example.solvesupremizer();
-
     ITHACAPOD::getModes(example.nutFields, example.nutModes, example._nut().name(),
                         example.podex, 0, 0, NmodesProject);
     ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
@@ -215,11 +213,12 @@ void supremizer_approach(tutorial22& example)
                         example.podex,
                         example.supex, 1, NmodesProject);
     example.projectSUP("./Matrices", NmodesU, NmodesP, NmodesSUP, NmodesNUT);
-
-    Eigen::MatrixXd coeefs = ITHACAutilities::getCoeffs(example.Ufield, example.L_U_SUPmodes);
-    Eigen::MatrixXd coeefsNut = ITHACAutilities::getCoeffs(example.nutFields, example.nutModes);
-    Eigen::MatrixXd coeefsP = ITHACAutilities::getCoeffs(example.Pfield, example.Pmodes);
-
+    Eigen::MatrixXd coeefs = ITHACAutilities::getCoeffs(example.Ufield,
+                             example.L_U_SUPmodes);
+    Eigen::MatrixXd coeefsNut = ITHACAutilities::getCoeffs(example.nutFields,
+                                example.nutModes);
+    Eigen::MatrixXd coeefsP = ITHACAutilities::getCoeffs(example.Pfield,
+                              example.Pmodes);
     cnpy::save(coeefs, "./ITHACAoutput/Matrices/coeefs.npy");
     cnpy::save(coeefsNut, "./ITHACAoutput/Matrices/coeefsNut.npy");
     cnpy::save(coeefsP, "./ITHACAoutput/Matrices/coeefsP.npy");
@@ -258,7 +257,6 @@ void poisson_approach(tutorial22& example)
     example.writeEvery = 0.004;
     example.offlineSolve("./ITHACAoutput/Offline");
     example.solvesupremizer();
-
     //modNut = ITHACAPOD::getModes(example.nutFields, example.nutModes, example._nut().name(),
     //                    example.podex, 0, 0, NmodesProject);
     ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
@@ -268,16 +266,15 @@ void poisson_approach(tutorial22& example)
     ITHACAPOD::getModes(example.supfield, example.supmodes, example._U().name(),
                         example.podex,
                         example.supex, 1, NmodesProject);
-    
     example.projectPPE("./Matrices", NmodesU, NmodesP, NmodesSUP, NmodesNUT);
-
-    Eigen::MatrixXd coeefs = ITHACAutilities::getCoeffs(example.Ufield, example.L_U_SUPmodes);
-    Eigen::MatrixXd coeefsNut = ITHACAutilities::getCoeffs(example.nutFields, example.nutModes);
-    Eigen::MatrixXd coeefsP = ITHACAutilities::getCoeffs(example.Pfield, example.Pmodes);
-
+    Eigen::MatrixXd coeefs = ITHACAutilities::getCoeffs(example.Ufield,
+                             example.L_U_SUPmodes);
+    Eigen::MatrixXd coeefsNut = ITHACAutilities::getCoeffs(example.nutFields,
+                                example.nutModes);
+    Eigen::MatrixXd coeefsP = ITHACAutilities::getCoeffs(example.Pfield,
+                              example.Pmodes);
     cnpy::save(coeefs, "./ITHACAoutput/Matrices/coeefs.npy");
     cnpy::save(coeefsNut, "./ITHACAoutput/Matrices/coeefsNut.npy");
     cnpy::save(coeefsP, "./ITHACAoutput/Matrices/coeefsP.npy");
-
 }
 

@@ -39,6 +39,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
     -ftemplate-depth=500 \
     -w \
+    -O2 \
     -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++11

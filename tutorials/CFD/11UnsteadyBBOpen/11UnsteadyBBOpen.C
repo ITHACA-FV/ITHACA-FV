@@ -264,8 +264,12 @@ int main(int argc, char* argv[])
         example.solvesupremizer("modes");
     }
 
-    // Create a list with number of modes for which the projection needs to be performed
-    Eigen::MatrixXd List_of_modes(NmodesOut - 5, 1);
+    <<< <<< < HEAD
+    == == == =
+        >>>>>>> 56693175 (Adding stabilization method option in 11UnsteadyBBOpen
+                          tutorial)
+        // Create a list with number of modes for which the projection needs to be performed
+        Eigen::MatrixXd List_of_modes(NmodesOut - 5, 1);
 
     for (int i = 0; i < List_of_modes.rows(); i++)
     {
@@ -379,8 +383,12 @@ int main(int argc, char* argv[])
         temp_now_BC(0, 0) = par_on_BC(k, 0);
         temp_now_BC(1, 0) = par_on_BC(k, 1);
         temp_now_BC(2, 0) = par_on_BC(k, 2);
+        <<< <<< < HEAD
+        == == == =
+            >>>>>>> 56693175 (Adding stabilization method option in 11UnsteadyBBOpen
+                              tutorial)
 
-        if (stabilization == "supremizer")
+            if (stabilization == "supremizer")
         {
             reduced.solveOnline_sup(temp_now_BC, vel_now_BC, k, par_on_BC.rows());
             reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 5);
