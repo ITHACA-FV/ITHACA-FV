@@ -122,6 +122,11 @@ void laplacianProblem::project(label Nmodes)
                                           nu_list[i], Tmodes[k])).value();
             }
         }
+
+        if (Pstream::parRun())
+        {
+            reduce(A_matrices[i], sumOp<Eigen::MatrixXd>());
+        }
     }
 
     /// Export the A matrices
