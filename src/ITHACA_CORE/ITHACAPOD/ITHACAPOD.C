@@ -191,35 +191,40 @@ void getModes(
         Eigen::MatrixXd modesEig = (SnapMatrix * eigenVectoreig);
         // Computing Normalization factors of the POD Modes
         Eigen::VectorXd V = ITHACAutilities::getMassMatrixFV(snapshots[0]);
-        Eigen::VectorXd normFact(nmodes);
+        Eigen::MatrixXd normFact(nmodes, 1);
 
         for (label i = 0; i < nmodes; i++)
         {
             if (PODnorm == "L2")
             {
-                normFact(i) = std::sqrt((modesEig.col(i).transpose() * V.asDiagonal() *
-                                         modesEig.col(i))(0, 0));
+                normFact(i, 0) = std::sqrt((modesEig.col(i).transpose() * V.asDiagonal() *
+                                            modesEig.col(i))(0, 0));
 
                 if (Pstream::parRun())
                 {
-                    normFact(i) = (modesEig.col(i).transpose() * V.asDiagonal() *
-                                   modesEig.col(i))(0, 0);
+                    normFact(i, 0) = (modesEig.col(i).transpose() * V.asDiagonal() *
+                                      modesEig.col(i))(0, 0);
                 }
             }
             else if (PODnorm == "Frobenius")
             {
-                normFact(i) = std::sqrt((modesEig.col(i).transpose() * modesEig.col(i))(0, 0));
+                normFact(i, 0) = std::sqrt((modesEig.col(i).transpose() * modesEig.col(i))(0,
+                                           0));
 
                 if (Pstream::parRun())
                 {
-                    normFact(i) = (modesEig.col(i).transpose() * modesEig.col(i))(0, 0);
+                    normFact(i, 0) = (modesEig.col(i).transpose() * modesEig.col(i))(0, 0);
                 }
             }
         }
 
         if (Pstream::parRun())
         {
-            reduce(_corMatrix, sumOp<Eigen::MatrixXd>());
+            reduce(normFact, sumOp<Eigen::MatrixXd>());
+        }
+
+        if (Pstream::parRun())
+        {
             normFact = normFact.cwiseSqrt();
         }
 
@@ -228,18 +233,18 @@ void getModes(
 
         for (label i = 0; i < NBC; i++)
         {
-            //modesEigBC[i] = (SnapMatrixBC[i] * eigenVectoreig) *
-            //                eigenValueseigLam.head(nmodes).asDiagonal();
             modesEigBC[i] = (SnapMatrixBC[i] * eigenVectoreig);
         }
 
+        std::cout << normFact << std::endl;
+
         for (label i = 0; i < nmodes; i++)
         {
-            modesEig.col(i) = modesEig.col(i).array() / normFact(i);
+            modesEig.col(i) = modesEig.col(i).array() / normFact(i, 0);
 
             for (label j = 0; j < NBC; j++)
             {
-                modesEigBC[j].col(i) = modesEigBC[j].col(i).array() / normFact(i);
+                modesEigBC[j].col(i) = modesEigBC[j].col(i).array() / normFact(i, 0);
             }
         }
 

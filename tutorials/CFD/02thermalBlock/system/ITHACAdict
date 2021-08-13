@@ -25,4 +25,4 @@ NmodesTproj 10;
 OutPrecision 20;
 OutType fixed;
 
-POD_T Frobenius;
+POD_T L2;
