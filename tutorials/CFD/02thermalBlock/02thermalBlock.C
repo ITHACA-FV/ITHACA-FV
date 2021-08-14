@@ -198,6 +198,9 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
                         example.podex, 0, 0,
                         NmodesTout);
+    Info << fvc::domainIntegrate(example.Tmodes[0]*example.Tmodes[0]).value() <<
+         endl;
+    exit(0);
     /// Create a new instance of the FOM problem for testing purposes
     tutorial02 FOM_test(argc, argv);
     FOM_test.offline = false;
