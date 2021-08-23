@@ -320,21 +320,21 @@ volScalarField Foam2Eigen::Eigen2field(
         field_out.ref()[i] = eigen_vector(i);
     }
 
-    word fieldName = field_out.name();
+    word field_name = field_out.name();
 
-    if (fieldName == "p_rgh")
+    if (field_name == "p_rgh")
     {
         volScalarField::Boundary& pBf = field_out.boundaryFieldRef();
         forAll (pBf, patchi)
         {
             if (isA<fixedFluxPressureFvPatchScalarField>(pBf[patchi]))
             {
-                fixedFluxPressureFvPatchScalarField& Tpatch =
+                fixedFluxPressureFvPatchScalarField patch =
                     refCast<fixedFluxPressureFvPatchScalarField>
                     (
                         field_out.boundaryFieldRef()[patchi]
                     );
-                Tpatch.updateSnGrad(Tpatch.gradient());
+                patch.updateSnGrad(patch.gradient());
             }
         }
     }
