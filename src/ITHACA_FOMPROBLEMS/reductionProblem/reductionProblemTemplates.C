@@ -53,7 +53,7 @@ void reductionProblem::computeLift(T& Lfield, T& liftfield, T& omfield)
         area = gSum(Lfield[0].mesh().magSf().boundaryField()[p]);
         u_lf = gSum(liftfield[k].mesh().magSf().boundaryField()[p] *
                     liftfield[k].boundaryField()[p]).component(l) / area;
-        M_Assert(abs(u_lf) > 1e-5,
+        M_Assert(std::abs(u_lf) > 1e-5,
                  "The lift cannot be computed. Please, check your inletIndex definition");
 
         for (label j = 0; j < Lfield.size(); j++)
