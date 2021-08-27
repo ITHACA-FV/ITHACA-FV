@@ -329,7 +329,7 @@ volScalarField Foam2Eigen::Eigen2field(
         {
             if (isA<fixedFluxPressureFvPatchScalarField>(pBf[patchi]))
             {
-                fixedFluxPressureFvPatchScalarField patch =
+                fixedFluxPressureFvPatchScalarField& patch =
                     refCast<fixedFluxPressureFvPatchScalarField>
                     (
                         field_out.boundaryFieldRef()[patchi]
