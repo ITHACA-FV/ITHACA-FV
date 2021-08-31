@@ -113,8 +113,8 @@ int main(int argc, char* argv[])
     /// Set the parameters infos
     example.setParameters();
     // Set the parameter ranges
-    example.mu_range(0, 0) = 0.9;
-    example.mu_range(0, 1) = 1.15;
+    example.mu_range(0, 0) = 1.0;
+    example.mu_range(0, 1) = 1.1;
     // Generate equispaced samples inside the parameter range
     example.genEquiPar();
     // Set the inlet boundaries where we have non homogeneous boundary conditions
@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
     pod_rbf.nu = 1e-05;
     pod_rbf.tauU.resize(1, 1);
     pod_rbf.tstart = 0;
-    pod_rbf.finalTime = 50;
+    pod_rbf.finalTime = 10.1;
     pod_rbf.dt = 0.005;
     pod_rbf.storeEvery = 0.005;
     pod_rbf.exportEvery = 0.1;
@@ -226,7 +226,7 @@ int main(int argc, char* argv[])
     example2.inletIndex(0, 1) = 0;
     // Time parameters
     example2.startTime = 0;
-    example2.finalTime = 25;
+    example2.finalTime = 5;
     example2.timeStep = 0.001;
     example2.writeEvery = 0.1;
     example2.offlineSolve("./ITHACAoutput/Offline_check/");
