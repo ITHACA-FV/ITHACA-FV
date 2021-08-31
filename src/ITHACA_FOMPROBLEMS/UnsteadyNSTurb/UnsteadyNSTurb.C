@@ -106,7 +106,7 @@ UnsteadyNSTurb::UnsteadyNSTurb(int argc, char* argv[])
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void UnsteadyNSTurb::truthSolve(List<scalar> mu_now)
+void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
 {
     Time& runTime = _runTime();
     surfaceScalarField& phi = _phi();
@@ -162,11 +162,12 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now)
         if (checkWrite(runTime))
         {
             nsnapshots += 1;
-            volScalarField nut = turbulence->nut().ref();
-            ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
-            ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
-            ITHACAstream::exportSolution(nut, name(counter), "./ITHACAoutput/Offline/");
-            std::ofstream of("./ITHACAoutput/Offline/" + name(counter) + "/" +
+            // Produces error when uncommented
+            // volScalarField nut = turbulence->nut().ref();
+            ITHACAstream::exportSolution(U, name(counter), offlinepath);
+            ITHACAstream::exportSolution(p, name(counter), offlinepath);
+            ITHACAstream::exportSolution(nut, name(counter), offlinepath);
+            std::ofstream of(offlinepath + name(counter) + "/" +
                              runTime.timeName());
             Ufield.append(tmp<volVectorField>(U));
             Pfield.append(tmp<volScalarField>(p));
@@ -196,7 +197,7 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now)
     if (mu_samples.rows() == nsnapshots * mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-                                   "./ITHACAoutput/Offline");
+                                   offlinepath);
     }
 }
 
@@ -727,6 +728,14 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     cTotalTensor.resize(cSize, nNutModes, cSize);
     cTotalTensor = ct1Tensor + ct2Tensor;
+
+    // Define coeffL2
+    coeffL2 = ITHACAutilities::getCoeffs(nutFields,
+                                         nutModes, nNutModes);
+    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
+                               "./ITHACAoutput/Matrices/");
+    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
+                               "./ITHACAoutput/Matrices/");
 
     if (nutAve.size() != 0)
     {
