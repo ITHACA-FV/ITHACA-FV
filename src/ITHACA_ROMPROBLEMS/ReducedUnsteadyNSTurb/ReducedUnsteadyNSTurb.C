@@ -490,9 +490,17 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();
+    
     // Set Initial Conditions
-    y.head(Nphi_u) = initCond.col(0).head(Nphi_u);
-    y.tail(Nphi_p) = initCond.col(0).tail(Nphi_p);
+    // y.head(Nphi_u) = initCond.col(0).head(Nphi_u);
+    // y.tail(Nphi_p) = initCond.col(0).tail(Nphi_p);
+    y.head(Nphi_u) = ITHACAutilities::getCoeffs(problem->Ufield[0],
+                     Umodes);
+    y.tail(Nphi_p) = ITHACAutilities::getCoeffs(problem->Pfield[0],
+                     Pmodes);
+    nut0           = ITHACAutilities::getCoeffs(problem->nutFields[0],
+                     nutModes);
+
     int nextStore = 0;
     int counter2 = 0;
 

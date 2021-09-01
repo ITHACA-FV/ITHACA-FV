@@ -271,8 +271,9 @@ class UnsteadyNSTurb: public unsteadyNS
         /// @param[in]  mu_now  The actual value of the parameter for this truthSolve. Used only
         /// to construct mu_interp matrix which is written out in the Offline folder, also for par file in
         /// the Parameters folder.
+        /// @param[in]  offlinepath Path where solution should be stored
         ///
-        void truthSolve(List<scalar> mu_now);
+        void truthSolve(List<scalar> mu_now, std::string& offlinepath);
 
         //----------------------------------------------------------------------
         /// Project using a supremizer approach
