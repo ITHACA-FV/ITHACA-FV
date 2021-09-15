@@ -269,7 +269,7 @@ template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
 template<template<class> class PatchField, class GeoMesh>
 GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     GeometricField<vector, PatchField, GeoMesh>& field_in,
-    Eigen::VectorXd& eigen_vector)
+    Eigen::VectorXd& eigen_vector, bool correctBC)
 {
     GeometricField<vector, PatchField, GeoMesh> field_out(field_in);
 
@@ -280,19 +280,21 @@ GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
         field_out.ref()[i][2] = eigen_vector(i + field_out.size() * 2);
     }
 
-    field_out.correctBoundaryConditions();
+    if (correctBC)
+    {
+        field_out.correctBoundaryConditions();
+    }
+
     return field_out;
 }
 
 template volVectorField Foam2Eigen::Eigen2field(
-    volVectorField& field_in,
-    Eigen::VectorXd& eigen_vector);
-
+    volVectorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
 
 template<template<class> class PatchField, class GeoMesh>
 GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     GeometricField<scalar, PatchField, GeoMesh>& field_in,
-    Eigen::VectorXd& eigen_vector)
+    Eigen::VectorXd& eigen_vector, bool correctBC)
 {
     GeometricField<scalar, PatchField, GeoMesh> field_out(field_in);
 
@@ -306,12 +308,12 @@ GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
 
 template surfaceScalarField Foam2Eigen::Eigen2field(
     surfaceScalarField& field_in,
-    Eigen::VectorXd& eigen_vector);
+    Eigen::VectorXd& eigen_vector,
+    bool correctBC);
 
 template<>
 volScalarField Foam2Eigen::Eigen2field(
-    volScalarField& field_in,
-    Eigen::VectorXd& eigen_vector)
+    volScalarField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC)
 {
     GeometricField<scalar, fvPatchField, volMesh> field_out(field_in);
 
@@ -320,32 +322,17 @@ volScalarField Foam2Eigen::Eigen2field(
         field_out.ref()[i] = eigen_vector(i);
     }
 
-    word field_name = field_out.name();
-
-    if (field_name == "p_rgh")
+    if (correctBC)
     {
-        volScalarField::Boundary& pBf = field_out.boundaryFieldRef();
-        forAll (pBf, patchi)
-        {
-            if (isA<fixedFluxPressureFvPatchScalarField>(pBf[patchi]))
-            {
-                fixedFluxPressureFvPatchScalarField& patch =
-                    refCast<fixedFluxPressureFvPatchScalarField>
-                    (
-                        field_out.boundaryFieldRef()[patchi]
-                    );
-                patch.updateSnGrad(patch.gradient());
-            }
-        }
+        field_out.correctBoundaryConditions();
     }
 
-    field_out.correctBoundaryConditions();
     return field_out;
 }
 
 template<>
-Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
-                                      Eigen::MatrixXd& matrix)
+Field<scalar> Foam2Eigen::Eigen2field(
+    Field<scalar>& field, Eigen::MatrixXd& matrix, bool correctBC)
 {
     label sizeBC = field.size();
     M_Assert(matrix.cols() == 1,
@@ -373,8 +360,8 @@ Field<scalar> Foam2Eigen::Eigen2field(Field<scalar>& field,
 }
 
 template<>
-Field<vector> Foam2Eigen::Eigen2field(Field<vector>& field,
-                                      Eigen::MatrixXd& matrix)
+Field<vector> Foam2Eigen::Eigen2field(
+    Field<vector>& field, Eigen::MatrixXd& matrix, bool correctBC)
 {
     label sizeBC = field.size();
     M_Assert(matrix.cols() == 3,

@@ -253,7 +253,7 @@ void getModes(
             GeometricField<Type, PatchField, GeoMesh>  tmp2(snapshots[0].name(),
                     snapshots[0]);
             Eigen::VectorXd vec = modesEig.col(i);
-            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec);
+            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec, false);
 
             for (label k = 0; k < NBC; k++)
             {
@@ -396,7 +396,7 @@ void getWeightedModes(
             GeometricField<Type, PatchField, GeoMesh> tmp2(snapshots[0].name(),
                     snapshots[0]);
             Eigen::VectorXd vec = modesEig.col(i);
-            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec);
+            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec, false);
 
             for (label k = 0; k < tmp2.boundaryField().size(); k++)
             {
@@ -496,7 +496,7 @@ void getModesSVD(
         for (label i = 0; i < nmodes; i++)
         {
             Eigen::VectorXd vec = modesEig.col(i);
-            tmb_bu = Foam2Eigen::Eigen2field(tmb_bu, vec);
+            tmb_bu = Foam2Eigen::Eigen2field(tmb_bu, vec, false);
             modes.set(i, tmb_bu.clone());
         }
 
@@ -1097,7 +1097,7 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
             GeometricField<Type, PatchField, GeoMesh> tmp2(snapshots[0].name(),
                     snapshots[0] * 0);
             Eigen::VectorXd vec = modesEig.col(i);
-            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec);
+            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec, false);
 
             // Adjusting boundary conditions
             for (label k = 0; k < tmp2.boundaryField().size(); k++)
