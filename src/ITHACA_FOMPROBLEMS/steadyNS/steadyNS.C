@@ -1103,7 +1103,7 @@ Eigen::MatrixXd steadyNS::pressure_BC1(label NUmodes, label NPmodes)
     label P_BC1size = NPmodes;
     label P_BC2size = NUmodes + liftfield.size();
     Eigen::MatrixXd BC1_matrix(P_BC1size, P_BC2size);
-    fvMesh& mesh = _mesh();
+    const fvMesh& mesh = L_U_SUPmodes[0].mesh();
 
     for (label i = 0; i < P_BC1size; i++)
     {
@@ -1133,7 +1133,7 @@ List <Eigen::MatrixXd> steadyNS::pressure_BC2(label NUmodes, label NPmodes)
     label P2_BC1size = NPmodes;
     label P2_BC2size = NUmodes + NSUPmodes + liftfield.size();
     List <Eigen::MatrixXd> BC2_matrix;
-    fvMesh& mesh = _mesh();
+    const fvMesh& mesh = L_U_SUPmodes[0].mesh();
     BC2_matrix.setSize(P2_BC1size);
 
     for (label j = 0; j < P2_BC1size; j++)
@@ -1170,7 +1170,7 @@ Eigen::Tensor<double, 3> steadyNS::pressureBC2(label NUmodes, label NPmodes)
     label pressureBC1Size = NPmodes;
     label pressureBC2Size = NUmodes + NSUPmodes + liftfield.size();
     Eigen::Tensor<double, 3> bc2Tensor;
-    fvMesh& mesh = _mesh();
+    const fvMesh& mesh = L_U_SUPmodes[0].mesh();
     bc2Tensor.resize(pressureBC1Size, pressureBC2Size, pressureBC2Size);
 
     for (label i = 0; i < pressureBC1Size; i++)
@@ -1206,7 +1206,7 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
     label P3_BC1size = NPmodes;
     label P3_BC2size = NUmodes + liftfield.size();
     Eigen::MatrixXd BC3_matrix(P3_BC1size, P3_BC2size);
-    fvMesh& mesh = _mesh();
+    const fvMesh& mesh = L_U_SUPmodes[0].mesh();
     surfaceVectorField n(mesh.Sf() / mesh.magSf());
 
     for (label i = 0; i < P3_BC1size; i++)
@@ -1237,7 +1237,7 @@ Eigen::MatrixXd steadyNS::pressure_BC4(label NUmodes, label NPmodes)
     label P4_BC1size = NPmodes;
     label P4_BC2size = NUmodes + liftfield.size();
     Eigen::MatrixXd BC4_matrix(P4_BC1size, P4_BC2size);
-    fvMesh& mesh = _mesh();
+    const fvMesh& mesh = L_U_SUPmodes[0].mesh();
     surfaceVectorField n(mesh.Sf() / mesh.magSf());
 
     for (label i = 0; i < P4_BC1size; i++)
