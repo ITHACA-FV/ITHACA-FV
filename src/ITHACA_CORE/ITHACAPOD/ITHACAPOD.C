@@ -81,18 +81,20 @@ void getNestedSnapshotMatrix(
     }
 }
 
-template void getNestedSnapshotMatrix(PtrList<volScalarField>&
-                                      snapshots, PtrList<volScalarField>& ModesGlobal, word fieldName, label Npar,
-                                      label NnestedOut);
-template void getNestedSnapshotMatrix(PtrList<volVectorField>&
-                                      snapshots, PtrList<volVectorField>& ModesGlobal, word fieldName, label Npar,
-                                      label NnestedOut);
+template void getNestedSnapshotMatrix(
+    PtrList<volScalarField>& snapshots, PtrList<volScalarField>& ModesGlobal,
+    word fieldName, label Npar, label NnestedOut);
+
+template void getNestedSnapshotMatrix(
+    PtrList<volVectorField>& snapshots, PtrList<volVectorField>& ModesGlobal,
+    word fieldName, label Npar, label NnestedOut);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getModes(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-    word fieldName, bool podex, bool supex, bool sup, label nmodes)
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     word PODkey = "POD_" + fieldName;
@@ -253,7 +255,7 @@ void getModes(
             GeometricField<Type, PatchField, GeoMesh>  tmp2(snapshots[0].name(),
                     snapshots[0]);
             Eigen::VectorXd vec = modesEig.col(i);
-            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec, false);
+            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec, correctBC);
 
             for (label k = 0; k < NBC; k++)
             {
@@ -307,23 +309,27 @@ void getModes(
     }
 }
 
-template void getModes(PtrList<volVectorField>& snapshots,
-                       PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
-                       bool sup, label nmodes);
-template void getModes(PtrList<volScalarField>& snapshots,
-                       PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
-                       bool sup, label nmodes);
-template void getModes(PtrList<surfaceScalarField>& snapshots,
-                       PtrList<surfaceScalarField>& modes, word fieldName, bool podex, bool supex,
-                       bool sup, label nmodes);
+template void getModes(
+    PtrList<volVectorField>& snapshots, PtrList<volVectorField>& modes,
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC);
 
+template void getModes(
+    PtrList<volScalarField>& snapshots, PtrList<volScalarField>& modes,
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC);
+
+template void getModes(
+    PtrList<surfaceScalarField>& snapshots, PtrList<surfaceScalarField>& modes,
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getWeightedModes(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-    word fieldName, bool podex,
-    bool supex, bool sup, label nmodes)
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
 
@@ -396,7 +402,7 @@ void getWeightedModes(
             GeometricField<Type, PatchField, GeoMesh> tmp2(snapshots[0].name(),
                     snapshots[0]);
             Eigen::VectorXd vec = modesEig.col(i);
-            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec, false);
+            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec, correctBC);
 
             for (label k = 0; k < tmp2.boundaryField().size(); k++)
             {
@@ -451,20 +457,22 @@ void getWeightedModes(
     }
 }
 
-template void getWeightedModes(PtrList<volScalarField>& snapshots,
-                               PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
-                               bool sup, label nmodes);
+template void getWeightedModes(
+    PtrList<volScalarField>& snapshots, PtrList<volScalarField>& modes,
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC);
 
-template void getWeightedModes(PtrList<volVectorField>& snapshots,
-                               PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
-                               bool sup, label nmodes);
+template void getWeightedModes(
+    PtrList<volVectorField>& snapshots, PtrList<volVectorField>& modes,
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getModesSVD(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-    word fieldName, bool podex,
-    bool supex, bool sup, label nmodes)
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
 
@@ -496,7 +504,7 @@ void getModesSVD(
         for (label i = 0; i < nmodes; i++)
         {
             Eigen::VectorXd vec = modesEig.col(i);
-            tmb_bu = Foam2Eigen::Eigen2field(tmb_bu, vec, false);
+            tmb_bu = Foam2Eigen::Eigen2field(tmb_bu, vec, correctBC);
             modes.set(i, tmb_bu.clone());
         }
 
@@ -545,14 +553,15 @@ void getModesSVD(
     }
 }
 
-template void getModesSVD(PtrList<volScalarField>& snapshots,
-                          PtrList<volScalarField>& modes, word fieldName, bool podex, bool supex,
-                          bool sup, label nmodes);
+template void getModesSVD(
+    PtrList<volScalarField>& snapshots, PtrList<volScalarField>& modes,
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC);
 
-template void getModesSVD(PtrList<volVectorField>& snapshots,
-                          PtrList<volVectorField>& modes, word fieldName, bool podex, bool supex,
-                          bool sup, label nmodes);
-
+template void getModesSVD(
+    PtrList<volVectorField>& snapshots, PtrList<volVectorField>& modes,
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC);
 
 /// Construct the Correlation Matrix for Scalar Field
 template<>
@@ -990,11 +999,11 @@ void GrammSchmidt(Eigen::MatrixXd& Matrix)
     Matrix = Ortho;
 }
 template<class Type, template<class> class PatchField, class GeoMesh>
-void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
-              PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-              PtrList<volScalarField>& Volumes,
-              word fieldName, bool podex,
-              bool supex, bool sup, label nmodes)
+void getModes(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    PtrList<volScalarField>& Volumes, word fieldName, bool podex, bool supex,
+    bool sup, label nmodes, bool correctBC)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
 
@@ -1097,7 +1106,7 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
             GeometricField<Type, PatchField, GeoMesh> tmp2(snapshots[0].name(),
                     snapshots[0] * 0);
             Eigen::VectorXd vec = modesEig.col(i);
-            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec, false);
+            tmp2 = Foam2Eigen::Eigen2field(tmp2, vec, correctBC);
 
             // Adjusting boundary conditions
             for (label k = 0; k < tmp2.boundaryField().size(); k++)
@@ -1140,15 +1149,15 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
         }
     }
 }
-template void getModes(PtrList<volScalarField>& snapshots,
-                       PtrList<volScalarField>& modes, PtrList<volScalarField>& Volumes,
-                       word fieldName, bool podex,
-                       bool supex, bool sup, label nmodes);
-template void getModes(PtrList<volVectorField>& snapshots,
-                       PtrList<volVectorField>& modes, PtrList<volScalarField>& Volumes,
-                       word fieldName, bool podex,
-                       bool supex, bool sup, label nmodes);
+template void getModes(
+    PtrList<volScalarField>& snapshots, PtrList<volScalarField>& modes,
+    PtrList<volScalarField>& Volumes, word fieldName, bool podex, bool supex,
+    bool sup, label nmodes, bool correctBC);
 
+template void getModes(
+    PtrList<volVectorField>& snapshots, PtrList<volVectorField>& modes,
+    PtrList<volScalarField>& Volumes, word fieldName, bool podex, bool supex,
+    bool sup, label nmodes, bool correctBC);
 
 template<typename type_matrix>
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
@@ -1463,10 +1472,10 @@ PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
 }
 
 template<class Field_type, class Field_type_2>
-void getModes(PtrList<Field_type>& snapshots,
-              PtrList<Field_type>& modes, PtrList<Field_type_2>& fields2, word fieldName,
-              bool podex,
-              bool supex, bool sup, label nmodes)
+void getModes(
+    PtrList<Field_type>& snapshots, PtrList<Field_type>& modes,
+    PtrList<Field_type_2>& fields2, word fieldName, bool podex, bool supex,
+    bool sup, label nmodes, bool correctBC)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
 
@@ -1601,17 +1610,15 @@ void getModes(PtrList<Field_type>& snapshots,
     }
 }
 
-template void getModes(PtrList<surfaceScalarField>& snapshots,
-                       PtrList<surfaceScalarField>& modes,
-                       PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
-                       bool sup,
-                       label nmodes);
+template void getModes(
+    PtrList<surfaceScalarField>& snapshots, PtrList<surfaceScalarField>& modes,
+    PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
+    bool sup, label nmodes, bool correctBC);
 
-template void getModes(PtrList<volScalarField>& snapshots,
-                       PtrList<volScalarField>& modes,
-                       PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
-                       bool sup,
-                       label nmodes);
+template void getModes(
+    PtrList<volScalarField>& snapshots, PtrList<volScalarField>& modes,
+    PtrList<volVectorField>& fields2, word fieldName, bool podex, bool supex,
+    bool sup, label nmodes, bool correctBC);
 
 template PtrList<GeometricField<scalar, fvPatchField, volMesh>>
 DEIMmodes(
