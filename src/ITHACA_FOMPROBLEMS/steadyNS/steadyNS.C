@@ -875,8 +875,17 @@ Eigen::MatrixXd steadyNS::diffusive_term(label NUmodes, label NPmodes,
         }
     }
 
-    ITHACAstream::SaveDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/",
-                                  "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+    if (Pstream::parRun())
+    {
+        reduce(B_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/",
+                                      "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+    }
+
     return B_matrix;
 }
 
@@ -897,9 +906,18 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term(label NUmodes, label NPmodes,
         }
     }
 
-    ITHACAstream::SaveDenseMatrix(K_matrix, "./ITHACAoutput/Matrices/",
-                                  "K_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_" + name(NPmodes));
+    if (Pstream::parRun())
+    {
+        reduce(K_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(K_matrix, "./ITHACAoutput/Matrices/",
+                                      "K_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes));
+    }
+
     return K_matrix;
 }
 
@@ -926,13 +944,21 @@ List <Eigen::MatrixXd> steadyNS::convective_term(label NUmodes, label NPmodes,
                                         L_U_SUPmodes[k])).value();
             }
         }
+
+        if (Pstream::parRun())
+        {
+            reduce(C_matrix[i], sumOp<Eigen::MatrixXd>());
+        }
     }
 
-    // Export the matrix
-    ITHACAstream::exportMatrix(C_matrix, "C", "python", "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(C_matrix, "C", "matlab", "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(C_matrix, "C", "eigen", "./ITHACAoutput/Matrices/C");
-    return C_matrix;
+    if (Pstream::master())
+    {
+        // Export the matrix
+        ITHACAstream::exportMatrix(C_matrix, "C", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(C_matrix, "C", "matlab", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(C_matrix, "C", "eigen", "./ITHACAoutput/Matrices/C");
+        return C_matrix;
+    }
 }
 
 Eigen::Tensor<double, 3> steadyNS::convective_term_tens(label NUmodes,
@@ -965,10 +991,19 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_tens(label NUmodes,
         }
     }
 
-    // Export the tensor
-    ITHACAstream::SaveDenseTensor(C_tensor, "./ITHACAoutput/Matrices/",
-                                  "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_t");
+    if (Pstream::parRun())
+    {
+        reduce(C_tensor, sumOp<Eigen::Tensor<double, 3>>());
+    }
+
+    if (Pstream::master())
+    {
+        // Export the tensor
+        ITHACAstream::SaveDenseTensor(C_tensor, "./ITHACAoutput/Matrices/",
+                                      "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_t");
+    }
+
     return C_tensor;
 }
 
@@ -988,8 +1023,17 @@ Eigen::MatrixXd steadyNS::mass_term(label NUmodes, label NPmodes,
         }
     }
 
-    ITHACAstream::SaveDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/",
-                                  "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+    if (Pstream::parRun())
+    {
+        reduce(M_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/",
+                                      "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+    }
+
     return M_matrix;
 }
 
@@ -1012,9 +1056,18 @@ Eigen::MatrixXd steadyNS::divergence_term(label NUmodes, label NPmodes,
         }
     }
 
-    ITHACAstream::SaveDenseMatrix(P_matrix, "./ITHACAoutput/Matrices/",
-                                  "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_" + name(NPmodes));
+    if (Pstream::parRun())
+    {
+        reduce(P_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(P_matrix, "./ITHACAoutput/Matrices/",
+                                      "P_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes));
+    }
+
     return P_matrix;
 }
 
@@ -1042,12 +1095,21 @@ List <Eigen::MatrixXd> steadyNS::div_momentum(label NUmodes, label NPmodes)
                                         L_U_SUPmodes[k]))).value();
             }
         }
+
+        if (Pstream::parRun())
+        {
+            reduce(G_matrix[i], sumOp<Eigen::MatrixXd>());
+        }
     }
 
-    // Export the matrix
-    ITHACAstream::exportMatrix(G_matrix, "G", "python", "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(G_matrix, "G", "matlab", "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(G_matrix, "G", "eigen", "./ITHACAoutput/Matrices/G");
+    if (Pstream::master())
+    {
+        // Export the matrix
+        ITHACAstream::exportMatrix(G_matrix, "G", "python", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(G_matrix, "G", "matlab", "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(G_matrix, "G", "eigen", "./ITHACAoutput/Matrices/G");
+    }
+
     return G_matrix;
 }
 
@@ -1071,10 +1133,19 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
         }
     }
 
-    // Export the tensor
-    ITHACAstream::SaveDenseTensor(gTensor, "./ITHACAoutput/Matrices/",
-                                  "G_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_" + name(NPmodes) + "_t");
+    if (Pstream::parRun())
+    {
+        reduce(gTensor, sumOp<Eigen::Tensor<double, 3>>());
+    }
+
+    if (Pstream::master())
+    {
+        // Export the tensor
+        ITHACAstream::SaveDenseTensor(gTensor, "./ITHACAoutput/Matrices/",
+                                      "G_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_t");
+    }
+
     return gTensor;
 }
 
@@ -1093,8 +1164,17 @@ Eigen::MatrixXd steadyNS::laplacian_pressure(label NPmodes)
         }
     }
 
-    ITHACAstream::SaveDenseMatrix(D_matrix, "./ITHACAoutput/Matrices/",
-                                  "D_" + name(NPmodes));
+    if (Pstream::parRun())
+    {
+        reduce(D_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(D_matrix, "./ITHACAoutput/Matrices/",
+                                      "D_" + name(NPmodes));
+    }
+
     return D_matrix;
 }
 
@@ -1122,8 +1202,17 @@ Eigen::MatrixXd steadyNS::pressure_BC1(label NUmodes, label NPmodes)
         }
     }
 
-    ITHACAstream::SaveDenseMatrix(BC1_matrix, "./ITHACAoutput/Matrices/",
-                                  "BC1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NPmodes));
+    if (Pstream::parRun())
+    {
+        reduce(BC1_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(BC1_matrix, "./ITHACAoutput/Matrices/",
+                                      "BC1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NPmodes));
+    }
+
     return BC1_matrix;
 }
 
@@ -1160,6 +1249,11 @@ List <Eigen::MatrixXd> steadyNS::pressure_BC2(label NUmodes, label NPmodes)
                 BC2_matrix[i](j, k) = s;
             }
         }
+
+        if (Pstream::parRun())
+        {
+            reduce(BC2_matrix[i], sumOp<Eigen::MatrixXd>());
+        }
     }
 
     return BC2_matrix;
@@ -1194,10 +1288,19 @@ Eigen::Tensor<double, 3> steadyNS::pressureBC2(label NUmodes, label NPmodes)
         }
     }
 
-    // Export the tensor
-    ITHACAstream::SaveDenseTensor(bc2Tensor, "./ITHACAoutput/Matrices/",
-                                  "BC2_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_" + name(NPmodes) + "_t");
+    if (Pstream::parRun())
+    {
+        reduce(bc2Tensor, sumOp<Eigen::Tensor<double, 3>>());
+    }
+
+    if (Pstream::master())
+    {
+        // Export the tensor
+        ITHACAstream::SaveDenseTensor(bc2Tensor, "./ITHACAoutput/Matrices/",
+                                      "BC2_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_t");
+    }
+
     return bc2Tensor;
 }
 
@@ -1227,8 +1330,17 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
         }
     }
 
-    ITHACAstream::SaveDenseMatrix(BC3_matrix, "./ITHACAoutput/Matrices/",
-                                  "BC3_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NPmodes));
+    if (Pstream::parRun())
+    {
+        reduce(BC3_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(BC3_matrix, "./ITHACAoutput/Matrices/",
+                                      "BC3_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NPmodes));
+    }
+
     return BC3_matrix;
 }
 
@@ -1258,8 +1370,17 @@ Eigen::MatrixXd steadyNS::pressure_BC4(label NUmodes, label NPmodes)
         }
     }
 
-    ITHACAstream::SaveDenseMatrix(BC4_matrix, "./ITHACAoutput/Matrices/",
-                                  "BC4_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NPmodes));
+    if (Pstream::parRun())
+    {
+        reduce(BC4_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(BC4_matrix, "./ITHACAoutput/Matrices/",
+                                      "BC4_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NPmodes));
+    }
+
     return BC4_matrix;
 }
 
@@ -1284,10 +1405,19 @@ List<Eigen::MatrixXd> steadyNS::bcVelocityVec(label NUmodes,
             bcVelVec[k](i, 0) = gSum(L_U_SUPmodes[i].boundaryField()[BCind].component(
                                          BCcomp));
         }
+
+        if (Pstream::parRun())
+        {
+            reduce(bcVelVec[k], sumOp<Eigen::MatrixXd>());
+        }
     }
 
-    ITHACAstream::exportMatrix(bcVelVec, "bcVelVec", "eigen",
-                               "./ITHACAoutput/Matrices/bcVelVec");
+    if (Pstream::master())
+    {
+        ITHACAstream::exportMatrix(bcVelVec, "bcVelVec", "eigen",
+                                   "./ITHACAoutput/Matrices/bcVelVec");
+    }
+
     return bcVelVec;
 }
 
@@ -1317,10 +1447,19 @@ List<Eigen::MatrixXd> steadyNS::bcVelocityMat(label NUmodes,
                                          L_U_SUPmodes[j].boundaryField()[BCind].component(BCcomp));
             }
         }
+
+        if (Pstream::parRun())
+        {
+            reduce(bcVelMat[k], sumOp<Eigen::MatrixXd>());
+        }
     }
 
-    ITHACAstream::exportMatrix(bcVelMat, "bcVelMat", "eigen",
-                               "./ITHACAoutput/Matrices/bcVelMat");
+    if (Pstream::master())
+    {
+        ITHACAstream::exportMatrix(bcVelMat, "bcVelMat", "eigen",
+                                   "./ITHACAoutput/Matrices/bcVelMat");
+    }
+
     return bcVelMat;
 }
 
@@ -1343,8 +1482,17 @@ Eigen::MatrixXd steadyNS::diffusive_term_flux_method(label NUmodes,
         }
     }
 
-    ITHACAstream::SaveDenseMatrix(BP_matrix, "./ITHACAoutput/Matrices/",
-                                  "BP_" + name(NPmodes));
+    if (Pstream::parRun())
+    {
+        reduce(BP_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(BP_matrix, "./ITHACAoutput/Matrices/",
+                                      "BP_" + name(NPmodes));
+    }
+
     return BP_matrix;
 }
 
@@ -1379,8 +1527,16 @@ List<Eigen::MatrixXd> steadyNS::boundary_vector_diffusion(label NUmodes,
             RD_matrix[i](j, 0) = ModeVector.dot(b.col(0));
         }
 
-        ITHACAstream::SaveDenseMatrix(RD_matrix[i], "./ITHACAoutput/Matrices/RD/",
-                                      "RD" + name(i) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+        if (Pstream::parRun())
+        {
+            reduce(RD_matrix[i], sumOp<Eigen::MatrixXd>());
+        }
+
+        if (Pstream::master())
+        {
+            ITHACAstream::SaveDenseMatrix(RD_matrix[i], "./ITHACAoutput/Matrices/RD/",
+                                          "RD" + name(i) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+        }
     }
 
     return RD_matrix;
@@ -1417,8 +1573,16 @@ List<Eigen::MatrixXd> steadyNS::boundary_vector_convection(label NUmodes,
             RC_matrix[i](j, 0) = ModeVector.dot(b.col(0));
         }
 
-        ITHACAstream::SaveDenseMatrix(RC_matrix[i], "./ITHACAoutput/Matrices/RC/",
-                                      "RC" + name(i) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+        if (Pstream::parRun())
+        {
+            reduce(RC_matrix[i], sumOp<Eigen::MatrixXd>());
+        }
+
+        if (Pstream::master())
+        {
+            ITHACAstream::SaveDenseMatrix(RC_matrix[i], "./ITHACAoutput/Matrices/RC/",
+                                          "RC" + name(i) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+        }
     }
 
     return RC_matrix;
@@ -1458,9 +1622,18 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_flux_tens(label NUmodes,
         }
     }
 
-    ITHACAstream::SaveDenseTensor(Cf_tensor, "./ITHACAoutput/Matrices/",
-                                  "Cf_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_t");
+    if (Pstream::parRun())
+    {
+        reduce(Cf_tensor, sumOp<Eigen::Tensor<double, 3>>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(Cf_tensor, "./ITHACAoutput/Matrices/",
+                                      "Cf_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_t");
+    }
+
     return Cf_tensor;
 }
 
@@ -1591,8 +1764,12 @@ Eigen::MatrixXd steadyNS::mass_matrix_oldtime_consistent(label NUmodes,
         reduce(I_matrix, sumOp<Eigen::MatrixXd>());
     }
 
-    ITHACAstream::SaveDenseMatrix(I_matrix, "./ITHACAoutput/Matrices/",
-                                  "I_" + name(NUmodes));
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(I_matrix, "./ITHACAoutput/Matrices/",
+                                      "I_" + name(NUmodes));
+    }
+
     return I_matrix;
 }
 
@@ -1623,9 +1800,13 @@ Eigen::MatrixXd steadyNS::diffusive_term_consistent(label NUmodes,
         reduce(DF_matrix, sumOp<Eigen::MatrixXd>());
     }
 
-    ITHACAstream::SaveDenseMatrix(DF_matrix, "./ITHACAoutput/Matrices/",
-                                  "DF_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes));
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(DF_matrix, "./ITHACAoutput/Matrices/",
+                                      "DF_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes));
+    }
+
     return DF_matrix;
 }
 
@@ -1653,9 +1834,13 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term_consistent(label NUmodes,
         reduce(KF_matrix, sumOp<Eigen::MatrixXd>());
     }
 
-    ITHACAstream::SaveDenseMatrix(KF_matrix, "./ITHACAoutput/Matrices/",
-                                  "KF_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes));
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(KF_matrix, "./ITHACAoutput/Matrices/",
+                                      "KF_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes));
+    }
+
     return KF_matrix;
 }
 
@@ -1683,9 +1868,18 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_consistent_tens(
         }
     }
 
-    ITHACAstream::SaveDenseTensor(Ci_tensor, "./ITHACAoutput/Matrices/",
-                                  "Ci_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                      NSUPmodes) + "_t");
+    if (Pstream::parRun())
+    {
+        reduce(Ci_tensor, sumOp<Eigen::Tensor<double, 3>>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(Ci_tensor, "./ITHACAoutput/Matrices/",
+                                      "Ci_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_t");
+    }
+
     return Ci_tensor;
 }
 
@@ -1718,6 +1912,11 @@ List <Eigen::MatrixXd> steadyNS::boundary_vector_diffusion_consistent(
 
         ITHACAstream::SaveDenseMatrix(SD_matrix[i], "./ITHACAoutput/Matrices/SD/",
                                       "SD" + name(i) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+
+        if (Pstream::parRun())
+        {
+            reduce(SD_matrix[i], sumOp<Eigen::MatrixXd>());
+        }
     }
 
     return SD_matrix;
