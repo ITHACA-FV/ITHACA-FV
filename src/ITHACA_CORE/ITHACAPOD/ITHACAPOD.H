@@ -82,10 +82,11 @@ namespace ITHACAPOD
 /// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-              word fieldName,
-              bool podex, bool supex = 0, bool sup = 0, label nmodes = 0);
+void getModes(
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    word fieldName, bool podex, bool supex = 0, bool sup = 0,
+    label nmodes = 0, bool correctBC = true);
 
 //------------------------------------------------------------------------------
 /// @brief      Gets the bases for a scalar field using SVD instead of the
@@ -111,8 +112,8 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 void getModesSVD(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>&
     snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-    word fieldName,
-    bool podex, bool supex = 0, bool sup = 0, label nmodes = 0);
+    word fieldName, bool podex, bool supex = 0, bool sup = 0,
+    label nmodes = 0, bool correctBC = true);
 
 
 //------------------------------------------------------------------------------
@@ -164,9 +165,8 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 void getWeightedModes(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-    word fieldName, bool podex,
-    bool supex = 0, bool sup = 0,
-    label nmodes = 0);
+    word fieldName, bool podex, bool supex = 0, bool sup = 0,
+    label nmodes = 0, bool correctBC = true);
 
 //------------------------------------------------------------------------------
 /// @brief      Performs GrammSchmidt orthonormalization on an Eigen Matrix

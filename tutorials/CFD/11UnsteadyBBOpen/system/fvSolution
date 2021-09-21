@@ -31,37 +31,12 @@ solvers
         relTol          0;
     }
 
-
-    Tlift0
+    "(Tlift.*)"
     {
-	solver           GAMG;
-        tolerance        1e-6;
-        relTol           0;
-        smoother         symGaussSeidel;
-    }
-
-    Tlift1
-    {
-	solver           GAMG;
-        tolerance        1e-6;
-        relTol           0;
-        smoother         symGaussSeidel;
-    }
-
-    Tlift2
-    {
-	solver           GAMG;
-        tolerance        1e-6;
-        relTol           0;
-        smoother         symGaussSeidel;
-    }
-    
-   Tlift3
-    {
-        solver		PBiCGStab;
-        preconditioner  DIC;
-        tolerance       1e-05;
-        relTol          0.0;
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-6;
+        relTol          0;
     }
 
     "(U|T|R)"
