@@ -203,7 +203,11 @@ int main(int argc, char* argv[])
     int NmodesPrghproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPrghproj",
                          5);
     int NmodesTproj   = para->ITHACAdict->lookupOrDefault<int>("NmodesTproj", 5);
-    int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
+    int NmodesSUPproj = 0;
+    if (stabilization == "supremizer")
+    {
+        NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
+    }
     int NmodesOut     = para->ITHACAdict->lookupOrDefault<int>("NmodesOut", 15);
     // Set the number of parameters
     example.Pnumber = 1;
