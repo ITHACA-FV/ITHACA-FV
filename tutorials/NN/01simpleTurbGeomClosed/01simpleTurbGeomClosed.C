@@ -285,7 +285,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
 #else
                 simple.loop();
 #endif
-                volScalarField nueff = problem->turbulence->nuEff();
+                volScalarField nueff(problem->turbulence->nuEff());
                 vector v(1, 0, 0);
                 ITHACAutilities::assignBC(U, 0, v);
 
@@ -662,9 +662,9 @@ int main(int argc, char* argv[])
 
     for (label k = 0; k < Ufull.size(); k++)
     {
-        volVectorField errorU = Ufull[k] - Ured[k];
-        volVectorField devU = Ufull[k] - U_fs;
-        volScalarField errorP = Pfull[k] - Pred[k];
+        volVectorField errorU = (Ufull[k] - Ured[k]).ref();
+        volVectorField devU = (Ufull[k] - U_fs).ref();
+        volScalarField errorP = (Pfull[k] - Pred[k]).ref();
         relErrorU(k, 0) = ITHACAutilities::frobNorm(errorU) /
                           ITHACAutilities::frobNorm(devU);
         relErrorP(k, 0) = ITHACAutilities::frobNorm(errorP) /
