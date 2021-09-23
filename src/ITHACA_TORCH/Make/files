@@ -1,6 +1,10 @@
 torch2Eigen.C
 torch2Foam.C
 torchUTILITIES.C
-convLayer.C
+Filters/Filter.C
+Filters/NewFilter.C
+Filters/IntegralFilter.C
+ConvLayer.C
+
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_TORCH

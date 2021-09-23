@@ -69,7 +69,7 @@ void save(const torch::Tensor& torchTensor, const std::string fname)
 torch::Tensor load(const std::string fname)
 {
     cnpy::NpyArray arr = cnpy::npy_load(fname);
-    at::IntList shape[arr.shape.size()];
+    at::IntArrayRef shape[arr.shape.size()];
     std::vector<int64_t> dims(arr.shape.size());
 
     for (int i = 0; i < arr.shape.size(); i++)
