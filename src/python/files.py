@@ -82,4 +82,25 @@ def sed_variable(what, source, new_value, dest=None):
     fout.close()
 
     if not dest:
+        shutil.move(name, source)
+
+def read_variable(what, source):
+    """Reads a source file and returns the value of a variable.
+
+    Args:
+        what (str): pattern of the line to be returned
+        source  (str): input filename.       
+    """
+
+    fin = open(source, 'r')
+    fd, name = mkstemp()
+
+    for line in fin:
+        if what in line:
+            a = line.split();
+            return(int(a[1][:-1]))
+
+    fin.close()
+
+    if not dest:
         shutil.move(name, source) 

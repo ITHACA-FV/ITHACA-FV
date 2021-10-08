@@ -50,6 +50,6 @@ online_velocities vel.txt;
 // Distancing between intermediate snapshots to be exported (for turbulent case only)
 middleStep 5;
 
-epochs 10;
+epochs 20000;
 
 
