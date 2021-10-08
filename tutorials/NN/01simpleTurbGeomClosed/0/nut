@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  5                                     |
-|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|  \\    /   O peration     | Version:  v2006                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -17,29 +17,20 @@ FoamFile
 
 dimensions      [0 2 -1 0 0 0 0];
 
-internalField   uniform 1e-3;
+
+internalField   uniform 0.000851986;
 
 boundaryField
 {
-    walls
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-    step
-    {
-        type            nutkWallFunction;
-        value           uniform 1e-3;
-    }
     inlet
     {
         type            calculated;
-        value           uniform 0;
+        value           uniform 0.000851986;
     }
     outlet
     {
         type            calculated;
-        value           uniform 0;
+        value           uniform 0.000851986;
     }
     frontAndBack
     {
@@ -48,6 +39,24 @@ boundaryField
     frontAndBackLow
     {
         type            empty;
+    }
+    walls
+    {
+        type            nutkWallFunction;
+        blending        stepwise;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        value           uniform 0;
+    }
+    step
+    {
+        type            nutkWallFunction;
+        blending        stepwise;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        value           uniform 0;
     }
 }
 

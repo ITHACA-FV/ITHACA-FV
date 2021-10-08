@@ -19,13 +19,13 @@ EigenSolver eigen;
 
 // Number of modes to output and to use for projection
 NmodesUout 150;
-NmodesUproj 20;
+NmodesUproj 45;
 NmodesPout 150;
-NmodesPproj 20;
+NmodesPproj 45;
 NmodesSUPout 0;
 NmodesSUPproj 0;
 NmodesNutOut 150;
-NmodesNutProj 20;
+NmodesNutProj 25;
 
 // Output format to save market vectors.
 OutPrecision 20;
@@ -34,11 +34,11 @@ OutType fixed;
 debug 1;
 
 // Specific problem of a stationary case
-tolerance 1e-5;
+tolerance 1e-4;
 
 // Maximum number of iterations
-maxIter 3000;
-maxIterOn 1000;
+maxIter 10000;
+maxIterOn 2000;
 
 // Reduced simple cicle parameters
 residualJumpLim 1e-8;
@@ -48,6 +48,8 @@ normalizedResidualLim 1e-8;
 online_velocities vel.txt;
 
 // Distancing between intermediate snapshots to be exported (for turbulent case only)
-middleStep 50;
+middleStep 5;
+
+epochs 10;
 
 
