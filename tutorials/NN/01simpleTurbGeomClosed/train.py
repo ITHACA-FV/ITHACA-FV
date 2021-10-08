@@ -6,7 +6,9 @@ nNut = read_variable("NmodesNutProj", "system/ITHACAdict")
 NU = read_variable("NmodesUproj", "system/ITHACAdict")
 NP = read_variable("NmodesPproj", "system/ITHACAdict")
 
-Netok = Net(NU, nNut, 20000)
+epochs = read_variable("epochs", "system/ITHACAdict")
+
+Netok = Net(NU, nNut, epochs)
 Netok.read()
 Netok.train()
 Netok.save()
