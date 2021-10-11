@@ -46,16 +46,16 @@ namespace ITHACAtorch
 {
 class convLayer
 {
-public:
-    //--------------------------------------------------------------------------
-    /// @brief      Construct using Time as functionObject
-    ///
-    /// @param[in]  db    The database
-    ///
-    convLayer(const Time &db);
+    public:
+        //--------------------------------------------------------------------------
+        /// @brief      Construct using Time as functionObject
+        ///
+        /// @param[in]  db    The database
+        ///
+        convLayer(const Time& db);
 
-    const Time& obReg;
-    const fvMesh& mesh;
+        const Time& obReg;
+        const fvMesh& mesh;
 };
 }
 #endif

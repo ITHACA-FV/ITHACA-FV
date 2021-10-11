@@ -277,7 +277,7 @@ class Foam2Eigen
         template<template<class> class PatchField, class GeoMesh>
         static GeometricField<scalar, PatchField, GeoMesh> Eigen2field(
             GeometricField<scalar, PatchField, GeoMesh>& field,
-            Eigen::VectorXd& eigen_vector, bool correctBC=true);
+            Eigen::VectorXd& eigen_vector, bool correctBC = true);
 
         //----------------------------------------------------------------------
         /// @brief         Convert a vector in Eigen format into an OpenFOAM
@@ -294,7 +294,7 @@ class Foam2Eigen
         template<template<class> class PatchField, class GeoMesh>
         static GeometricField<vector, PatchField, GeoMesh> Eigen2field(
             GeometricField<vector, PatchField, GeoMesh>& field,
-            Eigen::VectorXd& eigen_vector, bool correctBC=true);
+            Eigen::VectorXd& eigen_vector, bool correctBC = true);
 
         //----------------------------------------------------------------------
         /// @brief         Converts a matrix in Eigen format into an OpenFOAM
@@ -309,7 +309,7 @@ class Foam2Eigen
         ///
         template <class Type>
         static Field<Type> Eigen2field(
-            Field<Type>& field, Eigen::MatrixXd& matrix, bool correctBC=true);
+            Field<Type>& field, Eigen::MatrixXd& matrix, bool correctBC = true);
 
         //----------------------------------------------------------------------
         /// @brief      Obtain the Mass Matrix from a list of reduced basis

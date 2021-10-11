@@ -678,7 +678,7 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                                        "./ITHACAoutput/Matrices/");
         }
     }
-    
+
     if (para->exportMatlab)
     {
         ITHACAstream::exportMatrix(B_matrix, "B", "matlab", "./ITHACAoutput/Matrices/");
@@ -728,7 +728,6 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     cTotalTensor.resize(cSize, nNutModes, cSize);
     cTotalTensor = ct1Tensor + ct2Tensor;
-
     // Define coeffL2
     coeffL2 = ITHACAutilities::getCoeffs(nutFields,
                                          nutModes, nNutModes);
