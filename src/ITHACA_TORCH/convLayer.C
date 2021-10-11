@@ -31,10 +31,10 @@
 
 namespace ITHACAtorch
 {
-convLayer::convLayer(const Time &db)
-:
-obReg(db),
-mesh(db.lookupObject<fvMesh>("region0"))
+convLayer::convLayer(const Time& db)
+    :
+    obReg(db),
+    mesh(db.lookupObject<fvMesh>("region0"))
 {
     Info << db.names() << endl;
     Info << mesh.names() << endl;
