@@ -16,10 +16,11 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/redsvd \
+    -I$(LIB_ITHACA_SRC)/ITHACA_TORCH \
+    -I$(LIB_ITHACA_SRC)/ITHACA_TORCH\Filters \
     -I$(TORCH_LIBRARIES)/include \
     -I$(TORCH_LIBRARIES)/include/torch/csrc/api/include \
     -std=c++14 \
-    -w \
     -Wno-old-style-cast \
     -Wno-non-virtual-dtor \
     -Wno-return-type \
