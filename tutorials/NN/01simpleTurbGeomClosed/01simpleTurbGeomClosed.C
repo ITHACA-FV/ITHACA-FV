@@ -289,7 +289,6 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
             {
                 iter++;
                 std::cout << iter << std::endl;
-
 #if defined(OFVER) && (OFVER == 6)
                 simple.loop(runTime);
 #else
@@ -410,7 +409,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
                 volScalarField& nut = const_cast<volScalarField&>
                                       (problem->_mesh().lookupObject<volScalarField>("nut"));
                 nut.rename("nutAux");
-		ITHACAstream::exportSolution(nut, name(counter), Folder);
+                ITHACAstream::exportSolution(nut, name(counter), Folder);
             }
 
             ITHACAstream::exportSolution(U, name(counter), Folder);
@@ -454,13 +453,11 @@ class tutorial01cl : public SteadyNSSimpleNN
                 auto nut = _mesh().lookupObject<volScalarField>("nut");
                 ITHACAstream::readMiddleFields(nutFields, nut, folder);
             }
-
             else if (offline && !ITHACAutilities::check_folder("./ITHACAoutput/POD/1"))
             {
                 ITHACAstream::readMiddleFields(Ufield, U, folder);
                 ITHACAstream::readMiddleFields(Pfield, p, folder);
             }
-
             else if (!offline)
             {
                 //Vector<double> Uinl(1, 0, 0);
@@ -544,7 +541,6 @@ int main(int argc, char* argv[])
     {
         example.mu  = ITHACAstream::readMatrix("./angOff_mat.txt");
     }
-
     else
     {
         example.mu  = Eigen::VectorXd::LinSpaced(50, 0, 75);
@@ -558,7 +554,6 @@ int main(int argc, char* argv[])
     {
         angOn = ITHACAstream::readMatrix("./angOn_mat.txt");
     }
-
     else
     {
         //angOn = Eigen::VectorXd::LinSpaced(20, 5, 70);
@@ -601,7 +596,6 @@ int main(int argc, char* argv[])
                         example.NPmodesOut);
     // Error analysis
     tutorial01cl checkOff(argc, argv);
-
     std::clock_t startOff;
     double durationOff;
     startOff = std::clock();
@@ -616,6 +610,7 @@ int main(int argc, char* argv[])
         checkOff.offlineSolve(Box, movPat, "./ITHACAoutput/checkOff/");
         checkOff.offline = true;
     }
+
     durationOff = (std::clock() - startOff);
 
     if (ITHACAutilities::isTurbulent())
@@ -626,13 +621,13 @@ int main(int argc, char* argv[])
         example.getTurbNN();
     }
 
-    std::string wrng = "The network for this problem has not been calculated yet. Perform the Python training (see train.py).";
-    M_Assert(ITHACAutilities::check_file("ITHACAoutput/NN/Net_" + name(example.NUmodes) + "_" + name(
-                            example.NNutModes) + ".pt"), wrng.c_str());
-    
+    std::string wrng =
+        "The network for this problem has not been calculated yet. Perform the Python training (see train.py).";
+    M_Assert(ITHACAutilities::check_file("ITHACAoutput/NN/Net_" + name(
+            example.NUmodes) + "_" + name(
+                    example.NNutModes) + ".pt"), wrng.c_str());
     example.loadNet("ITHACAoutput/NN/Net_" + name(example.NUmodes) + "_" + name(
-                            example.NNutModes) + ".pt");
-
+                        example.NNutModes) + ".pt");
     example._mesh().movePoints(example.point0);
     // Create the reduced object
     reducedSimpleSteadyNN reduced(example);
@@ -643,16 +638,16 @@ int main(int argc, char* argv[])
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
     // Set the maximum iterations number for the online phase
     reduced.maxIterOn = para->ITHACAdict->lookupOrDefault<int>("maxIterOn", 2000);
-    std::cout<< "Total amout of parameters to be solved online: "+name(angOn.rows()) <<std::endl;
-    
+    std::cout << "Total amout of parameters to be solved online: " + name(
+                  angOn.rows()) << std::endl;
     //Perform the online solutions
     std::clock_t startOn;
     double durationOn;
     startOn = std::clock();
-    
+
     for (label k = 0; k < angOn.rows(); k++)
     {
-        std::cout << "Solving online for parameter number "+name(k+1) << std::endl;
+        std::cout << "Solving online for parameter number " + name(k + 1) << std::endl;
         scalar mu_now = angOn(k, 0);
         example.restart();
         reduced.vel_now = vel;
@@ -679,7 +674,6 @@ int main(int argc, char* argv[])
                                        example.NNutModes, "./ITHACAoutput/Reconstruct_" + name(
                                            example.NUmodes) + "_" + name(example.NPmodes) + "/");
         }
-
         else
         {
             example._mesh().movePoints(example.point0);
@@ -703,9 +697,9 @@ int main(int argc, char* argv[])
                                            example.NUmodes) + "_" + name(example.NPmodes) + "/");
         }
     }
-    durationOn = (std::clock() - startOn);
 
-    std::cout<< "ONLINE PHASE COMPLETED" <<std::endl;
+    durationOn = (std::clock() - startOn);
+    std::cout << "ONLINE PHASE COMPLETED" << std::endl;
     PtrList<volVectorField> Ufull;
     PtrList<volScalarField> Pfull;
     PtrList<volVectorField> Ured;
@@ -738,12 +732,14 @@ int main(int argc, char* argv[])
     }
 
     ITHACAstream::exportMatrix(relErrorU,
-                               "errorU_" + name(example.NUmodes) + "_" + name(example.NPmodes) + "_" + name(example.NNutModes), "python", ".");
+                               "errorU_" + name(example.NUmodes) + "_" + name(example.NPmodes) + "_" + name(
+                                   example.NNutModes), "python", ".");
     ITHACAstream::exportMatrix(relErrorP,
-                               "errorP_" + name(example.NUmodes) + "_" + name(example.NPmodes) + "_" + name(example.NNutModes), "python", ".");
-
-    std::cout << "The online phase duration is equal to " << durationOn << std::endl;
-    std::cout << "The offline phase duration is equal to " << durationOff << std::endl;
-
+                               "errorP_" + name(example.NUmodes) + "_" + name(example.NPmodes) + "_" + name(
+                                   example.NNutModes), "python", ".");
+    std::cout << "The online phase duration is equal to " << durationOn <<
+              std::endl;
+    std::cout << "The offline phase duration is equal to " << durationOff <<
+              std::endl;
     exit(0);
 }
