@@ -84,7 +84,7 @@ class tutorial21: public UnsteadyNSTurb
                     inl[0] = mu(0, i);
                     mu_now[0] = mu(0, i);
                     assignBC(U, BCind, inl);
-                    truthSolve(mu_now,offlinepath);
+                    truthSolve(mu_now, offlinepath);
                 }
             }
         }
@@ -105,7 +105,6 @@ int main(int argc, char* argv[])
     int NmodesSUP = para->ITHACAdict->lookupOrDefault<int>("NmodesSUP", 10);
     int NmodesNUT = para->ITHACAdict->lookupOrDefault<int>("NmodesNUT", 10);
     int NmodesProject = para->ITHACAdict->lookupOrDefault<int>("NmodesProject", 10);
-
     /// Set the number of parameters
     example.Pnumber = 1;
     /// Set samples
@@ -128,11 +127,10 @@ int main(int argc, char* argv[])
     example.writeEvery = 0.1;
     // Perform The Offline Solve;
     example.offlineSolve("./ITHACAoutput/Offline/");
-
     // Define velRBF
-    auto mu_mat = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+    auto mu_mat =
+        ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
     example.velRBF = mu_mat.col(1);
-    
     // Solve the supremizer problem
     example.solvesupremizer();
     // Search the lift function
@@ -158,12 +156,10 @@ int main(int argc, char* argv[])
     example.solvesupremizer("modes");
     // Compute the reduced order matrices
     example.projectSUP("./Matrices", NmodesU, NmodesP, NmodesSUP,
-                      NmodesNUT,true);
-
+                       NmodesNUT, true);
     // Create an object of the turbulent class
     ReducedUnsteadyNSTurb pod_rbf(
         example);
-
     // Set value of the reduced viscosity and the penalty factor
     pod_rbf.nu = 1e-05;
     pod_rbf.tauU.resize(1, 1);
@@ -172,10 +168,9 @@ int main(int argc, char* argv[])
     pod_rbf.dt = 0.005;
     pod_rbf.storeEvery = 0.005;
     pod_rbf.exportEvery = 0.1;
-
     // We create the matrix rbfCoeff which will store the values of the interpolation results for the eddy viscosity field
     Eigen::MatrixXd rbfCoeff;
-    rbfCoeff.resize(NmodesNUT+1, 1);
+    rbfCoeff.resize(NmodesNUT + 1, 1);
 
     // Perform an online solve for the new values of inlet velocities
     for (label k = 0; k < 1; k++)
@@ -203,10 +198,8 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/red_coeff");
     ITHACAstream::exportMatrix(pod_rbf.online_solution, "red_coeff", "eigen",
                                "./ITHACAoutput/red_coeff");
-
     // Reconstruct and export the solution
     pod_rbf.reconstruct(true, "./ITHACAoutput/Reconstruction/");
-    
     // Solve the full order problem for the online velocity values for the purpose of comparison
     tutorial21 example2(argc, argv);
     /// Set the number of parameters
@@ -230,7 +223,6 @@ int main(int argc, char* argv[])
     example2.timeStep = 0.001;
     example2.writeEvery = 0.1;
     example2.offlineSolve("./ITHACAoutput/Offline_check/");
-
     Eigen::MatrixXd errFrobU = ITHACAutilities::errorFrobRel(example2.Ufield,
                                pod_rbf.uRecFields);
     Eigen::MatrixXd errFrobP =  ITHACAutilities::errorFrobRel(example2.Pfield,

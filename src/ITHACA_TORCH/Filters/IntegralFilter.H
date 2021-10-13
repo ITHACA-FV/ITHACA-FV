@@ -35,7 +35,8 @@ class IntegralFilter
         virtual ~IntegralFilter()
         {};
 
-        virtual List<scalarList> apply(const List<labelList>& cells, const List<point>& convPoints, const fvMesh& mesh) const;
+        virtual List<scalarList> apply(const List<labelList>& cells,
+                                       const List<point>& convPoints, const fvMesh& mesh) const;
 
 
 };

@@ -85,7 +85,8 @@ class Filter
         virtual ~Filter()
         {};
 
-        virtual List<scalarList> apply(const List<labelList>& cells, const List<point>& convPoints, const fvMesh& mesh) const = 0;
+        virtual List<scalarList> apply(const List<labelList>& cells,
+                                       const List<point>& convPoints, const fvMesh& mesh) const = 0;
 
         static autoPtr<Filter> New
         (

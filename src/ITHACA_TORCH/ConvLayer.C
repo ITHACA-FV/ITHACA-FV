@@ -81,7 +81,6 @@ void ConvLayer<Type, PatchField, GeoMesh>::setDomainDivision(label Nx, label Ny,
         {
             ds[i] = domainSize[i] / (domainDivision[i] - 1);
         }
-
         else
         {
             ds[i] = domainSize[i] / 2;
@@ -142,9 +141,9 @@ void ConvLayer<Type, PatchField, GeoMesh>::setFilterSize(double dx, double dy,
         List<treeBoundBox> l;
         l.append(boxi);
         boxToCell finding(mesh, l);
-    #if OPENFOAM >= 1812
+#if OPENFOAM >= 1812
         finding.verbose(false);
-    #endif
+#endif
         finding.applyToSet(topoSetSource::ADD, a);
         cellsInBoxes[i] = a.toc();
     }
@@ -186,8 +185,10 @@ torch::Tensor ConvLayer<scalar, fvPatchField, volMesh>::filter()
                 {
                     for (label p = 0; p < cellsInBoxes[index].size(); p++)
                     {
-                        foo_a[i][0][j][k][l] += _snapshots[i][cellsInBoxes[index][p]] * weights[index][p];
+                        foo_a[i][0][j][k][l] += _snapshots[i][cellsInBoxes[index][p]] *
+                                                weights[index][p];
                     }
+
                     index++;
                 }
             }
@@ -222,10 +223,14 @@ torch::Tensor ConvLayer<vector, fvPatchField, volMesh>::filter()
                 {
                     for (label p = 0; p < cellsInBoxes[index].size(); p++)
                     {
-                        foo_a[i][0][j][k][l] += _snapshots[i][cellsInBoxes[index][p]][0] * weights[index][p];
-                        foo_a[i][1][j][k][l] += _snapshots[i][cellsInBoxes[index][p]][1] * weights[index][p];
-                        foo_a[i][2][j][k][l] += _snapshots[i][cellsInBoxes[index][p]][2] * weights[index][p];
+                        foo_a[i][0][j][k][l] += _snapshots[i][cellsInBoxes[index][p]][0] *
+                                                weights[index][p];
+                        foo_a[i][1][j][k][l] += _snapshots[i][cellsInBoxes[index][p]][1] *
+                                                weights[index][p];
+                        foo_a[i][2][j][k][l] += _snapshots[i][cellsInBoxes[index][p]][2] *
+                                                weights[index][p];
                     }
+
                     index++;
                 }
             }
