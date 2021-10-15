@@ -18,7 +18,6 @@ EXE_INC = \
     -I$(MUQ_EXT_LIBRARIES)/include\
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -Wno-comment \
-    -g \
     -std=c++11 \
     -Wno-maybe-uninitialized \
     -Wno-sign-compare \
@@ -29,7 +28,7 @@ EXE_INC = \
     -fopenmp \
     -pthread \
     -ldl \
-    -O3 \
+    -O1 \
     -msse4 
 
 EXE_LIBS = \
@@ -48,4 +47,5 @@ EXE_LIBS = \
     -L$(FOAM_USER_LIBBIN) \
     -L$(MUQ_LIBRARIES)/lib \
     -lITHACA_MUQ \
-    -lmuqModeling 
+    -lmuqModeling \
+    -Wl,-rpath-link,$(MUQ_LIBRARIES)/lib
