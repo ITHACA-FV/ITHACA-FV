@@ -221,6 +221,12 @@ template Eigen::MatrixXd getCoeffs(
     label Nmodes,
     bool consider_volumes);
 
+template Eigen::MatrixXd getCoeffs(
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>&
+    snapshot, PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& modes,
+    label Nmodes,
+    bool consider_volumes);
+
 Eigen::MatrixXd parTimeCombMat(List<Eigen::VectorXd>
                                acquiredSnapshotsTimes,
                                Eigen::MatrixXd parameters)
