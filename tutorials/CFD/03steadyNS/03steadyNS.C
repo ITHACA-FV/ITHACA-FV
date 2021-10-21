@@ -83,11 +83,54 @@ class tutorial03 : public steadyNS
         }
 };
 
+void offline_stage(tutorial03& example);
+void online_stage(tutorial03& example);
 
 int main(int argc, char* argv[])
 {
+    if (argc == 1)
+    {
+        std::cout << "Pass 'offline' or 'online' as first arguments."
+                  << std::endl;
+        exit(0);
+    }
+
+    // process arguments removing "offline" or "online" keywords
+    int argc_proc = argc - 1;
+    char* argv_proc[argc_proc];
+    argv_proc[0] = argv[0];
+
+    if (argc > 2)
+    {
+        std::copy(argv + 2, argv + argc, argv_proc + 1);
+    }
+
+    argc--;
     // Construct the tutorial object
     tutorial03 example(argc, argv);
+
+    if (std::strcmp(argv[1], "offline") == 0)
+    {
+        // perform the offline stage, extracting the modes from the snapshots' dataset corresponding to parOffline
+        offline_stage(example);
+    }
+    else if (std::strcmp(argv[1], "online") == 0)
+    {
+        // load precomputed modes and reduced matrices
+        offline_stage(example);
+        // perform online solve with respect to the parameters in parOnline
+        online_stage(example);
+    }
+    else
+    {
+        std::cout << "Pass offline, online" << std::endl;
+    }
+
+    exit(0);
+}
+
+void offline_stage(tutorial03& example)
+{
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
@@ -97,8 +140,8 @@ int main(int argc, char* argv[])
     int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
     int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
     int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
-    // Read the par file where the parameters are stored
-    word filename("./par");
+    // Read the par file where the training parameters are stored
+    word filename("./parOffline");
     example.mu = ITHACAstream::readMatrix(filename);
     // Set the inlet boundaries patch 0 directions x and y
     example.inletIndex.resize(1, 2);
@@ -134,8 +177,15 @@ int main(int argc, char* argv[])
                         example.supex, 1, NmodesSUPout);
     // Perform the Galerkin Projection
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
+}
+
+void online_stage(tutorial03& example)
+{
     // Create the reduced object
     reducedSteadyNS ridotto(example);
+    // Read the par file where the test parameters are stored
+    word filename("./parOnline");
+    example.mu = ITHACAstream::readMatrix(filename);
     // Set the inlet velocity
     Eigen::MatrixXd vel_now(1, 1);
     vel_now(0, 0) = 1;
@@ -146,6 +196,8 @@ int main(int argc, char* argv[])
     // Perform an online solve for the new values of inlet velocities
     for (label k = 0; k < example.mu.size(); k++)
     {
+        Info << "Evaluation of the reduced order model on the test set" << endl;
+        Info << "Inlet Ux = " << vel_now(0, 0) << " nu = " << example.mu(0, k) << endl;
         // Set the reduced viscosity
         ridotto.nu = example.mu(0, k);
         ridotto.solveOnline_sup(vel_now);
@@ -164,8 +216,8 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/red_coeff");
     // Reconstruct and export the solution
     ridotto.reconstruct(true, "./ITHACAoutput/Reconstruction/");
-    return 0;
 }
+
 
 //--------
 /// \dir 03steadyNS Folder of the turorial 3
