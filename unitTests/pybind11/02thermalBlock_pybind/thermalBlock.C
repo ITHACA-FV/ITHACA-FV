@@ -57,6 +57,8 @@ class tutorial02: public laplacianProblem
         {
             para = ITHACAparameters::getInstance(_mesh(),
                              _runTime());
+            mu = ITHACAstream::readMatrix("./mu_samples_mat.txt");
+            std::cout << mu << std::endl;
         }
 
         ~tutorial02(){}
@@ -78,8 +80,9 @@ class tutorial02: public laplacianProblem
         ITHACAparameters* para;
 
         /// It perform an offline Solve
-        void offlineSolve(std::string folder = "./ITHACAoutput/Offline/")
+        void offlineSolve()
         {
+            word folder = "./ITHACAoutput/Offline/";
             if (offline)
             {
                 ITHACAstream::read_fields(Tfield, "T", folder);
@@ -181,79 +184,79 @@ class tutorial02: public laplacianProblem
 };
 
 
-int main(int argc, char* argv[])
-{
-    // Create the example object of the tutorial02 type
-    tutorial02 example(argc, argv);
-    // Read some parameters from file
+// int main(int argc, char* argv[])
+// {
+//     // Create the example object of the tutorial02 type
+//     tutorial02 example(argc, argv);
+//     // Read some parameters from file
 
-    int NmodesTout = example.para->ITHACAdict->lookupOrDefault<int>("NmodesTout", 15);
-    int NmodesTproj = example.para->ITHACAdict->lookupOrDefault<int>("NmodesTproj", 10);
-    // Set the number of parameters
-    example.Pnumber = 9;
-    example.Tnumber = 500;
-    // Set the parameters
-    example.setParameters();
-    // Set the parameter ranges, in all the subdomains the diffusivity varies between
-    // 0.001 and 0.1
-    example.mu_range.col(0) = Eigen::MatrixXd::Ones(9, 1) * 0.001;
-    example.mu_range.col(1) = Eigen::MatrixXd::Ones(9, 1) * 0.1;
-    // Generate the Parameters
-    example.genRandPar(500);
-    // Set the size of the list of values that are multiplying the affine forms
-    example.theta.resize(9);
-    // Set the source term
-    example.SetSource();
-    // Compute the diffusivity field for each subdomain
-    example.compute_nu();
-    // Assemble all the operators of the affine decomposition
-    example.assemble_operator();
-    // Perform an Offline Solve
-    example.offlineSolve();
-    // Perform a POD decomposition and get the modes
-    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
-                        example.podex, 0, 0,
-                        NmodesTout);
-    /// Create a new instance of the FOM problem for testing purposes
-    tutorial02 FOM_test(argc, argv);
-    FOM_test.offline = false;
-    FOM_test.Pnumber = 9;
-    FOM_test.Tnumber = 50;
-    // Set the parameters
-    FOM_test.setParameters();
-    // Set the parameter ranges, in all the subdomains the diffusivity varies between
-    // 0.001 and 0.1
-    FOM_test.mu_range.col(0) = Eigen::MatrixXd::Ones(9, 1) * 0.001;
-    FOM_test.mu_range.col(1) = Eigen::MatrixXd::Ones(9, 1) * 0.1;
-    // Generate the Parameters
-    FOM_test.genRandPar(50);
-    // Set the size of the list of values that are multiplying the affine forms
-    FOM_test.theta.resize(9);
-    // Set the source term
-    FOM_test.SetSource();
-    // Compute the diffusivity field for each subdomain
-    FOM_test.compute_nu();
-    // Assemble all the operators of the affine decomposition
-    FOM_test.assemble_operator();
-    // Perform an Offline Solve
-    FOM_test.offlineSolve("./ITHACAoutput/FOMtest");
-    // Perform the Galerkin projection onto the space spanned by the POD modes
-    example.project(NmodesTproj);
-    // Create a reduced object
-    reducedLaplacian reduced(example);
+//     int NmodesTout = example.para->ITHACAdict->lookupOrDefault<int>("NmodesTout", 15);
+//     int NmodesTproj = example.para->ITHACAdict->lookupOrDefault<int>("NmodesTproj", 10);
+//     // Set the number of parameters
+//     example.Pnumber = 9;
+//     example.Tnumber = 500;
+//     // Set the parameters
+//     example.setParameters();
+//     // Set the parameter ranges, in all the subdomains the diffusivity varies between
+//     // 0.001 and 0.1
+//     example.mu_range.col(0) = Eigen::MatrixXd::Ones(9, 1) * 0.001;
+//     example.mu_range.col(1) = Eigen::MatrixXd::Ones(9, 1) * 0.1;
+//     // Generate the Parameters
+//     example.genRandPar(500);
+//     // Set the size of the list of values that are multiplying the affine forms
+//     example.theta.resize(9);
+//     // Set the source term
+//     example.SetSource();
+//     // Compute the diffusivity field for each subdomain
+//     example.compute_nu();
+//     // Assemble all the operators of the affine decomposition
+//     example.assemble_operator();
+//     // Perform an Offline Solve
+//     example.offlineSolve();
+//     // Perform a POD decomposition and get the modes
+//     ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
+//                         example.podex, 0, 0,
+//                         NmodesTout);
+//     /// Create a new instance of the FOM problem for testing purposes
+//     tutorial02 FOM_test(argc, argv);
+//     FOM_test.offline = false;
+//     FOM_test.Pnumber = 9;
+//     FOM_test.Tnumber = 50;
+//     // Set the parameters
+//     FOM_test.setParameters();
+//     // Set the parameter ranges, in all the subdomains the diffusivity varies between
+//     // 0.001 and 0.1
+//     FOM_test.mu_range.col(0) = Eigen::MatrixXd::Ones(9, 1) * 0.001;
+//     FOM_test.mu_range.col(1) = Eigen::MatrixXd::Ones(9, 1) * 0.1;
+//     // Generate the Parameters
+//     FOM_test.genRandPar(50);
+//     // Set the size of the list of values that are multiplying the affine forms
+//     FOM_test.theta.resize(9);
+//     // Set the source term
+//     FOM_test.SetSource();
+//     // Compute the diffusivity field for each subdomain
+//     FOM_test.compute_nu();
+//     // Assemble all the operators of the affine decomposition
+//     FOM_test.assemble_operator();
+//     // Perform an Offline Solve
+//     FOM_test.offlineSolve("./ITHACAoutput/FOMtest");
+//     // Perform the Galerkin projection onto the space spanned by the POD modes
+//     example.project(NmodesTproj);
+//     // Create a reduced object
+//     reducedLaplacian reduced(example);
 
-    // Solve the online reduced problem some new values of the parameters
-    for (int i = 0; i < FOM_test.mu.rows(); i++)
-    {
-        reduced.solveOnline(FOM_test.mu.row(i));
-    }
+//     // Solve the online reduced problem some new values of the parameters
+//     for (int i = 0; i < FOM_test.mu.rows(); i++)
+//     {
+//         reduced.solveOnline(FOM_test.mu.row(i));
+//     }
 
-    // Reconstruct the solution and store it into Reconstruction folder
-    reduced.reconstruct("./ITHACAoutput/Reconstruction");
-    // Compute the error on the testing set
-    Eigen::MatrixXd error = ITHACAutilities::errorL2Rel(FOM_test.Tfield,
-                            reduced.Trec);
-}
+//     // Reconstruct the solution and store it into Reconstruction folder
+//     reduced.reconstruct("./ITHACAoutput/Reconstruction");
+//     // Compute the error on the testing set
+//     Eigen::MatrixXd error = ITHACAutilities::errorL2Rel(FOM_test.Tfield,
+//                             reduced.Trec);
+// }
 //--------
 /// \dir 02thermalBlock Folder of the turorial 2
 /// \file

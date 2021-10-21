@@ -54,7 +54,6 @@ EXE_INC = \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -O3 \
     -w \
-    -w \
     -std=c++11 
 
 LIB_LIBS = \
