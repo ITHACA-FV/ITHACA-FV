@@ -140,13 +140,13 @@ void steadyNS::solvesupremizer(word type)
              "You must specify the variable type with either snapshots or modes");
     PtrList<volScalarField> P_sup;
 
-    if (type == "modes")
-    {
-        P_sup = Pmodes;
-    }
-    else if (type == "snapshots")
+    if (type == "snapshots")
     {
         P_sup = Pfield;
+    }
+    else
+    {
+        P_sup = Pmodes;
     }
 
     if (supex == 1)
@@ -229,7 +229,7 @@ void steadyNS::solvesupremizer(word type)
         }
         else
         {
-            for (label i = 0; i < Pmodes.size(); i++)
+            for (label i = 0; i < P_sup.size(); i++)
             {
                 fvVectorMatrix u_sup_eqn
                 (
@@ -237,7 +237,7 @@ void steadyNS::solvesupremizer(word type)
                 );
                 solve
                 (
-                    u_sup_eqn == fvc::grad(Pmodes[i])
+                    u_sup_eqn == fvc::grad(P_sup[i])
                 );
                 supmodes.append(Usup.clone());
                 ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
