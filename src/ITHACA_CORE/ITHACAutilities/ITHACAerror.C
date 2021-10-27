@@ -72,12 +72,14 @@ double LinfNorm(GeometricField<vector, fvPatchField, volMesh>& field)
     return a;
 }
 
-template<typename T>
-double errorFrobRel(GeometricField<T, fvPatchField, volMesh>& field1,
-                    GeometricField<T, fvPatchField, volMesh>& field2)
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+double errorFrobRel(GeometricField<Type, PatchField, GeoMesh>& field1,
+                    GeometricField<Type, PatchField, GeoMesh>& field2)
 {
     double err;
-    GeometricField<T, fvPatchField, volMesh> errField = (field1 - field2).ref();
+    GeometricField<Type, PatchField, GeoMesh> errField = (field1 - field2).ref();
 
     if (frobNorm(field1) <= 1e-6)
     {
@@ -89,7 +91,9 @@ double errorFrobRel(GeometricField<T, fvPatchField, volMesh>& field1,
     }
 
     return err;
+
 }
+
 
 template double errorFrobRel(GeometricField<scalar, fvPatchField, volMesh>&
                              field1,
@@ -97,6 +101,10 @@ template double errorFrobRel(GeometricField<scalar, fvPatchField, volMesh>&
 template double errorFrobRel(GeometricField<vector, fvPatchField, volMesh>&
                              field1,
                              GeometricField<vector, fvPatchField, volMesh>& field2);
+
+template double errorFrobRel(GeometricField<scalar, fvsPatchField, surfaceMesh>&
+                             field1,
+                             GeometricField<scalar, fvsPatchField, surfaceMesh>& field2);
 
 
 template<typename T>
@@ -333,8 +341,9 @@ double H1Seminorm(GeometricField<vector, fvPatchField, volMesh>& field)
     return a;
 }
 
-template<class T>
-double frobNorm(GeometricField<T, fvPatchField, volMesh>& field)
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+double frobNorm(GeometricField<Type, PatchField, GeoMesh>& field)
 {
     double norm(0);
     Eigen::VectorXd vF = Foam2Eigen::field2Eigen(field);
