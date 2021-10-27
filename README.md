@@ -34,7 +34,7 @@ Linear and non-linear algebra operations which are not already implemented in Op
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
-*   [**OpenFOAM 5.0**](https://openfoam.org/version/5-0)
+*   [**OpenFOAM 5.0**](https://openfoam.org/version/5-0) or
 *   [**OpenFOAM 6.0**](https://openfoam.org/version/6) or
 *   [**OpenFOAM 1812**](https://www.openfoam.com/releases/openfoam-v1812/) or
 *   [**OpenFOAM 1906**](https://www.openfoam.com/releases/openfoam-v1906/) or
@@ -88,17 +88,17 @@ In the near future the ITHACA-FV will also be linked with the pytorch package fo
 For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://mathlab.github.io/ITHACA-FV/).
 
 ### 3. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
-Several tutorials are provided the [**tutorials** subfolder](./tutorials).
-* [**Tutorial 1**](https://mathlab.github.io/ITHACA-FV/01POD_8C-example.html): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case. 
-* [**Tutorial 2**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C-example.html): In this tutorial the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem is implemented. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**. 
-* [**Tutorial 3**](https://mathlab.github.io/ITHACA-FV/03steadyNS_8C-example.html) In this tutorial, the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the viscosity is implemented. The OpenFOAM full order problem is based on **simpleFoam**.
-* [**Tutorial 4**](https://mathlab.github.io/ITHACA-FV/04unsteadyNS_8C-example.html) In this tutorial, the development of a parametrized POD-Galerkin method for an unsteady Navier-Stokes problem is implemented. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **pimpleFoam**.
+Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
+*   [**CFD/Tutorial 1**](https://mathlab.github.io/ITHACA-FV/01POD_8C-example.html): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case. 
+*   [**CFD/Tutorial 2**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C-example.html): In this tutorial the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem is implemented. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**. 
+*   [**CFD/Tutorial 3**](https://mathlab.github.io/ITHACA-FV/03steadyNS_8C-example.html): In this tutorial, the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the viscosity is implemented. The OpenFOAM full order problem is based on **simpleFoam**.
+*   [**CFD/Tutorial 4**](https://mathlab.github.io/ITHACA-FV/04unsteadyNS_8C-example.html): In this tutorial, the development of a parametrized POD-Galerkin method for an unsteady Navier-Stokes problem is implemented. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **pimpleFoam**.
 
-* [**Tutorial 6**](https://mathlab.github.io/ITHACA-FV/06POD_RBF_8C-example.html) This tutorial presents the application of data driven POD-Galerkin model to RANS equation in steady state setting. The components of the velocity at the inlet are paramertized. The OpenFOAM full order problem is based on **simpleFoam**.
+*   [**CFD/Tutorial 6**](https://mathlab.github.io/ITHACA-FV/06POD_RBF_8C-example.html): This tutorial presents the application of data driven POD-Galerkin model to RANS equation in steady state setting. The components of the velocity at the inlet are paramertized. The OpenFOAM full order problem is based on **simpleFoam**.
 
-* [**Tutorial 8**](https://mathlab.github.io/ITHACA-FV/08DEIM_8C-example.html) In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for the reconstruction of a non-linear function. In this case we do not perform model reduction but we test just the motodology a non-linear function.
+*   [**CFD/Tutorial 8**](https://mathlab.github.io/ITHACA-FV/08DEIM_8C-example.html): In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for the reconstruction of a non-linear function. In this case we do not perform model reduction but we test just the motodology a non-linear function.
 
-* [**Tutorial 9**](https://mathlab.github.io/ITHACA-FV/09DEIM_ROM_8C-example.html) In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for model reduction purposes. The non-linearity is in the forcing term of a heat transfer problem. The OpenFOAM full order problem is based on **laplacianFoam**.
+*   [**CFD/Tutorial 9**](https://mathlab.github.io/ITHACA-FV/09DEIM_ROM_8C-example.html): In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for model reduction purposes. The non-linearity is in the forcing term of a heat transfer problem. The OpenFOAM full order problem is based on **laplacianFoam**.
 
 
 ### 4. Authors and contributors
