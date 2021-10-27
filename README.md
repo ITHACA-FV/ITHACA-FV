@@ -30,14 +30,18 @@
 
 Linear and non-linear algebra operations which are not already implemented in OpenFOAM are performed with the external library [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page). The source code of Eigen 3.3.7 is provided together with ITHACA-FV and is located in the [src/thirdyparty/Eigen](./src/thirdparty/Eigen) folder.  For the EigenValue decomposition it is also possible to rely on the [**Spectra-0.7.0**](https://spectralib.org/) library and the source code is provided in the [src/thirdyparty/spectra](./src//thirdparty/spectra) folder. Numerical optimization can be performed using the external library [**OptimLib**](https://www.kthohr.com/optimlib.html) and the header based source code is provided in the [src/thirdyparty/OptimLib](./src/thirdparty/OptimLib) folder.
 
-**ITHACA-FV** has been tested on ubuntu 16.04, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 6.0, OpenFOAM 5.0 or OpenFOAM 1812.
+**ITHACA-FV** has been tested on ubuntu 16.04, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 6.0, OpenFOAM 5.0, OpenFOAM 1812, OpenFOAM 1906, OpenFOAM 1912, OpenFOAM 2006, OpenFOAM 2012 and OpenFOAM 2106.
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
-* [**OpenFOAM 6.0**](https://openfoam.org/version/6) 
-* [**OpenFOAM 5.0**](https://openfoam.org/version/5-0) or 
-* [**OpenFOAM 1812**](https://www.openfoam.com/releases/openfoam-v1812/)
-* [**OpenFOAM 1906**](https://www.openfoam.com/releases/openfoam-v1812/)
+*   [**OpenFOAM 5.0**](https://openfoam.org/version/5-0)
+*   [**OpenFOAM 6.0**](https://openfoam.org/version/6) or
+*   [**OpenFOAM 1812**](https://www.openfoam.com/releases/openfoam-v1812/) or
+*   [**OpenFOAM 1906**](https://www.openfoam.com/releases/openfoam-v1906/) or
+*   [**OpenFOAM 1912**](https://www.openfoam.com/releases/openfoam-v1912/) or
+*   [**OpenFOAM 2006**](https://www.openfoam.com/releases/openfoam-v2006/) or
+*   [**OpenFOAM 2012**](https://www.openfoam.com/releases/openfoam-v2012/) or
+*   [**OpenFOAM 2106**](https://www.openfoam.com/news/main-news/openfoam-v2106)
 
 
 ### 2. Installation and usage
