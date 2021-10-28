@@ -5,13 +5,16 @@ The problem equation are
 <center>
 <img src="https://render.githubusercontent.com/render/math?math=\nabla \cdot (k \nabla T) = S"> 
 </center>
-where <img src="https://render.githubusercontent.com/render/math?math=k"> is the diffusivity, <img src="https://render.githubusercontent.com/render/math?math=T"> is the temperature and <img src="https://render.githubusercontent.com/render/math?math=k"> is the diffusivity, <img src="https://render.githubusercontent.com/render/math?math=S"> is the source term. The problem discretised and formalized in matrix equation reads:
+
+where *k* is the diffusivity, *T* is the temperature and *S* is the source term. The problem discretised and formalized in matrix equation reads:
 <center>
-<img src="https://render.githubusercontent.com/render/math?math=AT = S"></center>
-where <img src="https://render.githubusercontent.com/render/math?math=A"> is the matrix of interpolation coefficients, <img src="https://render.githubusercontent.com/render/math?math=T"> is the vector of unknowns and <img src="https://render.githubusercontent.com/render/math?math=S"> is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
-<center>
-![drawing](../../../docs/images/drawing.png)
+<img src="https://render.githubusercontent.com/render/math?math=AT = S">
 </center>
+
+where *A* is the matrix of interpolation coefficients, *T*  is the vector of unknowns and *S* is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
+
+![drawing](../../../docs/images/drawing.png)
+
 Both the full order and the reduced order problem are solved exploiting the parametric affine decomposition of the differential operators:
 <center>
 <img src="https://render.githubusercontent.com/render/math?math=A = \sum_{i=1}^N \theta_i(\mu) A_i"> 
@@ -108,11 +111,9 @@ Define by:
 <img src="https://render.githubusercontent.com/render/math?math=S = \sin(\frac{\pi}{L}\cdot x) + \sin(\frac{\pi}{L}\cdot y)"> 
 </center>
 
-where <img src="https://render.githubusercontent.com/render/math?math=L"> is the dimension of the thermal block which is equal to 0.9.
+where *L* is the dimension of the thermal block which is equal to 0.9.
 
-<center>
-![hat](../../../docs/images/hat.png)
-</center>
+![hat](../../../docs/images/hat.jpg)
 
 With the following is defined a method to set compute the parameter of the affine expansion:
 
