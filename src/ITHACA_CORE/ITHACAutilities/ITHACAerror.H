@@ -64,9 +64,10 @@ namespace ITHACAutilities
 ///
 /// @return     The Frobenius norm of the relative error.
 ///
-template<typename T>
-double errorFrobRel(GeometricField<T, fvPatchField, volMesh>& field1,
-                    GeometricField<T, fvPatchField, volMesh>& field2);
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+double errorFrobRel(GeometricField<Type, PatchField, GeoMesh>& field1,
+                    GeometricField<Type, PatchField, GeoMesh>& field2);
 
 //--------------------------------------------------------------------------
 /// Computes the relative error between two geometric Fields in L2 norm
@@ -234,8 +235,8 @@ double H1Seminorm(GeometricField<T, fvPatchField, volMesh>& field);
 ///
 /// @return     Frobenius norm of the field.
 ///
-template<class T>
-double frobNorm(GeometricField<T, fvPatchField, volMesh>& field);
+template<class Type, template<class> class PatchField, class GeoMesh>
+double frobNorm(GeometricField<Type, PatchField, GeoMesh>& field);
 
 //--------------------------------------------------------------------------
 /// Evaluate the L2 norm of a field on a boundary patch
