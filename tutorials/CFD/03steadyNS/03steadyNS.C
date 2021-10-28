@@ -27,25 +27,19 @@ SourceFiles
     03steadyNS.C
 \*---------------------------------------------------------------------------*/
 
-#include "steadyNS.H"
-#include "ITHACAstream.H"
+#include "IOmanip.H"
 #include "ITHACAPOD.H"
+#include "ITHACAstream.H"
 #include "ReducedSteadyNS.H"
 #include "forces.H"
-#include "IOmanip.H"
-
+#include "steadyNS.H"
 
 class tutorial03 : public steadyNS
 {
     public:
         /// Constructor
         explicit tutorial03(int argc, char* argv[])
-            :
-            steadyNS(argc, argv),
-            U(_U()),
-            p(_p()),
-            args(_args())
-        {}
+            : steadyNS(argc, argv), U(_U()), p(_p()), args(_args()) {}
 
         /// Velocity field
         volVectorField& U;
@@ -88,33 +82,32 @@ void online_stage(tutorial03& example);
 
 int main(int argc, char* argv[])
 {
-    if (argc == 1)
-    {
-        std::cout << "Pass 'offline' or 'online' as first arguments."
-                  << std::endl;
-        exit(0);
-    }
-
-    // process arguments removing "offline" or "online" keywords
-    int argc_proc = argc - 1;
-    char* argv_proc[argc_proc];
-    argv_proc[0] = argv[0];
-
-    if (argc > 2)
-    {
-        std::copy(argv + 2, argv + argc, argv_proc + 1);
-    }
-
-    argc--;
+    // load stage to perform
+    argList::addOption("stage", "offline", "Perform offline stage");
+    argList::addOption("stage", "online", "Perform online stage");
+    // add options for parallel run
+    HashTable<string> validParOptions;
+    validParOptions.set
+    (
+        "stage",
+        "offline"
+    );
+    validParOptions.set
+    (
+        "stage",
+        "online"
+    );
+    Pstream::addValidParOptions(validParOptions);
     // Construct the tutorial object
     tutorial03 example(argc, argv);
 
-    if (std::strcmp(argv[1], "offline") == 0)
+    if (example._args().get("stage").match("offline"))
     {
-        // perform the offline stage, extracting the modes from the snapshots' dataset corresponding to parOffline
+        // perform the offline stage, extracting the modes from the snapshots'
+        // dataset corresponding to parOffline
         offline_stage(example);
     }
-    else if (std::strcmp(argv[1], "online") == 0)
+    else if (example._args().get("stage").match("online"))
     {
         // load precomputed modes and reduced matrices
         offline_stage(example);
@@ -123,7 +116,7 @@ int main(int argc, char* argv[])
     }
     else
     {
-        std::cout << "Pass offline, online" << std::endl;
+        std::cout << "Pass '-stage offline', '-stage online'" << std::endl;
     }
 
     exit(0);
@@ -132,14 +125,15 @@ int main(int argc, char* argv[])
 void offline_stage(tutorial03& example)
 {
     // Read some parameters from file
-    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
-                             example._runTime());
+    ITHACAparameters* para =
+        ITHACAparameters::getInstance(example._mesh(), example._runTime());
     int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
     int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
     int NmodesSUPout = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 15);
     int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
     int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
-    int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
+    int NmodesSUPproj =
+        para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
     // Read the par file where the training parameters are stored
     word filename("./parOffline");
     example.mu = ITHACAstream::readMatrix(filename);
@@ -168,13 +162,12 @@ void offline_stage(tutorial03& example)
                             example.podex, 0, 0, NmodesUout);
     }
 
-    // Perform POD on velocity pressure and supremizers and store the first 10 modes
+    // Perform POD on velocity pressure and supremizers and store the first 10
+    // modes
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
-                        example.podex, 0, 0,
-                        NmodesPout);
+                        example.podex, 0, 0, NmodesPout);
     ITHACAPOD::getModes(example.supfield, example.supmodes, example._U().name(),
-                        example.podex,
-                        example.supex, 1, NmodesSUPout);
+                        example.podex, example.supex, 1, NmodesSUPout);
     // Perform the Galerkin Projection
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
 }
@@ -197,7 +190,8 @@ void online_stage(tutorial03& example)
     for (label k = 0; k < example.mu.size(); k++)
     {
         Info << "Evaluation of the reduced order model on the test set" << endl;
-        Info << "Inlet Ux = " << vel_now(0, 0) << " nu = " << example.mu(0, k) << endl;
+        Info << "Inlet Ux = " << vel_now(0, 0) << " nu = " << example.mu(0, k)
+             << endl;
         // Set the reduced viscosity
         ridotto.nu = example.mu(0, k);
         ridotto.solveOnline_sup(vel_now);
@@ -218,7 +212,6 @@ void online_stage(tutorial03& example)
     ridotto.reconstruct(true, "./ITHACAoutput/Reconstruction/");
 }
 
-
 //--------
 /// \dir 03steadyNS Folder of the turorial 3
 /// \file
@@ -226,18 +219,20 @@ void online_stage(tutorial03& example)
 
 /// \example 03steadyNS.C
 /// \section intro_sreadyNS Introduction to tutorial 3
-/// The problems consists of steady Navier-Stokes problem with parametrized viscosity.
-/// The physical problem is the backward facing step depicted in the following image:
-/// \image html step.png
-/// At the inlet a uniform and constant velocity equal to 1 m/s is prescribed.
+/// The problems consists of steady Navier-Stokes problem with parametrized
+/// viscosity. The physical problem is the backward facing step depicted in the
+/// following image: \image html step.png At the inlet a uniform and constant
+/// velocity equal to 1 m/s is prescribed.
 ///
 /// \section code03 A detailed look into the code
 ///
-/// In this section are explained the main steps necessary to construct the tutorial N°3
+/// In this section are explained the main steps necessary to construct the
+/// tutorial N°3
 ///
 /// \subsection header The necessary header files
 ///
-/// First of all let's have a look to the header files that needs to be included and what they are responsible for:
+/// First of all let's have a look to the header files that needs to be included
+/// and what they are responsible for:
 ///
 /// The header file of ITHACA-FV necessary for this tutorial
 ///
@@ -251,8 +246,8 @@ void online_stage(tutorial03& example)
 /// \skipline tutorial03
 /// \until {}
 ///
-/// The members of the class are the fields that needs to be manipulated during the
-/// resolution of the problem
+/// The members of the class are the fields that needs to be manipulated during
+/// the resolution of the problem
 ///
 /// Inside the class it is defined the offlineSolve method according to the
 /// specific parametrized problem that needs to be solved.
@@ -261,12 +256,14 @@ void online_stage(tutorial03& example)
 /// \until {
 ///
 ///
-/// If the offline solve has already been performed than read the existing snapshots
+/// If the offline solve has already been performed than read the existing
+/// snapshots
 ///
 /// \skipline offline
 /// \until }
 ///
-/// else perform the offline solve where a loop over all the parameters is performed:
+/// else perform the offline solve where a loop over all the parameters is
+/// performed:
 ///
 /// \skipline else
 /// \until }
@@ -299,8 +296,9 @@ void online_stage(tutorial03& example)
 ///
 /// \skipline supremizer()
 ///
-/// In order to show the functionality of reading fields in this case the lifting function is read
-/// from a precomputed simulation with a unitary inlet velocity:
+/// In order to show the functionality of reading fields in this case the
+/// lifting function is read from a precomputed simulation with a unitary inlet
+/// velocity:
 ///
 /// \skipline stream
 ///
@@ -326,7 +324,8 @@ void online_stage(tutorial03& example)
 /// \skipline Eigen::
 /// \until }
 ///
-/// The vel_now matrix in this case is not used since there are no parametrized boundary conditions.
+/// The vel_now matrix in this case is not used since there are no parametrized
+/// boundary conditions.
 ///
 /// The viscosity is set with the command:
 ///
@@ -334,8 +333,8 @@ void online_stage(tutorial03& example)
 /// ridotto.nu = example.mu(k,0)
 /// \endcode
 ///
-/// finally the online solution stored during the online solve is exported to file in three different
-/// formats with the lines:
+/// finally the online solution stored during the online solve is exported to
+/// file in three different formats with the lines:
 ///
 /// \skipline exportMatrix
 /// \until "eigen"
@@ -351,9 +350,3 @@ void online_stage(tutorial03& example)
 /// \section plaincode The plain program
 /// Here there's the plain code
 ///
-
-
-
-
-
-
