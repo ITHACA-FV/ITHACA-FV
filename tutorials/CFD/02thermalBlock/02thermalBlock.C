@@ -421,7 +421,7 @@ int main(int argc, char* argv[])
 ///
 /// and the projection is performed onto the POD modes using 10 modes
 ///
-/// \skipline project(10)
+/// \skipline .project(NmodesTproj)
 ///
 /// Once the projection is performed we can construct a reduced object:
 ///
