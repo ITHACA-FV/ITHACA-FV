@@ -197,12 +197,17 @@ int main(int argc, char* argv[])
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
+    word stabilization = para->ITHACAdict->lookupOrDefault<word>("Stabilization", "supremizer");
     int NmodesUproj   = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 5);
     int NmodesPproj   = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 5);
     int NmodesPrghproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPrghproj",
                          5);
     int NmodesTproj   = para->ITHACAdict->lookupOrDefault<int>("NmodesTproj", 5);
-    int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
+    int NmodesSUPproj = 0;
+    if (stabilization == "supremizer")
+    {
+        NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 5);
+    }
     int NmodesOut     = para->ITHACAdict->lookupOrDefault<int>("NmodesOut", 15);
     // Set the number of parameters
     example.Pnumber = 1;
@@ -250,7 +255,10 @@ int main(int argc, char* argv[])
         example.Tomfield, example.Tmodes, example._T().name(),
         example.podex, 0, 0, NmodesOut, false);
     // Solve the supremizer problem
-    example.solvesupremizer("modes");
+    if (stabilization == "supremizer")
+    {
+        example.solvesupremizer("modes");
+    }
     // Create a list with number of modes for which the projection needs to be performed
     Eigen::MatrixXd List_of_modes(NmodesOut - 5, 1);
 
@@ -288,9 +296,12 @@ int main(int argc, char* argv[])
         ULmodes.append((example.Umodes[k]).clone());
     }
 
-    for (label k = 0; k < NmodesSUPproj; k++)
+    if (stabilization == "supremizer")
     {
-        ULmodes.append((example.supmodes[k]).clone());
+        for (label k = 0; k < NmodesSUPproj; k++)
+        {
+            ULmodes.append((example.supmodes[k]).clone());
+        }
     }
 
     // Perform the projection for all number of modes in List_of_modes for temperature and velocity
@@ -323,8 +334,21 @@ int main(int argc, char* argv[])
     ITHACAstream::exportMatrix(L2errorProjMatrixT, "L2errorProjMatrixT", "eigen",
                                "./ITHACAoutput/l2error");
     // Get reduced matrices
-    example.projectSUP("./Matrices", NmodesUproj, NmodesPrghproj, NmodesTproj,
-                       NmodesSUPproj);
+    if (stabilization == "supremizer")
+    {
+        example.projectSUP("./Matrices", NmodesUproj, NmodesPrghproj, NmodesTproj,
+                           NmodesSUPproj);
+    }
+    else if (stabilization == "PPE")
+    {
+        example.projectPPE("./Matrices", NmodesUproj, NmodesPrghproj, NmodesTproj,
+                           NmodesSUPproj);
+    }
+    else
+    {
+        // TODO: warning message
+    }
+
     // Resize the modes for projection
     example.Tmodes.resize(NmodesTproj);
     example.Umodes.resize(NmodesUproj);
@@ -349,8 +373,16 @@ int main(int argc, char* argv[])
         temp_now_BC(0, 0) = par_on_BC(k, 0);
         temp_now_BC(1, 0) = par_on_BC(k, 1);
         temp_now_BC(2, 0) = par_on_BC(k, 2);
-        reduced.solveOnline_sup(temp_now_BC, vel_now_BC, k, par_on_BC.rows());
-        reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 5);
+        if (stabilization == "supremizer")
+        {
+            reduced.solveOnline_sup(temp_now_BC, vel_now_BC, k, par_on_BC.rows());
+            reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 5);
+        }
+        else if (stabilization == "PPE")
+        {
+            reduced.solveOnline_PPE(temp_now_BC, vel_now_BC, k, par_on_BC.rows());
+            reduced.reconstruct_PPE("./ITHACAoutput/ReconstructionPPE/", 5);
+        }
     }
 
     // Performing full order simulation for second parameter set of temp_now_BC

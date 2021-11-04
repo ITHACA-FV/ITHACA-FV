@@ -83,6 +83,9 @@ ReducedUnsteadyBB::ReducedUnsteadyBB(UnsteadyBB& FOMproblem)
     newton_object_sup = newton_unsteadyBB_sup(Nphi_u + Nphi_prgh + Nphi_t,
                         Nphi_u + Nphi_prgh + Nphi_t,
                         FOMproblem);
+    newton_object_PPE = newton_unsteadyBB_PPE(Nphi_u + Nphi_prgh + Nphi_t,
+                        Nphi_u + Nphi_prgh + Nphi_t,
+                        FOMproblem);
 }
 
 
