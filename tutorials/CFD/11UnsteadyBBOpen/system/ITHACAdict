@@ -18,7 +18,7 @@ FoamFile
 EigenSolver eigen;
 
 // Stabilization, can be supremizer or PPE
-Stabilization PPE;
+Stabilization supremizer;
 
 // Number of modes to output and to use for projection
 NmodesUout 15;
