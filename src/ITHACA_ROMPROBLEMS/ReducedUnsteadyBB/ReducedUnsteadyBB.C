@@ -265,10 +265,12 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
         counter ++;
     }
 
+    std::cerr << "File: ReducedUnsteadyBB.C, Line: 264" << std::endl;
     // Set size of online solution
     online_solutiont.resize(Nphi_u + Nphi_prgh + Nphi_t + 1, counter + 1);
     // Set initial condition for online solve
-    volScalarField T_IC("T_IC", problem->Tfield[0]);
+    volScalarField T_IC("T_IC", problem->Tfield[0].clone());
+    Info << T_IC.boundaryField() << endl;
 
     for (int j = 0; j < T_IC.boundaryField().size(); j++)
     {
@@ -277,6 +279,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
             if (j == problem->inletIndexT(i, 0))
             {
                 T_IC.boundaryFieldRef()[problem->inletIndexT(i, 0)][j] = temp_now_BC(i, 0);
+                std::cerr << "File: ReducedUnsteadyBB.C, Line: 277" << std::endl;
             }
             else
             {
@@ -284,6 +287,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
         }
     }
 
+    std::cerr << "File: ReducedUnsteadyBB.C, Line: 284" << std::endl;
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_prgh + Nphi_t, 1);
     y.setZero();
@@ -298,7 +302,9 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
                                             problem->Prghmodes);
     }
 
+    std::cerr << "File: ReducedUnsteadyBB.C, Line: 299" << std::endl;
     y.tail(Nphi_t) = ITHACAutilities::getCoeffs(T_IC, LTmodes);
+    std::cerr << "File: ReducedUnsteadyBB.C, Line: 302" << std::endl;
     // Set some properties of the newton object
     newton_object_sup.nu = nu;
     newton_object_sup.y_old = y;
