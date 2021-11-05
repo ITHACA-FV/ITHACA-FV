@@ -91,7 +91,6 @@ double errorFrobRel(GeometricField<Type, PatchField, GeoMesh>& field1,
     }
 
     return err;
-
 }
 
 
