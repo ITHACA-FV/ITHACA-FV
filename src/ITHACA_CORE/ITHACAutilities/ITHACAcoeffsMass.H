@@ -54,6 +54,7 @@ SourceFiles
 #include "fvMeshSubset.H"
 using namespace std::placeholders;
 #include "Foam2Eigen.H"
+#include "ITHACAstream.H"
 
 /// Namespace to implement projection coefficients calculation and mass matrices
 namespace ITHACAutilities
