@@ -509,7 +509,7 @@ Istream& operator>> (Istream& is, Eigen::Matrix < T, -1, -1 > & mat)
 template<typename T>
 Ostream& operator<< (Ostream& os, const Eigen::Matrix < T, -1, 1 > & mat)
 {
-    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::MatrixXd&>
+    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::VectorXd&>
             (mat).data(), mat.size());
     return os;
 }

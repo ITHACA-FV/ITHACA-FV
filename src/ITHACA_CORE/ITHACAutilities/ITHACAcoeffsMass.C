@@ -91,6 +91,11 @@ Eigen::MatrixXd getMassMatrix(
         M = F.transpose().topRows(Msize) * F.leftCols(Msize);
     }
 
+    if (Pstream::parRun())
+    {
+        reduce(M, sumOp<Eigen::MatrixXd>());
+    }
+
     return M;
 }
 
@@ -156,6 +161,11 @@ Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
     else
     {
         b = F.transpose().topRows(Msize) * snapEigen;
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(b, sumOp<Eigen::VectorXd>());
     }
 
     a = M_matrix.fullPivLu().solve(b);
