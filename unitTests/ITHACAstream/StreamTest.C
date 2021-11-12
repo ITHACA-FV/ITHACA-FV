@@ -116,12 +116,11 @@ int cnpyTEST()
             i++) data[i] = std::complex<double>(rand(), rand());
 
     //save it to file
-    const unsigned int shape[] = {Nz, Ny, Nx};
-    cnpy::npy_save("arr1.npy", data, shape, 3, "w");
+    std::vector<size_t> shape = {Nz, Ny, Nx};
+    cnpy::npy_save("arr1.npy", data, shape, "w");
     //load it into a new array
     cnpy::NpyArray arr = cnpy::npy_load("arr1.npy");
-    std::complex<double>* loaded_data = reinterpret_cast<std::complex<double>*>
-                                        (arr.data);
+    std::complex<double>* loaded_data = arr.data<std::complex<double>>();
     //make sure the loaded data matches the saved data
     assert(arr.word_size == sizeof(std::complex<double>));
     assert(arr.shape.size() == 3 && arr.shape[0] == Nz && arr.shape[1] == Ny &&
@@ -131,17 +130,17 @@ int cnpyTEST()
 
     //append the same data to file
     //npy array on file now has shape (Nz+Nz,Ny,Nx)
-    cnpy::npy_save("arr1.npy", data, shape, 3, "a");
+    cnpy::npy_save("arr1.npy", data, shape, "a");
     //now write to an npz file
     //non-array variables are treated as 1D arrays with 1 element
     double myVar1 = 1.2;
     char myVar2 = 'a';
-    unsigned int shape2[] = {1};
-    cnpy::npz_save("out.npz", "myVar1", &myVar1, shape2, 1,
+    std::vector<size_t> shape2 = {1};
+    cnpy::npz_save("out.npz", "myVar1", &myVar1, shape2,
                    "w"); //"w" overwrites any existing file
-    cnpy::npz_save("out.npz", "myVar2", &myVar2, shape2, 1,
+    cnpy::npz_save("out.npz", "myVar2", &myVar2, shape2,
                    "a"); //"a" appends to the file we created above
-    cnpy::npz_save("out.npz", "arr1", data, shape, 3,
+    cnpy::npz_save("out.npz", "arr1", data, shape,
                    "a"); //"a" appends to the file we created above
     //load a single var from the npz file
     cnpy::NpyArray arr2 = cnpy::npz_load("out.npz", "arr1");
@@ -149,14 +148,12 @@ int cnpyTEST()
     cnpy::npz_t my_npz = cnpy::npz_load("out.npz");
     //check that the loaded myVar1 matches myVar1
     cnpy::NpyArray arr_mv1 = my_npz["myVar1"];
-    double* mv1 = reinterpret_cast<double*>(arr_mv1.data);
+    double* mv1 = arr_mv1.data<double>();
     assert(arr_mv1.shape.size() == 1 && arr_mv1.shape[0] == 1);
     assert(mv1[0] == myVar1);
     //cleanup: note that we are responsible for deleting all loaded data
     delete[] data;
     delete[] loaded_data;
-    arr2.destruct();
-    my_npz.destruct();
     Eigen::MatrixXf pc1 = Eigen::MatrixXf::Random(5, 5);
     cnpy::save(pc1, "arr.npy");
     Eigen::MatrixXf pc0 = cnpy::load(pc0, "arr.npy");
@@ -169,12 +166,19 @@ int TestSparseMatrix()
 {
     Eigen::SparseMatrix<double> mat;
     cnpy::load(mat,"forCnpy.npz");
-    std::cout << mat << std::endl;
+    // std::cout << mat << std::endl;
     cnpy::save(mat,"forNpy.npz");
     Eigen::SparseMatrix<double> mat2;
     cnpy::load(mat2,"forNpy.npz");
-    std::cout << mat2 << std::endl;
-    return 0;
+    // std::cout << mat2 << std::endl;
+    bool esit = false;
+
+    if ((mat-mat2).norm() == 0)
+    {
+        esit = true;
+        std::cout << "> Read And Write NPZ sparse matrix succeeded!" << std::endl;
+    }
+    return esit;
 }
 
 int main(int argc, char **argv)
