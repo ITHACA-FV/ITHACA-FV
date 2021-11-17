@@ -55,7 +55,8 @@ bool isConst(torch::Tensor& tTensor)
 void save(const torch::Tensor& torchTensor, const std::string fname)
 {
     unsigned int dim = torchTensor.dim();
-    unsigned int shape[dim];
+    std::vector<size_t> shape = {dim};
+    // unsigned int shape[dim];
     float* data_p = torchTensor.data_ptr<float>();
 
     for (unsigned int i = 0; i < torchTensor.dim(); i++)
@@ -63,7 +64,7 @@ void save(const torch::Tensor& torchTensor, const std::string fname)
         shape[i] = (unsigned int) torchTensor.size(i);
     }
 
-    cnpy::npy_save(fname, data_p, shape, dim);
+    cnpy::npy_save(fname, data_p, shape);
 }
 
 torch::Tensor load(const std::string fname)
@@ -78,7 +79,7 @@ torch::Tensor load(const std::string fname)
     }
 
     torch::Tensor tensor = torch::randn({2, 2, 3});
-    return torch::from_blob(arr.data, dims).clone();
+    return torch::from_blob(arr.data<float>(), dims).clone();
     //return tensor;
 }
 

@@ -14,9 +14,8 @@
 
 char cnpy::BigEndianTest()
 {
-    unsigned char x[] = {1, 0};
-    short y = *(short*) x;
-    return y == 1 ? '<' : '>';
+    int x = 1;
+    return (((char*)&x)[0]) ? '<' : '>';
 }
 
 char cnpy::map_type(const std::type_info& t)
@@ -133,8 +132,48 @@ template<> std::vector<char>& cnpy::operator+=(std::vector<char>& lhs,
     return lhs;
 }
 
-void cnpy::parse_npy_header(FILE* fp, unsigned int& word_size,
-                            unsigned int*& shape, unsigned int& ndims, bool& fortran_order)
+void cnpy::parse_npy_header(unsigned char* buffer, size_t& word_size,
+                            std::vector<size_t>& shape, bool& fortran_order, std::string& number_type)
+{
+    //std::string magic_string(buffer,6);
+    uint8_t major_version = *reinterpret_cast<uint8_t*>(buffer + 6);
+    uint8_t minor_version = *reinterpret_cast<uint8_t*>(buffer + 7);
+    uint16_t header_len = *reinterpret_cast<uint16_t*>(buffer + 8);
+    std::string header(reinterpret_cast<char*>(buffer + 9), header_len);
+    size_t loc1, loc2;
+    //fortran order
+    loc1 = header.find("fortran_order") + 16;
+    fortran_order = (header.substr(loc1, 4) == "True" ? true : false);
+    //shape
+    loc1 = header.find("(");
+    loc2 = header.find(")");
+    std::regex num_regex("[0-9][0-9]*");
+    std::smatch sm;
+    shape.clear();
+    std::string str_shape = header.substr(loc1 + 1, loc2 - loc1 - 1);
+
+    while (std::regex_search(str_shape, sm, num_regex))
+    {
+        shape.push_back(std::stoi(sm[0].str()));
+        str_shape = sm.suffix().str();
+    }
+
+    //endian, word size, data type
+    //byte order code | stands for not applicable.
+    //not sure when this applies except for byte array
+    loc1 = header.find("descr") + 9;
+    bool littleEndian = (header[loc1] == '<' || header[loc1] == '|' ? true : false);
+    assert(littleEndian);
+    //char type = header[loc1+1];
+    //assert(type == map_type(T));
+    number_type = header.substr(loc1 + 1, 2);
+    std::string str_ws = header.substr(loc1 + 2);
+    loc2 = str_ws.find("'");
+    word_size = atoi(str_ws.substr(0, loc2).c_str());
+}
+
+void cnpy::parse_npy_header(FILE* fp, size_t& word_size,
+                            std::vector<size_t>& shape, bool& fortran_order, std::string& number_type)
 {
     char buffer[256];
     size_t res = fread(buffer, sizeof(char), 11, fp);
@@ -146,48 +185,60 @@ void cnpy::parse_npy_header(FILE* fp, unsigned int& word_size,
 
     std::string header = fgets(buffer, 256, fp);
     assert(header[header.size() - 1] == '\n');
-    int loc1, loc2;
+    size_t loc1, loc2;
     //fortran order
-    loc1 = header.find("fortran_order") + 16;
-    fortran_order = (header.substr(loc1, 5) == "True" ? true : false);
+    loc1 = header.find("fortran_order");
+
+    if (loc1 == std::string::npos)
+    {
+        throw std::runtime_error("parse_npy_header: failed to find header keyword: 'fortran_order'");
+    }
+
+    loc1 += 16;
+    fortran_order = (header.substr(loc1, 4) == "True" ? true : false);
     //shape
     loc1 = header.find("(");
     loc2 = header.find(")");
+
+    if (loc1 == std::string::npos || loc2 == std::string::npos)
+    {
+        throw std::runtime_error("parse_npy_header: failed to find header keyword: '(' or ')'");
+    }
+
+    std::regex num_regex("[0-9][0-9]*");
+    std::smatch sm;
+    shape.clear();
     std::string str_shape = header.substr(loc1 + 1, loc2 - loc1 - 1);
 
-    if (str_shape[str_shape.size() - 1] == ',')
+    while (std::regex_search(str_shape, sm, num_regex))
     {
-        ndims = 1;
-    }
-    else
-    {
-        ndims = std::count(str_shape.begin(), str_shape.end(), ',') + 1;
-    }
-
-    shape = new unsigned int[ndims];
-
-    for (unsigned int i = 0; i < ndims; i++)
-    {
-        loc1 = str_shape.find(",");
-        shape[i] = atoi(str_shape.substr(0, loc1).c_str());
-        str_shape = str_shape.substr(loc1 + 1);
+        shape.push_back(std::stoi(sm[0].str()));
+        str_shape = sm.suffix().str();
     }
 
     //endian, word size, data type
     //byte order code | stands for not applicable.
     //not sure when this applies except for byte array
-    loc1 = header.find("descr") + 9;
+    loc1 = header.find("descr");
+
+    if (loc1 == std::string::npos)
+    {
+        throw std::runtime_error("parse_npy_header: failed to find header keyword: 'descr'");
+    }
+
+    loc1 += 9;
     bool littleEndian = (header[loc1] == '<' || header[loc1] == '|' ? true : false);
     assert(littleEndian);
     //char type = header[loc1+1];
     //assert(type == map_type(T));
     std::string str_ws = header.substr(loc1 + 2);
+    number_type = header.substr(loc1 + 1, 2);
     loc2 = str_ws.find("'");
     word_size = atoi(str_ws.substr(0, loc2).c_str());
 }
 
-void cnpy::parse_zip_footer(FILE* fp, unsigned short& nrecs,
-                            unsigned int& global_header_size, unsigned int& global_header_offset)
+void cnpy::parse_zip_footer(FILE* fp, uint16_t& nrecs,
+                            size_t& global_header_size, size_t& global_header_offset)
 {
     std::vector<char> footer(22);
     fseek(fp, -22, SEEK_END);
@@ -198,48 +249,82 @@ void cnpy::parse_zip_footer(FILE* fp, unsigned short& nrecs,
         throw std::runtime_error("parse_zip_footer: failed fread");
     }
 
-    unsigned short disk_no, disk_start, nrecs_on_disk, comment_len;
-    disk_no = *(unsigned short*) &footer[4];
-    disk_start = *(unsigned short*) &footer[6];
-    nrecs_on_disk = *(unsigned short*) &footer[8];
-    nrecs = *(unsigned short*) &footer[10];
-    global_header_size = *(unsigned int*) &footer[12];
-    global_header_offset = *(unsigned int*) &footer[16];
-    comment_len = *(unsigned short*) &footer[20];
+    uint16_t disk_no, disk_start, nrecs_on_disk, comment_len;
+    disk_no = *(uint16_t*) &footer[4];
+    disk_start = *(uint16_t*) &footer[6];
+    nrecs_on_disk = *(uint16_t*) &footer[8];
+    nrecs = *(uint16_t*) &footer[10];
+    global_header_size = *(uint32_t*) &footer[12];
+    global_header_offset = *(uint32_t*) &footer[16];
+    comment_len = *(uint16_t*) &footer[20];
     assert(disk_no == 0);
     assert(disk_start == 0);
     assert(nrecs_on_disk == nrecs);
     assert(comment_len == 0);
 }
 
-cnpy::NpyArray load_the_npy_file(FILE* fp)
+cnpy::NpyArray cnpy::load_the_npy_file(FILE* fp)
 {
-    unsigned int* shape;
-    unsigned int ndims, word_size;
+    std::vector<size_t> shape;
+    size_t word_size;
     bool fortran_order;
-    cnpy::parse_npy_header(fp, word_size, shape, ndims, fortran_order);
-    unsigned long long size =
-        1; //long long so no overflow when multiplying by word_size
+    std::string number_type;
+    cnpy::parse_npy_header(fp, word_size, shape, fortran_order, number_type);
+    cnpy::NpyArray arr(shape, word_size, fortran_order, number_type);
+    size_t nread = fread(arr.data<char>(), 1, arr.num_bytes(), fp);
 
-    for (unsigned int i = 0; i < ndims; i++)
-    {
-        size *= shape[i];
-    }
-
-    cnpy::NpyArray arr;
-    arr.word_size = word_size;
-    arr.shape = std::vector<unsigned int>(shape, shape + ndims);
-    delete[] shape;
-    arr.data = new char[size * word_size];
-    arr.fortran_order = fortran_order;
-    size_t nread = fread(arr.data, word_size, size, fp);
-
-    if (nread != size)
+    if (nread != arr.num_bytes())
     {
         throw std::runtime_error("load_the_npy_file: failed fread");
     }
 
     return arr;
+}
+
+cnpy::NpyArray cnpy::load_the_npy_file(std::string fname)
+{
+    FILE* fp = fopen(fname.c_str(), "rb");
+    return load_the_npy_file(fp);
+
+}
+
+cnpy::NpyArray load_the_npz_array(FILE* fp, uint32_t compr_bytes,
+                                  uint32_t uncompr_bytes)
+{
+    std::vector<unsigned char> buffer_compr(compr_bytes);
+    std::vector<unsigned char> buffer_uncompr(uncompr_bytes);
+    size_t nread = fread(&buffer_compr[0], 1, compr_bytes, fp);
+
+    if (nread != compr_bytes)
+    {
+        throw std::runtime_error("load_the_npy_file: failed fread");
+    }
+
+    int err;
+    z_stream d_stream;
+    d_stream.zalloc = Z_NULL;
+    d_stream.zfree = Z_NULL;
+    d_stream.opaque = Z_NULL;
+    d_stream.avail_in = 0;
+    d_stream.next_in = Z_NULL;
+    err = inflateInit2(&d_stream, -MAX_WBITS);
+    d_stream.avail_in = compr_bytes;
+    d_stream.next_in = &buffer_compr[0];
+    d_stream.avail_out = uncompr_bytes;
+    d_stream.next_out = &buffer_uncompr[0];
+    err = inflate(&d_stream, Z_FINISH);
+    err = inflateEnd(&d_stream);
+    std::vector<size_t> shape;
+    size_t word_size;
+    bool fortran_order;
+    std::string number_type;
+    cnpy::parse_npy_header(&buffer_uncompr[0], word_size, shape, fortran_order,
+                           number_type);
+    cnpy::NpyArray array(shape, word_size, fortran_order, number_type);
+    size_t offset = uncompr_bytes - array.num_bytes();
+    memcpy(array.data<unsigned char>(), &buffer_uncompr[0] + offset,
+           array.num_bytes());
+    return array;
 }
 
 cnpy::npz_t cnpy::npz_load(std::string fname)
@@ -248,10 +333,9 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
 
     if (!fp)
     {
-        printf("npz_load: Error! Unable to open file %s!\n", fname.c_str());
+        throw std::runtime_error("npz_load: Error! Unable to open file " + fname + "!");
     }
 
-    assert(fp);
     cnpy::npz_t arrays;
 
     while (1)
@@ -271,7 +355,7 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
         }
 
         //read in the variable name
-        unsigned short name_len = *(unsigned short*) &local_header[26];
+        uint16_t name_len = *(uint16_t*) &local_header[26];
         std::string varname(name_len, ' ');
         size_t vname_res = fread(&varname[0], sizeof(char), name_len, fp);
 
@@ -283,7 +367,7 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
         //erase the lagging .npy
         varname.erase(varname.end() - 4, varname.end());
         //read in the extra field
-        unsigned short extra_field_len = *(unsigned short*) &local_header[28];
+        uint16_t extra_field_len = *(uint16_t*) &local_header[28];
 
         if (extra_field_len > 0)
         {
@@ -296,22 +380,31 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
             }
         }
 
-        arrays[varname] = load_the_npy_file(fp);
+        uint16_t compr_method = *reinterpret_cast<uint16_t*>(&local_header[0] + 8);
+        uint32_t compr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 18);
+        uint32_t uncompr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 22);
+
+        if (compr_method == 0)
+        {
+            arrays[varname] = load_the_npy_file(fp);
+        }
+        else
+        {
+            arrays[varname] = load_the_npz_array(fp, compr_bytes, uncompr_bytes);
+        }
     }
 
     fclose(fp);
     return arrays;
 }
 
-cnpy::NpyArray cnpy::npz_load(std::string fname,
-                              std::string varname)
+cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
 {
     FILE* fp = fopen(fname.c_str(), "rb");
 
     if (!fp)
     {
-        printf("npz_load: Error! Unable to open file %s!\n", fname.c_str());
-        abort();
+        throw std::runtime_error("npz_load: Unable to open file " + fname);
     }
 
     while (1)
@@ -331,7 +424,7 @@ cnpy::NpyArray cnpy::npz_load(std::string fname,
         }
 
         //read in the variable name
-        unsigned short name_len = *(unsigned short*) &local_header[26];
+        uint16_t name_len = *(uint16_t*) &local_header[26];
         std::string vname(name_len, ' ');
         size_t vname_res = fread(&vname[0], sizeof(char), name_len, fp);
 
@@ -342,27 +435,31 @@ cnpy::NpyArray cnpy::npz_load(std::string fname,
 
         vname.erase(vname.end() - 4, vname.end()); //erase the lagging .npy
         //read in the extra field
-        unsigned short extra_field_len = *(unsigned short*) &local_header[28];
+        uint16_t extra_field_len = *(uint16_t*) &local_header[28];
         fseek(fp, extra_field_len, SEEK_CUR); //skip past the extra field
+        uint16_t compr_method = *reinterpret_cast<uint16_t*>(&local_header[0] + 8);
+        uint32_t compr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 18);
+        uint32_t uncompr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 22);
 
         if (vname == varname)
         {
-            NpyArray array = load_the_npy_file(fp);
+            NpyArray array  = (compr_method == 0) ? load_the_npy_file(
+                                  fp) : load_the_npz_array(fp, compr_bytes, uncompr_bytes);
             fclose(fp);
             return array;
         }
         else
         {
             //skip past the data
-            unsigned int size = *(unsigned int*) &local_header[22];
+            uint32_t size = *(uint32_t*) &local_header[22];
             fseek(fp, size, SEEK_CUR);
         }
     }
 
     fclose(fp);
-    printf("npz_load: Error! Variable name %s not found in %s!\n", varname.c_str(),
-           fname.c_str());
-    abort();
+    //if we get here, we haven't found the variable in the file
+    throw std::runtime_error("npz_load: Variable name " + varname + " not found in "
+                             + fname);
 }
 
 cnpy::NpyArray cnpy::npy_load(std::string fname)
@@ -371,8 +468,7 @@ cnpy::NpyArray cnpy::npy_load(std::string fname)
 
     if (!fp)
     {
-        printf("npy_load: Error! Unable to open file %s!\n", fname.c_str());
-        abort();
+        throw std::runtime_error("npy_load: Unable to open file " + fname);
     }
 
     NpyArray arr = load_the_npy_file(fp);
@@ -385,7 +481,7 @@ void cnpy::save(const Eigen::Matrix<typeNumber, Eigen::Dynamic, dim>&
                 mat, const std::string fname)
 {
     std::vector<typeNumber> matvec(mat.rows() * mat.cols());
-    unsigned int shape[] = {(unsigned int) mat.rows(), (unsigned int)mat.cols()};
+    std::vector<size_t> shape = {(unsigned int) mat.rows(), (unsigned int)mat.cols()};
 
     for (int i = 0; i < mat.rows(); ++i)
     {
@@ -395,7 +491,7 @@ void cnpy::save(const Eigen::Matrix<typeNumber, Eigen::Dynamic, dim>&
         }
     }
 
-    npy_save(fname, matvec.data(), shape, 2);
+    npy_save(fname, matvec.data(), shape);
 }
 
 template<class typeNumber>
@@ -411,7 +507,7 @@ void cnpy::save(const Eigen::Tensor<typeNumber, 3>&
     }
 
     std::vector<typeNumber> matvec(tot);
-    unsigned int shape[] = {(unsigned int) dim[0], (unsigned int) dim[1], (unsigned int) dim[2]};
+    std::vector<size_t> shape = {(unsigned int) dim[0], (unsigned int) dim[1], (unsigned int) dim[2]};
 
     for (int i = 0; i < dim[0]; ++i)
     {
@@ -424,7 +520,7 @@ void cnpy::save(const Eigen::Tensor<typeNumber, 3>&
         }
     }
 
-    npy_save(fname, matvec.data(), shape, 3);
+    npy_save(fname, matvec.data(), shape);
 }
 
 template<class typeNumber, int dim>
@@ -437,7 +533,7 @@ Eigen::Matrix<typeNumber, Eigen::Dynamic, dim> cnpy::load(
     NpyArray arr = npy_load(fname);
     assert(arr.shape.size() == 2);
     mat.resize(arr.shape[0], arr.shape[1]);
-    typeNumber* data = reinterpret_cast<typeNumber*>(arr.data);
+    std::vector<typeNumber> data = arr.as_vec<typeNumber>();
 
     if (order == "rowMajor")
     {
@@ -445,7 +541,7 @@ Eigen::Matrix<typeNumber, Eigen::Dynamic, dim> cnpy::load(
         {
             for (size_t j = 0; j < arr.shape[1]; ++j)
             {
-                mat(i, j) = (typeNumber) data[arr.shape[1] * i + j];
+                    mat(i, j) = data[arr.shape[1] * i + j];
             }
         }
     }
@@ -455,12 +551,11 @@ Eigen::Matrix<typeNumber, Eigen::Dynamic, dim> cnpy::load(
         {
             for (size_t j = 0; j < arr.shape[1]; ++j)
             {
-                mat(i, j) = (typeNumber) data[arr.shape[0] * j + i];
+                    data[arr.shape[0] * j + i];
             }
         }
     }
-
-    delete[] arr.data;
+    // delete[] arr.data;
     return mat;
 }
 
@@ -472,8 +567,9 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
              order == "colMajor", "Order can be only rowMajor or colMajor");
     NpyArray arr = npy_load(fname);
     assert(arr.shape.size() == 3);
-    tens.resize(arr.shape[0], arr.shape[1], arr.shape[2]);
-    typeNumber* data = reinterpret_cast<typeNumber*>(arr.data);
+    tens.resize(static_cast<long>(arr.shape[0]), static_cast<long>(arr.shape[1]),
+                static_cast<long>(arr.shape[2]));
+    std::vector<typeNumber> data = arr.as_vec<typeNumber>();
 
     if (order == "rowMajor")
     {
@@ -483,7 +579,7 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
             {
                 for (size_t k = 0; k < arr.shape[2]; ++k)
                 {
-                    tens(i, j, k) = (typeNumber) data[arr.shape[1] * arr.shape[2] * i + j *
+                    tens(i, j, k) = data[arr.shape[1] * arr.shape[2] * i + j *
                                                                    arr.shape[2] + k];
                 }
             }
@@ -504,7 +600,7 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
         }
     }
 
-    delete[] arr.data;
+    // delete[] arr.data;
     return tens;
 }
 
@@ -516,10 +612,10 @@ Eigen::SparseMatrix<T> cnpy::load(Eigen::SparseMatrix<T>& smatrix,
     auto d2 = cnpy::npz_load(fname, "indices");
     auto d3 = cnpy::npz_load(fname, "indptr");
     auto d4 = cnpy::npz_load(fname, "shape");
-    double* data = reinterpret_cast<double*>(d1.data);
-    int32_t* indices = reinterpret_cast<int32_t*>(d2.data);
-    int32_t* indptr = reinterpret_cast<int32_t*>(d3.data);
-    int* shape = reinterpret_cast<int*>(d4.data);
+    std::vector<T> data = d1.as_vec<T>();
+    int32_t* indices = reinterpret_cast<int32_t*>(d2.data<int32_t>());
+    int32_t* indptr = reinterpret_cast<int32_t*>(d3.data<int32_t>());
+    int* shape = reinterpret_cast<int*>(d4.data<int>());
     int rows, cols;
     M_Assert(d4.shape[0] == 2, "Method works only with 2-D matrices");
     rows = (int) shape[0];
@@ -545,21 +641,21 @@ Eigen::SparseMatrix<T> cnpy::load(Eigen::SparseMatrix<T>& smatrix,
 template<typename T>
 void cnpy::save(const Eigen::SparseMatrix<T>& mat, const std::string fname)
 {
-    unsigned int shape1[] = {static_cast<unsigned int>(mat.nonZeros())};
-    unsigned int shape2[] = {static_cast<unsigned int>(mat.outerSize() + 1)};
-    unsigned int shape3[] = {2};
-    unsigned int shape4[] = {256};
-    cnpy::npz_save(fname, "data", mat.valuePtr(), shape1, 1, "w");
-    cnpy::npz_save(fname, "indices", mat.innerIndexPtr(), shape1, 1, "a");
-    cnpy::npz_save(fname, "indptr", mat.outerIndexPtr(), shape2, 1, "a");
+    std::vector<size_t> shape1 = std::vector<size_t> {(unsigned long) (mat.nonZeros())};
+    std::vector<size_t> shape2 = std::vector<size_t> {(unsigned long) (mat.outerSize() + 1)};
+    std::vector<size_t> shape3 = std::vector<size_t> {2};
+    std::vector<size_t> shape4 = std::vector<size_t> {256};
+    cnpy::npz_save(fname, "data", mat.valuePtr(), shape1, "w");
+    cnpy::npz_save(fname, "indices", mat.innerIndexPtr(), shape1, "a");
+    cnpy::npz_save(fname, "indptr", mat.outerIndexPtr(), shape2, "a");
     int64_t t1 = mat.rows();
     int64_t t2 = mat.cols();
     int64_t* shape = new int64_t[2];
     shape[0] = mat.rows();
     shape[1] = mat.cols();
-    cnpy::npz_save(fname, "shape", shape, shape3, 1, "a");
+    cnpy::npz_save(fname, "shape", shape, shape3, "a");
     char myVar2 = 'abc';
-    cnpy::npz_save(fname, "format", &myVar2, shape4, 1, "a");
+    cnpy::npz_save(fname, "format", &myVar2, shape4, "a");
 }
 
 template void cnpy::save(const Eigen::MatrixXi& mat, const std::string fname);
