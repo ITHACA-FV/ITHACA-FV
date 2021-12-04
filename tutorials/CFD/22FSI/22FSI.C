@@ -33,8 +33,19 @@ SourceFiles
 #include "ReducedSimpleSteadyNS.H"
 #include "forces.H"
 #include "IOmanip.H"
+//#include "fvCFD.H" //already in SteadyNSSimple.H
 
+#include "dynamicFvMesh.H"
+//#include "singlePhaseTransportModel.H"   // already present already in SteadyNSSimple.H
+#include "turbulenceModel.H"
+#include "pimpleControl.H"
+#include "CorrectPhi.H"
+//#include "fvOptions.H" //already present already in SteadyNSSimple.H
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
+//#include "points0MotionSolver.H" // added
 
+void truthSolve3(List<scalar> mu_now, word Folder);
 class tutorial22 : public SteadyNSSimple
 {
     public:
@@ -53,6 +64,8 @@ class tutorial22 : public SteadyNSSimple
         volScalarField& p;
         ///
         surfaceScalarField& phi;
+        /// Point motion field
+        //mutabe pointVectorField pointDisplacement_;
 
 
 
@@ -81,12 +94,280 @@ class tutorial22 : public SteadyNSSimple
                     mu_now[0] = mu(0, i);
                     change_viscosity(mu(0, i));
                     assignIF(U, Uinl);
-                    truthSolve2(mu_now);
+                    truthSolve3(mu_now); //truthSolve2 initial
                 }
             }
         }
 
 };
+
+void truthSolve3(List<scalar> mu_now, word Folder){
+     
+
+    Time& runTime = _runTime();
+    volScalarField& p = _p();
+    volVectorField& U = _U();
+    fvMesh& mesh = _mesh();
+    surfaceScalarField& phi = _phi();
+    simpleControl& simple = _simple();
+    singlePhaseTransportModel& laminarTransport = _laminarTransport();
+    scalar residual = 1;
+    scalar uresidual = 1;
+    Vector<double> uresidual_v(0, 0, 0);
+    scalar presidual = 1;
+    scalar csolve = 0;
+    turbulence->read();
+    std::ofstream res_os;
+    std::ofstream snaps_os;
+    std::ofstream iters;
+    std::ofstream res_U;
+    std::ofstream res_P;
+    res_os.open(Folder + "/residuals", std::ios_base::app);
+    snaps_os.open(Folder + "/snaps", std::ios_base::app);
+    iters.open(Folder + "/iters", std::ios_base::app);
+    res_U.open(Folder + name(counter) + "/res_U", std::ios_base::app);
+    res_P.open(Folder + name(counter) + "/res_P", std::ios_base::app);
+    folderN = 0;
+    saver = 0;
+    middleStep = para->ITHACAdict->lookupOrDefault<label>("middleStep", 20);
+    middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
+    //*****************************************************************pimpleFoam algorithm******************
+    //Info<< "\nStarting time loop\n" << endl;
+    //pimpleControl pimple(_mesh);
+ 
+    turbulence->validate();
+
+    if (!LTS)
+    {
+        #include "CourantNo.H"
+        #include "setInitialDeltaT.H"
+    }
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    Info<< "\nStarting time loop\n" << endl;
+
+    while (pimple.run(runTime))
+    {
+        #include "readDyMControls.H"
+
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
+        else
+        {
+            #include "CourantNo.H"
+            #include "setDeltaT.H"
+        }
+
+        runTime++;
+
+        Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        // --- Pressure-velocity PIMPLE corrector loop
+        while (pimple.loop())
+        {
+            if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+            {
+                mesh.update();
+
+                if (mesh.changing())
+                {
+                    MRF.update();
+
+                    if (correctPhi)
+                    {
+                        // Calculate absolute flux
+                        // from the mapped surface velocity
+                        phi = mesh.Sf() & Uf();
+
+                        // #include "correctPhi.H"
+		        CorrectPhi
+			(
+			    U,
+			    phi,
+			    p,
+			    dimensionedScalar("rAUf", dimTime, 1),
+			    geometricZeroField(),
+			    pimple,
+			    true
+			); 
+
+	                #include "continuityErrs.H"
+                        // ************ end of include correctPhi.H **********************
+
+                        // Make the flux relative to the mesh motion
+                        fvc::makeRelative(phi, U);
+                    }
+
+                    if (checkMeshCourantNo)
+                    {
+                        #include "meshCourantNo.H"
+                    }
+                }
+            }
+
+            //#include "UEqn.H"
+            MRF.correctBoundaryVelocity(U);
+
+            tmp<fvVectorMatrix> tUEqn
+            (
+              fvm::ddt(U) + fvm::div(phi, U)
+                  + MRF.DDt(U)
+                  + turbulence->divDevSigma(U)
+                  ==
+                  fvOptions(U)
+            );
+            fvVectorMatrix& UEqn = tUEqn.ref();
+
+            UEqn.relax();
+
+           fvOptions.constrain(UEqn);
+
+           if (pimple.momentumPredictor())
+           {
+             solve(UEqn == -fvc::grad(p));
+
+             fvOptions.correct(U);
+           }
+
+            // --- Pressure corrector loop
+            while (pimple.correct())
+            {
+                //#include "pEqn.H"
+                volScalarField rAU(1.0/UEqn.A());
+                volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
+                surfaceScalarField phiHbyA
+                (
+                   "phiHbyA",
+                      fvc::flux(HbyA)
+                   + MRF.zeroFilter(fvc::interpolate(rAU)*fvc::ddtCorr(U, phi, Uf))
+               );
+
+               MRF.makeRelative(phiHbyA);
+
+               if (p.needReference())
+	       {
+    	         fvc::makeRelative(phiHbyA, U);
+		 adjustPhi(phiHbyA, U, p);
+		 fvc::makeAbsolute(phiHbyA, U);
+	       }
+
+               tmp<volScalarField> rAtU(rAU);
+
+	       if (pimple.consistent())
+	       {
+		    rAtU = 1.0/max(1.0/rAU - UEqn.H1(), 0.1/rAU);
+		    phiHbyA +=
+			fvc::interpolate(rAtU() - rAU)*fvc::snGrad(p)*mesh.magSf();
+		    HbyA -= (rAU - rAtU())*fvc::grad(p);
+	       }
+
+	       if (pimple.nCorrPiso() <= 1)
+	       {
+		    tUEqn.clear();
+	       }
+
+	       // Update the pressure BCs to ensure flux consistency
+    	       constrainPressure(p, U, phiHbyA, rAtU(), MRF);
+
+	      // Non-orthogonal pressure corrector loop
+	      while (pimple.correctNonOrthogonal())
+	      {
+		    fvScalarMatrix pEqn
+		    (
+			fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
+		    );
+
+		    pEqn.setReference(pRefCell, pRefValue);
+
+		    pEqn.solve();
+
+		    if (pimple.finalNonOrthogonalIter())
+		    {
+			phi = phiHbyA - pEqn.flux();
+		    }
+	      }
+
+	      #include "continuityErrs.H"
+
+	      // Explicitly relax pressure for momentum corrector
+	      p.relax();
+
+	      U = HbyA - rAtU*fvc::grad(p);
+	      U.correctBoundaryConditions();
+	      fvOptions.correct(U);
+
+	      // Correct Uf if the mesh is moving
+	      fvc::correctUf(Uf, U, phi);
+
+	      // Make the fluxes relative to the mesh motion
+	      fvc::makeRelative(phi, U);
+
+              //********** end of pEqn.H **********
+            }
+
+            if (pimple.turbCorr())
+            {
+                laminarTransport.correct();
+                turbulence->correct();
+            }
+        }
+	//*****************************************end of pimpleFoam*****************************************
+	snaps_os << folderN + 1 << std::endl;
+	iters << csolve << std::endl;
+	res_os << residual << std::endl;
+	res_os.close();
+	res_U.close();
+	res_P.close();
+	snaps_os.close();
+	iters.close();
+	runTime.setTime(runTime.startTime(), 0);
+
+	if (middleExport)
+	{
+	ITHACAstream::exportSolution(U, name(folderN + 1), Folder + name(counter));
+	ITHACAstream::exportSolution(p, name(folderN + 1), Folder + name(counter));
+	}
+	else
+	{
+	ITHACAstream::exportSolution(U, name(counter), Folder);
+	ITHACAstream::exportSolution(p, name(counter), Folder);
+	}
+
+	if (ITHACAutilities::isTurbulent())
+	{
+	auto nut = mesh.lookupObject<volScalarField>("nut");
+	ITHACAstream::exportSolution(nut, name(folderN + 1), Folder + name(counter));
+	nutFields.append(nut.clone());
+	}
+
+	Ufield.append(U.clone());
+	Pfield.append(p.clone());
+	counter++;
+	writeMu(mu_now);
+	// --- Fill in the mu_samples with parameters (mu) to be used for the POD sample points
+	mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
+
+	for (label i = 0; i < mu_now.size(); i++)
+	{
+	mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
+	}
+
+	// Resize to Unitary if not initialized by user (i.e. non-parametric problem)
+	if (mu.cols() == 0)
+	{
+	mu.resize(1, 1);
+	}
+
+	if (mu_samples.rows() == mu.cols())
+	{
+	ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
+		                   Folder);
+	}
+
+}
 
 int main(int argc, char* argv[])
 {
