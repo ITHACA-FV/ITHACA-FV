@@ -39,9 +39,11 @@ SourceFiles
 #include "turbulenceModel.H"
 #include "pimpleControl.H"
 #include "CorrectPhi.H"
-//#include "fvOptions.H" //already present already in SteadyNSSimple.H
+#include "fvOptions.H" //already present already in SteadyNSSimple.H
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
+//#include "createUfIfPresent.H"
+
 //#include "points0MotionSolver.H" // added
 
 class tutorial22 : public unsteadyNS
@@ -66,8 +68,8 @@ public:
         }
 
         argList& args = _args();
-#include "createTime.H"
-#include "createMesh.H"
+        #include "createTime.H"
+        #include "createMesh.H"
         _pimple = autoPtr<pimpleControl>
                   (
                       new pimpleControl
@@ -86,8 +88,8 @@ public:
                 IOobject::NO_WRITE
             )
         );
-#include "createFields.H"
-#include "createFvOptions.H"
+        #include "createFields.H"
+        #include "createFvOptions.H"
     }
 
     /// Velocity field
@@ -96,6 +98,7 @@ public:
     volScalarField& p;
     ///
     surfaceScalarField& phi;
+    //surfaceVectorField& Uf;
 
     int folderN;
     int saver;
@@ -143,9 +146,19 @@ public:
         volVectorField& U = _U();
         fvMesh& mesh = _mesh();
         surfaceScalarField& phi = _phi();
-        simpleControl& simple = _simple();
-        singlePhaseTransportModel& laminarTransport = _laminarTransport();
+        //surfaceVectorField& Uf = _Uf();
+        //simpleControl& simple = _simple();
+	#include "initContinuityErrs.H"
+	fv::options& fvOptions = _fvOptions();
+	pimpleControl& pimple = _pimple();
+	IOMRFZoneList& MRF = _MRF();
+	singlePhaseTransportModel& laminarTransport = _laminarTransport();
+	instantList Times = runTime.times();
+	runTime.setEndTime(finalTime);
+        //correctPhi = _pimple().dict().getOrDefault; // for correctPhi
+        //singlePhaseTransportModel& laminarTransport = _laminarTransport();
         scalar residual = 1;
+        scalar checkMeshCourantNo = 1;
         scalar uresidual = 1;
         Vector<double> uresidual_v(0, 0, 0);
         scalar presidual = 1;
@@ -165,35 +178,19 @@ public:
         saver = 0;
         middleStep = para->ITHACAdict->lookupOrDefault<label>("middleStep", 20);
         middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
-        //*****************************************************************pimpleFoam algorithm******************
-        //Info<< "\nStarting time loop\n" << endl;
-        //pimpleControl pimple(_mesh);
+        //***************************pimpleFoam algorithm******************
 
         turbulence->validate();
-
-        if (!LTS)
-        {
-#include "CourantNo.H"
-#include "setInitialDeltaT.H"
-        }
-
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
         Info << "\nStarting time loop\n" << endl;
 
-        while (pimple.run(runTime))
+        while (runTime.run())
         {
-#include "readDyMControls.H"
-
-            if (LTS)
-            {
-#include "setRDeltaT.H"
-            }
-            else
-            {
-#include "CourantNo.H"
-#include "setDeltaT.H"
-            }
+            //#include "readDyMControls.H"
+            #include "readTimeControls.H" // included in readDyMControls
+            #include "CourantNo.H"
+            #include "setDeltaT.H"
 
             runTime++;
 
@@ -202,8 +199,10 @@ public:
             // --- Pressure-velocity PIMPLE corrector loop
             while (pimple.loop())
             {
-                if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+                /*if (pimple.firstIter() || moveMeshOuterCorrectors)
                 {
+              
+                    // Do any mesh changes      
                     mesh.update();
 
                     if (mesh.changing())
@@ -214,21 +213,11 @@ public:
                         {
                             // Calculate absolute flux
                             // from the mapped surface velocity
+                            //#include "createUf.H"
                             phi = mesh.Sf() & Uf();
 
-                            // #include "correctPhi.H"
-                            CorrectPhi
-                            (
-                                U,
-                                phi,
-                                p,
-                                dimensionedScalar("rAUf", dimTime, 1),
-                                geometricZeroField(),
-                                pimple,
-                                true
-                            );
-
-#include "continuityErrs.H"
+                            #include "correctPhi.H"
+                            
                             // ************ end of include correctPhi.H **********************
 
                             // Make the flux relative to the mesh motion
@@ -237,109 +226,18 @@ public:
 
                         if (checkMeshCourantNo)
                         {
-#include "meshCourantNo.H"
+                            #include "meshCourantNo.H"
                         }
                     }
-                }
+                }*/
 
-                //#include "UEqn.H"
-                MRF.correctBoundaryVelocity(U);
-
-                tmp<fvVectorMatrix> tUEqn
-                (
-                    fvm::ddt(U) + fvm::div(phi, U)
-                    + MRF.DDt(U)
-                    + turbulence->divDevSigma(U)
-                    ==
-                    fvOptions(U)
-                );
-                fvVectorMatrix& UEqn = tUEqn.ref();
-
-                UEqn.relax();
-
-                fvOptions.constrain(UEqn);
-
-                if (pimple.momentumPredictor())
-                {
-                    solve(UEqn == -fvc::grad(p));
-
-                    fvOptions.correct(U);
-                }
+                #include "UEqn.H"
 
                 // --- Pressure corrector loop
                 while (pimple.correct())
                 {
-                    //#include "pEqn.H"
-                    volScalarField rAU(1.0 / UEqn.A());
-                    volVectorField HbyA(constrainHbyA(rAU * UEqn.H(), U, p));
-                    surfaceScalarField phiHbyA
-                    (
-                        "phiHbyA",
-                        fvc::flux(HbyA)
-                        + MRF.zeroFilter(fvc::interpolate(rAU)*fvc::ddtCorr(U, phi, Uf))
-                    );
-
-                    MRF.makeRelative(phiHbyA);
-
-                    if (p.needReference())
-                    {
-                        fvc::makeRelative(phiHbyA, U);
-                        adjustPhi(phiHbyA, U, p);
-                        fvc::makeAbsolute(phiHbyA, U);
-                    }
-
-                    tmp<volScalarField> rAtU(rAU);
-
-                    if (pimple.consistent())
-                    {
-                        rAtU = 1.0 / max(1.0 / rAU - UEqn.H1(), 0.1 / rAU);
-                        phiHbyA +=
-                            fvc::interpolate(rAtU() - rAU) * fvc::snGrad(p) * mesh.magSf();
-                        HbyA -= (rAU - rAtU()) * fvc::grad(p);
-                    }
-
-                    if (pimple.nCorrPiso() <= 1)
-                    {
-                        tUEqn.clear();
-                    }
-
-                    // Update the pressure BCs to ensure flux consistency
-                    constrainPressure(p, U, phiHbyA, rAtU(), MRF);
-
-                    // Non-orthogonal pressure corrector loop
-                    while (pimple.correctNonOrthogonal())
-                    {
-                        fvScalarMatrix pEqn
-                        (
-                            fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
-                        );
-
-                        pEqn.setReference(pRefCell, pRefValue);
-
-                        pEqn.solve();
-
-                        if (pimple.finalNonOrthogonalIter())
-                        {
-                            phi = phiHbyA - pEqn.flux();
-                        }
-                    }
-
-#include "continuityErrs.H"
-
-                    // Explicitly relax pressure for momentum corrector
-                    p.relax();
-
-                    U = HbyA - rAtU * fvc::grad(p);
-                    U.correctBoundaryConditions();
-                    fvOptions.correct(U);
-
-                    // Correct Uf if the mesh is moving
-                    fvc::correctUf(Uf, U, phi);
-
-                    // Make the fluxes relative to the mesh motion
-                    fvc::makeRelative(phi, U);
-
-                    //********** end of pEqn.H **********
+                    #include "pEqn.H"
+                    
                 }
 
                 if (pimple.turbCorr())
@@ -370,12 +268,12 @@ public:
                 ITHACAstream::exportSolution(p, name(counter), Folder);
             }
 
-            if (ITHACAutilities::isTurbulent())
+            /*if (ITHACAutilities::isTurbulent())
             {
                 auto nut = mesh.lookupObject<volScalarField>("nut");
                 ITHACAstream::exportSolution(nut, name(folderN + 1), Folder + name(counter));
                 nutFields.append(nut.clone());
-            }
+            }*/
 
             Ufield.append(U.clone());
             Pfield.append(p.clone());
