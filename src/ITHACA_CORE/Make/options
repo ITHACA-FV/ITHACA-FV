@@ -37,6 +37,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ForceCoeff \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
+    -ftemplate-depth=500 \
     -w \
     -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
