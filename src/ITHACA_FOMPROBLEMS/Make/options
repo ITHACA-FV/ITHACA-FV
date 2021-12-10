@@ -37,6 +37,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAregularization \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
+    -ftemplate-depth=500 \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/EigenFunctions \
     -Wno-comment \
     -w \
