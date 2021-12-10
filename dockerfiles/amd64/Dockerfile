@@ -16,8 +16,9 @@ RUN chown -R $USER:$USER /home/$USER
 RUN chown -R $USER:$USER /home/openfoam && rm -r /home/openfoam && \
     chown -R $USER:$USER /home/sudofoam && rm -r /home/sudofoam
 
-RUN sudo apt-get update &&\
-    sudo apt-get install -y \
+USER root
+RUN apt-get update &&\
+    apt-get install -y \
         git \
         vim \
         ssh \
@@ -26,7 +27,6 @@ RUN sudo apt-get update &&\
         software-properties-common ;\
         sudo rm -rf /var/lib/apt/lists/*
 
-USER root
 WORKDIR /usr/lib
 RUN git clone https://github.com/mathLab/ITHACA-FV.git
 RUN chown -R $USER:$USER openfoam ITHACA-FV
