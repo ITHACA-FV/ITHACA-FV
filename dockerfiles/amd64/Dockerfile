@@ -1,4 +1,4 @@
-FROM ithacafv/openfoam2106:manifest-amd64
+FROM  opencfd/openfoam2106-dev
 LABEL maintainer="moaadkhamlich@gmail.com"
 
 
