@@ -26,7 +26,7 @@ Info << "Reading field p\n" << endl;
 
 Info << "Create mesh for time = "
      << runTime.timeName() << nl << endl;
-
+std::cerr << "File: createMesh.H, Line: 29"<< std::endl;
 _mesh = autoPtr<fvMesh>
         (
             new fvMesh
@@ -40,5 +40,6 @@ _mesh = autoPtr<fvMesh>
                 )
             )
         );
+std::cerr << "File: createMesh.H, Line: 43"<< std::endl;
 
 Foam::fvMesh& mesh = _mesh();

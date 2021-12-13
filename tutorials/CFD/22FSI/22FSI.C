@@ -68,8 +68,8 @@ public:
         }
 
         argList& args = _args();
-        #include "createTime.H"
-        #include "createMesh.H"
+#include "createTime.H"
+#include "createMesh.H"
         _pimple = autoPtr<pimpleControl>
                   (
                       new pimpleControl
@@ -88,8 +88,10 @@ public:
                 IOobject::NO_WRITE
             )
         );
-        #include "createFields.H"
-        #include "createFvOptions.H"
+        std::cerr << "File: 22FSI.C, Line: 91" << std::endl;
+#include "createFields.H"
+#include "createFvOptions.H"
+        std::cerr << "File: 22FSI.C, Line: 94" << std::endl;
     }
 
     /// Velocity field
@@ -99,6 +101,8 @@ public:
     ///
     surfaceScalarField& phi;
     //surfaceVectorField& Uf;
+
+    Foam::autoPtr<Foam::fvMesh> _mesh;
 
     int folderN;
     int saver;
@@ -117,14 +121,14 @@ public:
         List<scalar> mu_now(1);
 
         // if the offline solution is already performed read the fields
-        if (offline)
-        {
-            ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-            ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-            mu_samples =
-                ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
-        }
-        else
+        // if (offline)
+        // {
+        //     ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+        //     ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+        //     mu_samples =
+        //         ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+        // }
+        // else
         {
             Vector<double> Uinl(1, 0, 0);
             label BCind = 0;
@@ -132,8 +136,8 @@ public:
             for (label i = 0; i < mu.cols(); i++)
             {
                 mu_now[0] = mu(0, i);
-                change_viscosity(mu(0, i));
-                assignIF(U, Uinl);
+                // change_viscosity(mu(0, i));
+                // assignIF(U, Uinl);
                 truthSolve3(mu_now); //truthSolve2 initial
             }
         }
@@ -141,6 +145,7 @@ public:
 
     void truthSolve3(List<scalar> mu_now, word Folder = ".")
     {
+        std::cerr << "File: 22FSI.C, Line: 148"<< std::endl;
         Time& runTime = _runTime();
         volScalarField& p = _p();
         volVectorField& U = _U();
@@ -148,13 +153,13 @@ public:
         surfaceScalarField& phi = _phi();
         //surfaceVectorField& Uf = _Uf();
         //simpleControl& simple = _simple();
-	#include "initContinuityErrs.H"
-	fv::options& fvOptions = _fvOptions();
-	pimpleControl& pimple = _pimple();
-	IOMRFZoneList& MRF = _MRF();
-	singlePhaseTransportModel& laminarTransport = _laminarTransport();
-	instantList Times = runTime.times();
-	runTime.setEndTime(finalTime);
+#include "initContinuityErrs.H"
+        fv::options& fvOptions = _fvOptions();
+        pimpleControl& pimple = _pimple();
+        IOMRFZoneList& MRF = _MRF();
+        singlePhaseTransportModel& laminarTransport = _laminarTransport();
+        instantList Times = runTime.times();
+        runTime.setEndTime(finalTime);
         //correctPhi = _pimple().dict().getOrDefault; // for correctPhi
         //singlePhaseTransportModel& laminarTransport = _laminarTransport();
         scalar residual = 1;
@@ -188,9 +193,9 @@ public:
         while (runTime.run())
         {
             //#include "readDyMControls.H"
-            #include "readTimeControls.H" // included in readDyMControls
-            #include "CourantNo.H"
-            #include "setDeltaT.H"
+#include "readTimeControls.H" // included in readDyMControls
+#include "CourantNo.H"
+#include "setDeltaT.H"
 
             runTime++;
 
@@ -201,8 +206,8 @@ public:
             {
                 /*if (pimple.firstIter() || moveMeshOuterCorrectors)
                 {
-              
-                    // Do any mesh changes      
+
+                    // Do any mesh changes
                     mesh.update();
 
                     if (mesh.changing())
@@ -217,7 +222,7 @@ public:
                             phi = mesh.Sf() & Uf();
 
                             #include "correctPhi.H"
-                            
+
                             // ************ end of include correctPhi.H **********************
 
                             // Make the flux relative to the mesh motion
@@ -231,13 +236,13 @@ public:
                     }
                 }*/
 
-                #include "UEqn.H"
+#include "UEqn.H"
 
                 // --- Pressure corrector loop
                 while (pimple.correct())
                 {
-                    #include "pEqn.H"
-                    
+#include "pEqn.H"
+
                 }
 
                 if (pimple.turbCorr())
