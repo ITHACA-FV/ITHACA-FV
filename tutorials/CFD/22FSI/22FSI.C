@@ -92,26 +92,26 @@ public:
         //std::cerr << "File: 22FSI.C, Line: 91" << std::endl;
 #include "createFields.H"
 #include "createFvOptions.H"
-    para = ITHACAparameters::getInstance(mesh, runTime);
-    bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
-    M_Assert(bcMethod == "lift" || bcMethod == "penalty",
-             "The BC method must be set to lift or penalty in ITHACAdict");
-    timedepbcMethod = ITHACAdict->lookupOrDefault<word>("timedepbcMethod", "no");
-    M_Assert(timedepbcMethod == "yes" || timedepbcMethod == "no",
-             "The BC method can be set to yes or no");
-    timeDerivativeSchemeOrder =
-        ITHACAdict->lookupOrDefault<word>("timeDerivativeSchemeOrder", "second");
-    M_Assert(timeDerivativeSchemeOrder == "first"
-             || timeDerivativeSchemeOrder == "second",
-             "The time derivative approximation must be set to either first or second order scheme in ITHACAdict");
-    offline = ITHACAutilities::check_off();
-    podex = ITHACAutilities::check_pod();
-    supex = ITHACAutilities::check_sup();
+        para = ITHACAparameters::getInstance(mesh, runTime);
+        bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
+        M_Assert(bcMethod == "lift" || bcMethod == "penalty",
+                 "The BC method must be set to lift or penalty in ITHACAdict");
+        timedepbcMethod = ITHACAdict->lookupOrDefault<word>("timedepbcMethod", "no");
+        M_Assert(timedepbcMethod == "yes" || timedepbcMethod == "no",
+                 "The BC method can be set to yes or no");
+        timeDerivativeSchemeOrder =
+            ITHACAdict->lookupOrDefault<word>("timeDerivativeSchemeOrder", "second");
+        M_Assert(timeDerivativeSchemeOrder == "first"
+                 || timeDerivativeSchemeOrder == "second",
+                 "The time derivative approximation must be set to either first or second order scheme in ITHACAdict");
+        offline = ITHACAutilities::check_off();
+        podex = ITHACAutilities::check_pod();
+        supex = ITHACAutilities::check_sup();
         //std::cerr << "File: 22FSI.C, Line: 94" << std::endl;
-    }// end of the Constructor. 
+    }// end of the Constructor.
 
 
-    // members data 
+    // members data
 
     /// Velocity field
     volVectorField& U;
@@ -132,35 +132,35 @@ public:
     /// Reimplement this starting from pimplefoam
     void offlineSolve()
     {
+        std::cerr << "File: 22FSI.C, Line: 135"<< std::endl;
         Vector<double> inl(0, 0, 0); //inl(0, 0, 0)
         List<scalar> mu_now(1);
 
         // if the offline solution is already performed read the fields
-        if (offline)
-         {
-            ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-            ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-            mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
-        }
-         else
-        {
-            Vector<double> Uinl(1, 0, 0);
-            label BCind = 0;
+        // if (offline)
+        //  {
+        //     ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+        //     ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+        //     // mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+        // }
+        //  else
+        // {
+        Vector<double> Uinl(1, 0, 0);
+        label BCind = 0;
 
-            for (label i = 0; i < mu.cols(); i++)
-            {
-                mu_now[0] = mu(0, i);
-                change_viscosity(mu(0, i));
-                assignIF(U, Uinl);
-                truthSolve3(mu_now); 
-                //restart();
-            }
+        for (label i = 0; i < mu.cols(); i++)
+        {
+            mu_now[0] = mu(0, i);
+            // change_viscosity(mu(0, i));
+            // assignIF(U, Uinl);
+            truthSolve3(mu_now);
+            //restart();
         }
+        // }
     }
 
     void truthSolve3(List<scalar> mu_now, word Folder = "/ITHACAoutput/Offline")
     {
-        //std::cerr << "File: 22FSI.C, Line: 148"<< std::endl;
         Time& runTime = _runTime();
         volScalarField& p = _p();
         volVectorField& U = _U();
@@ -350,7 +350,7 @@ int main(int argc, char* argv[])
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
     // Perform the offline solve
-    //example.offlineSolve();
+    example.offlineSolve();
 
     //ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // Homogenize the snapshots
