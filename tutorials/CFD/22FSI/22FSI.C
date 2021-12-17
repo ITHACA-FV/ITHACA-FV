@@ -24,16 +24,19 @@ License
 Description
     Example of steady NS Reduction Problem solved by the use of the SIMPLE algorithm
 SourceFiles
-    12simpleSteadyNS.C
+    22FSI.C
 \*---------------------------------------------------------------------------*/
 
 #include "unsteadyNS.H"
 #include "ITHACAstream.H"
+#include "ITHACAutilities.H"
 #include "ITHACAPOD.H"
 #include "forces.H"
 #include "IOmanip.H"
+#include "IOstreams.H"
+#include "Switch.H"
+#include "objectRegistry.H"
 //#include "fvCFD.H" //already in SteadyNSSimple.H
-
 #include "dynamicFvMesh.H"
 //#include "singlePhaseTransportModel.H"   // already present already in SteadyNSSimple.H
 #include "turbulenceModel.H"
@@ -42,14 +45,12 @@ SourceFiles
 #include "fvOptions.H" //already present already in SteadyNSSimple.H
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
-//#include "createUfIfPresent.H"
-
-//#include "points0MotionSolver.H" // added
+#include "ReducedUnsteadyNS.H"
 
 class tutorial22 : public unsteadyNS
 {
 public:
-    /// Constructor
+    /// Constructors
     explicit tutorial22(int argc, char* argv[])
         :
         unsteadyNS(argc, argv),
@@ -88,11 +89,29 @@ public:
                 IOobject::NO_WRITE
             )
         );
-        std::cerr << "File: 22FSI.C, Line: 91" << std::endl;
+        //std::cerr << "File: 22FSI.C, Line: 91" << std::endl;
 #include "createFields.H"
 #include "createFvOptions.H"
-        std::cerr << "File: 22FSI.C, Line: 94" << std::endl;
-    }
+    para = ITHACAparameters::getInstance(mesh, runTime);
+    bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
+    M_Assert(bcMethod == "lift" || bcMethod == "penalty",
+             "The BC method must be set to lift or penalty in ITHACAdict");
+    timedepbcMethod = ITHACAdict->lookupOrDefault<word>("timedepbcMethod", "no");
+    M_Assert(timedepbcMethod == "yes" || timedepbcMethod == "no",
+             "The BC method can be set to yes or no");
+    timeDerivativeSchemeOrder =
+        ITHACAdict->lookupOrDefault<word>("timeDerivativeSchemeOrder", "second");
+    M_Assert(timeDerivativeSchemeOrder == "first"
+             || timeDerivativeSchemeOrder == "second",
+             "The time derivative approximation must be set to either first or second order scheme in ITHACAdict");
+    offline = ITHACAutilities::check_off();
+    podex = ITHACAutilities::check_pod();
+    supex = ITHACAutilities::check_sup();
+        //std::cerr << "File: 22FSI.C, Line: 94" << std::endl;
+    }// end of the Constructor. 
+
+
+    // members data 
 
     /// Velocity field
     volVectorField& U;
@@ -108,27 +127,22 @@ public:
     int saver;
     int middleStep;
     int middleExport;
-    /// Point motion field
-    //mutabe pointVectorField pointDisplacement_;
-
-
 
     /// Perform an Offline solve
     /// Reimplement this starting from pimplefoam
     void offlineSolve()
     {
-        Vector<double> inl(0, 0, 0);
+        Vector<double> inl(0, 0, 0); //inl(0, 0, 0)
         List<scalar> mu_now(1);
 
         // if the offline solution is already performed read the fields
-        // if (offline)
-        // {
-        //     ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-        //     ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-        //     mu_samples =
-        //         ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
-        // }
-        // else
+        if (offline)
+         {
+            ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+            ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+            mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+        }
+         else
         {
             Vector<double> Uinl(1, 0, 0);
             label BCind = 0;
@@ -136,16 +150,17 @@ public:
             for (label i = 0; i < mu.cols(); i++)
             {
                 mu_now[0] = mu(0, i);
-                // change_viscosity(mu(0, i));
-                // assignIF(U, Uinl);
-                truthSolve3(mu_now); //truthSolve2 initial
+                change_viscosity(mu(0, i));
+                assignIF(U, Uinl);
+                truthSolve3(mu_now); 
+                //restart();
             }
         }
     }
 
-    void truthSolve3(List<scalar> mu_now, word Folder = ".")
+    void truthSolve3(List<scalar> mu_now, word Folder = "/ITHACAoutput/Offline")
     {
-        std::cerr << "File: 22FSI.C, Line: 148"<< std::endl;
+        //std::cerr << "File: 22FSI.C, Line: 148"<< std::endl;
         Time& runTime = _runTime();
         volScalarField& p = _p();
         volVectorField& U = _U();
@@ -160,8 +175,11 @@ public:
         singlePhaseTransportModel& laminarTransport = _laminarTransport();
         instantList Times = runTime.times();
         runTime.setEndTime(finalTime);
-        //correctPhi = _pimple().dict().getOrDefault; // for correctPhi
-        //singlePhaseTransportModel& laminarTransport = _laminarTransport();
+        // Perform a TruthSolve
+        runTime.setTime(Times[1], 1);
+        runTime.setDeltaT(timeStep);
+        nextWrite = startTime;
+
         scalar residual = 1;
         scalar checkMeshCourantNo = 1;
         scalar uresidual = 1;
@@ -320,6 +338,10 @@ int main(int argc, char* argv[])
     int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
     int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
     int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+    int NmodesSUPout = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 15);
+    int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
+
+
     // Read the par file where the parameters are stored
     word filename("./par");
     example.mu = ITHACAstream::readMatrix(filename);
@@ -328,10 +350,12 @@ int main(int argc, char* argv[])
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
     // Perform the offline solve
-    example.offlineSolve();
-    ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
+    //example.offlineSolve();
+
+    //ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // Homogenize the snapshots
-    example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
+    //example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
+
     // Perform POD on velocity and pressure and store the first 10 modes
     ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
                         example.podex, 0, 0,
@@ -339,8 +363,10 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                         example.podex, 0, 0,
                         NmodesPout);
+
     // // Create the reduced object
-    // reducedSimpleSteadyNS reduced(example);
+    //reducedUnsteadyNS reduced(example);
+    //reducedSimpleSteadyNS reduced(example);
     // PtrList<volVectorField> U_rec_list;
     // PtrList<volScalarField> P_rec_list;
     // // Reads inlet volocities boundary conditions.
