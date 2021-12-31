@@ -90,7 +90,7 @@ class reducedProblem
         ///
         /// @return     Updated solution to the system.
         ///
-        Eigen::MatrixXd solveLinearSys(List<Eigen::MatrixXd> LinSys, Eigen::MatrixXd x,
+        static Eigen::MatrixXd solveLinearSys(List<Eigen::MatrixXd> LinSys, Eigen::MatrixXd x,
                                        Eigen::VectorXd& residual, const Eigen::MatrixXd& bc = Eigen::MatrixXd::Zero(0,
                                                0), const std::string solverType = "fullPivLu");
         ///
@@ -106,7 +106,7 @@ class reducedProblem
         ///
         /// @return     Updated solution to the system.
         ///
-        Eigen::MatrixXd solveLinearSys(List<Eigen::MatrixXd> LinSys, Eigen::MatrixXd x,
+        static Eigen::MatrixXd solveLinearSys(List<Eigen::MatrixXd> LinSys, Eigen::MatrixXd x,
                                        Eigen::VectorXd& residual, const std::string solverType);
 };
 
