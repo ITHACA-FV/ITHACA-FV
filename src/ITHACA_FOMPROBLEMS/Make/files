@@ -1,6 +1,7 @@
 reductionProblem/reductionProblem.C
 steadyNS/steadyNS.C
 SteadyNSTurb/SteadyNSTurb.C
+Burgers/Burgers.C
 SteadyNSTurbIntrusive/SteadyNSTurbIntrusive.C
 unsteadyNS/unsteadyNS.C
 UnsteadyBB/UnsteadyBB.C
@@ -16,7 +17,5 @@ UnsteadyNSExplicit/UnsteadyNSExplicit.C
 inverseLaplacianProblem/inverseLaplacianProblem.C
 inverseLaplacianProblem_CG/inverseLaplacianProblem_CG.C
 inverseLaplacianProblem_paramBC/inverseLaplacianProblem_paramBC.C
-
-
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_FOMPROBLEMS
