@@ -39,6 +39,7 @@
 #include "simpleControl.H"
 #include "fvOptions.H"
 #include "reductionProblem.H"
+#include "UnsteadyProblem.H"
 #include "ITHACAstream.H"
 #include "ITHACAparameters.H"
 #include "Modes.H"
@@ -53,7 +54,7 @@
 /** In this class are implemented the methods for the offline solve of a burgers problem
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the reduction problem class */
-class Burgers: public reductionProblem
+class Burgers: public reductionProblem, public UnsteadyProblem
 {
 
 public:

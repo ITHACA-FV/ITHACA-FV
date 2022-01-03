@@ -28,79 +28,30 @@
 
 \*---------------------------------------------------------------------------*/
 
-/// \file
-/// Source file of the Burgers class.
+#ifndef unsteadyproblem_H
+#define unsteadyproblem_H
+#include "fvCFD.H"
 
-#include "Burgers.H"
-
-// * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
-// Constructor
-Burgers::Burgers() {}
-
-Burgers::Burgers(int argc, char* argv[])
-  :
-  UnsteadyProblem()
+class UnsteadyProblem
 {
-  _args = autoPtr<argList>
-          (
-            new argList(argc, argv)
-          );
+public:
+  UnsteadyProblem() {};
 
-  if (!_args->checkRootCase())
-  {
-    Foam::FatalError.exit();
-  }
+  // Specific variable for the unstationary case
+  /// Start Time (initial time to start storing the snapshots)
+  scalar startTime;
 
-  argList& args = _args();
-#include "createTime.H"
-#include "createMesh.H"
-  _simple = autoPtr<simpleControl>
-            (
-              new simpleControl
-              (
-                mesh
-              )
-            );
-  simpleControl& simple = _simple();
-#include "createFields.H"
-#include "createFvOptions.H"
+  /// Final time (final time of the simulation and consequently of the acquisition of the snapshots)
+  scalar finalTime;
 
-  ITHACAdict = new IOdictionary
-  (
-    IOobject
-    (
-      "ITHACAdict",
-      runTime.system(),
-      mesh,
-      IOobject::MUST_READ,
-      IOobject::NO_WRITE
-    )
-  );
-}
+  /// Time step of the simulation
+  scalar timeStep;
 
-void Burgers::truthSolve()
-{
-  Time& runTime = _runTime();
-  fvMesh& mesh = _mesh();
-  volVectorField& U = _U();
-  surfaceScalarField& phi = _phi();
-  fv::options& fvOptions = _fvOptions();
-  simpleControl& simple = _simple();
-  dimensionedScalar& nu = _nu();
-  while (_simple().loop())
-  {
-    Info << "Time = " << _runTime().timeName() << nl << endl;
-    while (simple.correctNonOrthogonal())
-    {
-      solve
-      (
-        fvm::ddt(U)
-        + fvm::div(phi, U)
-        - fvm::laplacian(nu, U)
-      );
-    }
-    phi = linearInterpolate(U) & mesh.Sf();
-    runTime.write();
-  }
+  /// Time step of the writing procedure
+  scalar writeEvery = timeStep;
 
-}
+  /// Auxiliary variable to store the next writing instant
+  scalar nextWrite;
+};
+
+#endif

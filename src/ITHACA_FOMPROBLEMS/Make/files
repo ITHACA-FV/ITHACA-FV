@@ -2,6 +2,7 @@ reductionProblem/reductionProblem.C
 steadyNS/steadyNS.C
 SteadyNSTurb/SteadyNSTurb.C
 Burgers/Burgers.C
+UnsteadyProblem/UnsteadyProblem.C
 SteadyNSTurbIntrusive/SteadyNSTurbIntrusive.C
 unsteadyNS/unsteadyNS.C
 UnsteadyBB/UnsteadyBB.C
