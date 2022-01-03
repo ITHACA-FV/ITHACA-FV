@@ -15,23 +15,10 @@ EXE_INC = \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(LIB_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/reductionProblem \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/steadyNS \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/SteadyNSSimple \
-    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/unsteadyNS \
-    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAPOD \
-    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
-    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedProblem \
-    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedUnsteadyNS \
-    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedSteadyNS \
-    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/ReducedSimpleSteadyNS \
-    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAutilities \
-    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAstream \
-    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/ITHACAparallel \
-    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/NonLinearSolvers \
+    -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/lnInclude \
+    -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/lnInclude \
+    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/lnInclude \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
-    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
-    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/EigenFunctions \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -I$(LIB_ITHACA_SRC)/OF_EXT/lnInclude \

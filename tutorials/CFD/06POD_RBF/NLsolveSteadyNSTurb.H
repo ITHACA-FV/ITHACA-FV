@@ -44,12 +44,11 @@ while (simple.loop(runTime) && residual > tolerance && csolve < maxIter )
 while (simple.loop() && residual > tolerance && csolve < maxIter )
 #endif
 {
-    fvVectorMatrix UEqn(get_Umatrix(U, p));
-
-    if (simple.momentumPredictor())
+    Info << "Time = " << runTime.timeName() << nl << endl;
+    // --- Pressure-velocity SIMPLE corrector
     {
-        Vector<double> uresidual_v = solve(UEqn == -fvc::grad(p)).initialResidual();
-        fvOptions.correct(U);
+#include "UEqn.H"
+#include "pEqn.H"
         scalar C = 0;
 
         for (label i = 0; i < 3; i++)
@@ -61,13 +60,16 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
         }
 
         uresidual = C;
+        residual = max(presidual, uresidual);
+        Info << "\nResidual: " << residual << endl << endl;
+        //Info << "Residual U: " << solve(UEqn() == -fvc::grad(p)).initialResidual() << endl;
     }
-
-    get_Pmatrix(U, p, presidual);
-    residual = max(presidual, uresidual);
-    Info << "Time = " << runTime.timeName() << nl << endl;
     laminarTransport.correct();
     turbulence->correct();
+    csolve = csolve + 1;
+    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+         << nl << endl;
 }
 
 res_os << residual << std::endl;

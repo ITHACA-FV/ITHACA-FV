@@ -122,7 +122,7 @@ void msrProblem::truthSolve(List<scalar> mu_now)
     volScalarField powerDens = ((1 - decbetaTot) * flux * SP +
                                 (decLam1 * dec1 + decLam2 * dec2 + decLam3 * dec3)).ref();
     powerDens.rename("powerDens");
-#include "NLsolve.H"
+#include "NLmsrProblem.H"
     counter++;
     writeMu(mu_now);
     // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points

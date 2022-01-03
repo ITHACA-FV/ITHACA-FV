@@ -105,7 +105,7 @@ void SteadyNSTurbIntrusive::truthSolve(List<scalar> mu_now)
     simpleControl& simple = _simple();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
-#include "NLsolve.H"
+#include "NLsolveSteadyNSTurbIntrusive.H"
     ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
     ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     volScalarField _nut(turbulence->nut());

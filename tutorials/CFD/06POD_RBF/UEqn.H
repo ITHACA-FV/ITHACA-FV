@@ -22,41 +22,26 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
+// Momentum predictor
 
-while (runTime.run())
+MRF.correctBoundaryVelocity(U);
+
+tmp<fvVectorMatrix> tUEqn
+(
+    fvm::div(phi, U)
+    + MRF.DDt(U)
+    + turbulence->divDevReff(U)
+    ==
+    fvOptions(U)
+    );
+fvVectorMatrix& UEqn = tUEqn.ref();
+
+UEqn.relax();
+
+fvOptions.constrain(UEqn);
+
+if (simple.momentumPredictor())
 {
-#include "readTimeControls.H"
-#include "CourantNo.H"
-#include "setDeltaT.H"
-    runTime++;
-    Info << "Time = " << runTime.timeName() << nl << endl;
-
-    // --- Pressure-velocity PIMPLE corrector loop
-    while (pimple.loop())
-    {
-#include "UEqn.H"
-
-        // --- Pressure corrector loop
-        while (pimple.correct())
-        {
-#include "pEqn.H"
-        }
-
-        if (pimple.turbCorr())
-        {
-            turbulence->correct();
-        }
-    }
-
-    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-         << nl << endl;
+    uresidual_v = solve(UEqn == -fvc::grad(p)).initialResidual();
+    fvOptions.correct(U);
 }
-
-
-
-
-
-
-
-

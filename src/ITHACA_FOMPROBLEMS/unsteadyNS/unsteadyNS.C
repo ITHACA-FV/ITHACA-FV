@@ -40,6 +40,8 @@ unsteadyNS::unsteadyNS() {}
 
 // Construct from zero
 unsteadyNS::unsteadyNS(int argc, char* argv[])
+:
+UnsteadyProblem()
 {
     _args = autoPtr<argList>
             (
