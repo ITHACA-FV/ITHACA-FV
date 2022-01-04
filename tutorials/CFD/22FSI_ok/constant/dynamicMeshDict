@@ -1,0 +1,93 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1906                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh   dynamicMotionSolverFvMesh;
+
+motionSolverLibs   ("libsixDoFRigidBodyMotion.so");
+
+solver            sixDoFRigidBodyMotion;
+
+
+sixDoFRigidBodyMotionCoeffs
+{
+    report          on;
+
+    solver
+    {
+        type Newmark;
+    }
+
+    patches         (cylinder1);
+    innerDistance   0.3;
+    outerDistance   3;
+
+    rho             rhoInf;
+    rhoInf          1;
+
+    centreOfMass    (0 0 0);
+    mass            0.1;
+    momentOfInertia (1 1 0.03);//mass
+    transform       (1 0 0 0 1 0 0 0 1) (2.929541 0 0.2);
+
+    accelerationRelaxation 0.4;
+
+    constraints
+    {
+        noRotate1
+        {
+            sixDoFRigidBodyMotionConstraint axis;
+            axis            (0 0 1);
+        }
+        noRotate2
+        {
+            sixDoFRigidBodyMotionConstraint axis;
+            axis            (1 0 0);
+        }
+        noRotate3
+        {
+            sixDoFRigidBodyMotionConstraint axis;
+            axis            (0 1 0);
+        }
+    }
+
+    restraints
+    {
+        verticalSpring1
+        {
+            sixDoFRigidBodyMotionRestraint linearSpring;
+            body cylinder1;
+            anchor          (-1 0 0);
+            refAttachmentPt (0 0 0);
+            stiffness       0.04;
+            damping         0;
+            restLength      1;
+        }
+        horizontalSpring1
+        {
+            sixDoFRigidBodyMotionRestraint linearSpring;
+            body cylinder1;
+            anchor          (0 1 0);
+            refAttachmentPt (0 0 0);
+            stiffness       0.004;
+            damping         0;
+            restLength      1;
+        }
+    }
+
+}
+
+
+// ************************************************************************* //
