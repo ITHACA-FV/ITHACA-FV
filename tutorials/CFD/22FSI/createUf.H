@@ -1,4 +1,27 @@
 /*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | www.openfoam.com
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+    Copyright (C) 2013-2016 OpenFOAM Foundation
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Global
     createUf
@@ -9,69 +32,9 @@ Description
 \*---------------------------------------------------------------------------*/
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-//from /scratch/mathlab/packages/source/OpenFOAM/OpenFOAM-v2106/src/finiteVolume/cfdTools/incompressible
-/*#ifndef createUf_H
-#define createUf_H
 
 Info<< "Reading/calculating face velocity Uf\n" << endl;
 
-_Uf = autoPtr<surfaceVectorField>
-     (
-         new surfaceVectorField
-         (
-             IOobject
-             (
-                 "Uf",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             fvc::interpolate(U)
-         )
-     );
-surfaceVectorField& Uf = _Uf();
-
-surfaceVectorField U0(Uf);
-
-_U0 = autoPtr<surfaceVectorField>
-      (
-          new surfaceVectorField(U0)
-      );
-
-#endif */
-
-
-
-
-/*Info << "Reading field p\n" << endl;
-_p = autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "p",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-volScalarField& p = _p();
-
-volScalarField p0(p);
-
-_p0 = autoPtr<volScalarField>
-      (
-          new volScalarField(p0)
-      );
-
-
-
-*/
 surfaceVectorField Uf
 (
     IOobject
@@ -84,8 +47,6 @@ surfaceVectorField Uf
     ),
     fvc::interpolate(U)
 );
-
-
 
 
 // ************************************************************************* //

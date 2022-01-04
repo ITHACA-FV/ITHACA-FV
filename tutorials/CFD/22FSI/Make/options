@@ -41,6 +41,10 @@ EXE_LIBS = \
     -lturbulenceModels \
     -lincompressibleTransportModels \
     -lincompressibleTurbulenceModels \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
+    -latmosphericModels\
     -lfiniteVolume \
     -lmeshTools \
     -lfvOptions \

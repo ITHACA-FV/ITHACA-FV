@@ -3,10 +3,11 @@
  # Source tutorial run functions
  . $WM_PROJECT_DIR/bin/tools/RunFunctions
  # copy bullet surface from resources folder
- cp $FOAM_TUTORIALS/resources/geometry/bullet.stl.gz constant/triSurface/
+ #cp $FOAM_TUTORIALS/resources/geometry/bullet.stl.gz constant/triSurface/
  # Generate the base block mesh
  runApplication blockMesh
  # Generate the snappy mesh
  runApplication snappyHexMesh -overwrite
  # Run the solver
- runApplication 'getApplication'
+ #runApplication 'getApplication'
+ runApplication 22FSI

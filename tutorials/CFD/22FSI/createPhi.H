@@ -36,11 +36,11 @@ _phi = autoPtr<surfaceScalarField>
                (
                    "phi",
                    runTime.timeName(),
-                   mesh,
+                   dynamesh,
                    IOobject::READ_IF_PRESENT,
                    IOobject::AUTO_WRITE
                ),
-               linearInterpolate(U) & mesh.Sf()
+               linearInterpolate(U) & dynamesh.Sf()
            )
        );
 surfaceScalarField& phi = _phi();

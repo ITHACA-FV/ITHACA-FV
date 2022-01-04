@@ -1,83 +1,57 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2.2.2                                 |
+|  \\    /   O peration     | Version:  3.0.x                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
+|*---------------------------------------------------------------------------*|
+|  File created by CFD support s.r.o., Wed Jan 25 11:27:58 2017               |
+|                    http://www.cdfsupport.com                                |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     2.0;
+    version     3.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 solvers
 {
-    p
+    "(p|pa|pcorr|pcorrFinal)"
     {
-        solver           GAMG;
-        tolerance        1e-10;
-        relTol           0.01;
-        smoother         GaussSeidel;
-        nPreSweeps       0;
-        nPostSweeps      2;
-        cacheAgglomeration on;
-        agglomerator     faceAreaPair;
+        solver          GAMG;
+        tolerance       1e-08;
+        relTol          0;
+        smoother        GaussSeidel;
+        nPreSweeps      0;
+        nPostSweeps     2;
+        cacheAgglomeration true;
         nCellsInCoarsestLevel 10;
-        mergeLevels      1;
+        agglomerator    faceAreaPair;
+        mergeLevels     1;
     }
 
-    u_sup
+    "(U|Ua|k|epsilon)"
     {
         solver          smoothSolver;
         smoother        GaussSeidel;
-        nSweeps         1;
-        tolerance       1e-09;
+        nSweeps         2;
+        tolerance       1e-08;
         relTol          0.1;
     }
 
-    pcorr
+    "(U|k|epsilon)Final"
     {
-        
-        $p;
-        tolerance        0.02;
-        relTol           0;
+        $U;
+        relTol          0;
     }
-
-
     pFinal
     {
         $p;
-        tolerance        1e-6;
-        relTol           0;
-    }
-
-    "(U|k|omega)"
-    {
-	solver           GAMG;
-        tolerance        1e-10;
-        relTol           0.0001;
-        smoother         GaussSeidel;
-        nPreSweeps       0;
-        nPostSweeps      2;
-        cacheAgglomeration on;
-        agglomerator     faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        mergeLevels      1;
-    }
-
-    "(U|k|omega)Final"
-    {
-        $U;
-        tolerance       1e-08;
         relTol          0;
-    }
-    Phi
-    {
-        $p;
     }
 
     Usup
@@ -93,62 +67,45 @@ solvers
         nCellsInCoarsestLevel 10;
         mergeLevels      1;
     }
-}
-
-relaxationFactors
-{
-    fields
+    Phi
     {
-        p               0.3;
-    }
-    equations
-    {
-        U               0.7;
-        nuTilda         0.7;
+        $p;
     }
 }
 
-potentialFlow
+SIMPLE
 {
-    nNonOrthogonalCorrectors 3;
-}
-
-PISO
-{
-    nCorrectors     2;
-    nNonOrthogonalCorrectors 0;
-    pRefCell        0;
-    pRefValue       0;
-}
-
-
-cache
-{
-    grad(U);
+    nNonOrthogonalCorrectors 2;
+    pRefCell 0;
+    pRefValue 0;
 }
 
 PIMPLE
 {
-    correctPhi          yes;
-    nOuterCorrectors    2;
-    nCorrectors         2;
-    nNonOrthogonalCorrectors 0;
-    pRefCell        0;
-    pRefValue       0;
+    nNonOrthogonalCorrectors 1;
+    nCorrectors 3;
 }
-SIMPLE
-{
-    nNonOrthogonalCorrectors 0;
-    nOuterCorrectors    2;
-    nCorrectors         2;
-    pRefCell        0;
-    pRefValue       0;
 
-    residualControl
+potentialFlow
+{
+    nNonOrthogonalCorrectors 10;
+}
+
+
+relaxationFactors
+{
+    p 0.3;
+    U 0.7;    
+
+    fields
     {
-        p               1e-9;
-        U               1e-9;
-        nuTilda         1e-6;
+        "(p|pa)"        0.3;
+        alpha           0.1;
+    }
+    equations
+    {
+        "(U|Ua)"        0.7;
+        "(k|epsilon)"   0.7;
     }
 }
 

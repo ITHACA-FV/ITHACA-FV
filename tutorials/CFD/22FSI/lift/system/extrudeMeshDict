@@ -21,10 +21,10 @@ FoamFile
 
 constructFrom patch;
 sourceCase ".";
-sourcePatches (front);
+sourcePatches (up);
 
 // If construct from patch: patch to use for back (can be same as sourcePatch)
-exposedPatchName back;
+exposedPatchName down;
 
 // Flip surface normals before usage. Valid only for extrude from surface or
 // patch.

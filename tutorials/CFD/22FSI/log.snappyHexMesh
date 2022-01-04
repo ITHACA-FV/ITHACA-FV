@@ -1,19 +1,19 @@
 /*---------------------------------------------------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2106                                 |
+|  \\    /   O peration     | Version:  2106                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-Build  : _c15bfde3cb-20210624 OPENFOAM=2106
+Build  : _40a7d5d6-20210727 OPENFOAM=2106 patch=211215
 Arch   : "LSB;label=32;scalar=64"
 Exec   : snappyHexMesh -overwrite
-Date   : Dec 02 2021
-Time   : 23:45:39
-Host   : zina.maths.sissa.it
-PID    : 22266
+Date   : Jan 03 2022
+Time   : 13:18:40
+Host   : nkana
+PID    : 28409
 I/O    : uncollated
-Case   : /scratch/vnkanang/ITHACA-FV/tutorials/CFD/22FSI
+Case   : /home/valentinnkana/OpenFOAM/ITHACA-FV/tutorials/CFD/22FSI
 nProcs : 1
 trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
 fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
@@ -24,7 +24,7 @@ Create time
 
 Create mesh for time = 0
 
-Read mesh in = 0.02 s
+Read mesh in = 0.04 s
 
 Overall mesh bounding box  : (-4 -5 -0.1) (30 5 0.1)
 Relative tolerance         : 1e-06
@@ -34,7 +34,7 @@ Reading refinement surfaces.
 --> FOAM Warning : 
     From Foam::refinementSurfaces::refinementSurfaces(const Foam::searchableSurfaces&, const Foam::dictionary&, Foam::label, bool)
     in file refinementSurfaces/refinementSurfaces.C at line 467
-    Reading "/scratch/vnkanang/ITHACA-FV/tutorials/CFD/22FSI/system/snappyHexMeshDict.castellatedMeshControls.refinementSurfaces" at line 94 to 111
+    Reading "/home/valentinnkana/OpenFOAM/ITHACA-FV/tutorials/CFD/22FSI/system/snappyHexMeshDict.castellatedMeshControls.refinementSurfaces" at line 94 to 111
     Not all entries in refinementSurfaces dictionary were used. The following entries were not used : 1(cylinder2)
 Read refinement surfaces in = 0 s
 
@@ -77,7 +77,7 @@ cylinder1:
 
 5     wall                cylinder1                     
 
-Added patches in = 0 s
+Added patches in = 0.01 s
 
 Edge intersection testing:
     Number of edges             : 16140
@@ -95,13 +95,13 @@ Surface refinement iteration 0
 
 Marked for refinement due to surface intersection          : 20 cells.
 Marked for refinement due to curvature/regions             : 0 cells.
-Determined cells to refine in = 0.01 s
+Determined cells to refine in = 0 s
 Selected for refinement : 20 cells (out of 4000)
 Edge intersection testing:
     Number of edges             : 16662
     Number of edges to retest   : 689
     Number of intersected edges : 52
-Refined mesh in = 0.01 s
+Refined mesh in = 0.02 s
 After refinement surface refinement iteration 0 : cells:4140  faces:16662  points:8538
 Cells per refinement level:
     0	3980
@@ -136,7 +136,7 @@ Edge intersection testing:
     Number of edges             : 26640
     Number of edges to retest   : 10117
     Number of intersected edges : 896
-Refined mesh in = 0.02 s
+Refined mesh in = 0.04 s
 After refinement surface refinement iteration 2 : cells:7052  faces:26640  points:12775
 Cells per refinement level:
     0	3972
@@ -155,7 +155,7 @@ Edge intersection testing:
     Number of edges             : 59196
     Number of edges to retest   : 42034
     Number of intersected edges : 3552
-Refined mesh in = 0.06 s
+Refined mesh in = 0.1 s
 After refinement surface refinement iteration 3 : cells:16810  faces:59196  points:25927
 Cells per refinement level:
     0	3970
@@ -175,7 +175,7 @@ Edge intersection testing:
     Number of edges             : 187038
     Number of edges to retest   : 164480
     Number of intersected edges : 14272
-Refined mesh in = 0.22 s
+Refined mesh in = 0.29 s
 After refinement surface refinement iteration 4 : cells:55506  faces:187038  points:76597
 Cells per refinement level:
     0	3970
@@ -190,7 +190,7 @@ Surface refinement iteration 5
 
 Marked for refinement due to surface intersection          : 0 cells.
 Marked for refinement due to curvature/regions             : 0 cells.
-Determined cells to refine in = 0.01 s
+Determined cells to refine in = 0.02 s
 Selected for refinement : 0 cells (out of 55506)
 Stopping refining since too few cells selected.
 
@@ -226,13 +226,13 @@ Shell refinement iteration 0
 
 Marked for refinement due to distance to explicit features : 0 cells.
 Marked for refinement due to refinement shells             : 1882 cells.
-Determined cells to refine in = 0.3 s
+Determined cells to refine in = 0.46 s
 Selected for internal refinement : 5850 cells (out of 44838)
 Edge intersection testing:
     Number of edges             : 283933
     Number of edges to retest   : 211902
     Number of intersected edges : 14272
-Refined mesh in = 0.31 s
+Refined mesh in = 0.42 s
 After refinement shell refinement iteration 0 : cells:85788  faces:283933  points:112811
 Cells per refinement level:
     0	3885
@@ -247,13 +247,13 @@ Shell refinement iteration 1
 
 Marked for refinement due to distance to explicit features : 0 cells.
 Marked for refinement due to refinement shells             : 4848 cells.
-Determined cells to refine in = 0.07 s
+Determined cells to refine in = 0.08 s
 Selected for internal refinement : 5367 cells (out of 85788)
 Edge intersection testing:
     Number of edges             : 401590
     Number of edges to retest   : 170165
     Number of intersected edges : 14272
-Refined mesh in = 0.35 s
+Refined mesh in = 0.5 s
 After refinement shell refinement iteration 1 : cells:123357  faces:401590  points:155260
 Cells per refinement level:
     0	3824
@@ -268,13 +268,13 @@ Shell refinement iteration 2
 
 Marked for refinement due to distance to explicit features : 0 cells.
 Marked for refinement due to refinement shells             : 5392 cells.
-Determined cells to refine in = 0.07 s
+Determined cells to refine in = 0.11 s
 Selected for internal refinement : 5556 cells (out of 123357)
 Edge intersection testing:
     Number of edges             : 521380
     Number of edges to retest   : 167398
     Number of intersected edges : 14272
-Refined mesh in = 0.46 s
+Refined mesh in = 0.62 s
 After refinement shell refinement iteration 2 : cells:162249  faces:521380  points:197192
 Cells per refinement level:
     0	3804
@@ -289,13 +289,13 @@ Shell refinement iteration 3
 
 Marked for refinement due to distance to explicit features : 0 cells.
 Marked for refinement due to refinement shells             : 272 cells.
-Determined cells to refine in = 0.07 s
+Determined cells to refine in = 0.11 s
 Selected for internal refinement : 288 cells (out of 162249)
 Edge intersection testing:
     Number of edges             : 527677
     Number of edges to retest   : 12149
     Number of intersected edges : 14272
-Refined mesh in = 0.4 s
+Refined mesh in = 0.53 s
 After refinement shell refinement iteration 3 : cells:164265  faces:527677  points:199462
 Cells per refinement level:
     0	3796
@@ -310,7 +310,7 @@ Shell refinement iteration 4
 
 Marked for refinement due to distance to explicit features : 0 cells.
 Marked for refinement due to refinement shells             : 0 cells.
-Determined cells to refine in = 0.07 s
+Determined cells to refine in = 0.1 s
 Selected for internal refinement : 2 cells (out of 164265)
 Stopping refining since too few cells selected.
 
@@ -318,7 +318,7 @@ Stopping refining since too few cells selected.
 Dangling coarse cells refinement iteration 0
 --------------------------------------------
 
-Determined cells to refine in = 0.01 s
+Determined cells to refine in = 0.02 s
 Selected for refinement : 0 cells (out of 164265)
 Stopping refining since too few cells selected.
 
@@ -326,7 +326,7 @@ Stopping refining since too few cells selected.
 Dangling coarse cells refinement iteration 0
 --------------------------------------------
 
-Determined cells to refine in = 0 s
+Determined cells to refine in = 0.01 s
 Selected for refinement : 0 cells (out of 164265)
 Stopping refining since too few cells selected.
 
@@ -334,7 +334,7 @@ Stopping refining since too few cells selected.
 Refinement transition refinement iteration 0
 --------------------------------------------
 
-Determined cells to refine in = 0.01 s
+Determined cells to refine in = 0.02 s
 Selected for refinement : 0 cells (out of 164265)
 Stopping refining since too few cells selected.
 
@@ -353,7 +353,7 @@ Edge intersection testing:
     Number of edges             : 541949
     Number of edges to retest   : 89848
     Number of intersected edges : 28544
-Created baffles in = 0.35 s
+Created baffles in = 0.55 s
 
 
 After introducing baffles : cells:164265  faces:541949  points:199462
@@ -369,7 +369,7 @@ Introducing baffles to block off problem cells
 ----------------------------------------------
 
 markFacesOnProblemCells : marked 24178 additional internal faces to be converted into baffles.
-Analyzed problem cells in = 0.3 s
+Analyzed problem cells in = 0.39 s
 
 
 Introducing baffles to delete problem cells.
@@ -378,7 +378,7 @@ Edge intersection testing:
     Number of edges             : 566127
     Number of edges to retest   : 76196
     Number of intersected edges : 28544
-Created baffles in = 0.28 s
+Created baffles in = 0.38 s
 
 
 After introducing baffles : cells:164265  faces:566127  points:199462
@@ -408,7 +408,7 @@ Edge intersection testing:
     Number of edges             : 401117
     Number of edges to retest   : 0
     Number of intersected edges : 14272
-Split mesh in = 0.69 s
+Split mesh in = 0.99 s
 
 
 After subsetting : cells:124401  faces:401117  points:153019
@@ -449,7 +449,7 @@ Edge intersection testing:
     Number of edges             : 401117
     Number of edges to retest   : 45246
     Number of intersected edges : 14272
-Created baffles in = 0.49 s
+Created baffles in = 0.76 s
 
 
 After introducing baffles : cells:124401  faces:401117  points:153019
@@ -465,7 +465,7 @@ Introducing baffles to block off problem cells
 ----------------------------------------------
 
 markFacesOnProblemCells : marked 0 additional internal faces to be converted into baffles.
-Analyzed problem cells in = 0.2 s
+Analyzed problem cells in = 0.28 s
 
 
 Introducing baffles to delete problem cells.
@@ -494,7 +494,7 @@ Edge intersection testing:
 Remove unreachable sections of mesh
 -----------------------------------
 
-Split mesh in = 0.32 s
+Split mesh in = 0.49 s
 
 
 After subsetting : cells:124401  faces:401117  points:153019
@@ -512,7 +512,7 @@ Merge free-standing baffles
 freeStandingBaffles : detected 0 free-standing baffles out of 0
 
 Detected free-standing baffles : 0
-Merged free-standing baffles in = 0.08 s
+Merged free-standing baffles in = 0.12 s
 
 
 dupNonManifoldPoints : Found : 0 non-manifold points (out of 153019)
@@ -539,8 +539,8 @@ Cells per refinement level:
     4	53173
     5	50072
 Writing mesh to time constant
-Wrote mesh in = 0.66 s.
-Mesh refined in = 5.86 s.
+Wrote mesh in = 1 s.
+Mesh refined in = 8.46 s.
 
 Morphing phase
 --------------
@@ -582,7 +582,7 @@ Checking faces in error :
     faces with face twist < 0.05                           : 0
     faces on cells with determinant < 0.001                : 0
 Detected 0 illegal faces (concave, zero area or negative cell pyramid volume)
-Checked initial mesh in = 0.33 s
+Checked initial mesh in = 0.59 s
 
 
 Smoothing patch points ...
@@ -687,7 +687,7 @@ Checking faces in error :
     faces on cells with determinant < 0.001                : 0
 Successfully moved mesh
 
-Patch points smoothed in = 887.52 s
+Patch points smoothed in = 1004.69 s
 
 
 
@@ -698,7 +698,7 @@ Calculating patchDisplacement as distance to nearest surface point ...
     zone points     : attract to zone surface only
 
 Wanted displacement : average:0.00201095 min:5.125e-06 max:0.00656313
-Calculated surface displacement in = 0 s
+Calculated surface displacement in = 0.01 s
 
 
 Detecting near surfaces ...
@@ -735,7 +735,7 @@ Iteration 260
 Iteration 270
 Iteration 280
 Iteration 290
-Displacement smoothed in = 1.6 s
+Displacement smoothed in = 3.62 s
 
 
 Moving mesh ...
@@ -754,11 +754,11 @@ Checking faces in error :
     faces with face twist < 0.05                           : 0
     faces on cells with determinant < 0.001                : 0
 Successfully moved mesh
-Moved mesh in = 177.56 s
+Moved mesh in = 202.59 s
 
 
 Repatching faces according to nearest surface ...
-Repatched 0 faces in = 0.06 s
+Repatched 0 faces in = 0.1 s
 
 
 Edge intersection testing:
@@ -817,8 +817,8 @@ Cells per refinement level:
     4	53173
     5	50072
 Writing mesh to time constant
-Wrote mesh in = 1.86 s.
-Mesh snapped in = 1068.93 s.
+Wrote mesh in = 2.88 s.
+Mesh snapped in = 1214.48 s.
 Layer specification as
 - final layer thickness ('finalLayerThickness')
 - expansion ratio ('expansionRatio')
@@ -829,7 +829,7 @@ Layer specification as
 --> FOAM Warning : 
     From Foam::layerParameters::layerParameters(const Foam::dictionary&, const Foam::polyBoundaryMesh&, bool)
     in file snappyHexMeshDriver/layerParameters/layerParameters.C at line 540
-    Reading "/scratch/vnkanang/ITHACA-FV/tutorials/CFD/22FSI/system/snappyHexMeshDict.addLayersControls.layers" at line 181 to 189
+    Reading "/home/valentinnkana/OpenFOAM/ITHACA-FV/tutorials/CFD/22FSI/system/snappyHexMeshDict.addLayersControls.layers" at line 181 to 189
     Layer specification for cylinder2 does not match any patch.
 Valid patches are 6(inlet outlet down up sides cylinder1)
 
@@ -917,7 +917,7 @@ cylinder1 10176    40     1.22e-12  8.99e-09
 Selecting externalDisplacementMeshMover displacementMedialAxis
 displacementMedialAxis : Calculating distance to Medial Axis ...
 --> FOAM IOWarning :
-    Found [v1712] 'minMedianAxisAngle' entry instead of 'minMedialAxisAngle' in dictionary "/scratch/vnkanang/ITHACA-FV/tutorials/CFD/22FSI/system/snappyHexMeshDict.addLayersControls" 
+    Found [v1712] 'minMedianAxisAngle' entry instead of 'minMedialAxisAngle' in dictionary "/home/valentinnkana/OpenFOAM/ITHACA-FV/tutorials/CFD/22FSI/system/snappyHexMeshDict.addLayersControls" 
 
     This keyword is 42 months old.
 
@@ -1065,8 +1065,8 @@ Cells per refinement level:
     4	53173
     5	50072
 Writing mesh to time constant
-Wrote mesh in = 340.09 s.
-Layers added in = 340.09 s.
+Wrote mesh in = 408.71 s.
+Layers added in = 408.71 s.
 Checking final mesh ...
 Checking faces in error :
     non-orthogonality > 65  degrees                        : 0
@@ -1079,6 +1079,6 @@ Checking faces in error :
     faces with face twist < 0.05                           : 0
     faces on cells with determinant < 0.001                : 0
 Finished meshing without any errors
-Finished meshing in = 1415.27 s.
+Finished meshing in = 1632.34 s.
 End
 

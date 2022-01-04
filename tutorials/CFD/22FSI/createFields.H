@@ -77,7 +77,7 @@ _U0 = autoPtr<volVectorField>
 
 label pRefCell = 0;
 scalar pRefValue = 0.0;
-setRefCell(p, mesh.solutionDict().subDict("SIMPLE"), pRefCell, pRefValue);
+setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
 
 _laminarTransport = autoPtr<singlePhaseTransportModel>
                     (
@@ -94,3 +94,6 @@ _MRF = autoPtr<IOMRFZoneList>
        (
            new IOMRFZoneList(mesh)
        );
+
+#include "createMRF.H"
+#include "createFvOptions.H"       

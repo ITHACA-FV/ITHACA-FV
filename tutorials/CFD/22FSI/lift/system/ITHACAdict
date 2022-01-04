@@ -18,15 +18,15 @@ FoamFile
 EigenSolver eigen;
 
 // Number of modes to output and to use for projection
-NmodesUout 15;
+NmodesUout 50;
 NmodesUproj 10;
-NmodePUout 15;
-NmodesPproj 10;
-NmodesSUPout 15;
+
+NmodesPout 50;
+NmodesPproj 8;
+
+NmodesSUPout 50;
 NmodesSUPproj 10;
 
 // Output format to save market vectors.
 OutPrecision 20;
 OutType fixed;
-
-

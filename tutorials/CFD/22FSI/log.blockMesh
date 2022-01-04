@@ -1,19 +1,19 @@
 /*---------------------------------------------------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2106                                 |
+|  \\    /   O peration     | Version:  2106                                  |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-Build  : _c15bfde3cb-20210624 OPENFOAM=2106
+Build  : _40a7d5d6-20210727 OPENFOAM=2106 patch=211215
 Arch   : "LSB;label=32;scalar=64"
 Exec   : blockMesh
-Date   : Dec 02 2021
-Time   : 23:45:38
-Host   : zina.maths.sissa.it
-PID    : 22263
+Date   : Jan 03 2022
+Time   : 13:18:38
+Host   : nkana
+PID    : 28407
 I/O    : uncollated
-Case   : /scratch/vnkanang/ITHACA-FV/tutorials/CFD/22FSI
+Case   : /home/valentinnkana/OpenFOAM/ITHACA-FV/tutorials/CFD/22FSI
 nProcs : 1
 trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
 fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
@@ -24,7 +24,7 @@ Create time
 
 Creating block mesh from "system/blockMeshDict"
 --> FOAM IOWarning :
-    Found [v1012] 'convertToMeters' entry instead of 'scale' in dictionary "/scratch/vnkanang/ITHACA-FV/tutorials/CFD/22FSI/system/blockMeshDict" 
+    Found [v1012] 'convertToMeters' entry instead of 'scale' in dictionary "/home/valentinnkana/OpenFOAM/ITHACA-FV/tutorials/CFD/22FSI/system/blockMeshDict" 
 
     This keyword is 126 months old.
 
@@ -46,6 +46,7 @@ Check topology
 
 Creating block offsets
 Creating merge list (topological search)...
+Deleting polyMesh directory "constant/polyMesh"
 
 Creating polyMesh from blockMesh
 Creating patches

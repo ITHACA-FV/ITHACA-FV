@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.6                                   |
+|  \\    /   O peration     | Version:  2.4.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -10,13 +10,12 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
     object      transportProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    transportModel  Newtonian;
-    nu              nu [ 0 2 -1 0 0 0 0 ] 1;
-    rho             rho [ 1 -3 0 0 0 0 0 ] 1000;
-    
+transportModel  Newtonian;
+nu              nu [ 0 2 -1 0 0 0 0 ] 0.005;
+rho             1;
+
 // ************************************************************************* //
