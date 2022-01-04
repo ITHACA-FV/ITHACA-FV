@@ -29,4 +29,4 @@ POD_T L2;
 
 startTime 0;
 finalTime 0.05;
-writeEvery 0.005;
+//writeEvery 0.005;

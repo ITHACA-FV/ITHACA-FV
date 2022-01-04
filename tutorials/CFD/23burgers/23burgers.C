@@ -32,6 +32,7 @@ SourceFiles
 #include "IOmanip.H"
 #include "Time.H"
 #include "Burgers.H"
+#include "ITHACAPOD.H"
 #include <Eigen/Dense>
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -50,6 +51,20 @@ class tutorial23: public Burgers
 
         /// Velocity field
         volVectorField& U;
+
+        void offlineSolve(word folder = "./ITHACAoutput/Offline/")
+        {
+            if (offline)
+            {
+                ITHACAstream::readMiddleFields(Ufield, U, "./ITHACAoutput/Offline/");
+            }
+            else
+            {
+                truthSolve(folder);
+            }
+        }
+
+
 };
 
 
@@ -60,7 +75,9 @@ int main(int argc, char* argv[])
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(train._mesh(),
                              train._runTime());
-    train.truthSolve();
-    train.restart();
-    train.truthSolve();
+    int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+    train.offlineSolve();
+    ITHACAPOD::getModes(train.Ufield, train.Umodes, train._U().name(),
+                        train.podex, 0, 0,
+                        NmodesUout);
 }
