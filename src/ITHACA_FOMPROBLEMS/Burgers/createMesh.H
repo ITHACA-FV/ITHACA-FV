@@ -22,41 +22,23 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
+Info << "Reading field p\n" << endl;
 
-while (runTime.run())
-{
-#include "readTimeControls.H"
-#include "CourantNo.H"
-#include "setDeltaT.H"
-    runTime++;
-    Info << "Time = " << runTime.timeName() << nl << endl;
+Info << "Create mesh for time = "
+     << runTime.timeName() << nl << endl;
 
-    // --- Pressure-velocity PIMPLE corrector loop
-    while (pimple.loop())
-    {
-#include "UEqn.H"
+_mesh = autoPtr<fvMesh>
+        (
+            new fvMesh
+            (
+                IOobject
+                (
+                    fvMesh::defaultRegion,
+                    runTime.timeName(),
+                    runTime,
+                    IOobject::MUST_READ
+                )
+            )
+        );
 
-        // --- Pressure corrector loop
-        while (pimple.correct())
-        {
-#include "pEqn.H"
-        }
-
-        if (pimple.turbCorr())
-        {
-            turbulence->correct();
-        }
-    }
-
-    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-         << nl << endl;
-}
-
-
-
-
-
-
-
-
+Foam::fvMesh& mesh = _mesh();

@@ -23,40 +23,5 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
 
-while (runTime.run())
-{
-#include "readTimeControls.H"
-#include "CourantNo.H"
-#include "setDeltaT.H"
-    runTime++;
-    Info << "Time = " << runTime.timeName() << nl << endl;
-
-    // --- Pressure-velocity PIMPLE corrector loop
-    while (pimple.loop())
-    {
-#include "UEqn.H"
-
-        // --- Pressure corrector loop
-        while (pimple.correct())
-        {
-#include "pEqn.H"
-        }
-
-        if (pimple.turbCorr())
-        {
-            turbulence->correct();
-        }
-    }
-
-    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-         << nl << endl;
-}
-
-
-
-
-
-
-
+_fvOptions = autoPtr<fv::options>(new fv::options(mesh));
 

@@ -15,8 +15,6 @@
 </a>
 </p>
 <p align="center">
-<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF5"><img alt="OF5" src="https://github.com/mathLab/ITHACA-FV/workflows/OF5/badge.svg"></a>
-<a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF6"><img alt="OF6" src="https://github.com/mathLab/ITHACA-FV/workflows/OF6/badge.svg"></a>
 <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="OF1812" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1812/badge.svg"></a>
 <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1906"><img alt="OF1906" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1906/badge.svg"></a>
 <a href="https://github.com/mathLab/ITHACA-FV/actions?query=workflow%3AOF1912"><img alt="OF1912" src="https://github.com/mathLab/ITHACA-FV/workflows/OF1912/badge.svg"></a>
@@ -24,18 +22,16 @@
 </p>
 
 ### 0. Introduction
-**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM 6.0**](https://openfoam.org/version/6), [**OpenFOAM 5.0**](https://openfoam.org/version/5-0) and [**OpenFOAM v1812**](https://www.openfoam.com/releases/openfoam-v1812/) but it can be easily adapted also to other versions of OpenFOAM. 
+**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2106**](https://www.openfoam.com/releases/openfoam-v2106/) and older openfoam.com versions but it can be easily adapted also to other versions of OpenFOAM. 
 
 **ITHACA-FV** can also be used as a basis for more advanced projects that would like to assess the capability of reduced order models in their existing **OpenFOAM**-based software, thanks to the availability of several reduced order methods and algorithms.
 
 Linear and non-linear algebra operations which are not already implemented in OpenFOAM are performed with the external library [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page). The source code of Eigen 3.3.7 is provided together with ITHACA-FV and is located in the [src/thirdyparty/Eigen](./src/thirdparty/Eigen) folder.  For the EigenValue decomposition it is also possible to rely on the [**Spectra-0.7.0**](https://spectralib.org/) library and the source code is provided in the [src/thirdyparty/spectra](./src//thirdparty/spectra) folder. Numerical optimization can be performed using the external library [**OptimLib**](https://www.kthohr.com/optimlib.html) and the header based source code is provided in the [src/thirdyparty/OptimLib](./src/thirdparty/OptimLib) folder.
 
-**ITHACA-FV** has been tested on ubuntu 16.04, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 6.0, OpenFOAM 5.0, OpenFOAM 1812, OpenFOAM 1906, OpenFOAM 1912, OpenFOAM 2006, OpenFOAM 2012 and OpenFOAM 2106.
+**ITHACA-FV** has been tested on ubuntu 16.04, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 1812, OpenFOAM 1906, OpenFOAM 1912, OpenFOAM 2006, OpenFOAM 2012 and OpenFOAM 2106.
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
-*   [**OpenFOAM 5.0**](https://openfoam.org/version/5-0) or
-*   [**OpenFOAM 6.0**](https://openfoam.org/version/6) or
 *   [**OpenFOAM 1812**](https://www.openfoam.com/releases/openfoam-v1812/) or
 *   [**OpenFOAM 1906**](https://www.openfoam.com/releases/openfoam-v1906/) or
 *   [**OpenFOAM 1912**](https://www.openfoam.com/releases/openfoam-v1912/) or
@@ -45,13 +41,13 @@ Linear and non-linear algebra operations which are not already implemented in Op
 
 
 ### 2. Installation and usage
-First of all you need to source the bashrc file of your installation of **OpenFOAM 6.0** or **OpenFOAM 5.0** or **OpenFOAM 1812** or **OpenFOAM 1906**. This is of course depending on the location of your OpenFOAM installation and of your particular version of OpenFOAM
+First of all you need to source the bashrc file of your installation **OpenFOAM**. This is of course depending on the location of your OpenFOAM installation and of your particular version of OpenFOAM
 ```
-source $HOME/OpenFOAM/OpenFOAM-6/etc/bashrc
+source $HOME/OpenFOAM/OpenFOAM-v2106/etc/bashrc
 ``` 
-Then navigate to the folder where you want to install ITHACA-FV such as, for example, the utilities folder of OpenFOAM
+Then navigate to the folder where you want to install ITHACA-FV such as, for example, your HOME folder
 ```
-cd ${FOAM_APP}/utilities
+cd ~
 ``` 
 Now you can clone the **ITHACA-FV** repository inside the selected folder
 ```

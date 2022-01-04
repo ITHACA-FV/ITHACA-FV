@@ -45,6 +45,7 @@ SourceFiles
 #include "IOMRFZoneList.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 #include "steadyNS.H"
+#include "UnsteadyProblem.H"
 #include <iostream>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,7 +58,7 @@ SourceFiles
 /** In this class are implemented the methods for the offline solve of a unsteady NS problem
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the steadyNS class */
-class unsteadyNS: public steadyNS
+class unsteadyNS: public steadyNS, public UnsteadyProblem
 {
     public:
         // Constructors
@@ -66,22 +67,6 @@ class unsteadyNS: public steadyNS
 
         /// Construct with argc and argv
         unsteadyNS(int argc, char* argv[]);
-
-        // Specific variable for the unstationary case
-        /// Start Time (initial time to start storing the snapshots)
-        scalar startTime;
-
-        /// Final time (final time of the simulation and consequently of the acquisition of the snapshots)
-        scalar finalTime;
-
-        /// Time step of the simulation
-        scalar timeStep;
-
-        /// Time step of the writing procedure
-        scalar writeEvery = timeStep;
-
-        /// Auxiliary variable to store the next writing instant
-        scalar nextWrite;
 
         // Dummy variables to transform pimplefoam into a class
         /// pimpleControl
@@ -110,7 +95,6 @@ class unsteadyNS: public steadyNS
 
         // Time derivative numerical scheme order
         word timeDerivativeSchemeOrder;
-
 
         // Functions
 

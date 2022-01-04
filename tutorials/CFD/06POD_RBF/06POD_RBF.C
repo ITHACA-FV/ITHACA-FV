@@ -137,7 +137,7 @@ class tutorial06 : public SteadyNSTurb
             simpleControl& simple = _simple();
             IOMRFZoneList& MRF = _MRF();
             singlePhaseTransportModel& laminarTransport = _laminarTransport();
-#include "NLsolve.H"
+#include "NLsolveSteadyNSTurb.H"
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(p, name(counter), folder);
             volScalarField _nut(turbulence->nut());

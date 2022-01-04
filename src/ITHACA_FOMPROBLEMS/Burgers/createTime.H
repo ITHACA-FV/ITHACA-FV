@@ -22,33 +22,10 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
-
-while (runTime.run())
-{
-    //#include "readTimeControls.H"
-    //#include "setDeltaT.H"
-#include "CourantNo.H"
-    runTime++;
-    Info << "Time = " << runTime.timeName() << nl << endl;
-    // --- Pressure-velocity PISO corrector loop
-    {
-#include "UEqn.H"
-
-        // --- PISO loop
-        while (piso.correct())
-        {
-#include "pEqn.H"
-        }
-    }
-    {
-#include "TEqn.H"
-    }
-    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-         << nl << endl;
-}
+Info << "Reading field p\n" << endl;
 
 
-
-
-
+Foam::Info << "Create time\n" << Foam::endl;
+_runTime = autoPtr<Foam::Time>( new Foam::Time( Foam::Time::controlDictName,
+                                args ) );
+Foam::Time& runTime = _runTime();

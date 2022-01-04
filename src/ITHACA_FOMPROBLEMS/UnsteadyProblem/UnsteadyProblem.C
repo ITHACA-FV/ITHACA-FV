@@ -28,40 +28,7 @@
 
 \*---------------------------------------------------------------------------*/
 
-while (runTime.run())
-{
-#include "readTimeControls.H"
-#include "CourantNo.H"
-#include "setDeltaT.H"
-    runTime++;
-    Info << "Time = " << runTime.timeName() << nl << endl;
+#include "UnsteadyProblem.H"
 
-    // --- Pressure-velocity PIMPLE corrector loop
-    while (pimple.loop())
-    {
-#include "UEqn.H"
-
-        // --- Pressure corrector loop
-        while (pimple.correct())
-        {
-#include "pEqn.H"
-        }
-
-        if (pimple.turbCorr())
-        {
-            turbulence->correct();
-        }
-    }
-
-    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-         << nl << endl;
-}
-
-
-
-
-
-
-
-
+/// \file
+/// Source file of the UnsteadyProblem class.
