@@ -66,33 +66,43 @@ struct NpyArray
         if (number_type == "f4")
         {
             float* p = data<float>();
-            return std::vector<T>(static_cast<float*>(p), static_cast<float*>(p) + num_vals);
+            return std::vector<T>(static_cast<float*>(p),
+                                  static_cast<float*>(p) + num_vals);
         }
+
         if (number_type == "f8")
         {
             double* p = data<double>();
-            return std::vector<T>(static_cast<double*>(p), static_cast<double*>(p) + num_vals);
+            return std::vector<T>(static_cast<double*>(p),
+                                  static_cast<double*>(p) + num_vals);
         }
+
         if (number_type == "f16")
         {
             long double* p = data<long double>();
-            return std::vector<T>(static_cast<long double*>(p), static_cast<long double*>(p) + num_vals);
+            return std::vector<T>(static_cast<long double*>(p),
+                                  static_cast<long double*>(p) + num_vals);
         }
+
         if (number_type == "i2")
         {
             short* p = data<short>();
-            return std::vector<T>(static_cast<short*>(p), static_cast<short*>(p) + num_vals);
+            return std::vector<T>(static_cast<short*>(p),
+                                  static_cast<short*>(p) + num_vals);
         }
+
         if (number_type == "i4")
         {
             int* p = data<int>();
             return std::vector<T>(static_cast<int*>(p), static_cast<int*>(p) + num_vals);
         }
+
         if (number_type == "i8")
         {
             long* p = data<long>();
             return std::vector<T>(static_cast<long*>(p), static_cast<long*>(p) + num_vals);
         }
+
         // if (number_type == "c8")
         // {
         //     _Complex float* p = data<_Complex float>();
@@ -111,22 +121,29 @@ struct NpyArray
         if (number_type == "u2")
         {
             unsigned short* p = data<unsigned short>();
-            return std::vector<T>(static_cast<unsigned short*>(p), static_cast<unsigned short*>(p) + num_vals);
+            return std::vector<T>(static_cast<unsigned short*>(p),
+                                  static_cast<unsigned short*>(p) + num_vals);
         }
+
         if (number_type == "u4")
         {
             unsigned int* p = data<unsigned int>();
-            return std::vector<T>(static_cast<unsigned int*>(p), static_cast<unsigned int*>(p) + num_vals);
+            return std::vector<T>(static_cast<unsigned int*>(p),
+                                  static_cast<unsigned int*>(p) + num_vals);
         }
+
         if (number_type == "u8")
         {
             unsigned long* p = data<unsigned long>();
-            return std::vector<T>(static_cast<unsigned long*>(p), static_cast<unsigned long*>(p) + num_vals);
+            return std::vector<T>(static_cast<unsigned long*>(p),
+                                  static_cast<unsigned long*>(p) + num_vals);
         }
+
         if (number_type == "f8")
         {
             double* p = data<double>();
-            return std::vector<T>(static_cast<double*>(p), static_cast<double*>(p) + num_vals);
+            return std::vector<T>(static_cast<double*>(p),
+                                  static_cast<double*>(p) + num_vals);
         }
     }
 

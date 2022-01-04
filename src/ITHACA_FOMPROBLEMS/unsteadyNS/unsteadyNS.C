@@ -40,8 +40,8 @@ unsteadyNS::unsteadyNS() {}
 
 // Construct from zero
 unsteadyNS::unsteadyNS(int argc, char* argv[])
-:
-UnsteadyProblem()
+    :
+    UnsteadyProblem()
 {
     _args = autoPtr<argList>
             (
@@ -194,8 +194,6 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
         {
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(p, name(counter), folder);
-            std::ofstream of(folder + name(counter) + "/" +
-                             runTime.timeName());
             Ufield.append(U.clone());
             Pfield.append(p.clone());
             counter++;
@@ -224,24 +222,3 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
                                    folder);
     }
 }
-
-
-bool unsteadyNS::checkWrite(Time& timeObject)
-{
-    scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
-    scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
-                          timeObject.deltaTValue());
-
-    if ( diffnow < diffnext)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-
-

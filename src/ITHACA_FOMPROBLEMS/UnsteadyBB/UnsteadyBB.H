@@ -124,10 +124,6 @@ class UnsteadyBB: public unsteadyNS
         /// Mass Matrix - energy equation
         Eigen::MatrixXd W_matrix;
 
-        // Other Variables
-        /// Counter used for the output of the full order solutions
-        label counter = 1;
-
         /// Mesh
         mutable autoPtr<fvMesh> _mesh;
 

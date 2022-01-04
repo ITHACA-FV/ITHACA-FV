@@ -106,15 +106,6 @@ class unsteadyNS: public steadyNS, public UnsteadyProblem
         ///
         void truthSolve(List<scalar> mu_now,
                         fileName folder = "./ITHACAoutput/Offline/");
-
-        //--------------------------------------------------------------------------
-        /// Function to check if the solution must be exported.
-        ///
-        /// @param      timeObject  The time object of OpenFOAM.
-        ///
-        /// @return     1 if we must write 0 elsewhere.
-        ///
-        bool checkWrite(Time& timeObject);
 };
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -57,54 +57,59 @@ of the reduction problem class */
 class Burgers: public reductionProblem, public UnsteadyProblem
 {
 
-public:
-  // Constructors
-  /// Null constructor
-  Burgers();
+    public:
+        // Constructors
+        /// Null constructor
+        Burgers();
 
-  /// Construct with argc and argv
-  Burgers(int argc, char* argv[]);
+        /// Construct with argc and argv
+        Burgers(int argc, char* argv[]);
 
-  ~Burgers() {};
+        ~Burgers() {};
 
-  ITHACAparameters* para;
+        ITHACAparameters* para;
 
-  /// List of pointers used to form the velocity snapshots matrix
-  PtrList<volVectorField> Ufield;
+        /// List of pointers used to form the velocity snapshots matrix
+        PtrList<volVectorField> Ufield;
 
-  /// List of pointers used to form the velocity modes
-  volVectorModes Umodes;
+        /// List of pointers used to form the velocity modes
+        volVectorModes Umodes;
 
-  /// Velocity field
-  autoPtr<volVectorField> _U;
+        /// Velocity field
+        autoPtr<volVectorField> _U;
 
-  /// Initial Velocity field (for restart purposes)
-  autoPtr<volVectorField> _U0;
+        /// Initial Velocity field (for restart purposes)
+        autoPtr<volVectorField> _U0;
 
-  /// Mesh
-  mutable autoPtr<fvMesh> _mesh;
+        /// Mesh
+        mutable autoPtr<fvMesh> _mesh;
 
-  /// Time
-  autoPtr<Time> _runTime;
+        /// Time
+        autoPtr<Time> _runTime;
 
-  /// Flux
-  autoPtr<surfaceScalarField> _phi;
+        /// Flux
+        autoPtr<surfaceScalarField> _phi;
 
-  /// Initial Flux (for restart purposes)
-  autoPtr<surfaceScalarField> _phi0;
+        /// Initial Flux (for restart purposes)
+        autoPtr<surfaceScalarField> _phi0;
 
-  autoPtr<IOdictionary> _transportProperties;
+        autoPtr<IOdictionary> _transportProperties;
 
-  autoPtr<dimensionedScalar> _nu;
+        autoPtr<dimensionedScalar> _nu;
 
-  /// fvOptions
-  autoPtr<fv::options> _fvOptions;
+        /// fvOptions
+        autoPtr<fv::options> _fvOptions;
 
-  /// simpleControl
-  autoPtr<simpleControl> _simple;
+        /// simpleControl
+        autoPtr<simpleControl> _simple;
 
-  /// truthsolve
-  void truthSolve();
+        /// truthsolve
+        void truthSolve(word folder = "./ITHACAoutput/Offline/");
+
+        //----------------------------------------------------------------------------
+        /// @brief      Function to restart the fields of the Burgers problem
+        ///
+        void restart();
 
 };
 

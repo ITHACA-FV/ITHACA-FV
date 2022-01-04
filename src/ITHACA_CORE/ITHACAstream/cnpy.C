@@ -285,7 +285,6 @@ cnpy::NpyArray cnpy::load_the_npy_file(std::string fname)
 {
     FILE* fp = fopen(fname.c_str(), "rb");
     return load_the_npy_file(fp);
-
 }
 
 cnpy::NpyArray load_the_npz_array(FILE* fp, uint32_t compr_bytes,
@@ -541,7 +540,7 @@ Eigen::Matrix<typeNumber, Eigen::Dynamic, dim> cnpy::load(
         {
             for (size_t j = 0; j < arr.shape[1]; ++j)
             {
-                    mat(i, j) = data[arr.shape[1] * i + j];
+                mat(i, j) = data[arr.shape[1] * i + j];
             }
         }
     }
@@ -551,10 +550,11 @@ Eigen::Matrix<typeNumber, Eigen::Dynamic, dim> cnpy::load(
         {
             for (size_t j = 0; j < arr.shape[1]; ++j)
             {
-                    data[arr.shape[0] * j + i];
+                data[arr.shape[0] * j + i];
             }
         }
     }
+
     // delete[] arr.data;
     return mat;
 }
@@ -580,7 +580,7 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
                 for (size_t k = 0; k < arr.shape[2]; ++k)
                 {
                     tens(i, j, k) = data[arr.shape[1] * arr.shape[2] * i + j *
-                                                                   arr.shape[2] + k];
+                                                      arr.shape[2] + k];
                 }
             }
         }

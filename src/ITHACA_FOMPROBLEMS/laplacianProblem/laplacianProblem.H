@@ -85,9 +85,6 @@ class laplacianProblem: public reductionProblem
         /// Source vector
         Eigen::MatrixXd source;
 
-        /// Other Variables
-        label counter = 1;
-
         // Dummy variables to transform laplacianFoam into a class
         /// Temperature field
         autoPtr<volScalarField> _T;

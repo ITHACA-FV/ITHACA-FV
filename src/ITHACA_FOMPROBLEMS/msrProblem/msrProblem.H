@@ -177,7 +177,6 @@ class msrProblem: public reductionProblem
         scalar maxIter;
         /// continuity error
         scalar cumulativeContErr = 0;
-        label counter = 1;
 
         /// boolean variable to decide if apply prec inlet BC
         bool precInBool = false;
