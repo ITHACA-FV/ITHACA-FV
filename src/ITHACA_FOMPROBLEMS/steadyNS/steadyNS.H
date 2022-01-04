@@ -255,9 +255,6 @@ class steadyNS: public reductionProblem
         /// Boolean variable to check the existence of the supremizer modes
         bool supex;
 
-        /// Counter used for the output of the full order solutions
-        label counter = 1;
-
         // Dummy variables to transform simplefoam into a class
         /// Pressure field
         autoPtr<volScalarField> _p;

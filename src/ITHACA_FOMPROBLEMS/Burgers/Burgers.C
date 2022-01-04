@@ -38,69 +38,101 @@
 Burgers::Burgers() {}
 
 Burgers::Burgers(int argc, char* argv[])
-  :
-  UnsteadyProblem()
+    :
+    UnsteadyProblem()
 {
-  _args = autoPtr<argList>
-          (
-            new argList(argc, argv)
-          );
+    _args = autoPtr<argList>
+            (
+                new argList(argc, argv)
+            );
 
-  if (!_args->checkRootCase())
-  {
-    Foam::FatalError.exit();
-  }
+    if (!_args->checkRootCase())
+    {
+        Foam::FatalError.exit();
+    }
 
-  argList& args = _args();
+    argList& args = _args();
 #include "createTime.H"
 #include "createMesh.H"
-  _simple = autoPtr<simpleControl>
-            (
-              new simpleControl
+    _simple = autoPtr<simpleControl>
               (
-                mesh
-              )
-            );
-  simpleControl& simple = _simple();
+                  new simpleControl
+                  (
+                      mesh
+                  )
+              );
+    simpleControl& simple = _simple();
 #include "createFields.H"
 #include "createFvOptions.H"
-
-  ITHACAdict = new IOdictionary
-  (
-    IOobject
+    ITHACAdict = new IOdictionary
     (
-      "ITHACAdict",
-      runTime.system(),
-      mesh,
-      IOobject::MUST_READ,
-      IOobject::NO_WRITE
-    )
-  );
+        IOobject
+        (
+            "ITHACAdict",
+            runTime.system(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
+    para = ITHACAparameters::getInstance(mesh, runTime);
+    setTimes(runTime);
 }
 
-void Burgers::truthSolve()
+void Burgers::truthSolve(word folder)
 {
-  Time& runTime = _runTime();
-  fvMesh& mesh = _mesh();
-  volVectorField& U = _U();
-  surfaceScalarField& phi = _phi();
-  fv::options& fvOptions = _fvOptions();
-  simpleControl& simple = _simple();
-  dimensionedScalar& nu = _nu();
-  while (_simple().loop())
-  {
-    Info << "Time = " << _runTime().timeName() << nl << endl;
-    while (simple.correctNonOrthogonal())
-    {
-      solve
-      (
-        fvm::ddt(U)
-        + fvm::div(phi, U)
-        - fvm::laplacian(nu, U)
-      );
-    }
-    phi = linearInterpolate(U) & mesh.Sf();
-    runTime.write();
-  }
+    Time& runTime = _runTime();
+    fvMesh& mesh = _mesh();
+    volVectorField& U = _U();
+    surfaceScalarField& phi = _phi();
+    fv::options& fvOptions = _fvOptions();
+    simpleControl& simple = _simple();
+    dimensionedScalar& nu = _nu();
+    counter = 1;
+    ITHACAstream::exportSolution(U, name(counter), folder + name(folderN));
+    counter++;
+    nextWrite = startTime;
+    nextWrite += writeEvery;
 
+    while (_simple().loop())
+    {
+        Info << "Time = " << _runTime().timeName() << nl << endl;
+
+        while (simple.correctNonOrthogonal())
+        {
+            solve
+            (
+                fvm::ddt(U)
+                + fvm::div(phi, U)
+                - fvm::laplacian(nu, U)
+            );
+        }
+
+        phi = linearInterpolate(U) & mesh.Sf();
+
+        if (checkWrite(runTime))
+        {
+            ITHACAstream::exportSolution(U, name(counter), folder + name(folderN));
+            counter++;
+            Ufield.append(U.clone());
+            nextWrite += writeEvery;
+        }
+    }
+
+    folderN++;
+}
+
+void Burgers::restart()
+{
+    _U.clear();
+    _phi.clear();
+    _fvOptions.clear();
+    _nu.clear();
+    _transportProperties.clear();
+    argList& args = _args();
+    Time& runTime = _runTime();
+    runTime.setTime(0, 1);
+    Foam::fvMesh& mesh = _mesh();
+#include "createFields.H"
+#include "createFvOptions.H"
 }

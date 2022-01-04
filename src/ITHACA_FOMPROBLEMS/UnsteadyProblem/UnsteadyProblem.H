@@ -31,27 +31,39 @@
 #ifndef unsteadyproblem_H
 #define unsteadyproblem_H
 #include "fvCFD.H"
+#include "ITHACAparameters.H"
 
 class UnsteadyProblem
 {
-public:
-  UnsteadyProblem() {};
+    public:
+        UnsteadyProblem() {};
 
-  // Specific variable for the unstationary case
-  /// Start Time (initial time to start storing the snapshots)
-  scalar startTime;
+        // Specific variable for the unstationary case
+        /// Start Time (initial time to start storing the snapshots)
+        scalar startTime;
 
-  /// Final time (final time of the simulation and consequently of the acquisition of the snapshots)
-  scalar finalTime;
+        /// Final time (final time of the simulation and consequently of the acquisition of the snapshots)
+        scalar finalTime;
 
-  /// Time step of the simulation
-  scalar timeStep;
+        /// Time step of the simulation
+        scalar timeStep;
 
-  /// Time step of the writing procedure
-  scalar writeEvery = timeStep;
+        /// Time step of the writing procedure
+        scalar writeEvery = timeStep;
 
-  /// Auxiliary variable to store the next writing instant
-  scalar nextWrite;
+        /// Auxiliary variable to store the next writing instant
+        scalar nextWrite;
+
+        void setTimes(Time& timeObject);
+
+        //--------------------------------------------------------------------------
+        /// Function to check if the solution must be exported.
+        ///
+        /// @param      timeObject  The time object of OpenFOAM.
+        ///
+        /// @return     1 if we must write 0 elsewhere.
+        ///
+        bool checkWrite(Time& timeObject);
 };
 
 #endif

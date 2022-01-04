@@ -32,3 +32,40 @@
 
 /// \file
 /// Source file of the UnsteadyProblem class.
+///
+
+bool UnsteadyProblem::checkWrite(Time& timeObject)
+{
+    scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
+    scalar diffnext = mag(nextWrite - atof(timeObject.timeName().c_str()) -
+                          timeObject.deltaTValue());
+
+    if ( diffnow < diffnext)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void UnsteadyProblem::setTimes(Time& timeObject)
+{
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+    startTime = para->ITHACAdict->lookupOrDefault<scalar>("startTime",
+                timeObject.startTime().value());
+    finalTime = para->ITHACAdict->lookupOrDefault<scalar>("finalTime",
+                timeObject.endTime().value());
+    timeStep = para->ITHACAdict->lookupOrDefault<scalar>("timeStep",
+               timeObject.deltaT().value());
+    writeEvery = para->ITHACAdict->lookupOrDefault<scalar>("writeEvery", timeStep);
+    M_Assert(finalTime > startTime,
+             "The finalTime needs to be bigger than the startTime");
+    M_Assert(finalTime - startTime > timeStep,
+             "The timeStep needs to be bigger than the entire simulation Time");
+    M_Assert(writeEvery >= timeStep,
+             "The writeEvery needs to larger or equal to the timeStep");
+    timeObject.setEndTime(finalTime);
+    timeObject.setDeltaT(timeStep);
+}

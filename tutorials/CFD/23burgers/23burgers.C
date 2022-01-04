@@ -57,12 +57,10 @@ int main(int argc, char* argv[])
 {
     // Create the train object of the tutorial02 type
     tutorial23 train(argc, argv);
-    train.startTime = 50;
-
-    Info << train.startTime << endl;
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(train._mesh(),
                              train._runTime());
-
+    train.truthSolve();
+    train.restart();
     train.truthSolve();
 }

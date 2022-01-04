@@ -103,6 +103,11 @@ class reductionProblem
         autoPtr<argList> _args;
         /// parallel handling
         ITHACAparallel* paral;
+        /// Counter to save intermediate steps in the correct folder, for unsteady and some stationary cases
+        label folderN = 1;
+
+        /// Counter used for the output of the full order solutions
+        label counter = 1;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"

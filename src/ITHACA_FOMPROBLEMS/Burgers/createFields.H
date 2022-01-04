@@ -34,7 +34,7 @@ _U = autoPtr<volVectorField>
                  runTime.timeName(),
                  mesh,
                  IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
+                 IOobject::NO_WRITE
              ),
              mesh
          )
@@ -48,7 +48,30 @@ _U0 = autoPtr<volVectorField>
           new volVectorField(U0)
       );
 
-#include "createPhi.H"
+Info << "Reading/calculating face flux field phi\n" << endl;
+
+_phi = autoPtr<surfaceScalarField>
+       (
+           new surfaceScalarField
+           (
+               IOobject
+               (
+                   "phi",
+                   runTime.timeName(),
+                   mesh,
+                   IOobject::READ_IF_PRESENT,
+                   IOobject::NO_WRITE
+               ),
+               linearInterpolate(U) & mesh.Sf()
+           )
+       );
+surfaceScalarField& phi = _phi();
+surfaceScalarField phi0(phi);
+
+_phi0 = autoPtr<surfaceScalarField>
+        (
+            new surfaceScalarField(phi0)
+        );
 
 Info << "Reading transportProperties\n" << endl;
 

@@ -729,6 +729,8 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         ITHACAutilities::createSymLink(folder);
         GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
         fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
+        std::ofstream of(folder + "/" + subfolder + "/" +
+                         s.time().timeName());
         OFstream os(fieldname);
         act.writeHeader(os);
         os << act << endl;
@@ -740,6 +742,9 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
                              subfolder + "/" + fieldName;
+        std::ofstream of(folder + "/processor" + name(Pstream::myProcNo()) + "/" +
+                         subfolder + "/" +
+                         s.time().timeName());
         std::cout << fieldname << std::endl;
         OFstream os(fieldname);
         act.writeHeader(os);
@@ -768,6 +773,8 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
     {
         mkDir(folder + "/" + subfolder);
         ITHACAutilities::createSymLink(folder);
+        std::ofstream of(folder + "/" + subfolder + "/" +
+                         s.time().timeName());
         fileName fieldname = folder + "/" + subfolder + "/" + s.name();
         OFstream os(fieldname);
         s.writeHeader(os);
@@ -777,6 +784,9 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
         ITHACAutilities::createSymLink(folder);
+        std::ofstream of(folder + "/processor" + name(Pstream::myProcNo()) + "/" +
+                         subfolder + "/" +
+                         s.time().timeName());
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
                              subfolder + "/" + s.name();
         OFstream os(fieldname);

@@ -39,10 +39,11 @@
 #include "IOMRFZoneList.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 #include "../msrProblem/msrProblem.H"
+#include "UnsteadyProblem.H"
 #include <iostream>
 
 // us stands for unsteady
-class usmsrProblem: public msrProblem
+class usmsrProblem: public msrProblem, public UnsteadyProblem
 {
     public:
         // Constructors
@@ -54,20 +55,6 @@ class usmsrProblem: public msrProblem
 
         // Specific variable for the unstationary case
         autoPtr<dimensionedScalar> _tau;
-        /// Start Time (initial time to start storing the snapshots)
-        scalar startTime;
-
-        /// Final time (final time of the simulation and consequently of the acquisition of the snapshots)
-        scalar finalTime;
-
-        /// Time step of the simulation
-        scalar timeStep;
-
-        /// Time step of the writing procedure
-        scalar writeEvery = timeStep;
-
-        /// Auxiliary variable to store the next writing instant
-        scalar nextWrite;
 
         // Dummy variables to transform pimplefoam into a class
         /// pimpleControl
