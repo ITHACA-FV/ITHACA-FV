@@ -1,0 +1,90 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  docker-arm64:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./dockerfiles/arm64
+          platforms: linux/arm64
+          push: true
+          tags: ithacafv/ithacafv:manifest-arm64
+
+  docker-amd64:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./dockerfiles/amd64
+          platforms: linux/amd64
+          push: true
+          tags: ithacafv/ithacafv:manifest-amd64
+
+
+
+  build-manifest:
+    needs: [docker-amd64, docker-arm64]
+
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: manifest creation
+        run: docker manifest create ithacafv/ithacafv:manifest-latest --amend ithacafv/ithacafv:manifest-amd64 --amend ithacafv/ithacafv:manifest-arm64
+
+      - name: push manifest
+        run: docker manifest push ithacafv/ithacafv:manifest-latest
