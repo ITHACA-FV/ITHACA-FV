@@ -20,12 +20,12 @@ FoamFile
 
 ddtSchemes
 {
-    default         backward;
+    default         Euler;
 }
 
 gradSchemes
 {
-    default         cellMDLimited Gauss linear 0.5;
+    default         cellMDLimited Gauss linear 1;
 }
 
 divSchemes
@@ -35,7 +35,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default        Gauss linear limited 1.0;
+    default        Gauss linear limited 0.5;
 }
 
 interpolationSchemes
@@ -45,7 +45,7 @@ interpolationSchemes
 
 snGradSchemes
 {
-    default         limited 1;
+    default         limited 0.5;
 }
 
 fluxRequired

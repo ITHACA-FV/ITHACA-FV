@@ -27,7 +27,7 @@ SourceFiles
     22FSI.C
 \*---------------------------------------------------------------------------*/
 
-//#include "fvCFD.H"
+#include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
@@ -54,9 +54,15 @@ class tutorial22 : public unsteadyNS
 {
 public:
     /// Constructors
-    //tutorial22(){}
     explicit tutorial22(int argc, char* argv[])
+        :
+        unsteadyNS(argc, argv),
+        U(_U()),
+        p(_p()),
+        phi(_phi())
+
     {
+        // to create argument list
         _args = autoPtr<argList>
                 (
                     new argList(argc, argv)
@@ -70,57 +76,57 @@ public:
 
         argList& args = _args();
 
-#include "createTime.H"
-        Info << "Create mesh for time = "
+        #include "createTime.H"
+        Info << "Create a dynamic mesh for time = "
              << runTime.timeName() << nl << endl;
 
         meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
 
         dynamicFvMesh& mesh = meshPtr();
- _pimple = autoPtr<pimpleControl>
+        _pimple = autoPtr<pimpleControl>
                    (
                        new pimpleControl
                        (
                            mesh
                        )
                    );
-        #include "createFields.H"
-        // //#include "createFvOptions.H"
-        // ITHACAdict = new IOdictionary
-        // (
-        //     IOobject
-        //     (
-        //         "ITHACAdict",
-        //         runTime.system(),
-        //         mesh,
-        //         IOobject::MUST_READ,
-        //         IOobject::NO_WRITE
-        //     )
-        // );
+        #include "createFields.H" //Ok
+        #include "createFvOptions.H" // could be included in createFields.H
+        ITHACAdict = new IOdictionary
+        (
+            IOobject
+            (
+                "ITHACAdict",
+                runTime.system(),
+                mesh,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE
+            )
+        );
 
-        // // for coupling conditions
-        // IOdictionary couplingDict
-        // (
-        //     IOobject
-        //     (
-        //         "dynamicMeshDict",
-        //         runTime.constant(),
-        //         mesh,
-        //         IOobject::MUST_READ,
-        //         IOobject::NO_WRITE
-        //      )
-        // );
-
-        // // #include "createFields.H"
-        // // #include "createFvOptions.H"
-        // para = ITHACAparameters::getInstance(mesh, runTime);
+        para = ITHACAparameters::getInstance(mesh, runTime);
         // //pointVectorField & PointDisplacement = const_cast<pointVectorField&>(mesh.objectRegistry::lookupObject<pointVectorField>("pointDisplacement"));
+        std::cout << "*******************copy constructor of the tutorial22***************"<< std::endl;                 
 
 
     }// end of the Constructor.
 
+    //~tutorial22() {std::cout<< "***********************the destructor of tutorial22**********************";}
 
+    
+    // members data
+    /// Velocity field
+    volVectorField& U;
+    /// Pressure field
+    volScalarField& p;
+    ///
+    surfaceScalarField& phi;
+    //surfaceVectorField& Uf;
+    /// Dynamic mesh field
     Foam::autoPtr<Foam::dynamicFvMesh> meshPtr;
+    // Dummy variables to transform pimplefoam into a class
+    /// pimpleControl
+    autoPtr<pimpleControl> _pimple;
 
     int folderN;
     int saver;
@@ -129,761 +135,232 @@ public:
 
     /// Perform an Offline solve
     /// Reimplement this starting from pimplefoam
-    // void offlineSolve()
-    // {
-    //     //std::cerr << "File: 22FSI.C, Line: 135"<< std::endl;
-    //     Vector<double> inl(0, 0, 0); //inl(0, 0, 0)
-    //     List<scalar> mu_now(1);
+    void offlineSolve()
+    {
+        //std::cerr << "File: 22FSI.C, Line: 135"<< std::endl;
+        Vector<double> inl(0, 0, 0); //inl(0, 0, 0)
+        List<scalar> mu_now(1);
 
-    //     // if the offline solution is already performed read the fields
-    //     if (offline)
-    //      {
-    //         ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-    //         ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-    //         // mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
-    //     }
-    //     else
-    //     {
-    //         Vector<double> Uinl(1, 0, 0);
-    //         label BCind = 0;
+        // if the offline solution is already performed read the fields
+        // if (offline)
+        //  {
+        //     ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+        //     ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+        //     //mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+        // }
+        //else
+        //{
+            Vector<double> Uinl(1, 0, 0);
+            label BCind = 0;
 
-    //         for (label i = 0; i < mu.cols(); i++)
-    //         {
-    //             mu_now[0] = mu(0, i);
-    //             // change_viscosity(mu(0, i));
-    //             // assignIF(U, Uinl);
-    //             truthSolve3(mu_now);
-    //             restart();
-    //         }
-    //     }
-    // }
+            for (label i = 0; i < mu.cols(); i++)
+            {
+                mu_now[0] = mu(0, i);
+                // change_viscosity(mu(0, i));
+                // assignIF(U, Uinl);
+                truthSolve3(mu_now);
+            }
+        //}
+                        
+       //std::cout << "*******************offlineSolve method in the tutorial22***************\n"<< std::endl; 
 
-    // void truthSolve3(List<scalar> mu_now, word Folder = "/ITHACAoutput/Offline")
-    // {
-    //     Time& runTime = _runTime();
-    //     volScalarField& p = _p();
-    //     volVectorField& U = _U();
-    //     dynamicFvMesh& mesh = meshPtr();
-    //     surfaceScalarField& phi = _phi();
-    //     #include "initContinuityErrs.H"
-    //     fv::options& fvOptions = _fvOptions();
-    //     pimpleControl& pimple = _pimple();
-    //     IOMRFZoneList& MRF = _MRF();
-    //     singlePhaseTransportModel& laminarTransport = _laminarTransport();
-    //     autoPtr<incompressible::turbulenceModel> turbulence;
-    //     instantList Times = runTime.times();
-    //     runTime.setEndTime(finalTime);
-    //     // Perform a TruthSolve
-    //     runTime.setTime(Times[1], 1);
-    //     runTime.setDeltaT(timeStep);
-    //     nextWrite = startTime;
+    }
 
-    //     scalar residual = 1;
-    //     scalar uresidual = 1;
-    //     Vector<double> uresidual_v(0, 0, 0);
-    //     scalar presidual = 1;
-    //     scalar csolve = 0;
-    //     turbulence->read();
-    //     std::ofstream res_os;
-    //     std::ofstream snaps_os;
-    //     std::ofstream iters;
-    //     std::ofstream res_U;
-    //     std::ofstream res_P;
-    //     res_os.open(Folder + "/residuals", std::ios_base::app);
-    //     snaps_os.open(Folder + "/snaps", std::ios_base::app);
-    //     iters.open(Folder + "/iters", std::ios_base::app);
-    //     res_U.open(Folder + name(counter) + "/res_U", std::ios_base::app);
-    //     res_P.open(Folder + name(counter) + "/res_P", std::ios_base::app);
+    void truthSolve3(List<scalar> mu_now, word Folder = "/ITHACAoutput/Offline")
+    {
+        
+        Time& runTime = _runTime();
+        surfaceScalarField& phi = _phi();
+        dynamicFvMesh& mesh = meshPtr();
+       
+        #include "initContinuityErrs.H"
+        fv::options& fvOptions = _fvOptions();
+        pimpleControl& pimple = _pimple();
+        volScalarField& p = _p();
+        volVectorField& U = _U();
+        IOMRFZoneList& MRF = _MRF();
+        singlePhaseTransportModel& laminarTransport = _laminarTransport();
+        turbulence = autoPtr<incompressible::turbulenceModel>
+             (
+                 incompressible::turbulenceModel::New(U, phi, laminarTransport)
+             );
+        instantList Times = runTime.times();
+        runTime.setEndTime(finalTime);
+        // Perform a TruthSolve
+        runTime.setTime(Times[1], 1);
+        runTime.setDeltaT(timeStep);
+        nextWrite = startTime;
+        std::cout << "*******************truthSolve3 line 193***************"<< std::endl;                 
+        scalar residual = 1;
+        scalar uresidual = 1;
+        Vector<double> uresidual_v(0, 0, 0);
+        scalar presidual = 1;
+        scalar csolve = 0;
+        turbulence->read();
+        //folders to store fields variables.......
+        std::ofstream res_os;
+        std::ofstream snaps_os;
+        std::ofstream iters;
+        std::ofstream res_U;
+        std::ofstream res_P;
+        res_os.open(Folder + "/residuals", std::ios_base::app);
+        snaps_os.open(Folder + "/snaps", std::ios_base::app);
+        iters.open(Folder + "/iters", std::ios_base::app);
+        res_U.open(Folder + name(counter) + "/res_U", std::ios_base::app);
+        res_P.open(Folder + name(counter) + "/res_P", std::ios_base::app);
 
-    //     folderN = 0;
-    //     saver = 0;
+        folderN = 0;
+        saver = 0;
 
-    //     // middleStep = para->ITHACAdict->lookupOrDefault<label>("middleStep", 20);
-    //     // middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
+        // middleStep = para->ITHACAdict->lookupOrDefault<label>("middleStep", 20);
+        // middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
 
-    //     //***************pimpleFoam algorithm***************
-
-    //     //#include "postProcess.H"
-
-    //     #include "addCheckCaseOptions.H"
-    //     //#include "setRootCaseLists.H"
-    //     //#include "createTime.H" //already done
-
-    //     #include "initContinuityErrs.H"
-    //     #include "createDyMControls.H"
-    //     //#include "createFields.H"
-    //     #include "createUfIfPresent.H"
-    //     #include "CourantNo.H"
-    //     #include "setInitialDeltaT.H"
-
-    //     turbulence->validate();
-    //     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-    //     Info << "\nStarting time loop\n" << endl;
-
-    //     while (runTime.run())
-    //     {
-    //         #include "readDyMControls.H"
-    //         #include "CourantNo.H"
-    //         #include "setDeltaT.H"
-
-    //         ++runTime;
-
-    //         Info << "Time = " << runTime.timeName() << nl << endl;
-
-    //         // --- Pressure-velocity PIMPLE corrector loop
-    //         while (pimple.loop())
-    //         {
-    //             if (pimple.firstIter() || moveMeshOuterCorrectors)
-    //             {
-
-    //                 // Do any mesh changes
-    //                 mesh.controlledUpdate();
-
-    //                 if (mesh.changing())
-    //                 {
-    //                     MRF.update();
-
-    //                     if (correctPhi)
-    //                     {
-    //                         // Calculate absolute flux
-    //                         // from the mapped surface velocity
-
-    //                         phi = mesh.Sf() & Uf();
-
-    //                         #include "correctPhi.H"
-
-    //                         // ************ end of include correctPhi.H **********************
-
-    //                         // Make the flux relative to the mesh motion
-    //                         fvc::makeRelative(phi, U);
-    //                     }
-
-    //                     if (checkMeshCourantNo)
-    //                     {
-    //                         #include "meshCourantNo.H"
-    //                     }
-    //                 }
-    //             }
-
-    //             #include "UEqn.H"
-
-    //             // --- Pressure corrector loop
-    //             while (pimple.correct())
-    //             {
-    //                     #include "pEqn.H"
-
-    //             }
-
-    //             if (pimple.turbCorr())
-    //             {
-    //                 laminarTransport.correct();
-    //                 turbulence->correct();
-    //             }
-    //         }
-    //         //*****************************************end of pimpleFoam*****************************************
-    //         snaps_os << folderN + 1 << std::endl;
-    //         iters << csolve << std::endl;
-    //         res_os << residual << std::endl;
-    //         res_os.close();
-    //         res_U.close();
-    //         res_P.close();
-    //         snaps_os.close();
-    //         iters.close();
-    //         runTime.setTime(runTime.startTime(), 0);
-
-    //         // if (middleExport)
-    //         // {
-    //         //     ITHACAstream::exportSolution(U, name(folderN + 1), Folder + name(counter));
-    //         //     ITHACAstream::exportSolution(p, name(folderN + 1), Folder + name(counter));
-    //         // }
-    //         // else
-    //         // {
-    //         //     ITHACAstream::exportSolution(U, name(counter), Folder);
-    //         //     ITHACAstream::exportSolution(p, name(counter), Folder);
-    //         // }
-
-    //         /*if (ITHACAutilities::isTurbulent())
-    //         {
-    //             auto nut = mesh.lookupObject<volScalarField>("nut");
-    //             ITHACAstream::exportSolution(nut, name(folderN + 1), Folder + name(counter));
-    //             nutFields.append(nut.clone());
-    //         }*/
-
-    //         Ufield.append(U.clone());
-    //         Pfield.append(p.clone());
-    //         counter++;
-    //         writeMu(mu_now);
-    //         // --- Fill in the mu_samples with parameters (mu) to be used for the POD sample points
-    //         // mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
-
-    //         // for (label i = 0; i < mu_now.size(); i++)
-    //         // {
-    //         //     mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
-    //         // }
-
-    //         // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
-    //         if (mu.cols() == 0)
-    //         {
-    //             mu.resize(1, 1);
-    //         }
-
-    //         // if (mu_samples.rows() == mu.cols())
-    //         // {
-    //         //     ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-    //         //                                Folder);
-    //         // }
-
-    //     }
-    // }
-    // lift solve method
-
-    // void liftSolve3()
-    // {
-    //     //std::cout << "342 my lift solve "<< std::endl;
-    //     for (label k = 0; k < inletIndex.rows(); k++)
-    //     {
-    //         //std::cout << "345 my lift solve "<< std::endl;
-    //         Time& runTime = _runTime();
-    //         std::cout << "???????????? 348 my lift solve ???????????????????? "<< std::endl;
-    //         Foam::dynamicFvMesh& mesh = meshPtr();
-    //         std::cout << "***********350 my lift solve********* "<< std::endl;
-    //         volScalarField& p = _p();
-    //         volVectorField& U = _U();
-    //         std::cout << "349 my lift solve "<< std::endl;
-    //         //Foam::dynamicFvMesh& mesh = meshPtr();
-    //         std::cout << "351 my lift solve "<< std::endl;
-    //         surfaceScalarField& phi = _phi();
-    //         //#include "initContinuityErrs.H"
-    //         fv::options& fvOptions = _fvOptions();
-    //         pimpleControl& pimple = _pimple();
-    //         IOMRFZoneList& MRF = _MRF();
-    //         std::cout << "354 my lift solve "<< std::endl;
-
-    //         label BCind = inletIndex(k, 0);
-    //         volVectorField Ulift("Ulift" + name(k), U);
-    //         instantList Times = runTime.times();
-    //         runTime.setTime(Times[1], 1);
-    //         pisoControl piso(mesh);
-    //         Info << "Solving a lifting Problem" << endl;
-    //         Vector<double> v1(0, 0, 0);
-    //         v1[inletIndex(k, 1)] = 1;
-    //         Vector<double> v0(0, 0, 0);
-    //         std::cout << "365 my lift solve "<< std::endl;
-
-    //         for (label j = 0; j < U.boundaryField().size(); j++)
-    //         {
-    //             if (j == BCind)
-    //             {
-    //                 assignBC(Ulift, j, v1);
-    //             }
-    //             else if (U.boundaryField()[BCind].type() == "fixedValue")
-    //             {
-    //                 assignBC(Ulift, j, v0);
-    //             }
-    //             else
-    //             {
-    //             }
-
-    //             assignIF(Ulift, v0);
-    //             phi = linearInterpolate(Ulift) & mesh.Sf();
-    //         }
-    //          std::cout << "382 my lift solve "<< std::endl;
-
-    //         Info << "Constructing velocity pimple field Phi\n" << endl;
-    //         volScalarField Phi
-    //         (
-    //             IOobject
-    //             (
-    //                 "Phi",
-    //                 runTime.timeName(),
-    //                 mesh,
-    //                 IOobject::READ_IF_PRESENT,
-    //                 IOobject::NO_WRITE
-    //             ),
-    //             mesh,
-    //             dimensionedScalar("Phi", dimLength * dimVelocity, 0),
-    //             p.boundaryField().types()
-    //         );
-
-    //         label pRefCell = 0;
-    //         scalar pRefValue = 0.0;
-    //         setRefCell
-    //         (
-    //             Phi,
-    //             mesh.solutionDict().subDict("PIMPLE"),
-    //             pRefCell,
-    //             pRefValue
-    //         );
-    //         mesh.setFluxRequired(Phi.name());
-    //         runTime.functionObjects().start();
-    //         MRF.makeRelative(phi);
-    //         adjustPhi(phi, Ulift, p);
-    //         #include "UEqn.H"
-    //         #include "createUfIfPresent.H"
-    //         volScalarField rAU(1.0/UEqn.A());
-    //         volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
-    //         surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
-
-    //         if (pimple.ddtCorr())
-    //         {
-    //             phiHbyA += MRF.zeroFilter(fvc::interpolate(rAU)*fvc::ddtCorr(U, phi, Uf));
-    //         }
-    //         else
-    //         {
-    //             phiHbyA += MRF.zeroFilter(fvc::interpolate(rAU));
-    //         }
-
-    //         MRF.makeRelative(phiHbyA);
-
-    //         if (p.needReference())
-    //         {
-    //             fvc::makeRelative(phiHbyA, U);
-    //             adjustPhi(phiHbyA, U, p);
-    //             fvc::makeAbsolute(phiHbyA, U);
-    //         }
-
-    //         tmp<volScalarField> rAtU(rAU);
-
-    //         if (pimple.consistent())
-    //         {
-    //             rAtU = 1.0/max(1.0/rAU - UEqn.H1(), 0.1/rAU);
-    //             phiHbyA +=
-    //                 fvc::interpolate(rAtU() - rAU)*fvc::snGrad(p)*mesh.magSf();
-    //             HbyA -= (rAU - rAtU())*fvc::grad(p);
-    //         }
-
-    //         if (pimple.nCorrPISO() <= 1)
-    //         {
-    //             tUEqn.clear();
-    //         }
-
-    //         // Update the pressure BCs to ensure flux consistency
-    //         constrainPressure(p, U, phiHbyA, rAtU(), MRF);
+        //****************************pimpleFoam algorithm******************************************
+        argList::addNote
+        (
+            "Transient solver for incompressible, turbulent flow"
+            " of Newtonian fluids on a moving mesh."
+        );
 
 
-    //         // Non-orthogonal pressure corrector loop
-    //         while (pimple.correctNonOrthogonal())
-    //         {
-    //             // Continuity equation
-    //             fvScalarMatrix pEqn
-    //             (
-    //                 fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
-    //             );
-    //             // Added for reduced problem
-    //             //RedLinSysP = problem->Pmodes.project(pEqn, NmodesPproj);
-    //             //pEqn.solve();
-    //             //b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
-    //             //problem->Pmodes.reconstruct(P, b, "p");
-    //             pEqn.setReference(pRefCell, pRefValue);
+        //#include "postProcess.H"
 
-    //             pEqn.solve(mesh.solver(p.select(pimple.finalInnerIter())));
+        #include "addCheckCaseOptions.H"
+        //#include "setRootCaseLists.H"
+        //#include "createTime.H" //already done
 
-    //             if (pimple.finalNonOrthogonalIter())
-    //             {
-    //                 phi = phiHbyA - pEqn.flux();
-    //             }
-    //         }
+        #include "initContinuityErrs.H"
+        #include "createDyMControls.H"
+        //#include "createFields.H"
+        #include "createUfIfPresent.H"
+        #include "CourantNo.H"
+        #include "setInitialDeltaT.H"
 
 
-    //         MRF.makeAbsolute(phi);
-    //         Info << "Continuity error = "
-    //              << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
-    //              << endl;
-    //         Ulift = fvc::reconstruct(phi);
-    //         Ulift.correctBoundaryConditions();
-    //         Info << "Interpolated velocity error = "
-    //              << (sqrt(sum(sqr((fvc::interpolate(U) & mesh.Sf()) - phi)))
-    //                  / sum(mesh.magSf())).value()
-    //              << endl;
-    //         Ulift.write();
-    //         liftfield.append(Ulift.clone());
-    //     }
-    // }
+        turbulence->validate();
+        // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+        Info<< "\nStarting time loop\n" << endl;
+
+        while (runTime.run())
+        {
+            #include "readDyMControls.H"
+            #include "CourantNo.H"
+            #include "setDeltaT.H"
+            runTime.setEndTime(finalTime);
+            runTime++;
+
+            //++runTime;
+
+            Info<< "Time = " << runTime.timeName() << nl << endl;
+
+            // --- Pressure-velocity PIMPLE corrector loop
+            while (pimple.loop())
+            {
+                if (pimple.firstIter() || moveMeshOuterCorrectors)
+                {
+                    // Do any mesh changes
+                    mesh.controlledUpdate();
+
+                    if (mesh.changing())
+                    {
+                        MRF.update();
+
+                        if (correctPhi)
+                        {
+                            // Calculate absolute flux
+                            // from the mapped surface velocity
+                            phi = mesh.Sf() & Uf();
+
+                            #include "correctPhi.H"
+
+                            // Make the flux relative to the mesh motion
+                            fvc::makeRelative(phi, U);
+                        }
+
+                        if (checkMeshCourantNo)
+                        {
+                            #include "meshCourantNo.H"
+                        }
+                    }
+                }
+
+                #include "UEqn.H"
+
+                // --- Pressure corrector loop
+                while (pimple.correct())
+                {
+                    #include "pEqn.H"
+                }
+
+                if (pimple.turbCorr())
+                {
+                    laminarTransport.correct();
+                    turbulence->correct();
+                }
+            }
+            //runTime.write();
+            //runTime.printExecutionTime(Info);
+            //*****************************************end of pimpleFoam*****************************************
+            snaps_os << folderN + 1 << std::endl;
+            iters << csolve << std::endl;
+            res_os << residual << std::endl;
+            res_os.close();
+            res_U.close();
+            res_P.close();
+            snaps_os.close();
+            iters.close();
+            runTime.setTime(runTime.startTime(), 0);
+
+            // if (middleExport)
+            // {
+            //     ITHACAstream::exportSolution(U, name(folderN + 1), Folder + name(counter));
+            //     ITHACAstream::exportSolution(p, name(folderN + 1), Folder + name(counter));
+            // }
+            // else
+            // {
+            //     ITHACAstream::exportSolution(U, name(counter), Folder);
+            //     ITHACAstream::exportSolution(p, name(counter), Folder);
+            // }
+
+            /*if (ITHACAutilities::isTurbulent())
+            {
+                auto nut = mesh.lookupObject<volScalarField>("nut");
+                ITHACAstream::exportSolution(nut, name(folderN + 1), Folder + name(counter));
+                nutFields.append(nut.clone());
+            }*/
+
+            Ufield.append(U.clone());
+            Pfield.append(p.clone());
+            counter++;
+            writeMu(mu_now);
+            // --- Fill in the mu_samples with parameters (mu) to be used for the POD sample points
+            //mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
+
+            // for (label i = 0; i < mu_now.size(); i++)
+            // {
+            //     mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
+            // }
+
+            // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
+            if (mu.cols() == 0)
+            {
+                mu.resize(1, 1);
+            }
+
+            // if (mu_samples.rows() == mu.cols())
+            // {
+            //     ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
+            //                                Folder);
+            // }
+
+        }
+        std::cout << "*******************truthSolve3 method in the tutorial22***************\n"<< std::endl; 
+     }
 
 
 };
 
-// reduced class problem
-
-// class reducedFSI : public reducedSimpleSteadyNS
-// {
-// public:
-//     /// Constructor
-//     reducedFSI();
-//     explicit reducedFSI(tutorial22& FOMproblem)
-//         :
-//         problem(&FOMproblem)
-//     {
-
-
-//         // // Create a new Umodes set where the first ones are the lift functions
-//         // for (int i = 0; i < problem->inletIndex.rows(); i++)
-//         // {
-//         //     ULmodes.append((problem->liftfield[i]).clone());
-//         // }
-
-//         // for (int i = 0; i < problem->Umodes.size(); i++)
-//         // {
-//         //     ULmodes.append((problem->Umodes.toPtrList()[i]).clone());
-//         // }
-//     }
-
-//     /// Full problem.
-//     volVectorModes ULmodes;
-//     tutorial22* problem;
-
-//     Eigen::MatrixXd projGradModP;
-
-//     /// Imposed boundary conditions.
-//     Eigen::MatrixXd vel_now;
-
-//     /// Maximum iterations number for the online step
-//     int maxIterOn = 1000;
-
-//     /// Counter.
-//     int counter = 0;
-
-//     int UprojN;
-//     int PprojN;
-
-//     // Function to perform the online phase
-//     void solveOnline_Pimple(scalar mu_now,
-//                             int NmodesUproj, int NmodesPproj, int NmodesNut = 0,
-//                             word Folder = "./ITHACAoutput/Reconstruct/")
-//     {
-
-//         // ULmodes.resize(0);
-
-//         // for (int i = 0; i < problem->inletIndex.rows(); i++)
-//         // {
-//         //     ULmodes.append((problem->liftfield[i]).clone());
-//         // }
-
-//         // for (int i = 0; i < NmodesUproj; i++)
-//         // {
-//         //     ULmodes.append((problem->Umodes.toPtrList()[i]).clone());
-//         // }
-
-//         // for (int i = 0; i < NmodesSup; i++)
-//         // {
-//         //     ULmodes.append((problem->supmodes.toPtrList()[i]).clone());
-//         // }
-
-//         counter++;
-
-//         // For all the variables, in case one wants to use all the available modes it is just necessary to set
-//         // the requested number into the ITHACAdict to zero
-//         if (NmodesUproj == 0)
-//         {
-//             NmodesUproj = problem->Umodes.size();
-//         }
-
-//         if (NmodesPproj == 0)
-//         {
-//             NmodesPproj = problem->Pmodes.size();
-//         }
-
-//         /* if (NmodesNut == 0)
-//          {
-//              NmodesNut = problem->nutModes.size();
-//          }*/
-
-//         // Initializations
-//         Eigen::VectorXd uresidualOld = Eigen::VectorXd::Zero(NmodesUproj);
-//         Eigen::VectorXd presidualOld = Eigen::VectorXd::Zero(NmodesPproj);
-//         Eigen::VectorXd uresidual = Eigen::VectorXd::Zero(NmodesUproj);
-//         Eigen::VectorXd presidual = Eigen::VectorXd::Zero(NmodesPproj);
-//         scalar U_norm_res(1);
-//         scalar P_norm_res(1);
-//         // coefficients declaration
-//         Eigen::MatrixXd a = Eigen::VectorXd::Zero(NmodesUproj);
-//         Eigen::MatrixXd a0 = Eigen::VectorXd::Zero(NmodesUproj);
-//         Eigen::MatrixXd b = Eigen::VectorXd::Zero(NmodesPproj);
-//         Eigen::MatrixXd b0 = Eigen::VectorXd::Zero(NmodesPproj);
-//         Eigen::MatrixXd bOld = b;
-//         //Eigen::MatrixXd nutCoeff = Eigen::VectorXd::Zero(NmodesNut);
-//         //Eigen::MatrixXd nutCoeffOld = Eigen::VectorXd::Zero(NmodesNut);
-//         float residualJumpLim =
-//             problem->para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
-//         float normalizedResidualLim =
-//             problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim",
-//                     1e-5);
-//         scalar residual_jump(1 + residualJumpLim);
-//         volScalarField& P = problem->_p();
-//         volVectorField& U = problem->_U();
-//         //volScalarField& nut = const_cast<volScalarField&>
-//         //                     (problem->_mesh().lookupObject<volScalarField>("nut"));
-//         volVectorField u2 = U;
-
-//         // Getting coefficients
-//         a0 = ITHACAutilities::getCoeffs(U, problem->Umodes, NmodesUproj, true);
-//         b = ITHACAutilities::getCoeffs(P, problem->Pmodes, NmodesPproj, true);
-//         //nutCoeff = ITHACAutilities::getCoeffs(nut, problem->nutModes, NmodesNut, true);
-
-
-//         a(0) = a0(0); // Do not remove: it is not working without this condition
-//         b = b0;
-//         dynamicFvMesh& mesh = problem->meshPtr();
-//         Time& runTime = problem->_runTime();
-//         P.rename("p");
-//         surfaceScalarField& phi(problem->_phi());
-
-//         problem->Umodes.reconstruct(U, a, "U");
-//         problem->Pmodes.reconstruct(P, b, "p");
-//         vector v(1, 0, 0);
-//         ITHACAutilities::assignBC(U, 0, v);
-//         //problem->nutModes.reconstruct(nut, nutCoeff, "nut");
-//         phi = fvc::flux(U);
-//         int iter = 0;
-//         label pRefCell = 0;
-//         scalar pRefValue = 0.0;
-//         pimpleControl& pimple = problem->_pimple();
-//         /*_turbulence autoPtr<incompressible::turbulenceModel> turbulence
-//         (
-//                incompressible::turbulenceModel::New(U, phi, laminarTransport)
-//         );*/
-//         IOMRFZoneList& MRF = problem->_MRF();
-//         fv::options& fvOptions = problem->_fvOptions();
-//         std::ofstream res_os_U;
-//         std::ofstream res_os_P;
-//         res_os_U.open(Folder + name(counter) + "/residualsU", std::ios_base::app);
-//         res_os_P.open(Folder + name(counter) + "/residualsP", std::ios_base::app);
-
-//         // Pimple algorithm starts here
-//         while ((residual_jump > residualJumpLim
-//                 || std::max(U_norm_res, P_norm_res) > normalizedResidualLim) &&
-//                 iter < maxIterOn)
-//         {
-//             iter++;
-//             std::cout << iter << std::endl;
-
-// #if defined(OFVER) && (OFVER == 6)
-//             pimple.loop(runTime);
-// #else
-//             problem->_pimple().loop();
-// #endif
-
-//             // If the case is turbulent, then the network is evaluated
-//             /*if (ITHACAutilities::isTurbulent())
-//             {
-//                 nutCoeff = problem->evalNet(a, mu_now);
-//                 //nutCoeff = nutCoeffOld + 0.7*(nutCoeff - nutCoeffOld);
-//                 volScalarField& nut = const_cast<volScalarField&>
-//                                       (problem->_mesh().lookupObject<volScalarField>("nut"));
-//                 problem->nutModes.reconstruct(nut, nutCoeff, "nut");
-//                 //ITHACAstream::exportSolution(nut, name(counter), Folder);
-//             }*/
-
-//             //volScalarField nueff = problem->turbulence->nuEff();
-//             vector v(1, 0, 0);
-//             ITHACAutilities::assignBC(U, 0, v);
-//             /*// Momentum equation
-//             fvVectorMatrix UEqn
-//             (
-//                 fvm::div(phi, U)
-//                 - fvm::laplacian(nueff, U)
-//                 - fvc::div(nueff * dev2(T(fvc::grad(U))))
-//             );
-//             UEqn.relax();*/
-
-//             // Solve the Momentum equation
-
-//             MRF.correctBoundaryVelocity(U);
-
-//             tmp<fvVectorMatrix> tUEqn
-//             (
-//                 fvm::ddt(U) + fvm::div(phi, U)
-//                 + MRF.DDt(U)
-//                 + problem->turbulence->divDevReff(U)
-//                 ==
-//                 fvOptions(U)
-//             );
-//             fvVectorMatrix& UEqn = tUEqn.ref();
-
-//             UEqn.relax();
-//             List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(UEqn, UprojN);
-//             RedLinSysU[1] = RedLinSysU[1] - projGradModP * b;
-//             a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
-//             ULmodes.reconstruct(U, a, "U");
-
-//             fvOptions.constrain(UEqn);
-
-//             if (pimple.momentumPredictor())
-//             {
-//                 solve(UEqn == -fvc::grad(P));
-
-//                 fvOptions.correct(U);//??
-//             }
-//             //solve(UEqn == - fvc::grad(P));
-//             ITHACAutilities::assignBC(U, 0, v);
-
-//             // begining of solving the pEqn.H
-
-//             volScalarField rAU(1.0 / UEqn.A());
-//             volVectorField HbyA(constrainHbyA(rAU * UEqn.H(), U, P));
-//             surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
-
-//             if (pimple.ddtCorr())
-//             {
-// #include "createUfIfPresent.H"
-//                 phiHbyA += MRF.zeroFilter(fvc::interpolate(rAU) * fvc::ddtCorr(U, phi, Uf));
-//             }
-//             else
-//             {
-//                 phiHbyA += MRF.zeroFilter(fvc::interpolate(rAU));
-//             }
-
-//             MRF.makeRelative(phiHbyA);
-
-//             if (P.needReference())
-//             {
-//                 fvc::makeRelative(phiHbyA, U);
-//                 adjustPhi(phiHbyA, U, P);
-//                 fvc::makeAbsolute(phiHbyA, U);
-//             }
-
-//             tmp<volScalarField> rAtU(rAU);
-
-//             if (pimple.consistent())
-//             {
-//                 rAtU = 1.0 / max(1.0 / rAU - UEqn.H1(), 0.1 / rAU);
-//                 phiHbyA +=
-//                     fvc::interpolate(rAtU() - rAU) * fvc::snGrad(P) * mesh.magSf();
-//                 HbyA -= (rAU - rAtU()) * fvc::grad(P);
-//             }
-//             List<Eigen::MatrixXd> RedLinSysP;
-//             bOld = b;
-
-//             if (pimple.nCorrPISO() <= 1)
-//             {
-//                 tUEqn.clear();
-//             }
-
-//             // Update the pressure BCs to ensure flux consistency
-//             constrainPressure(P, U, phiHbyA, rAtU(), MRF);
-
-//             // Non-orthogonal pressure corrector loop
-//             while (pimple.correctNonOrthogonal())
-//             {
-//                 // Continuity equation
-//                 fvScalarMatrix pEqn
-//                 (
-//                     fvm::laplacian(rAtU(), P) == fvc::div(phiHbyA)
-//                 );
-//                 // Added for reduced problem
-//                 RedLinSysP = problem->Pmodes.project(pEqn, NmodesPproj);
-//                 //pEqn.solve();
-//                 b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
-//                 problem->Pmodes.reconstruct(P, b, "p");
-//                 pEqn.setReference(pRefCell, pRefValue);
-
-//                 pEqn.solve(mesh.solver(P.select(pimple.finalInnerIter())));
-
-//                 if (pimple.finalNonOrthogonalIter())
-//                 {
-//                     phi = phiHbyA - pEqn.flux();
-//                 }
-//             }
-//             scalar cumulativeContErr = 0.0;
-
-// #include "continuityErrs.H"
-
-//             // Explicitly relax pressure for momentum corrector
-//             //p.relax();
-
-//             /*U = HbyA - rAtU*fvc::grad(p);
-//             U.correctBoundaryConditions();*/
-
-
-//             // Correct Uf if the mesh is moving
-//             //#include "correctPhi.H"
-// #include "createUfIfPresent.H"
-//             fvc::correctUf(Uf, U, phi);
-
-//             // Make the fluxes relative to the mesh motion
-//             fvc::makeRelative(phi, U);
-
-//             b = bOld + mesh.fieldRelaxationFactor("p") * (b - bOld);
-//             problem->Pmodes.reconstruct(P, b, "p");
-//             //nutCoeffOld = nutCoeff;
-//             // P.relax();
-//             U = HbyA - rAtU() * fvc::grad(P);
-//             U.correctBoundaryConditions();
-//             fvOptions.correct(U);
-
-//             uresidualOld = uresidualOld - uresidual;
-//             presidualOld = presidualOld - presidual;
-//             uresidualOld = uresidualOld.cwiseAbs();
-//             presidualOld = presidualOld.cwiseAbs();
-//             residual_jump = std::max(uresidualOld.sum(), presidualOld.sum());
-//             uresidualOld = uresidual;
-//             presidualOld = presidual;
-//             uresidual = uresidual.cwiseAbs();
-//             presidual = presidual.cwiseAbs();
-//             U_norm_res = uresidual.sum() / (RedLinSysU[1].cwiseAbs()).sum();
-//             P_norm_res = presidual.sum() / (RedLinSysP[1].cwiseAbs()).sum();
-
-//             if (problem->para->debug)
-//             {
-//                 std::cout << "Residual jump = " << residual_jump << std::endl;
-//                 std::cout << "Normalized residual = " << std::max(U_norm_res,
-//                           P_norm_res) << std::endl;
-//                 std::cout << "Final normalized residual for velocity: " << U_norm_res <<
-//                           std::endl;
-//                 std::cout << "Final normalized residual for pressure: " << P_norm_res <<
-//                           std::endl;
-//             }
-
-//             res_os_U << U_norm_res << std::endl;
-//             res_os_P << P_norm_res << std::endl;
-//         }
-
-//         res_os_U.close();
-//         res_os_P.close();
-//         std::cout << "Solution " << counter << " converged in " << iter <<
-//                   " iterations." << std::endl;
-//         std::cout << "Final normalized residual for velocity: " << U_norm_res <<
-//                   std::endl;
-//         std::cout << "Final normalized residual for pressure: " << P_norm_res <<
-//                   std::endl;
-//         problem->Umodes.reconstruct(U, a, "Uaux");
-//         problem->Pmodes.reconstruct(P, b, "Paux");
-
-//         /*if (ITHACAutilities::isTurbulent())
-//         {
-//             volScalarField& nut = const_cast<volScalarField&>
-//                                   (problem->_mesh().lookupObject<volScalarField>("nut"));
-//             nut.rename("nutAux");
-//         ITHACAstream::exportSolution(nut, name(counter), Folder);
-//         }*/
-
-//         ITHACAstream::exportSolution(U, name(counter), Folder);
-//         ITHACAstream::exportSolution(P, name(counter), Folder);
-//         runTime.setTime(runTime.startTime(), 0);
-//     }
-
-
-//     void OnlineVelocity(Eigen::MatrixXd vel)
-//     {
-//         M_Assert(problem->inletIndex.rows() == vel.size(),
-//                  "Imposed boundary conditions dimensions do not match given values matrix dimensions");
-//         Eigen::MatrixXd vel_scal;
-//         vel_scal.resize(vel.rows(), vel.cols());
-
-//         for (int k = 0; k < problem->inletIndex.rows(); k++)
-//         {
-//             int p = problem->inletIndex(k, 0);
-//             int l = problem->inletIndex(k, 1);
-//             scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
-//             scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
-//                                problem->liftfield[k].boundaryField()[p]).component(l) / area;
-//             vel_scal(k, 0) = vel(k, 0) / u_lf;
-//         }
-
-//         vel_now = vel_scal;
-//     }
-// };
 
 
 int main(int argc, char* argv[])
@@ -900,54 +377,34 @@ int main(int argc, char* argv[])
     int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
     int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 15);
     int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
-
-
+   
     // Read the par file where the parameters are stored
-    // word filename("./par");
-    // example.mu = ITHACAstream::readMatrix(filename);
-    // Set the inlet boundaries patch 0 directions x and y
+    word filename("./par");
+    example.mu = ITHACAstream::readMatrix(filename);
+    //Set the inlet boundaries patch 0 directions x and y
     //std::cout << " the initial problem size is: " << example.inletIndex.size() << std::endl;
-    // example.inletIndex.resize(1, 2);
-    // example.inletIndex(0, 0) = 0;
-    // example.inletIndex(0, 1) = 0;
-    // Perform the offline solve
-    // example.offlineSolve();
-    //example.liftSolve(); // offlineSolve3()
+    example.inletIndex.resize(1, 2);
+    example.inletIndex(0, 0) = 0;
+    example.inletIndex(0, 1) = 0;
+
+    //Perform the offline solve
+    example.offlineSolve();
+
     //Info << "example field: " <<  example.liftfield << endl;
 
-    //Info << " example for U: " << example.U << endl;
+    //std::cout << " ************************example for U:******************* " << example._U;
 
-    // if (example.bcMethod == "lift")
-    // {
-    //     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
-    //     ITHACAutilities::normalizeFields(example.liftfield);
-    //     // Homogenize the snapshots
-    //     example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
-    //     // Perform POD on the velocity snapshots
-    //     ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
-    //                         example.podex, 0, 0, NmodesUout);
-    // }
-    // else
-    //{
-    // ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
-    //                         example.podex, 0, 0, NmodesUout);
-    //}
-
-    // Perform POD on velocity pressure and supremizers and store the first 10 modes
-    // ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
-    //                     example.podex, 0, 0,
-    //                     NmodesPout);
     // ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // // // Homogenize the snapshots
     // //example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
 
-    // Perform POD on velocity and pressure and store the first 10 modes
-    // ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
-    //                     example.podex, 0, 0,
-    //                     NmodesUout);
-    // ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
-    //                     example.podex, 0, 0,
-    //                     NmodesPout);
+    //Perform POD on velocity and pressure and store the first 10 modes
+    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0,
+                        NmodesUout);
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+                        example.podex, 0, 0,
+                        NmodesPout);
 
     // Create the reduced object
     // reducedFSI reduced(example);
@@ -971,6 +428,80 @@ int main(int argc, char* argv[])
     //     reduced.OnlineVelocity(vel);
     //     reduced.solveOnline_Pimple(mu_now, NmodesUproj, NmodesPproj);
     // }
+    std::cout << "///////////////////////////////////////////////////////////////////////////////////////";
+    // word temp(couplingDict.lookup("cylinder1"));
+    // word interface = temp;
+    // label fluidPatchID = example.meshPtr().boundaryMesh().findPatchID(interface);
+
+    // std::cout<< "the label is: " << fluidPatchID;
+
+    Info << "Hello there, the most recent time folder found is " << example._runTime().timeName() << nl
+         << "The mesh has " << example.meshPtr().C().size() << " cells and " << example.meshPtr().Cf().size()
+         << " internal faces in it. Wubalubadubdub!" << nl << endl;
+
+    // // It's possible to iterate over every cell in a standard C++ for loop
+    // for (label cellI = 0; cellI < example.meshPtr().C().size(); cellI++)
+    //     if (cellI%20 == 0) // only show every twentieth cell not to spam the screen too much
+    //         Info << "Cell " << cellI << " with centre at " << example.meshPtr().C()[cellI] << endl;
+    // Info << endl; // spacer
+
+    // Each cell is constructed of faces - these may either be internal or constitute a
+    // boundary, or a patch in OpenFOAM terms; internal faces have an owner cell
+    // // and a neighbour.
+    // for (label faceI = 0; faceI < example.meshPtr().owner().size(); faceI++)
+    //     if (faceI%40 == 0)
+    //         Info << "Internal face " << faceI << " with centre at " << example.meshPtr().Cf()[faceI]
+    //              << " with owner cell " << example.meshPtr().owner()[faceI]
+    //              << " and neighbour " << example.meshPtr().neighbour()[faceI] << endl;
+    // Info << endl;  
+
+    const faceList& fcs = example.meshPtr().faces();
+    const List<point>& pts = example.meshPtr().points();
+    const List<point>& cents = example.meshPtr().faceCentres();
+
+    // forAll(fcs,faceI)
+    //     if (faceI%80==0)
+    //     {
+    //         if (faceI<example.meshPtr().Cf().size())
+    //             Info << "Internal face ";
+    //         else
+    //         {
+    //             forAll(example.meshPtr().boundary(),patchI)
+    //                 if ((example.meshPtr().boundary()[patchI].start()<= faceI) &&
+    //                     (faceI < example.meshPtr().boundary()[patchI].start()+example.meshPtr().boundary()[patchI].Cf().size()))
+    //                 {
+    //                     Info << "Face on patch " << patchI << ", faceI ";
+    //                     break; // exit the forAll loop prematurely
+    //                 }
+    //         }
+
+    //         Info << faceI << " with centre at " << cents[faceI]
+    //              << " has " << fcs[faceI].size() << " vertices:";
+    //         forAll(fcs[faceI],vertexI)
+    //             // Note how fcs[faceI] holds the indices of points whose coordinates
+    //             // are stored in the pts list.
+    //             Info << " " << pts[fcs[faceI][vertexI]];
+    //         Info << endl;
+    //     }
+    // Info << endl;
+
+
+    label patchID(0);
+    const polyPatch& pp = example.meshPtr().boundaryMesh()[patchID];
+    if (isA<emptyPolyPatch>(pp))
+    {
+        // patch patchID is of type "empty".
+        Info << "You will not see this." << endl;
+    }
+
+    // Patches may also be retrieved from the mesh using their name. This could be
+    // useful if the user were to refer to a particular patch from a dictionary
+    // (like when you do when calculating forces on a particular patch).
+    word patchName("movingWall");
+    patchID = example.meshPtr().boundaryMesh().findPatchID(patchName);
+    Info << "Retrieved patch " << patchName << " at index " << patchID << " using its name only." << nl << endl;
+
+    Info<< "End\n" << endl;
 
     exit(0);
 }

@@ -22,6 +22,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
  \*---------------------------------------------------------------------------*/
+std::cout << "*****create fields of a  dynamic case****\n"<< std::endl; 
 Info << "Reading field p\n" << endl;
 _p = autoPtr<volScalarField>
      (
@@ -71,7 +72,7 @@ _U0 = autoPtr<volVectorField>
       (
           new volVectorField(U0)
       );
-
+//#include "createPhi.H"
 Info << "Reading/calculating face flux field phi\n" << endl;
 
 _phi = autoPtr<surfaceScalarField>
@@ -100,7 +101,9 @@ _phi0 = autoPtr<surfaceScalarField>
 
 label pRefCell = 0;
 scalar pRefValue = 0.0;
-setRefCell(p, mesh.solutionDict().subDict("SIMPLE"), pRefCell, pRefValue);
+//setRefCell(p, mesh.solutionDict().subDict("SIMPLE"), pRefCell, pRefValue);
+setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
+mesh.setFluxRequired(p.name());
 
 _laminarTransport = autoPtr<singlePhaseTransportModel>
                     (
@@ -112,8 +115,9 @@ turbulence = autoPtr<incompressible::turbulenceModel>
              (
                  incompressible::turbulenceModel::New(U, phi, laminarTransport)
              );
-
+//#include "createMRF.H"
 _MRF = autoPtr<IOMRFZoneList>
        (
            new IOMRFZoneList(mesh)
        );
+//#include "createFvOptions.H"

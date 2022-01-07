@@ -27,7 +27,7 @@ sixDoFRigidBodyMotionCoeffs
 
     solver
     {
-        type Newmark;
+        type symplectic; //Newmark;
     }
 
     patches         (cylinder1);
