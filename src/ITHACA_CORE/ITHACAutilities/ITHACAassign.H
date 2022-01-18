@@ -267,7 +267,6 @@ template<typename Type>
 void assignZeroDirichlet(GeometricField<Type, fvPatchField,
                          volMesh>& field);
 
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcomment"
 //------------------------------------------------------------------------------
@@ -368,6 +367,36 @@ void assignMixedBC(GeometricField<Type, fvPatchField, volMesh>& field,
 template<typename Type>
 void normalizeFields(
     PtrList<GeometricField<Type, fvPatchField, volMesh>>& fields);
+
+//------------------------------------------------------------------------------
+/// @brief      /// @brief      Gets the values from a list of indices
+///
+/// @param      field    The field from which you want to extract the values
+/// @param      indices  The indices at the point
+/// @param      xyz      Definition of the x, y, z coordinate of the value you want to extract 0 for x, 1 for y, 2 for z
+///
+/// @tparam     Type     type of the Field can be Scalar or Vector
+///
+/// @return     The values.
+///
+template<typename Type>
+Eigen::MatrixXd getValues(GeometricField<Type, fvPatchField,
+                          volMesh>& field, labelList& indices, labelList* xyz = NULL);
+
+//------------------------------------------------------------------------------
+/// @brief      Gets the values from a list of indices
+///
+/// @param      field    The field
+/// @param      indices  The indices
+/// @param      xyz      The xyz
+///
+/// @tparam     Type     { description }
+///
+/// @return     The values.
+///
+template<typename Type>
+Eigen::MatrixXd getValues(PtrList<GeometricField<Type, fvPatchField,
+                          volMesh>>& field, labelList& indices, labelList* xyz = NULL);
 
 }
 

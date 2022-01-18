@@ -419,5 +419,17 @@ class Foam2Eigen
         template <class type_matrix>
         static List<type_matrix> EigenMatrix2List (
             Eigen::Matrix<type_matrix, Eigen::Dynamic, Eigen::Dynamic> matrix );
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to convert an OpenFOAM list to an Eigen Matrix
+        ///
+        /// @param[in]  list       The OpenFOAM list
+        ///
+        /// @tparam     type_list  The type of the list, only scalar and vector are supported
+        ///
+        /// @return     An Eigen::MatrixXd Matrix containing the OpenFOAM values
+        ///
+        template <class type_list>
+        static Eigen::MatrixXd field2Eigen(const List<type_list>& list);
 };
 #endif

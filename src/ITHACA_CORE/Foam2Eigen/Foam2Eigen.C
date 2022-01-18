@@ -1004,3 +1004,33 @@ template List<int> Foam2Eigen::EigenMatrix2List (
     Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic> matrix );
 template List<double> Foam2Eigen::EigenMatrix2List (
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix );
+
+template<>
+Eigen::MatrixXd Foam2Eigen::field2Eigen(const List<vector>& field)
+{
+    Eigen::MatrixXd out;
+    out.resize(label(field.size() * 3), 1);
+
+    for (label l = 0; l < field.size(); l++)
+    {
+        out(l, 0) = field[l][0];
+        out(field.size() +  l, 0 ) = field[l][1];
+        out(2 * field.size() + l, 0 ) = field[l][2];
+    }
+
+    return out;
+}
+
+template<>
+Eigen::MatrixXd Foam2Eigen::field2Eigen(const List<scalar>& field)
+{
+    Eigen::MatrixXd out;
+    out.resize(label(field.size()), 1);
+
+    for (label l = 0; l < field.size(); l++)
+    {
+        out(l, 0) = field[l];
+    }
+
+    return out;
+}

@@ -145,7 +145,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
         /// @param[in]  numberOfModes  The number of modes used to project. If
         ///                            not given it will use all the available
         ///                            ones.
-        /// @param[in]  projType       The projection type, it can be Galerkin "G" or Petrov-Galerkin "PG"
+        /// @param[in]  projType       The projection type, it can be Galerkin "G", Petrov-Galerkin "PG" or "F" Frobenius
         /// @param[in]  Af             The system matrix used in case of Petrov-Galerkin projection
         ///
         /// @return     An Eigen MatricxXd list.
@@ -159,7 +159,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh>>
         ///
         /// @param      field          The field one wants to project
         /// @param[in]  numberOfModes  The number of modes
-        /// @param[in]  projType       The projection type, it can be Galerkin "G" or Petrov-Galerkin "PG"
+        /// @param[in]  projType       The projection type, it can be Galerkin "G", Petrov-Galerkin "PG" or "F" Frobenius
         /// @param      Af             The system matrix used in case of Petrov-Galerkin projection
         ///
         /// @return     The projected snapshot

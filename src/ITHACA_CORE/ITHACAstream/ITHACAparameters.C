@@ -37,6 +37,7 @@ ITHACAparameters::ITHACAparameters(fvMesh& mesh, Time& localTime)
     exportMatlab = ITHACAdict->lookupOrDefault<bool>("exportMatlab", 0);
     exportTxt = ITHACAdict->lookupOrDefault<bool>("exportTxt", 0);
     debug = ITHACAdict->lookupOrDefault<bool>("debug", 0);
+    warnings = ITHACAdict->lookupOrDefault<bool>("warnings", 0);
 }
 
 ITHACAparameters* ITHACAparameters::getInstance(fvMesh& mesh,
