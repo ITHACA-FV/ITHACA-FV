@@ -76,7 +76,7 @@ public:
 
         argList& args = _args();
 
-        #include "createTime.H"
+#include "createTime.H"
         Info << "Create a dynamic mesh for time = "
              << runTime.timeName() << nl << endl;
 
@@ -90,8 +90,8 @@ public:
                            mesh
                        )
                    );
-        #include "createFields.H" //Ok
-        #include "createFvOptions.H" // could be included in createFields.H
+#include "createFields.H" //Ok
+#include "createFvOptions.H" // could be included in createFields.H
         ITHACAdict = new IOdictionary
         (
             IOobject
@@ -110,9 +110,6 @@ public:
 
 
     }// end of the Constructor.
-
-    //~tutorial22() {std::cout<< "***********************the destructor of tutorial22**********************";}
-
     
     // members data
     /// Velocity field
@@ -124,7 +121,7 @@ public:
     //surfaceVectorField& Uf;
     /// Dynamic mesh field
     Foam::autoPtr<Foam::dynamicFvMesh> meshPtr;
-    // Dummy variables to transform pimplefoam into a class
+    // Dummy variable to transform pimplefoam into a class
     /// pimpleControl
     autoPtr<pimpleControl> _pimple;
 
@@ -138,20 +135,20 @@ public:
     void offlineSolve()
     {
         //std::cerr << "File: 22FSI.C, Line: 135"<< std::endl;
-        Vector<double> inl(0, 0, 0); //inl(0, 0, 0)
+        Vector<double> inl(1, 0, 0); //inl(0, 0, 0)
         List<scalar> mu_now(1);
 
         // if the offline solution is already performed read the fields
-        // if (offline)
-        //  {
-        //     ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-        //     ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-        //     //mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
-        // }
-        //else
-        //{
-            Vector<double> Uinl(1, 0, 0);
-            label BCind = 0;
+          //if (offline)
+          //{
+             //ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+             //ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+             //mu_samples = ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+          //}
+          //else
+          //{
+            //Vector<double> Uinl(1, 0, 0);
+            //label BCind = 0;
 
             for (label i = 0; i < mu.cols(); i++)
             {
@@ -160,99 +157,87 @@ public:
                 // assignIF(U, Uinl);
                 truthSolve3(mu_now);
             }
-        //}
+          //}
                         
-       //std::cout << "*******************offlineSolve method in the tutorial22***************\n"<< std::endl; 
+        std::cout << "**************************offlineSolve method end****************************\n"<< std::endl; 
 
     }
 
-    void truthSolve3(List<scalar> mu_now, word Folder = "/ITHACAoutput/Offline")
+    void truthSolve3(List<scalar> mu_now, word folder = "./ITHACAoutput/Offline")
     {
         
         Time& runTime = _runTime();
         surfaceScalarField& phi = _phi();
         dynamicFvMesh& mesh = meshPtr();
        
-        #include "initContinuityErrs.H"
+#include "initContinuityErrs.H"
         fv::options& fvOptions = _fvOptions();
         pimpleControl& pimple = _pimple();
         volScalarField& p = _p();
         volVectorField& U = _U();
         IOMRFZoneList& MRF = _MRF();
         singlePhaseTransportModel& laminarTransport = _laminarTransport();
-        turbulence = autoPtr<incompressible::turbulenceModel>
-             (
-                 incompressible::turbulenceModel::New(U, phi, laminarTransport)
-             );
+        // turbulence = autoPtr<incompressible::turbulenceModel>
+        //      (
+        //          incompressible::turbulenceModel::New(U, phi, laminarTransport)
+        //      );
         instantList Times = runTime.times();
         runTime.setEndTime(finalTime);
         // Perform a TruthSolve
         runTime.setTime(Times[1], 1);
         runTime.setDeltaT(timeStep);
-        nextWrite = startTime;
-        std::cout << "*******************truthSolve3 line 193***************"<< std::endl;                 
-        scalar residual = 1;
-        scalar uresidual = 1;
-        Vector<double> uresidual_v(0, 0, 0);
-        scalar presidual = 1;
-        scalar csolve = 0;
-        turbulence->read();
-        //folders to store fields variables.......
-        std::ofstream res_os;
-        std::ofstream snaps_os;
-        std::ofstream iters;
-        std::ofstream res_U;
-        std::ofstream res_P;
-        res_os.open(Folder + "/residuals", std::ios_base::app);
-        snaps_os.open(Folder + "/snaps", std::ios_base::app);
-        iters.open(Folder + "/iters", std::ios_base::app);
-        res_U.open(Folder + name(counter) + "/res_U", std::ios_base::app);
-        res_P.open(Folder + name(counter) + "/res_P", std::ios_base::app);
 
-        folderN = 0;
-        saver = 0;
+        nextWrite = startTime; // timeStep initialization
+        std::cout <<"************************The finalTime is ****************"<< finalTime << std::endl;           
+        std::cout <<"************************The startTime is ****************"<<startTime << std::endl;                 
+      
+        //turbulence->read();
 
-        // middleStep = para->ITHACAdict->lookupOrDefault<label>("middleStep", 20);
-        // middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
+//****************************pimpleFoam algorithm******************************************
+       
+//#include "postProcess.H"
 
-        //****************************pimpleFoam algorithm******************************************
-        argList::addNote
-        (
-            "Transient solver for incompressible, turbulent flow"
-            " of Newtonian fluids on a moving mesh."
-        );
+#include "addCheckCaseOptions.H"
+//#include "setRootCaseLists.H"
+//#include "createTime.H" //already done
 
-
-        //#include "postProcess.H"
-
-        #include "addCheckCaseOptions.H"
-        //#include "setRootCaseLists.H"
-        //#include "createTime.H" //already done
-
-        #include "initContinuityErrs.H"
-        #include "createDyMControls.H"
-        //#include "createFields.H"
-        #include "createUfIfPresent.H"
-        #include "CourantNo.H"
-        #include "setInitialDeltaT.H"
+#include "initContinuityErrs.H"
+#include "createDyMControls.H"
+//#include "createFields.H"
+#include "createUfIfPresent.H"
+#include "CourantNo.H"
+#include "setInitialDeltaT.H"
 
 
         turbulence->validate();
         // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
+        // Export and store the initial conditions for velocity and pressure
+    	ITHACAstream::exportSolution(U, name(counter), folder);
+    	ITHACAstream::exportSolution(p, name(counter), folder);
+    	std::ofstream of(folder + name(counter) + "/" +
+    		     runTime.timeName());
+    	Ufield.append(U.clone());
+    	Pfield.append(p.clone());
+    	counter++;
+    	nextWrite += writeEvery;
         Info<< "\nStarting time loop\n" << endl;
 
         while (runTime.run())
         {
-            #include "readDyMControls.H"
-            #include "CourantNo.H"
-            #include "setDeltaT.H"
+        std::cout<< "///////////////////////////////////////////beginning of the while loop ////////////////////////"<< std::endl;
+
+#include "readDyMControls.H"
+#include "CourantNo.H"
+#include "setDeltaT.H"
             runTime.setEndTime(finalTime);
+            //std::cout<< "Time = " <<finalTime << nl << std::endl;
             runTime++;
 
             //++runTime;
+            //std::cout << runTime
 
             Info<< "Time = " << runTime.timeName() << nl << endl;
+            std::cout<< "*************Time = " <<runTime.timeName() << nl << std::endl;
 
             // --- Pressure-velocity PIMPLE corrector loop
             while (pimple.loop())
@@ -272,7 +257,7 @@ public:
                             // from the mapped surface velocity
                             phi = mesh.Sf() & Uf();
 
-                            #include "correctPhi.H"
+#include "correctPhi.H"
 
                             // Make the flux relative to the mesh motion
                             fvc::makeRelative(phi, U);
@@ -285,12 +270,12 @@ public:
                     }
                 }
 
-                #include "UEqn.H"
+#include "UEqn.H"
 
                 // --- Pressure corrector loop
                 while (pimple.correct())
                 {
-                    #include "pEqn.H"
+#include "pEqn.H"
                 }
 
                 if (pimple.turbCorr())
@@ -299,64 +284,43 @@ public:
                     turbulence->correct();
                 }
             }
-            //runTime.write();
-            //runTime.printExecutionTime(Info);
-            //*****************************************end of pimpleFoam*****************************************
-            snaps_os << folderN + 1 << std::endl;
-            iters << csolve << std::endl;
-            res_os << residual << std::endl;
-            res_os.close();
-            res_U.close();
-            res_P.close();
-            snaps_os.close();
-            iters.close();
-            runTime.setTime(runTime.startTime(), 0);
-
-            // if (middleExport)
-            // {
-            //     ITHACAstream::exportSolution(U, name(folderN + 1), Folder + name(counter));
-            //     ITHACAstream::exportSolution(p, name(folderN + 1), Folder + name(counter));
-            // }
-            // else
-            // {
-            //     ITHACAstream::exportSolution(U, name(counter), Folder);
-            //     ITHACAstream::exportSolution(p, name(counter), Folder);
-            // }
-
-            /*if (ITHACAutilities::isTurbulent())
+            
+//*****************************************end of pimpleFoam*****************************************
+            if (checkWrite(runTime))
             {
-                auto nut = mesh.lookupObject<volScalarField>("nut");
-                ITHACAstream::exportSolution(nut, name(folderN + 1), Folder + name(counter));
-                nutFields.append(nut.clone());
-            }*/
+                ITHACAstream::exportSolution(U, name(counter), folder);
+                ITHACAstream::exportSolution(p, name(counter), folder);
+                std::ofstream of(folder + name(counter) + "/" +
+                                 runTime.timeName());
+                Ufield.append(U.clone());
+                Pfield.append(p.clone());
+                counter++;
+                nextWrite += writeEvery;
+                writeMu(mu_now);
+                // --- Fill in the mu_samples with parameters (time, mu) to be used for the PODI sample points
+                mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
+                mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
 
-            Ufield.append(U.clone());
-            Pfield.append(p.clone());
-            counter++;
-            writeMu(mu_now);
-            // --- Fill in the mu_samples with parameters (mu) to be used for the POD sample points
-            //mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
-
-            // for (label i = 0; i < mu_now.size(); i++)
-            // {
-            //     mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
-            // }
-
-            // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
-            if (mu.cols() == 0)
-            {
-                mu.resize(1, 1);
+                for (label i = 0; i < mu_now.size(); i++)
+                {
+                    mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
+                }
             }
 
-            // if (mu_samples.rows() == mu.cols())
-            // {
-            //     ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-            //                                Folder);
-            // }
+        }
+        // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
+        if (mu.cols() == 0)
+        {
+            mu.resize(1, 1);
+        }
 
+        if (mu_samples.rows() == mu.cols())
+        {
+            ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
+                                       folder);
         }
         std::cout << "*******************truthSolve3 method in the tutorial22***************\n"<< std::endl; 
-     }
+    }
 
 
 };
@@ -371,7 +335,7 @@ int main(int argc, char* argv[])
     ITHACAparameters* para = ITHACAparameters::getInstance(example.meshPtr(),
                              example._runTime());
 
-    int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+    int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 10);
     int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 10);
     int NmodesSUPout = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPout", 15);
     int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
@@ -382,29 +346,38 @@ int main(int argc, char* argv[])
     word filename("./par");
     example.mu = ITHACAstream::readMatrix(filename);
     //Set the inlet boundaries patch 0 directions x and y
-    //std::cout << " the initial problem size is: " << example.inletIndex.size() << std::endl;
     example.inletIndex.resize(1, 2);
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
+    // Time parameters: W e can use Ioodictionnary to access time parameters
+    example.startTime = 50;
+    example.finalTime = 70;
+    example.timeStep = 0.01;
+    example.writeEvery = 0.1;
 
     //Perform the offline solve
     example.offlineSolve();
+    // ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
+    //                         example.podex, 0, 0, NmodesUout);
 
-    //Info << "example field: " <<  example.liftfield << endl;
+    // ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+    //                     example.podex, 0, 0,
+    //                     NmodesPout);
+    //Info<< example.Umodes;
+    //Info << "example field: " <<  example.Uomfield << endl;
 
-    //std::cout << " ************************example for U:******************* " << example._U;
-
+    //std::cout<< example.Ufield;
     // ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // // // Homogenize the snapshots
     // //example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
 
     //Perform POD on velocity and pressure and store the first 10 modes
-    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
-                        example.podex, 0, 0,
-                        NmodesUout);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
-                        example.podex, 0, 0,
-                        NmodesPout);
+    //ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
+    //                    example.podex, 0, 0,
+    //                   NmodesUout);
+    //ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+    //                    example.podex, 0, 0,
+    //                    NmodesPout);
 
     // Create the reduced object
     // reducedFSI reduced(example);
