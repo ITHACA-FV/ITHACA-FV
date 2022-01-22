@@ -26,15 +26,15 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         5;
+endTime         1;
 
-deltaT          0.1;
+deltaT          0.005;
 
 writeControl    timeStep;
 
-writeInterval   20;
+writeInterval   20;//10000000;
 
-purgeWrite      0;
+purgeWrite      500;
 
 writeFormat     ascii;
 
@@ -46,11 +46,11 @@ timeFormat      general;
 
 timePrecision   6;
 
-runTimeModifiable false;
+runTimeModifiable false;// false
 
-adjustTimeStep on; 
+adjustTimeStep off; 
 
-maxCo 1;
+maxCo 0.9;//1
 
 
 functions

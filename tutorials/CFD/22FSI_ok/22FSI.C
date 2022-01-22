@@ -76,7 +76,7 @@ public:
 
         argList& args = _args();
 
-#include "createTime.H"
+        #include "createTime.H"
         Info << "Create a dynamic mesh for time = "
              << runTime.timeName() << nl << endl;
 
@@ -90,8 +90,8 @@ public:
                            mesh
                        )
                    );
-#include "createFields.H" //Ok
-#include "createFvOptions.H" // could be included in createFields.H
+        #include "createFields.H" //Ok
+        #include "createFvOptions.H" // could be included in createFields.H
         ITHACAdict = new IOdictionary
         (
             IOobject
@@ -124,11 +124,6 @@ public:
     // Dummy variable to transform pimplefoam into a class
     /// pimpleControl
     autoPtr<pimpleControl> _pimple;
-
-    int folderN;
-    int saver;
-    int middleStep;
-    int middleExport;
 
     /// Perform an Offline solve
     /// Reimplement this starting from pimplefoam
@@ -170,7 +165,7 @@ public:
         surfaceScalarField& phi = _phi();
         dynamicFvMesh& mesh = meshPtr();
        
-#include "initContinuityErrs.H"
+        #include "initContinuityErrs.H"
         fv::options& fvOptions = _fvOptions();
         pimpleControl& pimple = _pimple();
         volScalarField& p = _p();
@@ -191,22 +186,22 @@ public:
         std::cout <<"************************The finalTime is ****************"<< finalTime << std::endl;           
         std::cout <<"************************The startTime is ****************"<<startTime << std::endl;                 
       
-        //turbulence->read();
+        turbulence->read();
 
 //****************************pimpleFoam algorithm******************************************
        
-//#include "postProcess.H"
+        //#include "postProcess.H"
 
-#include "addCheckCaseOptions.H"
-//#include "setRootCaseLists.H"
-//#include "createTime.H" //already done
+        #include "addCheckCaseOptions.H"
+        //#include "setRootCaseLists.H"
+        //#include "createTime.H" //already done
 
-#include "initContinuityErrs.H"
-#include "createDyMControls.H"
-//#include "createFields.H"
-#include "createUfIfPresent.H"
-#include "CourantNo.H"
-#include "setInitialDeltaT.H"
+        //#include "initContinuityErrs.H"
+        #include "createDyMControls.H"
+        //#include "createFields.H"
+        #include "createUfIfPresent.H"
+        #include "CourantNo.H"
+        #include "setInitialDeltaT.H"
 
 
         turbulence->validate();
@@ -226,14 +221,14 @@ public:
         {
         std::cout<< "///////////////////////////////////////////beginning of the while loop ////////////////////////"<< std::endl;
 
-#include "readDyMControls.H"
-#include "CourantNo.H"
-#include "setDeltaT.H"
-            runTime.setEndTime(finalTime);
+            #include "readDyMControls.H"
+            #include "CourantNo.H"
+            #include "setDeltaT.H"
+            //runTime.setEndTime(finalTime);
             //std::cout<< "Time = " <<finalTime << nl << std::endl;
-            runTime++;
+            //runTime++;
 
-            //++runTime;
+            ++runTime;
             //std::cout << runTime
 
             Info<< "Time = " << runTime.timeName() << nl << endl;
@@ -257,7 +252,7 @@ public:
                             // from the mapped surface velocity
                             phi = mesh.Sf() & Uf();
 
-#include "correctPhi.H"
+                                 #include "correctPhi.H"
 
                             // Make the flux relative to the mesh motion
                             fvc::makeRelative(phi, U);
@@ -270,12 +265,12 @@ public:
                     }
                 }
 
-#include "UEqn.H"
+              #include "UEqn.H"
 
                 // --- Pressure corrector loop
                 while (pimple.correct())
                 {
-#include "pEqn.H"
+                  #include "pEqn.H"
                 }
 
                 if (pimple.turbCorr())
@@ -284,6 +279,9 @@ public:
                     turbulence->correct();
                 }
             }
+            runTime.write();
+
+            runTime.printExecutionTime(Info);
             
 //*****************************************end of pimpleFoam*****************************************
             if (checkWrite(runTime))
@@ -350,8 +348,8 @@ int main(int argc, char* argv[])
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
     // Time parameters: W e can use Ioodictionnary to access time parameters
-    example.startTime = 50;
-    example.finalTime = 70;
+    example.startTime = 0.5;
+    example.finalTime = 1;
     example.timeStep = 0.01;
     example.writeEvery = 0.1;
 

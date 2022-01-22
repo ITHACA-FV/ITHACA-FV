@@ -33,44 +33,44 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Info<< "Reading/calculating face velocity Uf\n" << endl;
-
-surfaceVectorField Uf
-(
-   IOobject
-   (
-       "Uf",
-       runTime.timeName(),
-       mesh,
-       IOobject::READ_IF_PRESENT,
-       IOobject::AUTO_WRITE
-   ),
-   fvc::interpolate(U)
-);
-
 // Info<< "Reading/calculating face velocity Uf\n" << endl;
-// _Uf = autoPtr<surfaceVectorField>
-//        (
-//            new surfaceVectorField
-//            (
-//                IOobject
-//                (
-//                    "Uf",
-//                    runTime.timeName(),
-//                    mesh,
-//                    IOobject::READ_IF_PRESENT,
-//                    IOobject::AUTO_WRITE
-//                ),
-//                fvc::interpolate(U)
-//            )
-//        );
-// surfaceScalarField& Uf = _Uf();
-// surfaceScalarField Uf0(Uf);
 
-// _Uf0 = autoPtr<surfaceVectorField>
-//         (
-//             new surfaceVectorField(Uf0)
-//         );
+// surfaceVectorField Uf
+// (
+//    IOobject
+//    (
+//        "Uf",
+//        runTime.timeName(),
+//        mesh,
+//        IOobject::READ_IF_PRESENT,
+//        IOobject::AUTO_WRITE
+//    ),
+//    fvc::interpolate(U)
+// );
+
+Info<< "Reading/calculating face velocity Uf\n" << endl;
+_Uf = autoPtr<surfaceVectorField>
+       (
+           new surfaceVectorField
+           (
+               IOobject
+               (
+                   "Uf",
+                   runTime.timeName(),
+                   mesh,
+                   IOobject::READ_IF_PRESENT,
+                   IOobject::AUTO_WRITE
+               ),
+               fvc::interpolate(U)
+           )
+       );
+surfaceScalarField& Uf = _Uf();
+surfaceScalarField Uf0(Uf);
+
+_Uf0 = autoPtr<surfaceVectorField>
+        (
+            new surfaceVectorField(Uf0)
+        );
 
 
 

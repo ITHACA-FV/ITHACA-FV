@@ -29,15 +29,18 @@ NmodesSUPproj 10;
 OutPrecision 20;
 OutType fixed;
 
-// Specific problem of a stationary case
-tolerance 1e-5;
 
-// Reduced simple cicle parameters
-residualJumpLim 1e-5;
-normalizedResidualLim 1e-5;
+//bcMethod penalty;
 
-// Inlet boundary conditions velocities.
-online_velocities vel.txt;
+// // Specific problem of a stationary case
+// tolerance 1e-5;
 
-// Do not export middle fields for this case
-middleExport false;
+// // Reduced simple cicle parameters
+// residualJumpLim 1e-5;
+// normalizedResidualLim 1e-5;
+
+// // Inlet boundary conditions velocities.
+// online_velocities vel.txt;
+
+// // Do not export middle fields for this case
+// middleExport false;

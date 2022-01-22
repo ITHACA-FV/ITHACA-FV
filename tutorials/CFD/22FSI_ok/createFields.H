@@ -72,38 +72,16 @@ _U0 = autoPtr<volVectorField>
       (
           new volVectorField(U0)
       );
-//#include "createPhi.H"
-Info << "Reading/calculating face flux field phi\n" << endl;
+#include "createPhi.H"
 
-_phi = autoPtr<surfaceScalarField>
-       (
-           new surfaceScalarField
-           (
-               IOobject
-               (
-                   "phi",
-                   runTime.timeName(),
-                   mesh,
-                   IOobject::READ_IF_PRESENT,
-                   IOobject::AUTO_WRITE
-               ),
-               linearInterpolate(U) & mesh.Sf()
-           )
-       );
-surfaceScalarField& phi = _phi();
-surfaceScalarField phi0(phi);
-
-_phi0 = autoPtr<surfaceScalarField>
-        (
-            new surfaceScalarField(phi0)
-        );
 
 
 label pRefCell = 0;
 scalar pRefValue = 0.0;
 //setRefCell(p, mesh.solutionDict().subDict("SIMPLE"), pRefCell, pRefValue);
 setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
-mesh.setFluxRequired(p.name());
+//setRefCell(p, _pimple.dict(), pRefCell, pRefValue);
+//mesh.setFluxRequired(p.name());
 
 _laminarTransport = autoPtr<singlePhaseTransportModel>
                     (
