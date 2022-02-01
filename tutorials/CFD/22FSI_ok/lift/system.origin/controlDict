@@ -1,16 +1,13 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  3.0.x                                 |
+|  \\    /   O peration     | Version:  2.4.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
-|*---------------------------------------------------------------------------*|
-|  File created by CFD support s.r.o., Wed Jan 25 11:27:58 2017               |
-|                    http://www.cdfsupport.com                                |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     3.0;
+    version     2.0;
     format      ascii;
     class       dictionary;
     location    "system";
@@ -18,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     pimpleFoam;
+application     simpleFoam;
 
 startFrom       startTime;
 
@@ -26,15 +23,15 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         0.5;
+endTime         10000000;
 
-deltaT          0.025;
+deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   1;//10000000;
+writeInterval   500;
 
-purgeWrite      500;
+purgeWrite      0;
 
 writeFormat     ascii;
 
@@ -46,29 +43,7 @@ timeFormat      general;
 
 timePrecision   6;
 
-runTimeModifiable false;// false
+runTimeModifiable true;
 
-adjustTimeStep off; 
-
-maxCo 1; //1
-
-
-functions
-{
-    forces
-    {
-        type            forces;
-        libs            ("libforces.so");
-        patches         (cylinder1);
-        pName     p;
-	    UName     U;
-        rho 			rhoInf;
-        rhoInf          1;
-        log             on;
-        writeControl    timeStep;
-        writeInterval   1;
-        CofR            (0 0 0);
-    }
-}
 
 // ************************************************************************* //
