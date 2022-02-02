@@ -63,12 +63,14 @@ class tutorial22: public fsiBasic
             Vector<double> inl(1, 0, 0);
             List<scalar> mu_now(1);
 
-            //if (offline)
-            //{
-                //ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-                //ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-            //}
-            //else
+            // if (offline)
+            // {
+            //     ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+            //     ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+            //      // mu_samples =
+            //      //    ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+            // }
+            // else
             //{
                 //for (label i = 0; i < mu.cols(); i++)
                 //{
@@ -85,7 +87,6 @@ class tutorial22: public fsiBasic
 
                     truthSolve3(mu_now);
                 //}
-                //truthSolve3(mu_now);
             //}
         }
 };
@@ -226,7 +227,7 @@ class reducedFSI : public reducedSimpleSteadyNS
             // res_os_U.open(folder + name(counter) + "/residualsU", std::ios_base::app);
             // res_os_P.open(folder + name(counter) + "/residualsP", std::ios_base::app);
 
-            std::cout << "///////////////////////////solveOnline_Pimple method line 240//////////////////////////////////"<< std::endl;
+            std::cout << "///////////////////////////solveOnline_Pimple method line 229//////////////////////////////////"<< std::endl;
 
             PtrList<volVectorField> gradModP;
 
@@ -248,10 +249,10 @@ class reducedFSI : public reducedSimpleSteadyNS
 
 #if defined(OFVER) && (OFVER == 6)
                 pimple.loop(runTime);
-                 std::cout << "///////////////////////////solveOnline_Pimple method line 253 after pimple.loop(runTime) //////////////////////////////////"<< std::endl;
+                 std::cout << "///////////////////////////solveOnline_Pimple method line 251 after pimple.loop(runTime) //////////////////////////////////"<< std::endl;
 #else
                 pimple.loop();
-                 std::cout << "///////////////////////////solveOnline_Pimple method line 256 after pimple.loop() //////////////////////////////////"<< std::endl;
+                 std::cout << "///////////////////////////solveOnline_Pimple method line 254 after pimple.loop() //////////////////////////////////"<< std::endl;
 #endif
 
                 //volScalarField nueff = problem->turbulence->nuEff();
@@ -285,11 +286,11 @@ class reducedFSI : public reducedSimpleSteadyNS
 
                 //////////////////////////////reduced the linear system for the velocity////////////////////////////////////////////
                 List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(UEqn, UprojN);
-                std::cout << "///////////////////////////solveOnline_Pimple line 289: RedLinSysU  //////////////////////////////////"<< RedLinSysU.size() << std::endl;
-                std::cout << "///////////////////////////solveOnline_Pimple line 290: b //////////////////////////////////"<< b << std::endl;
+                std::cout << "///////////////////////////solveOnline_Pimple line 288: RedLinSysU  //////////////////////////////////"<< RedLinSysU.size() << std::endl;
+                std::cout << "///////////////////////////solveOnline_Pimple line 289: b //////////////////////////////////"<< b << std::endl;
 
                 RedLinSysU[1] = RedLinSysU[1] - projGradModP * b;
-                std::cout << "///////////////////////////solveOnline_Pimple method line 293 //////////////////////////////////"<< std::endl;
+                std::cout << "///////////////////////////solveOnline_Pimple method line 292 //////////////////////////////////"<< std::endl;
 
                 a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
                 std::cout << "///////////////////////////solveOnline_Pimple method line 295//////////////////////////////////"<< std::endl;
@@ -452,7 +453,7 @@ class reducedFSI : public reducedSimpleSteadyNS
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(P, name(counter), folder);
             runTime.setTime(runTime.startTime(), 0);
-        std::cout << "////////////////////////////solveOnline_Pimple///////////////////////////"<< std::endl;                 
+            std::cout << "////////////////////////////solveOnline_Pimple method end///////////////////////////"<< std::endl;                 
 
         }
 
@@ -510,6 +511,14 @@ int main(int argc, char* argv[])
     // Read the par file where the parameters are stored
     word filename("./par");
     example.mu = ITHACAstream::readMatrix(filename);
+    // example.Pnumber = 1; // Number of parameters.
+    // example.Tnumber = 1; //Dimension of the training set (used only when gerating parameters without input)
+    // example.setParameters();
+    // // Set the parameter ranges: Range of the parameter spaces. 
+    // example.mu_range(0, 0) = 0.005;
+    // example.mu_range(0, 1) = 0.005;
+    //   // Generate equispaced samples inside the parameter range
+    // example.genEquiPar();
     //Set the inlet boundaries patch 0 directions x and y
     example.inletIndex.resize(1, 2);
     example.inletIndex(0, 0) = 0;
@@ -553,9 +562,6 @@ int main(int argc, char* argv[])
     word vel_file(para->ITHACAdict->lookup("online_velocities"));
     std::cout << "///////////////////////////size  of vel_file //////////////////////////////////"<<vel_file.size() << std::endl;
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
- //    // std::cout << "///////////////////////////size  of vel //////////////////////////////////"<<vel.size() << std::endl;
- //    // std::cout << "///////////////////////////problem->inletIndex.rows() //////////////////////////////////"<<example.inletIndex.rows() << std::endl;
- //    // std::cout << "///////////////////////////problem->inletIndex.cols() //////////////////////////////////"<<example.inletIndex.cols() << std::endl;
    
  //    //reduced.OnlineVelocity(vel);
 	// //   reducedFSI.nu = 0.005;
@@ -575,6 +581,7 @@ int main(int argc, char* argv[])
     //Perform the online solutions
     //for (label k = 0; k < (example.mu).size(); k++)
     //{
+        //scalar mu_now = example.mu(0, k);
         scalar mu_now = example.mu(0, 0);
         example.change_viscosity(mu_now);
         reduced.OnlineVelocity(vel);

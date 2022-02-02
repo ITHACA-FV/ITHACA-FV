@@ -81,7 +81,7 @@ fsiBasic::fsiBasic(int argc, char* argv[])
         //pointVectorField & PointDisplacement = const_cast<pointVectorField&>(mesh.objectRegistry::lookupObject<pointVectorField>("pointDisplacement"));               
 }
 
-void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
+void fsiBasic::truthSolve3(List<scalar> mu_now)
 {
 
     Time& runTime = _runTime();
@@ -181,9 +181,9 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
                 turbulence->correct();
             }
         }
-        // runTime.write();
+        runTime.write();
 
-        // runTime.printExecutionTime(Info);
+        runTime.printExecutionTime(Info);
         
     //*****************************************end of pimpleFoam*****************************************
         if (checkWrite(runTime))

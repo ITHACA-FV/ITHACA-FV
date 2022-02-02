@@ -18,5 +18,6 @@ UnsteadyNSExplicit/UnsteadyNSExplicit.C
 inverseLaplacianProblem/inverseLaplacianProblem.C
 inverseLaplacianProblem_CG/inverseLaplacianProblem_CG.C
 inverseLaplacianProblem_paramBC/inverseLaplacianProblem_paramBC.C
+Fsi/fsiBasic.C
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_FOMPROBLEMS
