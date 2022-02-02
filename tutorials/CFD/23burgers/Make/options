@@ -31,6 +31,9 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
     -lsampling \
     -lITHACA_ROMPROBLEMS \
     -lITHACA_FOMPROBLEMS \

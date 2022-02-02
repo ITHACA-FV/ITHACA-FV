@@ -963,6 +963,8 @@ int main(int argc, char* argv[])
 
      // Create the reduced object
     reducedFSI reduced(example);
+    scalar mu_now = example.mu(0, 0);
+    reduced.solveOnline_Pimple(mu_now, NmodesUproj, NmodesPproj);
     
     // // Create the reduced object
     //reducedUnsteadyNS reduced(example);

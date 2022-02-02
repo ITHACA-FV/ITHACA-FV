@@ -33,6 +33,9 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools \
     -lfvOptions \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
     -lsampling \
     -lfluidThermophysicalModels \
     -lradiationModels \

@@ -31,6 +31,9 @@ EXE_INC = \
 EXE_LIBS = \
     -lturbulenceModels \
     -lfiniteVolume \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
     -lmeshTools \
     -lfvOptions \
     -lsampling \
