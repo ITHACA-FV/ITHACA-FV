@@ -178,6 +178,7 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
     label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
+    ITHACAparameters* para(ITHACAparameters::getInstance());
 
     if (typeBC == "fixedGradient")
     {
@@ -225,7 +226,10 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
         }
         catch (const word message)
         {
-            std::cerr << "WARNING: " << message << endl;
+            if (para->warnings)
+            {
+                WarningInFunction << message << endl;
+            }
         }
 
         for (label i = 0; i < sizeBC; i++)
@@ -312,6 +316,7 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
     label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
+    ITHACAparameters* para(ITHACAparameters::getInstance());
 
     if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
@@ -351,7 +356,10 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
         }
         catch (const word message)
         {
-            cerr << "WARNING: " << message << endl;
+            if (para->warnings)
+            {
+                WarningInFunction << message << endl;
+            }
         }
 
         for (label i = 0; i < sizeBC; i++)
@@ -369,6 +377,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
     label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
+    ITHACAparameters* para(ITHACAparameters::getInstance());
 
     if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
@@ -413,7 +422,10 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
         }
         catch (const word message)
         {
-            cerr << "WARNING: " << message << endl;
+            if (para->warnings)
+            {
+                WarningInFunction << message << endl;
+            }
         }
 
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -663,5 +675,101 @@ template void normalizeFields(
     PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields);
 template void normalizeFields(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields);
+
+
+template<typename Type>
+Eigen::MatrixXd getValues(GeometricField<Type, fvPatchField,
+                          volMesh>& field, labelList& indices)
+{
+    List<Type> list(indices.size());
+    M_Assert(max(indices) < field.size(),
+             "The list indices are too large respect to field dimension");
+
+    for (label i = 0; i < indices.size(); i++)
+    {
+        list[i] = field[indices[i]];
+    }
+
+    return Foam2Eigen::field2Eigen(list);
+}
+
+template<>
+Eigen::MatrixXd getValues(GeometricField<vector, fvPatchField,
+                          volMesh>& field, labelList& indices, labelList* xyz)
+{
+    M_Assert(max(indices) < field.size(),
+             "The list of indices is too large respect to field dimension. There is at least one value larger than the dimension of the list");
+
+    if (xyz != NULL)
+    {
+        List<scalar> list;
+        list.resize(indices.size());
+        M_Assert(max(*xyz) <= 2,
+                 "The list of xyz positions contains at list one value larger than 2");
+        labelList l = *xyz;
+
+        for (label i = 0; i < indices.size(); i++)
+        {
+            list[i] = field[indices[i]][l[i]];
+        }
+
+        return Foam2Eigen::field2Eigen(list);
+    }
+    else
+    {
+        List<vector> list;
+        list.resize(indices.size());
+
+        for (label i = 0; i < indices.size(); i++)
+        {
+            list[i] = field[indices[i]];
+        }
+
+        return Foam2Eigen::field2Eigen(list);
+    }
+}
+
+template<>
+Eigen::MatrixXd getValues(GeometricField<scalar, fvPatchField,
+                          volMesh>& field, labelList& indices, labelList* xyz)
+{
+    M_Assert(max(indices) < field.size(),
+             "The list of indices is too large respect to field dimension. There is at least one value larger than the dimension of the list");
+    List<scalar> list;
+    list.resize(indices.size());
+
+    for (label i = 0; i < indices.size(); i++)
+    {
+        list[i] = field[indices[i]];
+    }
+
+    return Foam2Eigen::field2Eigen(list);
+}
+
+template<typename T>
+Eigen::MatrixXd getValues(PtrList<GeometricField<T, fvPatchField,
+                          volMesh>>& fields, labelList& indices, labelList* xyz)
+{
+    Eigen::MatrixXd out;
+    Eigen::MatrixXd a = getValues(fields[0], indices, xyz);
+    out.resize(a.rows(), fields.size());
+    out.col(0) = a;
+
+    for (label i = 1; i < fields.size(); i++)
+    {
+        out.col(i) = getValues(fields[i], indices, xyz);
+    }
+
+    return out;
+}
+
+
+template
+Eigen::MatrixXd getValues(PtrList<GeometricField<scalar, fvPatchField,
+                                  volMesh>>& fields, labelList& indices, labelList* xyz);
+template
+Eigen::MatrixXd getValues(PtrList<GeometricField<vector, fvPatchField,
+                                  volMesh>>& fields, labelList& indices, labelList* xyz);
+
 
 }

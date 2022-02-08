@@ -29,7 +29,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "DEIM.H"
-
 // Template function constructor
 template<typename T>
 DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
@@ -55,10 +54,25 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
                           )
                       )
                   );
+    xyz = autoPtr<IOList<label>>
+          (
+              new IOList<label>
+              (
+                  IOobject
+                  (
+                      "xyz",
+                      para->runTime.time().constant(),
+                      "../" + Folder,
+                      para->mesh,
+                      IOobject::READ_IF_PRESENT,
+                      IOobject::NO_WRITE
+                  )
+              )
+          );
     modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModes, FunctionName,
                                  FieldName);
 
-    if (!magicPoints().headerOk())
+    if (!(magicPoints().headerOk() && xyz().headerOk()))
     {
         Eigen::MatrixXd A;
         Eigen::VectorXd b;
@@ -66,10 +80,12 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
         Eigen::VectorXd r;
         Eigen::VectorXd rho(1);
         MatrixModes = Foam2Eigen::PtrList2Eigen(modes);
-        label ind_max, c1;
+        label ind_max, c1, xyz_in;
         double max = MatrixModes.cwiseAbs().col(0).maxCoeff(&ind_max, &c1);
+        check3DIndices(ind_max, xyz_in);
         rho(0) = max;
         magicPoints().append(ind_max);
+        xyz().append(xyz_in);
         U = MatrixModes.col(0);
         P.resize(MatrixModes.rows(), 1);
         P.insert(ind_max, 0) = 1;
@@ -88,12 +104,15 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
             rho.conservativeResize(i + 1);
             rho(i) = max;
             magicPoints().append(ind_max);
+            check3DIndices(ind_max, xyz_in);
+            xyz().append(xyz_in);
         }
 
         MatrixOnline = U * ((P.transpose() * U).fullPivLu().inverse());
         mkDir(Folder);
         cnpy::save(MatrixOnline, Folder + "/MatrixOnline.npy");
         magicPoints().write();
+        xyz().write();
     }
     else
     {
@@ -722,6 +741,71 @@ template<> label DEIM<fvVectorMatrix>::getNcells(label sizeM)
     return Ncells;
 }
 
+template<typename T>
+void DEIM<T>::setMagicPoints(labelList& newMagicPoints, labelList& newxyz)
+{
+    Folder = "ITHACAoutput/DEIM/" + FunctionName;
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+    word command = "rm -r " + Folder + "/magicPoints";
+    system(command);
+    command = "rm -r " + Folder + "/xyz";
+    system(command);
+    command = "rm -r " + Folder + "/totalMagicPoints";
+    system(command);
+    command = "rm -r " + Folder + "/uniqueMagicPoints";
+    system(command);
+    magicPoints.reset
+    (
+        autoPtr<IOList<label>>
+        (
+            new IOList<label>
+            (
+                IOobject
+                (
+                    "magicPoints",
+                    para->runTime.time().constant(),
+                    "../" + Folder,
+                    para->mesh,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE
+                )
+            )
+        )
+    );
+
+    for (label i = 0; i < newMagicPoints.size(); ++i)
+    {
+        magicPoints().append(newMagicPoints[i]);
+    }
+
+    xyz.reset
+    (
+        autoPtr<IOList<label>>
+        (
+            new IOList<label>
+            (
+                IOobject
+                (
+                    "xyz",
+                    para->runTime.time().constant(),
+                    "../" + Folder,
+                    para->mesh,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE
+                )
+            )
+        )
+    );
+
+    for (label i = 0; i < newMagicPoints.size(); ++i)
+    {
+        xyz().append(newxyz[i]);
+    }
+
+    magicPoints().write();
+    xyz().write();
+}
+
 // Specialization of the constructor
 template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix>& s,
                                      label MaxModesA,
@@ -828,3 +912,8 @@ template surfaceVectorField
 DEIM<fvVectorMatrix>::generateSubmeshMatrix(label layers, fvMesh& mesh,
         surfaceVectorField field, label secondTime);
 
+// specialization for setMagicPoints
+template void DEIM<volScalarField>::setMagicPoints(labelList& newMagicPoints,
+        labelList& newxyz);
+template void DEIM<volVectorField>::setMagicPoints(labelList& newMagicPoints,
+        labelList& newxyz);

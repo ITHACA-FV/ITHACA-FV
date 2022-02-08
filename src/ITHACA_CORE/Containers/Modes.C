@@ -65,7 +65,7 @@ List<Eigen::MatrixXd> Modes<Type, PatchField, GeoMesh>::project(
     word projType)
 {
     M_Assert(projType == "G" || projType == "PG",
-             "Projection type can be G for Galerking or PG for Petrov-Galerkin");
+             "Projection type can be G for Galerkin or PG for Petrov-Galerkin");
     List<Eigen::MatrixXd> LinSys;
     LinSys.resize(2);
 
@@ -120,11 +120,13 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
     GeometricField<Type, PatchField, GeoMesh>&
     field, label numberOfModes, word projType, fvMatrix<Type>* Af)
 {
-    M_Assert(projType == "G" || projType == "PG",
-             "Projection type can be G for Galerking or PG for Petrov-Galerkin");
+    M_Assert(projType == "F" || projType == "G" || projType == "PG",
+             "Projection type can be F for Frobenius, G for Galerkin or PG for Petrov-Galerkin");
     Eigen::MatrixXd fieldEig = Foam2Eigen::field2Eigen(field);
     auto vol = ITHACAutilities::getMassMatrixFV(field);
     Eigen::MatrixXd projField;
+    Eigen::MatrixXd M;
+    Eigen::MatrixXd b;
 
     if (EigenModes.size() == 0)
     {
@@ -133,7 +135,14 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
 
     if (numberOfModes == 0)
     {
-        if (projType == "G")
+        if (projType == "F")
+        {
+            vol = Eigen::VectorXd::Ones(vol.size());
+            b = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
+            M = EigenModes[0].transpose() * EigenModes[0].transpose();
+            projField = M.fullPivLu().solve(b);
+        }
+        else if (projType == "G")
         {
             projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
         }
@@ -152,7 +161,16 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
         M_Assert(numberOfModes <= EigenModes[0].cols(),
                  "Number of required modes for projection is higher then the number of available ones");
 
-        if (projType == "G")
+        if (projType == "F")
+        {
+            vol = Eigen::VectorXd::Ones(vol.size());
+            M = EigenModes[0].leftCols(numberOfModes).transpose() * EigenModes[0].leftCols(
+                    numberOfModes);
+            b = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
+                vol.asDiagonal() * fieldEig;
+            projField = M.fullPivLu().solve(b);
+        }
+        else if (projType == "G")
         {
             projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
                         vol.asDiagonal() * fieldEig;
@@ -203,7 +221,12 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
 
     if (numberOfModes == 0)
     {
-        if (projType == "G")
+        if (projType == "F")
+        {
+            vol = Eigen::VectorXd::Ones(vol.size());
+            projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
+        }
+        else if (projType == "G")
         {
             projField = EigenModes[0].transpose() * vol.asDiagonal() * fieldEig;
         }
@@ -222,7 +245,13 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
         M_Assert(numberOfModes <= EigenModes[0].cols(),
                  "Number of required modes for projection is higher then the number of available ones");
 
-        if (projType == "G")
+        if (projType == "F")
+        {
+            vol = Eigen::VectorXd::Ones(vol.size());
+            projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
+                        vol.asDiagonal() * fieldEig;
+        }
+        else if (projType == "G")
         {
             projField = ((EigenModes[0]).leftCols(numberOfModes)).transpose() *
                         vol.asDiagonal() * fieldEig;

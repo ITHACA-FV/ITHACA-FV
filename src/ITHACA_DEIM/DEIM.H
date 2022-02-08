@@ -148,6 +148,7 @@ class DEIM
         /// Definition of the x, y, z coordinate of the identified element in the matrix or source term
         /// 0 for x, 1 for y, 2 for z
         ///@{
+        autoPtr<IOList<label>> xyz;
         autoPtr<IOList<label>> xyz_Arow;
         autoPtr<IOList<label>> xyz_Acol;
         autoPtr<IOList<label>> xyz_B;
@@ -296,6 +297,14 @@ class DEIM
         /// @return     The number of cells
         ///
         label getNcells(label sizeM);
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to set the magic points externally
+        ///
+        /// @param      newMagicPoints  The new magic points
+        /// @param      newxyz          The new xyz coordinates in case of a volVectorField. In case of a volScalarField needs to be of the same dimension of magicPoints and full or zeros
+        ///
+        void setMagicPoints(labelList& newMagicPoints, labelList& newxyz);
 
 };
 

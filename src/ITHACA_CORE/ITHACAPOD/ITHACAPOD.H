@@ -252,11 +252,10 @@ void exportcumEigenvalues(scalarField cumEigenvalues,  fileName name,
 ///
 /// @return     Type             the POD modes
 ///
-template<typename Type>
-PtrList<GeometricField<Type, fvPatchField, volMesh>> DEIMmodes(
-            PtrList<GeometricField<Type, fvPatchField, volMesh>>& SnapShotsMatrix,
-            label nmodes,
-            word FunctionName, word FieldName);
+template<class Type, template<class> class PatchField, class GeoMesh>
+PtrList<GeometricField<Type, PatchField, GeoMesh>> DEIMmodes(
+            PtrList<GeometricField<Type, PatchField, GeoMesh>>& SnapShotsMatrix,
+            label nmodes, word FunctionName, word FieldName);
 
 //------------------------------------------------------------------------------
 /// @brief      Get the DEIM modes for a generic non-parametrized matrix coming

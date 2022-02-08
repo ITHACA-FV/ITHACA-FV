@@ -54,56 +54,61 @@ using namespace std::placeholders;
 
 namespace ITHACAutilities
 {
-//--------------------------------------------------------------------------
-/// Computes the relative error between two Fields in the Frobenius norm
-///
-/// @param      field1     The reference field to which the norm is computed
-/// @param      field2     The field for which the error is computed
-///
-/// @tparam     TypeField  type of field can be scalar or vector
-///
-/// @return     The Frobenius norm of the relative error.
-///
 
+//------------------------------------------------------------------------------
+/// @brief      Computes the relative error between two Fields in the Frobenius norm
+///
+/// @param      field1      The reference field to which the norm is computed
+/// @param      field2      The field for which the error is computed
+/// @param      labels      (optional) a list of labels with the indices were you want to compute the error
+///
+/// @tparam     Type        Type of field, can be scalar or vector
+/// @tparam     PatchField  Type of PatchField, surface or volumetric
+/// @tparam     GeoMesh     Type of Mesh, surface or volumetric
+///
+/// @return     Frobenius norm of the relative error.
+///
 template<class Type, template<class> class PatchField, class GeoMesh>
 double errorFrobRel(GeometricField<Type, PatchField, GeoMesh>& field1,
-                    GeometricField<Type, PatchField, GeoMesh>& field2);
+                    GeometricField<Type, PatchField, GeoMesh>& field2, List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
-/// Computes the relative error between two geometric Fields in L2 norm
+/// @brief      Computes the relative error between two geometric Fields in L2 norm
 ///
-/// @param[in]  field1  The field 1
-/// @param[in]  field2  The field 2
+/// @param[in]  field1      The reference field to which the norm is computed
+/// @param[in]  field2      The field for which the error is computed
+/// @param[in]  labels      (optional) a list of labels with the indices were you want to compute the error
 ///
-/// @tparam     TypeField   type of field
+/// @tparam     T   type of field
 ///
 /// @return     L2 norm of the relative error.
 ///
 template<typename T>
 double errorL2Rel(GeometricField<T, fvPatchField, volMesh>& field1,
-                  GeometricField<T, fvPatchField, volMesh>& field2);
+                  GeometricField<T, fvPatchField, volMesh>& field2, List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
-/// Computes the relative error between two geometric Fields in Linf norm
+/// @brief      Computes the relative error between two geometric Fields in Linf norm
 ///
-/// @param[in]  field1  The field 1
-/// @param[in]  field2  The field 2
+/// @param[in]  field1      The reference field to which the norm is computed
+/// @param[in]  field2      The field for which the error is computed
+/// @param[in]  labels      (optional) a list of labels with the indices were you want to compute the error
 ///
-/// @tparam     TypeField   type of field
+/// @tparam     T   type of field
 ///
 /// @return     Linf norm of the relative error.
 ///
 template<typename T>
 double errorLinfRel(GeometricField<T, fvPatchField, volMesh>& field1,
-                    GeometricField<T, fvPatchField, volMesh>& field2);
+                    GeometricField<T, fvPatchField, volMesh>& field2, List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
-/// Computes the relative error between two geometric Fields in
-/// L2 norm, given the mesh volumes field
+/// @brief      Computes the absolute error between two geometric Fields in
+///             L2 norm, given the mesh volumes field
 ///
-/// @param[in]  field1  The field 1
-/// @param[in]  field2  The field 2
-/// @param[in]  Volumes  The field containing the volumes of the mesh cells
+/// @param[in]  field1      The reference field to which the norm is computed
+/// @param[in]  field2      The field for which the error is computed
+/// @param[in]  labels      (optional) a list of labels with the indices were you want to compute the error
 ///
 /// @tparam     T   type of field
 ///
@@ -114,48 +119,53 @@ double errorL2Abs(GeometricField<T, fvPatchField, volMesh>& field1,
                   GeometricField<T, fvPatchField, volMesh>& field2, volScalarField& Volumes);
 
 //--------------------------------------------------------------------------
-/// Computes the absolute error between two Fields in L2 norm
+/// @brief      Computes the absolute error between two Fields in L2 norm
 ///
-/// @param[in]  field1  The field 1
-/// @param[in]  field2  The field 2
+/// @param[in]  field1      The reference field to which the norm is computed
+/// @param[in]  field2      The field for which the error is computed
+/// @param[in]  labels      (optional) a list of labels with the indices were you want to compute the error
 ///
-/// @tparam     TypeField   type of field
+/// @tparam     T   type of field
 ///
 /// @return     L2 norm of the absolute error.
 ///
 template<typename T>
 double errorL2Abs(GeometricField<T, fvPatchField, volMesh>& field1,
-                  GeometricField<T, fvPatchField, volMesh>& field2);
+                  GeometricField<T, fvPatchField, volMesh>& field2, List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
-/// Computes the relative error in L2 norm between two lists of fields
+/// @brief      Computes the relative error in L2 norm between two lists of fields
 ///
-/// @param      fields1  The reference fields to which the norm is computed
-/// @param      fields2  The fields for which the error is computed
+/// @param[in]  field1      The reference field to which the norm is computed
+/// @param[in]  field2      The field for which the error is computed
+/// @param[in]  labels      (optional) a list of labels with the indices were you want to compute the error
 ///
-/// @tparam     TypeField   type of field
+/// @tparam     T   type of field
 ///
 /// @return     Column vector, in each row the L2 norm of the relative error.
 ///
 template<typename T>
 Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh>>&
                            fields1,
-                           PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2);
+                           PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2,
+                           List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
-/// Computes the relative error in the Frobenius norm between two lists of fields
+/// @brief      Computes the relative error in the Frobenius norm between two lists of fields
 ///
-/// @param      fields1  The reference fields to which the norm is computed
-/// @param      fields2  The fields for which the error is computed
+/// @param[in]  field1      The reference field to which the norm is computed
+/// @param[in]  field2      The field for which the error is computed
+/// @param[in]  labels      (optional) a list of labels with the indices were you want to compute the error
 ///
-/// @tparam     TypeField   type of field
+/// @tparam     T   type of field
 ///
 /// @return     Column vector, in each row the Frobenius norm of the relative error.
 ///
 template<typename T>
 Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, fvPatchField, volMesh>>&
                              fields1,
-                             PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2);
+                             PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2,
+                             List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
 /// Computes the relative error in L2 norm between two lists of Fields
@@ -176,19 +186,21 @@ Eigen::MatrixXd errorL2Abs(
     PtrList<volScalarField>& Volumes);
 
 //--------------------------------------------------------------------------
-/// Computes the absolute error in L2 norm between two lists of Fields
+/// @brief      Computes the absolute error in L2 norm between two lists of Fields
 ///
-/// @param[in]  fields1  The fields 1, scalar or vector
-/// @param[in]  fields2  The fields 2, scalar or vector
+/// @param[in]  field1      The reference field to which the norm is computed
+/// @param[in]  field2      The field for which the error is computed
+/// @param[in]  labels      (optional) a list of labels with the indices were you want to compute the error
 ///
-/// @tparam     TypeField   type of field
+/// @tparam     T   type of field
 ///
-/// @return     olumn vector, in each row the L2 norm of the absolute error.
+/// @return     column vector, in each row the L2 norm of the absolute error.
 ///
 template<typename T>
 Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh>>&
                            fields1,
-                           PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2);
+                           PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2,
+                           List<label>* labels = NULL);
 
 //------------------------------------------------------------------------------
 /// Evaluate the L2 norm of a geometric field
