@@ -69,60 +69,92 @@ Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys,
     M_Assert(solverType == "fullPivLu" || solverType == "partialPivLu"
              || solverType == "householderQR" || solverType == "colPivHouseholderQR"
              || solverType == "fullPivHouseholderQR"
-             || solverType == "CompleteOrthogonalDecomposition" || solverType == "llt"
+             || solverType == "completeOrthogonalDecomposition" || solverType == "llt"
              || solverType == "ldlt" || solverType == "bdcSvd"
              || solverType == "jacobiSvd", "solver not defined");
+    Eigen::MatrixXd A;
+    Eigen::MatrixXd b;
+
+    if (LinSys[0].rows() < LinSys[0].cols())
+    {
+        FatalErrorInFunction << "The system is undetermined, it has more unknowns: " <<
+                             LinSys[0].rows() << ", then equations: " << LinSys[0].rows() << abort(
+                                 FatalError);
+    }
+
     Eigen::MatrixXd y;
+    residual = LinSys[0] * x - LinSys[1];
+    A = LinSys[0];
+    b = LinSys[1];
+
+    if (A.rows() > A.cols())
+    {
+        if (solverType != "completeOrthogonalDecomposition" && solverType != "bdcSvd"
+                && solverType != "jacobiSvd")
+        {
+            A.resize(A.cols(), A.cols());
+            b.resize(A.cols(), 1);
+            A =  LinSys[0].transpose() * LinSys[0];
+            b =  LinSys[0].transpose() * LinSys[1];
+            WarningInFunction <<
+                              "Using normal equation, results might be inaccurate, better to rely on completeOrthogonalDecomposition, bdcSvd or jacobiSvd"
+                              << endl;
+        }
+    }
 
     for (int i = 0; i < bc.size(); i++)
     {
-        LinSys[0].row(i) *= 0;
-        LinSys[0](i, i) = 1;
-        LinSys[1](i, 0) = bc(i);
+        A.row(i) *= 0;
+        A(i, i) = 1;
+        b(i, 0) = bc(i);
     }
-
-    residual = LinSys[0] * x - LinSys[1];
 
     if (solverType == "fullPivLu")
     {
-        y = LinSys[0].fullPivLu().solve(LinSys[1]);
+        y = A.fullPivLu().solve(b);
     }
     else if (solverType == "partialPivLu")
     {
-        y = LinSys[0].partialPivLu().solve(LinSys[1]);
+        y = A.partialPivLu().solve(b);
     }
     else if (solverType == "householderQr")
     {
-        y = LinSys[0].householderQr().solve(LinSys[1]);
+        y = A.householderQr().solve(b);
     }
     else if (solverType == "colPivHouseholderQr")
     {
-        y = LinSys[0].colPivHouseholderQr().solve(LinSys[1]);
+        y = A.colPivHouseholderQr().solve(b);
     }
     else if (solverType == "fullPivHouseholderQr")
     {
-        y = LinSys[0].fullPivHouseholderQr().solve(LinSys[1]);
+        y = A.fullPivHouseholderQr().solve(b);
     }
     else if (solverType == "completeOrthogonalDecomposition")
     {
-        y = LinSys[0].completeOrthogonalDecomposition().solve(LinSys[1]);
+        y = A.completeOrthogonalDecomposition().solve(b);
     }
     else if (solverType == "llt")
     {
-        y = LinSys[0].llt().solve(LinSys[1]);
+        y = A.llt().solve(b);
     }
     else if (solverType == "ldlt")
     {
-        y = LinSys[0].ldlt().solve(LinSys[1]);
+        y = A.ldlt().solve(b);
     }
     else if (solverType == "bdcSvd")
     {
-        y = LinSys[0].bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(
-                LinSys[1]);
+        y = A.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(b);
     }
     else if (solverType == "jacobiSvd")
     {
-        y = LinSys[0].jacobiSvd().solve(LinSys[1]);
+        if (A.rows() > A.cols())
+        {
+            y = A.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(b);
+        }
+        else
+        {
+            y = A.jacobiSvd().solve(b);
+        }
     }
 
     return y;
