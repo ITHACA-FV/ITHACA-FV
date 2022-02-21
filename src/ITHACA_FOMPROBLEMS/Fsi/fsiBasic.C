@@ -81,7 +81,7 @@ fsiBasic::fsiBasic(int argc, char* argv[])
         //pointVectorField & PointDisplacement = const_cast<pointVectorField&>(mesh.objectRegistry::lookupObject<pointVectorField>("pointDisplacement"));               
 }
 
-void fsiBasic::truthSolve3(List<scalar> mu_now)
+void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
 {
 
     Time& runTime = _runTime();
