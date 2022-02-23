@@ -1,9 +1,9 @@
-#include "ReducedFsiBasic.H"
+#include "ReducedBasicFsi.H"
 
 
 /// Constructor
-ReducedFsiBasic() {}
-explicit ReducedFsiBasic(fsiBasic& FOMproblem)
+ReducedBasicFsi() {}
+explicit ReducedBasicFsi(fsiBasic& FOMproblem)
     :
     problem(&FOMproblem)
 {
