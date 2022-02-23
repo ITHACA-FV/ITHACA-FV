@@ -179,7 +179,7 @@ class reducedFSI : public reducedSimpleSteadyNS
             }
             else
             {
-            	PprojN = NmodesPproj;
+                PprojN = NmodesPproj;
             }
 
            /* if (NmodesNut == 0)
@@ -196,8 +196,8 @@ class reducedFSI : public reducedSimpleSteadyNS
             scalar P_norm_res(1);
             // coefficients declaration
             Eigen::MatrixXd a = Eigen::VectorXd::Zero(UprojN);
-            //Eigen::MatrixXd a0 = Eigen::VectorXd::Zero(NmodesUproj);
             Eigen::MatrixXd b = Eigen::VectorXd::Zero(PprojN);
+
             a(0) = vel_now(0, 0);
             float residualJumpLim =
                 problem->para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
@@ -219,61 +219,69 @@ class reducedFSI : public reducedSimpleSteadyNS
             label pRefCell = 0;
             scalar pRefValue = 0.0;
             pimpleControl& pimple = problem->_pimple();
-           
             IOMRFZoneList& MRF = problem->_MRF();
             fv::options& fvOptions = problem->_fvOptions();
-            // std::ofstream res_os_U;
-            // std::ofstream res_os_P;
-            // res_os_U.open(folder + name(counter) + "/residualsU", std::ios_base::app);
-            // res_os_P.open(folder + name(counter) + "/residualsP", std::ios_base::app);
-
-            std::cout << "///////////////////////////solveOnline_Pimple method line 229//////////////////////////////////"<< std::endl;
+            //std::cout << "///////////////////////////solveOnline_Pimple method line 229//////////////////////////////////"<< std::endl;
 
             PtrList<volVectorField> gradModP;
 
-		    for (int i = 0; i < NmodesPproj; i++)
-		    {
-		        gradModP.append(fvc::grad(problem->Pmodes[i]));
-		    }
+            for (int i = 0; i < NmodesPproj; i++)
+            {
+                gradModP.append(fvc::grad(problem->Pmodes[i]));
+            }
 
-		    projGradModP = ULmodes.project(gradModP, NmodesUproj);
-            // Pimple algorithm starts here
-            while ((residual_jump > residualJumpLim
-                    || std::max(U_norm_res, P_norm_res) > normalizedResidualLim) &&
-                    iter < maxIterOn)
+            projGradModP = ULmodes.project(gradModP, NmodesUproj);
+            // ####### Starting of the reduced algorithm ##############
+            while ((residual_jump > residualJumpLim || std::max(U_norm_res, P_norm_res) > normalizedResidualLim) && iter < maxIterOn)
             {
                 iter++;
-                std::cout << "///////////////////////////solveOnline_Pimple method line 249: iter value is:  //////////////////////////////////"<< iter <<  std::endl;
+                //std::cout << "///////////////////////////solveOnline_Pimple method line 249: iter value is:  //////////////////////////////////"<< iter <<  std::endl;
 
                 //std::cout << iter << std::endl;
+                // OFVER = Openfoam Version
+                #if defined(OFVER) && (OFVER == 6)
+                   pimple.loop(runTime);
+                 //std::cout << "///////////////////////////solveOnline_Pimple method line 251 after pimple.loop(runTime) //////////////////////////////////"<< std::endl;
+                #else
+                   pimple.loop();
+                 //std::cout << "///////////////////////////solveOnline_Pimple method line 254 after pimple.loop() //////////////////////////////////"<< std::endl;
+                #endif
+                // #################### Check the deformation of the mesh properties. #################
+                if (pimple.firstIter() || moveMeshOuterCorrectors)
+                {
+                    // Do any mesh changes
+                    mesh.controlledUpdate();
 
-#if defined(OFVER) && (OFVER == 6)
-                pimple.loop(runTime);
-                 std::cout << "///////////////////////////solveOnline_Pimple method line 251 after pimple.loop(runTime) //////////////////////////////////"<< std::endl;
-#else
-                pimple.loop();
-                 std::cout << "///////////////////////////solveOnline_Pimple method line 254 after pimple.loop() //////////////////////////////////"<< std::endl;
-#endif
+                    if (mesh.changing())
+                    {
+                        MRF.update();
 
-                //volScalarField nueff = problem->turbulence->nuEff();
-                //vector v(1, 0, 0);
-                //ITHACAutilities::assignBC(U, 0, v);
-                /*// Momentum equation
-                fvVectorMatrix UEqn
-                (
-                    fvm::div(phi, U)
-                    - fvm::laplacian(nueff, U)
-                    - fvc::div(nueff * dev2(T(fvc::grad(U))))
-                );
-                UEqn.relax();*/
+                        if (correctPhi)
+                        {
+                            // Calculate absolute flux
+                            // from the mapped surface velocity
+                            phi = mesh.Sf() & Uf();
 
-                // Solve the Momentum equation
+                            #include "correctPhi.H"
+
+                            // Make the flux relative to the mesh motion
+                            fvc::makeRelative(phi, U);
+                        }
+
+                        if (checkMeshCourantNo)
+                        {
+                            #include "meshCourantNo.H"
+                        }
+                    }
+                }
+
+                // Assemble the Momentum equation
 
                 MRF.correctBoundaryVelocity(U);
 
                 tmp<fvVectorMatrix> tUEqn
                 (
-                fvm::ddt(U) + fvm::div(phi, U)
+                + fvm::div(phi, U)
                 + MRF.DDt(U)
                 + problem->turbulence->divDevReff(U)
                 ==
@@ -282,19 +290,17 @@ class reducedFSI : public reducedSimpleSteadyNS
                 fvVectorMatrix& UEqn = tUEqn.ref();
 
                 UEqn.relax();
-                std::cout << "///////////////////////////solveOnline_Pimple method line 285 //////////////////////////////////"<< std::endl;
+                //std::cout << "///////////////////////////solveOnline_Pimple method line 285 //////////////////////////////////"<< std::endl;
 
-                //////////////////////////////reduced the linear system for the velocity////////////////////////////////////////////
+                // #############Galerkin projection for the velocity ###########################
                 List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(UEqn, UprojN);
-                std::cout << "///////////////////////////solveOnline_Pimple line 288: RedLinSysU  //////////////////////////////////"<< RedLinSysU.size() << std::endl;
-                std::cout << "///////////////////////////solveOnline_Pimple line 289: b //////////////////////////////////"<< b << std::endl;
-
+                //std::cout << "///////////////////////////solveOnline_Pimple line 288: RedLinSysU  //////////////////////////////////"<< RedLinSysU.size() << std::endl;
+                //std::cout << "///////////////////////////solveOnline_Pimple line 289: b //////////////////////////////////"<< b << std::endl;
                 RedLinSysU[1] = RedLinSysU[1] - projGradModP * b;
-                std::cout << "///////////////////////////solveOnline_Pimple method line 292 //////////////////////////////////"<< std::endl;
+                //std::cout << "///////////////////////////solveOnline_Pimple method line 292 //////////////////////////////////"<< std::endl;
 
                 a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
-                std::cout << "///////////////////////////solveOnline_Pimple method line 295//////////////////////////////////"<< std::endl;
-
+                //std::cout << "///////////////////////////solveOnline_Pimple method line 295//"<< std::endl;
                 ULmodes.reconstruct(U, a, "U");
         
                 // fvOptions.constrain(UEqn);
@@ -307,15 +313,14 @@ class reducedFSI : public reducedSimpleSteadyNS
                 // }
                 //solve(UEqn == - fvc::grad(P));
                 //ITHACAutilities::assignBC(U, 0, v);
-                std::cout << "///////////////////////////solveOnline_Pimple method line 309 //////////////////////////////////"<< std::endl;
+                //std::cout << "///////////////////////////solveOnline_Pimple method line 309"<< std::endl;
 
                 
-              ///////////////////////////////////////// begining of solving the pEqn.H//////////////////////////////////////   
+              // ########### Assemble matrix for the  Poisson pressure equation ############### 
 
                 volScalarField rAU(1.0/UEqn.A());
                 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, P));
                 surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
-
                 if (pimple.ddtCorr())
                 {
                     #include "createUfIfPresent.H"
@@ -344,8 +349,8 @@ class reducedFSI : public reducedSimpleSteadyNS
                         fvc::interpolate(rAtU() - rAU)*fvc::snGrad(P)*mesh.magSf();
                     HbyA -= (rAU - rAtU())*fvc::grad(P);
                 }
+
                 List<Eigen::MatrixXd> RedLinSysP;
-                //bOld = b;
 
                 if (pimple.nCorrPISO() <= 1)
                 {
@@ -395,10 +400,7 @@ class reducedFSI : public reducedSimpleSteadyNS
 
                 // Make the fluxes relative to the mesh motion
                 fvc::makeRelative(phi, U);
-
-                //b = bOld + mesh.fieldRelaxationFactor("p") * (b - bOld);
                 problem->Pmodes.reconstruct(P, b, "p");
-                //nutCoeffOld = nutCoeff;
                 // P.relax();
                 U = HbyA - rAtU() * fvc::grad(P);
                 U.correctBoundaryConditions();
@@ -426,68 +428,57 @@ class reducedFSI : public reducedSimpleSteadyNS
                     std::cout << "Final normalized residual for pressure: " << P_norm_res <<
                               std::endl;
                 }
-
-                // res_os_U << U_norm_res << std::endl;
-                // res_os_P << P_norm_res << std::endl;
             }
 
-            // res_os_U.close();
-            // res_os_P.close();
             std::cout << "Solution " << counter << " converged in " << iter <<
                       " iterations." << std::endl;
             std::cout << "Final normalized residual for velocity: " << U_norm_res <<
                       std::endl;
             std::cout << "Final normalized residual for pressure: " << P_norm_res <<
                       std::endl;
-            problem->Umodes.reconstruct(U, a, "Uaux");
+            // ###### Reconstruction of the solution ###############         
+            ULmodes.reconstruct(U, a, "Uaux");
+            P.rename("Paux");
             problem->Pmodes.reconstruct(P, b, "Paux");
-
-            /*if (ITHACAutilities::isTurbulent())
-            {
-                volScalarField& nut = const_cast<volScalarField&>
-                                      (problem->_mesh().lookupObject<volScalarField>("nut"));
-                nut.rename("nutAux");
-        ITHACAstream::exportSolution(nut, name(counter), Folder);
-            }*/
 
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(P, name(counter), folder);
             runTime.setTime(runTime.startTime(), 0);
-            std::cout << "////////////////////////////solveOnline_Pimple method end///////////////////////////"<< std::endl;                 
+            std::cout << "################### solveOnline_Pimple end ##################"<< std::endl;                 
 
         }
 
 
-	void OnlineVelocity(Eigen::MatrixXd vel)
-	{
-	        M_Assert(problem->inletIndex.rows() == vel.size(),
-	                 "Imposed boundary conditions dimensions do not match given values matrix dimensions");
-	        Eigen::MatrixXd vel_scal;
-	        vel_scal.resize(vel.rows(), vel.cols());
+        void OnlineVelocity(Eigen::MatrixXd vel)
+        {
+            M_Assert(problem->inletIndex.rows() == vel.size(),
+                     "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+            Eigen::MatrixXd vel_scal;
+            vel_scal.resize(vel.rows(), vel.cols());
 
-	        for (int k = 0; k < problem->inletIndex.rows(); k++)
-	        {
-	            int p = problem->inletIndex(k, 0);
-	            //int p = problem->inletIndex(0, 0);
+            for (int k = 0; k < problem->inletIndex.rows(); k++)
+            {
+                int p = problem->inletIndex(k, 0);
+                //int p = problem->inletIndex(0, 0);
 
-	            //std::cout << "/////////////////////////// Value of p is:  //////////////////////////////////"<< p << std::endl;
-	            int l = problem->inletIndex(k, 1);
-	            //int l = problem->inletIndex(0, 1);
-	            //std::cout << "/////////////////////////// Value of l is ://////////////////////////////////" << l << std::endl;
-	            scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
-	            //std::cout << "/////////////////////////// the value of the area is : //////////////////////////////////"<< area << std::endl;
-	            scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
-	                              problem->liftfield[k].boundaryField()[p]).component(l) / area;
-	            //std::cout << "///////////////////////////the value of u_lf is : //////////////////////////////////"<< u_lf << std::endl;
-	            vel_scal(k, 0) = vel(k, 0) / u_lf;
-	            //vel_scal(0, 0) = vel(0, 0) / u_lf;
-	            //std::cout << "///////////////////////////vel_scal //////////////////////////////////"<< vel_scal(k,0) << std::endl;
+                //std::cout << "/////////////////////////// Value of p is:  //////////////////////////////////"<< p << std::endl;
+                int l = problem->inletIndex(k, 1);
+                //int l = problem->inletIndex(0, 1);
+                //std::cout << "/////////////////////////// Value of l is ://////////////////////////////////" << l << std::endl;
+                scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
+                //std::cout << "/////////////////////////// the value of the area is : //////////////////////////////////"<< area << std::endl;
+                scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
+                                  problem->liftfield[k].boundaryField()[p]).component(l) / area;
+                //std::cout << "///////////////////////////the value of u_lf is : //////////////////////////////////"<< u_lf << std::endl;
+                vel_scal(k, 0) = vel(k, 0) / u_lf;
+                //vel_scal(0, 0) = vel(0, 0) / u_lf;
+                //std::cout << "///////////////////////////vel_scal //////////////////////////////////"<< vel_scal(k,0) << std::endl;
 
-	        }
+            }
             //std::cout << "///////////////////////////vel_scal dimension //////////////////////////////////"<< vel_scal << std::endl;
-	        vel_now = vel_scal;
-	        std::cout << "/////////////////////////// the OnlineVelocity method //////////////////////////////////"<< std::endl;
-	}
+            vel_now = vel_scal;
+            std::cout << "/////////////////////////// the OnlineVelocity method //////////////////////////////////"<< std::endl;
+        }
 };
 
 /*---------------------------------------------------------------------------*\
