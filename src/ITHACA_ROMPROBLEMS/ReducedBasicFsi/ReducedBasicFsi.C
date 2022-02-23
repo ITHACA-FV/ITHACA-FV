@@ -24,7 +24,7 @@ explicit ReducedBasicFsi(fsiBasic& FOMproblem)
 
 
 // Function to perform the online phase
-void solveOnline_Pimple(scalar mu_now, int NmodesUproj, int NmodesPproj, int NmodesSup = 0, fileName  folder = "./ITHACAoutput/Reconstruct/")
+void ReducedBasicFsi::solveOnline_Pimple(scalar mu_now, int NmodesUproj, int NmodesPproj, int NmodesSup = 0, fileName  folder = "./ITHACAoutput/Reconstruct/")
 {
 
     ULmodes.resize(0);
@@ -396,7 +396,7 @@ void solveOnline_Pimple(scalar mu_now, int NmodesUproj, int NmodesPproj, int Nmo
 }
 
 
-void OnlineVelocity(Eigen::MatrixXd vel)
+void ReducedBasicFsi::OnlineVelocity(Eigen::MatrixXd vel)
 {
         M_Assert(problem->inletIndex.rows() == vel.size(),
                  "Imposed boundary conditions dimensions do not match given values matrix dimensions");
