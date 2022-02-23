@@ -115,8 +115,9 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
     // Export and store the initial conditions for velocity and pressure
     ITHACAstream::exportSolution(U, name(counter), folder);
     ITHACAstream::exportSolution(p, name(counter), folder);
-    std::ofstream of(folder + name(counter) + "/" +
-    	     runTime.timeName());
+    ITHACAstream::writePoints(meshPtr().points(), folder, name(counter) + "/polyMesh/");
+
+    std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
     Ufield.append(U.clone());
     Pfield.append(p.clone());
     counter++;
@@ -190,8 +191,9 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
         {
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(p, name(counter), folder);
-            std::ofstream of(folder + name(counter) + "/" +
-                             runTime.timeName());
+            ITHACAstream::writePoints(meshPtr().points(), folder, name(counter) + "/polyMesh/");
+
+            std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
             Ufield.append(U.clone());
             Pfield.append(p.clone());
             counter++;
