@@ -228,36 +228,28 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
 
 void fsiBasic::liftSolve3()
 {
-    //std::cout << "342 my lift solve "<< std::endl;
+    
     for (label k = 0; k < inletIndex.rows(); k++)
     {
-        //std::cout << "345 my lift solve "<< std::endl;
+
         Time& runTime = _runTime();
-        std::cout << "???????????? 234 my lift solve ???????????????????? "<< std::endl;
         Foam::dynamicFvMesh& mesh = meshPtr();
-        std::cout << "***********236 my lift solve********* "<< std::endl;
         volScalarField& p = _p();
         volVectorField& U = _U();
-        std::cout << "239 my lift solve "<< std::endl;
-        //Foam::dynamicFvMesh& mesh = meshPtr();
-        std::cout << "351 my lift solve "<< std::endl;
         surfaceScalarField& phi = _phi();
         //#include "initContinuityErrs.H"
         fv::options& fvOptions = _fvOptions();
         pimpleControl& pimple = _pimple();
         IOMRFZoneList& MRF = _MRF();
-        std::cout << "354 my lift solve "<< std::endl;
 
         label BCind = inletIndex(k, 0);
         volVectorField Ulift("Ulift" + name(k), U);
         instantList Times = runTime.times();
         runTime.setTime(Times[1], 1);
         pisoControl piso(mesh);
-        Info << "Solving a lifting Problem" << endl;
         Vector<double> v1(0, 0, 0);
         v1[inletIndex(k, 1)] = 1;
         Vector<double> v0(0, 0, 0);
-        std::cout << "365 my lift solve "<< std::endl;
 
         for (label j = 0; j < U.boundaryField().size(); j++)
         {
@@ -276,9 +268,7 @@ void fsiBasic::liftSolve3()
             assignIF(Ulift, v0);
             phi = linearInterpolate(Ulift) & mesh.Sf();
         }
-         std::cout << "277 my lift solve "<< std::endl;
 
-        Info << "Constructing velocity pimple field Phi\n" << endl;
         volScalarField Phi
         (
             IOobject
@@ -358,11 +348,6 @@ void fsiBasic::liftSolve3()
             (
                 fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
             );
-            // Added for reduced problem
-            //RedLinSysP = problem->Pmodes.project(pEqn, NmodesPproj);
-            //pEqn.solve();
-            //b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
-            //problem->Pmodes.reconstruct(P, b, "p");
             pEqn.setReference(pRefCell, pRefValue);
 
             pEqn.solve(mesh.solver(p.select(pimple.finalInnerIter())));
