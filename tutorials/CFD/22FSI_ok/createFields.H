@@ -72,30 +72,7 @@ _U0 = autoPtr<volVectorField>
       (
           new volVectorField(U0)
       );
-Info << "Reading/calculating face flux field phi\n" << endl;
-
-_phi = autoPtr<surfaceScalarField>
-       (
-           new surfaceScalarField
-           (
-               IOobject
-               (
-                   "phi",
-                   runTime.timeName(),
-                   mesh,
-                   IOobject::READ_IF_PRESENT,
-                   IOobject::AUTO_WRITE
-               ),
-               linearInterpolate(U) & mesh.Sf()
-           )
-       );
-surfaceScalarField& phi = _phi();
-surfaceScalarField phi0(phi);
-
-_phi0 = autoPtr<surfaceScalarField>
-        (
-            new surfaceScalarField(phi0)
-        );
+#include "createPhi.H"
 
 label pRefCell = 0;
 scalar pRefValue = 0.0;

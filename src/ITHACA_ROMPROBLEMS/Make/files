@@ -13,6 +13,5 @@ ReducedSimpleSteadyNS/ReducedSimpleSteadyNS.C
 ReducedMSR/ReducedMSR.C
 ReducedUnsteadyMSR/ReducedUnsteadyMSR.C
 ReducedUnsteadyNSExplicit/ReducedUnsteadyNSExplicit.C
-ReducedBasicFsi/ReducedBasicFsi.C
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_ROMPROBLEMS

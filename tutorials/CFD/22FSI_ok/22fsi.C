@@ -39,506 +39,396 @@ SourceFiles
 
 class tutorial22: public fsiBasic
 {
-    public:
-        explicit tutorial22(int argc, char* argv[])
-            :
-            fsiBasic(argc, argv),
-            U(_U()),
-            p(_p()),
-            phi(_phi())
-        {}
+public:
+    explicit tutorial22(int argc, char* argv[])
+        : fsiBasic(argc, argv), U(_U()), p(_p()), phi(_phi())
+    {}
 
-        // Fields To Perform
-       /// Velocity field
-        volVectorField& U;
-        /// Pressure field
-        volScalarField& p;
-        ///
-        surfaceScalarField& phi;
-        /// Dynamic mesh field
-        //Foam::autoPtr<Foam::dynamicFvMesh> meshPtr;
-        void offlineSolve()
-        {
-            Vector<double> inl(1, 0, 0);
-            List<scalar> mu_now(1);
+    // Fields To Perform
+    /// Velocity field
+    volVectorField& U;
+    /// Pressure field
+    volScalarField& p;
+    /// flux field
+    surfaceScalarField& phi;
+    /// Dynamic mesh field
+    //Foam::autoPtr<Foam::dynamicFvMesh> meshPtr;
+    void offlineSolve()
+    {
+        Vector<double> inl(1, 0, 0);
+        List<scalar> mu_now(1);
 
-            // if (offline)
-            // {
-            //     ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
-            //     ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
-            //      // mu_samples =
-            //      //    ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
-            // }
-            // else
-            //{
-                //for (label i = 0; i < mu.cols(); i++)
-                //{
-                    //inl[0] = mu(0, i);
-                    mu_now[0] = mu(0, 0); //mu.cols()=50
-                    //mu_now[0] = mu(0, i);
-                    //std::cout << "////////////////////////////mu is :///////////////////"<< mu.cols() <<  std::endl;                 
-                    //std::cout << "////////////////////////////mu_now[0] is :///////////////////"<< mu_now[0] <<  std::endl;                
+        // if (offline)
+        // {
+        //     ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
+        //     ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+        //      // mu_samples =
+        //      //    ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
+        // }
+        // else
+        //{
+        //for (label i = 0; i < mu.cols(); i++)
+        //{
+        //inl[0] = mu(0, i);
+        mu_now[0] = mu(0, 0); //mu.cols()=50
+        //mu_now[0] = mu(0, i);
+        //std::cout << "////////////////////////////mu is :///////////////////"<< mu.cols() <<  std::endl;
+        //std::cout << "////////////////////////////mu_now[0] is :///////////////////"<< mu_now[0] <<  std::endl;
 
-                    //assignBC(U, BCind, inl);
-                    //assignIF(U, inl);
-                    //change_viscosity(mu(0, i));
-                    //std::cout << "////////////////////////////i is :///////////////////"<< i <<  std::endl;
+        //assignBC(U, BCind, inl);
+        //assignIF(U, inl);
+        //change_viscosity(mu(0, i));
+        //std::cout << "////////////////////////////i is :///////////////////"<< i <<  std::endl;
 
-                    truthSolve3(mu_now);
-                //}
-            //}
-        }
+        truthSolve3(mu_now);
+        restart();
+        //}
+        //}
+    }
 };
 
-// reduced class problem
 
-class reducedFSI : public reducedSimpleSteadyNS
+class reducedBasicFsi: public reducedSimpleSteadyNS
 {
-    public:
-        /// Constructor
-        reducedFSI() {}
-        explicit reducedFSI(tutorial22& FOMproblem)
-            :
-            problem(&FOMproblem)
+public:
+    explicit reducedBasicFsi(tutorial22& FoamPb)
+        : problem(&FoamPb)
+    {
+        //std::cout << " #############" << "problem->Umodes.size() is: " << problem->Umodes.size() << std::endl;
+        //startTime = problem->startTime;
+        finalTime = problem->finalTime;
+        timeStep = problem->timeStep;
+        writeEvery = timeStep;
+
+        //#include "setRootCase.H"
+
+        for (int i = 0; i < problem->Umodes.size(); i++)
         {
 
-
-            // Create a new Umodes set where the first ones are the lift functions
-            for (int i = 0; i < problem->inletIndex.rows(); i++)
-            {
-                ULmodes.append((problem->liftfield[i]).clone());
-            }
-
-            for (int i = 0; i < problem->Umodes.size(); i++)
-            {
-                ULmodes.append((problem->Umodes.toPtrList()[i]).clone());
-            }
-            std::cout << "////////////////////////////////////reduced problem Constructor calling////////////////////////////////////////////"<< std::endl;
+            ULmodes.append(problem->Umodes.toPtrList()[i].clone());
+            //std::cout << "############# the i ULmodes is " << ULmodes(i) << std::endl;
         }
 
-        /// Variables
+        //std::cout << timeStep << std::endl;
+        //std::cout << "The size of P is: " <<  p.size()<<  "##################" << std::endl;
 
-        /// Lifted velocity modes.
-        volVectorModes ULmodes;
-        /// Pointer to the Full problem.
-        tutorial22* problem;
-        /// Scalar to store the current time
-        scalar time;
+        std::cout << "################ ctor of reducedBasicFsi ##################" << std::endl;
+    }
 
-        /// Scalar to store the time increment
-        double dt;
+    tutorial22* problem;
 
-        /// Scalar to store the final time if the online simulation
-        scalar finalTime;
+    //turbulence = problem->turbulence();
 
-        /// Scalar to store the initial time if the online simulation
-        scalar tstart;
-
-        /// A variable for storing the reduced coefficients
-        double storeEvery;
-
-        /// A variable for exporting the fields
-        double exportEvery;
-
-        /// Projected gradient of the pressure modes.
-        Eigen::MatrixXd projGradModP;
-
-        /// Imposed boundary conditions.
-        Eigen::MatrixXd vel_now;
-
-        /// Maximum iterations number for the online step
-        int maxIterOn = 1000; //1000
-
-        /// Counter.
-        int counter = 0;
-
-        int UprojN;
-        int PprojN;
-        // Set the initial time
-        // instantList Times = runTime.times();
-        // runTime.setEndTime(finalTime);
-
-        // // Perform a TruthSolve
-        // runTime.setTime(Times[1], 1);
-        // runTime.setDeltaT(timeStep);
+    volVectorModes ULmodes;
+    ///////// time control variables
+    scalar startTime;
+    scalar finalTime;
+    scalar timeStep;
+    scalar writeEvery;
+    scalar nextWrite;
+    // label pRefCell = 0;
+    // scalar pRefValue = 0.0;
+    // scalar cumulativeContErr = 0.0;
+    label counter = 1;
 
 
-        // Function to perform the online phase
-        void solveOnline_Pimple(scalar mu_now, int NmodesUproj, int NmodesPproj, int NmodesSup = 0, fileName  folder = "./ITHACAoutput/Reconstruct/")
+    void solveOnline_Pimple(scalar mu_now, int NmodesUproj, int NmodesPproj,
+                            fileName folder = "./ITHACAoutput/Reconstruct/")
+    {
+
+        //ULmodes.resize(0);
+
+        for (int i = 0; i < NmodesUproj; i++)
         {
+            ULmodes.append((problem->Umodes.toPtrList()[i]).clone());
+        }
 
-            ULmodes.resize(0);
 
-            for (int i = 0; i < problem->inletIndex.rows(); i++)
-            {
-                ULmodes.append((problem->liftfield[i]).clone());
-            }
+        // Initializations
+        Eigen::VectorXd uresidualOld = Eigen::VectorXd::Zero(NmodesUproj);
+        Eigen::VectorXd presidualOld = Eigen::VectorXd::Zero(NmodesPproj);
+        Eigen::VectorXd uresidual = Eigen::VectorXd::Zero(NmodesUproj);
+        Eigen::VectorXd presidual = Eigen::VectorXd::Zero(NmodesPproj);
+        scalar U_norm_res(1);
+        scalar P_norm_res(1);
+        Eigen::MatrixXd a = Eigen::VectorXd::Zero(NmodesUproj);
+        Eigen::MatrixXd a0 = Eigen::VectorXd::Zero(NmodesUproj);
+        Eigen::MatrixXd b = Eigen::VectorXd::Zero(NmodesPproj);
+        Eigen::MatrixXd b0 = Eigen::VectorXd::Zero(NmodesPproj);
+        Eigen::MatrixXd bOld = b;
 
-            for (int i = 0; i < NmodesUproj; i++)
-            {
-                ULmodes.append((problem->Umodes.toPtrList()[i]).clone());
-            }
-        
+        pimpleControl& pimple = problem->_pimple();
+        IOMRFZoneList& MRF = problem->_MRF();
+        fv::options& fvOptions = problem->_fvOptions();
+        surfaceScalarField& phi = problem->_phi();
+        volScalarField& p = problem->_p();
+        volVectorField& U = problem->_U();
+        dynamicFvMesh& mesh = problem->meshPtr();
+        Time& runTime = problem->_runTime();
+        singlePhaseTransportModel& laminarTransport = problem->_laminarTransport();
+        //autoPtr<incompressible::turbulenceModel> turbulence;
+        //volScalarField& p = problem->_p();
+        //volVectorField& U = problem->_U();
+        //surfaceScalarField& phi(problem->_phi());
+        //volVectorField u2 = U;
+        a = ITHACAutilities::getCoeffs(U, problem->Umodes, NmodesUproj, true);
+        b = ITHACAutilities::getCoeffs(p, problem->Pmodes, NmodesPproj, true);
+        //a(0) = a0(0); // Do not remove: it is not working without this condition
+        //b = b0;
+        float residualJumpLim = problem->para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
+        float normalizedResidualLim = problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim", 1e-5);
+        scalar residual_jump(1 + residualJumpLim);
 
-            if (NmodesUproj == 0)
-            {
-                UprojN = ULmodes.size();
-            }
-            else
-            {
-                UprojN = NmodesUproj + NmodesSup;
-            }
+        //Time& runTime = problem->_runTime();
+        instantList Times = runTime.times();
+        runTime.setEndTime(finalTime);
+        // runTime.setTime(Times[1], 1);
+        const label startTime = 1;
+        const label endTime = Times.size();
+        runTime.setDeltaT(timeStep);
+        runTime.setTime(Times[startTime], startTime);
 
-            if (NmodesPproj == 0)
-            {
-                PprojN = problem->Pmodes.size();
-            }
-            else
-            {
-                PprojN = NmodesPproj;
-            }
+        autoPtr<incompressible::turbulenceModel> turbulence;
+        //singlePhaseTransportModel& laminarTransport = problem->_laminarTransport();
+        turbulence = autoPtr<incompressible::turbulenceModel>
+                     (
+                         incompressible::turbulenceModel::New(U, phi, laminarTransport)
+                     );
 
-            // Initializations
-            Eigen::VectorXd uresidualOld = Eigen::VectorXd::Zero(UprojN);
-            Eigen::VectorXd presidualOld = Eigen::VectorXd::Zero(PprojN);
-            Eigen::VectorXd uresidual = Eigen::VectorXd::Zero(UprojN);
-            Eigen::VectorXd presidual = Eigen::VectorXd::Zero(PprojN);
-            scalar U_norm_res(1);
-            scalar P_norm_res(1);
-            // coefficients declaration
-            Eigen::MatrixXd a = Eigen::VectorXd::Zero(UprojN);
-            Eigen::MatrixXd b = Eigen::VectorXd::Zero(PprojN);
+        label pRefCell = 0;
+        scalar pRefValue = 0.0;
+        scalar cumulativeContErr = 0.0;
+        /// first reconstruction  of velocity and pressure
+        problem->Umodes.reconstruct(U, a, "U");
+        problem->Pmodes.reconstruct(p, b, "p");
 
-           
-            int iter = 0;
-            //int numberOfStores = round(storeEvery / dt);
-            int nextStore = 0;
-            label pRefCell = 0;
-            scalar pRefValue = 0.0;
-            scalar cumulativeContErr = 0.0;
-            scalar meshCoNum = 0.0;
-            scalar meanMeshCoNum = 0.0;
-            counter++;
-            nextStore += storeEvery;
-            pimpleControl& pimple = problem->_pimple();
-            IOMRFZoneList& MRF = problem->_MRF();
-            fv::options& fvOptions = problem->_fvOptions();
-            a(0) = vel_now(0, 0);
-            float residualJumpLim = problem->para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
-            float normalizedResidualLim = problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim", 1e-5);
-            scalar residual_jump(1 + residualJumpLim);
+        ITHACAstream::exportSolution(U, name(counter), folder);
+        ITHACAstream::exportSolution(p, name(counter), folder);
+        ITHACAstream::writePoints(mesh.points(), folder, name(counter) + "/polyMesh/");
+        std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
+        counter++;
 
-            volScalarField& P = problem->_p();
-            volVectorField& U = problem->_U();
-            dynamicFvMesh& mesh = problem->meshPtr();
-            Time& runTime = problem->_runTime();
-            P.rename("p");
-            surfaceScalarField& phi(problem->_phi());
-            problem->Umodes.reconstruct(U, a, "U");
-            problem->Pmodes.reconstruct(P, b, "p");
+        //Project method return A list of Eigen Matrices of dimension 2.
+        //The first element of the list is the reduced matrix of the linear system,
+        //the second element is the reduced source term of the linear system.
+        //#include "addCheckCaseOptions.H"
+#include "createDyMControls.H"
+#include "createUfIfPresent.H"
+#include "CourantNo.H"
+#include "setInitialDeltaT.H"
+        // PIMPLE algorithm starts here
+        for (label i = startTime; i < endTime; i++)
+        {
+            std::cerr << "File: 22fsi.C, Line: 230"<< std::endl;
+            //runTime.setTime(Times[i], i);
 
-            //phi = fvc::flux(U);
-            // phi = fvc::interpolate(U); //????
-            
+            //Info<< "Time = " << runTime.timeName() << endl;
+
+            //while (runTime.run())
+            //{
+            //#include "readDyMControls.H"
+            bool adjustTimeStep = runTime.controlDict().getOrDefault("adjustTimeStep", false);
+            scalar maxCo = runTime.controlDict().getOrDefault<scalar>("maxCo", 1);
+            scalar maxDeltaT = runTime.controlDict().getOrDefault<scalar>("maxDeltaT", GREAT);
+
             bool correctPhi(pimple.dict().getOrDefault("correctPhi", mesh.dynamic()));
             bool checkMeshCourantNo(pimple.dict().getOrDefault("checkMeshCourantNo", false));
             bool moveMeshOuterCorrectors(pimple.dict().getOrDefault("moveMeshOuterCorrectors", false));
-            // ### Create Uf field ###########
-            autoPtr<surfaceVectorField> Uf;
-            Uf.reset( new surfaceVectorField(IOobject("Uf", runTime.timeName(), mesh, IOobject::READ_IF_PRESENT,IOobject::AUTO_WRITE),fvc::interpolate(U)) );
+#include "CourantNo.H"
+#include "setDeltaT.H"
+            //runTime.setEndTime(finalTime);
+            //++runTime;
+            //runTime++;
+            runTime.setTime(Times[i], i);
 
-            // if (mesh.dynamic())
-            // {
-            //     //Info<< "Constructing face velocity Uf\n" << endl;
+            Info << "Time = " << runTime.timeName() << nl << endl;
 
-            //     Uf.reset
-            //     (
-            //         new surfaceVectorField
-            //         (
-            //             IOobject
-            //             (
-            //                 "Uf",
-            //                 runTime.timeName(),
-            //                 mesh,
-            //                 IOobject::READ_IF_PRESENT,
-            //                 IOobject::AUTO_WRITE
-            //             ),
-            //             fvc::interpolate(U)
-            //         )
-            //     );
-            // }
-
-            PtrList<volVectorField> gradModP;
-
-            for (int i = 0; i < NmodesPproj; i++)
+            while (pimple.loop())
             {
-                gradModP.append(fvc::grad(problem->Pmodes[i]));
-            }
+                if (pimple.firstIter() || moveMeshOuterCorrectors)
+                {
+                    // Do any mesh changes
+                    mesh.controlledUpdate();
 
-            projGradModP = ULmodes.project(gradModP, NmodesUproj);
-            // ####### Starting of the reduced algorithm ##############
-            time = tstart;
-            //nextStore += numberOfStores;
-            while (time < finalTime ) //runTime.run()
-            {
-                    time = time + dt;
-                    //runTime++;
-                    while ((residual_jump > residualJumpLim || std::max(U_norm_res, P_norm_res) > normalizedResidualLim) && iter < maxIterOn)
+                    if (mesh.changing())
                     {
-                        iter++;
+                        MRF.update();
 
-                        //std::cout << iter << std::endl;
-                        // OFVER = Openfoam Version
-                        //#if defined(OFVER) && (OFVER == 6)
-                          // pimple.loop(runTime);
-                         //std::cout << "///////////////////////////solveOnline_Pimple method line 251 after pimple.loop(runTime) //////////////////////////////////"<< std::endl;
-                        //#else
-                           pimple.loop();
-                        //#endif
-
-                        // #################### Check the deformation of the mesh properties. #################
-
-                       if (pimple.firstIter() || moveMeshOuterCorrectors)
-                       {
-                            // Do any mesh changes
-                            mesh.controlledUpdate();
-
-                            if (mesh.changing())
-                            {
-                                MRF.update();
-
-                                if (correctPhi)
-                                {
-                                    // Calculate absolute flux
-                                    // from the mapped surface velocity
-                                    phi = mesh.Sf() & Uf();
-
-                                    //#include "correctPhi.H"
-                                    CorrectPhi(U,phi,P,dimensionedScalar("rAUf", dimTime, 1), geometricZeroField(),pimple);
-
-                                    //#include "continuityErrs.H"
-                                    {
-                                        volScalarField contErr(fvc::div(phi));
-
-                                        scalar sumLocalContErr = runTime.deltaTValue()*
-                                            mag(contErr)().weightedAverage(mesh.V()).value();
-
-                                        scalar globalContErr = runTime.deltaTValue()*
-                                            contErr.weightedAverage(mesh.V()).value();
-                                        cumulativeContErr += globalContErr;
-
-                                        // Info<< "time step continuity errors : sum local = " << sumLocalContErr
-                                        //     << ", global = " << globalContErr
-                                        //     << ", cumulative = " << cumulativeContErr
-                                        //     << endl;
-                                    }
-
-                                    // Make the flux relative to the mesh motion
-                                    fvc::makeRelative(phi, U);
-                                }
-
-                                 if (checkMeshCourantNo)
-                                 {
-                                     //#include "meshCourantNo.H"
-                                    {
-                                        scalarField sumPhi
-                                        (
-                                            fvc::surfaceSum(mag(mesh.phi()))().primitiveField()
-                                        );
-
-                                        meshCoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
-
-                                        meanMeshCoNum =
-                                            0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
-                                    }
-
-                                    Info<< "Mesh Courant Number mean: " << meanMeshCoNum
-                                        << " max: " << meshCoNum << endl;
-                                }
-                           }
-                        }
-
-                        // Assemble the Momentum equation
-
-                        MRF.correctBoundaryVelocity(U);
-                        tmp<fvVectorMatrix> tUEqn
-                        (
-                          fvm::div(phi, U)
-                        + MRF.DDt(U)
-                        + problem->turbulence->divDevReff(U)
-                        ==
-                        fvOptions(U)
-                        );
-                        fvVectorMatrix& UEqn = tUEqn.ref();
-                        UEqn.relax();
-
-                        // #############Galerkin projection for the velocity ###########################
-                        List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(UEqn, UprojN);
-                        RedLinSysU[1] = RedLinSysU[1] - projGradModP * b;
-                        a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
-                        ULmodes.reconstruct(U, a, "U");
-                        
-                      // ########### Assemble matrix for the  Poisson pressure equation ############### 
-                        volScalarField rAU(1.0/UEqn.A());
-                        volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, P));
-                        surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
-                        if (pimple.ddtCorr())
+                        if (correctPhi)
                         {
-                            //#include "createUfIfPresent.H"
-                            phiHbyA += MRF.zeroFilter(fvc::interpolate(rAU)*fvc::ddtCorr(U, phi, Uf));
+                            // Calculate absolute flux
+                            // from the mapped surface velocity
+                            phi = mesh.Sf() & Uf();
+
+#include "correctPhi.H"
+                            //CorrectPhi(U, phi, P, dimensionedScalar("rAUf", dimTime, 1), geometricZeroField(),pimple);
+
+                            // Make the flux relative to the mesh motion
+                            fvc::makeRelative(phi, U);
                         }
-                        else
+
+                        if (checkMeshCourantNo)
                         {
-                            phiHbyA += MRF.zeroFilter(fvc::interpolate(rAU));
+#include "meshCourantNo.H"
                         }
+                    }
+                }
 
-                        MRF.makeRelative(phiHbyA);
+                //vector v(1, 0, 0);
+                // ITHACAutilities::assignBC(U, 0, v);
+                //#include "UEqn.H"
 
-                        if (P.needReference())
-                        {
-                            fvc::makeRelative(phiHbyA, U);
-                            adjustPhi(phiHbyA, U, P);
-                            fvc::makeAbsolute(phiHbyA, U);
-                        }
+                // Solve the Momentum equation
+                MRF.correctBoundaryVelocity(U);
 
-                        tmp<volScalarField> rAtU(rAU);
+                tmp<fvVectorMatrix> tUEqn
+                (
+                    fvm::ddt(U) + fvm::div(phi, U)
+                    + MRF.DDt(U)
+                    + turbulence->divDevReff(U)
+                    ==
+                    fvOptions(U)
+                );
+                fvVectorMatrix& UEqn = tUEqn.ref();
 
-                        if (pimple.consistent())
-                        {
-                            rAtU = 1.0/max(1.0/rAU - UEqn.H1(), 0.1/rAU);
-                            phiHbyA +=
-                                fvc::interpolate(rAtU() - rAU)*fvc::snGrad(P)*mesh.magSf();
-                            HbyA -= (rAU - rAtU())*fvc::grad(P);
-                        }
+                UEqn.relax();
 
-                        if (pimple.nCorrPISO() <= 1)
-                        {
-                            tUEqn.clear();
-                        }
-                        // //Update the pressure BCs to ensure flux consistency
-                        constrainPressure(P, U, phiHbyA, rAtU(), MRF);
+                fvOptions.constrain(UEqn);
+                // #############Galerkin projection for the velocity ###########################
+                List<Eigen::MatrixXd> RedLinSysU;
+                if (pimple.momentumPredictor())
+                {
+                    //std::cout << "#############"<< U_norm_res << "###################"<< std::endl;
+                    //solve(UEqn == -fvc::grad(p));
+                    RedLinSysU = problem->Umodes.project(UEqn, NmodesUproj);
+                    volVectorField gradpfull = -fvc::grad(p);
+                    Eigen::MatrixXd projGrad = problem->Umodes.project(gradpfull, NmodesUproj);
+                    RedLinSysU[1] = RedLinSysU[1] + projGrad;
+                    //Project method return A list of Eigen Matrices of dimension 2.
+                    //The first element of the list is the reduced matrix of the linear system,
+                    //the second element is the reduced source term of the linear system.
+                    //RedLinSysU[1] = RedLinSysU[1] - projGradModP * b; //?
 
-                        // ### Reduced linear system for Pressure
-                        List<Eigen::MatrixXd> RedLinSysP;
+                    a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual);
 
-                        // Non-orthogonal pressure corrector loop
-                        while (pimple.correctNonOrthogonal())
-                        {
-                            // Continuity equation
-                            fvScalarMatrix pEqn
-                            (
-                                fvm::laplacian(rAtU(), P) == fvc::div(phiHbyA)
-                            );
+                    problem->Umodes.reconstruct(U, a, "U");
+                    fvOptions.correct(U);
+                }
 
-                            pEqn.setReference(pRefCell, pRefValue);
-                            //pEqn.solve(mesh.solver(P.select(pimple.finalInnerIter())));
+                /////////////////////////////////////////////////////////
 
-                            ////// Added for reduced problem to project the pressure /////////
-                            RedLinSysP = problem->Pmodes.project(pEqn, NmodesPproj);
-                            b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
-                            problem->Pmodes.reconstruct(P, b, "p");
-
-                            if (pimple.finalNonOrthogonalIter())
-                            {
-                                phi = phiHbyA - pEqn.flux();
-                            }
-                        }
-
-                        P.relax();
-                        U = HbyA - rAtU() * fvc::grad(P);
-                        U.correctBoundaryConditions();
-                        fvOptions.correct(U);
-
-                        // Correct Uf if the mesh is moving
-                        // Uf = fvc::interpolate(U)
-                        fvc::correctUf(Uf, U, phi);
-
-                        // Make the fluxes relative to the mesh motion
-                        fvc::makeRelative(phi, U);
-
-                        uresidualOld = uresidualOld - uresidual;
-                        presidualOld = presidualOld - presidual;
-                        uresidualOld = uresidualOld.cwiseAbs();
-                        presidualOld = presidualOld.cwiseAbs();
-                        residual_jump = std::max(uresidualOld.sum(), presidualOld.sum());
-                        uresidualOld = uresidual;
-                        presidualOld = presidual;
-                        uresidual = uresidual.cwiseAbs();
-                        presidual = presidual.cwiseAbs();
-                        U_norm_res = uresidual.sum() / (RedLinSysU[1].cwiseAbs()).sum();
-                        P_norm_res = presidual.sum() / (RedLinSysP[1].cwiseAbs()).sum();
-
-                        // if (problem->para->debug)
-                        // {
-                        //     std::cout << "Residual jump = " << residual_jump << std::endl;
-                        //     std::cout << "Normalized residual = " << std::max(U_norm_res,
-                        //               P_norm_res) << std::endl;
-                        //     std::cout << "Final normalized residual for velocity: " << U_norm_res <<
-                        //               std::endl;
-                        //     std::cout << "Final normalized residual for pressure: " << P_norm_res <<
-                        //               std::endl;
-                        // }
+                // --- Pressure corrector loop
+                while (pimple.correct())
+                {
+                    //#include "pEqn.H"
+                    //std::cout << "#############"<< P_norm_res << "###################"<< std::endl;
+                    volScalarField rAU(1.0 / UEqn.A());
+                    volVectorField HbyA(constrainHbyA(rAU * UEqn.H(), U, p)); //p
+                    surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
+                    if (pimple.ddtCorr())
+                    {
+                        phiHbyA += MRF.zeroFilter(fvc::interpolate(rAU) * fvc::ddtCorr(U, phi, Uf));
+                    }
+                    else
+                    {
+                        phiHbyA += MRF.zeroFilter(fvc::interpolate(rAU));
                     }
 
-                    std::cout << "Solution " << counter << " converged in " << iter <<
-                              " iterations." << std::endl;
-                    std::cout << "Final normalized residual for velocity: " << U_norm_res <<
-                              std::endl;
-                    std::cout << "Final normalized residual for pressure: " << P_norm_res <<
-                              std::endl;
-                    // ###### Reconstruction of the solution ###############         
-                    ULmodes.reconstruct(U, a, "Uaux");
-                    P.rename("Paux");
-                    problem->Pmodes.reconstruct(P, b, "Paux");
+                    MRF.makeRelative(phiHbyA);
 
-                    ITHACAstream::exportSolution(U, name(counter), folder);
-                    ITHACAstream::exportSolution(P, name(counter), folder);
-                    ITHACAstream::writePoints(mesh.points(), folder, name(counter) + "/polyMesh/");
+                    if (p.needReference())
+                    {
+                        fvc::makeRelative(phiHbyA, U);
+                        adjustPhi(phiHbyA, U, p);
+                        fvc::makeAbsolute(phiHbyA, U);
+                    }
 
-                    //runTime.setTime(runTime.startTime(), 0);
-                    //runTime.setTime(runTime.startTime(), tstart);
+                    tmp<volScalarField> rAtU(rAU);
 
-                    //runTime.setTime(runTime.startTime(), 1);
+                    if (pimple.consistent())
+                    {
+                        rAtU = 1.0 / max(1.0 / rAU - UEqn.H1(), 0.1 / rAU);
+                        phiHbyA +=
+                            fvc::interpolate(rAtU() - rAU) * fvc::snGrad(p) * mesh.magSf(); // p
+                        HbyA -= (rAU - rAtU()) * fvc::grad(p); //p
+                    }
 
-                    counter++;
-                    nextStore += storeEvery;
-                    std::cout << "################### solveOnline_Pimple end ##################"<< std::endl;       
-            }                  
+                    if (pimple.nCorrPISO() <= 1)
+                    {
+                        tUEqn.clear();
+                    }
 
-        }
+                    // Update the pressure BCs to ensure flux consistency
+                    constrainPressure(p, U, phiHbyA, rAtU(), MRF); //p
 
+                    // ### Reduced linear system for Pressure
+                    List<Eigen::MatrixXd> RedLinSysP;
 
-    void OnlineVelocity(Eigen::MatrixXd vel)
-    {
-            M_Assert(problem->inletIndex.rows() == vel.size(),
-                     "Imposed boundary conditions dimensions do not match given values matrix dimensions");
-            Eigen::MatrixXd vel_scal;
-            vel_scal.resize(vel.rows(), vel.cols());
+                    // Non-orthogonal pressure corrector loop
+                    while (pimple.correctNonOrthogonal())
+                    {
+                        fvScalarMatrix pEqn
+                        (
+                            fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA) //p
+                        );
 
-            for (int k = 0; k < problem->inletIndex.rows(); k++)
-            {
-                int p = problem->inletIndex(k, 0);
-                //int p = problem->inletIndex(0, 0);
+                        pEqn.setReference(pRefCell, pRefValue);
 
-                //std::cout << "/////////////////////////// Value of p is:  //////////////////////////////////"<< p << std::endl;
-                int l = problem->inletIndex(k, 1);
-                //int l = problem->inletIndex(0, 1);
-                //std::cout << "/////////////////////////// Value of l is ://////////////////////////////////" << l << std::endl;
-                scalar area = gSum(problem->liftfield[0].mesh().magSf().boundaryField()[p]);
-                //std::cout << "/////////////////////////// the value of the area is : //////////////////////////////////"<< area << std::endl;
-                scalar u_lf = gSum(problem->liftfield[k].mesh().magSf().boundaryField()[p] *
-                                  problem->liftfield[k].boundaryField()[p]).component(l) / area;
-                //std::cout << "///////////////////////////the value of u_lf is : //////////////////////////////////"<< u_lf << std::endl;
-                vel_scal(k, 0) = vel(k, 0) / u_lf;
-                //vel_scal(0, 0) = vel(0, 0) / u_lf;
-                //std::cout << "///////////////////////////vel_scal //////////////////////////////////"<< vel_scal(k,0) << std::endl;
+                        //pEqn.solve(mesh.solver(P.select(pimple.finalInnerIter()))); //p
+                        //// Added for reduced problem to project the pressure /////////
+                        RedLinSysP = problem->Pmodes.project(pEqn, NmodesPproj);
+                        b = reducedProblem::solveLinearSys(RedLinSysP, b, presidual);
+                        problem->Pmodes.reconstruct(p, b, "p");
 
-            }
-            //std::cout << "///////////////////////////vel_scal dimension //////////////////////////////////"<< vel_scal << std::endl;
-            vel_now = vel_scal;
-            //std::cout << "/////////////////////////// the OnlineVelocity method //////////////////////////////////"<< std::endl;
-    }
+                        if (pimple.finalNonOrthogonalIter())
+                        {
+                            phi = phiHbyA - pEqn.flux();
+                        }
+                    }
+
+#include "continuityErrs.H"
+
+                    // Explicitly relax pressure for momentum corrector
+                    p.relax();
+                    U = HbyA - rAtU * fvc::grad(p); //p
+                    U.correctBoundaryConditions();
+                    fvOptions.correct(U);
+                    // Correct Uf if the mesh is moving
+                    fvc::correctUf(Uf, U, phi);
+
+                    // Make the fluxes relative to the mesh motion
+                    fvc::makeRelative(phi, U);
+
+                }// end of the pimple.correct()
+
+            }// end of the pimple.loop()
+
+            // uresidualOld = uresidualOld - uresidual;
+            // presidualOld = presidualOld - presidual;
+            // uresidualOld = uresidualOld.cwiseAbs();
+            // presidualOld = presidualOld.cwiseAbs();
+            // residual_jump = std::max(uresidualOld.sum(), presidualOld.sum());
+            // uresidualOld = uresidual;
+            // presidualOld = presidual;
+            // uresidual = uresidual.cwiseAbs();
+            // presidual = presidual.cwiseAbs();
+            //runTime.write();
+            problem->Umodes.reconstruct(U, a, "U");
+            problem->Pmodes.reconstruct(p, b, "p");
+
+            ITHACAstream::exportSolution(U, name(counter), folder);
+            ITHACAstream::exportSolution(p, name(counter), folder);
+            ITHACAstream::writePoints(mesh.points(), folder, name(counter) + "/polyMesh/");
+            std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
+            //runTime.setTime(runTime.startTime(), 0);
+            counter++;
+        } // end of the runTime.run()
+
+    } // end of the method
+
 };
+
+
 
 /*---------------------------------------------------------------------------*\
                                Starting the MAIN
@@ -557,77 +447,79 @@ int main(int argc, char* argv[])
     int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
     int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
     //int NmodesSUPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesSUPproj", 10);
-   
+
     // Read the par file where the parameters are stored
     word filename("./par");
     example.mu = ITHACAstream::readMatrix(filename);
-    // example.Pnumber = 1; // Number of parameters.
-    // example.Tnumber = 1; //Dimension of the training set (used only when gerating parameters without input)
-    // example.setParameters();
-    // // Set the parameter ranges: Range of the parameter spaces. 
-    // example.mu_range(0, 0) = 0.005;
-    // example.mu_range(0, 1) = 0.005;
-    //   // Generate equispaced samples inside the parameter range
-    // example.genEquiPar();
+    // // example.Pnumber = 1; // Number of parameters.
+    // // example.Tnumber = 1; //Dimension of the training set (used only when gerating parameters without input)
+    // // example.setParameters();
+    // // // Set the parameter ranges: Range of the parameter spaces.
+    // // example.mu_range(0, 0) = 0.005;
+    // // example.mu_range(0, 1) = 0.005;
+    // //   // Generate equispaced samples inside the parameter range
+    // // example.genEquiPar();
+
     //Set the inlet boundaries patch 0 directions x and y
     example.inletIndex.resize(1, 2);
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
-    // Time parameters: W e can use Ioodictionnary to access time parameters
+    // Time parameters: We can use Ioodictionnary to access time parameters
     example.startTime = 0;
-    example.finalTime = 1;
+    example.finalTime = 0.5;
     example.timeStep = 0.005; //0.01;
     example.writeEvery = 0.005;
 
-    //Perform the offline solve
+    // //Perform the offline solve
     example.offlineSolve();
-    //Search the lift function
-    example.liftSolve3();
-    // Normalize the lifting function
-    ITHACAutilities::normalizeFields(example.liftfield);
-    //Create homogeneous basis functions for velocity    
-    example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
-    // Perform a POD decomposition for velocity and pressure
-    ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
-                            example.podex, 0, 0, NmodesUout);
+    // //Search the lift function
+    // //example.liftSolve3();
+    // // Normalize the lifting function
+    // //ITHACAutilities::normalizeFields(example.liftfield);
+    // //Create homogeneous basis functions for velocity
+    // //example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
+    // // Perform a POD decomposition for velocity and pressure
+    // // ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
+    // //                         example.podex, 0, 0, NmodesUout);
 
     //Perform POD on velocity pressure store the first 20 modes
 
-    // ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
-    //                          example.podex, 0, 0, NmodesUout);
+    ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0, NmodesUout);
 
-    
+
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                         example.podex, 0, 0,
                         NmodesPout);
 
-
+    example.restart();
     // ############### contruct the reduced the class object ##########
-    reducedFSI reduced(example);
+    reducedBasicFsi reduced(example);
+    //std::cout << "########################" << reduced.startTime << "#####################" << std::endl;
     // Reads inlet volocities boundary conditions.
     word vel_file(para->ITHACAdict->lookup("online_velocities"));
-    ///std::cout << "///////////////////////////size  of vel_file //////////////////////////////////"<<vel_file.size() << std::endl;
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
-   
-    reduced.tstart = 0;
-    reduced.finalTime = 1;
-    reduced.dt = 0.005;
-    reduced.storeEvery = 0.005;
+
+    reduced.startTime = example.startTime;
+    reduced.finalTime = example.finalTime;
+    reduced.timeStep = example.timeStep;
+    reduced.writeEvery = example.writeEvery;
     //reduced.nextStore = 0.1;
-    reduced.exportEvery = 0.005;
-    
+    //reduced.exportEvery = 0.005;
+
     //Perform the online solutions
     //for (label k = 0; k < (example.mu).size(); k++)
     //{
-        //scalar mu_now = example.mu(0, k);
-        scalar mu_now = example.mu(0, 0);
-        example.change_viscosity(mu_now);
-        reduced.OnlineVelocity(vel);
-        reduced.solveOnline_Pimple(mu_now, NmodesUproj, NmodesPproj);
+    //scalar mu_now = example.mu(0, k);
+    scalar mu_now = example.mu(0, 0);
+    //example.change_viscosity(mu_now);
+    //reduced.OnlineVelocity(vel);
+    reduced.solveOnline_Pimple(mu_now, NmodesUproj, NmodesPproj);
+    //reduced.solveOnline_Pimple(mu_now, NmodesUproj, NmodesPproj);
     //}
-   
+
     exit(0);
 }
 
 
-
+//////////////////////////////////////////////////////////////////////

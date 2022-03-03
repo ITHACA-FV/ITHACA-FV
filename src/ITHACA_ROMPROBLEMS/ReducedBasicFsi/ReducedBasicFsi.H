@@ -42,7 +42,7 @@ SourceFiles
 #include "ReducedProblem.H"
 #include "fsiBasic.H"
 #include "ITHACAutilities.H"
-#include "reducedSimpleSteadyNS.H"
+#include "ReducedSimpleSteadyNS.H"
 #include "EigenFunctions.H"
 #include <Eigen/Eigen>
 #include <unsupported/Eigen/NonLinearOptimization>

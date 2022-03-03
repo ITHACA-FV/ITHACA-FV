@@ -82,11 +82,11 @@ SIMPLE
 
 PIMPLE
 {
-    nNonOrthogonalCorrectors 1;
+    nNonOrthogonalCorrectors 2;
     nCorrectors 3;
     //momentumPredictor yes;
     //correctPhi        yes;
-    //nOuterCorrectors  5;
+    nOuterCorrectors  2;
 }
 
 potentialFlow

@@ -31,6 +31,7 @@ OutType fixed;
 
 
 bcMethod penalty;
+warning false;
 
 // // Specific problem of a stationary case
 //tolerance 1e-5;

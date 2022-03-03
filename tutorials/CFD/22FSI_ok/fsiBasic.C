@@ -36,17 +36,18 @@ fsiBasic::fsiBasic(int argc, char* argv[])
 :unsteadyNS(argc, argv)
 {
         // to create argument list
-        _args = autoPtr<argList>
-                (
-                    new argList(argc, argv)
-                );
+        // _args = autoPtr<argList>
+        //         (
+        //             new argList(argc, argv)
+        //         );
 
-        if (!_args->checkRootCase())
-        {
-            Foam::FatalError.exit();
-        }
+        // if (!_args->checkRootCase())
+        // {
+        //     Foam::FatalError.exit();
+        // }
 
-        argList& args = _args();
+        // argList& args = _args();
+        #include "setRootCase.H"
 
         #include "createTime.H"
         //#include "createDynamicFvMesh.H"
@@ -384,17 +385,75 @@ void fsiBasic::restart()
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
-    meshPtr.clear();
-    _pimple.clear();
-    meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     dynamicFvMesh& mesh = meshPtr();
-    _pimple = autoPtr<pimpleControl>
+    pimpleControl& pimple = _pimple();
+    Info << "ReReading field p\n" << endl;
+    _p = autoPtr<volScalarField>
+         (
+             new volScalarField
+             (
+                 IOobject
+                 (
+                     "p",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+    volScalarField& p = _p();
+    Info << "ReReading field U\n" << endl;
+    _U = autoPtr<volVectorField>
+         (
+             new volVectorField
+             (
+                 IOobject
+                 (
+                     "U",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+    volVectorField& U = _U();
+    Info << "ReReading/calculating face flux field phi\n" << endl;
+    _phi = autoPtr<surfaceScalarField>
+           (
+               new surfaceScalarField
+               (
+                   IOobject
                    (
-                       new pimpleControl
-                       (
-                           mesh
-                       )
-               );
-        //turbulence->validate();
-     #include "createFields.H" 
+                       "phi",
+                       runTime.timeName(),
+                       mesh,
+                       IOobject::READ_IF_PRESENT,
+                       IOobject::AUTO_WRITE
+                   ),
+                   linearInterpolate(U) & mesh.Sf()
+               )
+           );
+    surfaceScalarField& phi = _phi();
+    pRefCell = 0;
+    pRefValue = 0.0;
+    setRefCell(p, pimple.dict(), pRefCell, pRefValue);
+    _laminarTransport = autoPtr<singlePhaseTransportModel>
+                        (
+                            new singlePhaseTransportModel( U, phi )
+                        );
+    singlePhaseTransportModel& laminarTransport = _laminarTransport();
+    turbulence = autoPtr<incompressible::turbulenceModel>
+                 (
+                     incompressible::turbulenceModel::New(U, phi, laminarTransport)
+                 );
+    _MRF = autoPtr<IOMRFZoneList>
+           (
+               new IOMRFZoneList(mesh)
+           );
+    _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
+    turbulence->validate();
 }
