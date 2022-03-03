@@ -105,6 +105,8 @@ class fsiBasic: public unsteadyNS
         void truthSolve3(List<scalar> mu_now,
                         fileName folder = "./ITHACAoutput/Offline/");
         void liftSolve3();
+
+        void restart();
 };        
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
