@@ -30,7 +30,7 @@ sixDoFRigidBodyMotionCoeffs
         type Newmark; // symplectic;
     }
 
-    patches         (cylinder1);
+    patches         ( cylinder1 );
     innerDistance   0.3;
     outerDistance   3;
 
@@ -38,7 +38,7 @@ sixDoFRigidBodyMotionCoeffs
     rhoInf          1;
 
     centreOfMass    (0 0 0);
-    mass            0.1;
+    mass            10.1;
     momentOfInertia (1 1 0.03);//mass
     transform       (1 0 0 0 1 0 0 0 1) (2.929541 0 0.2);
 
@@ -46,20 +46,30 @@ sixDoFRigidBodyMotionCoeffs
 
     constraints
     {
-        noRotate1
+        // noRotate1
+        // {
+        //     sixDoFRigidBodyMotionConstraint axis;
+        //     axis            (0 0 1);
+        // }
+        // noRotate2
+        // {
+        //     sixDoFRigidBodyMotionConstraint axis;
+        //     axis            (1 0 0);
+        // }
+        // noRotate3
+        // {
+        //     sixDoFRigidBodyMotionConstraint axis;
+        //     axis            (0 1 0);
+        // }
+        yPlan
         {
-            sixDoFRigidBodyMotionConstraint axis;
-            axis            (0 0 1);
+            sixDoFRigidBodyMotionConstraint plane;
+            normal           (0 1 0); //(1 0 0)
         }
-        noRotate2
+        yAxis
         {
-            sixDoFRigidBodyMotionConstraint axis;
-            axis            (1 0 0);
-        }
-        noRotate3
-        {
-            sixDoFRigidBodyMotionConstraint axis;
-            axis            (0 1 0);
+            sixDoFRigidBodyMotionConstraint orientation;
+            centreOfRotation           (0 1 0);
         }
     }
 
@@ -70,21 +80,21 @@ sixDoFRigidBodyMotionCoeffs
             sixDoFRigidBodyMotionRestraint linearSpring;
             body cylinder1;
             anchor          (-1 0 0);
-            refAttachmentPt (0 0 0);
-            stiffness       0.04;
+            refAttachmentPt (-1 0 0);
+            stiffness       10.04;
             damping         0;
-            restLength      1;
+            restLength      0;
         }
-        horizontalSpring1
-        {
-            sixDoFRigidBodyMotionRestraint linearSpring;
-            body cylinder1;
-            anchor          (0 1 0);
-            refAttachmentPt (0 0 0);
-            stiffness       0.004;
-            damping         0;
-            restLength      1;
-        }
+        //horizontalSpring1
+        //{
+        //    sixDoFRigidBodyMotionRestraint linearSpring;
+        //    body cylinder1;
+         //   anchor          (0 1 0);
+        //    refAttachmentPt (0 1 0);
+         //   stiffness       10.004;
+         //   damping         0;
+         //   restLength      0;//1
+        //}
     }
 
 }
