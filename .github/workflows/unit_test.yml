@@ -1,0 +1,16 @@
+name: Docker
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  docker-arm64:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Running docker container with openfoam
+        run : docker run -v "$PWD/:/root" opencfd/openfoam2106-dev /root/unitTests/gtest/script.sh
