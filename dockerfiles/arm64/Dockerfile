@@ -32,5 +32,4 @@ RUN /bin/bash -c "source OpenFOAM-v2106/etc/bashrc && \
 
 WORKDIR $HOME
 COPY .bashrc $HOME/.bashrc
-COPY .vimrc $HOME/.
 ENTRYPOINT ["/bin/bash"]
