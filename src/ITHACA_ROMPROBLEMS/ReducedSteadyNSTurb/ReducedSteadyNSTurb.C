@@ -165,6 +165,10 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     newtonObject.bc.resize(N_BC);
     newtonObject.tauU = tauU;
 
+    Eigen::MatrixXd param(2, 1);
+    param(0, 0) = vel_now(0, 0);
+    param(1, 0) = nu;
+
     for (int j = 0; j < N_BC; j++)
     {
         newtonObject.bc(j) = vel_now(j, 0);
@@ -181,7 +185,8 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     {
         for (int i = 0; i < nphiNut; i++)
         {
-            newtonObject.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
+            //newtonObject.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
+            newtonObject.gNut(i) = problem->rbfSplines[i]->eval(param);
             rbfCoeff = newtonObject.gNut;
         }
     }
