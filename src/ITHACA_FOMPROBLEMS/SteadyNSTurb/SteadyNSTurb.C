@@ -140,6 +140,7 @@ void SteadyNSTurb::truthSolve(List<scalar> mu_now)
 List < Eigen::MatrixXd > SteadyNSTurb::turbulenceTerm1(label NUmodes,
         label NSUPmodes, label nNutModes)
 {
+
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     List < Eigen::MatrixXd > ct1Matrix;
     ct1Matrix.setSize(cSize);
@@ -528,6 +529,8 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
                                "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
+                               "./ITHACAoutput/Matrices/");
+    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
                                "./ITHACAoutput/Matrices/");
     // Export the matrix
     ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
