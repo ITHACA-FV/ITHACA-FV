@@ -1,11 +1,11 @@
-name: Docker
+name: Unit Testing
 
 on:
   push:
     branches: [ master ]
 
 jobs:
-  docker-arm64:
+  gtest:
     runs-on: ubuntu-latest
     steps:
 
