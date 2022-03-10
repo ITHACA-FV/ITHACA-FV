@@ -185,8 +185,10 @@ public:
         // runTime.setTime(Times[1], 1);
         const label startTime = 1;
         const label endTime = Times.size();
+        Info << "endTime" << endTime << endl;
+        Info << "runtime.run(): " << runTime.run() << endl;
         runTime.setDeltaT(timeStep);
-        runTime.setTime(Times[startTime], startTime);
+        // runTime.setTime(Times[startTime], startTime);
 
         autoPtr<incompressible::turbulenceModel> turbulence;
         //singlePhaseTransportModel& laminarTransport = problem->_laminarTransport();
@@ -217,7 +219,7 @@ public:
 #include "CourantNo.H"
 #include "setInitialDeltaT.H"
         // PIMPLE algorithm starts here
-        for (label i = startTime; i < endTime; i++)
+        while (runTime.loop())
         {
             std::cerr << "File: 22fsi.C, Line: 230"<< std::endl;
             //runTime.setTime(Times[i], i);
@@ -239,7 +241,7 @@ public:
             //runTime.setEndTime(finalTime);
             //++runTime;
             //runTime++;
-            runTime.setTime(Times[i], i);
+            // runTime.setTime(Times[i], i);
 
             Info << "Time = " << runTime.timeName() << nl << endl;
 
