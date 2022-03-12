@@ -182,9 +182,9 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
                 turbulence->correct();
             }
         }
-        runTime.write();
+        // runTime.write();
 
-        runTime.printExecutionTime(Info);
+        // runTime.printExecutionTime(Info);
         
     //*****************************************end of pimpleFoam*****************************************
         if (checkWrite(runTime))
@@ -396,5 +396,6 @@ void fsiBasic::restart()
                        )
                );
         //turbulence->validate();
+ 
      #include "createFields.H" 
 }

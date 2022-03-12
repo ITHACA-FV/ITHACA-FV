@@ -80,10 +80,12 @@ class fsiBasic: public unsteadyNS
 
         // Dummy variables to transform pimplefoam into a class
         /// pimpleControl
-        //autoPtr<pimpleControl> _pimple;
+        autoPtr<pimpleControl> _pimple;
 
         // /// Turbulence model
-        // autoPtr<incompressible::turbulenceModel> turbulence;
+        autoPtr<incompressible::turbulenceModel> turbulence;
+        autoPtr<singlePhaseTransportModel> _laminarTransport;
+        autoPtr<IOMRFZoneList> _MRF;
         /// Velocity field
         // volVectorField& U;
         // /// Pressure field
