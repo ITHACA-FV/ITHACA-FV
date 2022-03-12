@@ -89,6 +89,7 @@ _phi = autoPtr<surfaceScalarField>
                linearInterpolate(U) & mesh.Sf()
            )
        );
+std::cout << "##############createFields line 92 #################\n"<< std::endl;
 surfaceScalarField& phi = _phi();
 surfaceScalarField phi0(phi);
 
@@ -96,14 +97,14 @@ _phi0 = autoPtr<surfaceScalarField>
         (
             new surfaceScalarField(phi0)
         );
-
+std::cout << "##############createFields line 99 #################\n"<< std::endl; 
 label pRefCell = 0;
 scalar pRefValue = 0.0;
 //setRefCell(p, mesh.solutionDict().subDict("SIMPLE"), pRefCell, pRefValue);
 setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
 //setRefCell(p, _pimple.dict(), pRefCell, pRefValue);
 mesh.setFluxRequired(p.name());
-
+std::cout << "##############createFields line 106 #################\n"<< std::endl; 
 _laminarTransport = autoPtr<singlePhaseTransportModel>
                     (
                         new singlePhaseTransportModel( U, phi )
