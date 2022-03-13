@@ -94,8 +94,8 @@ class fsiBasic: public unsteadyNS
         autoPtr<surfaceScalarField> _phi0;*/
         
         autoPtr<singlePhaseTransportModel> _laminarTransport;
-        // /// Turbulence model
-        autoPtr<incompressible::turbulenceModel> turbulence;
+        /*// /// Turbulence model
+        autoPtr<incompressible::turbulenceModel> turbulence;*/
        
         autoPtr<IOMRFZoneList> _MRF;
         /// fvOptions
