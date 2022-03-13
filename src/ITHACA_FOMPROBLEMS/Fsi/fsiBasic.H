@@ -84,14 +84,14 @@ class fsiBasic: public unsteadyNS
         autoPtr<Foam::dynamicFvMesh> meshPtr;
         /// pimpleControl
         autoPtr<pimpleControl> _pimple;
-        // Dummy variables to transform createFields.H into a class
+        /*// Dummy variables to transform createFields.H into a class
         autoPtr<volScalarField> _p;
         autoPtr<volVectorField> _U;
-        autoPtr<surfaceScalarField> _phi;
-        /// Initial fields (for restart purposes)
+        autoPtr<surfaceScalarField> _phi;*/
+        /*/// Initial fields (for restart purposes)
         autoPtr<volScalarField> _p0;
         autoPtr<volVectorField> _U0;
-        autoPtr<surfaceScalarField> _phi0;
+        autoPtr<surfaceScalarField> _phi0;*/
         
         autoPtr<singlePhaseTransportModel> _laminarTransport;
         // /// Turbulence model
@@ -101,7 +101,7 @@ class fsiBasic: public unsteadyNS
         /// fvOptions
         autoPtr<fv::options> _fvOptions;
         
-        // Fields containing the offline solution i.e. the snapshot matrix
+        /*// Fields containing the offline solution i.e. the snapshot matrix
 
         /// List of pointers used to form the pressure snapshots matrix
         PtrList<volScalarField> Pfield;
@@ -113,7 +113,7 @@ class fsiBasic: public unsteadyNS
         PtrList<volScalarField> Pmodes;
 
         /// List of pointers used to form the velocity modes
-        PtrList<volVectorField> Umodes;
+        PtrList<volVectorField> Umodes;*/
 
         // Functions
 
