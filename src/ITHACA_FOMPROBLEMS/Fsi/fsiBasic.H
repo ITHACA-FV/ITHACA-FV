@@ -88,10 +88,10 @@ class fsiBasic: public unsteadyNS
         autoPtr<volScalarField> _p;
         autoPtr<volVectorField> _U;
         autoPtr<surfaceScalarField> _phi;
-        /// Initial fields (for restart purposes)
+        /*/// Initial fields (for restart purposes)
         autoPtr<volScalarField> _p0;
         autoPtr<volVectorField> _U0;
-        autoPtr<surfaceScalarField> _phi0;
+        autoPtr<surfaceScalarField> _phi0;*/
         
         autoPtr<singlePhaseTransportModel> _laminarTransport;
         // /// Turbulence model
