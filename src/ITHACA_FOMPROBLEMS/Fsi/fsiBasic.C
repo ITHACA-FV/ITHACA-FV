@@ -48,7 +48,7 @@ fsiBasic::fsiBasic(int argc, char* argv[])
 
         argList& args = _args();
 
-        #include "createTime.H"
+#include "createTime.H"
         //#include "createDynamicFvMesh.H"
         Info << "Create a dynamic mesh for time = "
              << runTime.timeName() << nl << endl;
@@ -63,7 +63,6 @@ fsiBasic::fsiBasic(int argc, char* argv[])
                            mesh
                        )
                    );
-        //turbulence->validate();
 
         ITHACAdict = new IOdictionary
         (
@@ -76,7 +75,8 @@ fsiBasic::fsiBasic(int argc, char* argv[])
                 IOobject::NO_WRITE
             )
         );
-         #include "createFields.H" 
+#include "createFields.H" 
+        turbulence->validate();
         para = ITHACAparameters::getInstance(mesh, runTime);
         //pointVectorField & PointDisplacement = const_cast<pointVectorField&>(mesh.objectRegistry::lookupObject<pointVectorField>("pointDisplacement"));               
 }
@@ -87,14 +87,13 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
     Time& runTime = _runTime();
     surfaceScalarField& phi = _phi();
     dynamicFvMesh& mesh = meshPtr();
-    #include "initContinuityErrs.H"
+#include "initContinuityErrs.H"
     fv::options& fvOptions = _fvOptions();
     pimpleControl& pimple = _pimple();
     volScalarField& p = _p();
     volVectorField& U = _U();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
-
     instantList Times = runTime.times();
     runTime.setEndTime(finalTime);
 
@@ -104,11 +103,11 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
     nextWrite = startTime; // timeStep initialization
 
     //****************************pimpleFoam algorithm******************************************
-    #include "addCheckCaseOptions.H"
-    #include "createDyMControls.H"
-    #include "createUfIfPresent.H"
-    #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
+#include "addCheckCaseOptions.H"
+#include "createDyMControls.H"
+#include "createUfIfPresent.H"
+#include "CourantNo.H"
+#include "setInitialDeltaT.H"
 
     turbulence->validate();
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -127,9 +126,10 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
 
     while (runTime.run())
     {
-        #include "readDyMControls.H"
-        #include "CourantNo.H"
-        #include "setDeltaT.H"
+
+#include "readDyMControls.H"
+#include "CourantNo.H"
+#include "setDeltaT.H"
         runTime.setEndTime(finalTime);
         runTime++;
 
@@ -155,7 +155,7 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
                         // from the mapped surface velocity
                         phi = mesh.Sf() & Uf();
 
-                             #include "correctPhi.H"
+#include "correctPhi.H"
 
                         // Make the flux relative to the mesh motion
                         fvc::makeRelative(phi, U);
@@ -163,17 +163,17 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
 
                     if (checkMeshCourantNo)
                     {
-                        #include "meshCourantNo.H"
+#include "meshCourantNo.H"
                     }
                 }
             }
 
-          #include "UEqn.H"
+#include "UEqn.H"
 
             // --- Pressure corrector loop
             while (pimple.correct())
             {
-              #include "pEqn.H"
+#include "pEqn.H"
             }
 
             if (pimple.turbCorr())
@@ -297,8 +297,8 @@ void fsiBasic::liftSolve3()
         runTime.functionObjects().start();
         MRF.makeRelative(phi);
         adjustPhi(phi, Ulift, p);
-        #include "UEqn.H"
-        #include "createUfIfPresent.H"
+#include "UEqn.H"
+#include "createUfIfPresent.H"
         volScalarField rAU(1.0/UEqn.A());
         volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
         surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
@@ -397,5 +397,5 @@ void fsiBasic::restart()
                );
         //turbulence->validate();
  
-     #include "createFields.H" 
+#include "createFields.H" 
 }

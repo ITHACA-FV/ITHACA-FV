@@ -77,24 +77,43 @@ class fsiBasic: public unsteadyNS
         /// Construct with argc and argv
         fsiBasic(int argc, char* argv[]);
         ~fsiBasic() {};
-
-        // Dummy variables to transform pimplefoam into a class
-        /// pimpleControl
-        autoPtr<pimpleControl> _pimple;
-
-        // /// Turbulence model
-        autoPtr<incompressible::turbulenceModel> turbulence;
-        autoPtr<singlePhaseTransportModel> _laminarTransport;
-        autoPtr<IOMRFZoneList> _MRF;
-        /// Velocity field
-        // volVectorField& U;
-        // /// Pressure field
-        // volScalarField& p;
-        // ///
-        // surfaceScalarField& phi;
+        
+        // Dummy variables to transform createTime.H into a class
+        autoPtr<Time> _runTime;
         // /// Dynamic mesh field
         autoPtr<Foam::dynamicFvMesh> meshPtr;
-        //autoPtr<dynamicFvMesh> _mesh;
+        /// pimpleControl
+        autoPtr<pimpleControl> _pimple;
+        // Dummy variables to transform createFields.H into a class
+        autoPtr<volScalarField> _p;
+        autoPtr<volVectorField> _U;
+        autoPtr<surfaceScalarField> _phi;
+        /// Initial fields (for restart purposes)
+        autoPtr<volScalarField> _p0;
+        autoPtr<volVectorField> _U0;
+        autoPtr<surfaceScalarField> _phi0;
+        
+        autoPtr<singlePhaseTransportModel> _laminarTransport;
+        // /// Turbulence model
+        autoPtr<incompressible::turbulenceModel> turbulence;
+       
+        autoPtr<IOMRFZoneList> _MRF;
+        /// fvOptions
+        autoPtr<fv::options> _fvOptions;
+        
+        // Fields containing the offline solution i.e. the snapshot matrix
+
+        /// List of pointers used to form the pressure snapshots matrix
+        PtrList<volScalarField> Pfield;
+
+        /// List of pointers used to form the velocity snapshots matrix
+        PtrList<volVectorField> Ufield;
+        
+        /// List of pointers used to form the pressure modes
+        PtrList<volScalarField> Pmodes;
+
+        /// List of pointers used to form the velocity modes
+        PtrList<volVectorField> Umodes;
 
         // Functions
 
@@ -106,8 +125,9 @@ class fsiBasic: public unsteadyNS
         ///
         void truthSolve3(List<scalar> mu_now,
                         fileName folder = "./ITHACAoutput/Offline/");
+        /// Perform a lift solve for the velocity field                
         void liftSolve3();
-
+        /// method to set all fields back to values in 0 folder
         void restart();
 };        
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
