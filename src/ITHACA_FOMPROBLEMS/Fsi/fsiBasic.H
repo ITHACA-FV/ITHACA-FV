@@ -79,7 +79,7 @@ class fsiBasic: public unsteadyNS
         ~fsiBasic() {};
         
         // Dummy variables to transform createTime.H into a class
-        autoPtr<Time> _runTime;
+        //autoPtr<Time> _runTime;
         // /// Dynamic mesh field
         autoPtr<Foam::dynamicFvMesh> meshPtr;
         /// pimpleControl
