@@ -53,7 +53,7 @@ adjustTimeStep off;
 maxCo 1; //1
 
 
-functions
+/*functions
 {
     forces
     {
@@ -69,6 +69,6 @@ functions
         writeInterval   1;
         CofR            (0 0 0);
     }
-}
+}*/
 
 // ************************************************************************* //
