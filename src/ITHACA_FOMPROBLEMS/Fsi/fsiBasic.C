@@ -379,7 +379,10 @@ void fsiBasic::restart()
     _p.clear();
     _U.clear();
     _phi.clear();
-    turbulence.clear();
+    //turbulence.clear();
+    turbulence.reset(
+        (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
+    );
     _fvOptions.clear();
     meshPtr.clear();
     _pimple.clear();
@@ -396,7 +399,7 @@ void fsiBasic::restart()
                        )
                );
         //turbulence->validate();
-    pimpleControl& pimple = _pimple();               
+    //pimpleControl& pimple = _pimple();               
  
 #include "createFields.H" 
 }
