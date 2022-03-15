@@ -100,6 +100,17 @@ class fsiBasic: public unsteadyNS
         autoPtr<IOMRFZoneList> _MRF;
         /// fvOptions
         autoPtr<fv::options> _fvOptions;
+        /// List of pointers used to form the pressure snapshots matrix
+        PtrList<volScalarField> Pfield;
+
+        /// List of pointers used to form the velocity snapshots matrix
+        PtrList<volVectorField> Ufield;
+        /// List of pointers used to form the pressure modes
+        PtrList<volScalarField> Pmodes;
+
+        /// List of pointers used to form the velocity modes
+        PtrList<volVectorField> Umodes;
+
         
         // Functions
 
