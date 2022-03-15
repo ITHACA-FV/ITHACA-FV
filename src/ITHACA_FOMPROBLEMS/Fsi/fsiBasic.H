@@ -105,11 +105,11 @@ class fsiBasic: public unsteadyNS
 
         /// List of pointers used to form the velocity snapshots matrix
         PtrList<volVectorField> Ufield;
-        /// List of pointers used to form the pressure modes
+        /*/// List of pointers used to form the pressure modes
         PtrList<volScalarField> Pmodes;
 
         /// List of pointers used to form the velocity modes
-        PtrList<volVectorField> Umodes;
+        PtrList<volVectorField> Umodes;*/
 
         
         // Functions
