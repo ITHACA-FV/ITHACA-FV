@@ -388,10 +388,10 @@ void fsiBasic::restart()
     _p.clear();
     _U.clear();
     _phi.clear();
-    //turbulence.clear();
-    turbulence.reset(
-        (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
-    );
+    turbulence.clear();
+    // turbulence.reset(
+    //     (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
+    // );
     _fvOptions.clear();
     argList& args = _args();
     Time& runTime = _runTime();
