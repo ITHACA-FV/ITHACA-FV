@@ -380,12 +380,15 @@ void fsiBasic::restart()
     _U.clear();
     _phi.clear();
     turbulence.clear();
+    _laminarTransport.clear();
     _fvOptions.clear();
+    meshPtr.clear();
+    _pimple.clear();
+    _runTime.clear();
+
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
-    meshPtr.clear();
-    _pimple.clear();
     meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
@@ -396,6 +399,7 @@ void fsiBasic::restart()
                        )
                );
         //turbulence->validate();
+    pimpleControl& pimple = _pimple();               
  
 #include "createFields.H" 
 }
