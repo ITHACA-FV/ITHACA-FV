@@ -380,9 +380,7 @@ void fsiBasic::restart()
     _U.clear();
     _phi.clear();
     //turbulence.clear();
-    turbulence.reset(
-        (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
-    );
+    
     _fvOptions.clear();
     meshPtr.clear();
     _pimple.clear();
