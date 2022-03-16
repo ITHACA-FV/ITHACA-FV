@@ -377,20 +377,22 @@ void fsiBasic::restart()
 {
 
     
-    meshPtr.clear();
-    _runTime.clear();
-    _pimple.clear();
+    
+    // _runTime.clear();
+   
+    // _pimple.clear();
     _p.clear();
     _U.clear();
     _phi.clear();
     turbulence.clear();
     _fvOptions.clear();
-    
-    //_pimple.clear();
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
-    //meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+     meshPtr.clear();
+    _pimple.clear();
+    
+    meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
                    (
