@@ -375,12 +375,18 @@ void fsiBasic::liftSolve3()
 
 void fsiBasic::restart()
 {
+
+    _runTime().objectRegistry::clear();
+    meshPtr.clear().objectRegistry::clear();
+    meshPtr.clear();
+    _runTime.clear();
+    _pimple.clear();
     _p.clear();
     _U.clear();
     _phi.clear();
     turbulence.clear();
     _fvOptions.clear();
-    //meshPtr.clear();
+    
     //_pimple.clear();
     argList& args = _args();
     Time& runTime = _runTime();
