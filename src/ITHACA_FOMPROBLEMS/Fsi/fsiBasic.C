@@ -376,8 +376,7 @@ void fsiBasic::liftSolve3()
 void fsiBasic::restart()
 {
 
-    _runTime().objectRegistry::clear();
-    meshPtr.objectRegistry::clear();
+    
     meshPtr.clear();
     _runTime.clear();
     _pimple.clear();
