@@ -402,7 +402,7 @@ void fsiBasic::restart()
     //                    )
     //            );
         //turbulence->validate();
-    //pimpleControl& pimple = _pimple();   
+    pimpleControl& pimple = _pimple();   
     std::cout << "*****Recreate fields of a  dynamic case****\n"<< std::endl; 
     Info << "ReReading field p\n" << endl;
     _p = autoPtr<volScalarField>
