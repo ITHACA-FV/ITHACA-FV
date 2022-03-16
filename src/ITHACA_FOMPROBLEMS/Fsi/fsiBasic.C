@@ -378,7 +378,7 @@ void fsiBasic::restart()
 
     
     
-    _runTime.clear();
+    //_runTime.clear();
    
     // _pimple.clear();
     _p.clear();
@@ -394,13 +394,13 @@ void fsiBasic::restart()
     
     meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     dynamicFvMesh& mesh = meshPtr();
-    _pimple = autoPtr<pimpleControl>
-                   (
-                       new pimpleControl
-                       (
-                           mesh
-                       )
-               );
+    // _pimple = autoPtr<pimpleControl>
+    //                (
+    //                    new pimpleControl
+    //                    (
+    //                        mesh
+    //                    )
+    //            );
         //turbulence->validate();
     //pimpleControl& pimple = _pimple();   
     std::cout << "*****Recreate fields of a  dynamic case****\n"<< std::endl; 
