@@ -456,15 +456,15 @@ void fsiBasic::restart()
     //setRefCell(p, pimple.dict(), pRefCell, pRefValue);
     setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
     mesh.setFluxRequired(p.name());
-    _laminarTransport = autoPtr<singlePhaseTransportModel>
-                        (
-                            new singlePhaseTransportModel( U, phi )
-                        );
-    singlePhaseTransportModel& laminarTransport = _laminarTransport();
-    turbulence = autoPtr<incompressible::turbulenceModel>
-                 (
-                     incompressible::turbulenceModel::New(U, phi, laminarTransport)
-                 );
+    // _laminarTransport = autoPtr<singlePhaseTransportModel>
+    //                     (
+    //                         new singlePhaseTransportModel( U, phi )
+    //                     );
+    // singlePhaseTransportModel& laminarTransport = _laminarTransport();
+    // turbulence = autoPtr<incompressible::turbulenceModel>
+    //              (
+    //                  incompressible::turbulenceModel::New(U, phi, laminarTransport)
+    //              );
     _MRF = autoPtr<IOMRFZoneList>
            (
                new IOMRFZoneList(mesh)
