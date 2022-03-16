@@ -76,9 +76,8 @@ fsiBasic::fsiBasic(int argc, char* argv[])
             )
         );
 #include "createFields.H" 
-        //turbulence->validate();
-        para = ITHACAparameters::getInstance(mesh, runTime);
-        //pointVectorField & PointDisplacement = const_cast<pointVectorField&>(mesh.objectRegistry::lookupObject<pointVectorField>("pointDisplacement"));               
+#include "createFvOptions.H"
+        para = ITHACAparameters::getInstance(mesh, runTime);            
 }
 
 void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
@@ -380,14 +379,13 @@ void fsiBasic::restart()
     _U.clear();
     _phi.clear();
     turbulence.clear();
-    
     _fvOptions.clear();
-    meshPtr.clear();
-    _pimple.clear();
+    //meshPtr.clear();
+    //_pimple.clear();
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
-    meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+    //meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
                    (
@@ -497,9 +495,10 @@ void fsiBasic::restart()
            (
                new IOMRFZoneList(mesh)
            );
-    //#include "createFvOptions.H"
+    
 
     _fvOptions = autoPtr<fv::options>(new fv::options(mesh));            
  
 //#include "createFields.H" 
+//#include "createFvOptions.H"
 }

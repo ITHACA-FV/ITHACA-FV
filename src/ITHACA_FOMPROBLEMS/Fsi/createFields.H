@@ -121,6 +121,5 @@ _MRF = autoPtr<IOMRFZoneList>
        (
            new IOMRFZoneList(mesh)
        );
-//#include "createFvOptions.H"
 
 _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
