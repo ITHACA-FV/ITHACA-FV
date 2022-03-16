@@ -392,7 +392,7 @@ void fsiBasic::restart()
      meshPtr.clear();
     _pimple.clear();
     
-    meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+    //meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
                    (
