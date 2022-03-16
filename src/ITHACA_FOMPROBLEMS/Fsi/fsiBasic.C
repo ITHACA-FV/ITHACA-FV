@@ -379,7 +379,7 @@ void fsiBasic::restart()
     _p.clear();
     _U.clear();
     _phi.clear();
-    //turbulence.clear();
+    turbulence.clear();
     
     _fvOptions.clear();
     meshPtr.clear();
