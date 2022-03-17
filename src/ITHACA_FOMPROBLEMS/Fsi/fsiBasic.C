@@ -379,9 +379,9 @@ void fsiBasic::restart()
     
     
    
-    // _p.clear();
-    // _U.clear();
-    // _phi.clear();
+    _p.clear();
+    _U.clear();
+    _phi.clear();
     // turbulence.clear();
     // _fvOptions.clear();
     argList& args = _args();
