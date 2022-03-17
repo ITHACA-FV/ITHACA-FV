@@ -90,6 +90,8 @@ class fsiBasic: public unsteadyNS
         autoPtr<pimpleControl> _pimple;
          /// fvOptions
         autoPtr<fv::options> _fvOptions;
+
+        vectorField point0;
         
         autoPtr<Time> _runTime;
         autoPtr<surfaceScalarField> _phi;
