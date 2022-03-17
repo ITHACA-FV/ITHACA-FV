@@ -76,7 +76,7 @@ fsiBasic::fsiBasic(int argc, char* argv[])
             )
         );
 #include "createFields.H" 
-#include "createFvOptions.H"
+//#include "createFvOptions.H"
         para = ITHACAparameters::getInstance(mesh, runTime);            
 }
 
@@ -389,10 +389,9 @@ void fsiBasic::restart()
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
-     //meshPtr.clear();
+    meshPtr.clear();
     _pimple.clear();
-    
-    //meshPtr = autoPtr<Foam::dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+    meshPtr = autoPtr<Foam::dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     Foam::dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
                    (
@@ -404,5 +403,4 @@ void fsiBasic::restart()
         
  
 #include "createFields.H" 
-#include "createFvOptions.H"
 }
