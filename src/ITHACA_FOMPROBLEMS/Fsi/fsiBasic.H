@@ -78,12 +78,12 @@ class fsiBasic: public unsteadyNS
         fsiBasic(int argc, char* argv[]);
         ~fsiBasic() {};
         
-        // Dummy variables to transform createTime.H into a class
+        /*// Dummy variables to transform createTime.H into a class
         autoPtr<volScalarField> _p;
         autoPtr<volVectorField> _U;
          /// Initial fields (for restart purposes)
         autoPtr<volScalarField> _p0;
-        autoPtr<volVectorField> _U0;
+        autoPtr<volVectorField> _U0;*/
         // /// Dynamic mesh field
         autoPtr<Foam::dynamicFvMesh> meshPtr;
           /// pimpleControl
@@ -91,9 +91,9 @@ class fsiBasic: public unsteadyNS
          /// fvOptions
         autoPtr<fv::options> _fvOptions;
         
-        autoPtr<Time> _runTime;
+        /*autoPtr<Time> _runTime;
         autoPtr<surfaceScalarField> _phi;
-        autoPtr<surfaceScalarField> _phi0;
+        autoPtr<surfaceScalarField> _phi0;*/
          // /// Turbulence model
         autoPtr<incompressible::turbulenceModel> turbulence;
         // ///  Laminar variable
