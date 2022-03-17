@@ -378,9 +378,7 @@ void fsiBasic::restart()
 
     
     
-    _runTime.clear();
    
-    // _pimple.clear();
     _p.clear();
     _U.clear();
     _phi.clear();
