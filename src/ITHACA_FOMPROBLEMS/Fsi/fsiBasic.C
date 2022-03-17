@@ -392,8 +392,8 @@ void fsiBasic::restart()
      meshPtr.clear();
     _pimple.clear();
     
-    //meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
-    dynamicFvMesh& mesh = meshPtr();
+    meshPtr = autoPtr<Foam::dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+    Foam::dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
                    (
                        new pimpleControl
@@ -401,111 +401,8 @@ void fsiBasic::restart()
                            mesh
                        )
                );
-        //turbulence->validate();
-    pimpleControl& pimple = _pimple();   
-    std::cout << "*****Recreate fields of a  dynamic case****\n"<< std::endl; 
-    Info << "ReReading field p\n" << endl;
-    _p = autoPtr<volScalarField>
-         (
-             new volScalarField
-             (
-                 IOobject
-                 (
-                     "p",
-                     runTime.timeName(),
-                     mesh,
-                     IOobject::MUST_READ,
-                     IOobject::AUTO_WRITE
-                 ),
-                 mesh
-             )
-         );
-    volScalarField& p = _p();
-
-    volScalarField p0(p);
-
-    _p0 = autoPtr<volScalarField>
-          (
-              new volScalarField(p0)
-          );
-
-    Info << "Re/Reading field U\n" << endl;
-    _U = autoPtr<volVectorField>
-         (
-             new volVectorField
-             (
-                 IOobject
-                 (
-                     "U",
-                     runTime.timeName(),
-                     mesh,
-                     IOobject::MUST_READ,
-                     IOobject::AUTO_WRITE
-                 ),
-                 mesh
-             )
-         );
-    volVectorField& U = _U();
-
-    volVectorField U0(U);
-
-    _U0 = autoPtr<volVectorField>
-          (
-              new volVectorField(U0)
-          );
-    Info << "ReReading/calculating face flux field phi\n" << endl;
-
-    _phi = autoPtr<surfaceScalarField>
-           (
-               new surfaceScalarField
-               (
-                   IOobject
-                   (
-                       "phi",
-                       runTime.timeName(),
-                       mesh,
-                       IOobject::READ_IF_PRESENT,
-                       IOobject::AUTO_WRITE
-                   ),
-                   linearInterpolate(U) & mesh.Sf()
-               )
-           );
-           
-    surfaceScalarField& phi = _phi();
-    surfaceScalarField phi0(phi);
-
-    _phi0 = autoPtr<surfaceScalarField>
-            (
-                new surfaceScalarField(phi0)
-            );
-
-    label pRefCell = 0;
-    scalar pRefValue = 0.0;
-
-    setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
-    mesh.setFluxRequired(p.name());
-    //std::cout << "##############createFields line 107 #################\n"<< std::endl; 
-    _laminarTransport = autoPtr<singlePhaseTransportModel>
-                        (
-                            new singlePhaseTransportModel( U, phi )
-                        );
-    //std::cout << "##############createFields line 112 #################\n"<< std::endl; 
-    singlePhaseTransportModel& laminarTransport = _laminarTransport();
-    //std::cout << "##############createFields line 114 #################\n"<< std::endl; 
-
-    turbulence = autoPtr<incompressible::turbulenceModel>
-                 (
-                     incompressible::turbulenceModel::New(U, phi, laminarTransport)
-                 );
-    //#include "createMRF.H"
-    _MRF = autoPtr<IOMRFZoneList>
-           (
-               new IOMRFZoneList(mesh)
-           );
-    
-
-    _fvOptions = autoPtr<fv::options>(new fv::options(mesh));            
+        
  
-//#include "createFields.H" 
-//#include "createFvOptions.H"
+#include "createFields.H" 
+#include "createFvOptions.H"
 }
