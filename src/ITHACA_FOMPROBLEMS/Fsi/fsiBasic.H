@@ -91,7 +91,7 @@ class fsiBasic: public unsteadyNS
          /// fvOptions
         autoPtr<fv::options> _fvOptions;
         
-        //autoPtr<Time> _runTime;
+        autoPtr<Time> _runTime;
         autoPtr<surfaceScalarField> _phi;
         //autoPtr<surfaceScalarField> _phi0;
          // /// Turbulence model
