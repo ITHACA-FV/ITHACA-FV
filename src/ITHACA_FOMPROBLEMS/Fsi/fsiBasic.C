@@ -386,7 +386,9 @@ void fsiBasic::restart()
     _fvOptions.clear();
     argList& args = _args();
     Time& runTime = _runTime();
-    runTime.setTime(0, 1);
+    //runTime.setTime(0, 1);
+    instantList Times = runTime.times();
+    runTime.setTime(Times[1], 1);
     //meshPtr.clear();
     //meshPtr().resetMotion();
     _pimple.clear();
