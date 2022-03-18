@@ -389,6 +389,7 @@ void fsiBasic::restart()
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
     //meshPtr.clear();
+    meshPtr.resetMotion();
     _pimple.clear();
     //meshPtr().movePoints(point0);
     //meshPtr = autoPtr<Foam::dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
