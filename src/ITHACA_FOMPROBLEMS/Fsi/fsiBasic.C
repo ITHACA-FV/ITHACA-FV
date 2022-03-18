@@ -76,9 +76,8 @@ fsiBasic::fsiBasic(int argc, char* argv[])
             )
         );
 #include "createFields.H" 
-//#include "createFvOptions.H"
         para = ITHACAparameters::getInstance(mesh, runTime);   
-        //point0 =   meshPtr().points();       
+        point0 =   meshPtr().points();       
 }
 
 void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
@@ -388,11 +387,11 @@ void fsiBasic::restart()
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
-    meshPtr().clear();
+    //meshPtr.clear();
     //meshPtr().resetMotion();
     _pimple.clear();
-    //meshPtr().movePoints(point0);
-    meshPtr = autoPtr<Foam::dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+    meshPtr().movePoints(point0);
+    //meshPtr = autoPtr<Foam::dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     Foam::dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
                    (

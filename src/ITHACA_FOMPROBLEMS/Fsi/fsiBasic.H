@@ -93,7 +93,7 @@ class fsiBasic: public unsteadyNS
 
         vectorField point0;
         
-        autoPtr<Time> _runTime;
+        //autoPtr<Time> _runTime;
         autoPtr<surfaceScalarField> _phi;
         autoPtr<surfaceScalarField> _phi0;
          /// Turbulence model
