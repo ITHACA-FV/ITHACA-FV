@@ -389,7 +389,7 @@ void fsiBasic::restart()
     runTime.setTime(0, 1);
     //instantList Times = runTime.times();
     //runTime.setTime(Times[1], 1);
-    meshPtr().clear();
+    meshPtr.clear();
     //meshPtr().resetMotion();
     _pimple.clear();
     //meshPtr().movePoints(point0);
