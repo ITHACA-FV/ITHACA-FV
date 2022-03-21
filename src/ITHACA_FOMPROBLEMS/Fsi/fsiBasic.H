@@ -91,7 +91,8 @@ class fsiBasic: public unsteadyNS
          /// fvOptions
         autoPtr<fv::options> _fvOptions;
 
-        vectorField point0;
+        //vectorField point0;
+        pointField point0;
         
         //autoPtr<Time> _runTime;
         autoPtr<surfaceScalarField> _phi;
