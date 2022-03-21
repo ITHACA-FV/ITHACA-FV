@@ -379,19 +379,20 @@ void fsiBasic::restart()
     
     
    
-    _p.clear();
-    _U.clear();
-    _phi.clear();
+//    _p.clear();
+//    _U.clear();
+//    _phi.clear();
     turbulence.clear();
     _fvOptions.clear();
+    _laminarTransport.clear();
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
     //meshPtr.clear(); // problem with this one: we replace it by resetMotion()
-    //meshPtr().resetMotion(); //working with the  foam problem.
+    meshPtr().resetMotion(); //working with the  foam problem.
     _pimple.clear();
-    meshPtr().movePoints(point0);
-    //meshPtr = autoPtr<Foam::dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+    //meshPtr().movePoints(point0);
+    meshPtr = autoPtr<Foam::dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     Foam::dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
                    (
@@ -400,7 +401,29 @@ void fsiBasic::restart()
                            mesh
                        )
                );
-        
- 
-#include "createFields.H" 
+    _p() = _p0();
+    _U() = _U0();
+    _phi() = _phi0();
+
+    volVectorField& U = _U();
+    volScalarField& p = _p();
+    surfaceScalarField& phi = _phi();
+    
+    
+_laminarTransport = autoPtr<singlePhaseTransportModel>
+                    (
+                        new singlePhaseTransportModel( U, phi )
+                    );
+singlePhaseTransportModel& laminarTransport = _laminarTransport();
+
+turbulence = autoPtr<incompressible::turbulenceModel>
+             (
+                 incompressible::turbulenceModel::New(U, phi, laminarTransport)
+             );
+_MRF = autoPtr<IOMRFZoneList>
+       (
+           new IOMRFZoneList(mesh)
+       );
+_fvOptions = autoPtr<fv::options>(new fv::options(mesh));
+
 }
