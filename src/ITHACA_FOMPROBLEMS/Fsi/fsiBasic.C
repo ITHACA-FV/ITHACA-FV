@@ -375,24 +375,16 @@ void fsiBasic::liftSolve3()
 
 void fsiBasic::restart()
 {
-
-    
-    
-   
-//    _p.clear();
-//    _U.clear();
-//    _phi.clear();
     turbulence.clear();
     _fvOptions.clear();
     _laminarTransport.clear();
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
-    //meshPtr.clear(); // problem with this one: we replace it by resetMotion()
-    meshPtr().resetMotion(); //working with the  foam problem.
+    // meshPtr().movePoints(point0);
+    // meshPtr().resetMotion();
+
     _pimple.clear();
-    //meshPtr().movePoints(point0);
-    meshPtr = autoPtr<Foam::dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
     Foam::dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
                    (
@@ -420,10 +412,5 @@ turbulence = autoPtr<incompressible::turbulenceModel>
              (
                  incompressible::turbulenceModel::New(U, phi, laminarTransport)
              );
-_MRF = autoPtr<IOMRFZoneList>
-       (
-           new IOMRFZoneList(mesh)
-       );
 _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
-
 }

@@ -151,7 +151,7 @@ public:
         volScalarField& p = problem->_p();
         volVectorField& U = problem->_U();
         a = ITHACAutilities::getCoeffs(U, problem->Umodes, NmodesUproj, true);
-        // std::cerr << "File: 22fsi.C, Line: 247"<< std::endl;
+        std::cerr << "File: 22fsi.C, Line: 247"<< std::endl;
         b = ITHACAutilities::getCoeffs(p, problem->Pmodes, NmodesPproj, true);
         // std::cerr << "File: 22fsi.C, Line: 247"<< std::endl;
 
@@ -403,6 +403,7 @@ int main(int argc, char* argv[])
 {
     // Construct the tutorial object
     tutorial22 example(argc, argv);
+    tutorial22 online(argc,argv);
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(example.meshPtr(),example._runTime());
 
@@ -448,23 +449,23 @@ int main(int argc, char* argv[])
 
     //Perform POD on velocity pressure store the first 20 modes
 
-    ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
+    ITHACAPOD::getModes(example.Ufield, online.Umodes, online._U().name(),
                         example.podex, 0, 0, NmodesUout);
 
 
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+    ITHACAPOD::getModes(example.Pfield, online.Pmodes, example._p().name(),
                         example.podex, 0, 0,
                         NmodesPout);
 
-    Eigen::MatrixXd coeffU = ITHACAutilities::getCoeffs(example.Ufield, example.Umodes, NmodesUproj, true);
+    Eigen::MatrixXd coeffU = ITHACAutilities::getCoeffs(example.Ufield, online.Umodes, NmodesUproj, true);
     // std::cout << "cols of coeffU is :" << coeffU.rows() << std::endl;
     
-    Eigen::MatrixXd coeffp= ITHACAutilities::getCoeffs(example.Pfield, example.Pmodes, NmodesPproj, true);
+    Eigen::MatrixXd coeffp= ITHACAutilities::getCoeffs(example.Pfield, online.Pmodes, NmodesPproj, true);
     // std::cout << "rows of coeffp is :" << coeffp.rows() << std::endl;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // // ############### contruct the reduced the class object ###################
-    reducedBasicFsi reduced(example);
+    reducedBasicFsi reduced(online);
     // Reads inlet volocities boundary conditions.
     word vel_file(para->ITHACAdict->lookup("online_velocities"));
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
@@ -484,7 +485,8 @@ int main(int argc, char* argv[])
     //example.change_viscosity(mu_now);
     //reduced.OnlineVelocity(vel);
     
-    example.restart();
+    //example.restart();
+    // ITHACAstream::writePoints(example.meshPtr().points(), "prova", "/polyMesh/");
     reduced.solveOnline_Pimple(mu_now, NmodesUproj, NmodesPproj);
     //}
 
