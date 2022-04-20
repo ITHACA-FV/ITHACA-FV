@@ -13,7 +13,7 @@ cmake ..              && \
 make && \
 sudo make install &&
 export GTEST_DIR='/usr/local/lib' &&  \
-cd ../../unitTests/gtest && \
+cd ../../gtest && \
 python3 writeSparseMatrix.py  && \
 wmake  && \
 ./test_all.exe ;
