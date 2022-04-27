@@ -43,7 +43,7 @@ SourceFiles
 #include "pimpleControl.H"
 #include "fvOptions.H"
 #include "CorrectPhi.H"
-#include "sixDoFRigidMotionSolver.H"
+#include "sixDoFRigidBodyMotionSolver.H"
 #include "unsteadyNS.H"
 #include "ITHACAstream.H"
 #include "ITHACAutilities.H"
