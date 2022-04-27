@@ -43,7 +43,7 @@ SourceFiles
 #include "pimpleControl.H"
 #include "fvOptions.H"
 #include "CorrectPhi.H"
-
+#include "sixDoFRigidMotionSolver.H"
 #include "unsteadyNS.H"
 #include "ITHACAstream.H"
 #include "ITHACAutilities.H"
@@ -114,6 +114,18 @@ class fsiBasic: public unsteadyNS
 
         /// List of pointers used to form the velocity modes
         PtrList<volVectorField> Umodes;*/
+        /// List of pointers used pointDisplacement modes
+        PtrList<pointVectorField> PDfiedl;
+        /// List scalar for access the centerofmass
+        List<scalar> centerofmassx;
+        List<scalar> centerofmassy;
+        List<scalar> centerofmassz;
+
+         /// List scalar for access the velocities of the centerofmass
+        List<scalar> velx;
+        List<scalar> vely;
+        List<scalar> velz;
+
 
         
         // Functions
