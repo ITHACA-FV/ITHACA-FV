@@ -77,7 +77,15 @@ class fsiBasic: public unsteadyNS
         /// Construct with argc and argv
         fsiBasic(int argc, char* argv[]);
         ~fsiBasic() {};
+
         autoPtr<volScalarField> _p;
+        // /// Dynamic mesh field
+        autoPtr<Foam::dynamicFvMesh> meshPtr;
+        /// pimpleControl
+        autoPtr<pimpleControl> _pimple;
+        // Dummy variables to transform createFields.H into a class
+        /*autoPtr<volScalarField> _p;
+
         autoPtr<volVectorField> _U;
          /// Initial fields (for restart purposes)
         autoPtr<volScalarField> _p0;
@@ -101,6 +109,7 @@ class fsiBasic: public unsteadyNS
         autoPtr<singlePhaseTransportModel> _laminarTransport;
        
         autoPtr<IOMRFZoneList> _MRF;
+
        
         /// List of pointers used to form the pressure snapshots matrix
         PtrList<volScalarField> Pfield;
@@ -123,6 +132,9 @@ class fsiBasic: public unsteadyNS
         List<scalar> velx;
         List<scalar> vely;
         List<scalar> velz;
+        /// fvOptions
+        autoPtr<fv::options> _fvOptions;*/
+        
         // Functions
 
         //--------------------------------------------------------------------------
