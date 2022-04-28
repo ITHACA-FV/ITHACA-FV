@@ -100,6 +100,20 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime; // timeStep initialization
+    IOdictionary   dynamicMeshDict
+    (
+        IOobject
+        (
+        "dynamicMeshDict",
+        mesh.time().constant(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE,
+        false
+        )
+    );
+    /// construct a sixDoFRigidBodyMotionSolver object
+    sixDoFRigidBodyMotionSolver sDRBMS(mesh, dynamicMeshDict);
 
     //****************************pimpleFoam algorithm******************************************
 #include "addCheckCaseOptions.H"
@@ -113,6 +127,7 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
     // Export and store the initial conditions for velocity and pressure
     ITHACAstream::exportSolution(U, name(counter), folder);
     ITHACAstream::exportSolution(p, name(counter), folder);
+    ITHACAstream::exportSolution(sDRBMS.pointDisplacement(), name(counter), folder);
     ITHACAstream::writePoints(meshPtr().points(), folder, name(counter) + "/polyMesh/");
 
     std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
@@ -142,7 +157,19 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
             if (pimple.firstIter() || moveMeshOuterCorrectors)
             {
                 // Do any mesh changes
-                mesh.controlledUpdate();
+                //mesh.controlledUpdate();
+                // The following line remplace the above controlledUpdate() method
+                std::cerr << "################"<< "Before six dof motion solver" << "#############"<< std::endl;
+                sDRBMS.solve();
+                mesh.movePoints(sDRBMS.curPoints());
+                std::cerr << "################"<< "Before six dof motion solver" << "#############"<< std::endl;
+                centerofmassx.append(sDRBMS.motion().centreOfMass().x());
+                centerofmassy.append(sDRBMS.motion().centreOfMass().y());
+                centerofmassz.append(sDRBMS.motion().centreOfMass().z());
+                // To append the linear velocities
+                velx.append(sDRBMS.motion().v().x());
+                vely.append(sDRBMS.motion().v().y());
+                velz.append(sDRBMS.motion().v().z());
 
                 if (mesh.changing())
                 {
@@ -190,6 +217,7 @@ void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
         {
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(p, name(counter), folder);
+            ITHACAstream::exportSolution(sDRBMS.pointDisplacement(), name(counter), folder);
             ITHACAstream::writePoints(meshPtr().points(), folder, name(counter) + "/polyMesh/");
 
             std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
