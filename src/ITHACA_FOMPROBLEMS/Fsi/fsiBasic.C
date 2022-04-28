@@ -401,10 +401,10 @@ void fsiBasic::restart()
                            mesh
                        )
                );
+
     _p() = _p0();
     _U() = _U0();
     _phi() = _phi0();
-
 
     //pimpleControl& pimple = _pimple();
     pimpleControl& pimple = _pimple();
@@ -445,23 +445,39 @@ void fsiBasic::restart()
     volVectorField& U = _U();
     volScalarField& p = _p();
     surfaceScalarField& phi = _phi();
-    
+    Info << "ReReading/calculating face flux field phi\n" << endl;
+    _phi = autoPtr<surfaceScalarField>
+           (
+               new surfaceScalarField
+               (
+                   IOobject
+                   (
+                       "phi",
+                       runTime.timeName(),
+                       mesh,
+                       IOobject::READ_IF_PRESENT,
+                       IOobject::AUTO_WRITE
+                   ),
+                   linearInterpolate(U) & mesh.Sf()
+               )
+           );
+    surfaceScalarField& phi = _phi(); 
     pRefCell = 0;
     pRefValue = 0.0;
-    setRefCell(p, pimple.dict(), pRefCell, pRefValue);
-    //setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
+    //setRefCell(p, pimple.dict(), pRefCell, pRefValue);
+    setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
     mesh.setFluxRequired(p.name());
     _laminarTransport = autoPtr<singlePhaseTransportModel>
                         (
                             new singlePhaseTransportModel( U, phi )
                         );
-    //std::cout << "############## restart line 465 #################\n"<< std::endl; 
+
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
     turbulence = autoPtr<incompressible::turbulenceModel>
                  (
                      incompressible::turbulenceModel::New(U, phi, laminarTransport)
                  );
-    //std::cout << "############## restart line 471 #################\n"<< std::endl;              
+
     _MRF = autoPtr<IOMRFZoneList>
            (
                new IOMRFZoneList(mesh)
