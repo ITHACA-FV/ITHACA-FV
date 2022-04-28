@@ -84,22 +84,12 @@ class fsiBasic: public unsteadyNS
         /// pimpleControl
         autoPtr<pimpleControl> _pimple;
         // Dummy variables to transform createFields.H into a class
-        /*autoPtr<volScalarField> _p;
-
+        /* autoPtr<volScalarField> _p;
         autoPtr<volVectorField> _U;
          /// Initial fields (for restart purposes)
         autoPtr<volScalarField> _p0;
         autoPtr<volVectorField> _U0;
-        // /// Dynamic mesh field
-        autoPtr<Foam::dynamicFvMesh> meshPtr;
-          /// pimpleControl
-        autoPtr<pimpleControl> _pimple;
-         /// fvOptions
-        autoPtr<fv::options> _fvOptions;
-
         //vectorField point0;
-        pointField point0;
-        
         //autoPtr<Time> _runTime;
         autoPtr<surfaceScalarField> _phi;
         autoPtr<surfaceScalarField> _phi0;
@@ -107,18 +97,13 @@ class fsiBasic: public unsteadyNS
         autoPtr<incompressible::turbulenceModel> turbulence;
         // ///  Laminar variable
         autoPtr<singlePhaseTransportModel> _laminarTransport;
-       
         autoPtr<IOMRFZoneList> _MRF;
-
-       
         /// List of pointers used to form the pressure snapshots matrix
         PtrList<volScalarField> Pfield;
-
         /// List of pointers used to form the velocity snapshots matrix
         PtrList<volVectorField> Ufield;
-        /*/// List of pointers used to form the pressure modes
+        /// List of pointers used to form the pressure modes
         PtrList<volScalarField> Pmodes;
-
         /// List of pointers used to form the velocity modes
         PtrList<volVectorField> Umodes;*/
         /// List of pointers used pointDisplacement modes
@@ -132,8 +117,6 @@ class fsiBasic: public unsteadyNS
         List<scalar> velx;
         List<scalar> vely;
         List<scalar> velz;
-        /// fvOptions
-        autoPtr<fv::options> _fvOptions;*/
         
         // Functions
 
