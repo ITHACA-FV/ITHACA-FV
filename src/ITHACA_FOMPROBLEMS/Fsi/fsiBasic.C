@@ -388,9 +388,6 @@ void fsiBasic::restart()
     runTime.setTime(0, 1);
     // meshPtr().movePoints(point0);
     // meshPtr().resetMotion();
-    //Reinitializing runTime
-    //instantList Times = runTime.times();
-    //runTime.setTime(Times[1], 1);
     meshPtr.clear();
     _pimple.clear();
     Foam::dynamicFvMesh& mesh = meshPtr();
@@ -425,6 +422,12 @@ void fsiBasic::restart()
              )
          );
     volScalarField& p = _p();
+    volScalarField p0(p);
+
+    _p0 = autoPtr<volScalarField>
+      (
+          new volScalarField(p0)
+      );
     Info << "ReReading field U\n" << endl;
     _U = autoPtr<volVectorField>
          (
@@ -445,6 +448,13 @@ void fsiBasic::restart()
     volVectorField& U = _U();
     volScalarField& p = _p();
     surfaceScalarField& phi = _phi();
+    volVectorField U0(U);
+
+    _U0 = autoPtr<volVectorField>
+      (
+          new volVectorField(U0)
+      );
+
     Info << "ReReading/calculating face flux field phi\n" << endl;
     _phi = autoPtr<surfaceScalarField>
            (
@@ -461,7 +471,14 @@ void fsiBasic::restart()
                    linearInterpolate(U) & mesh.Sf()
                )
            );
-    surfaceScalarField& phi = _phi(); 
+    surfaceScalarField& phi = _phi();
+    surfaceScalarField phi0(phi);
+
+    _phi0 = autoPtr<surfaceScalarField>
+        (
+            new surfaceScalarField(phi0)
+        );
+
     pRefCell = 0;
     pRefValue = 0.0;
     //setRefCell(p, pimple.dict(), pRefCell, pRefValue);
