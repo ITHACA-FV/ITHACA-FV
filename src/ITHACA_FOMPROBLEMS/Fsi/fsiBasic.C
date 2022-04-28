@@ -379,12 +379,6 @@ void fsiBasic::restart()
     turbulence.clear();
     _fvOptions.clear();
     _laminarTransport.clear();
-    //_p.clear();
-    // _U.clear();
-    // _phi.clear();
-    // turbulence.clear();
-    // _fvOptions.clear();
-
     _p.clear();
     _U.clear();
     _phi.clear();
@@ -413,6 +407,7 @@ void fsiBasic::restart()
 
 
     //pimpleControl& pimple = _pimple();
+    pimpleControl& pimple = _pimple();
     Info << "ReReading field p\n" << endl;
     _p = autoPtr<volScalarField>
          (
@@ -453,20 +448,20 @@ void fsiBasic::restart()
     
     pRefCell = 0;
     pRefValue = 0.0;
-    //setRefCell(p, pimple.dict(), pRefCell, pRefValue);
-    setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
+    setRefCell(p, pimple.dict(), pRefCell, pRefValue);
+    //setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
     mesh.setFluxRequired(p.name());
     _laminarTransport = autoPtr<singlePhaseTransportModel>
                         (
                             new singlePhaseTransportModel( U, phi )
                         );
-    std::cout << "############## restart line 465 #################\n"<< std::endl; 
+    //std::cout << "############## restart line 465 #################\n"<< std::endl; 
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
     turbulence = autoPtr<incompressible::turbulenceModel>
                  (
                      incompressible::turbulenceModel::New(U, phi, laminarTransport)
                  );
-    std::cout << "############## restart line 471 #################\n"<< std::endl;              
+    //std::cout << "############## restart line 471 #################\n"<< std::endl;              
     _MRF = autoPtr<IOMRFZoneList>
            (
                new IOMRFZoneList(mesh)
