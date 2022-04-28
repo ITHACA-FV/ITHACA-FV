@@ -130,7 +130,7 @@ class fsiBasic: public unsteadyNS
         // /// Dynamic mesh field
         autoPtr<Foam::dynamicFvMesh> meshPtr;
         /// pimpleControl
-        autoPtr<pimpleControl> _pimple;
+        //autoPtr<pimpleControl> _pimple;
         // Dummy variables to transform createFields.H into a class
         //autoPtr<volScalarField> _p;
         //autoPtr<volVectorField> _U;

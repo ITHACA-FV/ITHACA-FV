@@ -375,6 +375,7 @@ void fsiBasic::liftSolve3()
 
 void fsiBasic::restart()
 {
+
     turbulence.clear();
     _fvOptions.clear();
     _laminarTransport.clear();
@@ -383,6 +384,15 @@ void fsiBasic::restart()
     // _phi.clear();
     // turbulence.clear();
     // _fvOptions.clear();
+
+    _p.clear();
+    _U.clear();
+    _phi.clear();
+    //turbulence.clear();
+    turbulence.reset(
+        (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
+    );
+    _fvOptions.clear();
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
