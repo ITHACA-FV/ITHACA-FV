@@ -203,6 +203,7 @@ public:
 	    );
     /// construct a sixDoFRigidBodyMotionSolver object
     sixDoFRigidBodyMotionSolver sDRBMS(mesh, dynamicMeshDict);
+    std::cerr << "/////////////////////"<< sDRBMS.motion().mass() << "///////////////////" << std::endl;
 
    
 #include "addCheckCaseOptions.H"
