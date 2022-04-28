@@ -136,6 +136,17 @@ public:
     scalar writeEvery = timeStep;
     scalar nextWrite;
 
+    PtrList<pointVectorField> PDfiedl;
+    /// List scalar for access the centerofmass
+    List<scalar> centerofmassx;
+    List<scalar> centerofmassy;
+    List<scalar> centerofmassz;
+
+     /// List scalar for access the velocities of the centerofmass
+    List<scalar> velx;
+    List<scalar> vely;
+    List<scalar> velz;
+
     label counter = 1;
 
     /// void solveOnline_Pimple(scalar mu_now, Eigen::MatrixXd& a, Eigen::MatrixXd& b,fileName folder = "./ITHACAoutput/Reconstruct/")
@@ -178,6 +189,21 @@ public:
         scalar pRefValue = 0.0;
         scalar  cumulativeContErr =0.0;
 
+        IOdictionary   dynamicMeshDict
+	    (
+	         IOobject
+	         (
+	            "dynamicMeshDict",
+	            mesh.time().constant(),
+	            mesh,
+	            IOobject::MUST_READ,
+	            IOobject::NO_WRITE,
+	            false
+	         )
+	    );
+    /// construct a sixDoFRigidBodyMotionSolver object
+    sixDoFRigidBodyMotionSolver sDRBMS(mesh, dynamicMeshDict);
+
    
 #include "addCheckCaseOptions.H"
 #include "createDyMControls.H"
@@ -191,6 +217,7 @@ public:
 
         ITHACAstream::exportSolution(U, name(counter), folder);
         ITHACAstream::exportSolution(p, name(counter), folder);
+        ITHACAstream::exportSolution(sDRBMS.pointDisplacement(), name(counter), folder);
         ITHACAstream::writePoints(mesh.points(), folder, name(counter) + "/polyMesh/");
         std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
         counter++;
@@ -215,6 +242,17 @@ public:
                 {
                     // Do any mesh changes
                     mesh.controlledUpdate();
+                    std::cerr << "/////////////////////////////////////////////////"<< std::endl;
+                    sDRBMS.solve();
+	                mesh.movePoints(sDRBMS.curPoints());
+	                std::cerr << "/////////////////////////////////////////////////"<< std::endl;
+	                centerofmassx.append(sDRBMS.motion().centreOfMass().x());
+	                centerofmassy.append(sDRBMS.motion().centreOfMass().y());
+	                centerofmassz.append(sDRBMS.motion().centreOfMass().z());
+	                // To append the linear velocities
+	                velx.append(sDRBMS.motion().v().x());
+	                vely.append(sDRBMS.motion().v().y());
+	                velz.append(sDRBMS.motion().v().z());
 
                     if (mesh.changing())
                     {
@@ -367,6 +405,7 @@ public:
 
                     ITHACAstream::exportSolution(U, name(counter), folder);
                     ITHACAstream::exportSolution(p, name(counter), folder);
+                    ITHACAstream::exportSolution(sDRBMS.pointDisplacement(), name(counter), folder);
                     ITHACAstream::writePoints(mesh.points(), folder, name(counter) + "/polyMesh/");
                     std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
                     counter++;
