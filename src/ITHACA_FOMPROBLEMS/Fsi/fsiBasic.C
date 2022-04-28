@@ -411,21 +411,66 @@ void fsiBasic::restart()
     _U() = _U0();
     _phi() = _phi0();
 
+
+    //pimpleControl& pimple = _pimple();
+    Info << "ReReading field p\n" << endl;
+    _p = autoPtr<volScalarField>
+         (
+             new volScalarField
+             (
+                 IOobject
+                 (
+                     "p",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+    volScalarField& p = _p();
+    Info << "ReReading field U\n" << endl;
+    _U = autoPtr<volVectorField>
+         (
+             new volVectorField
+             (
+                 IOobject
+                 (
+                     "U",
+                     runTime.timeName(),
+                     mesh,
+                     IOobject::MUST_READ,
+                     IOobject::AUTO_WRITE
+                 ),
+                 mesh
+             )
+         );
+
     volVectorField& U = _U();
     volScalarField& p = _p();
     surfaceScalarField& phi = _phi();
     
-    
-_laminarTransport = autoPtr<singlePhaseTransportModel>
-                    (
-                        new singlePhaseTransportModel( U, phi )
-                    );
-singlePhaseTransportModel& laminarTransport = _laminarTransport();
+    pRefCell = 0;
+    pRefValue = 0.0;
+    //setRefCell(p, pimple.dict(), pRefCell, pRefValue);
+    setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
+    mesh.setFluxRequired(p.name());
+    _laminarTransport = autoPtr<singlePhaseTransportModel>
+                        (
+                            new singlePhaseTransportModel( U, phi )
+                        );
+    singlePhaseTransportModel& laminarTransport = _laminarTransport();
+    turbulence = autoPtr<incompressible::turbulenceModel>
+                 (
+                     incompressible::turbulenceModel::New(U, phi, laminarTransport)
+                 );
+    _MRF = autoPtr<IOMRFZoneList>
+           (
+               new IOMRFZoneList(mesh)
+           );
+    _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
+        //turbulence->validate();
 
-turbulence = autoPtr<incompressible::turbulenceModel>
-             (
-                 incompressible::turbulenceModel::New(U, phi, laminarTransport)
-             );
-_fvOptions = autoPtr<fv::options>(new fv::options(mesh));
 //#include "createFields.H" 
 }
