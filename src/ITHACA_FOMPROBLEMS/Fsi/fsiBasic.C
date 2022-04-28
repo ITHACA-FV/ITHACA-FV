@@ -77,7 +77,7 @@ fsiBasic::fsiBasic(int argc, char* argv[])
         );
 #include "createFields.H" 
         para = ITHACAparameters::getInstance(mesh, runTime);   
-        point0 =   meshPtr().points();       
+        //point0 =   meshPtr().points();       
 }
 
 void fsiBasic::truthSolve3(List<scalar> mu_now, fileName folder)
