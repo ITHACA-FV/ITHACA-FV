@@ -77,8 +77,6 @@ class fsiBasic: public unsteadyNS
         /// Construct with argc and argv
         fsiBasic(int argc, char* argv[]);
         ~fsiBasic() {};
-        
-        // Dummy variables to transform createTime.H into a class
         autoPtr<volScalarField> _p;
         autoPtr<volVectorField> _U;
          /// Initial fields (for restart purposes)
