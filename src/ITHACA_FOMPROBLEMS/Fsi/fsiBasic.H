@@ -140,9 +140,9 @@ class fsiBasic: public unsteadyNS
         //autoPtr<volVectorField> _U0;
         //autoPtr<surfaceScalarField> _phi0;
         
-        //autoPtr<singlePhaseTransportModel> _laminarTransport;
+        autoPtr<singlePhaseTransportModel> _laminarTransport;
         // /// Turbulence model
-        //autoPtr<incompressible::turbulenceModel> turbulence;
+        autoPtr<incompressible::turbulenceModel> turbulence;
        
         //autoPtr<IOMRFZoneList> _MRF;
         /// fvOptions

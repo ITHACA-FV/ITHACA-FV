@@ -388,20 +388,15 @@ void fsiBasic::restart()
     _p.clear();
     _U.clear();
     _phi.clear();
-    turbulence.clear();
-    // turbulence.reset(
-    //     (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
-    // );
-    _fvOptions.clear();
+
     argList& args = _args();
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
     // meshPtr().movePoints(point0);
     // meshPtr().resetMotion();
     //Reinitializing runTime
-    instantList Times = runTime.times();
-    runTime.setTime(Times[1], 1);
-    //runTime.setTime(0, 1);
+    //instantList Times = runTime.times();
+    //runTime.setTime(Times[1], 1);
     meshPtr.clear();
     _pimple.clear();
     Foam::dynamicFvMesh& mesh = meshPtr();
@@ -432,4 +427,5 @@ turbulence = autoPtr<incompressible::turbulenceModel>
                  incompressible::turbulenceModel::New(U, phi, laminarTransport)
              );
 _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
+//#include "createFields.H" 
 }
