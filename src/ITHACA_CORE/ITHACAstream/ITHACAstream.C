@@ -718,52 +718,52 @@ template void exportFields(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& field,
     word folder, word fieldname);
 
-// template<class Type, template<class> class PatchField, class GeoMesh>
-// void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
-//                     fileName subfolder, fileName folder,
-//                     word fieldName)
-// {
-//     if (!Pstream::parRun())
-//     {
-//         mkDir(folder + "/" + subfolder);
-//         ITHACAutilities::createSymLink(folder);
-//         GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
-//         fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
-//         std::ofstream of(folder + "/" + subfolder + "/" +
-//                          s.time().timeName());
-//         OFstream os(fieldname);
-//         act.writeHeader(os);
-//         os << act << endl;
-//     }
-//     else
-//     {
-//         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
-//         ITHACAutilities::createSymLink(folder);
-//         GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
-//         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
-//                              subfolder + "/" + fieldName;
-//         std::ofstream of(folder + "/processor" + name(Pstream::myProcNo()) + "/" +
-//                          subfolder + "/" +
-//                          s.time().timeName());
-//         std::cout << fieldname << std::endl;
-//         OFstream os(fieldname);
-//         act.writeHeader(os);
-//         os << act << endl;
-//     }
-// }
+template<class Type, template<class> class PatchField, class GeoMesh>
+void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
+                    fileName subfolder, fileName folder,
+                    word fieldName)
+{
+    if (!Pstream::parRun())
+    {
+        mkDir(folder + "/" + subfolder);
+        ITHACAutilities::createSymLink(folder);
+        GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
+        fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
+        std::ofstream of(folder + "/" + subfolder + "/" +
+                         s.time().timeName());
+        OFstream os(fieldname);
+        act.writeHeader(os);
+        os << act << endl;
+    }
+    else
+    {
+        mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
+        ITHACAutilities::createSymLink(folder);
+        GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
+        fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
+                             subfolder + "/" + fieldName;
+        std::ofstream of(folder + "/processor" + name(Pstream::myProcNo()) + "/" +
+                         subfolder + "/" +
+                         s.time().timeName());
+        std::cout << fieldname << std::endl;
+        OFstream os(fieldname);
+        act.writeHeader(os);
+        os << act << endl;
+    }
+}
 
-// template void exportSolution(
-//     GeometricField<scalar, fvPatchField, volMesh>& s,
-//     fileName subfolder, fileName folder,
-//     word fieldName);
-// template void exportSolution(
-//     GeometricField<vector, fvPatchField, volMesh>& s,
-//     fileName subfolder, fileName folder,
-//     word fieldName);
-// template void exportSolution(
-//     GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
-//     fileName subfolder, fileName folder,
-//     word fieldName);
+template void exportSolution(
+    GeometricField<scalar, fvPatchField, volMesh>& s,
+    fileName subfolder, fileName folder,
+    word fieldName);
+template void exportSolution(
+    GeometricField<vector, fvPatchField, volMesh>& s,
+    fileName subfolder, fileName folder,
+    word fieldName);
+template void exportSolution(
+    GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
+    fileName subfolder, fileName folder,
+    word fieldName);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
