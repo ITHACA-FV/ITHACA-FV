@@ -104,7 +104,7 @@ scalar pRefValue = 0.0;
 setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
 mesh.setFluxRequired(p.name());
 std::cout << "##############createFields line 107 #################\n"<< std::endl; 
-autoPtr<singlePhaseTransportModel> _laminarTransport = autoPtr<singlePhaseTransportModel>
+_laminarTransport = autoPtr<singlePhaseTransportModel>
                     (
                         new singlePhaseTransportModel( U, phi )
                     );
