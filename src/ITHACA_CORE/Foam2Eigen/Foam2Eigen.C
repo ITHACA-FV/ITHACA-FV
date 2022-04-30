@@ -55,6 +55,9 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(
 
 template Eigen::VectorXd Foam2Eigen::field2Eigen(
     volVectorField& field);
+template Eigen::VectorXd Foam2Eigen::field2Eigen(
+    pointVectorField& field);
+
 
 template<template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd Foam2Eigen::field2Eigen(
@@ -75,6 +78,8 @@ template Eigen::VectorXd Foam2Eigen::field2Eigen(
     volScalarField& field);
 template Eigen::VectorXd Foam2Eigen::field2Eigen(
     surfaceScalarField& field);
+template Eigen::VectorXd Foam2Eigen::field2Eigen(
+    pointScalarField& field);
 
 template<>
 Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<scalar>& field)

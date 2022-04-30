@@ -38,6 +38,7 @@
 #define Foam2Eigen_H
 
 #include "fvCFD.H"
+#include "pointMesh.H"
 #include "IOmanip.H"
 #include "ITHACAassert.H"
 #include <tuple>
@@ -147,8 +148,8 @@ class Foam2Eigen
         ///
         /// @param[in]  field       The field
         ///
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     PatchField  pointPatchField, fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     pointMesh, volMesh or surfaceMesh.
         ///
         /// @return     Dense Eigen vector
         ///
@@ -161,8 +162,8 @@ class Foam2Eigen
         ///
         /// @param[in]  field       The field
         ///
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     PatchField  pointPatchField, fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     pointMesh, volMesh or surfaceMesh.
         ///
         /// @return     Dense Eigen vector
         ///
@@ -176,7 +177,7 @@ class Foam2Eigen
         /// @param[in]  field    The field
         ///
         /// @tparam     Type     vector or scalar.
-        /// @tparam     GeoMesh  volMesh or surfaceMesh.
+        /// @tparam     GeoMesh  pointMesh, volMesh or surfaceMesh.
         ///
         /// @return     Dense Eigen vector
         ///
@@ -189,8 +190,8 @@ class Foam2Eigen
         ///
         /// @param[in]  field  The field
         ///
-        /// @tparam     Type   Type of the field can be volScalarField or
-        ///                    volVectorField
+        /// @tparam     Type   Type of the field can be volScalarField
+        ///                    volVectorField, pointVectorField, pointScalarField or volScalarField
         ///
         /// @return     Dense   Eigen vector
         ///
