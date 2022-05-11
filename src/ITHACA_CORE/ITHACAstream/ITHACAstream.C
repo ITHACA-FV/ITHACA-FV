@@ -805,6 +805,13 @@ template void exportSolution(
     GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
     fileName subfolder, fileName folder);
 
+template void exportSolution(
+    GeometricField<scalar, pointPatchField, pointMesh>& s,
+    fileName subfolder, fileName folder);
+template void exportSolution(
+    GeometricField<vector, pointPatchField, pointMesh>& s,
+    fileName subfolder, fileName folder);
+
 void writePoints(pointField points, fileName folder,
                  fileName subfolder)
 {
