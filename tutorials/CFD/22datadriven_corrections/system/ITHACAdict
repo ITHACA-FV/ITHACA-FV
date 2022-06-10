@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      ITHACAdict;
+}
+
+// EigenValue solver, can be eigen or spectra
+EigenSolver eigen;
+
+// Number of modes to output and to use for projection
+NmodesU 50;
+NmodesP 50;
+NmodesSUP 50;
+NmodesNUT 50;
+NmodesProject 50;
+NmodesMatrixRec 13;
+
+// Boundary method
+bcMethod penalty;
+
+// Penalty factor values
+penaltyFactor 1;
+
+// eddy viscosity coefficients computation method
+viscCoeff RBF;
+
+/// radius of infulence of the RBF functions
+RBFradius 0.0260;
+
+// Finite difference scheme order for the time derivative
+timeDerivativeSchemeOrder first;
+
+// Online velcoity
+U_BC 7.75;
+romStartTime 0;
+romTimeStep 0.0004;
+romEndTime 8;
+
+
+// Export Reduced Matrices
+exportPython 1;
+exportMatlab 1;
+exportTxt 0;
+
+
+// Output format to save market vectors.
+OutPrecision 20;
+OutType fixed;
