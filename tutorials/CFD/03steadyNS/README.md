@@ -171,15 +171,21 @@ applications in parallel on distributed processors: the method of parallel
 computing used by OpenFOAM is known as domain decomposition.
 
 First, the domain is decomposed as indicated in the directory
-*system/decomposeParDict*
+*system/decomposeParDict*, with the command
 
     decomposePar
 
-then the offline solve is performed in parallel, evaluating the modes and the
+In the parallel run also the lift field needs to be split with
+
+    decomposePar -time 0,1
+
+Then, the offline solve is performed in parallel, evaluating the modes and the
 reduced matrices on the whole domain
 
-    mpirun -np 4 03steadyNS -parallel -offline
+    mpirun -np 4 -quiet 03steadyNS -parallel -stage offline
 
 The online stage is performed analogously
 
-    mpirun -np 4 03steadyNS -parallel -online
+    mpirun -np 4 -quiet 03steadyNS -parallel -stage online
+
+In the case of OF1812 the parallel run is not supported.

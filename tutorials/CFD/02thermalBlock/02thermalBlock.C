@@ -168,6 +168,7 @@ void online_stage(tutorial02& example, tutorial02& FOM_test);
 
 int main(int argc, char* argv[])
 {
+#if OPENFOAM > 1812
     // load stage to perform
     argList::addOption("stage", "offline", "Perform offline stage");
     argList::addOption("stage", "online", "Perform online stage");
@@ -204,9 +205,50 @@ int main(int argc, char* argv[])
     }
     else
     {
-        std::cout << "Pass '-stage offline', '-stage online'" << std::endl;
+        Info << "Pass '-stage offline', '-stage online'" << endl;
+    }
+#else
+    if (argc == 1)
+    {
+        Info << "Pass 'offline' or 'online' as first arguments."
+                  << endl;
+        exit(0);
     }
 
+    // process arguments removing "offline" or "online" keywords
+    int argc_proc = argc - 1;
+    char* argv_proc[argc_proc];
+    argv_proc[0] = argv[0];
+
+    if (argc > 2)
+    {
+        std::copy(argv + 2, argv + argc, argv_proc + 1);
+    }
+
+    argc--;
+    // Construct the tutorial object
+    tutorial02 example(argc, argv);
+    /// Create a new instance of the FOM problem for testing purposes
+    tutorial02 FOM_test(argc, argv);
+
+    if (std::strcmp(argv[1], "offline") == 0)
+    {
+        // perform the offline stage, extracting the modes from the snapshots'
+        // dataset corresponding to parOffline
+        offline_stage(example, FOM_test);
+    }
+    else if (std::strcmp(argv[1], "online") == 0)
+    {
+        // load precomputed modes and reduced matrices
+        offline_stage(example, FOM_test);
+        // perform online solve with respect to the parameters in parOnline
+        online_stage(example, FOM_test);
+    }
+    else
+    {
+        Info << "Pass offline, online" << endl;
+    }
+#endif
     exit(0);
 }
 
