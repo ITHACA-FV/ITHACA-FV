@@ -22,7 +22,7 @@
 </p>
 
 ### 0. Introduction
-**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2106**](https://www.openfoam.com/releases/openfoam-v2106/) and older openfoam.com versions but it can be easily adapted also to other versions of OpenFOAM. 
+**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2106**](https://www.openfoam.com/releases/openfoam-v2106/) and older openfoam.com versions but it can be easily adapted also to other versions of OpenFOAM.
 
 **ITHACA-FV** can also be used as a basis for more advanced projects that would like to assess the capability of reduced order models in their existing **OpenFOAM**-based software, thanks to the availability of several reduced order methods and algorithms.
 
@@ -44,11 +44,11 @@ Linear and non-linear algebra operations which are not already implemented in Op
 First of all you need to source the bashrc file of your installation **OpenFOAM**. This is of course depending on the location of your OpenFOAM installation and of your particular version of OpenFOAM
 ```
 source $HOME/OpenFOAM/OpenFOAM-v2106/etc/bashrc
-``` 
+```
 Then navigate to the folder where you want to install ITHACA-FV such as, for example, your HOME folder
 ```
 cd ~
-``` 
+```
 Now you can clone the **ITHACA-FV** repository inside the selected folder
 ```
 git clone https://github.com/mathLab/ITHACA-FV
@@ -83,10 +83,23 @@ In the near future the ITHACA-FV will also be linked with the pytorch package fo
 
 For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://mathlab.github.io/ITHACA-FV/).
 
-### 3. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
+
+### 3. Docker Image
+
+Docker images for linux/arm64 and linux/amd64  are available on [Docker Hub](https://hub.docker.com/u/ithacafv).
+These images are based **OpenFOAM-v2106**, and provided an isolated environment, where you can find a compiled version of the master branch of **ITHACA-FV**.
+In order to pull the image, run the following command:
+
+    $ docker pull ithacafv/openfoam2106:manifest-latest
+
+Once the image is downloaded, you can start the container and mount the $HOME directory by executing:
+
+    $ docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" --security-opt seccomp=unconfined ithacafv/ithacafv:manifest-latest
+
+### 4. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
 Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
-*   [**CFD/Tutorial 1**](https://mathlab.github.io/ITHACA-FV/01POD_8C-example.html): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case. 
-*   [**CFD/Tutorial 2**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C-example.html): In this tutorial the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem is implemented. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**. 
+*   [**CFD/Tutorial 1**](https://mathlab.github.io/ITHACA-FV/01POD_8C-example.html): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case.
+*   [**CFD/Tutorial 2**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C-example.html): In this tutorial the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem is implemented. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**.
 *   [**CFD/Tutorial 3**](https://mathlab.github.io/ITHACA-FV/03steadyNS_8C-example.html): In this tutorial, the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the viscosity is implemented. The OpenFOAM full order problem is based on **simpleFoam**.
 *   [**CFD/Tutorial 4**](https://mathlab.github.io/ITHACA-FV/04unsteadyNS_8C-example.html): In this tutorial, the development of a parametrized POD-Galerkin method for an unsteady Navier-Stokes problem is implemented. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **pimpleFoam**.
 
@@ -97,12 +110,12 @@ Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
 *   [**CFD/Tutorial 9**](https://mathlab.github.io/ITHACA-FV/09DEIM_ROM_8C-example.html): In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for model reduction purposes. The non-linearity is in the forcing term of a heat transfer problem. The OpenFOAM full order problem is based on **laplacianFoam**.
 
 
-### 4. Authors and contributors
+### 5. Authors and contributors
 **ITHACA-FV** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by [Dr. Giovanni Stabile](mailto:gstabile@sissa.it) under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it)
 
 Contact us by email for further information or questions about **ITHACA-FV**, or open an ''Issue'' on this website. **ITHACA-FV** is at an early development stage, so contributions improving either the code or the documentation are welcome, both as patches or merge requests on this website. If you are willing to contribute please follow the [developer instructions](https://github.com/mathLab/ITHACA-FV/tree/master/src).
 
-### 5. How to cite
+### 6. How to cite
 Most of the theoretical aspects behind **ITHACA-FV** are deeply explained in [<b> Stabile2017CAIM </b>](https://arxiv.org/pdf/1701.03424.pdf) and [<b> Stabile2017CAF </b>](https://arxiv.org/pdf/1710.11580.pdf).
 For this reason, if you use this software, please consider citing the mentioned works, reported in the following bibtex entries:
 ```
@@ -130,5 +143,5 @@ Doi                      = {10.1016/j.compfluid.2018.01.035}}
 and cite the [ITHACA-FV website](http://mathlab.sissa.it/ITHACA-FV).
 
 
-### 6. License
+### 7. License
 **ITHACA-FV** is freely available under the GNU LGPL, version 3.
