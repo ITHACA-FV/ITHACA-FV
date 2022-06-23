@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      FORCESdict;
+}
+
+
+    outputControl timeStep;
+    log         yes;
+
+    patches     ( cylinder1 );
+    pName       pRec;
+    UName       uRec;
+    rhoName     rhoInf;      // Indicates incompressible
+    log         true;
+    rho         rhoInf;     // Indicates incompressible
+    rhoInf      999.1026;           // Redundant for incompressible
+    liftDir     (0 1 0);
+    dragDir     (1 0 0);
+    CofR        (0 0 0);  // Axle midpoint on ground
+    pitchAxis   (0 0 1);
+    magUInf  	7.75;
+    lRef        0.025;        // Wheelbase length
+    Aref        0.157079632679490;        // Estimated
+    type binData;
+    binData
+    {
+        nBin        20;          // output data into 20 bins
+        direction   (1 0 0);     // bin direction
+        format      gnuplot;
+        cumulative  yes;
+    }
+
+
+
+// ************************************************************************* //
