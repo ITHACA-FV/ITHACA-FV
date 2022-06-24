@@ -9,7 +9,7 @@ ENV USER $USER
 # Create the user
 RUN adduser --disabled-password --gecos '' $USER && \
     adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    usermod -a -G $USER $USER
+    usermod -a -G $USER $USER && \
     userdel sudofoam && \
     usermod -u 1000 ithacafv  && \
     groupmod -g 1000 ithacafv
