@@ -90,11 +90,15 @@ Docker images for linux/arm64 and linux/amd64  are available on [Docker Hub](htt
 These images are based **OpenFOAM-v2106**, and provided an isolated environment, where you can find a compiled version of the master branch of **ITHACA-FV**.
 In order to pull the image, run the following command:
 
-    $ docker pull ithacafv/openfoam2106:manifest-latest
+```
+docker pull ithacafv/ithacafv:manifest-latest
+```
 
 Once the image is downloaded, you can start the container and mount the $HOME directory by executing:
 
-    $ docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" --security-opt seccomp=unconfined ithacafv/ithacafv:manifest-latest
+```
+docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manifest-latest
+```
 
 ### 4. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
 Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
