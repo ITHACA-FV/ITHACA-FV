@@ -153,6 +153,11 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
     {
         vel_now = vel;
     }
+    else
+    {
+        M_Assert(false,
+                 "The BC method must be set to lift or penalty in ITHACAdict");
+    }
 
     y.resize(Nphi_u + Nphi_p, 1);
     y.setZero();

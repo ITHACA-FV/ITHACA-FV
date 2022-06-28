@@ -9,6 +9,7 @@ following image:
 At the inlet a uniform and constant velocity equal to 1 m/s is prescribed.
 
 ## The necessary header files
+
 First of all let's have a look to the header files that needs to be included and what they are responsible for.
 
 The header files of ITHACA-FV necessary for this tutorial
@@ -21,6 +22,7 @@ The header files of ITHACA-FV necessary for this tutorial
     #include "IOmanip.H"
 
 ## Implementation of the tutorial03 class
+
 We can define the tutorial03 class as a child of the steadyNS class
 
     class tutorial03 : public steadyNS
@@ -57,26 +59,38 @@ else perform the offline solve where a loop over all the parameters is performed
 See also the steadyNS class for the definition of the methods.
 
 ## Definition of the main function
-This tutorial is divided in Offline and Online stage
 
-    if (std::strcmp(argv[1], "offline") == 0) {
+This tutorial is divided into Offline and Online stage
+
+    if (example._args().get("stage").match("offline"))
+    {
+        // perform the offline stage, extracting the modes from the snapshots'
+        // dataset corresponding to parOffline
         offline_stage(example);
-    } else if (std::strcmp(argv[1], "online") == 0) {
+    }
+    else if (example._args().get("stage").match("online"))
+    {
+        // load precomputed modes and reduced matrices
         offline_stage(example);
+        // perform online solve with respect to the parameters in parOnline
         online_stage(example);
-    } else {
-        std::cout << "Pass offline, online" << std::endl;
+    }
+    else
+    {
+        std::cout << "Pass '-stage offline', '-stage online'" << std::endl;
     }
 
 pass "Offline" or "Online" as arguments from the command line:
 
-    > 03steadyNS online
+    > 03steadyNS -offline
+    > 03steadyNS -online
 
 An example of type tutorial03 is constructed:
 
     tutorial03 example(argc, argv);
 
-### Offline stage
+## Offline stage
+
 The inlet boundary is set:
 
     example.inletIndex.resize(1, 2);
@@ -115,7 +129,8 @@ then the projection onto the POD modes is performed with:
 
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
 
-### Online stage
+## Online stage
+
 The modes and reduced matrices computed during the offline stage are loaded
 
     offline_stage(example);
@@ -147,3 +162,30 @@ finally the online solution stored during the online solve is exported to file i
 and the online solution is reconstructed and exported to file
 
     ridotto.reconstruct(true, "./ITHACAoutput/Reconstruction/");
+
+
+## Parallel run
+
+To speed up the offline stage, ITHACA-FV employs OpenFOAM facilities to run
+applications in parallel on distributed processors: the method of parallel
+computing used by OpenFOAM is known as domain decomposition.
+
+First, the domain is decomposed as indicated in the directory
+*system/decomposeParDict*, with the command
+
+    decomposePar
+
+In the parallel run also the lift field needs to be split with
+
+    decomposePar -time 0,1
+
+Then, the offline solve is performed in parallel, evaluating the modes and the
+reduced matrices on the whole domain
+
+    mpirun -np 4 -quiet 03steadyNS -parallel -stage offline
+
+The online stage is performed analogously
+
+    mpirun -np 4 -quiet 03steadyNS -parallel -stage online
+
+In the case of OF1812 the parallel run is not supported.

@@ -1,9 +1,9 @@
 # Introduction to tutorial 2
 
-The problems consists of a parametrized POD-Galerkin ROM for a steady heat transfer phenomenon. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**.
-The problem equation are
+The problem consists of a parametrized POD-Galerkin ROM for a steady heat transfer phenomenon. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**.
+The problem equation is
 <center>
-<img src="https://render.githubusercontent.com/render/math?math=\nabla \cdot (k \nabla T) = S"> 
+<img src="https://render.githubusercontent.com/render/math?math=\nabla \cdot (k \nabla T) = S">
 </center>
 
 where *k* is the diffusivity, *T* is the temperature and *S* is the source term. The problem discretised and formalized in matrix equation reads:
@@ -17,12 +17,13 @@ where *A* is the matrix of interpolation coefficients, *T*  is the vector of unk
 
 Both the full order and the reduced order problem are solved exploiting the parametric affine decomposition of the differential operators:
 <center>
-<img src="https://render.githubusercontent.com/render/math?math=A = \sum_{i=1}^N \theta_i(\mu) A_i"> 
+<img src="https://render.githubusercontent.com/render/math?math=A = \sum_{i=1}^N \theta_i(\mu) A_i">
 </center>
 
 For the operations performed by each command check the comments in the source [**02thermalBlock.C**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C.html) file.
 
 ## The necessary header files
+
 First of all let's have a look to the header files that needs to be included and what they are responsible for:
 
 The standard C++ header for input/output stream objects:
@@ -45,7 +46,7 @@ The [**Eigen**](https://mathlab.github.io/ITHACA-FV/namespaceEigen.html) library
 
 ## Implementation of the tutorial02 class
 
-Then we can define the [**tutorial02**](https://mathlab.github.io/ITHACA-FV/classtutorial02.html) class as a child of the [**laplacianProblem**](https://mathlab.github.io/ITHACA-FV/classlaplacianProblem.html) class
+We can define the [**tutorial02**](https://mathlab.github.io/ITHACA-FV/classtutorial02.html) class as a child of the [**laplacianProblem**](https://mathlab.github.io/ITHACA-FV/classlaplacianProblem.html) class
 
     class tutorial02: public laplacianProblem
     {
@@ -62,11 +63,11 @@ The members of the class are the fields that need to be manipulated during the r
 
 Inside the class it is defined the offline solve method according to the specific parametrized problem that needs to be solved.
 
-    
+
     void offlineSolve(word folder = "./ITHACAoutput/Offline/")
         {
 
-If the offline solve has already been performed than read the existing snapshots
+If the offline solve has already been performed, then read the existing snapshots
 
 
     if (offline)
@@ -108,18 +109,18 @@ We need also to implement a method to set/define the source term that may be pro
     }
 Define by:
 <center>
-<img src="https://render.githubusercontent.com/render/math?math=S = \sin(\frac{\pi}{L}\cdot x) + \sin(\frac{\pi}{L}\cdot y)"> 
+<img src="https://render.githubusercontent.com/render/math?math=S = \sin(\frac{\pi}{L}\cdot x) + \sin(\frac{\pi}{L}\cdot y)">
 </center>
 
 where *L* is the dimension of the thermal block which is equal to 0.9.
 
 ![hat](../../../docs/images/hat.jpg)
 
-With the following is defined a method to set compute the parameter of the affine expansion:
+With the following is defined a method to set the parameter of the affine expansion:
 
     void compute_nu()
     {
-The list of parameters is resized according to number of parametrized regions
+The list of parameters is resized according to the number of parametrized regions
 
     nu_list.resize(9);
 
@@ -155,7 +156,7 @@ and the 9 different boxes are defined:
     Box8 << 0.3, 0.61, 0, 0.6, 0.91, 0.1;
     Eigen::MatrixXd Box9(2, 3);
 
-and for each of the defined boxes the relative diffusivity field is set to 1 inside the box and remain 0 elsewhere:
+and for each of the defined boxes the relative diffusivity field is set to 1 inside the box and remains 0 elsewhere:
 
     ITHACAutilities::setBoxToValue(nu1, Box1, 1.0);
     ITHACAutilities::setBoxToValue(nu2, Box2, 1.0);
@@ -184,11 +185,37 @@ The list of diffusivity fields is set with:
 
 ## Definition of the main function
 
-Once the [**tutorial02**](https://mathlab.github.io/ITHACA-FV/classtutorial02.html) class is defined the main function is defined, an example of type tutorial02 is constructed:
+Once the [**tutorial02**](https://mathlab.github.io/ITHACA-FV/classtutorial02.html) class is defined the main function is defined, an example of type tutorial02 is constructed
 
     tutorial02 example(argc, argv);
 
-the number of parameter is set:
+along with another instance to compute the test set
+
+    tutorial02 FOM_test(argc, argv);
+
+The problem is split in *offline* and *online* stages:
+
+    if (example._args().get("stage").match("offline"))
+    {
+        // perform the offline stage, extracting the modes from the snapshots'
+        // dataset corresponding to parOffline
+        offline_stage(example, FOM_test);
+    }
+    else if (example._args().get("stage").match("online"))
+    {
+        // load precomputed modes and reduced matrices
+        offline_stage(example, FOM_test);
+        // perform online solve with respect to the parameters in parOnline
+        online_stage(example, FOM_test);
+    }
+    else
+    {
+        std::cout << "Pass '-stage offline', '-stage online'" << std::endl;
+    }
+
+## Offline stage
+
+The number of parameter is set:
 
     example.Pnumber = 9;
     example.setParameters();
@@ -215,13 +242,15 @@ then the Offline full order Solve is performed:
 
     example.offlineSolve();
 
-Once the Offline solve is performed the modes ar obtained using the ITHACAPOD::getModes function:
+Once the Offline solve is performed the modes are obtained using the ITHACAPOD::getModes function:
 
     ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
 
 and the projection is performed onto the POD modes using 10 modes
 
     example.project(NmodesTproj);
+
+## Online stage
 
 Once the projection is performed we can construct a reduced object:
 
@@ -236,4 +265,24 @@ and solve the reduced problem for some values of the parameters:
 
 Finally, once the online solve has been performed we can reconstruct the solution:
 
-reduced.reconstruct("./ITHACAoutput/Reconstruction");
+    reduced.reconstruct("./ITHACAoutput/Reconstruction");
+
+## Parallel run
+
+To speed up the offline stage, ITHACA-FV employs OpenFOAM facilities to run
+applications in parallel on distributed processors: the method of parallel
+computing used by OpenFOAM is known as domain decomposition.
+
+First, the domain is decomposed in 4 subdomains as indicated in the directory
+*system/decomposeParDict*
+
+    decomposePar
+
+then the offline solve is performed in parallel, evaluating the modes and the
+reduced matrices on the whole domain
+
+    mpirun -np 4 02thermalBlock -stage offline -parallel
+
+The online stage is performed analogously
+
+    mpirun -np 4 02thermalBlock -stage online -parallel

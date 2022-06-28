@@ -163,11 +163,97 @@ class tutorial02: public laplacianProblem
 
 };
 
+void offline_stage(tutorial02& example, tutorial02& FOM_test);
+void online_stage(tutorial02& example, tutorial02& FOM_test);
 
 int main(int argc, char* argv[])
 {
-    // Create the example object of the tutorial02 type
+#if OPENFOAM > 1812
+    // load stage to perform
+    argList::addOption("stage", "offline", "Perform offline stage");
+    argList::addOption("stage", "online", "Perform online stage");
+    // add options for parallel run
+    HashTable<string> validParOptions;
+    validParOptions.set
+    (
+        "stage",
+        "offline"
+    );
+    validParOptions.set
+    (
+        "stage",
+        "online"
+    );
+    Pstream::addValidParOptions(validParOptions);
+    // Construct the tutorial object
     tutorial02 example(argc, argv);
+    /// Create a new instance of the FOM problem for testing purposes
+    tutorial02 FOM_test(argc, argv);
+
+    if (example._args().get("stage").match("offline"))
+    {
+        // perform the offline stage, extracting the modes from the snapshots'
+        // dataset corresponding to parOffline
+        offline_stage(example, FOM_test);
+    }
+    else if (example._args().get("stage").match("online"))
+    {
+        // load precomputed modes and reduced matrices
+        offline_stage(example, FOM_test);
+        // perform online solve with respect to the parameters in parOnline
+        online_stage(example, FOM_test);
+    }
+    else
+    {
+        Info << "Pass '-stage offline', '-stage online'" << endl;
+    }
+#else
+    if (argc == 1)
+    {
+        Info << "Pass 'offline' or 'online' as first arguments."
+                  << endl;
+        exit(0);
+    }
+
+    // process arguments removing "offline" or "online" keywords
+    int argc_proc = argc - 1;
+    char* argv_proc[argc_proc];
+    argv_proc[0] = argv[0];
+
+    if (argc > 2)
+    {
+        std::copy(argv + 2, argv + argc, argv_proc + 1);
+    }
+
+    argc--;
+    // Construct the tutorial object
+    tutorial02 example(argc, argv);
+    /// Create a new instance of the FOM problem for testing purposes
+    tutorial02 FOM_test(argc, argv);
+
+    if (std::strcmp(argv[1], "offline") == 0)
+    {
+        // perform the offline stage, extracting the modes from the snapshots'
+        // dataset corresponding to parOffline
+        offline_stage(example, FOM_test);
+    }
+    else if (std::strcmp(argv[1], "online") == 0)
+    {
+        // load precomputed modes and reduced matrices
+        offline_stage(example, FOM_test);
+        // perform online solve with respect to the parameters in parOnline
+        online_stage(example, FOM_test);
+    }
+    else
+    {
+        Info << "Pass offline, online" << endl;
+    }
+#endif
+    exit(0);
+}
+
+void offline_stage(tutorial02& example, tutorial02& FOM_test)
+{
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
@@ -198,8 +284,8 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
                         example.podex, 0, 0,
                         NmodesTout);
-    /// Create a new instance of the FOM problem for testing purposes
-    tutorial02 FOM_test(argc, argv);
+    // Perform the Galerkin projection onto the space spanned by the POD modes
+    example.project(NmodesTproj);
     FOM_test.offline = false;
     FOM_test.Pnumber = 9;
     FOM_test.Tnumber = 50;
@@ -221,8 +307,10 @@ int main(int argc, char* argv[])
     FOM_test.assemble_operator();
     // Perform an Offline Solve
     FOM_test.offlineSolve("./ITHACAoutput/FOMtest");
-    // Perform the Galerkin projection onto the space spanned by the POD modes
-    example.project(NmodesTproj);
+}
+
+void online_stage(tutorial02& example, tutorial02& FOM_test)
+{
     // Create a reduced object
     reducedLaplacian reduced(example);
 
