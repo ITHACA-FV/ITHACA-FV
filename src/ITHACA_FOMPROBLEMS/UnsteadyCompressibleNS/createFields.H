@@ -80,4 +80,5 @@ _U = autoPtr<volVectorField>
              mesh
          )
      );
+     
 volVectorField& U = _U();

@@ -41,7 +41,7 @@ SourceFiles
 //#include "turbulentTransportModel.H"
 //#include "fvOptions.H"
 #include "unsteadyNS.H"
-#include <iostream>
+//#include <iostream>
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -67,13 +67,13 @@ class UnsteadyCompressibleNS: public unsteadyNS
 
         // Member Functions
         /// List of snapshots for the solution
-        PtrList<volScalarField> Ufield;
-
-        /// List of snapshots for the solution
         PtrList<volScalarField> Pfield;
 
         /// List of snapshots for the solution
         PtrList<volScalarField> Tfield;
+
+        /// List of POD modes
+        volScalarModes Pmodes;
 
         // Dummy variables to transform rhoCentralFoam into a class
         /// Temperature field
@@ -81,10 +81,9 @@ class UnsteadyCompressibleNS: public unsteadyNS
         /// Pressure Term
         autoPtr<volScalarField> _p;
         /// Mesh
-     //   mutable autoPtr<fvMesh> _mesh;
+        mutable autoPtr<fvMesh> _mesh;
         /// Time
-     //   autoPtr<Time> _runTime;
-
+        autoPtr<Time> _runTime;
 };
 
 #endif

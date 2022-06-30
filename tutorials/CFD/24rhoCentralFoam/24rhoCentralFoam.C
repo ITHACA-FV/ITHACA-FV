@@ -33,7 +33,7 @@ SourceFiles
 //#include "Time.H"
 #include "UnsteadyCompressibleNS.H"
 //#include "ReducedUnsteadyNS.H"
-//#include "ITHACAPOD.H"
+#include "ITHACAPOD.H"
 //#include "ITHACAutilities.H"
 //#include <Eigen/Dense>
 //#define _USE_MATH_DEFINES
@@ -62,9 +62,9 @@ class tutorial24: public UnsteadyCompressibleNS
         {
             if (offline)
             {
-                ITHACAstream::read_fields(Pfield, "p", folder);
-                ITHACAstream::read_fields(Tfield, "T", folder);
-                ITHACAstream::read_fields(Ufield, "U", folder);
+                ITHACAstream::read_fields(Pfield, p, folder);
+                ITHACAstream::read_fields(Tfield, T, folder);
+                ITHACAstream::read_fields(Ufield, U, folder);
             }
             else
             {
@@ -80,22 +80,21 @@ int main(int argc, char* argv[])
     // Create the example object of the tutorial24 type
     tutorial24 example(argc, argv);
     // Read some parameters from file
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
+    int nModes = para->ITHACAdict->lookupOrDefault<int>("nModes", 10);
+    // Perform an Offline Solve
+    example.offlineSolve();
 
-    PtrList<volScalarField> Pfield;
-    volScalarModes Pmodes;
-
-    word folder = "./ITHACAoutput/Offline/";
-    ITHACAstream::read_fields(Pfield, "P", folder);
-    int Nmodes = 10;
-    // ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
-    //                     example.podex, 0, 0,
-    //                     Nmodes);    
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+                        example.podex, 0, 0,
+                        nModes);    
     ///////////////////////////////////////
     PtrList<volScalarField> projectedSnapshots;
 
     word projType = "L2";
-    Pmodes.projectSnapshots(Pfield, projectedSnapshots, Nmodes, projType);
-    ITHACAstream::exportFields(projectedSnapshots, "pippo", "P");
+    example.Pmodes.projectSnapshots(example.Pfield, projectedSnapshots, nModes, projType);
+    ITHACAstream::exportFields(projectedSnapshots, "./ITHACAoutput/Reconstruction", "P");
     ///////////////////////////////////////
 
   
