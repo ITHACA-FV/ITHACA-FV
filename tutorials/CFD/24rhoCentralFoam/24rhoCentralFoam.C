@@ -86,18 +86,28 @@ int main(int argc, char* argv[])
     // Perform an Offline Solve
     example.offlineSolve();
 
+    // Get Modes
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                         example.podex, 0, 0,
-                        nModes);    
-    ///////////////////////////////////////
-    PtrList<volScalarField> projectedSnapshots;
+                        nModes);
+    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
+                        example.podex, 0, 0,
+                        nModes);
+    ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0,
+                        nModes);            
 
-    word projType = "L2";
-    example.Pmodes.projectSnapshots(example.Pfield, projectedSnapshots, nModes, projType);
-    ITHACAstream::exportFields(projectedSnapshots, "./ITHACAoutput/Reconstruction", "P");
-    ///////////////////////////////////////
+    // Project modes and reconstruct solution           
+    PtrList<volScalarField> projectedSnapshotsP, projectedSnapshotsT;
+    PtrList<volVectorField> projectedSnapshotsU;
 
-  
+    example.Pmodes.projectSnapshots(example.Pfield, projectedSnapshotsP, nModes);
+    example.Tmodes.projectSnapshots(example.Tfield, projectedSnapshotsT, nModes);
+    example.Umodes.projectSnapshots(example.Ufield, projectedSnapshotsU, nModes);
+
+    ITHACAstream::exportFields(projectedSnapshotsP, "./ITHACAoutput/Reconstruction", "P");
+    ITHACAstream::exportFields(projectedSnapshotsT, "./ITHACAoutput/Reconstruction", "T");
+    ITHACAstream::exportFields(projectedSnapshotsU, "./ITHACAoutput/Reconstruction", "U");
 }
 //--------
 /// \dir 02thermalBlock Folder of the turorial 2

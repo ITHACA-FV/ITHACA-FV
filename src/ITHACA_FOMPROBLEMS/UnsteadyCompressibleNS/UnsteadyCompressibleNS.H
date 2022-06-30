@@ -75,6 +75,9 @@ class UnsteadyCompressibleNS: public unsteadyNS
         /// List of POD modes
         volScalarModes Pmodes;
 
+        /// List of POD modes
+        volScalarModes Tmodes;
+
         // Dummy variables to transform rhoCentralFoam into a class
         /// Temperature field
         autoPtr<volScalarField> _T;
