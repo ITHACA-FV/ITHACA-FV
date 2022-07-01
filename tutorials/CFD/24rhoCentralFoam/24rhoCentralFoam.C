@@ -39,8 +39,8 @@ SourceFiles
 //#define _USE_MATH_DEFINES
 //#include <cmath>
 
-/// \brief Class where the tutorial number 2 is implemented.
-/// \details It is a child of the unsteadyNS class and some of its
+/// \brief Class where the tutorial number 24 is implemented.
+/// \details It is a child of the UnsteadyCompressibleNS class and some of its
 /// functions are overridden to be adapted to the specific case.
 class tutorial24: public UnsteadyCompressibleNS
 {
@@ -85,7 +85,6 @@ int main(int argc, char* argv[])
     int nModes = para->ITHACAdict->lookupOrDefault<int>("nModes", 10);
     // Perform an Offline Solve
     example.offlineSolve();
-
     // Get Modes
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                         example.podex, 0, 0,
@@ -96,7 +95,6 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
                         example.podex, 0, 0,
                         nModes);            
-
     // Project modes and reconstruct solution           
     PtrList<volScalarField> projectedSnapshotsP, projectedSnapshotsT;
     PtrList<volVectorField> projectedSnapshotsU;
@@ -105,9 +103,13 @@ int main(int argc, char* argv[])
     example.Tmodes.projectSnapshots(example.Tfield, projectedSnapshotsT, nModes);
     example.Umodes.projectSnapshots(example.Ufield, projectedSnapshotsU, nModes);
 
-    ITHACAstream::exportFields(projectedSnapshotsP, "./ITHACAoutput/Reconstruction", "P");
+    ITHACAstream::exportFields(projectedSnapshotsP, "./ITHACAoutput/Reconstruction", "p");
     ITHACAstream::exportFields(projectedSnapshotsT, "./ITHACAoutput/Reconstruction", "T");
     ITHACAstream::exportFields(projectedSnapshotsU, "./ITHACAoutput/Reconstruction", "U");
+
+    // Compute the error on the testing set (velocity)
+    Eigen::MatrixXd error = ITHACAutilities::errorL2Rel(example.Ufield,
+                            projectedSnapshotsU);
 }
 //--------
 /// \dir 02thermalBlock Folder of the turorial 2
