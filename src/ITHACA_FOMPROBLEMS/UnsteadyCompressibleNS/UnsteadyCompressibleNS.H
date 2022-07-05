@@ -66,27 +66,24 @@ class UnsteadyCompressibleNS: public unsteadyNS
         ~UnsteadyCompressibleNS() {};
 
         // Member Functions
-        /// List of snapshots for the solution
-        PtrList<volScalarField> Pfield;
-
-        /// List of snapshots for the solution
+        /// List of snapshots for the temperature solution
         PtrList<volScalarField> Tfield;
 
-        /// List of POD modes
-        volScalarModes Pmodes;
-
-        /// List of POD modes
+        /// List of POD temperature modes
         volScalarModes Tmodes;
 
         // Dummy variables to transform rhoCentralFoam into a class
+
         /// Temperature field
         autoPtr<volScalarField> _T;
-        /// Pressure Term
-        autoPtr<volScalarField> _p;
-        /// Mesh
-        mutable autoPtr<fvMesh> _mesh;
-        /// Time
-        autoPtr<Time> _runTime;
+
+        // Methods
+
+        //--------------------------------------------------------------------------
+        /// Perform a truthsolve
+        void truthSolve(List<scalar> params, fileName folder = "./ITHACAoutput/Offline/");
+
+        //--------------------------------------------------------------------------
 };
 
 #endif

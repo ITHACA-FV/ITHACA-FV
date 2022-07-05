@@ -54,7 +54,26 @@ UnsteadyCompressibleNS::UnsteadyCompressibleNS(int argc, char* argv[])
 #include "createTime.H"
 #include "createMesh.H"
 #include "createFields.H"
-//#include "createFvOptions.H"
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
+}
+
+// * * * * * * * * * * * * * * * * Methods * * * * * * * * * * * * * * * * * * //
+
+void UnsteadyCompressibleNS::truthSolve(List<scalar> params, fileName folder) 
+{
+    // Time& runtime = _runTime();
+    // fvMesh& mesh = _mesh();
+    // fv::options& fvOptions = _fvOptions();
+
+    // volScalarField& p = _p();
+    // volScalarField& T = _T();
+    // volVectorField& U = _U();
+
+    // instantList Times = runTime.times();
+    // runTime.setTime(Times[1], 1);
+    // runTime.setDeltaT(timeStep);
+    // nextWrite = startTime;
+
+    
 }
