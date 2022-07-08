@@ -23,45 +23,57 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
  \*---------------------------------------------------------------------------*/
 
-Info << "Reading field T\n" << endl;
+//#include "createRDeltaT.H"
 
-_T = autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "T",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
+Info<< "Reading thermophysical properties\n" << endl;
 
-volScalarField& T = _T();
+autoPtr<psiThermo> _pThermo
+(
+    psiThermo::New(mesh)
+);
+ psiThermo& thermo = _pThermo();
+//
+ volScalarField& e = thermo.he();
 
-Info << "Reading field p\n" << endl;
+// Info << "Reading field T\n" << endl;
+//
+// _T = autoPtr<volScalarField>
+//      (
+//          new volScalarField
+//          (
+//              IOobject
+//              (
+//                  "T",
+//                  runTime.timeName(),
+//                  mesh,
+//                  IOobject::MUST_READ,
+//                  IOobject::AUTO_WRITE
+//              ),
+//              mesh
+//          )
+//      );
+//
+// // volScalarField& T = _T();
+//
+// Info << "Reading field p\n" << endl;
+//
+// _p = autoPtr<volScalarField>
+//      (
+//          new volScalarField
+//          (
+//              IOobject
+//              (
+//                  "p",
+//                  runTime.timeName(),
+//                  mesh,
+//                  IOobject::MUST_READ,
+//                  IOobject::AUTO_WRITE
+//              ),
+//              mesh
+//          )
+//      );
 
-_p = autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "p",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-
-volScalarField& p = _p();
+//volScalarField& p = _p();
 
 Info << "Reading field U\n" << endl;
 
@@ -80,5 +92,138 @@ _U = autoPtr<volVectorField>
              mesh
          )
      );
-     
+
 volVectorField& U = _U();
+
+_rho = autoPtr<volScalarField>
+     (
+         new volScalarField
+         (
+             IOobject
+             (
+                 "rho",
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::NO_READ,
+                 IOobject::AUTO_WRITE
+             ),
+             thermo.rho()
+         )
+     );
+
+volScalarField& rho = _rho();
+
+_rhoU = autoPtr<volVectorField>
+      (
+          new volVectorField
+          (
+              IOobject
+              (
+                  "rhoU",
+                  runTime.timeName(),
+                  mesh,
+                  IOobject::NO_READ,
+                  IOobject::NO_WRITE
+              ),
+              rho*U
+          )
+      );
+
+_rhoE = autoPtr<volScalarField>
+      (
+          new volScalarField
+          (
+              IOobject
+              (
+                  "rhoE",
+                  runTime.timeName(),
+                  mesh,
+                  IOobject::NO_READ,
+                  IOobject::NO_WRITE
+              ),
+              rho*(e + 0.5*magSqr(U))
+          )
+      );
+
+
+// volVectorField rhoU
+// (
+//     IOobject
+//     (
+//         "rhoU",
+//         runTime.timeName(),
+//         mesh,
+//         IOobject::NO_READ,
+//         IOobject::NO_WRITE
+//     ),
+//     rho*U
+// );
+
+// volScalarField rhoE
+// (
+//     IOobject
+//     (
+//         "rhoE",
+//         runTime.timeName(),
+//         mesh,
+//         IOobject::NO_READ,
+//         IOobject::NO_WRITE
+//     ),
+//     rho*(e + 0.5*magSqr(U))
+// );
+
+_pos = autoPtr<surfaceScalarField>
+      (
+          new surfaceScalarField
+          (
+              IOobject
+              (
+                  "pos",
+                  runTime.timeName(),
+                  mesh
+              ),
+              mesh,
+              dimensionedScalar("pos", dimless, 1.0)
+          )
+      );
+
+_neg = autoPtr<surfaceScalarField>
+      (
+          new surfaceScalarField
+          (
+              IOobject
+              (
+                  "neg",
+                  runTime.timeName(),
+                  mesh
+              ),
+              mesh,
+              dimensionedScalar("neg", dimless, 1.0)
+          )
+      );
+
+// surfaceScalarField neg
+// (
+//     IOobject
+//     (
+//         "neg",
+//         runTime.timeName(),
+//         mesh
+//     ),
+//     mesh,
+//     dimensionedScalar("neg", dimless, -1.0)
+// );
+
+// surfaceScalarField phi("phi", fvc::flux(rhoU));
+
+// Info<< "Creating turbulence model\n" << endl;
+// autoPtr<compressible::turbulenceModel> turbulence
+// (
+//     compressible::turbulenceModel::New
+//     (
+//         rho,
+//         U,
+//         phi,
+//         thermo
+//     )
+// );

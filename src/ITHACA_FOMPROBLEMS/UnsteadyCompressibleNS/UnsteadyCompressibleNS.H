@@ -41,6 +41,9 @@ SourceFiles
 //#include "turbulentTransportModel.H"
 //#include "fvOptions.H"
 #include "unsteadyNS.H"
+#include "directionInterpolate.H"
+#include "psiThermo.H"
+//#include "turbulentFluidThermoModel.H"
 //#include <iostream>
 
 
@@ -77,6 +80,19 @@ class UnsteadyCompressibleNS: public unsteadyNS
         /// Temperature field
         autoPtr<volScalarField> _T;
 
+        /// Density field
+        autoPtr<volScalarField> _rho;
+
+        autoPtr<surfaceScalarField> _pos;
+
+        autoPtr<surfaceScalarField> _neg;
+
+        autoPtr<volVectorField> _rhoU;
+
+        autoPtr<volScalarField> _rhoE;
+
+        autoPtr<psiThermo> _pThermo;
+
         // Methods
 
         //--------------------------------------------------------------------------
@@ -87,13 +103,3 @@ class UnsteadyCompressibleNS: public unsteadyNS
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
