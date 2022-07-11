@@ -43,7 +43,7 @@ SourceFiles
 #include "unsteadyNS.H"
 #include "directionInterpolate.H"
 #include "psiThermo.H"
-#include "turbulentFluidThermoModel.H"
+#include "turbulentFluidThermoModel.H"7
 //#include <iostream>
 
 
@@ -92,6 +92,8 @@ class UnsteadyCompressibleNS: public unsteadyNS
         autoPtr<volScalarField> _rhoE;
 
         autoPtr<psiThermo> _pThermo;
+
+        autoPtr<compressible::turbulenceModel> turbulence;
 
         // Methods
 
