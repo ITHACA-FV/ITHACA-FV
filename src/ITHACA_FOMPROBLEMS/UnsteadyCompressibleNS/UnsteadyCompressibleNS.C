@@ -81,6 +81,11 @@ void UnsteadyCompressibleNS::truthSolve(List<scalar> params, fileName folder)
     psiThermo& thermo = _pThermo();
 
     volScalarField& e = thermo.he();
+   // const volScalarField& psi = thermo.psi();
+
+    surfaceScalarField phi("phi", fvc::flux(rhoU));
+
+#include "createFieldRefs.H"
 
     instantList Times = runTime.times();
     runTime.setTime(Times[1], 1);

@@ -43,7 +43,7 @@ SourceFiles
 #include "unsteadyNS.H"
 #include "directionInterpolate.H"
 #include "psiThermo.H"
-//#include "turbulentFluidThermoModel.H"
+#include "turbulentFluidThermoModel.H"
 //#include <iostream>
 
 

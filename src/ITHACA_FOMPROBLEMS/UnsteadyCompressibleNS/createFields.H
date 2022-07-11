@@ -31,9 +31,9 @@ autoPtr<psiThermo> _pThermo
 (
     psiThermo::New(mesh)
 );
- psiThermo& thermo = _pThermo();
+psiThermo& thermo = _pThermo();
 //
- volScalarField& e = thermo.he();
+volScalarField& e = thermo.he();
 
 // Info << "Reading field T\n" << endl;
 //
@@ -129,6 +129,8 @@ _rhoU = autoPtr<volVectorField>
           )
       );
 
+volVectorField& rhoU = _rhoU();
+
 _rhoE = autoPtr<volScalarField>
       (
           new volScalarField
@@ -144,33 +146,6 @@ _rhoE = autoPtr<volScalarField>
               rho*(e + 0.5*magSqr(U))
           )
       );
-
-
-// volVectorField rhoU
-// (
-//     IOobject
-//     (
-//         "rhoU",
-//         runTime.timeName(),
-//         mesh,
-//         IOobject::NO_READ,
-//         IOobject::NO_WRITE
-//     ),
-//     rho*U
-// );
-
-// volScalarField rhoE
-// (
-//     IOobject
-//     (
-//         "rhoE",
-//         runTime.timeName(),
-//         mesh,
-//         IOobject::NO_READ,
-//         IOobject::NO_WRITE
-//     ),
-//     rho*(e + 0.5*magSqr(U))
-// );
 
 _pos = autoPtr<surfaceScalarField>
       (
@@ -198,32 +173,20 @@ _neg = autoPtr<surfaceScalarField>
                   mesh
               ),
               mesh,
-              dimensionedScalar("neg", dimless, 1.0)
+              dimensionedScalar("neg", dimless, -1.0)
           )
       );
 
-// surfaceScalarField neg
-// (
-//     IOobject
-//     (
-//         "neg",
-//         runTime.timeName(),
-//         mesh
-//     ),
-//     mesh,
-//     dimensionedScalar("neg", dimless, -1.0)
-// );
+surfaceScalarField phi("phi", fvc::flux(rhoU));
 
-// surfaceScalarField phi("phi", fvc::flux(rhoU));
-
-// Info<< "Creating turbulence model\n" << endl;
-// autoPtr<compressible::turbulenceModel> turbulence
-// (
-//     compressible::turbulenceModel::New
-//     (
-//         rho,
-//         U,
-//         phi,
-//         thermo
-//     )
-// );
+Info << "Creating turbulence model\n" << endl;
+autoPtr<compressible::turbulenceModel> turbulence
+(
+    compressible::turbulenceModel::New
+    (
+        rho,
+        U,
+        phi,
+        thermo
+    )
+);
