@@ -27,7 +27,8 @@
 
 Info<< "Reading thermophysical properties\n" << endl;
 
-autoPtr<psiThermo> _pThermo
+//autoPtr<psiThermo> _pThermo
+_pThermo = autoPtr<psiThermo>
 (
     psiThermo::New(mesh)
 );
@@ -35,45 +36,45 @@ psiThermo& thermo = _pThermo();
 //
 volScalarField& e = thermo.he();
 
-// Info << "Reading field T\n" << endl;
-//
-// _T = autoPtr<volScalarField>
-//      (
-//          new volScalarField
-//          (
-//              IOobject
-//              (
-//                  "T",
-//                  runTime.timeName(),
-//                  mesh,
-//                  IOobject::MUST_READ,
-//                  IOobject::AUTO_WRITE
-//              ),
-//              mesh
-//          )
-//      );
-//
-// // volScalarField& T = _T();
-//
-// Info << "Reading field p\n" << endl;
-//
-// _p = autoPtr<volScalarField>
-//      (
-//          new volScalarField
-//          (
-//              IOobject
-//              (
-//                  "p",
-//                  runTime.timeName(),
-//                  mesh,
-//                  IOobject::MUST_READ,
-//                  IOobject::AUTO_WRITE
-//              ),
-//              mesh
-//          )
-//      );
+Info << "Reading field T\n" << endl;
 
-//volScalarField& p = _p();
+_T = autoPtr<volScalarField>
+     (
+         new volScalarField
+         (
+             IOobject
+             (
+                 "T",
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::MUST_READ,
+                 IOobject::AUTO_WRITE
+             ),
+             mesh
+         )
+     );
+
+volScalarField& T = _T();
+
+Info << "Reading field p\n" << endl;
+
+_p = autoPtr<volScalarField>
+     (
+         new volScalarField
+         (
+             IOobject
+             (
+                 "p",
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::MUST_READ,
+                 IOobject::AUTO_WRITE
+             ),
+             mesh
+         )
+     );
+
+volScalarField& p = _p();
 
 Info << "Reading field U\n" << endl;
 
@@ -179,14 +180,14 @@ _neg = autoPtr<surfaceScalarField>
 
 surfaceScalarField phi("phi", fvc::flux(rhoU));
 
-Info << "Creating turbulence model\n" << endl;
-autoPtr<compressible::turbulenceModel> turbulence
-(
-    compressible::turbulenceModel::New
-    (
-        rho,
-        U,
-        phi,
-        thermo
-    )
-);
+// Info << "Creating turbulence model\n" << endl;
+// autoPtr<compressible::turbulenceModel> turbulence
+// (
+//     compressible::turbulenceModel::New
+//     (
+//         rho,
+//         U,
+//         phi,
+//         thermo
+//     )
+// );

@@ -55,4 +55,5 @@ EXE_LIBS = \
     -lcompressibleRASModels \
     -lforces \
     -lfileFormats \
+    -ldynamicFvMesh \
     -lcompressibleLESModels

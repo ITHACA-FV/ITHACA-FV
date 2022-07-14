@@ -44,6 +44,9 @@ SourceFiles
 #include "directionInterpolate.H"
 #include "psiThermo.H"
 #include "turbulentFluidThermoModel.H"
+#include "localEulerDdtScheme.H"
+#include "dynamicFvMesh.H"
+#include "fvcSmooth.H"
 //#include <iostream>
 
 
@@ -93,13 +96,13 @@ class UnsteadyCompressibleNS: public unsteadyNS
 
         autoPtr<psiThermo> _pThermo;
 
-        autoPtr<compressible::turbulenceModel> turbulence;
+  //      autoPtr<compressible::turbulenceModel> turbulence;
 
         // Methods
 
         //--------------------------------------------------------------------------
         /// Perform a truthsolve
-        void truthSolve(List<scalar> params, fileName folder = "./ITHACAoutput/Offline/");
+        void truthSolve(fileName folder = "./ITHACAoutput/Offline/");
 
         //--------------------------------------------------------------------------
 };

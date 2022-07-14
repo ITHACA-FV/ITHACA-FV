@@ -68,8 +68,9 @@ class tutorial24: public UnsteadyCompressibleNS
             }
             else
             {
-                Info << "WIP: Online solve" << endl;
-                exit(0);
+                truthSolve();
+                // Info << "WIP: Online solve" << endl;
+                // exit(0);
             }
         }
 };
@@ -83,6 +84,10 @@ int main(int argc, char* argv[])
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
     int nModes = para->ITHACAdict->lookupOrDefault<int>("nModes", 10);
+    example.startTime = para->ITHACAdict->lookupOrDefault<scalar>("startTime", 0);
+    example.finalTime = para->ITHACAdict->lookupOrDefault<scalar>("finalTime", 7e-03);
+    example.timeStep  = para->ITHACAdict->lookupOrDefault<scalar>("timeStep", 1e-06);
+    example.writeEvery = para->ITHACAdict->lookupOrDefault<scalar>("writeEvery", 5e-05); 
     // Perform an Offline Solve
     example.offlineSolve();
     // Get Modes
@@ -94,8 +99,8 @@ int main(int argc, char* argv[])
                         nModes);
     ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
                         example.podex, 0, 0,
-                        nModes);            
-    // Project modes and reconstruct solution           
+                        nModes);
+    // Project modes and reconstruct solution
     PtrList<volScalarField> projectedSnapshotsP, projectedSnapshotsT;
     PtrList<volVectorField> projectedSnapshotsU;
 
