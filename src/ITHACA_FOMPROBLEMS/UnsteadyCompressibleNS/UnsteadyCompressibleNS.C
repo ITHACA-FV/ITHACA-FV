@@ -119,7 +119,7 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
     // Start the time loop
     while (runTime.run())
     {
-#include "readTimeControls.H";
+        #include "readTimeControls.H";
 
         if (!LTS)
         {
@@ -331,6 +331,18 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
              << "  ClockTime = " << runTime.elapsedClockTime() << " s"
              << nl << endl;
+
+        if (checkWrite(runTime))
+        {
+            ITHACAstream::exportSolution(U, name(counter), folder);
+            ITHACAstream::exportSolution(p, name(counter), folder);
+            ITHACAstream::exportSolution(T, name(counter), folder);
+            Ufield.append(U.clone());
+            Pfield.append(p.clone());
+            Tfield.append(T.clone());
+            counter++;
+            nextWrite += writeEvery;
+        }
     }
 
 }
