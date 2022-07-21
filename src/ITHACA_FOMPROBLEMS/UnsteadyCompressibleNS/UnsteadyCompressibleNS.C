@@ -66,7 +66,7 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
 {
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
-    fv::options& fvOptions = _fvOptions();
+  //  fv::options& fvOptions = _fvOptions();
 
     volScalarField& p = _p();
     volScalarField& T = _T();
@@ -81,7 +81,6 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
     psiThermo& thermo = _pThermo();
 
     volScalarField& e = thermo.he();
-   // const volScalarField& psi = thermo.psi();
 
     surfaceScalarField phi("phi", fvc::flux(rhoU));
 //#include "createDynamicFvMesh.H"
@@ -104,7 +103,7 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
     counter++;
     nextWrite += writeEvery;
 
-    //turbulence->validate();
+    turbulence->validate();
 
 #include "readFluxScheme.H";
 
@@ -130,10 +129,6 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
            // Do any mesh changes
     //       mesh.update();
         }
-
-        // runTime.setEndTime(finalTime);
-        // runTime++;
-        // Info << "Time = " << runTime.timeName() << nl << endl;
 
         // --- Directed interpolation of primitive fields onto faces
 
@@ -256,8 +251,8 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
             phiEp += meshPhi*(a_pos*p_pos + a_neg*p_neg);
         }
 
-    //    volScalarField muEff("muEff", turbulence->muEff());
-    //    volTensorField tauMC("tauMC", muEff*dev2(Foam::T(fvc::grad(U))));
+        volScalarField muEff("muEff", turbulence->muEff());
+        volTensorField tauMC("tauMC", muEff*dev2(Foam::T(fvc::grad(U))));
 
         // --- Solve density
         solve(fvm::ddt(rho) + fvc::div(phi));
@@ -276,28 +271,28 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
             solve
             (
                 fvm::ddt(rho, U) - fvc::ddt(rho, U)
-    //          - fvm::laplacian(muEff, U)
-    //          - fvc::div(tauMC)
+              - fvm::laplacian(muEff, U)
+              - fvc::div(tauMC)
             );
             rhoU = rho*U;
         }
 
         // --- Solve energy
-    //     surfaceScalarField sigmaDotU
-    //     (
-    //         "sigmaDotU",
-    //         (
-    // //            fvc::interpolate(muEff)*mesh.magSf()*fvc::snGrad(U)
-    // //          + fvc::dotInterpolate(mesh.Sf(), tauMC)
-    //         )
-    //       & (a_pos*U_pos + a_neg*U_neg)
-    //     );
+        surfaceScalarField sigmaDotU
+        (
+            "sigmaDotU",
+            (
+                fvc::interpolate(muEff)*mesh.magSf()*fvc::snGrad(U)
+              + fvc::dotInterpolate(mesh.Sf(), tauMC)
+            )
+          & (a_pos*U_pos + a_neg*U_neg)
+        );
 
         solve
         (
             fvm::ddt(rhoE)
           + fvc::div(phiEp)
-//          - fvc::div(sigmaDotU)
+          - fvc::div(sigmaDotU)
         );
 
         e = rhoE/rho - 0.5*magSqr(U);
@@ -314,7 +309,7 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
             solve
             (
                 fvm::ddt(rho, e) - fvc::ddt(rho, e)
-    //          - fvm::laplacian(turbulence->alphaEff(), e)
+              - fvm::laplacian(turbulence->alphaEff(), e)
             );
             thermo.correct();
             rhoE = rho*(e + 0.5*magSqr(U));
@@ -326,7 +321,7 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
         p.correctBoundaryConditions();
         rho.boundaryFieldRef() == psi.boundaryField()*p.boundaryField();
 
-  //      turbulence->correct();
+        turbulence->correct();
 
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
              << "  ClockTime = " << runTime.elapsedClockTime() << " s"

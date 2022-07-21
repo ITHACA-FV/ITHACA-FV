@@ -23,17 +23,14 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
  \*---------------------------------------------------------------------------*/
 
-//#include "createRDeltaT.H"
-
 Info<< "Reading thermophysical properties\n" << endl;
 
-//autoPtr<psiThermo> _pThermo
 _pThermo = autoPtr<psiThermo>
 (
     psiThermo::New(mesh)
 );
 psiThermo& thermo = _pThermo();
-//
+
 volScalarField& e = thermo.he();
 
 Info << "Reading field T\n" << endl;
@@ -180,14 +177,14 @@ _neg = autoPtr<surfaceScalarField>
 
 surfaceScalarField phi("phi", fvc::flux(rhoU));
 
-// Info << "Creating turbulence model\n" << endl;
-// autoPtr<compressible::turbulenceModel> turbulence
-// (
-//     compressible::turbulenceModel::New
-//     (
-//         rho,
-//         U,
-//         phi,
-//         thermo
-//     )
-// );
+Info << "Creating turbulence model\n" << endl;
+turbulence = autoPtr<compressible::turbulenceModel>
+(
+    compressible::turbulenceModel::New
+    (
+        rho,
+        U,
+        phi,
+        thermo
+    )
+);

@@ -96,7 +96,7 @@ class UnsteadyCompressibleNS: public unsteadyNS
 
         autoPtr<psiThermo> _pThermo;
 
-  //      autoPtr<compressible::turbulenceModel> turbulence;
+        autoPtr<compressible::turbulenceModel> turbulence;
 
         // Methods
 
