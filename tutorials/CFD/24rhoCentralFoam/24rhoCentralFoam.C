@@ -48,15 +48,18 @@ class tutorial24: public UnsteadyCompressibleNS
         explicit tutorial24(int argc, char* argv[])
             :
             UnsteadyCompressibleNS(argc, argv),
-            p(_p()),
-            T(_T()),
-            U(_U())
+            U(_U()),
+            rho(_rho())
         {}
 
         // Fields to perform
-        volScalarField& p;
-        volScalarField& T;
+        volScalarField& rho;
         volVectorField& U;
+
+        psiThermo& thermo = _pThermo();
+
+        volScalarField& T = thermo.T();
+        volScalarField& p = thermo.p();
 
         void offlineSolve(word folder = "./ITHACAoutput/Offline/")
         {
@@ -65,12 +68,11 @@ class tutorial24: public UnsteadyCompressibleNS
                 ITHACAstream::read_fields(Pfield, p, folder);
                 ITHACAstream::read_fields(Tfield, T, folder);
                 ITHACAstream::read_fields(Ufield, U, folder);
+                ITHACAstream::read_fields(rhofield, rho, folder);
             }
             else
             {
                 truthSolve();
-                // Info << "WIP: Online solve" << endl;
-                // exit(0);
             }
         }
 };
@@ -87,30 +89,35 @@ int main(int argc, char* argv[])
     example.startTime = para->ITHACAdict->lookupOrDefault<scalar>("startTime", 0);
     example.finalTime = para->ITHACAdict->lookupOrDefault<scalar>("finalTime", 7e-03);
     example.timeStep  = para->ITHACAdict->lookupOrDefault<scalar>("timeStep", 1e-06);
-    example.writeEvery = para->ITHACAdict->lookupOrDefault<scalar>("writeEvery", 5e-05); 
+    example.writeEvery = para->ITHACAdict->lookupOrDefault<scalar>("writeEvery", 5e-05);
     // Perform an Offline Solve
     example.offlineSolve();
     // Get Modes
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example.p.name(),
                         example.podex, 0, 0,
                         nModes);
-    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
+    ITHACAPOD::getModes(example.Tfield, example.Tmodes, example.T.name(),
                         example.podex, 0, 0,
                         nModes);
     ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
                         example.podex, 0, 0,
                         nModes);
+    ITHACAPOD::getModes(example.rhofield, example.rhomodes, example._rho().name(),
+                        example.podex, 0, 0,
+                        nModes);
     // Project modes and reconstruct solution
-    PtrList<volScalarField> projectedSnapshotsP, projectedSnapshotsT;
+    PtrList<volScalarField> projectedSnapshotsP, projectedSnapshotsT, projectedSnapshotsRho;
     PtrList<volVectorField> projectedSnapshotsU;
 
     example.Pmodes.projectSnapshots(example.Pfield, projectedSnapshotsP, nModes);
     example.Tmodes.projectSnapshots(example.Tfield, projectedSnapshotsT, nModes);
     example.Umodes.projectSnapshots(example.Ufield, projectedSnapshotsU, nModes);
+    example.rhomodes.projectSnapshots(example.rhofield, projectedSnapshotsRho, nModes);
 
     ITHACAstream::exportFields(projectedSnapshotsP, "./ITHACAoutput/Reconstruction", "p");
     ITHACAstream::exportFields(projectedSnapshotsT, "./ITHACAoutput/Reconstruction", "T");
     ITHACAstream::exportFields(projectedSnapshotsU, "./ITHACAoutput/Reconstruction", "U");
+    ITHACAstream::exportFields(projectedSnapshotsRho, "./ITHACAoutput/Reconstruction", "rho");
 
     // Compute the error on the testing set (velocity)
     Eigen::MatrixXd error = ITHACAutilities::errorL2Rel(example.Ufield,

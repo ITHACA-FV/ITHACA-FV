@@ -45,7 +45,7 @@ SourceFiles
 #include "psiThermo.H"
 #include "turbulentFluidThermoModel.H"
 #include "localEulerDdtScheme.H"
-#include "dynamicFvMesh.H"
+//#include "dynamicFvMesh.H"
 #include "fvcSmooth.H"
 //#include <iostream>
 
@@ -75,13 +75,16 @@ class UnsteadyCompressibleNS: public unsteadyNS
         /// List of snapshots for the temperature solution
         PtrList<volScalarField> Tfield;
 
+        /// List of snapshots for the density solution
+        PtrList<volScalarField> rhofield;
+
         /// List of POD temperature modes
         volScalarModes Tmodes;
 
-        // Dummy variables to transform rhoCentralFoam into a class
+        /// List of POD density modes
+        volScalarModes rhomodes;
 
-        /// Temperature field
-        autoPtr<volScalarField> _T;
+        // Dummy variables to transform rhoCentralFoam into a class
 
         /// Density field
         autoPtr<volScalarField> _rho;
@@ -97,6 +100,8 @@ class UnsteadyCompressibleNS: public unsteadyNS
         autoPtr<psiThermo> _pThermo;
 
         autoPtr<compressible::turbulenceModel> turbulence;
+
+        autoPtr<surfaceScalarField> _phi;
 
         // Methods
 

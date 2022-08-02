@@ -23,11 +23,26 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
  \*---------------------------------------------------------------------------*/
 
- const volScalarField& psi = thermo.psi();
- const volScalarField& mu = thermo.mu();
+volVectorField& U = _U();
+volVectorField& rhoU = _rhoU();
 
- bool inviscid(true);
- if (max(mu.primitiveField()) > 0.0)
- {
-     inviscid = false;
- }
+volScalarField& rho = _rho();
+volScalarField& rhoE = _rhoE();
+
+surfaceScalarField& pos = _pos();
+surfaceScalarField& neg = _neg();
+surfaceScalarField& phi = _phi();
+
+psiThermo& thermo = _pThermo();
+
+volScalarField& e = thermo.he();
+volScalarField& p = thermo.p();
+volScalarField& T = thermo.T();
+const volScalarField& psi = thermo.psi();
+const volScalarField& mu = thermo.mu();
+
+bool inviscid(true);
+if (max(mu.primitiveField()) > 0.0)
+{
+   inviscid = false;
+}

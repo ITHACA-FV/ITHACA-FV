@@ -33,46 +33,6 @@ psiThermo& thermo = _pThermo();
 
 volScalarField& e = thermo.he();
 
-Info << "Reading field T\n" << endl;
-
-_T = autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "T",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-
-volScalarField& T = _T();
-
-Info << "Reading field p\n" << endl;
-
-_p = autoPtr<volScalarField>
-     (
-         new volScalarField
-         (
-             IOobject
-             (
-                 "p",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::MUST_READ,
-                 IOobject::AUTO_WRITE
-             ),
-             mesh
-         )
-     );
-
-volScalarField& p = _p();
-
 Info << "Reading field U\n" << endl;
 
 _U = autoPtr<volVectorField>
@@ -175,7 +135,21 @@ _neg = autoPtr<surfaceScalarField>
           )
       );
 
-surfaceScalarField phi("phi", fvc::flux(rhoU));
+_phi = autoPtr<surfaceScalarField>
+       (
+          new surfaceScalarField
+           (
+              IOobject
+              (
+                  "phi",
+                   runTime.timeName(),
+                   mesh
+              ),
+              fvc::flux(rhoU)
+           )
+       );
+
+surfaceScalarField& phi = _phi();
 
 Info << "Creating turbulence model\n" << endl;
 turbulence = autoPtr<compressible::turbulenceModel>

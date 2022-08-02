@@ -54,7 +54,6 @@ UnsteadyCompressibleNS::UnsteadyCompressibleNS(int argc, char* argv[])
 #include "createTime.H"
 #include "createMesh.H"
 #include "createFields.H"
-#include "createFieldRefs.H"
 #include "createFvOptions.H"
     offline = ITHACAutilities::check_off();
     podex   = ITHACAutilities::check_pod();
@@ -66,40 +65,29 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
 {
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
-  //  fv::options& fvOptions = _fvOptions();
 
-    volScalarField& p = _p();
-    volScalarField& T = _T();
-    volVectorField& U = _U();
-    volScalarField& rho = _rho();
-    volVectorField& rhoU = _rhoU();
-    volScalarField& rhoE = _rhoE();
-
-    surfaceScalarField& pos = _pos();
-    surfaceScalarField& neg = _neg();
-
-    psiThermo& thermo = _pThermo();
-
-    volScalarField& e = thermo.he();
-
-    surfaceScalarField phi("phi", fvc::flux(rhoU));
 //#include "createDynamicFvMesh.H"
 #include "createFieldRefs.H"
 #include "createRDeltaT.H"
+
     instantList Times = runTime.times();
     runTime.setEndTime(finalTime);
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
-    // Export and store the initial conditions for velocity and pressure
+
+    // Export and store the initial conditions for velocity, pressure
+    // temperature and density
     ITHACAstream::exportSolution(U, name(counter), folder);
     ITHACAstream::exportSolution(p, name(counter), folder);
     ITHACAstream::exportSolution(T, name(counter), folder);
+    ITHACAstream::exportSolution(rho, name(counter), folder);
     std::ofstream of(folder + name(counter) + "/" +
                      runTime.timeName());
     Ufield.append(U.clone());
     Pfield.append(p.clone());
     Tfield.append(T.clone());
+    rhofield.append(rho.clone());
     counter++;
     nextWrite += writeEvery;
 
@@ -127,7 +115,7 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
            ++runTime;
 
            // Do any mesh changes
-    //       mesh.update();
+  //         mesh.update();
         }
 
         // --- Directed interpolation of primitive fields onto faces
@@ -332,9 +320,11 @@ void UnsteadyCompressibleNS::truthSolve(fileName folder)
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(p, name(counter), folder);
             ITHACAstream::exportSolution(T, name(counter), folder);
+            ITHACAstream::exportSolution(rho, name(counter), folder);
             Ufield.append(U.clone());
             Pfield.append(p.clone());
             Tfield.append(T.clone());
+            rhofield.append(rho.clone());
             counter++;
             nextWrite += writeEvery;
         }
