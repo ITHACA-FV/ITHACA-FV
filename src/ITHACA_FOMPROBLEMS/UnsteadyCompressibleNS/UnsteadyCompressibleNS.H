@@ -30,16 +30,13 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the UnsteadyBB class.
+/// Header file of the UnsteadyCompressibleNS class.
 /// \dir
-/// Directory containing the header and source files for the UnsteadyBB class.
+/// Directory containing the header and source files for the UnsteadyCompressibleNS class.
 
 #ifndef UnsteadyCompressibleNS_H
 #define UnsteadyCompressibleNS_H
-//#include "fvCFD.H"
-//#include "singlePhaseTransportModel.H"
-//#include "turbulentTransportModel.H"
-//#include "fvOptions.H"
+
 #include "unsteadyNS.H"
 #include "directionInterpolate.H"
 #include "psiThermo.H"
@@ -47,19 +44,16 @@ SourceFiles
 #include "localEulerDdtScheme.H"
 //#include "dynamicFvMesh.H"
 #include "fvcSmooth.H"
-//#include <iostream>
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*---------------------------------------------------------------------------*\
-                        Class SteadyBB Declaration
+                Class UnsteadyCompressibleNS Declaration
 \*---------------------------------------------------------------------------*/
 
-/// Implementation of a parametrized full order <b> unsteady Boussinesq problem </b> and preparation of the the reduced matrices for the online solve.
-/** In this class are implemented the methods for the offline solve of a unsteady Boussinesq problem (two way coupling between momentum and energy equation)
-and the for the generation of the reduced matrices for subsequent online solve, this class is a son
-of the reduction problem class */
+/// Implementation of a parametrized full order <b> unsteady compressible Navier Stokes problem </b> and preparation of the the reduced matrices for the online solve.
+/** In this class are implemented the methods for the offline solve of a unsteady compressible Navier Stokes problem
+and for the generation of the reduced matrices for subsequent online solve. This class is a son of the unsteady NS problem class */
 class UnsteadyCompressibleNS: public unsteadyNS
 {
     public:
@@ -89,19 +83,26 @@ class UnsteadyCompressibleNS: public unsteadyNS
         /// Density field
         autoPtr<volScalarField> _rho;
 
-        autoPtr<surfaceScalarField> _pos;
-
-        autoPtr<surfaceScalarField> _neg;
-
+        /// Momentum 
         autoPtr<volVectorField> _rhoU;
 
+        /// Total energy
         autoPtr<volScalarField> _rhoE;
 
+        /// Volumetric flux
+        autoPtr<surfaceScalarField> _phi;
+
+        /// Volumetric flux associated with inward local propagation speed    
+        autoPtr<surfaceScalarField> _pos;
+
+        /// Volumetric flux associated with outward local propagation speed    
+        autoPtr<surfaceScalarField> _neg;
+
+        /// Thermodynamic model
         autoPtr<psiThermo> _pThermo;
 
+        /// Turbulence model
         autoPtr<compressible::turbulenceModel> turbulence;
-
-        autoPtr<surfaceScalarField> _phi;
 
         // Methods
 
