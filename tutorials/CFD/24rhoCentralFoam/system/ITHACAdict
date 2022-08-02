@@ -14,15 +14,12 @@ FoamFile
     object      ITHACAdict;
 }
 
-// EigenValue solver, can be eigen or spectra
-EigenSolver eigen;
-
-// Number of modes to output and to use for projection
-NmodesTout 500;
-NmodesTproj 10;
+// Simulation settings
+startTime 0;
+finalTime 7e-03;
+timeStep 1e-06;
+writeEvery 5e-05;
 
 // Output format to save market vectors.
 OutPrecision 20;
 OutType fixed;
-
-POD_T L2;

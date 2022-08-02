@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.5                                   |
-|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|  \\    /   O peration     | Version:  v2112                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -14,42 +14,43 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+fluxScheme          Tadmor;
+
 ddtSchemes
 {
-    default steadyState;
+    default         CrankNicolson 0.5;
 }
 
 gradSchemes
 {
-    default         Gauss linear;
-    grad(T)         Gauss linear;
+    default         cellLimited<Venkatakrishnan> leastSquares 1;
 }
 
 divSchemes
 {
-    default         none;
+//    default         none;
+
+    // div(tauMC)      Gauss linear;
 }
 
 laplacianSchemes
 {
-    default         Gauss linear corrected;
-    laplacian(DT,T)  Gauss linear corrected;
+    // default         Gauss cubic;
 }
 
 interpolationSchemes
 {
     default         linear;
+
+    reconstruct(rho) vanLeer 1;
+    reconstruct(U)  vanLeerV 1;
+    reconstruct(T)  vanLeer 1;
 }
 
 snGradSchemes
 {
-    default         corrected;
+    default         orthogonal;
 }
 
-fluxRequired
-{
-    default         no;
-    T;
-}
 
 // ************************************************************************* //

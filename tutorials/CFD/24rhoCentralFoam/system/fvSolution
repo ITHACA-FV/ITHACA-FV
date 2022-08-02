@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.5                                   |
-|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|  \\    /   O peration     | Version:  v2112                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -16,17 +16,27 @@ FoamFile
 
 solvers
 {
-    T PCG
+    "(rho|rhoU|rhoE)"
     {
-        preconditioner   DIC;
-        tolerance        1e-06;
-        relTol           0;
-    };
+        solver          diagonal;
+    }
+
+//    U
+//    {
+//        solver          smoothSolver;
+//        smoother        GaussSeidel;
+//        nSweeps         2;
+//        tolerance       1e-09;
+//        relTol          0.01;
+//    }
+
+//    h
+//    {
+//        $U;
+//        tolerance       1e-10;
+//        relTol          0;
+//    }
 }
 
-SIMPLE
-{
-    nNonOrthogonalCorrectors 2;
-}
 
 // ************************************************************************* //

@@ -1,8 +1,8 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.5                                   |
-|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|  \\    /   O peration     | Version:  v2112                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application poissonFoam;
+application     rhoCentralFoam;
 
 startFrom       startTime;
 
@@ -22,24 +22,33 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         1000;
+endTime         7e-03;
 
-deltaT          1;
+deltaT          1e-06;
 
-writeControl    timeStep;
+writeControl    runTime;
 
 writeInterval   10000000;
 
-purgeWrite      0;
+purgeWrite      1000;
 
 writeFormat     ascii;
 
 writePrecision  6;
 
+writeCompression off;
+
 timeFormat      general;
 
 timePrecision   6;
 
-runTimeModifiable yes;
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.1;
+
+maxDeltaT       1;
 
 // ************************************************************************* //
+
