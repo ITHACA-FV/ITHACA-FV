@@ -196,7 +196,7 @@ class DEIM
         /// @return     return field in the submesh
         ///
         template <class S>
-        S generateSubmesh(label layers, fvMesh& mesh, S field,
+        S generateSubmesh(label layers, const fvMesh& mesh, S field,
                           label secondTime = 0);
 
         //----------------------------------------------------------------------
@@ -212,7 +212,7 @@ class DEIM
         /// @return     return field in the submesh
         ///
         template <class S>
-        S generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
+        S generateSubmeshMatrix(label layers, const fvMesh& mesh, S field,
                                 label secondTime = 0);
 
         //----------------------------------------------------------------------
@@ -227,7 +227,7 @@ class DEIM
         ///
         /// @return     return field in the submesh
         template <class S>
-        S generateSubmeshVector(label layers, fvMesh& mesh, S field,
+        S generateSubmeshVector(label layers, const fvMesh& mesh, S field,
                                 label secondTime = 0);
 
         //----------------------------------------------------------------------
@@ -307,4 +307,3 @@ class DEIM
         void setMagicPoints(labelList& newMagicPoints, labelList& newxyz);
 
 };
-

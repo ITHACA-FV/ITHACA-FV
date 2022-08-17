@@ -353,7 +353,7 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
 
 template<typename T>
 template<typename S>
-S DEIM<T>::generateSubmesh(label layers, fvMesh& mesh, S field,
+S DEIM<T>::generateSubmesh(label layers, const fvMesh& mesh, S field,
                            label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -446,7 +446,7 @@ S DEIM<T>::generateSubmesh(label layers, fvMesh& mesh, S field,
 
 template<typename T>
 template<typename S>
-S DEIM<T>::generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
+S DEIM<T>::generateSubmeshMatrix(label layers, const fvMesh& mesh, S field,
                                  label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -539,7 +539,7 @@ S DEIM<T>::generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
 
 template<typename T>
 template<typename S>
-S DEIM<T>::generateSubmeshVector(label layers, fvMesh& mesh, S field,
+S DEIM<T>::generateSubmeshVector(label layers, const fvMesh& mesh, S field,
                                  label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -856,60 +856,60 @@ DEIM<fvVectorMatrix>::generateSubFieldVector(surfaceVectorField& field);
 
 // Specialization for generateSubmesh
 template volScalarField DEIM<volScalarField>::generateSubmesh(
-    label layers, fvMesh& mesh, volScalarField field,
+    label layers, const fvMesh& mesh, volScalarField field,
     label secondTime);
 template volVectorField DEIM<volVectorField>::generateSubmesh(
-    label layers, fvMesh& mesh, volVectorField field,
+    label layers, const fvMesh& mesh, volVectorField field,
     label secondTime);
 template volScalarField DEIM<volVectorField>::generateSubmesh(
-    label layers, fvMesh& mesh, volScalarField field,
+    label layers, const fvMesh& mesh, volScalarField field,
     label secondTime);
 template volVectorField DEIM<volScalarField>::generateSubmesh(
-    label layers, fvMesh& mesh, volVectorField field,
+    label layers, const fvMesh& mesh, volVectorField field,
     label secondTime);
 
 // Specialization for generateSubmeshVector
 template volScalarField DEIM<fvScalarMatrix>::generateSubmeshVector(
-    label layers, fvMesh& mesh, volScalarField field, label secondTime);
+    label layers, const fvMesh& mesh, volScalarField field, label secondTime);
 template volVectorField DEIM<fvScalarMatrix>::generateSubmeshVector(
-    label layers, fvMesh& mesh, volVectorField field, label secondTime);
+    label layers, const fvMesh& mesh, volVectorField field, label secondTime);
 template surfaceScalarField
-DEIM<fvScalarMatrix>::generateSubmeshVector(label layers, fvMesh& mesh,
+DEIM<fvScalarMatrix>::generateSubmeshVector(label layers, const fvMesh& mesh,
         surfaceScalarField field, label secondTime);
 template surfaceVectorField
-DEIM<fvScalarMatrix>::generateSubmeshVector(label layers, fvMesh& mesh,
+DEIM<fvScalarMatrix>::generateSubmeshVector(label layers, const fvMesh& mesh,
         surfaceVectorField field, label secondTime);
 template volScalarField DEIM<fvVectorMatrix>::generateSubmeshVector(
-    label layers, fvMesh& mesh, volScalarField field, label secondTime);
+    label layers, const fvMesh& mesh, volScalarField field, label secondTime);
 template volVectorField DEIM<fvVectorMatrix>::generateSubmeshVector(
-    label layers, fvMesh& mesh, volVectorField field, label secondTime);
+    label layers, const fvMesh& mesh, volVectorField field, label secondTime);
 template surfaceScalarField
-DEIM<fvVectorMatrix>::generateSubmeshVector(label layers, fvMesh& mesh,
+DEIM<fvVectorMatrix>::generateSubmeshVector(label layers, const fvMesh& mesh,
         surfaceScalarField field, label secondTime);
 template surfaceVectorField
-DEIM<fvVectorMatrix>::generateSubmeshVector(label layers, fvMesh& mesh,
+DEIM<fvVectorMatrix>::generateSubmeshVector(label layers, const fvMesh& mesh,
         surfaceVectorField field, label secondTime);
 
 // Specialization for generateSubmeshMatrix
 template volScalarField DEIM<fvScalarMatrix>::generateSubmeshMatrix(
-    label layers, fvMesh& mesh, volScalarField field, label secondTime);
+    label layers, const fvMesh& mesh, volScalarField field, label secondTime);
 template volVectorField DEIM<fvScalarMatrix>::generateSubmeshMatrix(
-    label layers, fvMesh& mesh, volVectorField field, label secondTime);
+    label layers, const fvMesh& mesh, volVectorField field, label secondTime);
 template surfaceScalarField
-DEIM<fvScalarMatrix>::generateSubmeshMatrix(label layers, fvMesh& mesh,
+DEIM<fvScalarMatrix>::generateSubmeshMatrix(label layers, const fvMesh& mesh,
         surfaceScalarField field, label secondTime);
 template surfaceVectorField
-DEIM<fvScalarMatrix>::generateSubmeshMatrix(label layers, fvMesh& mesh,
+DEIM<fvScalarMatrix>::generateSubmeshMatrix(label layers, const fvMesh& mesh,
         surfaceVectorField field, label secondTime);
 template volScalarField DEIM<fvVectorMatrix>::generateSubmeshMatrix(
-    label layers, fvMesh& mesh, volScalarField field, label secondTime);
+    label layers, const fvMesh& mesh, volScalarField field, label secondTime);
 template volVectorField DEIM<fvVectorMatrix>::generateSubmeshMatrix(
-    label layers, fvMesh& mesh, volVectorField field, label secondTime);
+    label layers, const fvMesh& mesh, volVectorField field, label secondTime);
 template surfaceScalarField
-DEIM<fvVectorMatrix>::generateSubmeshMatrix(label layers, fvMesh& mesh,
+DEIM<fvVectorMatrix>::generateSubmeshMatrix(label layers, const fvMesh& mesh,
         surfaceScalarField field, label secondTime);
 template surfaceVectorField
-DEIM<fvVectorMatrix>::generateSubmeshMatrix(label layers, fvMesh& mesh,
+DEIM<fvVectorMatrix>::generateSubmeshMatrix(label layers, const fvMesh& mesh,
         surfaceVectorField field, label secondTime);
 
 // specialization for setMagicPoints
