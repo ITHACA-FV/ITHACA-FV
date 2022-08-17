@@ -28,7 +28,7 @@ using namespace ITHACAutilities;
 namespace ITHACAutilities
 {
 
-labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
+labelList getIndicesFromBox(const fvMesh& mesh, List<label> indices,
                             Eigen::MatrixXd Box, List<vector>& points2Move)
 {
     points2Move.resize(0);
@@ -59,7 +59,7 @@ labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
     return boxIndices;
 }
 
-List<label> getIndices(fvMesh& mesh, int index, int layers)
+List<label> getIndices(const fvMesh& mesh, int index, int layers)
 {
     List<label> out;
     out.resize(1);
@@ -85,7 +85,7 @@ List<label> getIndices(fvMesh& mesh, int index, int layers)
     return out2;
 }
 
-List<label> getIndices(fvMesh& mesh, int index_row,
+List<label> getIndices(const fvMesh& mesh, int index_row,
                        int index_col, int layers)
 {
     List<label> out;
@@ -313,7 +313,7 @@ Eigen::VectorXd boudaryFaceToCellDistance(
     return (cellFaceDistance);
 }
 
-List<label> getIndicesFromDisc(fvMesh& mesh, double radius,
+List<label> getIndicesFromDisc(const fvMesh& mesh, double radius,
                                vector origin, vector axis, List<double>& radii)
 {
     pointField meshPoints(mesh.points());

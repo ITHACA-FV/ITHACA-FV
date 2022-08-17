@@ -70,7 +70,7 @@ namespace ITHACAutilities
 ///
 /// @return     the labels list of the points
 ///
-labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
+labelList getIndicesFromBox(const fvMesh& mesh, List<label> indices,
                             Eigen::MatrixXd Box, List<vector>& points2Move);
 
 //--------------------------------------------------------------------------
@@ -82,7 +82,7 @@ labelList getIndicesFromBox(fvMesh& mesh, List<label> indices,
 ///
 /// @return     The indices.
 ///
-List<label> getIndices(fvMesh& mesh, int index, int layers);
+List<label> getIndices(const fvMesh& mesh, int index, int layers);
 
 //--------------------------------------------------------------------------
 /// @brief      Gets the indices of the cells around a certain cell.
@@ -94,7 +94,7 @@ List<label> getIndices(fvMesh& mesh, int index, int layers);
 ///
 /// @return     The indices.
 ///
-List<label> getIndices(fvMesh& mesh, int index_row, int index_col,
+List<label> getIndices(const fvMesh& mesh, int index_row, int index_col,
                        int layers);
 
 //--------------------------------------------------------------------------
@@ -194,7 +194,7 @@ Eigen::VectorXd boudaryFaceToCellDistance(fvMesh& mesh, label BC_ind);
 ///
 /// @return     The indices of the points lying inside the specified the disc.
 ///
-List<label> getIndicesFromDisc(fvMesh& mesh, double radius,
+List<label> getIndicesFromDisc(const fvMesh& mesh, double radius,
                                vector origin, vector axis, List<double>& radii);
 
 //--------------------------------------------------------------------------
