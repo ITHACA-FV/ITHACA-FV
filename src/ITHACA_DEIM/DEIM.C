@@ -710,6 +710,16 @@ void DEIM<T>::check3DIndices(label& ind_rowA, label& xyz_rowA)
 
 template<class T>
 template <class F>
+F DEIM<T>::generateSubField(F& field)
+{
+    M_Assert(runSubMesh == true,
+             "You have to compute the magicPoints before calling this function, try to rerun generateSubmesh");
+    F f = submesh().interpolate(field).ref();
+    return f;
+}
+
+template<class T>
+template <class F>
 F DEIM<T>::generateSubFieldMatrix(F& field)
 {
     M_Assert(runSubMeshA == true,
@@ -817,6 +827,32 @@ template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, label MaxModes,
                                     word FunctionName, word FieldName);
 template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, label MaxModes,
                                     word FunctionName, word FieldName);
+
+// Specialization for generateSubField
+template volVectorField DEIM<volScalarField>::generateSubField(
+    volVectorField& field);
+template volVectorField DEIM<volVectorField>::generateSubField(
+    volVectorField& field);
+template volScalarField DEIM<volScalarField>::generateSubField(
+    volScalarField& field);
+template volScalarField DEIM<volVectorField>::generateSubField(
+    volScalarField& field);
+template volTensorField DEIM<volScalarField>::generateSubField(
+    volTensorField& field);
+template volTensorField DEIM<volVectorField>::generateSubField(
+    volTensorField& field);
+template const volVectorField DEIM<volScalarField>::generateSubField(
+    const volVectorField& field);
+template const volVectorField DEIM<volVectorField>::generateSubField(
+    const volVectorField& field);
+template const volScalarField DEIM<volScalarField>::generateSubField(
+    const volScalarField& field);
+template const volScalarField DEIM<volVectorField>::generateSubField(
+    const volScalarField& field);
+template const volTensorField DEIM<volScalarField>::generateSubField(
+    const volTensorField& field);
+template const volTensorField DEIM<volVectorField>::generateSubField(
+    const volTensorField& field);
 
 // Specialization for generateSubFieldMatrix
 template volScalarField DEIM<fvScalarMatrix>::generateSubFieldMatrix(
