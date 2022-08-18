@@ -31,7 +31,8 @@ License
 #include "DEIM.H"
 // Template function constructor
 template<typename T>
-DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
+DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName,
+    bool skipPOD)
     :
     SnapShotsMatrix(s),
     MaxModes(MaxModes),
@@ -69,8 +70,15 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
                   )
               )
           );
-    modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModes, FunctionName,
-                                 FieldName);
+    if (!skipPOD)
+    {
+        modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModes, FunctionName,
+                                   FieldName);
+    }
+    else
+    {
+        modes = SnapShotsMatrix;
+    }
 
     if (!(magicPoints().headerOk() && xyz().headerOk()))
     {
@@ -824,9 +832,11 @@ template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix>& s,
                                      label MaxModesA,
                                      label MaxModesB, word MatrixName);
 template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, label MaxModes,
-                                    word FunctionName, word FieldName);
+                                    word FunctionName, word FieldName,
+                                    bool skipPOD = false);
 template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, label MaxModes,
-                                    word FunctionName, word FieldName);
+                                    word FunctionName, word FieldName,
+                                    bool skipPOD = false);
 
 // Specialization for generateSubField
 template volVectorField DEIM<volScalarField>::generateSubField(

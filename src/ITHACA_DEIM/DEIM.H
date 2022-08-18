@@ -48,9 +48,10 @@ class DEIM
         /// @param[in]  MaxModes         The maximum number of modes
         /// @param[in]  FunctionName     The function name, used to save the results
         /// @param[in]  FieldName        The field name
+        /// @param[in]  skipPOD          if true, SnapShotsMatrix is the (pre-computed) modes list
         ///
         DEIM (PtrList<T>& SnapShotsMatrix, label MaxModes, word FunctionName,
-              word FieldName);
+              word FieldName, bool skipPOD = false);
 
         //----------------------------------------------------------------------
         /// @brief      Construct DEIM for matrix with non-linear dependency
