@@ -761,6 +761,10 @@ template void exportSolution(
     fileName subfolder, fileName folder,
     word fieldName);
 template void exportSolution(
+    GeometricField<tensor, fvPatchField, volMesh>& s,
+    fileName subfolder, fileName folder,
+    word fieldName);
+template void exportSolution(
     GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
@@ -800,6 +804,9 @@ template void exportSolution(
     fileName subfolder, fileName folder);
 template void exportSolution(
     GeometricField<vector, fvPatchField, volMesh>& s,
+    fileName subfolder, fileName folder);
+template void exportSolution(
+    GeometricField<tensor, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder);
 template void exportSolution(
     GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
@@ -944,7 +951,3 @@ template void load(List<Eigen::SparseMatrix<double>>& MatrixList, word folder,
                    word MatrixName);
 
 }
-
-
-
-

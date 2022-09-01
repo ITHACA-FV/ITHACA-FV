@@ -196,7 +196,7 @@ class DEIM
         /// @return     return field in the submesh
         ///
         template <class S>
-        S generateSubmesh(label layers, fvMesh& mesh, S field,
+        S generateSubmesh(label layers, const fvMesh& mesh, S field,
                           label secondTime = 0);
 
         //----------------------------------------------------------------------
@@ -212,7 +212,7 @@ class DEIM
         /// @return     return field in the submesh
         ///
         template <class S>
-        S generateSubmeshMatrix(label layers, fvMesh& mesh, S field,
+        S generateSubmeshMatrix(label layers, const fvMesh& mesh, S field,
                                 label secondTime = 0);
 
         //----------------------------------------------------------------------
@@ -227,15 +227,27 @@ class DEIM
         ///
         /// @return     return field in the submesh
         template <class S>
-        S generateSubmeshVector(label layers, fvMesh& mesh, S field,
+        S generateSubmeshVector(label layers, const fvMesh& mesh, S field,
                                 label secondTime = 0);
+
+         //----------------------------------------------------------------------
+         /// @brief      Function to generate a a subfield in the location of the magic points
+         ///
+         /// @param      field  For which you want the create the submeshes
+         ///
+         /// @tparam     F      type of field (can be volVectorField, volScalarField, surfaceScalar and surfaceVector)
+         ///
+         /// @return     a the interpolated field in the submesh
+         ///
+         template <class F>
+         F generateSubField(F& field);
 
         //----------------------------------------------------------------------
         /// @brief      Function to generate a a subfield in the location of the magic points computed for the Matrix (LHS)
         ///
         /// @param      field  For which you want the create the submeshes
         ///
-        /// @tparam     F      type of field (can be volVectorField, volScalarField, surfaceScalar and surfaceVector)
+        /// @tparam     F      type of field (can be volVectorField, volScalarField, and const versions)
         ///
         /// @return     a the interpolated field in the submesh
         ///
@@ -307,4 +319,3 @@ class DEIM
         void setMagicPoints(labelList& newMagicPoints, labelList& newxyz);
 
 };
-
