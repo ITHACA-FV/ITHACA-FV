@@ -21,56 +21,28 @@
   GNU Lesser General Public License for more details.
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
-\*---------------------------------------------------------------------------*/
-volScalarField T
-(
-    IOobject
-    (
-        "T",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
-volScalarField yPos = mesh.C().component(vector::Y);
-volScalarField xPos = mesh.C().component(vector::X);
+ \*---------------------------------------------------------------------------*/
 
-volScalarField S
-(
-    IOobject
-    (
-        "S",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    T.mesh(),
-    dimensionedScalar("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), 0)
-);
+volVectorField& U = _U();
+volVectorField& rhoU = _rhoU();
 
+volScalarField& rho = _rho();
+volScalarField& rhoE = _rhoE();
 
+surfaceScalarField& pos = _pos();
+surfaceScalarField& neg = _neg();
+surfaceScalarField& phi = _phi();
 
-Info << "Reading transportProperties\n" << endl;
+psiThermo& thermo = _pThermo();
 
-IOdictionary transportProperties
-(
-    IOobject
-    (
-        "transportProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::NO_WRITE
-    )
-);
+volScalarField& e = thermo.he();
+volScalarField& p = thermo.p();
+volScalarField& T = thermo.T();
+const volScalarField& psi = thermo.psi();
+const volScalarField& mu = thermo.mu();
 
-
-dimensionedScalar DT
-(
-    "DT",
-    dimensionSet( 0, 2, -1, 0, 0, 0, 0),
-    scalar(1)
-);
+bool inviscid(true);
+if (max(mu.primitiveField()) > 0.0)
+{
+   inviscid = false;
+}

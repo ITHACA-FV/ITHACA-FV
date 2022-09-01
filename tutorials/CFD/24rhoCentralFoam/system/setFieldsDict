@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2112                                  |
+|  \\    /   O peration     | Version:  v2112                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -9,21 +9,30 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    arch        "LSB;label=32;scalar=64";
-    class       polyBoundaryMesh;
-    location    "constant/polyMesh";
-    object      boundary;
+    class       dictionary;
+    object      setFieldsDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-1
+defaultFieldValues
 (
-    sides
+    volVectorFieldValue U (0 0 0)
+    volScalarFieldValue T 348.4
+    volScalarFieldValue p 100000
+);
+
+regions
+(
+    boxToCell
     {
-        type            patch;
-        nFaces          4006;
-        startFace       1000;
+        box (0 0 -0.1) (5 1 0);
+        fieldValues
+        (
+            volScalarFieldValue T 278.7
+            volScalarFieldValue p 10000
+        );
     }
-)
+);
+
 
 // ************************************************************************* //

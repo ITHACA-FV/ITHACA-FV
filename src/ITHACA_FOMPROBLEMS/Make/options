@@ -24,6 +24,7 @@ EXE_INC = \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/functionObjects/forces/lnInclude \
@@ -44,6 +45,7 @@ EXE_LIBS = \
     -lturbulenceModels \
     -lincompressibleTransportModels \
     -lincompressibleTurbulenceModels \
+    -lcompressibleTransportModels \
     -lfiniteVolume \
     -lmeshTools \
     -lfvOptions \
@@ -55,4 +57,6 @@ EXE_LIBS = \
     -lcompressibleRASModels \
     -lforces \
     -lfileFormats \
-    -lcompressibleLESModels
+    -ldynamicFvMesh \
+    -lcompressibleLESModels \
+    -ltopoChangerFvMesh

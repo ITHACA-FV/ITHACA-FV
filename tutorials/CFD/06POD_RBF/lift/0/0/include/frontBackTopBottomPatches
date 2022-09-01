@@ -1,25 +1,24 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2.2.2                                 |
+|  \\    /   O peration     | Version:  2.4.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-FoamFile
+
+topAndBottom
 {
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    location    "system";
-    object      ITHACAdict;
+    type slip;
 }
 
-// Simulation settings
-startTime 0;
-finalTime 7e-03;
-timeStep 1e-06;
-writeEvery 5e-05;
+front
+{
+    type empty
+}
 
-// Output format to save market vectors.
-OutPrecision 20;
-OutType fixed;
+back
+{
+    type empty;
+}
+
+// ************************************************************************* //
