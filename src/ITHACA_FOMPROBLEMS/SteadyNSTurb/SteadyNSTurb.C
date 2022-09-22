@@ -140,6 +140,7 @@ void SteadyNSTurb::truthSolve(List<scalar> mu_now)
 List < Eigen::MatrixXd > SteadyNSTurb::turbulenceTerm1(label NUmodes,
         label NSUPmodes, label nNutModes)
 {
+
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     List < Eigen::MatrixXd > ct1Matrix;
     ct1Matrix.setSize(cSize);
@@ -989,6 +990,10 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsSUP/", weightName);
+            ITHACAstream::exportMatrix(rbfSplines[i]->weights,
+                                       "wRBF_" + name(i), "eigen",
+                                        "./ITHACAoutput/weightsSUP/"
+                                      );
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
     }
