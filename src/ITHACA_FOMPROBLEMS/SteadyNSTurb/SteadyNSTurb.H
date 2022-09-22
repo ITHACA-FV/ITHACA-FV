@@ -96,9 +96,18 @@ class SteadyNSTurb: public steadyNS
         List <Eigen::MatrixXd> ct1Matrix;
         Eigen::Tensor<double, 3 > ct1Tensor;
 
+        /// Turbulent viscosity tensor in the PPE equation
+        Eigen::Tensor<double, 3 > ct1PPETensor;
+
+        /// Turbulent viscosity tensor in the PPE equation
+        Eigen::Tensor<double, 3 > ct2PPETensor;
+
         /// Total Turbulent tensor
         List <Eigen::MatrixXd> cTotalMatrix;
         Eigen::Tensor<double, 3 > cTotalTensor;
+
+        /// Turbulent total viscosity tensor in the PPE equation
+        Eigen::Tensor<double, 3 > cTotalPPETensor;
 
         /// Total B Matrix
         Eigen::MatrixXd bTotalMatrix;
@@ -126,6 +135,18 @@ class SteadyNSTurb: public steadyNS
         /// the Parameters folder.
         ///
         void truthSolve(List<scalar> mu_now);
+
+        //--------------------------------------------------------------------------
+        /// Project using a PPE approach
+        ///
+        /// @param[in]  folder     The folder name
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        void projectPPE(fileName folder, label NUmodes, label NPmodes, label NSUPmodes,
+                        label nNutModes);
 
         //--------------------------------------------------------------------------
         /// Project using a supremizer approach
@@ -198,6 +219,32 @@ class SteadyNSTurb: public steadyNS
         ///
         Eigen::Tensor<double, 3 > turbulenceTensor2(label NUmodes,
                 label NSUPmodes, label nNutModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      ct1PPE added tensor for the turbulence treatement in the PPE method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct1PPE tensor for the turbulence treatement in the PPE method
+        ///
+        Eigen::Tensor<double, 3 > turbulencePPETensor1(label NUmodes,
+                label NSUPmodes, label NPmodes, label nNutModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      ct2PPE added tensor for the turbulence treatement in the PPE method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct2PPE tensor for the turbulence treatement in the PPE method
+        ///
+        Eigen::Tensor<double, 3 > turbulencePPETensor2(label NUmodes,
+                label NSUPmodes, label NPmodes, label nNutModes);
 
 };
 

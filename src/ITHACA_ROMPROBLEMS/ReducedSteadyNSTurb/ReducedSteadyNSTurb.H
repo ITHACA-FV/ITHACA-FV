@@ -48,14 +48,43 @@ SourceFiles
 #include <unsupported/Eigen/NumericalDiff>
 
 /// Structure to implement a newton object for a stationary NS problem
-struct newtonSteadyNSTurb: public newton_argument<double>
+struct newtonSteadyNSTurbSUP: public newton_argument<double>
 {
     public:
-        newtonSteadyNSTurb() {}
-        newtonSteadyNSTurb(int Nx, int Ny,
+        newtonSteadyNSTurbSUP() {}
+        newtonSteadyNSTurbSUP(int Nx, int Ny,
                            SteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
             problem(&problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
+            nphiNut(problem.nNutModes),
+            Nphi_p(problem.NPmodes),
+            N_BC(problem.inletIndex.rows()),
+            gNut(problem.nNutModes)
+        {}
+
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+
+        SteadyNSTurb* problem;
+        int Nphi_u;
+        int nphiNut;
+        int Nphi_p;
+        int N_BC;
+        Eigen::VectorXd gNut;
+        scalar nu;
+        Eigen::MatrixXd tauU;
+        Eigen::VectorXd bc;
+        std::vector<SPLINTER::RBFSpline*> SPLINES;
+};
+
+struct newtonSteadyNSTurbPPE: public newton_argument<double>
+{
+    public:
+        newtonSteadyNSTurbPPE() {}
+        newtonSteadyNSTurbPPE(int Nx, int Ny,
+                           SteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
+            problem(&problem),
+            Nphi_u(problem.NUmodes + problem.liftfield.size()),
             nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows()),
@@ -118,8 +147,11 @@ class ReducedSteadyNSTurb: public reducedSteadyNS
         /// Number of viscosity modes
         int nphiNut;
 
-        /// Newton Object to solve the nonlinear problem
-        newtonSteadyNSTurb newtonObject;
+        /// Newton Object to solve the nonlinear problem sup approach
+        newtonSteadyNSTurbSUP newtonObjectSUP;
+
+        /// Newton Object to solve the nonlinear problem PPE approach
+        newtonSteadyNSTurbPPE newtonObjectPPE;
 
         /// Pointer to the FOM problem
         SteadyNSTurb* problem;
@@ -137,6 +169,13 @@ class ReducedSteadyNSTurb: public reducedSteadyNS
         ///
         void solveOnlineSUP(Eigen::MatrixXd velNow);
 
+        /// Method to perform an online solve using a PPE stabilisation method
+        ///
+        /// @param[in]  velNow   The vector of online velocity. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized boundary conditions.
+        ///
+        void solveOnlinePPE(Eigen::MatrixXd velNow);
 
         /// Method to reconstruct the solutions from an online solve.
         ///
