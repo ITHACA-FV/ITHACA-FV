@@ -155,7 +155,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
     std::cout << "The radius of the RBF is equal to " << e << std::endl;
 #endif // NDEBUG
     // SVD analysis
-    Eigen::JacobiSVD<DenseMatrix> svd(A, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    //         Eigen::JacobiSVD<DenseMatrix> svd(A, Eigen::ComputeThinU | Eigen::ComputeThinV);
     //         auto svals = svd.singularValues();
     //         double svalmax = svals(0);
     //         double svalmin = svals(svals.rows() - 1);
@@ -167,8 +167,8 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
     //         << std::endl;
     // #endif // NDEBUG
     //     // Solve for weights
-    weights = svd.solve(b);
-    //weights = A.colPivHouseholderQr().solve(b);
+    //         weights = svd.solve(b);
+    weights = A.colPivHouseholderQr().solve(b);
 #ifndef NDEBUG
     // Compute error. If it is used later on, move this statement above the NDEBUG
     double err = (A * weights - b).norm() / b.norm();

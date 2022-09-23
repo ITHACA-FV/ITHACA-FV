@@ -117,30 +117,10 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
 
     if (type == "eigen")
     {
-        const static Eigen::IOFormat CSVFormat(6, false, ", ", "\n");
         std::ofstream ofs;
-        ofs.precision(20);
         ofs.open (folder + "/" + Name + "_mat.txt");
-        for (int i = 0; i < matrix.rows(); i++)
-        {
-            for (int j = 0; j < matrix.cols(); j++)
-            {
-		 if (j == 0)
-		 {
-                    ofs << matrix(i,j);
-		 }
-		 else
-		 {
-                    ofs << " " << matrix(i,j);
-		 }
-            }
-
-            if (i != (matrix.rows() - 1))
-            {
-                 ofs << std::endl;
-	    }
-        }
-
+        ofs.precision(20);
+        ofs << matrix << std::endl;
         ofs.close();
     }
 }
@@ -749,6 +729,8 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         ITHACAutilities::createSymLink(folder);
         GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
         fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
+        std::ofstream of(folder + "/" + subfolder + "/" +
+                         s.time().timeName());
         OFstream os(fieldname);
         act.writeHeader(os);
         os << act << endl;
@@ -760,6 +742,9 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
                              subfolder + "/" + fieldName;
+        std::ofstream of(folder + "/processor" + name(Pstream::myProcNo()) + "/" +
+                         subfolder + "/" +
+                         s.time().timeName());
         std::cout << fieldname << std::endl;
         OFstream os(fieldname);
         act.writeHeader(os);
@@ -792,6 +777,8 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
     {
         mkDir(folder + "/" + subfolder);
         ITHACAutilities::createSymLink(folder);
+        std::ofstream of(folder + "/" + subfolder + "/" +
+                         s.time().timeName());
         fileName fieldname = folder + "/" + subfolder + "/" + s.name();
         OFstream os(fieldname);
         s.writeHeader(os);
@@ -801,6 +788,9 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
     {
         mkDir(folder + "/processor" + name(Pstream::myProcNo()) + "/" + subfolder);
         ITHACAutilities::createSymLink(folder);
+        std::ofstream of(folder + "/processor" + name(Pstream::myProcNo()) + "/" +
+                         subfolder + "/" +
+                         s.time().timeName());
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
                              subfolder + "/" + s.name();
         OFstream os(fieldname);
