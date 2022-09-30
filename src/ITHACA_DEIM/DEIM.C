@@ -80,6 +80,7 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
         Eigen::VectorXd r;
         Eigen::VectorXd rho(1);
         MatrixModes = Foam2Eigen::PtrList2Eigen(modes);
+        Ncells = modes[0].size();
         label ind_max, c1, xyz_in;
         double max = MatrixModes.cwiseAbs().col(0).maxCoeff(&ind_max, &c1);
         check3DIndices(ind_max, xyz_in);
@@ -103,8 +104,8 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
             U.col(i) =  MatrixModes.col(i);
             rho.conservativeResize(i + 1);
             rho(i) = max;
-            magicPoints().append(ind_max);
             check3DIndices(ind_max, xyz_in);
+            magicPoints().append(ind_max);
             xyz().append(xyz_in);
         }
 
@@ -680,7 +681,7 @@ void DEIM<T>::check3DIndices(label& ind_rowA, label&  ind_colA, label& xyz_rowA,
     else if (ind_colA < Ncells * 2)
     {
         xyz_colA = 1;
-        ind_colA = ind_colA - 2 * Ncells;
+        ind_colA = ind_colA - Ncells;
     }
     else
     {
