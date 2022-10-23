@@ -1,0 +1,50 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.0.0                                 |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      PODsolverDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Set simulation type 1 for Turbulent 0 for Laminar
+Turbulence 0;
+
+// Set Time from which you want to start taking the Snapshots
+InitialTime 0.1;
+
+// Set Time when you want to stop taking the Snapshots
+FinalTime 50;
+fields U;
+
+// Eventually you could set just InitalTime and Number of Snapshots you want    
+//Nsnapshots 40;
+
+// Field you want to use to construct the basis
+U 1;
+p 1;
+
+// Cumulative sum of the eigenvalues where you want to stop
+accuracy   1;
+
+// Number of modes you want to consider (used only during projection and reconstruction)
+nPODu       5;
+nPODp       5;
+nPODsup	    0;
+// Patch used to account for the boundary condition
+patchBC movingWall;
+
+writefields 1;
+twocoeffs 1;
+
+
+
+
+// ************************************************************************* //
