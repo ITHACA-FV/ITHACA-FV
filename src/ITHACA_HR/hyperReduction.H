@@ -28,6 +28,9 @@ Description
 SourceFiles
     hyperReduction.C
 \*---------------------------------------------------------------------------*/
+#ifndef hyperReduction_H
+#define hyperReduction_H
+
 #include "fvCFD.H"
 #include "ITHACAPOD.H"
 #include "Foam2Eigen.H"
@@ -36,18 +39,23 @@ SourceFiles
 #include "fvMeshSubset.H"
 #include <set>
 
+enum class HyperReductionMethod
+{
+    GappyDEIM
+};
+
 template <typename... SnapshotsLists>
 class HyperReduction
 {
 public:
-
-    enum class HyperReductionMethod { GNAT };
-    const word methodNames[1] = {"GNAT"};
+    const word methodNames[1] = {"GappyDEIM"};
     const word methodName;
 
     using SnapshotsTuple = std::tuple<std::decay_t<SnapshotsLists>...>;
     using FieldsTuple = std::tuple<std::decay_t<SnapshotsLists>...>;
     static constexpr auto n_fields = sizeof...(SnapshotsLists);
+
+    // TODO get vectorial dim from class template parameters
     unsigned int vectorial_dim;
 
     template <std::size_t N>
@@ -57,49 +65,44 @@ public:
     using NthFieldType = typename NthFieldListType<N>::value_type;
 
     //----------------------------------------------------------------------
-    /// @brief      Construct HyperReduction.
+    /// @brief      Construct HyperReduction class, interpolation-based.`SnapshotsLists` is a variadic argument of PtrLists of fields e.g. for incompressible Navier-Stokes PtrList<volVectorField>, PtrList<volScalarField> for velocity and pressure.
     ///
-    /// @param[in]  snapshotsLists  The snapshots matrix
-    /// @param[in]  maxModes         The maximum number of modes
+    /// @param[in]  hrMethod          the chosen HR method
+    /// @param[in]  n_modes           dimension of the HR basis
+    /// @param[in]  n_nodes           number of nodes
+    /// @param[in]  initialSeeds      initial nodes
+    /// @param[in]  problemName       name of the function to be hyper-reduced
+    /// @param[in]  snapshotsLists    lists of fields
     ///
-    HyperReduction(HyperReductionMethod hrMethod,
-                   label maxModes,
-                   label maxNodes,
+    HyperReduction(label n_modes,
+                   label n_nodes,
                    Eigen::VectorXi initialSeeds,
-                   word functionName,
-                   SnapshotsLists&&... snapshotsLists);
+                   word problemName,
+                   SnapshotsLists &&...snapshotsLists);
 
     /// The maximum number of modes to be considered
-    label maxModes;
+    label n_modes;
 
     /// The maximum number of modes to be considered
-    label maxNodes;
+    label n_nodes;
 
+    /// The length of the snapshots lists
     label n_snapshots;
-    
+
     // Initial nodes
     Eigen::VectorXi initialSeeds;
 
     /// The name of the non-linear function e.g. HR_method/residual
-    word functionName;
+    word problemName;
 
     /// The snapshots matrix containing the nonlinear function or operator
     SnapshotsTuple snapshotsTuple;
 
-    /// The POD modes of the HyperReduction procedure that can be
-    SnapshotsTuple modes;
+    /// Names of the fields
+    List<word> fieldNames;
 
-    /// Matrix Modes
-    Eigen::MatrixXd matrixModes;
-
-    // TODO
-    Eigen::MatrixXd pinv_PU;
-
-    /// TODO
-    Eigen::MatrixXd maskAux;
-
-    /// TODO
-    std::set<label> nodePointsSet;
+    /// Dimensions of the fields
+    List<unsigned int> fieldDims;
 
     /// Int Number of Cells;
     label n_cells;
@@ -107,105 +110,146 @@ public:
     /// Int Number of Cells in submeshes;
     label n_cellsSubfields;
 
-    /// Submeshes
-    autoPtr<volVectorField> submesh_field;
-
-    /// Online Matrices
-    ///@{
-    Eigen::MatrixXd MatrixOnline;
-
-    /// The U matrix of the HyperReduction method
-    Eigen::MatrixXd U;
-
-    /// Magic points in the case of the a nonlinear function
+    /// Nodes in the case of the a nonlinear function
     autoPtr<IOList<label>> nodePoints;
-    /// Magic points in the case of the a nonlinear function
-    autoPtr<IOList<label>> nodePointsFields;
-    /// Magic points in the case of the a matrix function (rows indices)
-    autoPtr<IOList<label>> nodePointsArow;
-    /// Magic points in the case of the a matrix function (cols indices)
-    autoPtr<IOList<label>> nodePointsAcol;
-    /// Magic points in the case of the a matrix function, right hand side
-    autoPtr<IOList<label>> nodePointsB;
 
-    /// Magic points and indices of the surrounding layers
-    ///@{
-    autoPtr<IOList<labelList>> totalnodePoints;
-    autoPtr<IOList<labelList>> totalnodePointsA;
-    autoPtr<IOList<labelList>> totalnodePointsB;
-    ///@}
+    /// List of label lists of the nodes and corresponding surrounding nodes
+    autoPtr<IOList<labelList>> totalNodePoints;
 
-    /// List of unique indices that define the submesh
-    ///@{
-    autoPtr<IOList<label>> uniquenodePoints;
-    autoPtr<IOList<label>> uniquenodePointsA;
-    autoPtr<IOList<label>> uniquenodePointsB;
-    ///@}
+    /// List of the unique indices of the nodes that define the submesh
+    autoPtr<IOList<label>> uniqueNodePoints;
 
     /// Folder for nonlinear functions
     word Folder;
-    /// Folder in the matrix case
-    word FolderM;
 
-    /// Definition of the x, y, z coordinate of the identified element in the matrix or source term
-    /// 0 for x, 1 for y, 2 for z
-    ///@{
-    autoPtr<IOList<label>> xyz;
-    autoPtr<IOList<label>> xyz_Arow;
-    autoPtr<IOList<label>> xyz_Acol;
-    autoPtr<IOList<label>> xyz_B;
-    ///@}
+    /// Indices of the local node points in the subMesh
+    List<label> localNodePoints;
+    
+    // Outputs
+    /// Orthonormal basis of HR
+    Eigen::MatrixXd basisMatrix;
 
-    /// Indices of the local magic points in the subMesh
-    ///@{
-    List<label> localnodePoints;
-    List<label> localnodePointsArow;
-    List<label> localnodePointsAcol;
-    List<label> localnodePointsB;
-    ///@}
+    /// Renormalized basis of HR
+    Eigen::MatrixXd renormalizedBasisMatrix;
+
+    // TODO
+    Eigen::MatrixXd pinvPU;
 
     /// The P matrix of the HyperReduction method
-    ///@{
     Eigen::SparseMatrix<double> P;
-    List<Eigen::SparseMatrix<double>> PA;
-    Eigen::SparseMatrix<double> PB;
-    ///@}
+
+    /// Normalizing weights of the offline snapshots
+    Eigen::VectorXd normalizingWeights;
 
     /// Submesh of the HyperReduction method
-    ///@{
     autoPtr<fvMeshSubset> submesh;
-    autoPtr<fvMeshSubset> submeshA;
-    autoPtr<fvMeshSubset> submeshB;
-
-    /// Non-repeated submeshes cells (only x coordinates)
-    Eigen::VectorXi nonRepeatedSubmeshes;
-
-    /// Non-repeated submeshes cells (only x, y coordinates)
-    Eigen::VectorXi nonRepeatedSubmeshes_xy;
-
-    void compute_basis();
-                                      
-    void evaluatePinv(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes);
     
-    voidgenerateSubmeshes(label layers, fvMesh &mesh, label secondTime);
+    /// Submeshes
+    autoPtr<volVectorField> submesh_field;
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    void offlineStage();
 
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    void getModesSVD(SnapshotsTuple &snapshotsTuple, Eigen::MatrixXd &modesSVD, Eigen::VectorXd &fieldWeights);
+
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename SnapshotsList>
+    void stackSnapshots(SnapshotsList sList, Eigen::MatrixXd &snapshotsMatrix, Eigen::VectorXd &fieldWeights);
+
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename SnapshotsList>
+    void stackNames(SnapshotsList sList);
+
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename SnapshotsList>
+    void stackDimensions(SnapshotsList sList);
+
+    //----------------------------------------------------------------------
+    /// @brief      Compute the pseudo-inverse of the matrix M restricted with the projector P
+    ///
+    /// @param[in]  Projector  projector into interpolation nodes
+    /// @param[in]  Modes      matrix to restrict and invert
+    ///
+    void evaluatePinv(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd& fieldWeights);
+
+    //----------------------------------------------------------------------
+    /// @brief      Compute the submesh common to all fields in SnapshotsLists
+    ///
+    /// @param[in]  layers          projector into interpolation nodes
+    /// @param[in]  mesh            matrix to restrict and invert
+    ///
+    void generateSubmesh(label layers, fvMesh &mesh);
+
+    //----------------------------------------------------------------------
+    /// @brief      Get local indices in the submesh from indices in the global ones
+    ///
+    /// @param      points       The points
+    /// @param      submesh      The submesh
+    ///
+    /// @return     The local indices
+    ///
     List<label> global2local(List<label> &points, fvMeshSubset &submesh);
 
-    template<typename... SnapshotsLists>
-    void createMasks()
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename FieldType>
+    autoPtr<FieldType> interpolateField(FieldType &field);
 
-    template<typename FieldType>
-    void interpolateField(FieldType& field)
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    // TODO expand with sphericalTensor, symmTensor, tensor
+    template <typename Field>
+    inline constexpr unsigned int get_field_dim()
+    {
+        return std::is_same<Field, volScalarField>::value ? 1 : 3;
+    }
 
-    template<typename SnapshotsList>
-    void compute_matrix_modes(SnapshotsList sList);
-    template<typename Field>
-    inline constexpr unsigned int get_field_dim(){return std::is_same<typename Field::DimensionedField::FieldType, Foam::scalar>::value? 1: 3;}
-
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
     template <typename LastList>
-    inline constexpr unsigned int compute_vectorial_dim(LastList x) {return get_field_dim<typename std::decay_t<LastList>::value_type>();}
+    inline constexpr unsigned int compute_vectorial_dim(LastList x) { return get_field_dim<typename std::decay_t<LastList>::value_type>(); }
 
-    template<typename List, typename... RemainingLists>
-    inline constexpr unsigned int compute_vectorial_dim(List&& head, RemainingLists&&... tail)  {
-        return get_field_dim<typename std::decay_t<List>::value_type>() + compute_vectorial_dim<RemainingLists...>(tail...);}
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename List, typename... RemainingLists>
+    inline constexpr unsigned int compute_vectorial_dim(List &&head, RemainingLists &&...tail)
+    {
+        return get_field_dim<typename std::decay_t<List>::value_type>() + compute_vectorial_dim<RemainingLists...>(tail...);
+    }
 };
+
+#endif

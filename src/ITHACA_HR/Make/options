@@ -24,7 +24,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Containers \
     -Wno-comment \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++17
+    -std=c++17 
 
 EXE_LIBS = \
     -lITHACA-CORE \
