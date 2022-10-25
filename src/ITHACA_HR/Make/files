@@ -1,3 +1,0 @@
-hyperReduction.C
-
-LIB = $(FOAM_USER_LIBBIN)/libITHACA_HR

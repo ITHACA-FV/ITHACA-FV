@@ -205,7 +205,8 @@ void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
         dimensionedScalar("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), 0)
     );
     // Parameters used to train the non-linear function
-    Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    Eigen::MatrixXd pars;
+    cnpy::load(pars, "trainingPars.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -263,7 +264,8 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
         dimensionedVector("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), vector(0, 0, 0))
     );
     // Parameters used to train the non-linear function
-    Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    Eigen::MatrixXd pars;
+    cnpy::load(pars, "trainingPars.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -296,11 +298,6 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
     ITHACAstream::exportSolution(S, name(1), "./ITHACAoutput/Online/");
     // Compute the L2 error and print it
     Info << ITHACAutilities::errorL2Rel(S2, S) << endl;
-
-    Eigen::VectorXd vec = c.renormalizedBasisMatrix.col(2);
-    S = S*0;
-    S = Foam2Eigen::Eigen2field(S, vec);
-    ITHACAstream::exportSolution(S, name(1), "./basis/");
 }
 
 void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime){
@@ -342,7 +339,8 @@ void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& 
     );
 
     // Parameters used to train the non-linear function
-    Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    Eigen::MatrixXd pars;
+    cnpy::load(pars, "trainingPars.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -372,6 +370,9 @@ void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& 
     auto theta = c.onlineCoeffs(sfield(), par_new);
     Eigen::VectorXd aprfield = c.renormalizedBasisMatrix*theta;
     // Transform to an OpenFOAM field and export
+    // c.eigen2fields(aprfield, V, S);
+    // volVectorField V2("V_online", V);
+    // volScalarField S2("S_online", S);
     Eigen::VectorXd recvec = aprfield.head(3*S.size());
     Eigen::VectorXd recsca = aprfield.tail(S.size());
     volVectorField V2("V_online", Foam2Eigen::Eigen2field(V, recvec));

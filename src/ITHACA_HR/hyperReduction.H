@@ -49,17 +49,17 @@ class HyperReduction
 {
 public:
     const word methodNames[1] = {"GappyDEIM"};
-    const word methodName;
+    word methodName;
 
-    using SnapshotsTuple = std::tuple<std::decay_t<SnapshotsLists>...>;
-    using FieldsTuple = std::tuple<std::decay_t<SnapshotsLists>...>;
+    using SnapshotsListTuple = std::tuple<std::decay_t<SnapshotsLists>...>;
+    using FieldsTuple = std::tuple<typename std::decay_t<SnapshotsLists>::value_type ...>;
     static constexpr auto n_fields = sizeof...(SnapshotsLists);
 
     // TODO get vectorial dim from class template parameters
     unsigned int vectorial_dim;
 
     template <std::size_t N>
-    using NthFieldListType = typename std::tuple_element<N, SnapshotsTuple>::type;
+    using NthFieldListType = typename std::tuple_element<N, SnapshotsListTuple>::type;
 
     template <std::size_t N>
     using NthFieldType = typename NthFieldListType<N>::value_type;
@@ -79,6 +79,9 @@ public:
                    Eigen::VectorXi initialSeeds,
                    word problemName,
                    SnapshotsLists &&...snapshotsLists);
+    
+    // ITHACA parameters dict
+    ITHACAparameters* para;
 
     /// The maximum number of modes to be considered
     label n_modes;
@@ -96,7 +99,7 @@ public:
     word problemName;
 
     /// The snapshots matrix containing the nonlinear function or operator
-    SnapshotsTuple snapshotsTuple;
+    SnapshotsListTuple snapshotsListTuple;
 
     /// Names of the fields
     List<word> fieldNames;
@@ -146,10 +149,21 @@ public:
     
     /// Submeshes
     autoPtr<volVectorField> submesh_field;
+
     //----------------------------------------------------------------------
     /// @brief      TODO
     ///
     void offlineStage();
+    
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    void offlineGappyDEIM();
+
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    void offlineEQP();
 
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -157,7 +171,15 @@ public:
     /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
     /// @param[in]  sList  The list of snapshots
     ///
-    void getModesSVD(SnapshotsTuple &snapshotsTuple, Eigen::MatrixXd &modesSVD, Eigen::VectorXd &fieldWeights);
+    void getModesSVD(SnapshotsListTuple &SnapshotsListTuple, Eigen::MatrixXd &modesSVD, Eigen::VectorXd &fieldWeights);
+    
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    void updateNodes(Eigen::SparseMatrix<double>& P, label& ind_max, Eigen::VectorXd& mp_not_mask, std::deque<label>& nodePointsDeque);
 
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -175,7 +197,9 @@ public:
     /// @param[in]  sList  The list of snapshots
     ///
     template <typename SnapshotsList>
-    void stackNames(SnapshotsList sList);
+    void stackNames(SnapshotsList sList){
+        fieldNames.append(sList[0].name());
+    }
 
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -184,7 +208,8 @@ public:
     /// @param[in]  sList  The list of snapshots
     ///
     template <typename SnapshotsList>
-    void stackDimensions(SnapshotsList sList);
+    inline void stackDimensions(SnapshotsList sList){
+        fieldDims.append(get_field_dim<typename SnapshotsList::value_type>());}
 
     //----------------------------------------------------------------------
     /// @brief      Compute the pseudo-inverse of the matrix M restricted with the projector P
@@ -218,7 +243,9 @@ public:
     /// @param[in]  sList  The list of snapshots
     ///
     template <typename FieldType>
-    autoPtr<FieldType> interpolateField(FieldType &field);
+    inline autoPtr<FieldType> interpolateField(FieldType &field){
+    return autoPtr<FieldType>(new FieldType(submesh->interpolate(field)));
+}
 
     /// @brief      TODO
     ///
@@ -249,6 +276,40 @@ public:
     inline constexpr unsigned int compute_vectorial_dim(List &&head, RemainingLists &&...tail)
     {
         return get_field_dim<typename std::decay_t<List>::value_type>() + compute_vectorial_dim<RemainingLists...>(tail...);
+    }
+
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    static inline double s_optimality(Eigen::MatrixXd& A)
+    {   
+        return std::pow(
+            std::sqrt((A.transpose()*A).determinant())/\
+            A.colwise().lpNorm<2>().prod(),
+            1.0/A.cols());
+    }
+
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename... FieldsArgs>
+    void eigen2fields(Eigen::VectorXd& eFields, FieldsArgs&&... oFields)
+    {   
+        unsigned int cumulativeSize{0}, ith_field{0};
+        
+        ([&](auto& oFieldsArg)
+            {
+                double ith_fieldSize = fieldDims[ith_field]*n_cells;
+                Eigen::VectorXd vec = eFields.segment(cumulativeSize, ith_fieldSize);
+                Foam2Eigen::Eigen2field(oFieldsArg, vec);
+                cumulativeSize+=ith_fieldSize;
+                ith_field++;
+            }(oFields), ...);
+
     }
 };
 
