@@ -172,6 +172,8 @@ int main(int argc, char* argv[])
     int NmodesSUP = para->ITHACAdict->lookupOrDefault<int>("NmodesSUP", 5);
     int NmodesNUT = para->ITHACAdict->lookupOrDefault<int>("NmodesNUT", 5);
     int NmodesProject = para->ITHACAdict->lookupOrDefault<int>("NmodesProject", 5);
+    word stabilization = para->ITHACAdict->lookupOrDefault<word>("Stabilization",
+                         "supremizer");
     // Perform The Offline Solve;
     example.offlineSolve();
     // Read the lift functions
@@ -192,10 +194,23 @@ int main(int argc, char* argv[])
                         example.podex,
                         example.supex, 0, NmodesProject);
     // Solve the supremizer problem based on the pressure modes
-    example.solvesupremizer("modes");
+    if (stabilization == "supremizer")
+    {
+        example.solvesupremizer("modes");
+    }
     // Compute the reduced order matrices
-    example.projectSUP("./Matrices", NmodesU, NmodesP, NmodesSUP,
-                       NmodesNUT);
+    // Get reduced matrices
+    if (stabilization == "supremizer")
+    {
+        example.projectSUP("./Matrices", NmodesU, NmodesP, NmodesSUP,
+                           NmodesNUT);
+    }
+    else if (stabilization == "PPE")
+    {
+        example.projectPPE("./Matrices", NmodesU, NmodesP, NmodesSUP,
+                           NmodesNUT);
+    }
+
     // Create an object of the turbulent class
     ReducedSteadyNSTurb pod_rbf(
         example);
@@ -214,7 +229,14 @@ int main(int argc, char* argv[])
         velNow(1, 0) = par_online(k, 1);
         pod_rbf.tauU(0, 0) = 0;
         pod_rbf.tauU(1, 0) = 0;
-        pod_rbf.solveOnlineSUP(velNow);
+        if (stabilization == "supremizer")
+        {
+            pod_rbf.solveOnlineSUP(velNow);
+        }
+        else if (stabilization == "PPE")
+        {
+            pod_rbf.solveOnlinePPE(velNow);
+        }
         rbfCoeff.col(k) = pod_rbf.rbfCoeff;
         Eigen::MatrixXd tmp_sol(pod_rbf.y.rows() + 1, 1);
         tmp_sol(0) = k + 1;

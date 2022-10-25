@@ -70,6 +70,7 @@ divSchemes
 	div((nut*dev(grad(Ulift1).T()))) Gauss linear;
 	div(dev(T(grad(Usup)))) Gauss linear;
 	div((nut*dev(grad(Usup).T()))) Gauss linear;
+	div((nut*dev2(grad(U).T()))) Gauss linear;
 }
 
 laplacianSchemes

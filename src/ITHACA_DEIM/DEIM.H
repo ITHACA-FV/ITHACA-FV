@@ -64,6 +64,18 @@ class DEIM
         DEIM (PtrList<T>& SnapShotsMatrix, label MaxModesA, label MaxModesB,
               word MatrixName);
 
+        //----------------------------------------------------------------------
+        /// @brief      DEIM algorithm
+        ///
+        /// @param      	magicPoints  	The Magic points
+        /// @param  		xyz        			The xyz coordinates
+        /// @param  		modes        		The ITHACAPOD modes
+        /// @param[in]  	MaxModes       	The maximum number of modes
+        /// @param  		MatrixOnline      The matrix name, used to save the results
+        /// @param[in]  	Folder       		The output folder name
+        ///
+        void DEIM_algo(PtrList<T> modes);
+
         /// The snapshots matrix containing the nonlinear function or operator
         PtrList<T> SnapShotsMatrix;
 
