@@ -18,8 +18,8 @@ FoamFile
 EigenSolver eigen;
 
 // Number of modes to output and to use for projection
-Nodes 200;
-Modes 80;
+Nodes 50;
+Modes 20;
 
 // Output format to save market vectors.
 OutPrecision 20;
@@ -27,3 +27,4 @@ OutType fixed;
 
 // HR
 HyperReduction GappyDEIM;
+GreedyMetric SOPTE;//L2, SOPT, SOPTE
