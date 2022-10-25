@@ -72,6 +72,14 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
     modes = ITHACAPOD::DEIMmodes(SnapShotsMatrix, MaxModes, FunctionName,
                                  FieldName);
 
+	  DEIM_algo(modes);
+}
+
+
+
+template<typename T>
+void DEIM<T>::DEIM_algo(PtrList<T> modes)
+{
     if (!(magicPoints().headerOk() && xyz().headerOk()))
     {
         Eigen::MatrixXd A;
@@ -120,6 +128,8 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
         cnpy::load(MatrixOnline, Folder + "/MatrixOnline.npy");
     }
 }
+
+
 
 // constructor for matrix DEIM
 template<typename T>
@@ -828,6 +838,10 @@ template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, label MaxModes,
                                     word FunctionName, word FieldName);
 template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, label MaxModes,
                                     word FunctionName, word FieldName);
+
+// Specialization for DEIM_algo
+template void DEIM<volScalarField>::DEIM_algo(PtrList<volScalarField> modes);
+template void DEIM<volVectorField>::DEIM_algo(PtrList<volVectorField> modes);
 
 // Specialization for generateSubField
 template volVectorField DEIM<volScalarField>::generateSubField(
