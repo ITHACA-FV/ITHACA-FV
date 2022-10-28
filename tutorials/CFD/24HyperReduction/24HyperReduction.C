@@ -72,7 +72,7 @@ class HyperReduction_function : public HyperReduction<PtrList<volScalarField>&>
             return ret;
         }
         
-        Eigen::VectorXd onlineCoeffs(volScalarField& S, Eigen::MatrixXd mu, volScalarField& SS)
+        Eigen::VectorXd onlineCoeffs(volScalarField& S, Eigen::MatrixXd mu)
         {
             Eigen::VectorXd f = evaluate_expression(S, mu, localNodePoints);
             return pinvPU*f;
@@ -129,63 +129,65 @@ class HyperReduction_vectorFunction : public HyperReduction<PtrList<volVectorFie
 
 };
 
-class HyperReduction_vectorScalarFunction : public HyperReduction<PtrList<volVectorField>&, PtrList<volScalarField>&>
-{
-    public:
-    using HyperReduction::HyperReduction;
-        static std::pair<volVectorField, volScalarField> evaluate_expression(volVectorField& V, volScalarField& S, Eigen::MatrixXd mu)
-        {
-            volScalarField yPos = S.mesh().C().component(vector::Y).ref();
-            volScalarField xPos = S.mesh().C().component(vector::X).ref();
+// class HyperReduction_vectorScalarFunction : public HyperReduction<PtrList<volVectorField>&, PtrList<volScalarField>&>
+// {
+//     public:
+//     using HyperReduction::HyperReduction;
+//         static std::pair<volVectorField, volScalarField> evaluate_expression(volVectorField& V, volScalarField& S, Eigen::MatrixXd mu)
+//         {
+//             volScalarField yPos = S.mesh().C().component(vector::Y).ref();
+//             volScalarField xPos = S.mesh().C().component(vector::X).ref();
 
-            for (auto i = 0; i < S.size(); i++)
-            {
-                V[i][0] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
-                                                2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
-                V[i][1] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 0.5,
-                                                2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
-                V[i][2] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1.5,
-                                                2) - 2 * std::pow(yPos[i] - mu(1) - 0., 2));
-                S[i] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
-                                                2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
-            }
+//             for (auto i = 0; i < S.size(); i++)
+//             {
+//                 V[i][0] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
+//                                                 2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+//                 V[i][1] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 0.5,
+//                                                 2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+//                 V[i][2] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1.5,
+//                                                 2) - 2 * std::pow(yPos[i] - mu(1) - 0., 2));
+//                 S[i] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
+//                                                 2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+//             }
 
-            return std::make_pair(V, S);
-        }
+//             return std::make_pair(V, S);
+//         }
 
-        static Eigen::VectorXd evaluate_expression(volScalarField& S, Eigen::MatrixXd mu, List<label> nodesList)
-        {
-            Eigen::VectorXd ret(nodesList.size()*4);
-            volScalarField yPos = S.mesh().C().component(vector::Y).ref();
-            volScalarField xPos = S.mesh().C().component(vector::X).ref();
+//         static Eigen::VectorXd evaluate_expression(volScalarField& S, Eigen::MatrixXd mu, List<label> nodesList)
+//         {
+//             Eigen::VectorXd ret(nodesList.size()*4);
+//             volScalarField yPos = S.mesh().C().component(vector::Y).ref();
+//             volScalarField xPos = S.mesh().C().component(vector::X).ref();
 
-            for (auto i = 0; i < nodesList.size(); i++)
-            {
-                ret(i*4) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
-                                                2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i*4 + 1) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 0.5,
-                                                2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i*4 + 2) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1.5,
-                                                2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0., 2));
-                ret(i*4 + 3) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
-                                                2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-            }
+//             for (auto i = 0; i < nodesList.size(); i++)
+//             {
+//                 ret(i*4) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
+//                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
+//                 ret(i*4 + 1) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 0.5,
+//                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
+//                 ret(i*4 + 2) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1.5,
+//                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0., 2));
+//                 ret(i*4 + 3) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
+//                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
+//             }
 
-            return ret;
-        }
+//             return ret;
+//         }
         
-        Eigen::VectorXd onlineCoeffs(volScalarField& S, Eigen::MatrixXd mu)
-        {
-            Eigen::VectorXd f = evaluate_expression(S, mu, localNodePoints);
-            return pinvPU*f;
-        }
+//         Eigen::VectorXd onlineCoeffs(volScalarField& S, Eigen::MatrixXd mu)
+//         {
+//             Eigen::VectorXd f = evaluate_expression(S, mu, localNodePoints);
+//             return pinvPU*f;
+//         }
 
-};
+// };
 
 void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime){
     int n_modes = para->ITHACAdict->lookupOrDefault<int>("Modes", 15);
     int n_nodes = para->ITHACAdict->lookupOrDefault<int>("Nodes", 15);
     simpleControl simple(mesh);
+
+    word methodName = para->ITHACAdict->lookupOrDefault<word>("HyperReduction", "GappyDEIM");
 
 #include "createFields.H"
     // List of volScalarField where the snapshots are stored
@@ -216,35 +218,81 @@ void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
         ITHACAstream::exportSolution(S, name(i + 1), "./ITHACAoutput/Offline/");
     }
 
+    // Define new online parameters
+    Eigen::MatrixXd parTest;// = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    cnpy::load(parTest, "testingPars.npy");
+
     // Create HyperReduction object with given number of basis functions
-    Eigen::VectorXi initSeeds(0);
+    Eigen::VectorXi initSeeds;
+    // initSeeds = cnpy::load(initSeeds, "./mp.npy");//load mp to test initialSeeds
 
-    HyperReduction_function c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
-    c.offlineStage();
+    if (methodName=="GappyDEIM")
+    {
+        HyperReduction_function c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
+        c.offlineGappyDEIM();
 
-    // Generate the submeshes with the depth of the layer
-    c.generateSubmesh(2, mesh);
-    auto sfield = c.interpolateField<volScalarField>(Sp[0]);
-    // Define a new online parameter
-    Eigen::MatrixXd par_new(2, 1);
-    par_new(0, 0) = 0;
-    par_new(1, 0) = 0;
-    // Online evaluation of the non linear function
-    Eigen::VectorXd aprfield = c.renormalizedBasisMatrix*c.onlineCoeffs(sfield(), par_new, Sp[0]);
-    // Transform to an OpenFOAM field and export
-    volScalarField S2("S_online", Foam2Eigen::Eigen2field(S, aprfield));
-    ITHACAstream::exportSolution(S2, name(1), "./ITHACAoutput/Online/");
-    // Evaluate the full order function and export it
-    HyperReduction_function::evaluate_expression(S, par_new);
-    ITHACAstream::exportSolution(S, name(1), "./ITHACAoutput/Online/");
-    // Compute the L2 error and print it
-    Info << ITHACAutilities::errorL2Rel(S2, S) << endl;
+        // Generate the submeshes with the depth of the layer
+        unsigned int layers{2};
+        c.generateSubmesh(layers, mesh);
+        auto sfield = c.interpolateField<volScalarField>(Sp[0]);
+        
+        PtrList<volScalarField> testTrueFields;
+        PtrList<volScalarField> testRecFields;
+        for (unsigned int idTest = 0; idTest < parTest.rows(); idTest++)
+        {        
+            // Online evaluation of the non linear function
+            Eigen::VectorXd aprfield = c.renormalizedBasisMatrix*c.onlineCoeffs(sfield(), parTest.row(idTest));
+            // Transform to an OpenFOAM field and export
+            volScalarField S2("S_online", Foam2Eigen::Eigen2field(S, aprfield));
+            // Evaluate the full order function and export it
+            HyperReduction_function::evaluate_expression(S, parTest.row(idTest));
+            
+            testRecFields.append(S2.clone());
+            testTrueFields.append(S.clone());
+
+            ITHACAstream::exportSolution(S2, name(idTest), "./ITHACAoutput/Online/");
+            ITHACAstream::exportSolution(S, name(idTest), "./ITHACAoutput/Online/");
+        }
+
+        // Compute the L2 error and print it
+        auto err = ITHACAutilities::errorL2Rel(testRecFields, testTrueFields);
+        Info << "GappyDEIM max relative error: " << err.maxCoeff() << endl;
+        Info << "GappyDEIM mean relative error: " << err.array().mean() << endl;
+    }
+    else if (methodName=="ECP")
+    {
+        HyperReduction_function c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
+        c.offlineECP();
+
+        // Generate the submeshes with the depth of the layer
+        unsigned int layers{2};
+        c.generateSubmesh(layers, mesh);
+        auto sfield = c.interpolateField<volScalarField>(Sp[0]);
+        
+        Eigen::VectorXd results(parTest.rows());
+        for (unsigned int idTest = 0; idTest < parTest.rows(); idTest++)
+        {
+            // Online evaluation of the non linear function            
+            Eigen::VectorXd f = c.evaluate_expression(sfield(), parTest.row(idTest), c.localNodePoints);
+            Eigen::VectorXd ff = Foam2Eigen::field2Eigen(c.evaluate_expression(Sp[0], parTest.row(idTest)));
+            
+            double trueIntegral = (c.normalizingWeights.array().cwiseInverse().matrix().asDiagonal()*ff).array().sum();
+            double testIntegral = (c.wPU*f).array().sum();
+            Info << "Integral: " << trueIntegral << endl;
+            Info << "Reconstructed Integral: " << testIntegral << endl;
+
+            results(idTest) = trueIntegral-testIntegral;
+        }
+        Info << "ECP max error: " << results.cwiseAbs().maxCoeff() << endl;
+        Info << "ECP mean error: " << results.cwiseAbs().mean() << endl;
+    }
 }
 
 void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime){
     int n_modes = para->ITHACAdict->lookupOrDefault<int>("Modes", 15);
     int n_nodes = para->ITHACAdict->lookupOrDefault<int>("Nodes", 15);
     simpleControl simple(mesh);
+    word methodName = para->ITHACAdict->lookupOrDefault<word>("HyperReduction", "GappyDEIM");
 
 #include "createFields.H"
     // List of volVectorField where the snapshots are stored
@@ -263,10 +311,10 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
         T.mesh(),
         dimensionedVector("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), vector(0, 0, 0))
     );
+
     // Parameters used to train the non-linear function
     Eigen::MatrixXd pars;
     cnpy::load(pars, "trainingPars.npy");
-
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
     {
@@ -275,119 +323,165 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
         ITHACAstream::exportSolution(S, name(i + 1), "./ITHACAoutput/Offline/");
     }
 
+    // Define new online parameters
+    Eigen::MatrixXd parTest;// = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    cnpy::load(parTest, "testingPars.npy");
+
     // Create HyperReduction object with given number of basis functions
-    Eigen::VectorXi initSeeds(0);
+    Eigen::VectorXi initSeeds;
+    // initSeeds = cnpy::load(initSeeds, "./mp.npy");//load mp to test initialSeeds
 
-    HyperReduction_vectorFunction c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
-    c.offlineStage();
-
-    // Generate the submeshes with the depth of the layer
-    c.generateSubmesh(2, mesh);
-    auto sfield = c.interpolateField<volVectorField>(Sp[0]);
-    // Define a new online parameter
-    Eigen::MatrixXd par_new(2, 1);
-    par_new(0, 0) = 0;
-    par_new(1, 0) = 0;
-    // Online evaluation of the non linear function
-    Eigen::VectorXd aprfield = c.renormalizedBasisMatrix*c.onlineCoeffs(sfield(), par_new);
-    // Transform to an OpenFOAM field and export
-    volVectorField S2("S_online", Foam2Eigen::Eigen2field(S, aprfield));
-    ITHACAstream::exportSolution(S2, name(1), "./ITHACAoutput/Online/");
-    // Evaluate the full order function and export it
-    HyperReduction_vectorFunction::evaluate_expression(S, par_new);
-    ITHACAstream::exportSolution(S, name(1), "./ITHACAoutput/Online/");
-    // Compute the L2 error and print it
-    Info << ITHACAutilities::errorL2Rel(S2, S) << endl;
-}
-
-void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime){
-    int n_modes = para->ITHACAdict->lookupOrDefault<int>("Modes", 15);
-    int n_nodes = para->ITHACAdict->lookupOrDefault<int>("Nodes", 15);
-    simpleControl simple(mesh);
-
-#include "createFields.H"
-    // List of volVectorField where the snapshots are stored
-    PtrList<volVectorField> Vp;
-    PtrList<volScalarField> Sp;
-    // Non linear function
-    volVectorField V
-    (
-        IOobject
-        (
-            "V",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        T.mesh(),
-        dimensionedVector("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), vector(0, 0, 0))
-    );
-    // Non linear function
-    volScalarField S
-    (
-        IOobject
-        (
-            "S",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        T.mesh(),
-        dimensionedScalar("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), 0)
-    );
-
-    // Parameters used to train the non-linear function
-    Eigen::MatrixXd pars;
-    cnpy::load(pars, "trainingPars.npy");
-
-    // Perform the offline phase
-    for (int i = 0; i < 100; i++)
+    if (methodName=="GappyDEIM")
     {
-        HyperReduction_vectorScalarFunction::evaluate_expression(V, S, pars.row(i));
-        Vp.append((V).clone());
-        Sp.append((S).clone());
-        ITHACAstream::exportSolution(S, name(i + 1), "./ITHACAoutput/Offline/");
-        ITHACAstream::exportSolution(V, name(i + 1), "./ITHACAoutput/Offline/");
+        HyperReduction_vectorFunction c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
+        c.offlineGappyDEIM();
+
+        // Generate the submeshes with the depth of the layer
+        unsigned int layers{2};
+        c.generateSubmesh(layers, mesh);
+        auto sfield = c.interpolateField<volVectorField>(Sp[0]);
+        
+        PtrList<volVectorField> testTrueFields;
+        PtrList<volVectorField> testRecFields;
+        for (unsigned int idTest = 0; idTest < parTest.rows(); idTest++)
+        {        
+            // Online evaluation of the non linear function
+            Eigen::VectorXd aprfield = c.renormalizedBasisMatrix*c.onlineCoeffs(sfield(), parTest.row(idTest));
+            // Transform to an OpenFOAM field and export
+            volVectorField S2("S_online", Foam2Eigen::Eigen2field(S, aprfield));
+            // Evaluate the full order function and export it
+            HyperReduction_vectorFunction::evaluate_expression(S, parTest.row(idTest));
+            
+            testRecFields.append(S2.clone());
+            testTrueFields.append(S.clone());
+
+            ITHACAstream::exportSolution(S2, name(idTest), "./ITHACAoutput/Online/");
+            ITHACAstream::exportSolution(S, name(idTest), "./ITHACAoutput/Online/");
+        }
+
+        // Compute the L2 error and print it
+        auto err = ITHACAutilities::errorL2Rel(testRecFields, testTrueFields);
+        Info << "GappyDEIM max relative error: " << err.maxCoeff() << endl;
+        Info << "GappyDEIM mean relative error: " << err.array().mean() << endl;
     }
+    else if (methodName=="ECP")
+    {
+        HyperReduction_vectorFunction c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
+        c.offlineECP();
 
-    // Create HyperReduction object with given number of basis functions
-    Eigen::VectorXi initSeeds(0);
+        // Generate the submeshes with the depth of the layer
+        unsigned int layers{2};
+        c.generateSubmesh(layers, mesh);
+        auto sfield = c.interpolateField<volVectorField>(Sp[0]);
+        
+        Eigen::VectorXd results(parTest.rows());
+        for (unsigned int idTest = 0; idTest < parTest.rows(); idTest++)
+        {
+            // Online evaluation of the non linear function            
+            Eigen::VectorXd f = c.evaluate_expression(sfield(), parTest.row(idTest), c.localNodePoints);
+            auto wholeField = c.evaluate_expression(Sp[0], parTest.row(idTest));
+            Eigen::VectorXd ff = Foam2Eigen::field2Eigen(wholeField);
+            
+            double trueIntegral = (c.normalizingWeights.array().cwiseInverse().matrix().asDiagonal()*ff).array().sum();
+            double testIntegral = (c.wPU*f).array().sum();
+            Info << "Integral: " << trueIntegral << endl;
+            Info << "Reconstructed Integral: " << testIntegral << endl;
 
-    HyperReduction_vectorScalarFunction c(n_modes, n_nodes, initSeeds, "Gaussian_function", Vp, Sp);
-    c.offlineStage();
-
-    // Generate the submeshes with the depth of the layer
-    c.generateSubmesh(2, mesh);
-    auto vfield = c.interpolateField<volVectorField>(Vp[0]);
-    auto sfield = c.interpolateField<volScalarField>(Sp[0]);
-    // Define a new online parameter
-    Eigen::MatrixXd par_new(2, 1);
-    par_new(0, 0) = 0;
-    par_new(1, 0) = 0;
-    // Online evaluation of the non linear function
-    auto theta = c.onlineCoeffs(sfield(), par_new);
-    Eigen::VectorXd aprfield = c.renormalizedBasisMatrix*theta;
-    // Transform to an OpenFOAM field and export
-    // c.eigen2fields(aprfield, V, S);
-    // volVectorField V2("V_online", V);
-    // volScalarField S2("S_online", S);
-    Eigen::VectorXd recvec = aprfield.head(3*S.size());
-    Eigen::VectorXd recsca = aprfield.tail(S.size());
-    volVectorField V2("V_online", Foam2Eigen::Eigen2field(V, recvec));
-    volScalarField S2("S_online", Foam2Eigen::Eigen2field(S, recsca));
-
-    ITHACAstream::exportSolution(V2, name(1), "./ITHACAoutput/Online/");
-    ITHACAstream::exportSolution(S2, name(1), "./ITHACAoutput/Online/");
-    // Evaluate the full order function and export it
-    HyperReduction_vectorScalarFunction::evaluate_expression(V, S, par_new);
-    ITHACAstream::exportSolution(V, name(1), "./ITHACAoutput/Online/");
-    ITHACAstream::exportSolution(S, name(1), "./ITHACAoutput/Online/");
-    // Compute the L2 error and print it
-    Info << "Scalar L2 error: " << ITHACAutilities::errorL2Rel(S2, S) << endl;
-    Info << "Vector L2 error: " << ITHACAutilities::errorL2Rel(V2, V) << endl;
+            results(idTest) = trueIntegral-testIntegral;
+        }
+        Info << "ECP max error: " << results.cwiseAbs().maxCoeff() << endl;
+        Info << "ECP mean error: " << results.cwiseAbs().mean() << endl;
+    }
 }
+
+// void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime){
+//     int n_modes = para->ITHACAdict->lookupOrDefault<int>("Modes", 15);
+//     int n_nodes = para->ITHACAdict->lookupOrDefault<int>("Nodes", 15);
+//     simpleControl simple(mesh);
+
+// #include "createFields.H"
+//     // List of volVectorField where the snapshots are stored
+//     PtrList<volVectorField> Vp;
+//     PtrList<volScalarField> Sp;
+//     // Non linear function
+//     volVectorField V
+//     (
+//         IOobject
+//         (
+//             "V",
+//             runTime.timeName(),
+//             mesh,
+//             IOobject::NO_READ,
+//             IOobject::AUTO_WRITE
+//         ),
+//         T.mesh(),
+//         dimensionedVector("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), vector(0, 0, 0))
+//     );
+//     // Non linear function
+//     volScalarField S
+//     (
+//         IOobject
+//         (
+//             "S",
+//             runTime.timeName(),
+//             mesh,
+//             IOobject::NO_READ,
+//             IOobject::AUTO_WRITE
+//         ),
+//         T.mesh(),
+//         dimensionedScalar("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), 0)
+//     );
+
+//     // Parameters used to train the non-linear function
+//     Eigen::MatrixXd pars;
+//     cnpy::load(pars, "trainingPars.npy");
+
+//     // Perform the offline phase
+//     for (int i = 0; i < 100; i++)
+//     {
+//         HyperReduction_vectorScalarFunction::evaluate_expression(V, S, pars.row(i));
+//         Vp.append((V).clone());
+//         Sp.append((S).clone());
+//         ITHACAstream::exportSolution(S, name(i + 1), "./ITHACAoutput/Offline/");
+//         ITHACAstream::exportSolution(V, name(i + 1), "./ITHACAoutput/Offline/");
+//     }
+
+//     // Create HyperReduction object with given number of basis functions
+//     Eigen::VectorXi initSeeds(0);
+
+//     HyperReduction_vectorScalarFunction c(n_modes, n_nodes, initSeeds, "Gaussian_function", Vp, Sp);
+//     c.offlineStage();
+
+//     // Generate the submeshes with the depth of the layer
+//     c.generateSubmesh(2, mesh);
+//     auto vfield = c.interpolateField<volVectorField>(Vp[0]);
+//     auto sfield = c.interpolateField<volScalarField>(Sp[0]);
+//     // Define a new online parameter
+//     Eigen::MatrixXd par_new(2, 1);
+//     par_new(0, 0) = 0;
+//     par_new(1, 0) = 0;
+//     // Online evaluation of the non linear function
+//     auto theta = c.onlineCoeffs(sfield(), par_new);
+//     Eigen::VectorXd aprfield = c.renormalizedBasisMatrix*theta;
+//     // Transform to an OpenFOAM field and export
+//     // c.eigen2fields(aprfield, V, S);
+//     // volVectorField V2("V_online", V);
+//     // volScalarField S2("S_online", S);
+//     Eigen::VectorXd recvec = aprfield.head(3*S.size());
+//     Eigen::VectorXd recsca = aprfield.tail(S.size());
+//     volVectorField V2("V_online", Foam2Eigen::Eigen2field(V, recvec));
+//     volScalarField S2("S_online", Foam2Eigen::Eigen2field(S, recsca));
+
+//     ITHACAstream::exportSolution(V2, name(1), "./ITHACAoutput/Online/");
+//     ITHACAstream::exportSolution(S2, name(1), "./ITHACAoutput/Online/");
+//     // Evaluate the full order function and export it
+//     HyperReduction_vectorScalarFunction::evaluate_expression(V, S, par_new);
+//     ITHACAstream::exportSolution(V, name(1), "./ITHACAoutput/Online/");
+//     ITHACAstream::exportSolution(S, name(1), "./ITHACAoutput/Online/");
+//     // Compute the L2 error and print it
+//     Info << "Scalar L2 error: " << ITHACAutilities::errorL2Rel(S2, S) << endl;
+//     Info << "Vector L2 error: " << ITHACAutilities::errorL2Rel(V2, V) << endl;
+// }
 
 int main(int argc, char* argv[])
 {
@@ -438,11 +532,11 @@ int main(int argc, char* argv[])
         Info << "Init vector testcase\n";
         test_vector(para, mesh, runTime);
     }
-    else if (args.get("test").match("vs"))
-    {
-        Info << "Init vector scalar testcase\n";
-        test_vector_scalar(para, mesh, runTime);
-    }
+    // else if (args.get("test").match("vs"))
+    // {
+    //     Info << "Init vector scalar testcase\n";
+    //     test_vector_scalar(para, mesh, runTime);
+    // }
     else
     {
         Info << "Pass '-test scalar', '-test vector', '-test vs'" << endl;

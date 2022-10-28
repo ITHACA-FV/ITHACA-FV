@@ -37,18 +37,13 @@ SourceFiles
 #include "EigenFunctions.H"
 #include "ITHACAutilities.H"
 #include "fvMeshSubset.H"
+#include <unsupported/Eigen/NNLS>
 #include <set>
-
-enum class HyperReductionMethod
-{
-    GappyDEIM
-};
 
 template <typename... SnapshotsLists>
 class HyperReduction
 {
 public:
-    const word methodNames[1] = {"GappyDEIM"};
     word methodName;
 
     using SnapshotsListTuple = std::tuple<std::decay_t<SnapshotsLists>...>;
@@ -95,6 +90,9 @@ public:
     // Initial nodes
     Eigen::VectorXi initialSeeds;
 
+    // nodes
+    Eigen::VectorXi nodes;
+
     /// The name of the non-linear function e.g. HR_method/residual
     word problemName;
 
@@ -138,11 +136,20 @@ public:
     // TODO
     Eigen::MatrixXd pinvPU;
 
-    /// The P matrix of the HyperReduction method
+    // TODO
+    Eigen::MatrixXd wPU;
+
+    // TODO
+    Eigen::VectorXd eigenValueseig;
+
+    /// The P matrix of the HyperReduction method. The nodes are ordered in the order of insertion during the greedy procedure. The components related to the same node follow immediately.
     Eigen::SparseMatrix<double> P;
 
     /// Normalizing weights of the offline snapshots
     Eigen::VectorXd normalizingWeights;
+
+    /// Quadrature weights. Ordered in the same order of matrix P.
+    Eigen::VectorXd quadratureWeights;
 
     /// Submesh of the HyperReduction method
     autoPtr<fvMeshSubset> submesh;
@@ -163,7 +170,7 @@ public:
     //----------------------------------------------------------------------
     /// @brief      TODO
     ///
-    void offlineEQP();
+    void offlineECP();
 
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -171,7 +178,7 @@ public:
     /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
     /// @param[in]  sList  The list of snapshots
     ///
-    void getModesSVD(SnapshotsListTuple &SnapshotsListTuple, Eigen::MatrixXd &modesSVD, Eigen::VectorXd &fieldWeights);
+    void getModesSVD(SnapshotsListTuple &SnapshotsListTuple, Eigen::MatrixXd &modesSVD, Eigen::VectorXd &fieldWeights, bool saveModesFlag = false);
     
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -189,6 +196,15 @@ public:
     ///
     template <typename SnapshotsList>
     void stackSnapshots(SnapshotsList sList, Eigen::MatrixXd &snapshotsMatrix, Eigen::VectorXd &fieldWeights);
+    
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename SnapshotsList>
+    void saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, unsigned int &rowIndex, unsigned int &modeIndex);
 
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -218,6 +234,14 @@ public:
     /// @param[in]  Modes      matrix to restrict and invert
     ///
     void evaluatePinv(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd& fieldWeights);
+
+     //----------------------------------------------------------------------
+    /// @brief      Compute the pseudo-inverse of the matrix M restricted with the projector P
+    ///
+    /// @param[in]  Projector  projector into interpolation nodes
+    /// @param[in]  Modes      matrix to restrict and invert
+    ///
+    void evaluateWPU(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd& fieldWeights, Eigen::VectorXd& quadratureWeights);
 
     //----------------------------------------------------------------------
     /// @brief      Compute the submesh common to all fields in SnapshotsLists
@@ -311,6 +335,13 @@ public:
             }(oFields), ...);
 
     }
+
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    void initReshapeMat(Eigen::SparseMatrix<double> &reshapeMat);
 };
 
 #endif
