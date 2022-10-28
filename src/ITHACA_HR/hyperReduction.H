@@ -37,8 +37,9 @@ SourceFiles
 #include "EigenFunctions.H"
 #include "ITHACAutilities.H"
 #include "fvMeshSubset.H"
-#include <unsupported/Eigen/NNLS>
 #include <set>
+
+Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
 
 template <typename... SnapshotsLists>
 class HyperReduction
@@ -156,11 +157,6 @@ public:
     
     /// Submeshes
     autoPtr<volVectorField> submesh_field;
-
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    void offlineStage();
     
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -170,7 +166,17 @@ public:
     //----------------------------------------------------------------------
     /// @brief      TODO
     ///
-    void offlineECP();
+    void offlineECP(Eigen::MatrixXd snapshotsModes);
+    
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    void initSeeds(Eigen::VectorXd mp_not_mask, std::set<label> nodePointsSet);
+
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    void computeLS(Eigen::MatrixXd& J, Eigen::MatrixXd& JWhole, Eigen::VectorXd& b, Eigen::VectorXd& q);
 
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -186,7 +192,7 @@ public:
     /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
     /// @param[in]  sList  The list of snapshots
     ///
-    void updateNodes(Eigen::SparseMatrix<double>& P, label& ind_max, Eigen::VectorXd& mp_not_mask, std::deque<label>& nodePointsDeque);
+    void updateNodes(Eigen::SparseMatrix<double>& P, label& ind_max, Eigen::VectorXd& mp_not_mask);
 
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -204,7 +210,7 @@ public:
     /// @param[in]  sList  The list of snapshots
     ///
     template <typename SnapshotsList>
-    void saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, unsigned int &rowIndex, unsigned int &modeIndex);
+    void saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, unsigned int &rowIndex, unsigned int &modeIndex, word folder);
 
     //----------------------------------------------------------------------
     /// @brief      TODO

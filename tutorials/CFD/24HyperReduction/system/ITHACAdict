@@ -26,5 +26,5 @@ OutPrecision 20;
 OutType fixed;
 
 // HR
-HyperReduction ECP;//GreedyDEIM, ECP
-GreedyMetric SOPT;//L2, SOPT, SOPTE
+HyperReduction ECP;//GappyDEIM, ECP
+GreedyMetric L2;//L2, SOPT, SOPTE
