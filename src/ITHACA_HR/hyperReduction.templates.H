@@ -33,6 +33,8 @@ License
 
 #include "hyperReduction.H"
 
+// TODO increase modularity to avoid heavy compiling costs
+
 // Using the Eigen library, using the SVD decomposition method to solve the
 // matrix pseudo-inverse, the default error er is 0
 Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0) {
@@ -60,8 +62,9 @@ Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0) {
 
 template <typename... SnapshotsLists>
 void HyperReduction<SnapshotsLists...>::getModesSVD(
-    SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights)
+    SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights, bool saveModesFlag)
 {
+  // TODO possibility to save openfoam modes fields
   ITHACAparameters* para(ITHACAparameters::getInstance());
   if (!ITHACAutilities::check_folder(Folder + "/Modes/"))
   {
@@ -77,7 +80,6 @@ void HyperReduction<SnapshotsLists...>::getModesSVD(
     Info << "####### End of SVD for " << problemName << " #######" <<
           endl;
 
-    Eigen::VectorXd eigenValueseig;
     Eigen::MatrixXd eigenVectoreig;
     eigenValueseig = svd.singularValues().real();
     eigenVectoreig = svd.matrixU().real();
@@ -103,6 +105,17 @@ void HyperReduction<SnapshotsLists...>::getModesSVD(
                             para->outytpe);
     cnpy::save(modesSVD, Folder + "/Modes/modes.npy");
     cnpy::save(fieldWeights, Folder + "/Modes/normalizingWeights.npy");
+
+
+    if (saveModesFlag)
+    {
+      unsigned int rowIndex{0};
+      for (unsigned int modeIndex = 0; modeIndex < modesSVD.cols(); modeIndex++)
+      {
+        std::apply([this, &modesSVD, &rowIndex, &modeIndex](auto& ...snapList){(..., saveModes(snapList, modesSVD, rowIndex, modeIndex));}, snapshotsListTuple);
+        rowIndex = 0;
+      }
+    }
   }
   else
   {
@@ -110,6 +123,20 @@ void HyperReduction<SnapshotsLists...>::getModesSVD(
     cnpy::load(modesSVD, Folder + "/Modes/modes.npy");
     cnpy::load(fieldWeights, Folder + "/Modes/normalizingWeights.npy");
   }
+}
+
+template <typename... SnapshotsLists>
+template <typename SnapshotsList>
+void HyperReduction<SnapshotsLists...>::saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, unsigned int &rowIndex, unsigned int &modeIndex)
+{
+  unsigned int field_dim = get_field_dim<typename SnapshotsList::value_type>();
+  auto fieldName = sList[0].name();
+  unsigned int fieldSize = field_dim*sList[0].size();
+  Eigen::VectorXd fieldBlock = snapshotsMatrix.block(rowIndex, modeIndex, fieldSize, 1);
+  auto fieldOut = Foam2Eigen::Eigen2field(sList[0], fieldBlock , true);
+  rowIndex +=fieldSize;
+  modeIndex++;
+  ITHACAstream::exportSolution(fieldOut, name(modeIndex), Folder + "/Modes/");
 }
 
 // Template function constructor
@@ -127,7 +154,7 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
       snapshotsListTuple{std::forward_as_tuple(snapshotsLists...)}
 {
   Info << "Init HyperReduction class with vectorial dim: " << vectorial_dim << endl;
-
+  para = ITHACAparameters::getInstance();
   // TODO check snapshotsLists is not empty
   // TODO check that the first snapshotsList is not empty (includes above)
 
@@ -159,24 +186,25 @@ void HyperReduction<SnapshotsLists...>::offlineStage()
 {
   para = ITHACAparameters::getInstance();
   methodName = para->ITHACAdict->lookupOrDefault<word>("HyperReduction", "GappyDEIM");
-  
+
   if (methodName=="GappyDEIM")
   {
     offlineGappyDEIM();
   }
-  else if (methodName=="EQP")
+  else if (methodName=="ECP")
   {
-    offlineEQP();
+    offlineECP();
   }
   else
   {
-    M_Assert(false, "Offline stage not performed. Invalid HR method.\n");
+    M_Assert(false, "Offline stage hyper-reduction not performed. Invalid HR method. Possible methods are: 'GappyDEIM', 'ECP.'\n");
   }
 }
 
 template <typename... SnapshotsLists>
 void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
 {
+  methodName = "GappyDEIM";
   Folder = "ITHACAoutput/" + problemName + "/" + methodName;
     mkDir(Folder);
 
@@ -204,41 +232,34 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
       P.resize(n_cells * vectorial_dim, initialSeeds.rows() * vectorial_dim);
       P.reserve(Eigen::VectorXi::Constant(initialSeeds.rows() * vectorial_dim /*n_cols*/, 1 /*n_non_zero_elements*/));
 
+      unsigned int trueSeeds{0};
       for (int i = 0; i < initialSeeds.rows(); i++)
       {
         unsigned int index = initialSeeds(i) % n_cells;
-        for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
-        {
-          P.insert(index+ith_field*n_cells, vectorial_dim*i+ith_field) = 1;
-          mp_not_mask(index + ith_field * n_cells) = 0;
-        }
-        
-        // check that are not repeated nodes in initialSeeds
+        // check that there are not repeated nodes in initialSeeds
         if (nodePointsSet.find(index) == nodePointsSet.end()){
           nodePointsSet.insert(index);
           nodePointsDeque.push_back(index);
+
+          for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+          {
+            P.insert(index+ith_field*n_cells, vectorial_dim*trueSeeds+ith_field) = 1;
+            mp_not_mask(index + ith_field * n_cells) = 0;
+          }
+          trueSeeds++;
         }
       }
 
+      P.conservativeResize(P.rows(), nodePointsDeque.size()*vectorial_dim);
       P.makeCompressed();
+      M_Assert(nodePointsDeque.size()<=n_nodes, "Size of 'initialSeeds' is greater than 'n_nodes'");
     }
 
     int na = n_nodes - initialSeeds.rows();
     if (na > 0)
     {
       Eigen::SparseMatrix<double> reshapeMat;
-      reshapeMat.resize(n_cells, n_cells*vectorial_dim);
-      reshapeMat.reserve(Eigen::VectorXi::Constant(n_cells * vectorial_dim /*n_cols*/, 1 /*n_non_zero_elements*/));
-
-      for (unsigned int i = 0; i < n_cells; i++)
-      {
-        for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
-        {
-          reshapeMat.insert(i, i+n_cells*ith_field) = 1;
-        }
-      }
-        
-      reshapeMat.makeCompressed();
+      initReshapeMat(reshapeMat);
 
       if (greedyMetric=="L2")
       {
@@ -370,7 +391,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
         Eigen::VectorXd r;
         Eigen::MatrixXd V = snapshotsModes.col(0);
 
-        max = (reshapeMat*snapshotsModes.leftCols(n_modes).rowwise().lpNorm<2>().array().square().matrix()).maxCoeff(&ind_max, &c1);
+        max = (reshapeMat* (mp_not_mask.asDiagonal()*snapshotsModes.leftCols(n_modes)).rowwise().lpNorm<2>().array().square().matrix()).maxCoeff(&ind_max, &c1);
         updateNodes(P, ind_max, mp_not_mask, nodePointsDeque);
 
         for (unsigned int ith_node = 1; ith_node < na; ith_node++)
@@ -431,13 +452,9 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
     Info << "Pseudo Inverse Matrix shape: " << pinvPU.rows() << " " << pinvPU.cols() << endl;
 
     // convert nodePointsSet to nodePoints i.e. list
-    Eigen::VectorXi nodes(nodePointsDeque.size());
-    unsigned int i{0};
     for (auto &x : nodePointsDeque)
     {
       nodePoints().append(x);
-      nodes(i) = x;
-      i++;
     }
     cnpy::save(nodes, Folder + "/mp.npy");
     cnpy::save(pinvPU, Folder + "/pinvPU.npy");
@@ -451,7 +468,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
 }
 
 template <typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::updateNodes(Eigen::SparseMatrix<double>& P, label& ind_max, Eigen::VectorXd& mp_not_mask, std::deque<label>& nodePointsDeque)
+void HyperReduction<SnapshotsLists...>::updateNodes(Eigen::SparseMatrix<double>& P, label& ind, Eigen::VectorXd& mp_not_mask, std::deque<label>& nodePointsDeque)
 {
   unsigned int last_col{0};
   
@@ -467,16 +484,28 @@ void HyperReduction<SnapshotsLists...>::updateNodes(Eigen::SparseMatrix<double>&
 
   for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
   {
-    P.insert(ind_max + ith_field * n_cells, last_col + ith_field) = 1;
-    mp_not_mask(ind_max + ith_field * n_cells) = 0;
+    P.insert(ind + ith_field * n_cells, last_col + ith_field) = 1;
+    mp_not_mask(ind + ith_field * n_cells) = 0;
   }
 
-  nodePointsDeque.push_back(ind_max);
+  nodePointsDeque.push_back(ind);
+
+  nodes.conservativeResize(nodes.rows()+1);
+  nodes(nodes.rows()-1) = ind;
 }
 
 template <typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::offlineEQP()
+void HyperReduction<SnapshotsLists...>::offlineECP()
 {
+  methodName = "ECP";
+
+  n_nodes = n_modes + 1;
+
+  Info << "####### Begin ECP #######" << endl;
+  Info << "####### Modes=" <<  n_modes
+            << ", nodePoints=" << n_nodes << " #######"
+            << endl;
+
   Folder = "ITHACAoutput/" + problemName + "/" + methodName;
     mkDir(Folder);
 
@@ -485,12 +514,42 @@ void HyperReduction<SnapshotsLists...>::offlineEQP()
                 para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE)));
 
   Eigen::MatrixXd snapshotsModes;
-  getModesSVD(snapshotsListTuple, snapshotsModes, normalizingWeights);  
+  getModesSVD(snapshotsListTuple, snapshotsModes, normalizingWeights, true);  
 
   if (!nodePoints().headerOk())
   {
     assert(n_modes > 0);
     assert(n_nodes >= n_modes);
+
+    // matrices for quadratureWeights evaluation
+    Eigen::MatrixXd J;//shape: (vectorial_dim * (n_modes + 1), nodePointsDeque.size())
+    Eigen::MatrixXd Jwhole(vectorial_dim * (n_modes + 1), n_cells);
+    Eigen::VectorXd q(vectorial_dim * (n_modes + 1));
+
+    // matrices for greedy selection of the nodes
+    Eigen::MatrixXd A(vectorial_dim*n_modes, n_cells);
+    Eigen::VectorXd b = Eigen::VectorXd::Constant(vectorial_dim*n_modes, 1);
+
+    Eigen::VectorXd volumes = ITHACAutilities::getMassMatrixFV(std::get<0>(snapshotsListTuple)[0]);
+    double volume = volumes.array().sum();
+
+    for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+    {
+      Eigen::MatrixXd block = snapshotsModes.block(ith_field*n_cells, 0, n_cells, n_modes).transpose();
+
+      q.segment(ith_field*(n_modes+1), n_modes) = block.rowwise().sum();
+      q(ith_field*(n_modes+1)+n_modes) = volume;
+
+      Jwhole.middleRows(ith_field*(n_modes+1), n_modes) = block;
+      Jwhole.row(ith_field*(n_modes+1)+n_modes) = Eigen::VectorXd::Constant(n_cells, 1);
+
+      Eigen::VectorXd mean = block.rowwise().mean();
+      block.colwise() -= mean;
+      Eigen::VectorXd Anorm = block.colwise().lpNorm<2>();
+      block.array().rowwise() /= Anorm.transpose().array();
+
+      A.middleRows(ith_field*n_modes, n_modes) = block;
+    }
 
     Eigen::VectorXd mp_not_mask = Eigen::VectorXd::Constant(n_cells * vectorial_dim, 1);
     std::set<label> nodePointsSet;
@@ -499,56 +558,208 @@ void HyperReduction<SnapshotsLists...>::offlineEQP()
     // set initialSeeds
     if (initialSeeds.rows() > 0)
     {
+      // TODO init matrix P from initialSeeds
       P.resize(n_cells * vectorial_dim, initialSeeds.rows() * vectorial_dim);
       P.reserve(Eigen::VectorXi::Constant(initialSeeds.rows() * vectorial_dim /*n_cols*/, 1 /*n_non_zero_elements*/));
 
+      unsigned int trueSeeds{0};
       for (int i = 0; i < initialSeeds.rows(); i++)
       {
         unsigned int index = initialSeeds(i) % n_cells;
-        for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
-        {
-          P.insert(index+ith_field*n_cells, vectorial_dim*i+ith_field) = 1;
-          mp_not_mask(index + ith_field * n_cells) = 0;
-        }
-        
-        // check that are not repeated nodes in initialSeeds
+        // check that there are not repeated nodes in initialSeeds
         if (nodePointsSet.find(index) == nodePointsSet.end()){
           nodePointsSet.insert(index);
           nodePointsDeque.push_back(index);
+
+          for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+          {
+            P.insert(index+ith_field*n_cells, vectorial_dim*trueSeeds+ith_field) = 1;
+            mp_not_mask(index + ith_field * n_cells) = 0;
+          }
+          trueSeeds++;
         }
       }
 
+      P.conservativeResize(P.rows(), nodePointsDeque.size()*vectorial_dim);
       P.makeCompressed();
+      M_Assert(nodePointsDeque.size()<=n_nodes, "Size of 'initialSeeds' is greater than 'n_nodes'");
+      
+      // TODO fix with only positive weights (NNLS)
+      // Init quadratureWeights
+      J.resize(vectorial_dim * (n_modes + 1), nodePointsDeque.size());
+      J = Jwhole(Eigen::indexing::all, nodes);
+      // J = Jwhole*P;
+      // for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+      // {
+      //   Eigen::MatrixXd block = APtmp(Eigen::indexing::all, Eigen::seqN(ith_field, nodePointsDeque.size(), vectorial_dim));
+      //   J.middleRows(n_modes*ith_field, n_modes) = block;
+      // }
+
+      // J.row(J.rows()-1) = Eigen::VectorXd::Constant(J.cols(), 1);
+
+      quadratureWeights.resize(nodePointsDeque.size()*vectorial_dim);
+      for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+      {
+        quadratureWeights.segment(ith_field*nodePointsDeque.size(), nodePointsDeque.size()) = J.middleRows(ith_field*(n_modes+1), n_modes+1).colPivHouseholderQr().solve(q.segment(ith_field*(n_modes+1), n_modes+1));
+        b.segment(ith_field*n_modes, n_modes) = q.segment(ith_field*(n_modes+1), n_modes)-J.middleRows(ith_field*(n_modes+1), n_modes)*quadratureWeights.segment(ith_field*nodePointsDeque.size(), nodePointsDeque.size());
+      }
+      Info << "Tol: " << b.lpNorm<2>()/q.lpNorm<2>() << endl;
+      Info << "ECP Error: " << b.maxCoeff() << endl;
+      b = b/b.lpNorm<2>();
+
+      Info << "weights: " << quadratureWeights << endl;
     }
 
-    Info << "####### End of greedy GappyDEIM #######\n";
+    int na = n_nodes - initialSeeds.rows();
+    Eigen::SparseMatrix<double> reshapeMat;
+    initReshapeMat(reshapeMat);
+
+    if (na > 0)
+    {
+      std::cout << "DEBUG ~/projects/ITHACA-FV/src/ITHACA_HR/hyperReduction.templates.H at Line 616 " << std::endl;
+      label ind_max, r1;
+      double max;
+      
+      // Eigen::MatrixXd Aw = A*mp_not_mask.asDiagonal();
+      // for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+      // {
+      //   Aw.middleCols(n_cells*ith_field, n_cells).array().colwise()*=b.segment(n_modes*ith_field, n_modes).array();
+      // }
+      std::cout << "DEBUG ~/projects/ITHACA-FV/src/ITHACA_HR/hyperReduction.templates.H at Line 625 " << b.rows() << " " << A.rows() << " " << A.cols() << " " << mp_not_mask.head(n_cells).rows() << std::endl;
+      max = ((b.transpose()*A*mp_not_mask.head(n_cells).asDiagonal()).colwise().sum()).maxCoeff(&r1, &ind_max);
+
+      updateNodes(P, ind_max, mp_not_mask, nodePointsDeque);
+      
+      Info << "Max ind init: " << ind_max << " Deque size: " << nodePointsDeque.size() << endl;
+
+      // TODO encapsulate update quadratureWeights
+      J.resize(vectorial_dim * (n_modes + 1), nodePointsDeque.size());
+      std::cout << "DEBUG ~/projects/ITHACA-FV/src/ITHACA_HR/hyperReduction.templates.H at Line 634 " << P.bottomRows(nodePointsDeque.size()).rows() << " " << P.bottomRows(nodePointsDeque.size()).cols() << std::endl;
+      J = Jwhole(Eigen::indexing::all, nodes);
+      // J = Jwhole*P;
+      std::cout << "DEBUG ~/projects/ITHACA-FV/src/ITHACA_HR/hyperReduction.templates.H at Line 636 " << std::endl;
+      
+      quadratureWeights.resize(nodePointsDeque.size()*vectorial_dim);
+      for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+      {
+        quadratureWeights.segment(ith_field*nodePointsDeque.size(), nodePointsDeque.size()) = J.middleRows(ith_field*(n_modes+1), n_modes+1).colPivHouseholderQr().solve(q.segment(ith_field*(n_modes+1), n_modes+1));
+        b.segment(ith_field*n_modes, n_modes) = q.segment(ith_field*(n_modes+1), n_modes)-J.middleRows(ith_field*(n_modes+1), n_modes)*quadratureWeights.segment(ith_field*nodePointsDeque.size(), nodePointsDeque.size());
+      }
+      Info << "DEBUG: " << b << endl;
+      Info << "Tol: " << b.lpNorm<2>()/q.lpNorm<2>() << endl;
+      Info << "ECP Error: " << b.maxCoeff() << endl;
+      b = b/b.lpNorm<2>();
+
+      // quadratureWeights.resize(nodePointsDeque.size());
+      // quadratureWeights = J.colPivHouseholderQr().solve(q);
+
+      // // auto ECPSolver = Eigen::NNLS(J);
+      // // quadratureWeights = ECPSolver.solve(q);
+      // // std::cout << "Info NNLS: " << ECPSolver.info() << endl;
+      // Info << quadratureWeights << endl;
+
+      // b = q-J*quadratureWeights;
+      // Info << "Tol: " << b.lpNorm<2>()/q.lpNorm<2>() << endl;
+      // Info << "ECP Error: " << b.maxCoeff(&ind_max, &c1) << " " << ind_max << " vol: " << b(b.rows()-1) << endl;
+      // b = b/b.lpNorm<2>();
+
+      for (unsigned int ith_node = 1; ith_node < na; ith_node++)
+      {
+        max = ((b.transpose()*A*mp_not_mask.head(n_cells).asDiagonal()).colwise().sum()).maxCoeff(&r1, &ind_max);
+
+        updateNodes(P, ind_max, mp_not_mask, nodePointsDeque);
+        
+        Info << "Max ind init: " << ind_max << " Deque size: " << nodePointsDeque.size() << endl;
+
+        // TODO encapsulate update quadratureWeights
+        J.resize(vectorial_dim * (n_modes + 1), nodePointsDeque.size());
+        J = Jwhole(Eigen::indexing::all, nodes);
+        // J = Jwhole*P;
+
+        quadratureWeights.resize(nodePointsDeque.size()*vectorial_dim);
+        for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+        {
+          quadratureWeights.segment(ith_field*nodePointsDeque.size(), nodePointsDeque.size()) = J.middleRows(ith_field*(n_modes+1), n_modes+1).colPivHouseholderQr().solve(q.segment(ith_field*(n_modes+1), n_modes+1));
+          b.segment(ith_field*n_modes, n_modes) = q.segment(ith_field*(n_modes+1), n_modes)-J.middleRows(ith_field*(n_modes+1), n_modes)*quadratureWeights.segment(ith_field*nodePointsDeque.size(), nodePointsDeque.size());
+        }
+        Info << "Tol: " << b.lpNorm<2>()/q.lpNorm<2>() << endl;
+        Info << "ECP Error: " << b.maxCoeff() << endl;
+        b = b/b.lpNorm<2>();
+        Info << "DEBUG quad size: " << quadratureWeights.rows() << endl;
+        
+        // Aw = A*mp_not_mask.asDiagonal();
+        // for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+        // {
+        //   Aw.middleCols(n_cells*ith_field, n_cells).array().colwise()*=b.segment(n_modes*ith_field, n_modes).array();
+        // }
+        // max = (Aw.colwise().sum()*reshapeMat).transpose().maxCoeff(&ind_max, &c1);
+
+        // updateNodes(P, ind_max, mp_not_mask, nodePointsDeque);
+        
+        // Info << "Max ind: " << ind_max << " Deque size: " << nodePointsDeque.size() << endl;
+
+        // // TODO encapsulate update quadratureWeights
+        // J.resize(n_modes*vectorial_dim+1, nodePointsDeque.size());
+
+        // Eigen::MatrixXd APtmp = (snapshotsModes).leftCols(n_modes).transpose()*P;
+
+        // // block transpose (M, nodes.size()*vectorial_dim)->(M*vectorial_dim, nodes.size()) if vectorial_dim > 1
+        // for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+        // {
+        //   Eigen::MatrixXd block = APtmp(Eigen::indexing::all, Eigen::seqN(ith_field, nodePointsDeque.size(), vectorial_dim));
+        //   J.middleRows(n_modes*ith_field, n_modes) = block;
+        // }
+
+        // J.row(J.rows()-1) = Eigen::VectorXd::Constant(J.cols(), 1);
+        // // J.array().colwise() /= q.array();
+
+        // quadratureWeights.resize(nodePointsDeque.size());
+        // quadratureWeights = J.colPivHouseholderQr().solve(q);
+
+        // b = q-J*quadratureWeights;
+        // Info << "Tol: " << b.lpNorm<2>()/q.lpNorm<2>() << endl;
+        // Info << "ECP Error: " << b.maxCoeff(&ind_max, &c1) << " " << ind_max << " vol: " << b(b.rows()-1) << endl << endl;
+        // b = b/b.lpNorm<2>();
+        // Info << "weights: " << quadratureWeights << endl;
+      }
+    }
+
+    basisMatrix = snapshotsModes.leftCols(n_modes);
     cnpy::save(basisMatrix, Folder +"/basisMatrix.npy");
-    cnpy::save(P, Folder +"/projectionMatrix.npy");
-    Info << "Projection Matrix shape: " << P.rows() << " " << P.cols() << endl;
-    Info << "Basis Matrix shape: " << basisMatrix.rows() << " " << basisMatrix.cols() << endl;
+    cnpy::save(quadratureWeights, Folder +"/quadratureWeights.npy");
+    nodePoints().write();
 
-    evaluatePinv(P, basisMatrix, normalizingWeights);
-    renormalizedBasisMatrix = normalizingWeights.asDiagonal()*basisMatrix;
-    Info << "Pseudo Inverse Matrix shape: " << pinvPU.rows() << " " << pinvPU.cols() << endl;
-
-    // convert nodePointsSet to nodePoints i.e. list
-    Eigen::VectorXi nodes(nodePointsDeque.size());
-    unsigned int i{0};
     for (auto &x : nodePointsDeque)
     {
       nodePoints().append(x);
-      nodes(i) = x;
-      i++;
     }
     cnpy::save(nodes, Folder + "/mp.npy");
-    cnpy::save(pinvPU, Folder + "/pinvPU.npy");
-    nodePoints().write();
+
+    evaluateWPU(P, basisMatrix, normalizingWeights, quadratureWeights);
+    cnpy::save(wPU, Folder + "/wPU.npy");
   }
   else
   {
     cnpy::load(pinvPU, Folder + "/pinvPU.npy");
     cnpy::load(basisMatrix, Folder +"/basisMatrix.npy");
+    cnpy::load(quadratureWeights, Folder +"/quadratureWeights.npy");
   }
+}
+
+template<typename... SnapshotsLists>
+void HyperReduction<SnapshotsLists...>::initReshapeMat(Eigen::SparseMatrix<double> &reshapeMat)
+{
+  reshapeMat.resize(n_cells, n_cells*vectorial_dim);
+  reshapeMat.reserve(Eigen::VectorXi::Constant(n_cells * vectorial_dim /*n_cols*/, 1 /*n_non_zero_elements*/));
+
+  for (unsigned int i = 0; i < n_cells; i++)
+  {
+    for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+    {
+      reshapeMat.insert(i, i+n_cells*ith_field) = 1;
+    }
+  }
+  reshapeMat.makeCompressed();
 }
 
 template <typename... SnapshotsLists>
@@ -583,6 +794,30 @@ void HyperReduction<SnapshotsLists...>::evaluatePinv(Eigen::SparseMatrix<double>
   Info << "S-Optimalty: " << s_optimality(restricted) << endl;
   pinvPU = pinv_eigen_based(restricted);
   pinvPU = pinvPU*(Projector.transpose() * fieldWeights.array().cwiseInverse().matrix()).asDiagonal();
+}
+
+template<typename... SnapshotsLists>
+void HyperReduction<SnapshotsLists...>::evaluateWPU(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd &fieldWeights, Eigen::VectorXd& quadratureWeights) {
+  assert(Projector.cols() > 0);
+  // Eigen::MatrixXd restricted = Projector.transpose() * Modes;
+
+  // restricted.array().rowwise()*= quadratureWeights.transpose().array();
+
+  // wPU = restricted.transpose()*(Projector.transpose() * fieldWeights.array().cwiseInverse().matrix()).asDiagonal();
+  Eigen::VectorXd quadratureWeightsOrderedAsProjector(quadratureWeights.rows());
+  unsigned int n_weightsPerField = quadratureWeights.rows()/vectorial_dim;
+  unsigned int reorderIndex{0};
+  
+  for (unsigned int ith_weight = 0; ith_weight < n_weightsPerField; ith_weight++)
+  {
+    for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+    {
+      quadratureWeightsOrderedAsProjector(reorderIndex) = quadratureWeights(ith_weight + ith_field * n_weightsPerField);
+      reorderIndex++;
+    }
+  }
+  
+  wPU = quadratureWeightsOrderedAsProjector.asDiagonal()*(Projector.transpose() * fieldWeights.array().cwiseInverse().matrix()).asDiagonal();
 }
 
 template<typename... SnapshotsLists>
