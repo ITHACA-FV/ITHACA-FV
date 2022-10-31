@@ -229,7 +229,10 @@ void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
     if (methodName=="GappyDEIM")
     {
         HyperReduction_function c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
-        c.offlineGappyDEIM();
+        Eigen::MatrixXd snapshotsModes;
+        Eigen::VectorXd normalizingWeights;
+        c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights); 
+        c.offlineGappyDEIM(snapshotsModes, normalizingWeights);
 
         // Generate the submeshes with the depth of the layer
         unsigned int layers{2};
@@ -263,10 +266,11 @@ void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
     {
         HyperReduction_function c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
 
-        Eigen::MatrixXd snapshotsModes;
         bool saveOFModes{true};
-        c.getModesSVD(c.snapshotsListTuple, snapshotsModes, c.normalizingWeights, saveOFModes); 
-        c.offlineECP(snapshotsModes);
+        Eigen::MatrixXd snapshotsModes;
+        Eigen::VectorXd normalizingWeights;
+        c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights, saveOFModes); 
+        c.offlineECP(snapshotsModes, normalizingWeights);
 
         // Generate the submeshes with the depth of the layer
         unsigned int layers{2};
@@ -280,7 +284,7 @@ void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
             Eigen::VectorXd f = c.evaluate_expression(sfield(), parTest.row(idTest), c.localNodePoints);
             Eigen::VectorXd ff = Foam2Eigen::field2Eigen(c.evaluate_expression(Sp[0], parTest.row(idTest)));
             
-            double trueIntegral = (c.normalizingWeights.array().cwiseInverse().matrix().asDiagonal()*ff).array().sum();
+            double trueIntegral = (normalizingWeights.cwiseInverse().asDiagonal()*ff).array().sum();
             double testIntegral = (c.wPU*f).array().sum();
             // Info << "Integral: " << trueIntegral << endl;
             // Info << "Reconstructed Integral: " << testIntegral << endl;
@@ -338,7 +342,10 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
     if (methodName=="GappyDEIM")
     {
         HyperReduction_vectorFunction c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
-        c.offlineGappyDEIM();
+        Eigen::MatrixXd snapshotsModes;
+        Eigen::VectorXd normalizingWeights;
+        c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights); 
+        c.offlineGappyDEIM(snapshotsModes, normalizingWeights);
 
         // Generate the submeshes with the depth of the layer
         unsigned int layers{2};
@@ -372,10 +379,11 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
     {
         HyperReduction_vectorFunction c(n_modes, n_nodes, initSeeds, "Gaussian_function", Sp);
         
-        Eigen::MatrixXd snapshotsModes;
         bool saveOFModes{true};
-        c.getModesSVD(c.snapshotsListTuple, snapshotsModes, c.normalizingWeights, saveOFModes); 
-        c.offlineECP(snapshotsModes);
+        Eigen::MatrixXd snapshotsModes;
+        Eigen::VectorXd normalizingWeights;
+        c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights, saveOFModes); 
+        c.offlineECP(snapshotsModes, normalizingWeights);
 
         // Generate the submeshes with the depth of the layer
         unsigned int layers{2};
@@ -390,7 +398,7 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& runTime
             auto wholeField = c.evaluate_expression(Sp[0], parTest.row(idTest));
             Eigen::VectorXd ff = Foam2Eigen::field2Eigen(wholeField);
             
-            double trueIntegral = (c.normalizingWeights.array().cwiseInverse().matrix().asDiagonal()*ff).array().sum();
+            double trueIntegral = (normalizingWeights.cwiseInverse().asDiagonal()*ff).array().sum();
             double testIntegral = (c.wPU*f).array().sum();
             // Info << "Integral: " << trueIntegral << endl;
             // Info << "Reconstructed Integral: " << testIntegral << endl;
@@ -465,7 +473,10 @@ void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& 
     if (methodName=="GappyDEIM")
     {
         HyperReduction_vectorScalarFunction c(n_modes, n_nodes, initSeeds, "Gaussian_function", Vp, Sp);
-        c.offlineGappyDEIM();
+        Eigen::MatrixXd snapshotsModes;
+        Eigen::VectorXd normalizingWeights;
+        c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights); 
+        c.offlineGappyDEIM(snapshotsModes, normalizingWeights);
 
         // Generate the submeshes with the depth of the layer
         unsigned int layers{2};
@@ -516,10 +527,11 @@ void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& 
     {
         HyperReduction_vectorScalarFunction c(n_modes, n_nodes, initSeeds, "Gaussian_function", Vp, Sp);
         
-        Eigen::MatrixXd snapshotsModes;
         bool saveOFModes{true};
-        c.getModesSVD(c.snapshotsListTuple, snapshotsModes, c.normalizingWeights, saveOFModes); 
-        c.offlineECP(snapshotsModes);
+        Eigen::MatrixXd snapshotsModes;
+        Eigen::VectorXd normalizingWeights;
+        c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights, saveOFModes); 
+        c.offlineECP(snapshotsModes, normalizingWeights);
 
         // Generate the submeshes with the depth of the layer
         unsigned int layers{2};
@@ -539,7 +551,7 @@ void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh, Foam::Time& 
             ff.head(ffV.rows()) = ffV;
             ff.tail(ffS.rows()) = ffS;
             
-            double trueIntegral = (c.normalizingWeights.array().cwiseInverse().matrix().asDiagonal()*ff).array().sum();
+            double trueIntegral = (normalizingWeights.cwiseInverse().asDiagonal()*ff).array().sum();
             double testIntegral = (c.wPU*f).array().sum();
             // Info << "Integral: " << trueIntegral << endl;
             // Info << "Reconstructed Integral: " << testIntegral << endl;

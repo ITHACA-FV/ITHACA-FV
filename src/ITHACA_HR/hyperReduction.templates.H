@@ -185,7 +185,7 @@ void HyperReduction<SnapshotsLists...>::saveModes(SnapshotsList sList, Eigen::Ma
 }
 
 template <typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
+void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights)
 {
   methodName = "GappyDEIM";
   folderMethod = "ITHACAoutput/" + problemName + "/" + methodName;
@@ -193,10 +193,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
 
   nodePoints = autoPtr<IOList<label>>(new IOList<label>(
       IOobject("nodePoints", para->runTime.time().constant(), "../" + folderMethod,
-                para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE)));
-
-  Eigen::MatrixXd snapshotsModes;
-  getModesSVD(snapshotsListTuple, snapshotsModes, normalizingWeights);  
+                para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE))); 
 
   auto greedyMetric = para->ITHACAdict->lookupOrDefault<word>("GreedyMetric", "l2");
 
@@ -413,6 +410,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
   }
   else
   {
+    Info << "Read GappyDEIM\n";
     cnpy::load(basisMatrix, folderMethod +"/basisMatrix.npy");
     cnpy::load(P, folderMethod +"/projectionMatrix.npz");
     cnpy::load(nodes, folderMethod + "/mp.npy");
@@ -427,7 +425,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
 }
 
 template <typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd snapshotsModes)
+void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights)
 {
   methodName = "ECP";
   n_nodes = n_modes + 1;
@@ -520,6 +518,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd snapshotsMode
   }
   else
   {
+    Info << "Read ECP\n";
     cnpy::load(basisMatrix, folderMethod +"/basisMatrix.npy");
     cnpy::load(quadratureWeights, folderMethod +"/quadratureWeights.npy");
     cnpy::load(nodes, folderMethod + "/mp.npy");
