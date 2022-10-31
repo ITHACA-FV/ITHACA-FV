@@ -51,8 +51,8 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
 {
   Info << "Init HyperReduction class with vectorial dim: " << vectorial_dim << endl;
   para = ITHACAparameters::getInstance();
-  Folder = "ITHACAoutput/" + problemName;
-  mkDir(Folder);
+  folderProblem = "ITHACAoutput/" + problemName;
+  mkDir(folderProblem);
 
   // TODO check snapshotsLists is not empty
   // TODO check that the first snapshotsList is not empty (includes above)
@@ -82,7 +82,7 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
 
 // Using the Eigen library, using the SVD decomposition method to solve the
 // matrix pseudo-inverse, the default error er is 0
-Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0) {
+Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
   // perform svd decomposition
   Eigen::JacobiSVD<Eigen::MatrixXd> svd_holder(origin, Eigen::ComputeThinU | Eigen::ComputeThinV);
   // Build SVD decomposition results
@@ -188,11 +188,11 @@ template <typename... SnapshotsLists>
 void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
 {
   methodName = "GappyDEIM";
-  Folder = "ITHACAoutput/" + problemName + "/" + methodName;
-  mkDir(Folder);
+  folderMethod = "ITHACAoutput/" + problemName + "/" + methodName;
+  mkDir(folderMethod);
 
   nodePoints = autoPtr<IOList<label>>(new IOList<label>(
-      IOobject("nodePoints", para->runTime.time().constant(), "../" + Folder,
+      IOobject("nodePoints", para->runTime.time().constant(), "../" + folderMethod,
                 para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE)));
 
   Eigen::MatrixXd snapshotsModes;
@@ -400,10 +400,11 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
     evaluatePinv(P, basisMatrix, normalizingWeights);
     renormalizedBasisMatrix = normalizingWeights.asDiagonal()*basisMatrix;
 
-    cnpy::save(basisMatrix, Folder +"/basisMatrix.npy");
-    cnpy::save(P, Folder +"/projectionMatrix.npy");
-    cnpy::save(nodes, Folder + "/mp.npy");
-    cnpy::save(pinvPU, Folder + "/pinvPU.npy");
+    P.makeCompressed();
+    cnpy::save(basisMatrix, folderMethod +"/basisMatrix.npy");
+    cnpy::save(P, folderMethod +"/projectionMatrix.npz");
+    cnpy::save(nodes, folderMethod + "/mp.npy");
+    cnpy::save(pinvPU, folderMethod + "/pinvPU.npy");
     nodePoints().write();
 
     Info << "Projection Matrix shape: " << P.rows() << " " << P.cols() << endl;
@@ -412,10 +413,16 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM()
   }
   else
   {
-    cnpy::load(basisMatrix, Folder +"/basisMatrix.npy");
-    cnpy::load(P, Folder +"/projectionMatrix.npy");
-    cnpy::load(nodes, Folder + "/mp.npy");
-    cnpy::load(pinvPU, Folder + "/pinvPU.npy");
+    cnpy::load(basisMatrix, folderMethod +"/basisMatrix.npy");
+    cnpy::load(P, folderMethod +"/projectionMatrix.npz");
+    cnpy::load(nodes, folderMethod + "/mp.npy");
+    cnpy::load(pinvPU, folderMethod + "/pinvPU.npy");
+
+    renormalizedBasisMatrix = normalizingWeights.asDiagonal()*basisMatrix;
+    
+    Info << "Projection Matrix shape: " << P.rows() << " " << P.cols() << endl;
+    Info << "Basis Matrix shape: " << basisMatrix.rows() << " " << basisMatrix.cols() << endl;
+    Info << "Pseudo Inverse Matrix shape: " << pinvPU.rows() << " " << pinvPU.cols() << endl;
   }
 }
 
@@ -430,11 +437,11 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd snapshotsMode
             << ", nodePoints=" << n_nodes << " #######"
             << endl;
 
-  Folder = "ITHACAoutput/" + problemName + "/" + methodName;
-  mkDir(Folder);
+  folderMethod = "ITHACAoutput/" + problemName + "/" + methodName;
+  mkDir(folderMethod);
 
   nodePoints = autoPtr<IOList<label>>(new IOList<label>(
-      IOobject("nodePoints", para->runTime.time().constant(), "../" + Folder,
+      IOobject("nodePoints", para->runTime.time().constant(), "../" + folderMethod,
                 para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE))); 
 
   if (!nodePoints().headerOk())
@@ -505,18 +512,18 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd snapshotsMode
     basisMatrix = snapshotsModes.leftCols(n_modes);
     evaluateWPU(P, basisMatrix, normalizingWeights, quadratureWeights);
 
-    cnpy::save(basisMatrix, Folder +"/basisMatrix.npy");
-    cnpy::save(quadratureWeights, Folder +"/quadratureWeights.npy");
-    cnpy::save(nodes, Folder + "/mp.npy");
-    cnpy::save(wPU, Folder + "/wPU.npy");
+    cnpy::save(basisMatrix, folderMethod +"/basisMatrix.npy");
+    cnpy::save(quadratureWeights, folderMethod +"/quadratureWeights.npy");
+    cnpy::save(nodes, folderMethod + "/mp.npy");
+    cnpy::save(wPU, folderMethod + "/wPU.npy");
     nodePoints().write();
   }
   else
   {
-    cnpy::load(basisMatrix, Folder +"/basisMatrix.npy");
-    cnpy::load(quadratureWeights, Folder +"/quadratureWeights.npy");
-    cnpy::load(nodes, Folder + "/mp.npy");
-    cnpy::load(wPU, Folder + "/wPU.npy");
+    cnpy::load(basisMatrix, folderMethod +"/basisMatrix.npy");
+    cnpy::load(quadratureWeights, folderMethod +"/quadratureWeights.npy");
+    cnpy::load(nodes, folderMethod + "/mp.npy");
+    cnpy::load(wPU, folderMethod + "/wPU.npy");
   }
 }
 
@@ -668,11 +675,11 @@ void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, fvMesh &me
   ITHACAparameters *para(ITHACAparameters::getInstance());
 
   totalNodePoints = autoPtr<IOList<labelList>>(new IOList<labelList>(IOobject(
-      "totalNodePoints", para->runTime.time().constant(),  "../" + Folder,
+      "totalNodePoints", para->runTime.time().constant(),  "../" + folderMethod,
       para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE)));
 
   uniqueNodePoints = autoPtr<IOList<label>>(new IOList<label>(IOobject(
-      "uniqueNodePoints", para->runTime.time().constant(),  "../" + Folder,
+      "uniqueNodePoints", para->runTime.time().constant(),  "../" + folderMethod,
       para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE)));
 
   volScalarField Indici
@@ -721,7 +728,7 @@ void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, fvMesh &me
   std::cout.clear();
 
   localNodePoints = global2local(nodePoints(), submesh());
-  ITHACAstream::exportSolution(Indici, "1", Folder);
+  ITHACAstream::exportSolution(Indici, "1", folderMethod);
 
   n_cellsSubfields = submesh().cellMap().size();
   Info << "####### End extract submesh #######\n";
