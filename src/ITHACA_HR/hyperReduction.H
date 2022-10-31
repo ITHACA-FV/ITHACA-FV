@@ -149,9 +149,6 @@ public:
     /// The P matrix of the HyperReduction method. The nodes are ordered in the order of insertion during the greedy procedure. The components related to the same node follow immediately.
     Eigen::SparseMatrix<double> P;
 
-    /// Normalizing weights of the offline snapshots
-    Eigen::VectorXd normalizingWeights;
-
     /// Quadrature weights. Ordered in the same order of matrix P.
     Eigen::VectorXd quadratureWeights;
 
@@ -162,14 +159,14 @@ public:
     autoPtr<volVectorField> submesh_field;
     
     //----------------------------------------------------------------------
-    /// @brief      TODO
+    /// @brief      Methods implemented: 'GappyDEIM'  from "DEIM, Chaturantabut, Saifon, and Danny C. Sorensen. "Nonlinear model reduction via discrete empirical interpolation." SIAM Journal on Scientific Computing 32.5 (2010): 2737-2764" and "GNAT, Carlberg, Kevin, et al. "The GNAT method for nonlinear model reduction: effective implementation and application to computational fluid dynamics and turbulent flows." Journal of Computational Physics 242 (2013): 623-647.". Quasi-optimal point selection algorithm 'SOPT' and optimal point selection 'SOPTE' from "Lauzon, Jessica T., Siu Wun Cheung, Yeonjong Shin, Youngsoo Choi, Dylan Matthew Copeland, and Kevin Huynh. "S-OPT: A Points Selection Algorithm for Hyper-Reduction in Reduced Order Models." arXiv preprint arXiv:2203.16494 (2022).""
     ///
-    void offlineGappyDEIM();
+    void offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights);
 
     //----------------------------------------------------------------------
-    /// @brief      TODO
+    /// @brief      Methods implemented: 'ECP' from "ECP, Hernandez, Joaquin Alberto, Manuel Alejandro Caicedo, and Alex Ferrer. "Dimensional hyper-reduction of nonlinear finite element models via empirical cubature." Computer methods in applied mechanics and engineering 313 (2017): 687-722.". TODO implement non-negative LS.
     ///
-    void offlineECP(Eigen::MatrixXd snapshotsModes);
+    void offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights);
     
     //----------------------------------------------------------------------
     /// @brief      TODO
