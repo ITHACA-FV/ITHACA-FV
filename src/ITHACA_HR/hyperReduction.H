@@ -121,8 +121,11 @@ public:
     /// List of the unique indices of the nodes that define the submesh
     autoPtr<IOList<label>> uniqueNodePoints;
 
-    /// Folder for nonlinear functions
-    word Folder;
+    /// Folder for the HR problem
+    word folderProblem;
+
+    /// Folder for the selected HR method
+    word folderMethod;
 
     /// Indices of the local node points in the subMesh
     List<label> localNodePoints;
