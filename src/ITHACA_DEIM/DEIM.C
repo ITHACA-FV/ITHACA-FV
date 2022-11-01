@@ -36,6 +36,7 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName,
     :
     SnapShotsMatrix(s),
     MaxModes(MaxModes),
+    runSubMesh(false),
     FunctionName(FunctionName)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -460,6 +461,7 @@ S DEIM<T>::generateSubmesh(label layers, const fvMesh& mesh, S field,
 
     totalMagicPoints().write();
     uniqueMagicPoints().write();
+    runSubMesh = true;
     return f;
 }
 
