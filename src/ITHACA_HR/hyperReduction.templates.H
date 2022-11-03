@@ -66,6 +66,9 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
   // Get fields' dimensions
   std::apply([this](auto& ...snapList){(..., stackDimensions(snapList));}, snapshotsListTuple);
 
+  sumFieldsDim = 0;
+  std::apply([this](auto& ...snapList){(..., sumDimensions(this->sumFieldsDim, snapList));}, snapshotsListTuple);
+
   Info << "Fields names: ";
   for (unsigned int ith_field = 0; ith_field < fieldNames.size(); ith_field++)
   {
@@ -114,25 +117,46 @@ void HyperReduction<SnapshotsLists...>::getModesSVD(
   word folderSVD = "ITHACAoutput/" + problemName + "/ModesSVD/";
   if (!ITHACAutilities::check_folder(folderSVD))
   {
+    mkDir(folderSVD);
     // Initialize stacked snapshotsMatrix and normalizing weights
     Eigen::MatrixXd snapMatrix;
-    std::apply([this, &snapMatrix, &fieldWeights](auto& ...snapList){(..., stackSnapshots(snapList, snapMatrix, fieldWeights));}, snapshotsListTuple);
+    getSnapMatrix(snapMatrix, fieldWeights);
 
-    Info << "####### Performing SVD for " << problemName << " #######" << endl;
-
-    Eigen::JacobiSVD<Eigen::MatrixXd> svd(fieldWeights.array().cwiseInverse().matrix().asDiagonal()*snapMatrix,
-                                          Eigen::ComputeThinU | Eigen::ComputeThinV);
-
-    Info << "####### End of SVD for " << problemName << " #######" <<
-          endl;
+    word dimensionReductionMethod = para->ITHACAdict->lookupOrDefault<word>("DimensionReductionMethod", "SVD");
 
     Eigen::MatrixXd eigenVectoreig;
-    eigenValueseig = svd.singularValues().real();
-    eigenVectoreig = svd.matrixU().real();
+
+    if (dimensionReductionMethod == "RSVD")
+    {
+      Info << "####### Performing RSVD for " << problemName << " #######" << endl;
+
+      unsigned int r_modeSVD = para->ITHACAdict->lookupOrDefault<unsigned int>("RSVDdim", snapMatrix.cols());
+      RedSVD::RedSVD svd(fieldWeights.array().cwiseInverse().matrix().asDiagonal()*snapMatrix, r_modeSVD);
+
+      Info << "####### End of RSVD for " << problemName << " #######" <<
+            endl;
+
+      eigenValueseig = svd.singularValues().real();
+      eigenVectoreig = svd.matrixU().real();
+    }
+    else
+    {
+      Info << "####### Performing SVD for " << problemName << " #######" << endl;
+
+      Eigen::JacobiSVD<Eigen::MatrixXd> svd(fieldWeights.array().cwiseInverse().matrix().asDiagonal()*snapMatrix, Eigen::ComputeThinU | Eigen::ComputeThinV);
+
+      Info << "####### End of SVD for " << problemName << " #######" <<
+            endl;
+
+      eigenValueseig = svd.singularValues().real();
+      eigenVectoreig = svd.matrixU().real();
+    }
 
     modesSVD = eigenVectoreig;
 
     // TODO correct boundary conditions
+    
+    cnpy::save(eigenValueseig, "ITHACAoutput/" + problemName + "/ModesSVD/eigenvalues.npy");
 
     eigenValueseig = eigenValueseig / eigenValueseig.sum();
     Eigen::VectorXd cumEigenValues(eigenValueseig);
@@ -142,7 +166,6 @@ void HyperReduction<SnapshotsLists...>::getModesSVD(
         cumEigenValues(j) += cumEigenValues(j - 1);
     }
 
-    mkDir(folderSVD);
     Eigen::saveMarketVector(eigenValueseig,
                             "ITHACAoutput/" + problemName + "/ModesSVD/Eigenvalues_" + problemName, para->precision,
                             para->outytpe);
@@ -172,6 +195,12 @@ void HyperReduction<SnapshotsLists...>::getModesSVD(
 }
 
 template <typename... SnapshotsLists>
+void HyperReduction<SnapshotsLists...>::getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights)
+{
+  std::apply([this, &fieldWeights, &snapMatrix](auto& ...snapList){(..., stackSnapshots(snapList, snapMatrix, fieldWeights));}, snapshotsListTuple);
+}
+
+template <typename... SnapshotsLists>
 template <typename SnapshotsList>
 void HyperReduction<SnapshotsLists...>::saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, unsigned int &rowIndex, unsigned int &modeIndex, word folder)
 {
@@ -185,19 +214,23 @@ void HyperReduction<SnapshotsLists...>::saveModes(SnapshotsList sList, Eigen::Ma
 }
 
 template <typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights)
+void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights)
 {
   methodName = "GappyDEIM";
   folderMethod = "ITHACAoutput/" + problemName + "/" + methodName;
   mkDir(folderMethod);
+
+  normalizingWeights = weights;
 
   nodePoints = autoPtr<IOList<label>>(new IOList<label>(
       IOobject("nodePoints", para->runTime.time().constant(), "../" + folderMethod,
                 para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE))); 
 
   auto greedyMetric = para->ITHACAdict->lookupOrDefault<word>("GreedyMetric", "l2");
+  
+  bool offlineStage = !nodePoints().headerOk();
 
-  if (!nodePoints().headerOk())
+  if (offlineStage)
   {
     assert(n_modes > 0);
     assert(n_nodes >= n_modes);
@@ -400,6 +433,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
     P.makeCompressed();
     cnpy::save(basisMatrix, folderMethod +"/basisMatrix.npy");
     cnpy::save(P, folderMethod +"/projectionMatrix.npz");
+    cnpy::save(normalizingWeights, folderMethod + "/normalizingWeights.npy");
     cnpy::save(nodes, folderMethod + "/mp.npy");
     cnpy::save(pinvPU, folderMethod + "/pinvPU.npy");
     nodePoints().write();
@@ -412,6 +446,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
   {
     Info << "Read GappyDEIM\n";
     cnpy::load(basisMatrix, folderMethod +"/basisMatrix.npy");
+    cnpy::load(normalizingWeights, folderMethod + "/normalizingWeights.npy");
     cnpy::load(P, folderMethod +"/projectionMatrix.npz");
     cnpy::load(nodes, folderMethod + "/mp.npy");
     cnpy::load(pinvPU, folderMethod + "/pinvPU.npy");
@@ -425,10 +460,12 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
 }
 
 template <typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights)
+void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights)
 {
   methodName = "ECP";
   n_nodes = n_modes + 1;
+
+  normalizingWeights = weights;
 
   Info << "####### Begin ECP #######" << endl;
   Info << "####### Modes=" <<  n_modes
@@ -441,8 +478,10 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd& snapshotsMod
   nodePoints = autoPtr<IOList<label>>(new IOList<label>(
       IOobject("nodePoints", para->runTime.time().constant(), "../" + folderMethod,
                 para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE))); 
+  
+  bool offlineStage = !nodePoints().headerOk();
 
-  if (!nodePoints().headerOk())
+  if (offlineStage)
   {
     assert(n_modes > 0);
     assert(n_nodes >= n_modes);
@@ -512,6 +551,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd& snapshotsMod
 
     cnpy::save(basisMatrix, folderMethod +"/basisMatrix.npy");
     cnpy::save(quadratureWeights, folderMethod +"/quadratureWeights.npy");
+    cnpy::save(normalizingWeights, folderMethod +"/normalizingWeights.npy");
     cnpy::save(nodes, folderMethod + "/mp.npy");
     cnpy::save(wPU, folderMethod + "/wPU.npy");
     nodePoints().write();
@@ -521,6 +561,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd& snapshotsMod
     Info << "Read ECP\n";
     cnpy::load(basisMatrix, folderMethod +"/basisMatrix.npy");
     cnpy::load(quadratureWeights, folderMethod +"/quadratureWeights.npy");
+    cnpy::load(normalizingWeights, folderMethod +"/normalizingWeights.npy");
     cnpy::load(nodes, folderMethod + "/mp.npy");
     cnpy::load(wPU, folderMethod + "/wPU.npy");
   }
@@ -618,8 +659,6 @@ template <typename... SnapshotsLists>
 template <typename SnapshotsList>
 void HyperReduction<SnapshotsLists...>::stackSnapshots(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, Eigen::VectorXd& fieldWeights)
 {
-  Info << "####### Compute hyper-reduction basis #######\n";
-
   unsigned int field_dim = get_field_dim<typename SnapshotsList::value_type>();
 
   Eigen::MatrixXd tmpSnapshots = Foam2Eigen::PtrList2Eigen(sList);
@@ -635,8 +674,6 @@ void HyperReduction<SnapshotsLists...>::stackSnapshots(SnapshotsList sList, Eige
 
   snapshotsMatrix.conservativeResize(snapshotsMatrix.rows() + n_cells * field_dim, n_snapshots);
   snapshotsMatrix.bottomRows(n_cells * field_dim) = tmpSnapshots;
-
-  Info << "####### End of computing hyper-reduction basis #######\n";
 }
 
 template<typename... SnapshotsLists>
@@ -696,8 +733,9 @@ void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, fvMesh &me
                         dimensionSet(0, 0, 0, 0, 0, 0, 0), 0.0));
 
   submesh = autoPtr<fvMeshSubset>(new fvMeshSubset(mesh));
+  bool offlineStage = !totalNodePoints().headerOk();
 
-  if (!totalNodePoints().headerOk()) {
+  if (offlineStage) {
     List<label> indices;
     for (label i = 0; i < nodePoints().size(); i++) {
       indices = ITHACAutilities::getIndices(mesh, nodePoints()[i], layers);
@@ -717,6 +755,7 @@ void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, fvMesh &me
 
     totalNodePoints().write();
     uniqueNodePoints().write();
+    ITHACAstream::exportSolution(Indici, "1", folderMethod);
   }
 
   submesh->setCellSubset(uniqueNodePoints());
@@ -727,10 +766,63 @@ void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, fvMesh &me
   std::cout.clear();
 
   localNodePoints = global2local(nodePoints(), submesh());
-  ITHACAstream::exportSolution(Indici, "1", folderMethod);
 
   n_cellsSubfields = submesh().cellMap().size();
-  Info << "####### End extract submesh #######\n";
+  Info << "####### End extract submesh size = " << n_cellsSubfields <<" #######\n";
+
+  createMasks(offlineStage);
+  Info << "####### End create masks #######\n";
+}
+
+template<typename... SnapshotsLists>
+void HyperReduction<SnapshotsLists...>::createMasks(bool offlineStage)
+{ 
+  if (offlineStage)
+  {
+    field2submesh.resize(submesh().cellMap().size() * vectorial_dim, n_cells*vectorial_dim);
+    field2submesh.reserve(Eigen::VectorXi::Constant(n_cells*vectorial_dim, 1));
+
+    for (unsigned int ith_subCell{0} ; ith_subCell <submesh().cellMap().size(); ith_subCell++)
+    {
+        for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+        {
+          field2submesh.insert(ith_subCell+ith_field*submesh().cellMap().size(), submesh().cellMap()[ith_subCell]+n_cells*ith_field) = 1;
+        }
+    }
+    field2submesh.makeCompressed();
+
+    submesh2nodes.resize(nodePoints().size() * vectorial_dim, submesh().cellMap().size()*vectorial_dim);
+    submesh2nodes.reserve(Eigen::VectorXi::Constant(submesh().cellMap().size()*vectorial_dim, 1));
+    submesh2nodesMask.resize(nodePoints().size() * vectorial_dim);
+
+    int index_col = 0;
+    for (unsigned int ith_node{0} ; ith_node <nodePoints().size(); ith_node++) {
+      for (unsigned int ith_subCell{0} ; ith_subCell <submesh().cellMap().size(); ith_subCell++) {
+        if (nodePoints()[ith_node] == submesh().cellMap()[ith_subCell]) {
+          for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+          {
+            submesh2nodes.insert(ith_node + nodePoints().size()*ith_field, index_col + ith_field) = 1;
+            submesh2nodesMask(ith_node + nodePoints().size()*ith_field) = index_col + ith_field;
+          }
+          break;
+        } else {
+          index_col++;
+        }
+      }
+      index_col = 0;
+    }
+    submesh2nodes.makeCompressed();
+
+    cnpy::save(field2submesh, folderMethod +"/field2submesh.npz");
+    cnpy::save(submesh2nodes, folderMethod +"/submesh2nodes.npz");
+    cnpy::save(submesh2nodesMask, folderMethod +"/submesh2nodesMask.npy");
+  }
+  else
+  {
+    cnpy::load(field2submesh, folderMethod +"/field2submesh.npz");
+    cnpy::load(submesh2nodes, folderMethod +"/submesh2nodes.npz");
+    cnpy::load(submesh2nodesMask, folderMethod +"/submesh2nodesMask.npy");
+  }
 }
 
 template<typename... SnapshotsLists>

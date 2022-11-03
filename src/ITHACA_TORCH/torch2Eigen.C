@@ -81,12 +81,12 @@ Eigen::Matrix<type, Eigen::Dynamic, Eigen::Dynamic> torchTensor2eigenMatrix(
 
     typedef Eigen::Matrix<type, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
     MatrixXf_rm;
-    float* data_p = torchTensor.data_ptr<float>();
+    type* data_p = torchTensor.data_ptr<type>();
     std::vector<type> raw(nElem);
 
     for (int i = 0; i < nElem; i++)
     {
-        float d(*(data_p + i));
+        type d(*(data_p + i));
         type a = static_cast <type>(d);
         raw[i] = a;
     }
