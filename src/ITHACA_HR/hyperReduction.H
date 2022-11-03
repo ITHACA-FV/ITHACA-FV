@@ -38,9 +38,11 @@ SourceFiles
 #include "ITHACAutilities.H"
 #include "fvMeshSubset.H"
 #include <set>
+#include "redsvd"
 
 Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
 
+// TODO uniform style for separating offline and onlie stages
 template <typename... SnapshotsLists>
 class HyperReduction
 {
@@ -53,6 +55,7 @@ public:
 
     // TODO get vectorial dim from class template parameters
     unsigned int vectorial_dim;
+    unsigned int sumFieldsDim;
 
     template <std::size_t N>
     using NthFieldListType = typename std::tuple_element<N, SnapshotsListTuple>::type;
@@ -78,6 +81,15 @@ public:
     
     // ITHACA parameters dict
     ITHACAparameters* para;
+
+    //TODO
+    label n_boundary_patches;
+
+    //TODO
+    List<label> n_boundary_cells_list;
+
+    //TODO
+    label n_boundary_cells;
 
     /// The maximum number of modes to be considered
     label n_modes;
@@ -134,6 +146,9 @@ public:
     /// Orthonormal basis of HR
     Eigen::MatrixXd basisMatrix;
 
+    // Normalizing weights of SVD decomposition
+    Eigen::VectorXd normalizingWeights;
+
     /// Renormalized basis of HR
     Eigen::MatrixXd renormalizedBasisMatrix;
 
@@ -148,6 +163,15 @@ public:
 
     /// The P matrix of the HyperReduction method. The nodes are ordered in the order of insertion during the greedy procedure. The components related to the same node follow immediately.
     Eigen::SparseMatrix<double> P;
+
+    // Mask field to submesh
+    Eigen::SparseMatrix<double> field2submesh;
+
+    // Mask submesh to nodes
+    Eigen::SparseMatrix<double> submesh2nodes;
+
+    // Indices submesh to nodes
+    Eigen::VectorXi submesh2nodesMask;
 
     /// Quadrature weights. Ordered in the same order of matrix P.
     Eigen::VectorXd quadratureWeights;
@@ -185,6 +209,14 @@ public:
     /// @param[in]  sList  The list of snapshots
     ///
     void getModesSVD(SnapshotsListTuple &SnapshotsListTuple, Eigen::MatrixXd &modesSVD, Eigen::VectorXd &fieldWeights, bool saveModesFlag = false);
+
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    void getModesSVD(SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights, Eigen::MatrixXd& modesSVDBoundary, Eigen::VectorXd& fieldWeightsBoundary, bool saveModesFlag);
     
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -202,6 +234,15 @@ public:
     ///
     template <typename SnapshotsList>
     void stackSnapshots(SnapshotsList sList, Eigen::MatrixXd &snapshotsMatrix, Eigen::VectorXd &fieldWeights);
+
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename SnapshotsList>
+    void stackSnapshotsBoundary(SnapshotsList sList, List<Eigen::MatrixXd>& snapshotsMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
     
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -211,6 +252,15 @@ public:
     ///
     template <typename SnapshotsList>
     void saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, unsigned int &rowIndex, unsigned int &modeIndex, word folder);
+
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename SnapshotsList>
+    void saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, Eigen::MatrixXd& snapshotsMatrixBoundary, unsigned int &rowIndex,  unsigned int& rowIndexBoundary, unsigned int &modeIndex, word folder);
 
     //----------------------------------------------------------------------
     /// @brief      TODO
@@ -232,6 +282,16 @@ public:
     template <typename SnapshotsList>
     inline void stackDimensions(SnapshotsList sList){
         fieldDims.append(get_field_dim<typename SnapshotsList::value_type>());}
+
+    //----------------------------------------------------------------------
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    template <typename SnapshotsList>
+    inline void sumDimensions(double sum, SnapshotsList sList){
+        sum+=get_field_dim<typename SnapshotsList::value_type>();}
 
     //----------------------------------------------------------------------
     /// @brief      Compute the pseudo-inverse of the matrix M restricted with the projector P
@@ -273,9 +333,10 @@ public:
     /// @param[in]  sList  The list of snapshots
     ///
     template <typename FieldType>
-    inline autoPtr<FieldType> interpolateField(FieldType &field){
-    return autoPtr<FieldType>(new FieldType(submesh->interpolate(field)));
-}
+    inline autoPtr<FieldType> interpolateField(const FieldType &field)
+    {
+        return autoPtr<FieldType>(new FieldType(submesh->interpolate(field)));
+    }
 
     /// @brief      TODO
     ///
@@ -333,9 +394,9 @@ public:
         
         ([&](auto& oFieldsArg)
             {
-                double ith_fieldSize = fieldDims[ith_field]*n_cells;
+                double ith_fieldSize = fieldDims[ith_field]*oFieldsArg.size();
                 Eigen::VectorXd vec = eFields.segment(cumulativeSize, ith_fieldSize);
-                Foam2Eigen::Eigen2field(oFieldsArg, vec);
+                oFieldsArg = Foam2Eigen::Eigen2field(oFieldsArg, vec);
                 cumulativeSize+=ith_fieldSize;
                 ith_field++;
             }(oFields), ...);
@@ -348,6 +409,27 @@ public:
     /// @param[in]  sList  The list of snapshots
     ///
     void initReshapeMat(Eigen::SparseMatrix<double> &reshapeMat);
+
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    void createMasks(bool offlineStage = true);
+
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    void getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights);
+
+    /// @brief      TODO
+    ///
+    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+    /// @param[in]  sList  The list of snapshots
+    ///
+    void getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights, List<Eigen::MatrixXd>& snapMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
 };
 
 #endif
