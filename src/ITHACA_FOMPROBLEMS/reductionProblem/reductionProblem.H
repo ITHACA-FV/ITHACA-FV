@@ -361,7 +361,7 @@ modeling techniques for parametrized problems. ITHACA-FV is developed and mainta
 - \b tutorials: test-cases that demonstrate a range of ITHACA-FV functionalities.
 - \b docs: documentation.
  *
- * \section step1 How to cite IHACA-FV.
+ * \section step1 How to cite ITHACA-FV.
  *
 Most of the theoretical aspects behind ITHACA-FV are deeply explained in [<b> Stabile2017CAIM </b>](https://doi.org/10.1515/caim-2017-0011) and [<b> Stabile2017CAF </b>](https://doi.org/10.1016/j.compfluid.2018.01.035).
 For this reason, if you use this software, please consider citing the mentioned works, reported in the following bibtex entries:
