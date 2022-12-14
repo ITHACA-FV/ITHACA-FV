@@ -56,6 +56,7 @@ git clone https://github.com/mathLab/ITHACA-FV
 and you can compile **ITHACA-FV** by navigating inside the src folder, sourcing the bashrc file of ITHACA-FV and compiling using wmake:
 ```
 cd ITHACA-FV
+git submodule update --init
 source etc/bashrc
 ./Allwmake
 ```
