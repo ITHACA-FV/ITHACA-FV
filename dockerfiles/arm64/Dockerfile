@@ -26,7 +26,7 @@ ENV HOME /home/$USER
 ENV USER $USER
 
 RUN /bin/bash -c "source OpenFOAM-v2106/etc/bashrc && \
-    cd ITHACA-FV && source etc/bashrc && \
+    cd ITHACA-FV && git submodule update --init && source etc/bashrc && \
     ./Allwmake -au -j 4";
 
 

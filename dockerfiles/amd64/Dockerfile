@@ -37,7 +37,7 @@ RUN chown -R $USER:$USER /home/$USER
 USER $USER
 
 RUN /bin/bash -c "source openfoam/openfoam2106/etc/bashrc && \
-    cd ITHACA-FV && source etc/bashrc && \
+    cd ITHACA-FV && git submodule update --init && source etc/bashrc && \
     ./Allwmake -au -j 4";
 
 USER $USER
