@@ -51,7 +51,7 @@ cd ~
 ```
 Now you can clone the **ITHACA-FV** repository inside the selected folder
 ```
-git clone https://github.com/mathLab/ITHACA-FV
+git clone --depth 1 https://github.com/mathLab/ITHACA-FV
 ```
 and you can compile **ITHACA-FV** by navigating inside the src folder, sourcing the bashrc file of ITHACA-FV and compiling using wmake:
 ```
