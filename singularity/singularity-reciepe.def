@@ -4,11 +4,6 @@ From: opencfd/openfoam2106-dev
 Stage: build
 
 
-%setup
-	mkdir singularity-build
-	export SINGULARITY_TMPDIR = ./singularity-build
-	export SINGULARITY_CACHEDIR = ./singularity-build
-
 %post
     	apt-get update &&\
     	apt-get install -y \
