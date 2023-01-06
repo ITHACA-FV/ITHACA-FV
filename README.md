@@ -103,30 +103,64 @@ docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manife
 
 ### 4. Singularity
 
-From docker image, if the docker image is unavailbe, then `run` will download it and run it 
+
+Create a local directory (which you own), followed by using the variables, `SINGULARITY_TMPDIR` and `SINGULARITY_CACHEDIR` for temporary and cache directory during built proccess. This step is highly recommended if you do NOT have `root` access, as singularity uses a temporary directory to build the squashfs filesystem, and this temp space needs to be large enough to hold the entire resulting Singularity image.
 
 ```
-singularity run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manifest-latest
+export SINGULARITY_TMPDIR=$HOME/mycontainter
 ```
-
-To pull docker images and store it locally as `sif` or `sing` images
-
-```
-singularity 
-```
-
-
-To build singlarity images from defination files, `singularity reciepe`
+and 
 
 ```
-singularity build of_singularity.sif singularity/SingulairtyRecipe
+export SINGULARITY_CACHEDIR=$HOME/mycontainter
 ```
 
-Additionally, `--fakeroot` can be passed if you do not have root access for the build
+Buidling singularity image file `.sif` from the docker image, which is build and stored in `$HOME/mycontainter`, The below image used is based **OpenFOAM-v2106**, and where you can find a compiled version of the master branch of **ITHACA-FV**.
 
 ```
-singularity build --fakeroot of_singularity.sif singularity/SingulairtyRecipe
+singularity build ithacafv.sif docker://ithacafv/ithacafv:manifest-latest
 ```
+
+To view / list all the images, 
+
+```
+singularity cache list
+```
+
+To run the singulairty image interactively, use `run` from your working directory. This mounts your working directory to the container.
+
+```
+singularity run $HOME/mycontainter/ithacafv.sif
+```
+
+To build singularity images from scratch use defination files, `singularity-reciepe.def` provided in singularity directory. This require `sudo` prilvildges.
+
+```
+sudo singularity build ithacafv.sif singularity/singularity-reciepe.def
+```
+
+Additionally, `--fakeroot` can be passed if you do NOT have root access for the build.
+
+```
+singularity build --fakeroot ithacafv.sif singularity/singularity-reciepe.def
+```
+
+Running singualrity in batch mode, you can add the following in your the batch script, 
+
+```
+singularity exec <image>.sif <command>
+```
+
+For example, running the first tutorial, add the following in the batch script,
+
+```
+singularity exec ithacafv.sif ./tutorials/CFD/01POD/./Allrun
+``` 
+
+
+Modifying images : convert `.sif` image to a sandbox `.sng` image
+
+
 
 
 ### 5. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)

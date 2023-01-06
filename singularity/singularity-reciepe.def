@@ -1,0 +1,33 @@
+
+Bootstrap: docker
+From: opencfd/openfoam2106-dev
+Stage: build
+
+
+%setup
+	mkdir singularity-build
+	export SINGULARITY_TMPDIR = ./singularity-build
+	export SINGULARITY_CACHEDIR = ./singularity-build
+
+%post
+    	apt-get update &&\
+    	apt-get install -y \
+        git \
+        vim \
+        ssh \
+        sudo\
+        wget\
+
+%runscript
+	source etc/bashrc
+	./Allwmake -tau -j 4
+
+
+%labels
+	Author Pavan Pranjivan Mehta
+	Version v0.1
+
+%help
+    	This is a demo container used to illustrate a def file that uses all supported sections.
+
+
