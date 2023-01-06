@@ -1,5 +1,4 @@
-ingularity pull ithacafv/ithacafv:manifest-latest
-```p align="center">
+<p align="center">
   <a href="http://mathlab.github.io/ITHACA-FV/" target="_blank" >
     <img alt="ITHACA-FV" src="./docs/logo/ithaca-fv-small.png" width="200" />
   </a>
