@@ -101,7 +101,36 @@ Once the image is downloaded, you can start the container and mount the $HOME di
 docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manifest-latest
 ```
 
-### 4. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
+### 4. Singularity
+
+From docker image, if the docker image is unavailbe, then `run` will download it and run it
+
+```
+singularity run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manifest-latest
+```
+
+To pull docker images and store it locally as `sif` or `sing` images
+
+```
+singularity
+```
+
+
+To build singlarity images from defination files, `singularity reciepe`
+
+```
+singularity build of_singularity.sif singularity/SingulairtyRecipe
+```
+
+Additionally, `--fakeroot` can be passed if you do not have root access for the build
+
+```
+singularity build --fakeroot of_singularity.sif singularity/SingulairtyRecipe
+```
+
+
+
+### 5. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
 Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
 *   [**CFD/Tutorial 1**](https://github.com/mathLab/ITHACA-FV/tree/master/tutorials/CFD/01POD): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case.
 *   [**CFD/Tutorial 2**](https://github.com/mathLab/ITHACA-FV/tree/master/tutorials/CFD/02thermalBlock): In this tutorial the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem is implemented. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**.
@@ -115,12 +144,12 @@ Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
 *   [**CFD/Tutorial 9**](https://mathlab.github.io/ITHACA-FV/09DEIM_ROM_8C-example.html): In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for model reduction purposes. The non-linearity is in the forcing term of a heat transfer problem. The OpenFOAM full order problem is based on **laplacianFoam**.
 
 
-### 5. Authors and contributors
+### 6. Authors and contributors
 **ITHACA-FV** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by [Dr. Giovanni Stabile](mailto:gstabile@sissa.it) under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it)
 
 Contact us by email for further information or questions about **ITHACA-FV**, or open an ''Issue'' on this website. **ITHACA-FV** is at an early development stage, so contributions improving either the code or the documentation are welcome, both as patches or merge requests on this website. If you are willing to contribute please follow the [developer instructions](https://github.com/mathLab/ITHACA-FV/tree/master/src).
 
-### 6. How to cite
+### 7. How to cite
 Most of the theoretical aspects behind **ITHACA-FV** are deeply explained in [<b> Stabile2017CAIM </b>](https://arxiv.org/pdf/1701.03424.pdf) and [<b> Stabile2017CAF </b>](https://arxiv.org/pdf/1710.11580.pdf).
 For this reason, if you use this software, please consider citing the mentioned works, reported in the following bibtex entries:
 ```
@@ -148,5 +177,5 @@ Doi                      = {10.1016/j.compfluid.2018.01.035}}
 and cite the [ITHACA-FV website](http://mathlab.sissa.it/ITHACA-FV).
 
 
-### 7. License
+### 8. License
 **ITHACA-FV** is freely available under the GNU LGPL, version 3.
