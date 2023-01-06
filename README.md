@@ -51,7 +51,7 @@ cd ~
 ```
 Now you can clone the **ITHACA-FV** repository inside the selected folder
 ```
-git clone https://github.com/mathLab/ITHACA-FV
+git clone --depth 1 https://github.com/mathLab/ITHACA-FV
 ```
 and you can compile **ITHACA-FV** by navigating inside the src folder, sourcing the bashrc file of ITHACA-FV and compiling using wmake:
 ```
@@ -103,7 +103,7 @@ docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manife
 
 ### 4. Singularity
 
-From docker image, if the docker image is unavailbe, then `run` will download it and run it
+From docker image, if the docker image is unavailbe, then `run` will download it and run it 
 
 ```
 singularity run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manifest-latest
@@ -112,7 +112,7 @@ singularity run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:m
 To pull docker images and store it locally as `sif` or `sing` images
 
 ```
-singularity
+singularity 
 ```
 
 
@@ -127,7 +127,6 @@ Additionally, `--fakeroot` can be passed if you do not have root access for the 
 ```
 singularity build --fakeroot of_singularity.sif singularity/SingulairtyRecipe
 ```
-
 
 
 ### 5. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
