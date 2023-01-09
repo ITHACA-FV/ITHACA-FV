@@ -6,11 +6,13 @@
 
 echo "Starting singularity on host $HOSTNAME"
 
-image = ./singularity/image/ithicafv.sif
+#image = ./singularity/image/ithicafv.sif
 
 module load singularity/3.4.1
+module load intel/2021.2
+module load openmpi3
 
-srun -n 4 singularity exec ../../../singularity/image/ithicafv.sif icoFoam
+srun -n 4 singularity exec ithicafv.sif ./Allrun
 
 #singularity run ./singularity/image/ithicafv.sif ./tutorials/CFD/01POD/./Allrun
 
