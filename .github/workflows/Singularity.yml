@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     
+      - name: Docker run for singulaity
+        run : docker run -it tacc/singularity_test1
+    
       - name: Singularity build
         run: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
      
