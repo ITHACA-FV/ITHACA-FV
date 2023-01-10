@@ -6,7 +6,7 @@ on:
 
 jobs:
   singularity-from-docker-image:
-    runs-on: singularityware/singularity:latest
+    runs-on: tacc/singularity_test1
     steps:
 
       - name: Checkout
