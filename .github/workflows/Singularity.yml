@@ -8,12 +8,12 @@ jobs:
   singularity-from-docker-image:
     runs-on: tacc/singularity_test1
     steps:
-
-      - name: Checkout
-        uses: actions/checkout@v2
-        
+    
       - name: Singularity build
         run: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
+     
+      - name: Checkout
+        uses: actions/checkout@v2
         
       - name: copying necessary files
         run: | 
