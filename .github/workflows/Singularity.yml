@@ -18,7 +18,7 @@ jobs:
         run: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
         
       - name: moving
-        run: mv singularity_image.sif /tutorials/CFD/01POD/
+        run: cp singularity_image.sif /tutorials/CFD/01POD/
         
       - name: copying
         run: cp singularity/Of.sh /tutorials/CFD/01POD/
