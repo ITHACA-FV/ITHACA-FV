@@ -6,7 +6,7 @@ on:
 
 jobs:
   singularity-from-docker-image:
-    runs-on: tacc/singularity_test1
+    runs-on: ubuntu-latest
     steps:
     
       - name: Singularity build
