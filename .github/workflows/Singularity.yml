@@ -17,11 +17,13 @@ jobs:
       - name: Singularity build
         run: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
         
-      - name: moving
-        run: cp singularity_image.sif /tutorials/CFD/01POD/
-        
-      - name: copying
-        run: cp singularity/Of.sh /tutorials/CFD/01POD/
+      - name: copying necessary files
+        run: | 
+          - /bin/bash 
+          - -c 
+          - mv singularity_image.sif /tutorials/CFD/01POD/ 
+          - cp singularity/Of.sh tutorials/CFD/01POD/
+          - cd /tutorials/CFD/01POD/
         
       - name: Run singulairty in batch mode
         run: singularity exec singularity_image.sif /bin/bash Of.sh
