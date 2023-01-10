@@ -36,11 +36,14 @@ RUN chown -R $USER:$USER openfoam ITHACA-FV
 RUN chown -R $USER:$USER /home/$USER
 USER $USER
 
-RUN /bin/bash -c "source openfoam/openfoam2106/etc/bashrc && \
+RUN /bin/bash -c "source /usr/lib/openfoam/openfoam2106/etc/bashrc && \
     cd ITHACA-FV && git submodule update --init && source etc/bashrc && \
-    ./Allwmake -au -j 4";
+    ./Allwmake -tau -j 4";
+
+USER root
+RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2106/platforms/linux64GccDPInt32Opt/bin/* /bin/
 
 USER $USER
 WORKDIR $HOME
-COPY .bashrc $HOME/.bashrc
 ENTRYPOINT ["/bin/bash"]
+
