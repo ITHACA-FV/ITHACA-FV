@@ -4,25 +4,101 @@ From: opencfd/openfoam2106-dev
 Stage: build
 
 
-%post
-    	apt-get update &&\
-    	apt-get install -y \
-        git \
-        vim \
-        ssh \
-        sudo\
-        wget\
+%environment
+	of_var="source /usr/lib/openfoam/openfoam2106/etc/bashrc"
+	ithaca_var="source /usr/lib/ITHACA-FV/etc/bashrc"
+	export of_var ithaca_var
 
+%post
+	
+	#Define variables
+	USER="ithacafv"
+	of_var="source /usr/lib/openfoam/openfoam2106/etc/bashrc"
+	ithaca_var="source /usr/lib/ITHACA-FV/etc/bashrc"
+	
+	# Create the user
+	cd ~
+	adduser --disabled-password --gecos '' $USER && \
+    	adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
+    	usermod -a -G $USER $USER && \
+    	userdel sudofoam && \
+    	usermod -u 1000 ithacafv  && \
+    	groupmod -g 1000 ithacafv
+
+	cd /home/$USER
+	
+	chown -R $USER:$USER /home/$USER
+	chown -R $USER:$USER /home/openfoam && rm -r /home/openfoam && \
+    	chown -R $USER:$USER /home/sudofoam && rm -r /home/sudofoam
+	
+	#install necessary packages
+	cd ~ 
+	
+	sudo apt-get update
+	sudo apt-get install git -y
+        sudo apt-get install vim -y
+        
+        #get the lastest version of ITHACA-FV       
+        cd /usr/lib/
+	
+	git clone https://github.com/mathLab/ITHACA-FV.git
+	
+	#install ITHACA-FV 
+	/bin/bash -c "source /usr/lib/openfoam/openfoam2106/etc/bashrc && \
+    	cd ITHACA-FV && git submodule update --init && source /etc/bash.bashrc && \
+    	./Allwmake -tau -j 4 && \
+    	cd ~ && \
+    	cp -r /root/OpenFOAM/-v2106/platforms/linux64GccDPInt32Opt/bin/* /bin/ &&\
+    	cp -r /root/OpenFOAM/-v2106/platforms/linux64GccDPInt32Opt/lib/* /lib/"
+    	
+    	#Update bashrc 
+	echo $of_var >> /etc/bash.bashrc
+	echo $ithaca_var >> /etc/bash.bashrc
+	
+	#source bashrc
+	#/bin/bash -c "source /etc/bash.bashrc"
+
+	
 %runscript
-	source etc/bashrc
-	./Allwmake -tau -j 4
+	/bin/bash -c "source /etc/bash.bashrc"
+	echo "singularity container for ithacafv with openfoam"
+	echo "to activate the openfoam environment use"
+	echo "source /usr/lib/openfoam/openfoam2106/etc/bashrc"
+	echo "to activate the openfoam and ithacafv environment use"
+	echo "source /etc/bash.bashrc"
 
 
 %labels
-	Author Pavan Pranjivan Mehta
+	Author Pavan Pranjivan Mehta, Email : pavan_pranjivan_mehta@alumni.brown.edu
 	Version v0.1
 
 %help
-    	This is a demo container used to illustrate a def file that uses all supported sections.
-
-
+    	This is a singularity container for ITHACA-FV. 
+    	
+    	Please note the openFoam version is as per the docker image : "opencfd/openfoam2106-dev". 
+    	
+    	Change the docker image in the ".def" file for a different openFoam version.
+    	
+    	Source code : https://github.com/mathLab/ITHACA-FV.git 
+    	
+    	1. To run intertactively, use "run" or "shell", 
+    		singularity shell <image>
+    	
+    	2. To run in batch mode, use "exec" / "run"
+	    	singularity exec <image> <command>
+	    	
+	3. MPI over slurm binds itself, with "exec"
+		mpirun -n $n singularity exec <image> <command>
+		
+		Other valid statements,
+		
+		srun -n $n singularity exec <image> <command>
+		
+		mpiexec -n $n singularity exec <image> <command>
+	
+	4. Using MPI over non-slurm machine, you will need to pass "--bind" with path to MPI installation directory.
+	
+	
+	Author : Pavan Pranjivan Mehta
+	Email : pavan.mehta@sissa.it 
+		    	
