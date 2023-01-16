@@ -127,7 +127,7 @@ To view / list all the images/cache,
 singularity cache list -v
 ```
 
-To run the singulairty image interactively, use `shell` from your working directory. This mounts your working directory to the container.
+To run the singulairty image interactively, use `shell` from your working directory. This mounts your working directory to the container. Activate the the OpenFOAM environment after`shell`, using `source /usr/lib/openfoam/openfoam2106/etc/bashrc` (or, `source /etc/bash.bashrc`)
 
 ```
 singularity shell $HOME/mycontainter/ithacafv.sif

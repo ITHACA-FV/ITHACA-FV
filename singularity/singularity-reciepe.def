@@ -56,7 +56,7 @@ Stage: build
 	echo $ithaca_var >> /etc/bash.bashrc
 	
 	#source bashrc
-	#/bin/bash -c "source /etc/bash.bashrc"
+	/bin/bash -c "source /etc/bash.bashrc"
 
 	
 %runscript

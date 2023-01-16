@@ -1,8 +1,8 @@
 ##sourcing the correct bashrc is important
 ##bashrc for OpenFOAM 
-##source /usr/lib/openfoam/openfoam2106/etc/bashrc
+source /usr/lib/openfoam/openfoam2106/etc/bashrc
 ## bashrc for OpenFOAM and Ithaca-FV
-source /etc/bash.bashrc
+##source /etc/bash.bashrc
 
 ##./Allrun
 icoFoam ##-paralell
