@@ -20,7 +20,7 @@ jobs:
            singularity-version: 3.8.3
         
       - name: Singularity build in detached mode
-        run: singularity build -d singularity_image_def.sif `pwd`/singularity/singularity-reciepe.def
+        run: singularity build --fakeroot -d singularity_image_def.sif `pwd`/singularity/singularity-reciepe.def
         
       - name: copying necessary files
         run: /bin/bash -c "mv singularity_image_def.sif `pwd`/tutorials/CFD/01POD/ && \ 
