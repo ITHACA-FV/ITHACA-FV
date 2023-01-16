@@ -17,21 +17,12 @@ jobs:
       - uses: eWaterCycle/setup-singularity@v7
         with:
            singularity-version: 3.8.3
-           
-      - name: Allocating the build directory
-        run: |
-          mkdir `pwd`/mycontainter
-          export SINGULARITY_TMPDIR=`pwd`/mycontainter
-          export SINGULARITY_CACHEDIR=`pwd`/mycontainter
-          export SINGULARITY_BIND=`pwd`/mycontainter
-          source etc/bashrc
         
       - name: Singularity build
         run: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
         
       - name: copying necessary files
         run: |
-          find ~ -name 'singularity_image.sif'
           mv singularity_image.sif `pwd`/tutorials/CFD/01POD/
           mv `pwd`/singularity/Of.sh `pwd`/tutorials/CFD/01POD/
         
