@@ -1,4 +1,4 @@
-name: Singularity
+name: Singularity_from_Docker_Image
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
         run: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
         
       - name: copying necessary files
-        run: /bin/bash -c "mv singularity_image.sif `pwd`/ITHACA-FV/tutorials/CFD/01POD/ && \ 
+        run: /bin/bash -c "mv singularity_image.sif `pwd`/tutorials/CFD/01POD/ && \ 
           cp `pwd`/singularity/Of.sh `pwd`/tutorials/CFD/01POD/ && \
           cd `pwd`/tutorials/CFD/01POD/"
         
