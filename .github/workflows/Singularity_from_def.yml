@@ -23,9 +23,10 @@ jobs:
         run: singularity build --fakeroot -d singularity_image_def.sif `pwd`/singularity/singularity-reciepe.def
         
       - name: copying necessary files
-        run: /bin/bash -c "mv singularity_image_def.sif `pwd`/tutorials/CFD/01POD/ && \ 
-          mv `pwd`/singularity/Of.sh `pwd`/tutorials/CFD/01POD/ && \
-          cd `pwd`/tutorials/CFD/01POD/"
+        run: |
+          mv singularity_image_def.sif `pwd`/tutorials/CFD/01POD/
+          mv `pwd`/singularity/Of.sh `pwd`/tutorials/CFD/01POD/
+          cd `pwd`/tutorials/CFD/01POD/
         
       - name: Run singulairty in batch mode
         run: singularity exec singularity_image_def.sif /bin/bash Of.sh
