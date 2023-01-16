@@ -24,7 +24,7 @@ jobs:
           export SINGULARITY_TMPDIR=`pwd`/mycontainter
           export SINGULARITY_CACHEDIR=`pwd`/mycontainter
           export SINGULARITY_BIND=`pwd`/mycontainter
-          source .bashrc
+          source /etc/bashrc
         
       - name: Singularity build
         run: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
