@@ -3,28 +3,30 @@ name: Singularity
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
   singularity-from-docker-image:
-    runs-on: singularityware/singularity:latest
+    runs-on: ubuntu-latest
     steps:
-
+    
+ 
       - name: Checkout
         uses: actions/checkout@v2
         
+      - uses: eWaterCycle/setup-singularity@v7
+        with:
+           singularity-version: 3.8.3
+        
       - name: Singularity build
-        uses: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
+        run: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
         
-      - name: moving
-        uses: mv singularity_image.sif /tutorials/CFD/01POD/
-        
-      - name: copying
-        uses: cp singularity/Of.sh /tutorials/CFD/01POD/
+      - name: copying necessary files
+        run: /bin/bash -c "mv singularity_image.sif /ITHACA-FV/tutorials/CFD/01POD/ && \ 
+          cp singularity/Of.sh tutorials/CFD/01POD/ && \
+          cd /tutorials/CFD/01POD/"
         
       - name: Run singulairty in batch mode
-        uses: singularity exec singularity_image.sif /bin/bash Of.sh
+        run: singularity exec singularity_image.sif /bin/bash Of.sh
         
         
       
