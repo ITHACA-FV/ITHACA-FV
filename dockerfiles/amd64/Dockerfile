@@ -51,6 +51,7 @@ RUN  echo $of_var >> /etc/bash.bashrc
 RUN  echo $ithaca_var >> /etc/bash.bashrc
 
 #Source bashrc
+USER $USER
 RUN /bin/bash -c "source /etc/bash.bashrc"
 
 USER $USER
