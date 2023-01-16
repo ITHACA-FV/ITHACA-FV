@@ -133,10 +133,10 @@ To run the singulairty image interactively, use `run` from your working director
 singularity run $HOME/mycontainter/ithacafv.sif
 ```
 
-To build singularity images from scratch use defination files, `singularity-reciepe.def` provided in singularity directory. This require `sudo` prilvildges.
+To build singularity images from scratch use defination files, `singularity-reciepe.def` provided in singularity directory. This require `sudo` prilvildges. Recommened to build in detached mode, by passing the flag `-d`.
 
 ```
-sudo singularity build ithacafv.sif singularity/singularity-reciepe.def
+sudo singularity build -d ithacafv.sif singularity/singularity-reciepe.def
 ```
 
 Additionally, `--fakeroot` can be passed if you do NOT have root access for the build.
@@ -151,15 +151,13 @@ Running singualrity in batch mode, you can add the following in your the batch s
 singularity exec <image>.sif <command>
 ```
 
-For example, running the first tutorial, add the following in the batch script,
+For example, running the any tutorial, add the following in the batch script,
 
 ```
-singularity exec ithacafv.sif ./tutorials/CFD/01POD/./Allrun
+singularity exec ithacafv.sif /bin/bash -c Of.sh
 ``` 
 
-
-Modifying images : convert `.sif` image to a sandbox `.sng` image
-
+the shell script `Of.sh` is provided within the singularity directory. A sample batch scipt is also proived. Please note, over slurm machine, mpi binds without passing any flags.
 
 
 
