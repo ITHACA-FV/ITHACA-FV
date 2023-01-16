@@ -124,7 +124,7 @@ singularity build ithacafv.sif docker://ithacafv/ithacafv:manifest-latest
 To view / list all the images, 
 
 ```
-singularity cache list
+singularity cache list -v
 ```
 
 To run the singulairty image interactively, use `run` from your working directory. This mounts your working directory to the container.
