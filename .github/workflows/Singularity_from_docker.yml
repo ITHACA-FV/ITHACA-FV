@@ -31,9 +31,10 @@ jobs:
         
       - name: copying necessary files
         run: |
-          mv `pwd`/mycontainter/singularity_image.sif `pwd`/tutorials/CFD/01POD/
-          mv `pwd`/singularity/Of.sh `pwd`/tutorials/CFD/01POD/
-          cd `pwd`/tutorials/CFD/01POD/
+          find . singularity_image.sif
+          #mv `pwd`/mycontainter/singularity_image.sif `pwd`/tutorials/CFD/01POD/
+          #mv `pwd`/singularity/Of.sh `pwd`/tutorials/CFD/01POD/
+          #cd `pwd`/tutorials/CFD/01POD/
         
       - name: Singulairty in batch mode
         run: |
