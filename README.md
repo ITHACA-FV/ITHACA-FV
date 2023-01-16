@@ -121,16 +121,16 @@ Buidling singularity image file `.sif` from the docker image, which is build and
 singularity build ithacafv.sif docker://ithacafv/ithacafv:manifest-latest
 ```
 
-To view / list all the images, 
+To view / list all the images/cache, 
 
 ```
 singularity cache list -v
 ```
 
-To run the singulairty image interactively, use `run` from your working directory. This mounts your working directory to the container.
+To run the singulairty image interactively, use `shell` from your working directory. This mounts your working directory to the container.
 
 ```
-singularity run $HOME/mycontainter/ithacafv.sif
+singularity shell $HOME/mycontainter/ithacafv.sif
 ```
 
 To build singularity images from scratch use defination files, `singularity-reciepe.def` provided in singularity directory. This require `sudo` prilvildges. Recommened to build in detached mode, by passing the flag `-d`.
