@@ -21,7 +21,7 @@ jobs:
         run: singularity build singularity_image.sif docker://mehtapavan/ithacafv-manifest:5
         
       - name: copying necessary files
-        run: /bin/bash -c "mv singularity_image.sif /tutorials/CFD/01POD/ && \ 
+        run: /bin/bash -c "mv singularity_image.sif /ITHACA-FV/tutorials/CFD/01POD/ && \ 
           cp singularity/Of.sh tutorials/CFD/01POD/ && \
           cd /tutorials/CFD/01POD/"
         
