@@ -23,7 +23,7 @@ jobs:
           mkdir `pwd`/mycontainter
           export SINGULARITY_TMPDIR=`pwd`/mycontainter
           export SINGULARITY_CACHEDIR=`pwd`/mycontainter
-          export SINGULARITY_BIND = `pwd`/mycontainter
+          export SINGULARITY_BIND=`pwd`/mycontainter
           source .bashrc
         
       - name: Singularity build
