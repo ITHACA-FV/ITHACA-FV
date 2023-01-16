@@ -42,6 +42,7 @@ RUN /bin/bash -c "source /usr/lib/openfoam/openfoam2106/etc/bashrc && \
 
 USER root
 RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2106/platforms/linux64GccDPInt32Opt/bin/* /bin/
+RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2106/platforms/linux64GccDPInt32Opt/lib/* /lib/
 
 USER $USER
 WORKDIR $HOME
