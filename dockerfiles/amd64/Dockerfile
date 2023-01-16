@@ -2,8 +2,10 @@ FROM  opencfd/openfoam2106-dev
 LABEL maintainer="moaadkhamlich@gmail.com"
 
 
-# add and enable the default user
+# add enviromental variables and enable the default user
 ARG USER=ithacafv
+ARG of_var="source /usr/lib/openfoam/openfoam2106/etc/bashrc"
+ARG ithaca_var="source /usr/lib/ITHACA-FV/etc/bashrc"
 ENV USER $USER
 
 # Create the user
@@ -37,12 +39,19 @@ RUN chown -R $USER:$USER /home/$USER
 USER $USER
 
 RUN /bin/bash -c "source /usr/lib/openfoam/openfoam2106/etc/bashrc && \
-    cd ITHACA-FV && git submodule update --init && source etc/bashrc && \
+    cd ITHACA-FV && git submodule update --init && source /etc/bash.bashrc && \
     ./Allwmake -tau -j 4";
 
 USER root
 RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2106/platforms/linux64GccDPInt32Opt/bin/* /bin/
 RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2106/platforms/linux64GccDPInt32Opt/lib/* /lib/
+
+#Update bashrc 
+RUN  echo $of_var >> /etc/bash.bashrc
+RUN  echo $ithaca_var >> /etc/bash.bashrc
+
+#Source bashrc
+RUN /bin/bash -c "source /etc/bash.bashrc"
 
 USER $USER
 WORKDIR $HOME
