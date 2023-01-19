@@ -101,7 +101,67 @@ Once the image is downloaded, you can start the container and mount the $HOME di
 docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manifest-latest
 ```
 
-### 4. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
+### 4. Singularity
+
+
+Create a local directory (which you own), followed by using the variables, `SINGULARITY_TMPDIR` and `SINGULARITY_CACHEDIR` for temporary and cache directory during built proccess. This step is highly recommended if you do NOT have `root` access, as singularity uses a temporary directory to build the squashfs filesystem, and this temp space needs to be large enough to hold the entire resulting Singularity image.
+
+```
+export SINGULARITY_TMPDIR=$HOME/mycontainter
+```
+and 
+
+```
+export SINGULARITY_CACHEDIR=$HOME/mycontainter
+```
+
+Buidling singularity image file `.sif` from the docker image, which is build and stored in `$HOME/mycontainter`, The below image used is based **OpenFOAM-v2106**, and where you can find a compiled version of the master branch of **ITHACA-FV**.
+
+```
+singularity build ithacafv.sif docker://ithacafv/ithacafv:manifest-latest
+```
+
+To view / list all the images/cache, 
+
+```
+singularity cache list -v
+```
+
+To run the singulairty image interactively, use `shell` from your working directory. This mounts your working directory to the container. Activate the the OpenFOAM environment after`shell`, using `source /usr/lib/openfoam/openfoam2106/etc/bashrc` (or, `source /etc/bash.bashrc`)
+
+```
+singularity shell $HOME/mycontainter/ithacafv.sif
+```
+
+To build singularity images from scratch use defination files, `singularity-reciepe.def` provided in singularity directory. This require `sudo` prilvildges. Recommened to build in detached mode, by passing the flag `-d`.
+
+```
+sudo singularity build -d ithacafv.sif singularity/singularity-reciepe.def
+```
+
+Additionally, `--fakeroot` can be passed if you do NOT have root access for the build.
+
+```
+singularity build --fakeroot ithacafv.sif singularity/singularity-reciepe.def
+```
+
+Running singualrity in batch mode, you can add the following in your the batch script, 
+
+```
+singularity exec <image>.sif <command>
+```
+
+For example, running the any tutorial, add the following in the batch script,
+
+```
+singularity exec ithacafv.sif /bin/bash -c Of.sh
+``` 
+
+the shell script `Of.sh` is provided within the singularity directory. A sample batch scipt is also proived. Please note, over slurm machine, mpi binds without passing any flags.
+
+
+
+### 5. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
 Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
 *   [**CFD/Tutorial 1**](https://github.com/mathLab/ITHACA-FV/tree/master/tutorials/CFD/01POD): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case.
 *   [**CFD/Tutorial 2**](https://github.com/mathLab/ITHACA-FV/tree/master/tutorials/CFD/02thermalBlock): In this tutorial the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem is implemented. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**.
@@ -115,12 +175,12 @@ Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
 *   [**CFD/Tutorial 9**](https://mathlab.github.io/ITHACA-FV/09DEIM_ROM_8C-example.html): In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for model reduction purposes. The non-linearity is in the forcing term of a heat transfer problem. The OpenFOAM full order problem is based on **laplacianFoam**.
 
 
-### 5. Authors and contributors
+### 6. Authors and contributors
 **ITHACA-FV** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by [Dr. Giovanni Stabile](mailto:gstabile@sissa.it) under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it)
 
 Contact us by email for further information or questions about **ITHACA-FV**, or open an ''Issue'' on this website. **ITHACA-FV** is at an early development stage, so contributions improving either the code or the documentation are welcome, both as patches or merge requests on this website. If you are willing to contribute please follow the [developer instructions](https://github.com/mathLab/ITHACA-FV/tree/master/src).
 
-### 6. How to cite
+### 7. How to cite
 Most of the theoretical aspects behind **ITHACA-FV** are deeply explained in [<b> Stabile2017CAIM </b>](https://arxiv.org/pdf/1701.03424.pdf) and [<b> Stabile2017CAF </b>](https://arxiv.org/pdf/1710.11580.pdf).
 For this reason, if you use this software, please consider citing the mentioned works, reported in the following bibtex entries:
 ```
@@ -148,5 +208,5 @@ Doi                      = {10.1016/j.compfluid.2018.01.035}}
 and cite the [ITHACA-FV website](http://mathlab.sissa.it/ITHACA-FV).
 
 
-### 7. License
+### 8. License
 **ITHACA-FV** is freely available under the GNU LGPL, version 3.
