@@ -1,0 +1,36 @@
+name: Singularity_from_Defination_file
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  singularity-from-defination-file:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - uses: eWaterCycle/setup-singularity@v7
+        with:
+           singularity-version: 3.8.3
+        
+      - name: Singularity build in detached mode
+        run: singularity build --fakeroot -d singularity_image_def.sif `pwd`/singularity/singularity-reciepe.def
+        
+      - name: copying necessary files
+        run: |
+          mv singularity_image_def.sif `pwd`/tutorials/CFD/01POD/
+          mv `pwd`/singularity/Of.sh `pwd`/tutorials/CFD/01POD/
+        
+      - name: Run singulairty in batch mode
+        run: |
+          cd `pwd`/tutorials/CFD/01POD/
+          singularity exec singularity_image_def.sif /bin/bash Of.sh
+        
+        
+      
+      
