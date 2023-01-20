@@ -11,12 +11,10 @@ RUN apt-get update \
 		software-properties-common ;\
 		rm -rf /var/lib/apt/lists/*
 
-# add enviromental variables
-ARG USER=ithacafv
-ARG of_var="source /usr/lib/openfoam/openfoam2106/etc/bashrc"
-ARG ithaca_var="source /usr/lib/ITHACA-FV/etc/bashrc"
-
 # add and enable the default user
+ARG USER=ithacafv
+ARG of_var="source /opt/OpenFOAM-v2106/etc/bashrc"
+ARG ithaca_var="source /opt/ITHACA-FV/etc/bashrc"
 RUN adduser --disabled-password --gecos '' $USER
 RUN adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
@@ -29,22 +27,16 @@ USER $USER
 ENV HOME /home/$USER
 ENV USER $USER
 
-RUN /bin/bash -c "source /usr/lib/openfoam/openfoam2106/etc/bashrc && \
-    cd ITHACA-FV && git submodule update --init && source /etc/bash.bashrc && \
-    ./Allwmake -tau -j 4";
+RUN /bin/bash -c "source OpenFOAM-v2106/etc/bashrc && \
+    cd ITHACA-FV && git submodule update --init && source etc/bashrc && \
+    ./Allwmake -au -j 4";
 
-USER root
-RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2106/platforms/linux64GccDPInt32Opt/bin/* /bin/
-RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2106/platforms/linux64GccDPInt32Opt/lib/* /lib/
-
-
-#Update bashrc 
+#Update bashrc
 RUN	echo $of_var >> /etc/bash.bashrc
 RUN	echo $ithaca_var >> /etc/bash.bashrc
 
 #Source bashrc
 RUN /bin/bash -c "source /etc/bash.bashrc"
 
-USER $USER
 WORKDIR $HOME
 ENTRYPOINT ["/bin/bash"]
