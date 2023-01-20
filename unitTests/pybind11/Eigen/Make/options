@@ -1,0 +1,14 @@
+EXE_INC = \
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(includepybind1) \
+    -I$(includepybind2) \
+    -DOFVER=$${WM_PROJECT_VERSION%.*} \
+    -std=c++11 \
+    -O3 \
+    -w \
+    -shared \
+    -fPIC
+
+EXE_LIBS = \
+
+ 
