@@ -13,8 +13,6 @@ RUN apt-get update \
 
 # add and enable the default user
 ARG USER=ithacafv
-ARG of_var="source /opt/OpenFOAM-v2106/etc/bashrc"
-ARG ithaca_var="source /opt/ITHACA-FV/etc/bashrc"
 RUN adduser --disabled-password --gecos '' $USER
 RUN adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
@@ -23,6 +21,11 @@ WORKDIR /opt/
 RUN git clone https://github.com/mathLab/ITHACA-FV.git
 RUN chown -R $USER:$USER OpenFOAM-v2106 OpenFOAM-v2106 ITHACA-FV
 RUN chown -R $USER:$USER /home/$USER
+ARG of_var="source /opt/OpenFOAM-v2106/etc/bashrc"
+ARG ithaca_var="source /opt/ITHACA-FV/etc/bashrc"
+#Update bashrc
+RUN	echo $of_var >> /etc/bash.bashrc
+RUN	echo $ithaca_var >> /etc/bash.bashrc
 USER $USER
 ENV HOME /home/$USER
 ENV USER $USER
@@ -31,9 +34,6 @@ RUN /bin/bash -c "source OpenFOAM-v2106/etc/bashrc && \
     cd ITHACA-FV && git submodule update --init && source etc/bashrc && \
     ./Allwmake -au -j 4";
 
-#Update bashrc
-RUN	echo $of_var >> /etc/bash.bashrc
-RUN	echo $ithaca_var >> /etc/bash.bashrc
 
 #Source bashrc
 RUN /bin/bash -c "source /etc/bash.bashrc"
