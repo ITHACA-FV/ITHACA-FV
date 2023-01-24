@@ -267,8 +267,9 @@ template double errorL2Abs(GeometricField<vector, fvPatchField, volMesh>&
 
 
 template<class T, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh>>&fields1,
-                             PtrList<GeometricField<T, PatchField, GeoMesh>>&fields2, List<label>* labels)
+Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh>>&
+                             fields1,
+                             PtrList<GeometricField<T, PatchField, GeoMesh>>& fields2, List<label>* labels)
 {
     Eigen::VectorXd err;
 

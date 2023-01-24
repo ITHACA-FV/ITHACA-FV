@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
     if (argc == 1)
     {
         Info << "Pass 'offline' or 'online' as first arguments."
-                  << endl;
+             << endl;
         exit(0);
     }
 

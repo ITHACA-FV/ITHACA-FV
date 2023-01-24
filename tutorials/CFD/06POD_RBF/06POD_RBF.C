@@ -193,11 +193,13 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.nutFields, example.nutModes, example._nut().name(),
                         example.podex,
                         example.supex, 0, NmodesProject);
+
     // Solve the supremizer problem based on the pressure modes
     if (stabilization == "supremizer")
     {
         example.solvesupremizer("modes");
     }
+
     // Compute the reduced order matrices
     // Get reduced matrices
     if (stabilization == "supremizer")
@@ -229,6 +231,7 @@ int main(int argc, char* argv[])
         velNow(1, 0) = par_online(k, 1);
         pod_rbf.tauU(0, 0) = 0;
         pod_rbf.tauU(1, 0) = 0;
+
         if (stabilization == "supremizer")
         {
             pod_rbf.solveOnlineSUP(velNow);
@@ -237,6 +240,7 @@ int main(int argc, char* argv[])
         {
             pod_rbf.solveOnlinePPE(velNow);
         }
+
         rbfCoeff.col(k) = pod_rbf.rbfCoeff;
         Eigen::MatrixXd tmp_sol(pod_rbf.y.rows() + 1, 1);
         tmp_sol(0) = k + 1;

@@ -10,6 +10,17 @@ const int Nx = 128;
 const int Ny = 64;
 const int Nz = 32;
 
+void cnpy2eigen(string data_fname, Eigen::MatrixXd& mat_out){
+    cnpy::NpyArray npy_data = cnpy::npy_load(data_fname);
+    // double* ptr = npy_data.data<double>();
+    int data_row = npy_data.shape[0];
+    int data_col = npy_data.shape[1];
+    double* ptr = static_cast<double *>(malloc(data_row * data_col * sizeof(double)));
+    memcpy(ptr, npy_data.data<double>(), data_row * data_col * sizeof(double));
+    cv::Mat dmat = cv::Mat(cv::Size(data_col, data_row), CV_64F, ptr); // CV_64F is equivalent double
+    new (&mat_out) Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic>>(reinterpret_cast<double *>(dmat.data), data_col, data_row);
+}
+
 bool ReadAndWriteTensor()
 {
     bool esit = false;
@@ -183,6 +194,7 @@ int TestSparseMatrix()
 
 int main(int argc, char **argv)
 {
+    Eigen::MatrixXi MI_out = Eigen::MatrixXi::Random(5, 5);
     ReadAndWriteTensor();
     ReadAndWriteNPYMatrix();
     TestSparseMatrix();

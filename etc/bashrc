@@ -17,6 +17,8 @@ export LIB_ITHACA="$ithacaDir"
 export LIB_ITHACA_SRC="$ithacaDir/src"
 export PYTHONPATH="$PYTHONPATH:${PYTHONPATH:+:}${LIB_ITHACA_SRC}"/python
 export PATH="$PATH:${LIB_ITHACA}"/bin
+export includepybind1=$(python3 -m pybind11 --includes | awk -F '-I' '{print $2}')
+export includepybind2=$(python3 -m pybind11 --includes | awk -F '-I' '{print $3}')
 alias ithaca='cd ${LIB_ITHACA:?}'
 
 unset ithacaDir
