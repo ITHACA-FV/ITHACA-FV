@@ -10,27 +10,27 @@ jobs:
   singularity-from-docker-image:
     runs-on: ubuntu-latest
     steps:
-     
+
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - uses: eWaterCycle/setup-singularity@v7
         with:
            singularity-version: 3.8.3
-        
+
       - name: Singularity build
-        run: singularity build singularity_image.sif docker://ithacafv/ithacafv:manifest-latest
-        
+        run: singularity build singularity_image.sif docker://ithacafv/ithacafv:manifest-amd64
+
       - name: copying necessary files
         run: |
           mv singularity_image.sif `pwd`/tutorials/CFD/01POD/
           mv `pwd`/singularity/Of.sh `pwd`/tutorials/CFD/01POD/
-        
+
       - name: Singulairty in batch mode
         run: |
           cd `pwd`/tutorials/CFD/01POD/
           singularity exec singularity_image.sif /bin/bash Of.sh
-        
-        
-      
-      
+
+
+
+
