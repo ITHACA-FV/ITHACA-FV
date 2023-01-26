@@ -264,10 +264,6 @@ int main(int argc, char* argv[])
         example.solvesupremizer("modes");
     }
 
-    <<< <<< < HEAD
-    == == == =
-        >>>>>>> 56693175 (Adding stabilization method option in 11UnsteadyBBOpen
-                          tutorial)
         // Create a list with number of modes for which the projection needs to be performed
         Eigen::MatrixXd List_of_modes(NmodesOut - 5, 1);
 
@@ -383,10 +379,7 @@ int main(int argc, char* argv[])
         temp_now_BC(0, 0) = par_on_BC(k, 0);
         temp_now_BC(1, 0) = par_on_BC(k, 1);
         temp_now_BC(2, 0) = par_on_BC(k, 2);
-        <<< <<< < HEAD
-        == == == =
-            >>>>>>> 56693175 (Adding stabilization method option in 11UnsteadyBBOpen
-                              tutorial)
+
 
             if (stabilization == "supremizer")
         {
