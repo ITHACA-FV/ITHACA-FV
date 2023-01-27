@@ -1511,7 +1511,7 @@ List<Eigen::MatrixXd> steadyNS::boundary_vector_diffusion(label NUmodes,
         label BCind = inletIndex(i, 0);
         Vector<double> v(0, 0, 0);
         v[inletIndex(i, 1)] = 1;
-        volVectorField Upara(Uinl);
+        volVectorField Upara(Uinl());
         assignBC(Upara, BCind, v);
         // Determine boundary vector
         fvVectorMatrix UEqn
@@ -1557,7 +1557,7 @@ List<Eigen::MatrixXd> steadyNS::boundary_vector_convection(label NUmodes,
         label BCind = inletIndex(i, 0);
         Vector<double> v(0, 0, 0);
         v[inletIndex(i, 1)] = 1;
-        volVectorField Upara(Uinl);
+        volVectorField Upara(Uinl());
         assignBC(Upara, BCind, v);
         // Determine boundary vector
         fvVectorMatrix UEqn
@@ -1642,14 +1642,14 @@ List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_div(label NPmodes)
     label BCsize = inletIndex.rows();
     List<Eigen::MatrixXd> LinSysDivDummy;
     LinSysDiv.resize(BCsize + 1);
-    volScalarField p(_p);
+    volScalarField p(_p());
 
     for (label i = 0; i < BCsize; i++)
     {
         label BCind = inletIndex(i, 0);
         Vector<double> v(0, 0, 0);
         v[inletIndex(i, 1)] = 1;
-        volVectorField Upara(Uinl);
+        volVectorField Upara(Uinl());
         assignBC(Upara, BCind, v);
         fvScalarMatrix pEqn
         (
@@ -1675,14 +1675,14 @@ List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_conv(
     label BCsize = inletIndex.rows();
     List<Eigen::MatrixXd> LinSysConvDummy;
     LinSysConv.resize(BCsize + 1);
-    volScalarField p(_p);
+    volScalarField p(_p());
 
     for (label i = 0; i < BCsize; i++)
     {
         label BCind = inletIndex(i, 0);
         Vector<double> v(0, 0, 0);
         v[inletIndex(i, 1)] = 1;
-        volVectorField Upara(Uinl);
+        volVectorField Upara(Uinl());
         assignBC(Upara, BCind, v);
         volVectorField Caux(L_U_SUPmodes[0]);
         Caux = dt_dummy * (-fvc::div(fvc::flux(Upara), Upara));
@@ -1710,14 +1710,14 @@ List<Eigen::MatrixXd> steadyNS::pressure_gradient_term_linsys_diff(
     label BCsize = inletIndex.rows();
     List<Eigen::MatrixXd> LinSysDiffDummy;
     LinSysDiff.resize(BCsize + 1);
-    volScalarField p(_p);
+    volScalarField p(_p());
 
     for (label i = 0; i < BCsize; i++)
     {
         label BCind = inletIndex(i, 0);
         Vector<double> v(0, 0, 0);
         v[inletIndex(i, 1)] = 1;
-        volVectorField Upara(Uinl);
+        volVectorField Upara(Uinl());
         assignBC(Upara, BCind, v);
         volVectorField Daux(L_U_SUPmodes[0]);
         Daux = dt_dummy * fvc::laplacian(nu_dummy(), Upara);
@@ -1780,7 +1780,7 @@ Eigen::MatrixXd steadyNS::diffusive_term_consistent(label NUmodes,
     label DFsize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::MatrixXd DF_matrix;
     DF_matrix.resize(DFsize, NUmodes);
-    surfaceScalarField phi_tmp("Phi_tmp", _phi);
+    surfaceScalarField phi_tmp("Phi_tmp", _phi());
 
     for (label i = 0; i < NUmodes; i++)
     {
@@ -1852,7 +1852,7 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_consistent_tens(
     Eigen::Tensor<double, 3> Ci_tensor;
     volVectorField L_U_SUPmodesaux(L_U_SUPmodes[0]);
     Ci_tensor.resize(NUmodes, Csize1, Csize1);
-    surfaceScalarField phi_tmp("Phi_tmp", _phi);
+    surfaceScalarField phi_tmp("Phi_tmp", _phi());
 
     for (label i = 0; i < NUmodes; i++)
     {
@@ -1890,14 +1890,14 @@ List <Eigen::MatrixXd> steadyNS::boundary_vector_diffusion_consistent(
     label BCsize = inletIndex.rows();
     label SDsize = NUmodes + NSUPmodes;
     List <Eigen::MatrixXd> SD_matrix(BCsize);
-    surfaceScalarField phi_tmp("Phi_tmp", _phi);
+    surfaceScalarField phi_tmp("Phi_tmp", _phi());
 
     for (label i = 0; i < BCsize; i++)
     {
         label BCind = inletIndex(i, 0);
         Vector<double> v(0, 0, 0);
         v[inletIndex(i, 1)] = 1;
-        volVectorField Upara(Uinl);
+        volVectorField Upara(Uinl());
         assignBC(Upara, BCind, v);
         SD_matrix[i].resize(SDsize, 1);
 
@@ -1929,14 +1929,14 @@ List <Eigen::MatrixXd> steadyNS::boundary_vector_convection_consistent(
     label BCsize = inletIndex.rows();
     label SCsize = NUmodes + NSUPmodes;
     List <Eigen::MatrixXd> SC_matrix(BCsize);
-    surfaceScalarField phi_tmp("Phi_tmp", _phi);
+    surfaceScalarField phi_tmp("Phi_tmp", _phi());
 
     for (label i = 0; i < BCsize; i++)
     {
         label BCind = inletIndex(i, 0);
         Vector<double> v(0, 0, 0);
         v[inletIndex(i, 1)] = 1;
-        volVectorField Upara(Uinl);
+        volVectorField Upara(Uinl());
         assignBC(Upara, BCind, v);
         SC_matrix[i].resize(SCsize, 1);
 
