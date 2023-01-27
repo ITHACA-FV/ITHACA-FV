@@ -402,7 +402,7 @@ void inverseLaplacianProblem_paramBC::solveAdditional()
     Tad_base.resize(0);
     fvMesh& mesh = _mesh();
     simpleControl& simple = _simple();
-    volScalarField Tad(_T);
+    volScalarField Tad(_T());
     Foam::Time& runTime = _runTime();
     set_valueFraction();
     List<scalar> RobinBC = - Tf;

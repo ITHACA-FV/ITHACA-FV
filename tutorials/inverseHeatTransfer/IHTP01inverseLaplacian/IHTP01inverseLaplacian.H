@@ -78,7 +78,7 @@ class IHTP01inverseLaplacian_paramBC: public inverseLaplacianProblem_paramBC
             restart();
             fvMesh& mesh = _mesh();
             simpleControl& simple = _simple();
-            volScalarField Tad(_T);
+            volScalarField Tad(_T());
             Foam::Time& runTime = _runTime();
             set_valueFraction();
             List<scalar> RobinBC = - Tf;
