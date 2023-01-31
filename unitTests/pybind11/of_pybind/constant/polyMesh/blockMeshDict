@@ -22,8 +22,8 @@ backgroundMesh
     yMax     0.9;
     zMin     0;
     zMax     0.1;
-    xCells1  40;
-    yCells   40;
+    xCells1  5;
+    yCells   5;
     zCells   1;
 }
 
