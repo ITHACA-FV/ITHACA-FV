@@ -1,66 +1,45 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2212                                  |
-|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|  \\    /   O peration     | Version:  1.5                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     version     2.0;
     format      ascii;
-    arch        "LSB;label=32;scalar=64";
-    note        "nPoints:72  nCells:25  nFaces:110  nInternalFaces:40";
-    class       labelList;
-    location    "constant/polyMesh";
-    object      neighbour;
+    class       dictionary;
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+application poissonFoam;
 
-40
-(
-1
-5
-2
-6
-3
-7
-4
-8
-9
-6
-10
-7
-11
-8
-12
-9
-13
-14
-11
-15
-12
-16
-13
-17
-14
-18
-19
-16
-20
-17
-21
-18
-22
-19
-23
-24
-21
-22
-23
-24
-)
+startFrom       startTime;
 
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1000;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   10000000;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
 
 // ************************************************************************* //
