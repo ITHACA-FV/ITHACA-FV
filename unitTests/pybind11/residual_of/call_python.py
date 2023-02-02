@@ -1,7 +1,4 @@
-from of_pybind11_system import *
-import os
-from scipy.optimize import fsolve
-import numpy as np
+from of_pybind11_system import of_pybind11_system
 from scipy.sparse.linalg import spsolve
 
 #Instantiate OF object
