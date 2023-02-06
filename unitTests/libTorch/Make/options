@@ -36,6 +36,7 @@ EXE_LIBS = \
     -L$(FOAM_USER_LIBBIN) \
     -lITHACA_TORCH \
     -Wl,-rpath,$(TORCH_LIBRARIES)/lib $(TORCH_LIBRARIES)/lib/libtorch.so $(TORCH_LIBRARIES)/lib/libc10.so \
-    -Wl,--no-as-needed,$(TORCH_LIBRARIES)/lib/libcaffe2_detectron_ops.so \
+    -Wl,--no-as-needed,$(TORCH_LIBRARIES)/lib/libtorch_cpu.so \
     -Wl,--as-needed $(TORCH_LIBRARIES)/lib/libc10.so \
+    -Wl,--no-as-needed,$(TORCH_LIBRARIES)/lib/libtorch.so
  
