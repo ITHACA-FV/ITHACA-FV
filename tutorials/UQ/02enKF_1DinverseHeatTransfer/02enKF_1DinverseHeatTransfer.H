@@ -358,7 +358,7 @@ class EnKF_1DinverseHeatTransfer: public laplacianProblem
                 }
                 else
                 {
-                    T = Tensemble.set(i, nullptr);
+                    T = Tensemble.set(i, nullptr)();
                 }
 
                 resetRunTime(startTime_, startIndex_, endTime_);
