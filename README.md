@@ -161,24 +161,24 @@ the shell script `Of.sh` is provided within the singularity directory. A sample 
 
 
 
-### 5. [Tutorials](https://mathlab.github.io/ITHACA-FV//examples.html)
+### 5. [Tutorials](https://ithaca-fv.github.io/ITHACA-FV//examples.html)
 Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
-*   [**CFD/Tutorial 1**](https://github.com/mathLab/ITHACA-FV/tree/master/tutorials/CFD/01POD): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case.
-*   [**CFD/Tutorial 2**](https://github.com/mathLab/ITHACA-FV/tree/master/tutorials/CFD/02thermalBlock): In this tutorial the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem is implemented. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**.
-*   [**CFD/Tutorial 3**](https://github.com/mathLab/ITHACA-FV/tree/master/tutorials/CFD/03steadyNS): In this tutorial, the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the viscosity is implemented. The OpenFOAM full order problem is based on **simpleFoam**.
-*   [**CFD/Tutorial 4**](https://mathlab.github.io/ITHACA-FV/04unsteadyNS_8C-example.html): In this tutorial, the development of a parametrized POD-Galerkin method for an unsteady Navier-Stokes problem is implemented. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **pimpleFoam**.
+*   [**CFD/Tutorial 1**](https://github.com/ithaca-fv/ITHACA-FV/tree/master/tutorials/CFD/01POD): In this tutorial it is shown how to perform POD on an already run standard **OpenFOAM** case.
+*   [**CFD/Tutorial 2**](https://github.com/ithaca-fv/ITHACA-FV/tree/master/tutorials/CFD/02thermalBlock): In this tutorial the development of a parametrized POD-Galerkin ROM for a steady heat transfer problem is implemented. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**.
+*   [**CFD/Tutorial 3**](https://github.com/ithaca-fv/ITHACA-FV/tree/master/tutorials/CFD/03steadyNS): In this tutorial, the development of a parametrized POD-Galerkin ROM for a steady NS-problem. The parametrization is on the viscosity is implemented. The OpenFOAM full order problem is based on **simpleFoam**.
+*   [**CFD/Tutorial 4**](https://ithaca-fv.github.io/ITHACA-FV/04unsteadyNS_8C-example.html): In this tutorial, the development of a parametrized POD-Galerkin method for an unsteady Navier-Stokes problem is implemented. The parametrization is on the viscosity. The OpenFOAM full order problem is based on **pimpleFoam**.
 
-*   [**CFD/Tutorial 6**](https://mathlab.github.io/ITHACA-FV/06POD_RBF_8C-example.html): This tutorial presents the application of data driven POD-Galerkin model to RANS equation in steady state setting. The components of the velocity at the inlet are paramertized. The OpenFOAM full order problem is based on **simpleFoam**.
+*   [**CFD/Tutorial 6**](https://ithaca-fv.github.io/ITHACA-FV/06POD_RBF_8C-example.html): This tutorial presents the application of data driven POD-Galerkin model to RANS equation in steady state setting. The components of the velocity at the inlet are paramertized. The OpenFOAM full order problem is based on **simpleFoam**.
 
-*   [**CFD/Tutorial 8**](https://mathlab.github.io/ITHACA-FV/08DEIM_8C-example.html): In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for the reconstruction of a non-linear function. In this case we do not perform model reduction but we test just the motodology a non-linear function.
+*   [**CFD/Tutorial 8**](https://ithaca-fv.github.io/ITHACA-FV/08DEIM_8C-example.html): In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for the reconstruction of a non-linear function. In this case we do not perform model reduction but we test just the motodology a non-linear function.
 
-*   [**CFD/Tutorial 9**](https://mathlab.github.io/ITHACA-FV/09DEIM_ROM_8C-example.html): In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for model reduction purposes. The non-linearity is in the forcing term of a heat transfer problem. The OpenFOAM full order problem is based on **laplacianFoam**.
+*   [**CFD/Tutorial 9**](https://ithaca-fv.github.io/ITHACA-FV/09DEIM_ROM_8C-example.html): In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Methods for model reduction purposes. The non-linearity is in the forcing term of a heat transfer problem. The OpenFOAM full order problem is based on **laplacianFoam**.
 
 
 ### 6. Authors and contributors
-**ITHACA-FV** is currently developed and mantained at [SISSA mathLab](http://mathlab.sissa.it/) by [Dr. Giovanni Stabile](mailto:gstabile@sissa.it) under the supervision of [Prof. Gianluigi Rozza](mailto:gianluigi.rozza@sissa.it)
+**ITHACA-FV** is currently developed and maintained at the University of Urbino by [Dr. Giovanni Stabile](www.giovannistabile.com) and at [SISSA mathLab](http://mathlab.sissa.it/) in collaboration with [Prof. Gianluigi Rozza](https://people.sissa.it/~grozza/)'s group.
 
-Contact us by email for further information or questions about **ITHACA-FV**, or open an ''Issue'' on this website. **ITHACA-FV** is at an early development stage, so contributions improving either the code or the documentation are welcome, both as patches or merge requests on this website. If you are willing to contribute please follow the [developer instructions](https://github.com/mathLab/ITHACA-FV/tree/master/src).
+Contact us by email for further information or questions about **ITHACA-FV**, or open an ''Issue'' on this website. **ITHACA-FV** is at an early development stage, so contributions improving either the code or the documentation are welcome, both as patches or merge requests on this website. If you are willing to contribute please follow the [developer instructions](https://github.com/ithaca-fv/ITHACA-FV/tree/master/src).
 
 ### 7. How to cite
 Most of the theoretical aspects behind **ITHACA-FV** are deeply explained in [<b> Stabile2017CAIM </b>](https://arxiv.org/pdf/1701.03424.pdf) and [<b> Stabile2017CAF </b>](https://arxiv.org/pdf/1710.11580.pdf).
