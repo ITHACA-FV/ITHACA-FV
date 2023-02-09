@@ -176,7 +176,7 @@ Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
 
 
 ### 6. Authors and contributors
-**ITHACA-FV** is currently developed and maintained at the University of Urbino by [Dr. Giovanni Stabile](www.giovannistabile.com) and at [SISSA mathLab](http://mathlab.sissa.it/) in collaboration with [Prof. Gianluigi Rozza](https://people.sissa.it/~grozza/)'s group.
+**ITHACA-FV** is currently developed and maintained at the [University of Urbino Carlo Bo](https://www.uniurb.it/) by [Dr. Giovanni Stabile](www.giovannistabile.com) and at [SISSA mathLab](http://mathlab.sissa.it/) in collaboration with [Prof. Gianluigi Rozza](https://people.sissa.it/~grozza/)'s group.
 
 Contact us by email for further information or questions about **ITHACA-FV**, or open an ''Issue'' on this website. **ITHACA-FV** is at an early development stage, so contributions improving either the code or the documentation are welcome, both as patches or merge requests on this website. If you are willing to contribute please follow the [developer instructions](https://github.com/ithaca-fv/ITHACA-FV/tree/master/src).
 
