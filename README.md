@@ -205,7 +205,7 @@ Doi                      = {10.1016/j.compfluid.2018.01.035}}
 ```
 
 
-and cite the [ITHACA-FV website](http://mathlab.sissa.it/ITHACA-FV).
+and cite the [ITHACA-FV website](https://ithaca-fv.github.io/ITHACA-FV).
 
 
 ### 8. License
