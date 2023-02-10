@@ -82,7 +82,7 @@ In the near future the ITHACA-FV will also be linked with the pytorch package fo
     unzip libtorch.zip -d opt/ && \
 ```
 
-For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://mathlab.github.io/ITHACA-FV/).
+For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://ithaca-fv.github.io/ITHACA-FV).
 
 
 ### 3. Docker Image
