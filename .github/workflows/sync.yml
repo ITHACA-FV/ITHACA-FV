@@ -15,5 +15,6 @@ jobs:
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
           owner: ithaca-fv
+          name: ithaca-fv
           base: master
           head: master
