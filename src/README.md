@@ -12,7 +12,7 @@ you want to add, remember to pull the last changes (see [here](https://help.gith
 If you intend to add some new classes or methods please follow the naming convention reported [here](https://gist.github.com/lefticus/10191322) and in particular use the CamelCase convention.
 
 1. <div id="1">Create a new fork of the public repository
-   [ITHACA-FV](https://github.com/mathlab/ITHACA-FV)
+   [ITHACA-FV](https://github.com/ithaca-fv/ITHACA-FV)
    ([here](https://help.github.com/articles/fork-a-repo) you can find an
     introduction about the fork procedure). 
 
@@ -30,7 +30,7 @@ If you intend to add some new classes or methods please follow the naming conven
    repository (**not** the fork) using the following commands:
    ```
    cd ITHACA-FV
-   git remote add mathlab "https://github.com/mathlab/ITHACA-FV"
+   git remote add ithaca-fv "https://github.com/ithaca-fv/ITHACA-FV"
    ```
 
 4. <div id="4">Create a branch into your local repository. The new branch name
@@ -42,7 +42,7 @@ If you intend to add some new classes or methods please follow the naming conven
 
 5. Start implementing changes or adding new functionalities. Please ensure to
    write well-documented and properly formatted code. You can use the
-   [`code_formatter.sh`](https://github.com/mathLab/ITHACA-FV/blob/master/code_formatter.sh)
+   [`code_formatter.sh`](https://github.com/ithaca-fv/ITHACA-FV/blob/master/code_formatter.sh)
    script (already in the repository) to automatically format the code
    according to the ITHACA style.
 
@@ -66,8 +66,8 @@ If you intend to add some new classes or methods please follow the naming conven
    history of your `new_branch_name` branch. Shortly:
    ```
    git checkout master
-   git fetch mathlab
-   git pull mathlab master
+   git fetch ithaca-fv
+   git pull ithaca-fv master
    git checkout new_branch_name
    git rebase master new_branch_name
    ```
@@ -101,8 +101,8 @@ If you intend to add some new classes or methods please follow the naming conven
     As before digit (*NOTE*: the following commands delete the `new_branch_name`):
     ```
     git checkout master
-    git fetch mathlab
-    git pull mathlab master
+    git fetch ithaca-fv
+    git pull ithaca-fv master
     git branch -D new_branch_name
     git push origin --delete new_branch_name
     git push origin master
