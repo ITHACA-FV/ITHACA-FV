@@ -38,6 +38,27 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 template <template <class> class PatchField, class GeoMesh>
 Eigen::VectorXd Foam2Eigen::field2Eigen(
+    GeometricField<tensor, PatchField, GeoMesh>& field)
+{
+    Eigen::VectorXd out;
+    out.resize(label(field.size() * 9));
+
+    for (label l = 0; l < field.size(); l++)
+    {
+      for (label j = 0; j < 9; j++)
+      {
+          out(j * field.size() + l) = field[l][j];
+      }
+    }
+
+    return out;
+}
+
+template Eigen::VectorXd Foam2Eigen::field2Eigen(
+    volTensorField& field);
+
+template <template <class> class PatchField, class GeoMesh>
+Eigen::VectorXd Foam2Eigen::field2Eigen(
     GeometricField<vector, PatchField, GeoMesh>& field)
 {
     Eigen::VectorXd out;
@@ -45,9 +66,10 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(
 
     for (label l = 0; l < field.size(); l++)
     {
-        out(l) = field[l][0];
-        out(field.size() + l) = field[l][1];
-        out(2 * field.size() + l) = field[l][2];
+      for (label j = 0; j < 3; j++)
+      {
+          out(j * field.size() + l) = field[l][j];
+      }
     }
 
     return out;
@@ -109,9 +131,27 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<vector>& field)
 
     for (label l = 0; l < field.size(); l++)
     {
-        out(l) = field[l][0];
-        out(field.size() + l) = field[l][1];
-        out(2 * field.size() + l) = field[l][2];
+      for (label j = 0; j < 3; j++)
+      {
+          out(j * field.size() + l) = field[l][j];
+      }
+    }
+
+    return out;
+}
+
+template <>
+Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<tensor>& field)
+{
+    Eigen::VectorXd out;
+    out.resize(label(field.size() * 9));
+
+    for (label l = 0; l < field.size(); l++)
+    {
+      for (label j = 0; j < 9; j++)
+      {
+          out(j * field.size() + l) = field[l][j];
+      }
     }
 
     return out;
@@ -134,6 +174,34 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const
 
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    GeometricField<tensor, PatchField, GeoMesh>& field)
+{
+    List<Eigen::VectorXd> Out;
+    label size = field.boundaryField().size();
+    Out.resize(size);
+
+    for (label i = 0; i < size; i++)
+    {
+        label sizei = field.boundaryField()[i].size();
+        Out[i].resize(sizei * 9);
+
+        for (label k = 0; k < sizei; k++)
+        {
+            for (label j = 0; j < 9; j++)
+            {
+                Out[i](k + j * sizei) = field.boundaryField()[i][k][j];
+            }
+        }
+    }
+
+    return Out;
+}
+
+template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+  volTensorField& field);
+
+template <template <class> class PatchField, class GeoMesh>
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     GeometricField<vector, PatchField, GeoMesh>& field)
 {
     List<Eigen::VectorXd> Out;
@@ -147,9 +215,10 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 
         for (label k = 0; k < sizei; k++)
         {
-            Out[i](k) = field.boundaryField()[i][k][0];
-            Out[i](k + sizei) = field.boundaryField()[i][k][1];
-            Out[i](k + 2 * sizei) = field.boundaryField()[i][k][2];
+            for (label j = 0; j < 3; j++)
+            {
+                Out[i](k + j * sizei) = field.boundaryField()[i][k][j];
+            }
         }
     }
 
@@ -279,6 +348,79 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     PtrList<volVectorField>& fields, label Nfields);
 
+
+template <template <class> class PatchField, class GeoMesh>
+List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<GeometricField<tensor, PatchField, GeoMesh>>&
+    fields,
+    label Nfields)
+{
+    label Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
+
+    if (Nfields == -1)
+    {
+        Nf = fields.size();
+    }
+    else
+    {
+        Nf = Nfields;
+    }
+
+    List<Eigen::MatrixXd> Out;
+    label NBound = fields[0].boundaryField().size();
+    Out.resize(NBound);
+
+    for (label i = 0; i < NBound; i++)
+    {
+        label sizei = fields[0].boundaryField()[i].size();
+        Out[i].resize(sizei * 9, Nf);
+    }
+
+    for (label k = 0; k < Nf; k++)
+    {
+        List<Eigen::VectorXd> temp;
+        temp = field2EigenBC(fields[k]);
+
+        for (label i = 0; i < NBound; i++)
+        {
+            Out[i].col(k) = temp[i];
+        }
+    }
+
+    return Out;
+}
+
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<volTensorField>& fields, label Nfields);
+
+template <template <class> class PatchField, class GeoMesh>
+GeometricField<tensor, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
+    GeometricField<tensor, PatchField, GeoMesh>& field_in,
+    Eigen::VectorXd& eigen_vector, bool correctBC)
+{
+    GeometricField<tensor, PatchField, GeoMesh> field_out(field_in);
+
+    for (auto i = 0; i < field_out.size(); i++)
+    {
+      for (label j = 0; j < 9; j++)
+      {
+          field_out.ref()[i][j] = eigen_vector(i + field_out.size() * j);
+      }
+    }
+
+    if (correctBC)
+    {
+        field_out.correctBoundaryConditions();
+    }
+
+    return field_out;
+}
+
+template volTensorField Foam2Eigen::Eigen2field(
+    volTensorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
+
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     GeometricField<vector, PatchField, GeoMesh>& field_in,
@@ -288,9 +430,10 @@ GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
 
     for (auto i = 0; i < field_out.size(); i++)
     {
-        field_out.ref()[i][0] = eigen_vector(i);
-        field_out.ref()[i][1] = eigen_vector(i + field_out.size());
-        field_out.ref()[i][2] = eigen_vector(i + field_out.size() * 2);
+      for (label j = 0; j < 3; j++)
+      {
+          field_out.ref()[i][j] = eigen_vector(i + field_out.size() * j);
+      }
     }
 
     if (correctBC)
@@ -395,9 +538,42 @@ Field<vector> Foam2Eigen::Eigen2field(
 
     for (auto i = 0; i < sizeBC; i++)
     {
-        field[i][0] = matrix(i, 0);
-        field[i][1] = matrix(i, 1);
-        field[i][2] = matrix(i, 2);
+        for (label j = 0; j < 3; j++)
+        {
+            field[i][j] = matrix(i, j);
+        }
+    }
+
+    return field;
+}
+
+template <>
+Field<tensor> Foam2Eigen::Eigen2field(
+    Field<tensor>& field, Eigen::MatrixXd& matrix, bool correctBC)
+{
+    label sizeBC = field.size();
+    M_Assert(matrix.cols() == 9,
+             "The number of columns of the Input members is not correct, it should be 1");
+
+    if (matrix.rows() == 1)
+    {
+        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC, 1);
+        matrix.conservativeResize(sizeBC, 9);
+        matrix = new_matrix;
+    }
+
+    std::string message = "The input Eigen::MatrixXd has size " + name(
+                              matrix.rows()) +
+                          ". It should have the same size of the Field, i.e. " +
+                          name(sizeBC);
+    M_Assert(matrix.rows() == sizeBC, message.c_str());
+
+    for (auto i = 0; i < sizeBC; i++)
+    {
+        for (label j = 0; j < 9; j++)
+        {
+            field[i][j] = matrix(i, j);
+        }
     }
 
     return field;
@@ -442,6 +618,10 @@ template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<surfaceScalarField>&
         label Nfields);
 template Eigen::MatrixXd
 Foam2Eigen::PtrList2Eigen<vector, fvPatchField, volMesh>(PtrList<volVectorField>&
+        fields,
+        label Nfields);
+template Eigen::MatrixXd
+Foam2Eigen::PtrList2Eigen<tensor, fvPatchField, volMesh>(PtrList<volTensorField>&
         fields,
         label Nfields);
 
@@ -1029,9 +1209,10 @@ Eigen::MatrixXd Foam2Eigen::field2Eigen(const List<vector>& field)
 
     for (label l = 0; l < field.size(); l++)
     {
-        out(l, 0) = field[l][0];
-        out(field.size() + l, 0) = field[l][1];
-        out(2 * field.size() + l, 0) = field[l][2];
+      for (label j = 0; j < 3; j++)
+      {
+          out(j * field.size() + l, 0) = field[l][j];
+      }
     }
 
     return out;

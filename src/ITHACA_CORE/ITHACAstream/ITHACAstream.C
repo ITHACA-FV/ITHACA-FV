@@ -738,6 +738,9 @@ template void exportFields(
 template void exportFields(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& field,
     word folder, word fieldname);
+template void exportFields(
+    PtrList<GeometricField<tensor, fvPatchField, volMesh>>& field,
+    word folder, word fieldname);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
@@ -829,6 +832,9 @@ template void exportSolution(
 template void exportSolution(
     GeometricField<vector, pointPatchField, pointMesh>& s,
     fileName subfolder, fileName folder);
+template void exportSolution(
+    GeometricField<tensor, pointPatchField, pointMesh>& s,
+    fileName subfolder, fileName folder);
 
 void writePoints(pointField points, fileName folder,
                  fileName subfolder)
@@ -906,6 +912,9 @@ template void read_fields(PtrList<volScalarField>& Lfield,
 template void read_fields(PtrList<volVectorField>& Lfield,
                           word Name,
                           fileName casename, int first_snap, int n_snap);
+template void read_fields(PtrList<volTensorField>& Lfield,
+                          word Name,
+                          fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<surfaceScalarField>& Lfield,
                           word Name,
                           fileName casename, int first_snap, int n_snap);
@@ -916,6 +925,8 @@ template void read_fields(PtrList<volScalarField>& Lfield,
                           volScalarField& field, fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<volVectorField>& Lfield,
                           volVectorField& field, fileName casename, int first_snap, int n_snap);
+template void read_fields(PtrList<volTensorField>& Lfield,
+                          volTensorField& field, fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<surfaceScalarField>& Lfield,
                           surfaceScalarField& field, fileName casename, int first_snap, int n_snap);
 template void read_fields(PtrList<surfaceVectorField>& Lfield,
@@ -924,6 +935,8 @@ template void readMiddleFields(PtrList<volScalarField>& Lfield,
                                volScalarField& field, fileName casename);
 template void readMiddleFields(PtrList<volVectorField>& Lfield,
                                volVectorField& field, fileName casename);
+template void readMiddleFields(PtrList<volTensorField>& Lfield,
+                               volTensorField& field, fileName casename);
 template void readMiddleFields(PtrList<surfaceScalarField>&
                                Lfield, surfaceScalarField& field, fileName casename);
 template void readMiddleFields(PtrList<surfaceVectorField>&
@@ -932,6 +945,8 @@ template void readConvergedFields(PtrList<volScalarField>& Lfield,
                                   volScalarField& field, fileName casename);
 template void readConvergedFields(PtrList<volVectorField>& Lfield,
                                   volVectorField& field, fileName casename);
+template void readConvergedFields(PtrList<volTensorField>& Lfield,
+                                  volTensorField& field, fileName casename);
 template void readConvergedFields(PtrList<surfaceScalarField>&
                                   Lfield, surfaceScalarField& field, fileName casename);
 template void readConvergedFields(PtrList<surfaceVectorField>&
@@ -953,6 +968,8 @@ void exportList(T& list, word folder, word filename)
 template void exportList(Field<scalar>& list, word folder,
                          word filename);
 template void exportList(Field<vector>& list, word folder,
+                         word filename);
+template void exportList(Field<tensor>& list, word folder,
                          word filename);
 
 template void save(const List<Eigen::SparseMatrix<double>>& MatrixList,

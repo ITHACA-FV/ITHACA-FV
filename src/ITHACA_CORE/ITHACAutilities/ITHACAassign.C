@@ -256,6 +256,22 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
     assignBC(s, BC_ind, valueList);
 }
 
+void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
+              tensor value)
+{
+    M_Assert(value.size() == 9,
+             "The size of the given vector has to be equal to 3x3 for the 3x3 components");
+    label sizeBC = s.boundaryField()[BC_ind].size();
+    List<tensor> valueList(sizeBC);
+
+    for (label i = 0; i < sizeBC; i++)
+    {
+        valueList[i] = value;
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
+
 void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
               Eigen::MatrixXd valueVec)
 {
@@ -263,12 +279,31 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
     M_Assert(sizeBC * 3 == valueVec.size(),
              "The size of the given values matrix has to be equal to 3 times the dimension of the boundaryField");
     List<vector> valueList(sizeBC);
+    for (label i = 0; i < sizeBC; i++)
+    {
+        for (label j = 0; j < 3; j++)
+        {
+            valueList[i].component(j) = valueVec(i + sizeBC * j);
+        }
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
+
+void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
+              Eigen::MatrixXd valueVec)
+{
+    label sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC * 9 == valueVec.size(),
+             "The size of the given values matrix has to be equal to 9 times the dimension of the boundaryField");
+    List<tensor> valueList(sizeBC);
 
     for (label i = 0; i < sizeBC; i++)
     {
-        valueList[i].component(0) = valueVec(i);
-        valueList[i].component(1) = valueVec(i + sizeBC);
-        valueList[i].component(2) = valueVec(i + sizeBC * 2);
+        for (label j = 0; j < 9; j++)
+        {
+            valueList[i].component(j) = valueVec(i + sizeBC * j);
+        }
     }
 
     assignBC(s, BC_ind, valueList);
@@ -368,6 +403,69 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
         }
     }
 }
+
+
+// Assign a BC for a tensor field
+void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
+              List<tensor> valueList)
+{
+    word typeBC = s.boundaryField()[BC_ind].type();
+    label sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC == valueList.size(),
+             "The size of the given values list has to be equal to the dimension of the boundaryField");
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+
+    if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        Info << "This Feature is not implemented for this boundary condition" << endl;
+        exit(0);
+    }
+    else if (s.boundaryField()[BC_ind].type() == "freestream")
+    {
+        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
+        }
+
+        freestreamFvPatchField<tensor>& Tpatch =
+            refCast<freestreamFvPatchField<tensor>>(s.boundaryFieldRef()[BC_ind]);
+        tensorField& gradTpatch = Tpatch.freestreamValue();
+        forAll(gradTpatch, faceI)
+        {
+            gradTpatch[faceI] = valueList[faceI];
+        }
+    }
+    else if (s.boundaryField()[BC_ind].type() == "empty"
+             || s.boundaryField()[BC_ind].type() == "zeroGradient")
+    {}
+    else
+    {
+        try
+        {
+            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty"
+                    && typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated"
+                    &&  typeBC != "processor")
+            {
+                word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
+                               " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                throw (message);
+            }
+        }
+        catch (const word message)
+        {
+            if (para->warnings)
+            {
+                WarningInFunction << message << endl;
+            }
+        }
+
+        for (label i = 0; i < sizeBC; i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
+        }
+    }
+}
+
 
 template<typename Type>
 void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
