@@ -153,6 +153,20 @@ class Foam2Eigen
         /// @return     Dense Eigen vector
         ///
         template<template<class> class PatchField, class GeoMesh>
+        static Eigen::VectorXd field2Eigen(GeometricField<tensor, PatchField, GeoMesh>&
+                                       field);
+
+        //----------------------------------------------------------------------
+        /// @brief      Convert a vector OpenFOAM field into an Eigen Vector
+        ///
+        /// @param[in]  field       The field
+        ///
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
+        ///
+        /// @return     Dense Eigen vector
+        ///
+        template<template<class> class PatchField, class GeoMesh>
         static Eigen::VectorXd field2Eigen(GeometricField<vector, PatchField, GeoMesh>&
                                            field);
 
@@ -242,6 +256,21 @@ class Foam2Eigen
         static List<Eigen::VectorXd> field2EigenBC(
             GeometricField<vector, PatchField, GeoMesh>& field);
 
+        //----------------------------------------------------------------------
+        /// @brief      Convert an OpenFOAM tensor field to a List of Eigen
+        ///             Vectors, one for each boundary
+        ///
+        /// @param[in]  field       The field
+        ///
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
+        ///
+        /// @return     Dense Eigen vector
+        ///
+        template<template<class> class PatchField, class GeoMesh>
+        static List<Eigen::VectorXd> field2EigenBC(
+            GeometricField<tensor, PatchField, GeoMesh>& field);
+
 
         //----------------------------------------------------------------------
         /// @brief      Convert an OpenFOAM scalar field to a List of Eigen
@@ -278,6 +307,23 @@ class Foam2Eigen
             label Nfields = -1);
 
         //----------------------------------------------------------------------
+        /// @brief      Convert an OpenFOAM vector field to a List of Eigen
+        ///             Vectors, one for each boundary
+        ///
+        /// @param[in]  fields      The field
+        /// @param[in]  Nfields     The nfields
+        ///
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
+        ///
+        /// @return     Dense Eigen matrix
+        ///
+        template<template<class> class PatchField, class GeoMesh>
+        static List<Eigen::MatrixXd> PtrList2EigenBC(
+            PtrList<GeometricField<tensor, PatchField, GeoMesh>>& fields,
+            label Nfields = -1);
+
+        //----------------------------------------------------------------------
         /// @brief         Convert a vector in Eigen format into an OpenFOAM
         ///                scalar GeometricField
         ///
@@ -309,6 +355,23 @@ class Foam2Eigen
         template<template<class> class PatchField, class GeoMesh>
         static GeometricField<vector, PatchField, GeoMesh> Eigen2field(
             GeometricField<vector, PatchField, GeoMesh>& field,
+            Eigen::VectorXd& eigen_vector, bool correctBC = true);
+
+        //----------------------------------------------------------------------
+        /// @brief         Convert a vector in Eigen format into an OpenFOAM
+        ///                tensor GeometricField
+        ///
+        /// @param[in/out] field         OpenFOAM GeometricField
+        /// @param[in]     eigen_vector  Vector in Eigen format
+        ///
+        /// @tparam        PatchField    fvPatchField or fvsPatchField.
+        /// @tparam        GeoMesh       volMesh or surfaceMesh.
+        ///
+        /// @return        OpenFOAM GeometricField
+        ///
+        template<template<class> class PatchField, class GeoMesh>
+        static GeometricField<tensor, PatchField, GeoMesh> Eigen2field(
+            GeometricField<tensor, PatchField, GeoMesh>& field,
             Eigen::VectorXd& eigen_vector, bool correctBC = true);
 
         //----------------------------------------------------------------------
