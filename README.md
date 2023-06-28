@@ -22,7 +22,7 @@
 </p>
 
 ### 0. Introduction
-**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2106**](https://www.openfoam.com/releases/openfoam-v2106/) and older openfoam.com versions but it can be easily adapted also to other versions of OpenFOAM.
+**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2212**](https://www.openfoam.com/releases/openfoam-v2212/) and older openfoam.com versions but it can be easily adapted also to other versions of OpenFOAM.
 
 **ITHACA-FV** can also be used as a basis for more advanced projects that would like to assess the capability of reduced order models in their existing **OpenFOAM**-based software, thanks to the availability of several reduced order methods and algorithms.
 
@@ -38,6 +38,7 @@ Linear and non-linear algebra operations which are not already implemented in Op
 *   [**OpenFOAM 2006**](https://www.openfoam.com/releases/openfoam-v2006/) or
 *   [**OpenFOAM 2012**](https://www.openfoam.com/releases/openfoam-v2012/) or
 *   [**OpenFOAM 2106**](https://www.openfoam.com/news/main-news/openfoam-v2106)
+*   [**OpenFOAM 2212**](https://www.openfoam.com/news/main-news/openfoam-v2212)
 
 
 ### 2. Installation and usage
