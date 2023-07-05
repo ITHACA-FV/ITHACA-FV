@@ -279,6 +279,7 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
     M_Assert(sizeBC * 3 == valueVec.size(),
              "The size of the given values matrix has to be equal to 3 times the dimension of the boundaryField");
     List<vector> valueList(sizeBC);
+
     for (label i = 0; i < sizeBC; i++)
     {
         for (label j = 0; j < 3; j++)

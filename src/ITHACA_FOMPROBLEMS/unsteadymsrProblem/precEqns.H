@@ -37,7 +37,7 @@ fvScalarMatrix precEq1
     + fvm::laplacian(turbulence->nu() / Sc + difft, prec1)
     - fvm::Sp(lam1, prec1)
     + beta1* NSF* flux
-    );
+);
 
 precEq1.relax();
 precEq1.solve();
@@ -51,7 +51,7 @@ fvScalarMatrix precEq2
     + fvm::laplacian(turbulence->nu() / Sc + difft, prec2)
     - fvm::Sp(lam2, prec2)
     + beta2* NSF* flux
-    );
+);
 
 precEq2.relax();
 precEq2.solve();
@@ -65,7 +65,7 @@ fvScalarMatrix precEq3
     + fvm::laplacian(turbulence->nu() / Sc + difft, prec3)
     - fvm::Sp(lam3, prec3)
     + beta3* NSF* flux
-    );
+);
 
 precEq3.relax();
 precEq3.solve();
@@ -79,7 +79,7 @@ fvScalarMatrix precEq4
     + fvm::laplacian(turbulence->nu() / Sc + difft, prec4)
     - fvm::Sp(lam4, prec4)
     + beta4* NSF* flux
-    );
+);
 
 precEq4.relax();
 precEq4.solve();
@@ -93,7 +93,7 @@ fvScalarMatrix precEq5
     + fvm::laplacian(turbulence->nu() / Sc + difft, prec5)
     - fvm::Sp(lam5, prec5)
     + beta5* NSF* flux
-    );
+);
 
 precEq5.relax();
 precEq5.solve();
@@ -107,7 +107,7 @@ fvScalarMatrix precEq6
     + fvm::laplacian(turbulence->nu() / Sc + difft, prec6)
     - fvm::Sp(lam6, prec6)
     + beta6* NSF* flux
-    );
+);
 
 precEq6.relax();
 precEq6.solve();
@@ -121,7 +121,7 @@ fvScalarMatrix precEq7
     + fvm::laplacian(turbulence->nu() / Sc + difft, prec7)
     - fvm::Sp(lam7, prec7)
     + beta7* NSF* flux
-    );
+);
 
 precEq7.relax();
 precEq7.solve();
@@ -135,7 +135,7 @@ fvScalarMatrix precEq8
     + fvm::laplacian(turbulence->nu() / Sc + difft, prec8)
     - fvm::Sp(lam8, prec8)
     + beta8* NSF* flux
-    );
+);
 
 precEq8.relax();
 precEq8.solve();

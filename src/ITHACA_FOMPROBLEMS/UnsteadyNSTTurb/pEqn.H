@@ -6,7 +6,7 @@ surfaceScalarField phiHbyA
     "phiHbyA",
     fvc::flux(HbyA)
     + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi)
-    );
+);
 
 MRF.makeRelative(phiHbyA);
 

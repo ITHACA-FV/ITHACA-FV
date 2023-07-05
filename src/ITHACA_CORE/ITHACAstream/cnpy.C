@@ -580,7 +580,7 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
                 for (size_t k = 0; k < arr.shape[2]; ++k)
                 {
                     tens(i, j, k) = data[arr.shape[1] * arr.shape[2] * i + j *
-                                                      arr.shape[2] + k];
+                                         arr.shape[2] + k];
                 }
             }
         }
@@ -594,7 +594,7 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
                 for (size_t k = 0; k < arr.shape[2]; ++k)
                 {
                     tens(i, j, k) = (typeNumber) data[arr.shape[0] * arr.shape[1] * k + j *
-                                                                   arr.shape[0] + i];
+                                                      arr.shape[0] + i];
                 }
             }
         }

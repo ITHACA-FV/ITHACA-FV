@@ -50,7 +50,7 @@ SourceFiles
 /// Structure to implement a newton object for a stationary NS problem
 struct newton_steadyNS: public newton_argument<double>
 {
-    public:
+        public:
         newton_steadyNS() {}
         newton_steadyNS(int Nx, int Ny,
                         steadyNS& problem): newton_argument<double>(Nx,

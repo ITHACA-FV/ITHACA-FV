@@ -37,7 +37,7 @@ License
 /// Structure to implement a newton object for a stationary MSR problem
 struct newton_msr_fd: public newton_argument<double>
 {
-    public:
+        public:
         newton_msr_fd() {}
         newton_msr_fd(int Nx, int Ny, msrProblem& problem) :
             newton_argument<double>(Nx, Ny),
@@ -61,7 +61,7 @@ struct newton_msr_fd: public newton_argument<double>
 
 struct newton_msr_n: public newton_argument<double>
 {
-    public:
+        public:
         newton_msr_n() {}
         newton_msr_n(int Nx, int Ny, msrProblem& problem) :
             newton_argument<double>(Nx, Ny),
@@ -129,7 +129,7 @@ struct newton_msr_n: public newton_argument<double>
 
 struct newton_msr_t: public newton_argument<double>
 {
-    public:
+        public:
         newton_msr_t() {}
         newton_msr_t(int Nx, int Ny, msrProblem& problem) :
             newton_argument<double>(Nx, Ny),

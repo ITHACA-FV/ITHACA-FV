@@ -49,7 +49,7 @@ SourceFiles
 
 struct newtonUnsteadyNSTurbIntrusive: public newton_argument<double>
 {
-    public:
+        public:
         newtonUnsteadyNSTurbIntrusive() {}
         newtonUnsteadyNSTurbIntrusive(int Nx, int Ny,
                                       UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
@@ -74,7 +74,7 @@ struct newtonUnsteadyNSTurbIntrusive: public newton_argument<double>
 
 struct newtonUnsteadyNSTurbIntrusivePPE: public newton_argument<double>
 {
-    public:
+        public:
         newtonUnsteadyNSTurbIntrusivePPE() {}
         newtonUnsteadyNSTurbIntrusivePPE(int Nx, int Ny,
                                          UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),

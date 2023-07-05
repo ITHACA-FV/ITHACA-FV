@@ -49,7 +49,7 @@ SourceFiles
 
 struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
 {
-    public:
+        public:
         newtonUnsteadyNSTurbSUP() {}
         newtonUnsteadyNSTurbSUP(int Nx, int Ny,
                                 UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
@@ -83,7 +83,7 @@ struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
 
 struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
 {
-    public:
+        public:
         newtonUnsteadyNSTurbPPE() {}
         newtonUnsteadyNSTurbPPE(int Nx, int Ny,
                                 UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
@@ -115,7 +115,7 @@ struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
 
 struct newtonUnsteadyNSTurbSUPAve: public newton_argument<double>
 {
-    public:
+        public:
         newtonUnsteadyNSTurbSUPAve() {}
         newtonUnsteadyNSTurbSUPAve(int Nx, int Ny,
                                    UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
@@ -149,7 +149,7 @@ struct newtonUnsteadyNSTurbSUPAve: public newton_argument<double>
 
 struct newtonUnsteadyNSTurbPPEAve: public newton_argument<double>
 {
-    public:
+        public:
         newtonUnsteadyNSTurbPPEAve() {}
         newtonUnsteadyNSTurbPPEAve(int Nx, int Ny,
                                    UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
