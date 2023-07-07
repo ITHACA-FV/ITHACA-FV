@@ -6,7 +6,7 @@ tutorial_flag=''
 torch_flag=''
 muq_flag=''
 applications_flag=''
-unit_tests_flag=''
+unit_tests_flag='true'
 
 has_wmake="$(command -v wmake)"
 
