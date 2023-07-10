@@ -27,6 +27,7 @@ License
 #define functionObjects_ITHACAsurfacetools_H
 
 #include <Eigen/Eigen>
+#include "volPointInterpolation.H"
 #include "Foam2Eigen.H"
 #include "fvMesh.H"
 #include "fvMeshSubset.H"
@@ -49,13 +50,19 @@ namespace ITHACAsurfacetools
 
   template<typename T, typename V>
   void surfaceValuesExt(T& field, const label patchInt, const label patchExt, List<V>& result);
-/*
-  template<typename T>
-  List<Eigen::vector> surfaceAverage(T& field, const label patch);
 
   template<typename T>
-  List<Eigen::vector> surfaceJump(T& field, const label patch);
-*/
+  Foam::Vector<scalar> surfaceFindMirrorPoint(T& field, const label patchInt, const label patchExt, const label cellID);
+
+  template<typename T>
+  label surfaceFindClosest(T& field, const label patchInt, const label patchExt, Foam::Vector<scalar> point);
+
+  template<typename T, typename V>
+  void surfaceAverage(T& field, const label patchInt, const label patchExt, List<V>& result);
+
+  template<typename T, typename V>
+  void surfaceJump(T& field, const label patchInt, const label patchExt, List<V>& result);
+
 }; // End namespace ITHACAsurfacetools
 } // End namespace ITHACAutilities
 
