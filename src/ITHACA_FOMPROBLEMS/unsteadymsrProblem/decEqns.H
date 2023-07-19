@@ -37,7 +37,7 @@ fvScalarMatrix decEq1
     + fvm::laplacian(turbulence->nu() / Sc + difft, dec1)
     - fvm::Sp(decLam1, dec1)
     + decBeta1* SP* flux
-    );
+);
 
 decEq1.relax();
 decEq1.solve();
@@ -53,7 +53,7 @@ fvScalarMatrix decEq2
     + fvm::laplacian(turbulence->nu() / Sc + difft, dec2)
     - fvm::Sp(decLam2, dec2)
     + decBeta2* SP* flux
-    );
+);
 
 decEq2.relax();
 decEq2.solve();
@@ -69,7 +69,7 @@ fvScalarMatrix decEq3
     + fvm::laplacian(turbulence->nu() / Sc + difft, dec3)
     - fvm::Sp(decLam3, dec3)
     + decBeta3* SP* flux
-    );
+);
 
 decEq3.relax();
 decEq3.solve();

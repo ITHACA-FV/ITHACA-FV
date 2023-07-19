@@ -56,7 +56,7 @@ SourceFiles
 
 struct newton_unsteadyNSTTurb_sup: public newton_argument<double>
 {
-    public:
+        public:
         newton_unsteadyNSTTurb_sup() {}
         newton_unsteadyNSTTurb_sup(int Nx, int Ny,
                                    UnsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
@@ -87,7 +87,7 @@ struct newton_unsteadyNSTTurb_sup: public newton_argument<double>
 
 struct newton_unsteadyNSTTurb_sup_t: public newton_argument<double>
 {
-    public:
+        public:
         newton_unsteadyNSTTurb_sup_t() {}
         newton_unsteadyNSTTurb_sup_t(int Nx, int Ny,
                                      UnsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),

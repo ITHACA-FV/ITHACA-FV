@@ -33,7 +33,7 @@ tmp<fvVectorMatrix> tUEqn
     + turbulence->divDevReff(U)
     ==
     fvOptions(U)
-    );
+);
 fvVectorMatrix& UEqn = tUEqn.ref();
 
 UEqn.relax();

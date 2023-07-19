@@ -50,7 +50,7 @@ SourceFiles
 /// Structure to implement a newton object for a stationary NS problem
 struct newtonSteadyNSTurbSUP: public newton_argument<double>
 {
-    public:
+        public:
         newtonSteadyNSTurbSUP() {}
         newtonSteadyNSTurbSUP(int Nx, int Ny,
                               SteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
@@ -79,7 +79,7 @@ struct newtonSteadyNSTurbSUP: public newton_argument<double>
 
 struct newtonSteadyNSTurbPPE: public newton_argument<double>
 {
-    public:
+        public:
         newtonSteadyNSTurbPPE() {}
         newtonSteadyNSTurbPPE(int Nx, int Ny,
                               SteadyNSTurb& problem): newton_argument<double>(Nx, Ny),

@@ -48,7 +48,7 @@ SourceFiles
 /// Newton object for the resolution of the reduced problem using a supremizer approach
 struct newton_unsteadyNS_sup: public newton_argument<double>
 {
-    public:
+        public:
         newton_unsteadyNS_sup() {}
         newton_unsteadyNS_sup(int Nx, int Ny,
                               unsteadyNS& problem): newton_argument<double>(Nx, Ny),
@@ -77,7 +77,7 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
 /// Newton object for the resolution of the reduced problem using a PPE approach
 struct newton_unsteadyNS_PPE: public newton_argument<double>
 {
-    public:
+        public:
         newton_unsteadyNS_PPE() {}
         newton_unsteadyNS_PPE(int Nx, int Ny,
                               unsteadyNS& problem): newton_argument<double>(Nx, Ny),

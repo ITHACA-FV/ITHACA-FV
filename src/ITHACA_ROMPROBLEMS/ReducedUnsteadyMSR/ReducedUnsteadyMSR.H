@@ -38,7 +38,7 @@ License
 
 struct newton_usmsr_fd: public newton_argument<double>
 {
-    public:
+        public:
         newton_usmsr_fd() {}
         newton_usmsr_fd(int Nx, int Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
@@ -64,7 +64,7 @@ struct newton_usmsr_fd: public newton_argument<double>
 
 struct newton_usmsr_n: public newton_argument<double>
 {
-    public:
+        public:
         newton_usmsr_n() {}
         newton_usmsr_n(int Nx, int Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
@@ -136,7 +136,7 @@ struct newton_usmsr_n: public newton_argument<double>
 
 struct newton_usmsr_t: public newton_argument<double>
 {
-    public:
+        public:
         newton_usmsr_t() {}
         newton_usmsr_t(int Nx, int Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),

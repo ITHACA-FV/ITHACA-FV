@@ -47,7 +47,7 @@ SourceFiles
 /// Newton object for the resolution of the reduced problem using a supremizer approach
 struct newton_unsteadyNST_sup: public newton_argument<double>
 {
-    public:
+        public:
         newton_unsteadyNST_sup() {}
         newton_unsteadyNST_sup(int Nx, int Ny,
                                unsteadyNST& problem): newton_argument<double>(Nx, Ny),
@@ -72,7 +72,7 @@ struct newton_unsteadyNST_sup: public newton_argument<double>
 
 struct newton_unsteadyNST_sup_t: public newton_argument<double>
 {
-    public:
+        public:
         newton_unsteadyNST_sup_t() {}
         newton_unsteadyNST_sup_t(int Nx, int Ny,
                                  unsteadyNST& problem): newton_argument<double>(Nx, Ny),

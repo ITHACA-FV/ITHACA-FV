@@ -32,8 +32,8 @@ struct NpyArray
 {
     NpyArray(const std::vector<size_t>& _shape, size_t _word_size,
              bool _fortran_order, std::string _number_type) :
-        shape(_shape), word_size(_word_size), fortran_order(_fortran_order),
-        number_type(_number_type)
+    shape(_shape), word_size(_word_size), fortran_order(_fortran_order),
+          number_type(_number_type)
     {
         num_vals = 1;
 

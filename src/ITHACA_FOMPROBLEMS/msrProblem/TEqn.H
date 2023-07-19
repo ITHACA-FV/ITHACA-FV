@@ -11,7 +11,7 @@ tmp<fvScalarMatrix> tTEqn
     +(v / CpRef) * (decLam1 * dec1 + decLam2 * dec2 + decLam3* dec3)
     + (SP * (1 - decbetaTot)*v / CpRef)*flux
 
-    );
+);
 fvScalarMatrix& TEqn = tTEqn.ref();
 //TEqn.relax();
 //TEqn.solve();

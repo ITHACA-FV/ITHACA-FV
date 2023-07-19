@@ -50,7 +50,7 @@ SourceFiles
 /// Structure to implement a newton object for a stationary NS problem
 struct newtonSteadyNSTurbIntrusive: public newton_argument<double>
 {
-    public:
+        public:
         newtonSteadyNSTurbIntrusive() {}
         newtonSteadyNSTurbIntrusive(int Nx, int Ny,
                                     SteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
