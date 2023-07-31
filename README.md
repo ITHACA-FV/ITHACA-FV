@@ -22,7 +22,7 @@
 </p>
 
 ### 0. Introduction
-**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2106**](https://www.openfoam.com/releases/openfoam-v2106/) and older openfoam.com versions but it can be easily adapted also to other versions of OpenFOAM.
+**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2212**](https://www.openfoam.com/news/main-news/openfoam-v2212/) and older openfoam.com versions but it can be easily adapted also to other versions of OpenFOAM.
 
 **ITHACA-FV** can also be used as a basis for more advanced projects that would like to assess the capability of reduced order models in their existing **OpenFOAM**-based software, thanks to the availability of several reduced order methods and algorithms.
 
@@ -32,12 +32,13 @@ Linear and non-linear algebra operations which are not already implemented in Op
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
-*   [**OpenFOAM 1812**](https://www.openfoam.com/releases/openfoam-v1812/) or
-*   [**OpenFOAM 1906**](https://www.openfoam.com/releases/openfoam-v1906/) or
-*   [**OpenFOAM 1912**](https://www.openfoam.com/releases/openfoam-v1912/) or
-*   [**OpenFOAM 2006**](https://www.openfoam.com/releases/openfoam-v2006/) or
-*   [**OpenFOAM 2012**](https://www.openfoam.com/releases/openfoam-v2012/) or
-*   [**OpenFOAM 2106**](https://www.openfoam.com/news/main-news/openfoam-v2106)
+*   [**OpenFOAM 1812**](https://www.openfoam.com/news/main-news/openfoam-v1812/) or
+*   [**OpenFOAM 1906**](https://www.openfoam.com/news/main-news/openfoam-v1906/) or
+*   [**OpenFOAM 1912**](https://www.openfoam.com/news/main-news/openfoam-v1912/) or
+*   [**OpenFOAM 2006**](https://www.openfoam.com/news/main-news/openfoam-v2006/) or
+*   [**OpenFOAM 2012**](https://www.openfoam.com/news/main-news/openfoam-v2012/) or
+*   [**OpenFOAM 2106**](https://www.openfoam.com/news/main-news/openfoam-v2106) or
+*   [**OpenFOAM 2212**](https://www.openfoam.com/news/main-news/openfoam-v2212)
 
 
 ### 2. Installation and usage
@@ -207,9 +208,9 @@ Doi                      = {10.1016/j.compfluid.2018.01.035}}
 and cite the [ITHACA-FV website](https://ithaca-fv.github.io/ITHACA-FV).
 
 ### 8. Funding
-A significant part of PyDMD has been written either as a by-product for other projects people were funded for, or by people on university-funded positions. There are probably many of such projects that have led to some development of PyDMD. We are very grateful for this support!
+A significant part of ITHACA-FV has been written either as a by-product for other projects people were funded for, or by people on university-funded positions. There are probably many of such projects that have led to some development of ITHACA-FV. We are very grateful for this support!
 
-Beyond this, PyDMD has also been supported by some dedicated projects that have allowed us to work on extensions, documentation, training and dissemination that would otherwise not have been possible. In particular, we acknowledge the following sources of support with great gratitude:
+Beyond this, ITHACA-FV has also been supported by some dedicated projects that have allowed us to work on extensions, documentation, training and dissemination that would otherwise not have been possible. In particular, we acknowledge the following sources of support with great gratitude:
 
 * [H2020 ERC CoG 2015 AROMA-CFD project 681447](https://people.sissa.it/~grozza/aroma-cfd/), P.I. Professor [Gianluigi Rozza](https://people.sissa.it/~grozza) at [SISSA mathLab](https://mathlab.sissa.it/).
 
