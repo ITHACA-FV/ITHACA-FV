@@ -92,7 +92,7 @@ namespace ITHACAsurfacetools
     Foam::Vector<scalar> result = *(new Foam::Vector<scalar>);
     List<label> indexesInt = surfaceIndexInt(field, patchInt, patchExt);
 
-    result = 2 * field.mesh().boundaryMesh()[patchInt].faceCentres()[cellID] - field.mesh().C()[indexesInt[cellID]];
+    result = 2.0 * field.mesh().boundaryMesh()[patchInt].faceCentres()[cellID] - field.mesh().C()[indexesInt[cellID]];
 
     return result;
   }
