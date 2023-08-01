@@ -37,13 +37,13 @@ int main(int argc, char **argv)
 
   List<label> indexesInt = surfaceIndexInt(U, patchInt, patchExt);
   List<label> indexesExt = surfaceIndexExt(U, patchInt, patchExt);
-  List<Foam::Vector<double>> patchValuesInt = *(new List<Foam::Vector<double>>);
+  List<Foam::Vector<double>> patchValuesInt;
   surfaceValuesInt(U, patchInt, patchExt, patchValuesInt);
-  List<Foam::Vector<double>> patchValuesExt = *(new List<Foam::Vector<double>>);
+  List<Foam::Vector<double>> patchValuesExt;
   surfaceValuesExt(U, patchInt, patchExt, patchValuesExt);
-  List<Foam::Vector<double>> average = *(new List<Foam::Vector<double>>);
+  List<Foam::Vector<double>> average;
   surfaceAverage(U, patchInt, patchExt, average);
-  List<Foam::Vector<double>> jump = *(new List<Foam::Vector<double>>);
+  List<Foam::Vector<double>> jump;
   surfaceJump(U, patchInt, patchExt, jump);
 
   Info << "surfaceIndexInt(U, 6) = " << endl;
