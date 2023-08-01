@@ -46,12 +46,35 @@ int main(int argc, char **argv)
   List<Foam::Vector<double>> jump = *(new List<Foam::Vector<double>>);
   surfaceJump(U, patchInt, patchExt, jump);
 
-  Info << "surfaceIndexInt(U, 6) = " << indexesInt << endl;
-  Info << "surfaceIndexExt(U, 6) = " << indexesExt << endl;
-  Info << "surfaceValuesInt(U, 6) = " << patchValuesInt << endl;
-  Info << "surfaceValuesExt(U, 6) = " << patchValuesExt << endl;
-  Info << "surfaceAverage(U, 6) = " << average << endl;
-  Info << "surfaceJump(U, 6) = " << jump << endl;
+  Info << "surfaceIndexInt(U, 6) = " << endl;
+  for (size_t i = 0; i < indexesInt.size(); i++) {
+    Info << "   " << indexesInt[i] << endl;
+  }
+
+  Info << endl << "surfaceIndexExt(U, 6) = " << endl;
+  for (size_t i = 0; i < indexesExt.size(); i++) {
+    Info << "   " << indexesExt[i] << endl;
+  }
+
+  Info << endl << "surfaceValuesInt(U, 6) = " << endl;
+  for (size_t i = 0; i < patchValuesInt.size(); i++) {
+    Info << "   " << patchValuesInt[i] << endl;
+  }
+
+  Info << endl << "surfaceValuesExt(U, 6) = " << endl;
+  for (size_t i = 0; i < patchValuesExt.size(); i++) {
+    Info << "   " << patchValuesExt[i] << endl;
+  }
+
+  Info << endl << "surfaceAverage(U, 6) = " << endl;
+  for (size_t i = 0; i < average.size(); i++) {
+    Info << "   " << average[i] << endl;
+  }
+
+  Info << endl << "surfaceJump(U, 6) = " << endl;
+  for (size_t i = 0; i < jump.size(); i++) {
+    Info << i << " :   " << jump[i] << endl;
+  }
 
   return 0;
 }
