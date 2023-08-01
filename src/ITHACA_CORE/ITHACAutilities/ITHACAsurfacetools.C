@@ -150,7 +150,6 @@ namespace ITHACAsurfacetools
   {
     List<label> indexesInt = surfaceIndexInt(field, patchInt, patchExt);
     result.resize(0);
-    Info << indexesInt.size() << endl;
 
     for(int i = 0; i < indexesInt.size(); i++)
     {
