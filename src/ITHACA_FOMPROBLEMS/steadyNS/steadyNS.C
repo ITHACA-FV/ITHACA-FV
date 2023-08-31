@@ -889,6 +889,37 @@ Eigen::MatrixXd steadyNS::diffusive_term(label NUmodes, label NPmodes,
     return B_matrix;
 }
 
+Eigen::MatrixXd steadyNS::diffusive_term_sym(label NUmodes, label NPmodes,
+        label NSUPmodes)
+{
+    label Bsize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::MatrixXd B_matrix;
+    B_matrix.resize(Bsize, Bsize);
+
+    // Project everything
+    for (label i = 0; i < Bsize; i++)
+    {
+        for (label j = 0; j < Bsize; j++)
+        {
+            B_matrix(i, j) = - fvc::domainIntegrate(fvc::grad(L_U_SUPmodes[i])
+                                        && fvc::grad(L_U_SUPmodes[j])).value();
+        }
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(B_matrix, sumOp<Eigen::MatrixXd>());
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/",
+                                      "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+    }
+
+    return B_matrix;
+}
+
 Eigen::MatrixXd steadyNS::pressure_gradient_term(label NUmodes, label NPmodes,
         label NSUPmodes)
 {
