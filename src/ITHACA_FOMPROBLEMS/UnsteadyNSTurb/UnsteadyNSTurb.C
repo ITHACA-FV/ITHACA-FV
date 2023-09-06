@@ -131,9 +131,7 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
     runTime.setDeltaT(timeStep);
     nextWrite = startTime + writeEvery;
 
-    // Initialize Nsnapshots
     label nsnapshots = 0;
-
 
     // Start the time loop
     while (runTime.run())
