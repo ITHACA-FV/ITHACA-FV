@@ -9,6 +9,7 @@ ITHACAutilities/ITHACAassign.C
 ITHACAutilities/ITHACAcoeffsMass.C
 ITHACAparallel/ITHACAparallel.C
 ITHACAutilities/ITHACAforces.C
+ITHACAutilities/ITHACAsurfacetools.C
 ITHACAPOD/ITHACAPOD.C
 ITHACAPOD/incrementalPOD.C
 ITHACADMD/ITHACADMD.C
