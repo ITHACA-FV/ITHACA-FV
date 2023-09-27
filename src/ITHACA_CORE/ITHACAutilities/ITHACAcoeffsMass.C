@@ -59,6 +59,10 @@ template PtrList<GeometricField<vector, fvPatchField, volMesh>>
 reconstructFromCoeff(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes,
     Eigen::MatrixXd& coeff_matrix, label Nmodes);
+template PtrList<GeometricField<tensor, fvPatchField, volMesh>>
+reconstructFromCoeff(
+    PtrList<GeometricField<tensor, fvPatchField, volMesh>>& modes,
+    Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd getMassMatrix(

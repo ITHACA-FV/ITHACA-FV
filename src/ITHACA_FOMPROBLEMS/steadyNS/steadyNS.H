@@ -386,6 +386,18 @@ class steadyNS: public reductionProblem
         Eigen::MatrixXd diffusive_term(label NUmodes, label NPmodes, label NSUPmodes);
 
         //--------------------------------------------------------------------------
+        //  Projection Methods Momentum Equation
+        /// Symetric diffusive Term
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
+        ///
+        Eigen::MatrixXd diffusive_term_sym(label NUmodes, label NPmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
         /// Gradient of pressure
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
