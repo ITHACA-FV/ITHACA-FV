@@ -157,6 +157,15 @@ class UnsteadyNSTurb: public unsteadyNS
         /// Eddy viscosity field
         autoPtr<volScalarField> _nut;
 
+        /// Face velocity field
+        autoPtr<surfaceVectorField> _Uf;
+
+        /// Pressure reference cell
+        label _pRefCell;
+
+        /// Pressure reference value
+        scalar _pRefValue;
+
         //--------------------------------------------------------------------------
         /// @brief      bt added matrix for the turbulence treatement
         ///

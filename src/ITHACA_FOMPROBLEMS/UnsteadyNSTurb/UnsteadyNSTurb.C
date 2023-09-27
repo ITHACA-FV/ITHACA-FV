@@ -62,6 +62,7 @@ UnsteadyNSTurb::UnsteadyNSTurb(int argc, char* argv[])
                   )
               );
 #include "createFields.H"
+#include "createUfIfPresent.H"
 #include "createFvOptions.H"
     ITHACAdict = new IOdictionary
     (
@@ -114,38 +115,43 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
 #include "initContinuityErrs.H"
     fv::options& fvOptions = _fvOptions();
     pimpleControl& pimple = _pimple();
-    volScalarField p = _p();
-    volVectorField U = _U();
-    volScalarField nut = _nut();
+    volScalarField& p = _p();
+    volVectorField& U = _U();
+    volScalarField& nut = _nut();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
     instantList Times = runTime.times();
+    label& pRefCell = _pRefCell;
+    scalar& pRefValue = _pRefValue;
+
+    mesh.setFluxRequired(p.name());
+
     runTime.setEndTime(finalTime);
-    // Perform a TruthSolve
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
-    nextWrite = startTime;
-    // Initialize Nsnapshots
+    nextWrite = startTime + writeEvery;
+
     label nsnapshots = 0;
 
     // Start the time loop
     while (runTime.run())
     {
-#include "readTimeControls.H"
-#include "CourantNo.H"
-#include "setDeltaT.H"
-        runTime.setEndTime(finalTime + timeStep);
+        #include "readTimeControls.H"
+        #include "CourantNo.H"
+        #include "setDeltaT.H"
+
+        ++runTime;
+
         Info << "Time = " << runTime.timeName() << nl << endl;
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-#include "UEqn.H"
-
+            #include "UEqn.H"
             // --- Pressure corrector loop
             while (pimple.correct())
             {
-#include "pEqn.H"
+                #include "pEqn.H"
             }
 
             if (pimple.turbCorr())
@@ -153,6 +159,7 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
                 laminarTransport.correct();
                 turbulence->correct();
             }
+
         }
 
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
@@ -164,6 +171,8 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
             nsnapshots += 1;
             // Produces error when uncommented
             // volScalarField nut = turbulence->nut().ref();
+            nut = turbulence->nut();
+
             ITHACAstream::exportSolution(U, name(counter), offlinepath);
             ITHACAstream::exportSolution(p, name(counter), offlinepath);
             ITHACAstream::exportSolution(nut, name(counter), offlinepath);
@@ -184,8 +193,6 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
                 mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
             }
         }
-
-        runTime++;
     }
 
     // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
