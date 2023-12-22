@@ -98,6 +98,7 @@ void Burgers::truthSolve(word folder)
 
     while (_simple().loop())
     {
+        auto start = std::chrono::system_clock::now();
         Info << "Time = " << _runTime().timeName() << nl << endl;
 
         while (simple.correctNonOrthogonal())
@@ -112,6 +113,10 @@ void Burgers::truthSolve(word folder)
 
         phi = linearInterpolate(U) & mesh.Sf();
 
+        auto end = std::chrono::system_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        Info << "Elapsed: " << elapsed.count() << " microseconds\n";
+        
         if (checkWrite(runTime))
         {
             ITHACAstream::exportSolution(U, name(counter), folder + name(folderN));
