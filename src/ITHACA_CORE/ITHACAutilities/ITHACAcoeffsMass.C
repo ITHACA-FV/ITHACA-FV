@@ -88,7 +88,12 @@ Eigen::MatrixXd getMassMatrix(
     if (consider_volumes)
     {
         Eigen::VectorXd V = getMassMatrixFV(modes[0]);
-        M = F.transpose().topRows(Msize) * V.asDiagonal() * F.leftCols(Msize);
+        Eigen::SparseMatrix<double> Vmat(V.size(),V.size());
+        for (int i=0; i<V.size(); i++)
+        {
+          Vmat.insert(i,i)=V(i);
+        }
+        M = F.transpose().topRows(Msize) * Vmat * F.leftCols(Msize);
     }
     else
     {
@@ -149,7 +154,12 @@ Eigen::MatrixXd getMassMatrix(
     if (consider_volumes)
     {
         Eigen::VectorXd V = getMassMatrixFV(modes[0]);
-        M = F.transpose().topRows(Msize) * V.asDiagonal() * F2.leftCols(Msize2);
+        Eigen::SparseMatrix<double> Vmat(V.size(),V.size());
+        for (int i=0; i<V.size(); i++)
+        {
+          Vmat.insert(i,i)=V(i);
+        }
+        M = F.transpose().topRows(Msize) * Vmat * F2.leftCols(Msize2);
     }
     else
     {
