@@ -116,6 +116,10 @@ template Eigen::MatrixXd getMassMatrix(
     PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes, label Nmodes,
     bool consider_volumes);
 
+template Eigen::MatrixXd getMassMatrix(
+    PtrList<GeometricField<tensor, fvPatchField, volMesh>>& modes, label Nmodes,
+    bool consider_volumes);
+
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd getMassMatrixFV(
     GeometricField<Type, PatchField, GeoMesh>& snapshot)
@@ -131,6 +135,8 @@ template Eigen::VectorXd getMassMatrixFV(
     GeometricField<scalar, fvPatchField, volMesh>& snapshot);
 template Eigen::VectorXd getMassMatrixFV(
     GeometricField<vector, fvPatchField, volMesh>& snapshot);
+template Eigen::VectorXd getMassMatrixFV(
+    GeometricField<tensor, fvPatchField, volMesh>& snapshot);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
