@@ -83,17 +83,15 @@ Eigen::MatrixXd getMassMatrix(
     M_Assert(modes.size() >= Msize,
              "The Number of requested modes is larger then the available quantity.");
     Eigen::MatrixXd F = Foam2Eigen::PtrList2Eigen(modes);
-    Eigen::MatrixXd M;
+    Eigen::MatrixXd M = Eigen::MatrixXd::Zero(Msize,Msize);
 
     if (consider_volumes)
     {
         Eigen::VectorXd V = getMassMatrixFV(modes[0]);
-        Eigen::SparseMatrix<double> Vmat(V.size(),V.size());
         for (int i=0; i<V.size(); i++)
         {
-          Vmat.insert(i,i)=V(i);
+          M += V(i) * F.transpose().topRows(Msize).col(i) * F.leftCols(Msize).row(i);
         }
-        M = F.transpose().topRows(Msize) * Vmat * F.leftCols(Msize);
     }
     else
     {
@@ -149,17 +147,15 @@ Eigen::MatrixXd getMassMatrix(
 
     Eigen::MatrixXd F = Foam2Eigen::PtrList2Eigen(modes);
     Eigen::MatrixXd F2 = Foam2Eigen::PtrList2Eigen(modes2);
-    Eigen::MatrixXd M;
+    Eigen::MatrixXd M = Eigen::MatrixXd::Zero(Msize,Msize2);
 
     if (consider_volumes)
     {
         Eigen::VectorXd V = getMassMatrixFV(modes[0]);
-        Eigen::SparseMatrix<double> Vmat(V.size(),V.size());
         for (int i=0; i<V.size(); i++)
         {
-          Vmat.insert(i,i)=V(i);
+          M += V(i) * F.transpose().topRows(Msize).col(i) * F2.leftCols(Msize2).row(i);
         }
-        M = F.transpose().topRows(Msize) * Vmat * F2.leftCols(Msize2);
     }
     else
     {
