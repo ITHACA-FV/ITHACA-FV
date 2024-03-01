@@ -96,6 +96,25 @@ Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
                               fields, label nModes = 0,
                               bool consider_volumes = true);
 
+//-----------------------------------------------------------------------------
+/// Gets the cross mass matrix using the eigen routine
+///
+/// @param[in]  fields            The openFoam fields
+/// @param[in]  consider_volumes  True if you want to consider the volumes
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+/// @return     The cross mass matrix eigen.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                              fields,
+                              PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                              fields2, label nModes = 0,
+                              bool consider_volumes = true);
+
 //--------------------------------------------------------------------------
 /// Gets a vector containing the volumes of each cell of the mesh.
 ///
