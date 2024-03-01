@@ -31,6 +31,11 @@ License
 #ifndef hyperReduction_templates_H
 #define hyperReduction_templates_H
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wreorder"
+
 #include "hyperReduction.H"
 
 // TODO increase modularity to avoid heavy compiling costs
@@ -95,9 +100,38 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
   Info << "Number of boundary cells: " << n_boundary_cells << endl;
 }
 
+// Template function constructor
+template <typename... SnapshotsLists>
+HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
+                                                  label n_nodes,
+                                                  label nbcells, 
+                                                  word folderMethod, 
+                                                  word problemName)//,
+                                                  // unsigned int vectorialDim)
+    : n_modes{n_modes},
+      n_nodes{n_nodes},
+      n_cells{nbcells},
+      folderMethod{folderMethod},
+      problemName{problemName}
+      // vectorial_dim{vectorialDim}
+{
+  para = ITHACAparameters::getInstance();
+  mkDir(folderMethod);
+
+  // folderProblem = "ITHACAoutput/" + problemName;
+  // mkDir(folderProblem);
+
+  Info << "The number of cells is: " << n_cells << endl;
+  n_snapshots = n_modes;
+  Info << "The number of modes is: " << n_modes << endl;
+}
+
+
 // Using the Eigen library, using the SVD decomposition method to solve the
 // matrix pseudo-inverse, the default error er is 0
-Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
+template <typename... SnapshotsLists>
+Eigen::MatrixXd 
+HyperReduction<SnapshotsLists...>::pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
   // perform svd decomposition
   Eigen::JacobiSVD<Eigen::MatrixXd> svd_holder(origin, Eigen::ComputeThinU | Eigen::ComputeThinV);
   // Build SVD decomposition results
@@ -109,7 +143,7 @@ Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
   Eigen::MatrixXd S(V.cols(), U.cols());
   S.setZero();
 
-  for (unsigned int i = 0; i < D.size(); ++i) {
+  for (int i = 0; i < D.size(); ++i) {
 
     if (D(i, 0) > er) {
       S(i, i) = 1 / D(i, 0);
@@ -370,9 +404,8 @@ void HyperReduction<SnapshotsLists...>::saveModes(SnapshotsList sList, Eigen::Ma
 template <typename... SnapshotsLists>
 void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights)
 {
-  methodName = "GappyDEIM";
-  folderMethod = "ITHACAoutput/" + problemName + "/" + methodName;
-  mkDir(folderMethod);
+  // methodName = "GappyDEIM";
+  // folderMethod = "ITHACAoutput/" + problemName + "/" + methodName;
 
   normalizingWeights = weights;
 
@@ -391,7 +424,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
 
     Eigen::VectorXd mp_not_mask = Eigen::VectorXd::Constant(n_cells * vectorial_dim, 1);
     std::set<label> nodePointsSet;
-
+    double max;
     // set initialSeeds
     if (initialSeeds.rows() > 0)
     {
@@ -420,7 +453,6 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
         Eigen::VectorXd c;
         Eigen::VectorXd r;
         label ind_max, c1;
-        double max;
 
         for (int i = 1; i <= nit; i++)
         {
@@ -487,10 +519,9 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
               << endl;
 
         label ind_max, c1;
-        double max;
         Eigen::MatrixXd V = snapshotsModes.leftCols(n_modes);
 
-        for (unsigned int ith_node = 0; ith_node < na; ith_node++)
+        for (int ith_node = 0; ith_node < na; ith_node++)
         {
           if (P.cols() > 0)
           {
@@ -524,7 +555,6 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
               << endl;
 
         label ind_max, c1;
-        double max;
         Eigen::MatrixXd A;
         Eigen::VectorXd b;
         Eigen::VectorXd c;
@@ -534,7 +564,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
         max = (reshapeMat* (mp_not_mask.asDiagonal()*snapshotsModes.leftCols(n_modes)).rowwise().lpNorm<2>().array().square().matrix()).maxCoeff(&ind_max, &c1);
         updateNodes(P, ind_max, mp_not_mask);
 
-        for (unsigned int ith_node = 1; ith_node < na; ith_node++)
+        for (int ith_node = 1; ith_node < na; ith_node++)
         {
           if (ith_node<n_modes)
           {
@@ -558,7 +588,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
 
             Eigen::VectorXd results(n_cells);
 
-            for (unsigned int ith_cell = 0; ith_cell < n_cells; ith_cell++)
+            for (int ith_cell = 0; ith_cell < n_cells; ith_cell++)
             {
               for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
               {
@@ -583,7 +613,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
 
     evaluatePinv(P, basisMatrix, normalizingWeights);
     renormalizedBasisMatrix = normalizingWeights.asDiagonal()*basisMatrix;
-
+    
     P.makeCompressed();
     cnpy::save(basisMatrix, folderMethod +"/basisMatrix.npy");
     cnpy::save(P, folderMethod +"/projectionMatrix.npz");
@@ -606,7 +636,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
     cnpy::load(pinvPU, folderMethod + "/pinvPU.npy");
 
     renormalizedBasisMatrix = normalizingWeights.asDiagonal()*basisMatrix;
-    
+
     Info << "Projection Matrix shape: " << P.rows() << " " << P.cols() << endl;
     Info << "Basis Matrix shape: " << basisMatrix.rows() << " " << basisMatrix.cols() << endl;
     Info << "Pseudo Inverse Matrix shape: " << pinvPU.rows() << " " << pinvPU.cols() << endl;
@@ -800,7 +830,7 @@ void HyperReduction<SnapshotsLists...>::initReshapeMat(Eigen::SparseMatrix<doubl
   reshapeMat.resize(n_cells, n_cells*vectorial_dim);
   reshapeMat.reserve(Eigen::VectorXi::Constant(n_cells * vectorial_dim /*n_cols*/, 1 /*n_non_zero_elements*/));
 
-  for (unsigned int i = 0; i < n_cells; i++)
+  for (int i = 0; i < n_cells; i++)
   {
     for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
     {
@@ -887,7 +917,7 @@ void HyperReduction<SnapshotsLists...>::evaluateWPU(Eigen::SparseMatrix<double> 
 }
 
 template<typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, fvMesh &mesh) {
+void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, const fvMesh &mesh) {
 
   Info << "####### Extract submesh #######\n";
   ITHACAparameters *para(ITHACAparameters::getInstance());
@@ -937,7 +967,7 @@ void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, fvMesh &me
 
     totalNodePoints().write();
     uniqueNodePoints().write();
-    ITHACAstream::exportSolution(Indici, "1", folderMethod);
+    ITHACAstream::exportSolution(Indici, "1", problemName);
   }
 
   submesh->setCellSubset(uniqueNodePoints());
@@ -964,7 +994,7 @@ void HyperReduction<SnapshotsLists...>::createMasks(bool offlineStage)
     field2submesh.resize(submesh().cellMap().size() * vectorial_dim, n_cells*vectorial_dim);
     field2submesh.reserve(Eigen::VectorXi::Constant(n_cells*vectorial_dim, 1));
 
-    for (unsigned int ith_subCell{0} ; ith_subCell <submesh().cellMap().size(); ith_subCell++)
+    for (int ith_subCell{0} ; ith_subCell <submesh().cellMap().size(); ith_subCell++)
     {
         for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
         {
@@ -978,8 +1008,8 @@ void HyperReduction<SnapshotsLists...>::createMasks(bool offlineStage)
     submesh2nodesMask.resize(nodePoints().size() * vectorial_dim);
 
     int index_col = 0;
-    for (unsigned int ith_node{0} ; ith_node <nodePoints().size(); ith_node++) {
-      for (unsigned int ith_subCell{0} ; ith_subCell <submesh().cellMap().size(); ith_subCell++) {
+    for (int ith_node{0} ; ith_node <nodePoints().size(); ith_node++) {
+      for (int ith_subCell{0} ; ith_subCell <submesh().cellMap().size(); ith_subCell++) {
         if (nodePoints()[ith_node] == submesh().cellMap()[ith_subCell]) {
           for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
           {
@@ -1022,5 +1052,7 @@ List<label> HyperReduction<SnapshotsLists...>::global2local(List<label> &points,
 
   return localPoints;
 }
+
+#pragma GCC diagnostic pop
 
 #endif
