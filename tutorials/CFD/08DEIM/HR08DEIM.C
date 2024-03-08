@@ -36,13 +36,15 @@ SourceFiles
 #include "Foam2Eigen.H"
 #include "ITHACAstream.H"
 #include "ITHACAPOD.H"
-#include "DEIM.H"
+#include "hyperReduction.templates.H"
+// #include "DEIM.H"
 #include <chrono>
 
-class DEIM_function : public DEIM<volScalarField>
+
+class DEIM_function : public HyperReduction<PtrList<volScalarField>&>
 {
     public:
-        using DEIM::DEIM;
+        using HyperReduction::HyperReduction;
         static volScalarField evaluate_expression(volScalarField& S, Eigen::MatrixXd mu)
         {
             volScalarField yPos = S.mesh().C().component(vector::Y).ref();
@@ -58,18 +60,19 @@ class DEIM_function : public DEIM<volScalarField>
         }
         Eigen::VectorXd onlineCoeffs(Eigen::MatrixXd mu)
         {
-            theta.resize(magicPoints().size());
+            theta.resize(nodePoints().size());
             auto f = evaluate_expression(subField(), mu);
 
-            for (int i = 0; i < magicPoints().size(); i++)
+            for (int i = 0; i < nodePoints().size(); i++)
             {
                 // double on_coeff = f[localMagicPoints[i]];
-                theta(i) = f[localMagicPoints[i]];
+                theta(i) = f[localNodePoints[i]];
             }
 
             return theta;
         }
-
+        
+        Eigen::VectorXd theta;
         PtrList<volScalarField> fields;
         autoPtr<volScalarField> subField;
 };
@@ -110,10 +113,8 @@ int main(int argc, char* argv[])
         dimensionedScalar("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), 0)
     );
     // Parameters used to train the non-linear function
-    Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
-    // Possible to create a file "random.npy" to compare both version 
-    // with cnpy::save(pars, "./random.npy");
-    // and load it with :  cnpy::load(pars, "./random.npy");
+    Eigen::MatrixXd pars ;//= ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    pars = cnpy::load(pars, "./random.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -124,10 +125,20 @@ int main(int argc, char* argv[])
     }
 
     // Create DEIM object with given number of basis functions
-    DEIM_function c(Sp, NDEIM, "Gaussian_function", S.name());
+    Eigen::VectorXi initSeeds;
+    DEIM_function c(NDEIM, NDEIM, initSeeds, "", Sp);
+    c.problemName = "Gaussian_function";
+    Eigen::MatrixXd snapshotsModes;
+    Eigen::VectorXd normalizingWeights = ITHACAutilities::getMassMatrixFV(Sp[0]).array().sqrt();
+    PtrList<volScalarField> modes = ITHACAPOD::DEIMmodes(Sp, NDEIM, "Gaussian_function",S.name());
+    
+    // c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights); 
+    snapshotsModes = Foam2Eigen::PtrList2Eigen(modes);
+    c.offlineGappyDEIM(snapshotsModes, normalizingWeights, "ITHACAoutput/DEIM/"+c.problemName);
+
     // Generate the submeshes with the depth of the layer
-    c.subField = autoPtr<volScalarField>(new volScalarField(c.generateSubmesh(2,
-                                         mesh, S)));
+    c.generateSubmesh(2, mesh); 
+    c.subField = autoPtr<volScalarField>(new volScalarField(c.submesh->interpolate(S).ref()));
     // Define a new online parameter
     Eigen::MatrixXd par_new(2, 1);
     par_new(0, 0) = 0;

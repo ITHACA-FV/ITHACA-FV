@@ -31,11 +31,6 @@ License
 #ifndef hyperReduction_templates_H
 #define hyperReduction_templates_H
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wold-style-cast"
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#pragma GCC diagnostic ignored "-Wreorder"
-
 #include "hyperReduction.H"
 
 // TODO increase modularity to avoid heavy compiling costs
@@ -100,38 +95,69 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
   Info << "Number of boundary cells: " << n_boundary_cells << endl;
 }
 
-// Template function constructor
+
+// Template function constructor to directly pass modes 
 template <typename... SnapshotsLists>
 HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
                                                   label n_nodes,
-                                                  label nbcells, 
-                                                  word folderMethod, 
-                                                  word problemName)//,
-                                                  // unsigned int vectorialDim)
-    : n_modes{n_modes},
+                                                  word folderProblem, 
+                                                  word problemName,
+                                                  SnapshotsLists &...modeLists)
+    : vectorial_dim{compute_vectorial_dim(modeLists...)},
+      n_modes{n_modes},
       n_nodes{n_nodes},
-      n_cells{nbcells},
-      folderMethod{folderMethod},
-      problemName{problemName}
-      // vectorial_dim{vectorialDim}
+      folderProblem{folderProblem},
+      problemName{problemName},
+      snapshotsListTuple{std::forward_as_tuple(modeLists...)}
 {
+  Info << "Init HyperReduction class with vectorial dim: " << vectorial_dim << endl;
   para = ITHACAparameters::getInstance();
-  mkDir(folderMethod);
+  mkDir(folderProblem);
 
-  // folderProblem = "ITHACAoutput/" + problemName;
-  // mkDir(folderProblem);
+  // TODO check snapshotsLists is not empty
+  // TODO check that the first snapshotsList is not empty (includes above)
 
-  Info << "The number of cells is: " << n_cells << endl;
-  n_snapshots = n_modes;
+  // TODO initialize vectorial_dim only from SnapshotsLists type
+  // vectorial_dim = std::apply(compute_vectorial_dim<modeLists...>, snapshotsListTuple);
+
+  // Get fields' names
+  std::apply([this](auto& ...snapList){(..., stackNames(snapList));}, snapshotsListTuple);
+
+  // Get fields' dimensions
+  std::apply([this](auto& ...snapList){(..., stackDimensions(snapList));}, snapshotsListTuple);
+
+  sumFieldsDim = 0;
+  std::apply([this](auto& ...snapList){(..., sumDimensions(this->sumFieldsDim, snapList));}, snapshotsListTuple);
+
+  Info << "Fields names: ";
+  for (unsigned int ith_field = 0; ith_field < fieldNames.size(); ith_field++)
+  {
+    Info << fieldNames[ith_field] << " (dim=" << fieldDims[ith_field] << "); ";
+  }
+  Info << endl;
+  
   Info << "The number of modes is: " << n_modes << endl;
+  n_cells = std::get<0>(snapshotsListTuple)[0].size();
+  Info << "The number of cells is: " << n_cells << endl;
+  Info << "Initial seeds length: " << initialSeeds.rows() << endl;
+
+  // get boundaries info
+  n_boundary_patches = std::get<0>(snapshotsListTuple)[0].boundaryField().size();
+
+  n_boundary_cells_list.resize(n_boundary_patches);
+  n_boundary_cells = 0;
+  for (unsigned int ith_boundary_patch = 0; ith_boundary_patch < n_boundary_patches; ith_boundary_patch++)
+  {
+    n_boundary_cells_list[ith_boundary_patch] = std::get<0>(snapshotsListTuple)[0].boundaryField()[ith_boundary_patch].size();
+    n_boundary_cells = n_boundary_cells + n_boundary_cells_list[ith_boundary_patch];
+  }
+  Info << "Number of boundary cells: " << n_boundary_cells << endl;
 }
 
 
 // Using the Eigen library, using the SVD decomposition method to solve the
 // matrix pseudo-inverse, the default error er is 0
-template <typename... SnapshotsLists>
-Eigen::MatrixXd 
-HyperReduction<SnapshotsLists...>::pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
+Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
   // perform svd decomposition
   Eigen::JacobiSVD<Eigen::MatrixXd> svd_holder(origin, Eigen::ComputeThinU | Eigen::ComputeThinV);
   // Build SVD decomposition results
@@ -152,6 +178,29 @@ HyperReduction<SnapshotsLists...>::pinv_eigen_based(Eigen::MatrixXd &origin, con
     }
   }
   return V * S * U.transpose();
+}
+
+Eigen::MatrixXd half_pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
+  // perform svd decomposition
+  Eigen::JacobiSVD<Eigen::MatrixXd> svd_holder(origin, Eigen::ComputeThinU | Eigen::ComputeThinV);
+  // Build SVD decomposition results
+  Eigen::MatrixXd U = svd_holder.matrixU();
+  Eigen::MatrixXd V = svd_holder.matrixV();
+  Eigen::MatrixXd D = svd_holder.singularValues();
+
+  // Build the S matrix
+  Eigen::MatrixXd S(V.cols(), U.cols());
+  S.setZero();
+
+  for (unsigned int i = 0; i < D.size(); ++i) {
+
+    if (D(i, 0) > er) {
+      S(i, i) = 1 / D(i, 0);
+    } else {
+      S(i, i) = 0;
+    }
+  }
+  return V * S;
 }
 
 template <typename... SnapshotsLists>
@@ -402,11 +451,12 @@ void HyperReduction<SnapshotsLists...>::saveModes(SnapshotsList sList, Eigen::Ma
 }
 
 template <typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights)
+void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights, word folderMethodName)
 {
-  // methodName = "GappyDEIM";
-  // folderMethod = "ITHACAoutput/" + problemName + "/" + methodName;
-
+  folderMethod = folderMethodName;
+  Info << "FolderMethod : " << folderMethod << endl;
+  mkDir(folderMethod);
+  
   normalizingWeights = weights;
 
   nodePoints = autoPtr<IOList<label>>(new IOList<label>(
@@ -613,13 +663,16 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
 
     evaluatePinv(P, basisMatrix, normalizingWeights);
     renormalizedBasisMatrix = normalizingWeights.asDiagonal()*basisMatrix;
-    
+
+    MatrixOnline = basisMatrix * ((P.transpose() * basisMatrix).completeOrthogonalDecomposition().pseudoInverse());
+
     P.makeCompressed();
     cnpy::save(basisMatrix, folderMethod +"/basisMatrix.npy");
     cnpy::save(P, folderMethod +"/projectionMatrix.npz");
     cnpy::save(normalizingWeights, folderMethod + "/normalizingWeights.npy");
     cnpy::save(nodes, folderMethod + "/mp.npy");
     cnpy::save(pinvPU, folderMethod + "/pinvPU.npy");
+    cnpy::save(MatrixOnline, folderMethod + "/MatrixOnline.npy");
     nodePoints().write();
 
     Info << "Projection Matrix shape: " << P.rows() << " " << P.cols() << endl;
@@ -630,6 +683,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
   {
     Info << "Read GappyDEIM\n";
     cnpy::load(basisMatrix, folderMethod +"/basisMatrix.npy");
+    cnpy::load(MatrixOnline, folderMethod +"/MatrixOnline.npy");
     cnpy::load(normalizingWeights, folderMethod + "/normalizingWeights.npy");
     cnpy::load(P, folderMethod +"/projectionMatrix.npz");
     cnpy::load(nodes, folderMethod + "/mp.npy");
@@ -967,7 +1021,7 @@ void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, const fvMe
 
     totalNodePoints().write();
     uniqueNodePoints().write();
-    ITHACAstream::exportSolution(Indici, "1", problemName);
+    ITHACAstream::exportSolution(Indici, "1", folderMethod);
   }
 
   submesh->setCellSubset(uniqueNodePoints());
@@ -1053,6 +1107,257 @@ List<label> HyperReduction<SnapshotsLists...>::global2local(List<label> &points,
   return localPoints;
 }
 
-#pragma GCC diagnostic pop
+
+// //---------- Specialization -----------//
+
+// // Specialization of the first constructor
+
+// template
+// HyperReduction<PtrList<volScalarField>&>::HyperReduction(label n_modes,
+//                                                         label n_nodes,
+//                                                         Eigen::VectorXi initialSeeds,
+//                                                         word problemName,
+//                                                         PtrList<volScalarField>& snapshotsList);
+
+// template<>
+// HyperReduction<PtrList<volVectorField>&>::HyperReduction(label n_modes,
+//                                                   label n_nodes,
+//                                                   Eigen::VectorXi initialSeeds,
+//                                                   word problemName,
+//                                                   PtrList<volVectorField>& snapshotsLists);
+
+// template
+// HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::HyperReduction(label n_modes,
+//                                                   label n_nodes,
+//                                                   Eigen::VectorXi initialSeeds,
+//                                                   word problemName,
+//                                                   PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>& snapshotsLists);
+
+// template HyperReduction<PtrList<volScalarField>&, PtrList<volScalarField>&>::HyperReduction(label n_modes,
+//                                                   label n_nodes,
+//                                                   Eigen::VectorXi initialSeeds,
+//                                                   word problemName,
+//                                                   PtrList<volVectorField>& snapshotsLists);
+
+
+// // Specialization of the second constructor
+
+// template 
+// HyperReduction<PtrList<volScalarField>&>::HyperReduction(label n_modes,
+//                                                             label n_nodes,
+//                                                             label nbcells, 
+//                                                             word folderMethod, 
+//                                                             word problemName);
+
+// template
+// HyperReduction<PtrList<volVectorField>&>::HyperReduction(label n_modes,
+//                                                               label n_nodes,
+//                                                               label nbcells, 
+//                                                               word folderMethod, 
+//                                                               word problemName);
+// // template
+// // HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::HyperReduction(label n_modes,
+// //                                                               label n_nodes,
+// //                                                               label nbcells, 
+// //                                                               word folderMethod, 
+// //                                                               word problemName);
+// // Specialization of pinv_eigen_based
+// template 
+// Eigen::MatrixXd HyperReduction<PtrList<volScalarField>&>::pinv_eigen_based(Eigen::MatrixXd &origin, const float er);
+// template 
+// Eigen::MatrixXd HyperReduction<PtrList<volVectorField>&>::pinv_eigen_based(Eigen::MatrixXd &origin, const float er);
+// // template 
+// // Eigen::MatrixXd HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::pinv_eigen_based(Eigen::MatrixXd &origin, const float er);
+
+// // Specialization of getModesSVD
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::getModesSVD(
+//     SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights, bool saveModesFlag);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::getModesSVD(
+//     SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights, bool saveModesFlag);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::getModesSVD(
+// //     SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights, bool saveModesFlag);
+
+
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::getModesSVD(
+//     SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights, 
+//     Eigen::MatrixXd& modesSVDBoundary, Eigen::VectorXd& fieldWeightsBoundary, bool saveModesFlag);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::getModesSVD(
+//     SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights, 
+//     Eigen::MatrixXd& modesSVDBoundary, Eigen::VectorXd& fieldWeightsBoundary, bool saveModesFlag);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::getModesSVD(
+// //     SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights, 
+// //     Eigen::MatrixXd& modesSVDBoundary, Eigen::VectorXd& fieldWeightsBoundary, bool saveModesFlag);
+
+
+// // Specialization of getSnapMatrix
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights);
+
+
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights, 
+//                   List<Eigen::MatrixXd>& snapMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights, 
+//                   List<Eigen::MatrixXd>& snapMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights, 
+// //                   List<Eigen::MatrixXd>& snapMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
+
+
+// // Specialization of saveModes
+// template  <>
+// template <>
+// void HyperReduction<PtrList<volScalarField>&>::saveModes(PtrList<volScalarField>& sList, Eigen::MatrixXd& snapshotsMatrix, 
+//                                               unsigned int &rowIndex, unsigned int &modeIndex, word folder);
+// template  <>
+// template <>
+// void HyperReduction<PtrList<volVectorField>&>::saveModes(PtrList<volVectorField>& sList, Eigen::MatrixXd& snapshotsMatrix, 
+//                                               unsigned int &rowIndex, unsigned int &modeIndex, word folder);
+// // template 
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::saveModes(PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>> sList, Eigen::MatrixXd& snapshotsMatrix, 
+// //                                               unsigned int &rowIndex, unsigned int &modeIndex, word folder);
+
+
+// template  <>
+// template <>
+// void HyperReduction<PtrList<volScalarField>&>::saveModes(PtrList<volScalarField>& sList, Eigen::MatrixXd& snapshotsMatrix, 
+//       Eigen::MatrixXd& snapshotsMatrixBoundary, unsigned int &rowIndex,  unsigned int& rowIndexBoundary, unsigned int &modeIndex, word folder);
+// template  <>
+// template <>
+// void HyperReduction<PtrList<volVectorField>&>::saveModes(PtrList<volVectorField>& sList, Eigen::MatrixXd& snapshotsMatrix, 
+//       Eigen::MatrixXd& snapshotsMatrixBoundary, unsigned int &rowIndex,  unsigned int& rowIndexBoundary, unsigned int &modeIndex, word folder);
+// // template 
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::saveModes(PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>> sList, Eigen::MatrixXd& snapshotsMatrix, 
+// //       Eigen::MatrixXd& snapshotsMatrixBoundary, unsigned int &rowIndex,  unsigned int& rowIndexBoundary, unsigned int &modeIndex, word folder);
+
+
+// // Specialization of offlineGappyDEIM
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights);
+
+// // Specialization of offlineECP
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights);
+
+// // Specialization of initSeeds
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::initSeeds(Eigen::VectorXd mp_not_mask, std::set<label> nodePointsSet);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::initSeeds(Eigen::VectorXd mp_not_mask, std::set<label> nodePointsSet);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::initSeeds(Eigen::VectorXd mp_not_mask, std::set<label> nodePointsSet);
+
+// // Specialization of updateNodes
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::updateNodes(Eigen::SparseMatrix<double>& P, label& ind, Eigen::VectorXd& mp_not_mask);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::updateNodes(Eigen::SparseMatrix<double>& P, label& ind, Eigen::VectorXd& mp_not_mask);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::updateNodes(Eigen::SparseMatrix<double>& P, label& ind, Eigen::VectorXd& mp_not_mask);
+
+// // Specialization of computeLS
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::computeLS(Eigen::MatrixXd& J, Eigen::MatrixXd& Jwhole, Eigen::VectorXd& b, Eigen::VectorXd& q);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::computeLS(Eigen::MatrixXd& J, Eigen::MatrixXd& Jwhole, Eigen::VectorXd& b, Eigen::VectorXd& q);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::computeLS(Eigen::MatrixXd& J, Eigen::MatrixXd& Jwhole, Eigen::VectorXd& b, Eigen::VectorXd& q);
+
+// // Specialization of initReshapeMat
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::initReshapeMat(Eigen::SparseMatrix<double> &reshapeMat);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::initReshapeMat(Eigen::SparseMatrix<double> &reshapeMat);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::initReshapeMat(Eigen::SparseMatrix<double> &reshapeMat);
+
+// // Specialization of stackSnapshots
+// template  <>
+// template <>
+// void HyperReduction<PtrList<volScalarField>&>::stackSnapshots(PtrList<volScalarField>& sList, Eigen::MatrixXd& snapshotsMatrix, Eigen::VectorXd& fieldWeights);
+// template  <>
+// template <>
+// void HyperReduction<PtrList<volVectorField>&>::stackSnapshots(PtrList<volVectorField>& sList, Eigen::MatrixXd& snapshotsMatrix, Eigen::VectorXd& fieldWeights);
+// // template 
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::stackSnapshots(PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>> sList, Eigen::MatrixXd& snapshotsMatrix, Eigen::VectorXd& fieldWeights);
+
+// // Specialization of stackSnapshotsBoundary
+// template  <>
+// template <>
+// void HyperReduction<PtrList<volScalarField>&>::stackSnapshotsBoundary(PtrList<volScalarField>& sList, List<Eigen::MatrixXd>& snapshotsMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
+// template  <>
+// template <>
+// void HyperReduction<PtrList<volVectorField>&>::stackSnapshotsBoundary(PtrList<volVectorField>& sList, List<Eigen::MatrixXd>& snapshotsMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
+// // template 
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::stackSnapshotsBoundary(PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>> sList, List<Eigen::MatrixXd>& snapshotsMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
+
+
+// // Specialization of evaluatePinv
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::evaluatePinv(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd &fieldWeights);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::evaluatePinv(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd &fieldWeights);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::evaluatePinv(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd &fieldWeights);
+
+// // Specialization of evaluateWPU
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::evaluateWPU(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd &fieldWeights, Eigen::VectorXd& quadratureWeights);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::evaluateWPU(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd &fieldWeights, Eigen::VectorXd& quadratureWeights);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::evaluateWPU(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd &fieldWeights, Eigen::VectorXd& quadratureWeights);
+
+// // Specialization of generateSubmesh
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::generateSubmesh(label layers, const fvMesh &mesh);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::generateSubmesh(label layers, const fvMesh &mesh);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::generateSubmesh(label layers, const fvMesh &mesh);
+
+// // Specialization of createMasks
+// template  
+// void HyperReduction<PtrList<volScalarField>&>::createMasks(bool offlineStage);
+// template  
+// void HyperReduction<PtrList<volVectorField>&>::createMasks(bool offlineStage);
+// // template 
+// // void HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::createMasks(bool offlineStage);
+
+// // Specialization of global2local
+// template  
+// List<label> HyperReduction<PtrList<volScalarField>&>::global2local(List<label> &points, fvMeshSubset &submesh);
+// template  
+// List<label> HyperReduction<PtrList<volVectorField>&>::global2local(List<label> &points, fvMeshSubset &submesh);
+// // template 
+// // List<label> HyperReduction<PtrList<Foam::GeometricField<double, Foam::fvPatchField, Foam::volMesh>>&>::global2local(List<label> &points, fvMeshSubset &submesh);
+
+
+
+
+
 
 #endif

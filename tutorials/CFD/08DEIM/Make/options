@@ -9,11 +9,13 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/fvOptions/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I$(LIB_ITHACA_SRC)/thirdparty/redsvd \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(LIB_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_DEIM \
+    -I$(LIB_ITHACA_SRC)/ITHACA_HR \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/lnInclude \
@@ -23,7 +25,7 @@ EXE_INC = \
     -Wno-comment \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11 \
+    -std=c++17 \
 
 
 EXE_LIBS = \
@@ -43,5 +45,4 @@ EXE_LIBS = \
     -lITHACA_ROMPROBLEMS \
     -lITHACA_THIRD_PARTY \
     -lITHACA_CORE \
-    -lITHACA_DEIM
-
+    -lITHACA_DEIM 

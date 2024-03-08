@@ -40,6 +40,10 @@ SourceFiles
 #include <set>
 #include "redsvd"
 
+
+Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
+Eigen::MatrixXd half_pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
+
 // TODO uniform style for separating offline and onlie stages
 template <typename... SnapshotsLists>
 class HyperReduction
@@ -78,23 +82,19 @@ public:
                    SnapshotsLists &&...snapshotsLists);
 
 
-      //----------------------------------------------------------------------
+    //----------------------------------------------------------------------
     /// @brief      Construct HyperReduction class, interpolation-based.`SnapshotsLists` is a variadic argument of PtrLists of fields e.g. for incompressible Navier-Stokes PtrList<volVectorField>, PtrList<volScalarField> for velocity and pressure.
     ///
     /// @param[in]  n_modes           dimension of the HR basis
     /// @param[in]  n_nodes           number of nodes
     /// @param[in]  problemName       name of the function to be hyper-reduced
-    /// @param[in]  modes             lists of modes
+    /// @param[in]  modeLists             lists of modes
     ///
     HyperReduction(label n_modes,
                    label n_nodes, 
-                   label n_cells, 
                    word folderMethod, 
-                   word problemName);//, 
-                //    unsigned int vectorialDim); 
-
-
-    Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
+                   word problemName,
+                   SnapshotsLists &...modeLists);
                     
     // ITHACA parameters dict
     ITHACAparameters* para;
@@ -199,10 +199,20 @@ public:
     /// Submeshes
     autoPtr<volVectorField> submesh_field;
 
+    /// Online Matrice
+    Eigen::MatrixXd MatrixOnline;
+
     //----------------------------------------------------------------------
     /// @brief      Methods implemented: 'GappyDEIM'  from "DEIM, Chaturantabut, Saifon, and Danny C. Sorensen. "Nonlinear model reduction via discrete empirical interpolation." SIAM Journal on Scientific Computing 32.5 (2010): 2737-2764" and "GNAT, Carlberg, Kevin, et al. "The GNAT method for nonlinear model reduction: effective implementation and application to computational fluid dynamics and turbulent flows." Journal of Computational Physics 242 (2013): 623-647.". Quasi-optimal point selection algorithm 'SOPT' and optimal point selection 'SOPTE' from "Lauzon, Jessica T., Siu Wun Cheung, Yeonjong Shin, Youngsoo Choi, Dylan Matthew Copeland, and Kevin Huynh. "S-OPT: A Points Selection Algorithm for Hyper-Reduction in Reduced Order Models." arXiv preprint arXiv:2203.16494 (2022).""
     ///
-    void offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights);
+    void offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights){
+        methodName = "GappyDEIM";
+        word name = "ITHACAoutput/" + problemName + "/" + methodName;
+        offlineGappyDEIM(snapshotsModes, normalizingWeights, name);
+    }
+
+    void offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights, word folderMethodName);
+
 
     //----------------------------------------------------------------------
     /// @brief      Methods implemented: 'ECP' from "ECP, Hernandez, Joaquin Alberto, Manuel Alejandro Caicedo, and Alex Ferrer. "Dimensional hyper-reduction of nonlinear finite element models via empirical cubature." Computer methods in applied mechanics and engineering 313 (2017): 687-722.". TODO implement non-negative LS.
