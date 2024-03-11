@@ -72,7 +72,7 @@ class DEIM_function : public HyperReduction<PtrList<volScalarField>&>
             return theta;
         }
         
-        Eigen::VectorXd theta;
+        Eigen::VectorXd theta; // Necessary to add inside the HyperReduction class ?
         PtrList<volScalarField> fields;
         autoPtr<volScalarField> subField;
 };
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
     );
     // Parameters used to train the non-linear function
     Eigen::MatrixXd pars ;//= ITHACAutilities::rand(100, 2, -0.5, 0.5);
-    pars = cnpy::load(pars, "./random.npy");
+    cnpy::load(pars, "./random.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -127,13 +127,19 @@ int main(int argc, char* argv[])
     // Create DEIM object with given number of basis functions
     Eigen::VectorXi initSeeds;
     DEIM_function c(NDEIM, NDEIM, initSeeds, "", Sp);
-    c.problemName = "Gaussian_function";
+    c.problemName = "Gaussian_function"; // To access the same folder as before
     Eigen::MatrixXd snapshotsModes;
-    Eigen::VectorXd normalizingWeights = ITHACAutilities::getMassMatrixFV(Sp[0]).array().sqrt();
+
+    // To use the DEIMmodes methode from ITHACAPOD :
     PtrList<volScalarField> modes = ITHACAPOD::DEIMmodes(Sp, NDEIM, "Gaussian_function",S.name());
-    
-    // c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights); 
     snapshotsModes = Foam2Eigen::PtrList2Eigen(modes);
+    Eigen::VectorXd normalizingWeights = ITHACAutilities::getMassMatrixFV(Sp[0]).array();
+
+    // To use the SVD modes from the hyperReduction class : 
+    // Eigen::VectorXd normalizingWeights;
+    // c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights); 
+    
+
     c.offlineGappyDEIM(snapshotsModes, normalizingWeights, "ITHACAoutput/DEIM/"+c.problemName);
 
     // Generate the submeshes with the depth of the layer

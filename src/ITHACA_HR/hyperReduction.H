@@ -41,8 +41,8 @@ SourceFiles
 #include "redsvd"
 
 
-Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
-Eigen::MatrixXd half_pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
+// Eigen::MatrixXd half_pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
+// Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
 
 // TODO uniform style for separating offline and onlie stages
 template <typename... SnapshotsLists>
@@ -92,10 +92,15 @@ public:
     ///
     HyperReduction(label n_modes,
                    label n_nodes, 
+                   Eigen::VectorXi initialSeeds,
                    word folderMethod, 
                    word problemName,
                    SnapshotsLists &...modeLists);
-                    
+
+
+    Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
+    Eigen::MatrixXd half_pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
+          
     // ITHACA parameters dict
     ITHACAparameters* para;
 

@@ -100,12 +100,14 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
 template <typename... SnapshotsLists>
 HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
                                                   label n_nodes,
+                                                  Eigen::VectorXi initialSeeds,
                                                   word folderProblem, 
                                                   word problemName,
                                                   SnapshotsLists &...modeLists)
     : vectorial_dim{compute_vectorial_dim(modeLists...)},
       n_modes{n_modes},
       n_nodes{n_nodes},
+      initialSeeds{initialSeeds},
       folderProblem{folderProblem},
       problemName{problemName},
       snapshotsListTuple{std::forward_as_tuple(modeLists...)}
@@ -157,7 +159,8 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
 
 // Using the Eigen library, using the SVD decomposition method to solve the
 // matrix pseudo-inverse, the default error er is 0
-Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
+template <typename... SnapshotsLists>
+Eigen::MatrixXd HyperReduction<SnapshotsLists...>::pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
   // perform svd decomposition
   Eigen::JacobiSVD<Eigen::MatrixXd> svd_holder(origin, Eigen::ComputeThinU | Eigen::ComputeThinV);
   // Build SVD decomposition results
@@ -180,7 +183,8 @@ Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
   return V * S * U.transpose();
 }
 
-Eigen::MatrixXd half_pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
+template <typename... SnapshotsLists>
+Eigen::MatrixXd HyperReduction<SnapshotsLists...>::half_pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
   // perform svd decomposition
   Eigen::JacobiSVD<Eigen::MatrixXd> svd_holder(origin, Eigen::ComputeThinU | Eigen::ComputeThinV);
   // Build SVD decomposition results
