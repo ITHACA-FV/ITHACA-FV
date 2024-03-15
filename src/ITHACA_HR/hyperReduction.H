@@ -81,23 +81,6 @@ public:
                    word problemName,
                    SnapshotsLists &&...snapshotsLists);
 
-
-    //----------------------------------------------------------------------
-    /// @brief      Construct HyperReduction class, interpolation-based.`SnapshotsLists` is a variadic argument of PtrLists of fields e.g. for incompressible Navier-Stokes PtrList<volVectorField>, PtrList<volScalarField> for velocity and pressure.
-    ///
-    /// @param[in]  n_modes           dimension of the HR basis
-    /// @param[in]  n_nodes           number of nodes
-    /// @param[in]  problemName       name of the function to be hyper-reduced
-    /// @param[in]  modeLists             lists of modes
-    ///
-    HyperReduction(label n_modes,
-                   label n_nodes, 
-                   Eigen::VectorXi initialSeeds,
-                   word folderMethod, 
-                   word problemName,
-                   SnapshotsLists &...modeLists);
-
-
     Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
     Eigen::MatrixXd half_pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
           

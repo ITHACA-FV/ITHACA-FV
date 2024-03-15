@@ -37,9 +37,7 @@ SourceFiles
 #include "ITHACAstream.H"
 #include "ITHACAPOD.H"
 #include "hyperReduction.templates.H"
-// #include "DEIM.H"
 #include <chrono>
-
 
 class DEIM_function : public HyperReduction<PtrList<volScalarField>&>
 {
@@ -126,22 +124,23 @@ int main(int argc, char* argv[])
 
     // Create DEIM object with given number of basis functions
     Eigen::VectorXi initSeeds;
-    DEIM_function c(NDEIM, NDEIM, initSeeds, "", Sp);
-    c.problemName = "Gaussian_function"; // To access the same folder as before
+    DEIM_function c(NDEIM, NDEIM, initSeeds, "DEIM", Sp);
+    // c.problemName = "Gaussian_function"; // To access the same folder as before
+
     Eigen::MatrixXd snapshotsModes;
 
-    // To use the DEIMmodes methode from ITHACAPOD :
-    PtrList<volScalarField> modes = ITHACAPOD::DEIMmodes(Sp, NDEIM, "Gaussian_function",S.name());
-    snapshotsModes = Foam2Eigen::PtrList2Eigen(modes);
+    // To use the DEIMmodes method from ITHACAPOD :
     Eigen::VectorXd normalizingWeights = ITHACAutilities::getMassMatrixFV(Sp[0]).array();
+    PtrList<volScalarField> modes = ITHACAPOD::DEIMmodes(Sp, NDEIM, "Gaussian_function", S.name());
+    snapshotsModes = Foam2Eigen::PtrList2Eigen(modes);
 
     // To use the SVD modes from the hyperReduction class : 
     // Eigen::VectorXd normalizingWeights;
     // c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights); 
-    
 
-    c.offlineGappyDEIM(snapshotsModes, normalizingWeights, "ITHACAoutput/DEIM/"+c.problemName);
-
+    c.offlineGappyDEIM(snapshotsModes, normalizingWeights);//, "ITHACAoutput/DEIM/"+c.problemName);
+                                                           // To access the same folder as before
+                                                           
     // Generate the submeshes with the depth of the layer
     c.generateSubmesh(2, mesh); 
     c.subField = autoPtr<volScalarField>(new volScalarField(c.submesh->interpolate(S).ref()));
