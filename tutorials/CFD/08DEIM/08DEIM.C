@@ -111,10 +111,11 @@ int main(int argc, char* argv[])
     );
     // Parameters used to train the non-linear function
     Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
-    // Possible to create a file "random.npy" to compare both version 
-    // with cnpy::save(pars, "./random.npy");
-    // and load it with :  cnpy::load(pars, "./random.npy");
-
+    // It's possible to create a file "random.npy" to compare both version 
+    // save it and load it with : 
+    // cnpy::save(pars, "./random.npy");
+    // cnpy::load(pars, "./random.npy");
+    
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
     {

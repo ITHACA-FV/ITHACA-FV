@@ -111,8 +111,10 @@ int main(int argc, char* argv[])
         dimensionedScalar("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), 0)
     );
     // Parameters used to train the non-linear function
-    Eigen::MatrixXd pars ;//= ITHACAutilities::rand(100, 2, -0.5, 0.5);
-    cnpy::load(pars, "./random.npy");
+    Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    // To compare with the same parameters, save data and then load it 
+    // cnpy::load(pars, "./random.npy");
+    // cnpy::save(pars, "./random.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -125,7 +127,6 @@ int main(int argc, char* argv[])
     // Create DEIM object with given number of basis functions
     Eigen::VectorXi initSeeds;
     DEIM_function c(NDEIM, NDEIM, initSeeds, "DEIM", Sp);
-    // c.problemName = "Gaussian_function"; // To access the same folder as before
 
     Eigen::MatrixXd snapshotsModes;
 
@@ -134,12 +135,14 @@ int main(int argc, char* argv[])
     PtrList<volScalarField> modes = ITHACAPOD::DEIMmodes(Sp, NDEIM, "Gaussian_function", S.name());
     snapshotsModes = Foam2Eigen::PtrList2Eigen(modes);
 
-    // To use the SVD modes from the hyperReduction class : 
+    // To use the SVD modes from the HyperReduction class : 
     // Eigen::VectorXd normalizingWeights;
     // c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights); 
 
-    c.offlineGappyDEIM(snapshotsModes, normalizingWeights);//, "ITHACAoutput/DEIM/"+c.problemName);
-                                                           // To access the same folder as before
+    c.offlineGappyDEIM(snapshotsModes, normalizingWeights);
+    // To access the same folder hierarchy as before : 
+    // c.problemName = "Gaussian_function";
+    // c.offlineGappyDEIM(snapshotsModes, normalizingWeights, "ITHACAoutput/DEIM/"+c.problemName);
                                                            
     // Generate the submeshes with the depth of the layer
     c.generateSubmesh(2, mesh); 
