@@ -95,29 +95,29 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
   Info << "Number of boundary cells: " << n_boundary_cells << endl;
 }
 
-// Using the Eigen library, using the SVD decomposition method to solve the
-// matrix pseudo-inverse, the default error er is 0
-Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
-  // perform svd decomposition
-  Eigen::JacobiSVD<Eigen::MatrixXd> svd_holder(origin, Eigen::ComputeThinU | Eigen::ComputeThinV);
-  // Build SVD decomposition results
-  Eigen::MatrixXd U = svd_holder.matrixU();
-  Eigen::MatrixXd V = svd_holder.matrixV();
-  Eigen::MatrixXd D = svd_holder.singularValues();
 
-  // Build the S matrix
-  Eigen::MatrixXd S(V.cols(), U.cols());
-  S.setZero();
+// Template function constructor
+template <typename... SnapshotsLists>
+HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
+                                                  label n_nodes,
+                                                  unsigned int vectorialDim,
+                                                  label n_cells,
+                                                  Eigen::VectorXi initialSeeds,
+                                                  word problemName)
+    : n_modes{n_modes},
+      n_nodes{n_nodes},
+      vectorial_dim{vectorialDim},
+      n_cells{n_cells},
+      initialSeeds{initialSeeds},
+      problemName{problemName}
+{
+  Info << "Init HyperReduction class with vectorial dim: " << vectorial_dim << endl;
+  para = ITHACAparameters::getInstance();
+  folderProblem = problemName;
+  mkDir(folderProblem);
 
-  for (unsigned int i = 0; i < D.size(); ++i) {
+  Info << "Initial seeds length: " << initialSeeds.rows() << endl;
 
-    if (D(i, 0) > er) {
-      S(i, i) = 1 / D(i, 0);
-    } else {
-      S(i, i) = 0;
-    }
-  }
-  return V * S * U.transpose();
 }
 
 template <typename... SnapshotsLists>
@@ -368,10 +368,10 @@ void HyperReduction<SnapshotsLists...>::saveModes(SnapshotsList sList, Eigen::Ma
 }
 
 template <typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights)
+void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights, word folderMethodName)
 {
-  methodName = "GappyDEIM";
-  folderMethod = "ITHACAoutput/" + problemName + "/" + methodName;
+  folderMethod = folderMethodName;
+  Info << "FolderMethod : " << folderMethod << endl;
   mkDir(folderMethod);
 
   normalizingWeights = weights;
@@ -380,7 +380,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
       IOobject("nodePoints", para->runTime.time().constant(), "../" + folderMethod,
                 para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE))); 
 
-  auto greedyMetric = para->ITHACAdict->lookupOrDefault<word>("GreedyMetric", "l2");
+  auto greedyMetric = para->ITHACAdict->lookupOrDefault<word>("GreedyMetric", "L2");
   
   bool offlineStage = !nodePoints().headerOk();
 
@@ -584,12 +584,15 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
     evaluatePinv(P, basisMatrix, normalizingWeights);
     renormalizedBasisMatrix = normalizingWeights.asDiagonal()*basisMatrix;
 
+    MatrixOnline = renormalizedBasisMatrix * pinvPU;
+
     P.makeCompressed();
     cnpy::save(basisMatrix, folderMethod +"/basisMatrix.npy");
     cnpy::save(P, folderMethod +"/projectionMatrix.npz");
     cnpy::save(normalizingWeights, folderMethod + "/normalizingWeights.npy");
     cnpy::save(nodes, folderMethod + "/mp.npy");
     cnpy::save(pinvPU, folderMethod + "/pinvPU.npy");
+    cnpy::save(MatrixOnline, folderMethod + "/MatrixOnline.npy");
     nodePoints().write();
 
     Info << "Projection Matrix shape: " << P.rows() << " " << P.cols() << endl;
@@ -600,6 +603,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
   {
     Info << "Read GappyDEIM\n";
     cnpy::load(basisMatrix, folderMethod +"/basisMatrix.npy");
+    cnpy::load(MatrixOnline, folderMethod +"/MatrixOnline.npy");
     cnpy::load(normalizingWeights, folderMethod + "/normalizingWeights.npy");
     cnpy::load(P, folderMethod +"/projectionMatrix.npz");
     cnpy::load(nodes, folderMethod + "/mp.npy");
@@ -614,9 +618,12 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(Eigen::MatrixXd& snapsh
 }
 
 template <typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights)
+void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& weights, word folderMethodName)
 {
-  methodName = "ECP";
+  folderMethod = folderMethodName;
+  Info << "FolderMethod : " << folderMethod << endl;
+  mkDir(folderMethod);
+
   n_nodes = n_modes + 1;
 
   normalizingWeights = weights;
@@ -625,9 +632,6 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd& snapshotsMod
   Info << "####### Modes=" <<  n_modes
             << ", nodePoints=" << n_nodes << " #######"
             << endl;
-
-  folderMethod = "ITHACAoutput/" + problemName + "/" + methodName;
-  mkDir(folderMethod);
 
   nodePoints = autoPtr<IOList<label>>(new IOList<label>(
       IOobject("nodePoints", para->runTime.time().constant(), "../" + folderMethod,
@@ -754,8 +758,13 @@ void HyperReduction<SnapshotsLists...>::initSeeds(Eigen::VectorXd mp_not_mask, s
 template <typename... SnapshotsLists>
 void HyperReduction<SnapshotsLists...>::updateNodes(Eigen::SparseMatrix<double>& P, label& ind, Eigen::VectorXd& mp_not_mask)
 {
+  nodePoints->append(ind);
+
+  nodes.conservativeResize(nodes.rows()+1);
+  nodes(nodes.rows()-1) = ind;
+
   unsigned int last_col{0};
-  
+
   if (P.rows()==0)
   {
     P.resize(n_cells*vectorial_dim, vectorial_dim);
@@ -763,19 +772,22 @@ void HyperReduction<SnapshotsLists...>::updateNodes(Eigen::SparseMatrix<double>&
   else
   {
     last_col = P.cols();
-    P.conservativeResize(P.rows(), P.cols() + vectorial_dim);
+    P.resize(P.rows(), P.cols() + vectorial_dim);
+  }
+  int step = P.cols() / vectorial_dim - 1;
+  
+  for (int ith_node=0; ith_node <= step; ith_node++)
+  {
+    for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+    {
+      P.insert(nodes[ith_node]+ith_field*n_cells,ith_node+ith_field*(step+1))=1;
+    }
   }
 
   for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
   {
-    P.insert(ind + ith_field * n_cells, last_col + ith_field) = 1;
     mp_not_mask(ind + ith_field * n_cells) = 0;
   }
-
-  nodePoints->append(ind);
-
-  nodes.conservativeResize(nodes.rows()+1);
-  nodes(nodes.rows()-1) = ind;
 }
 
 template<typename... SnapshotsLists>
@@ -863,7 +875,7 @@ void HyperReduction<SnapshotsLists...>::evaluatePinv(Eigen::SparseMatrix<double>
   assert(Projector.cols() > 0);
   Eigen::MatrixXd restricted = Projector.transpose() * Modes;
   Info << "S-Optimalty: " << s_optimality(restricted) << endl;
-  pinvPU = pinv_eigen_based(restricted);
+  pinvPU = ITHACAutilities::invertMatrix(restricted, para->ITHACAdict->lookupOrDefault<word>("InversionMethod", "completeOrthogonalDecomposition"));
   pinvPU = pinvPU*(Projector.transpose() * fieldWeights.array().cwiseInverse().matrix()).asDiagonal();
 }
 
@@ -875,9 +887,9 @@ void HyperReduction<SnapshotsLists...>::evaluateWPU(Eigen::SparseMatrix<double> 
   unsigned int n_weightsPerField = quadratureWeights.rows()/vectorial_dim;
   unsigned int reorderIndex{0};
 
-  for (unsigned int ith_weight = 0; ith_weight < n_weightsPerField; ith_weight++)
-  {
-    for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+  for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+  {  
+    for (unsigned int ith_weight = 0; ith_weight < n_weightsPerField; ith_weight++)
     {
       quadratureWeightsOrderedAsProjector(reorderIndex) = quadratureWeights(ith_weight + ith_field * n_weightsPerField);
       reorderIndex++;
@@ -887,7 +899,7 @@ void HyperReduction<SnapshotsLists...>::evaluateWPU(Eigen::SparseMatrix<double> 
 }
 
 template<typename... SnapshotsLists>
-void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, fvMesh &mesh) {
+void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers, const fvMesh &mesh) {
 
   Info << "####### Extract submesh #######\n";
   ITHACAparameters *para(ITHACAparameters::getInstance());

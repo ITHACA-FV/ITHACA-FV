@@ -36,13 +36,12 @@ SourceFiles
 #include "Foam2Eigen.H"
 #include "ITHACAstream.H"
 #include "ITHACAPOD.H"
-#include "DEIM.H"
+#include "hyperReduction.templates.H"
 #include <chrono>
-
-class DEIM_function : public DEIM<volScalarField>
+class DEIM_function : public HyperReduction<PtrList<volScalarField>&>
 {
     public:
-        using DEIM::DEIM;
+        using HyperReduction::HyperReduction;
         static volScalarField evaluate_expression(volScalarField& S, Eigen::MatrixXd mu)
         {
             volScalarField yPos = S.mesh().C().component(vector::Y).ref();
@@ -58,18 +57,19 @@ class DEIM_function : public DEIM<volScalarField>
         }
         Eigen::VectorXd onlineCoeffs(Eigen::MatrixXd mu)
         {
-            theta.resize(magicPoints().size());
+            theta.resize(nodePoints().size());
             auto f = evaluate_expression(subField(), mu);
 
-            for (int i = 0; i < magicPoints().size(); i++)
+            for (int i = 0; i < nodePoints().size(); i++)
             {
                 // double on_coeff = f[localMagicPoints[i]];
-                theta(i) = f[localMagicPoints[i]];
+                theta(i) = f[localNodePoints[i]];
             }
 
             return theta;
         }
-
+        
+        Eigen::VectorXd theta; 
         PtrList<volScalarField> fields;
         autoPtr<volScalarField> subField;
 };
@@ -111,6 +111,10 @@ int main(int argc, char* argv[])
     );
     // Parameters used to train the non-linear function
     Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    
+    // To compare with the same parameters, save data and then load it 
+    // cnpy::load(pars, "./random100.npy");
+    // cnpy::save(pars, "./random100.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -120,11 +124,31 @@ int main(int argc, char* argv[])
         ITHACAstream::exportSolution(S, name(i + 1), "./ITHACAoutput/Offline/");
     }
 
+    Eigen::MatrixXd snapshotsModes;
+
+    // To use the DEIMmodes method from ITHACAPOD :
+    Eigen::VectorXd normalizingWeights = ITHACAutilities::getMassMatrixFV(Sp[0]).array();
+    PtrList<volScalarField> modes = ITHACAPOD::DEIMmodes(Sp, NDEIM, "GappyDEIM", S.name());
+    snapshotsModes = Foam2Eigen::PtrList2Eigen(modes);
+
+    // To use the SVD modes from the HyperReduction class : 
+    // Eigen::VectorXd normalizingWeights;
+    // c.getModesSVD(c.snapshotsListTuple, snapshotsModes, normalizingWeights); 
+
     // Create DEIM object with given number of basis functions
-    DEIM_function c(Sp, NDEIM, "Gaussian_function", S.name());
+    Eigen::VectorXi initSeeds(0);
+    DEIM_function c(NDEIM, NDEIM, initSeeds, "DEIM", Sp);
+
+    // Compute the DEIM 
+    c.offlineGappyDEIM(snapshotsModes, normalizingWeights);
+    // To access the same folder hierarchy as before : 
+    // c.problemName = "Gaussian_function";
+    // c.offlineGappyDEIM(snapshotsModes, normalizingWeights, "ITHACAoutput/DEIM/"+c.problemName);
+                                                           
     // Generate the submeshes with the depth of the layer
-    c.subField = autoPtr<volScalarField>(new volScalarField(c.generateSubmesh(2,
-                                         mesh, S)));
+    c.generateSubmesh(2, mesh); 
+    c.subField = c.interpolateField<volScalarField>(Sp[0]);
+
     // Define a new online parameter
     Eigen::MatrixXd par_new(2, 1);
     par_new(0, 0) = 0;
@@ -148,19 +172,19 @@ int main(int argc, char* argv[])
 
 /// \example 08DEIM.C
 /// \section intro_08DEIM Introduction to tutorial 8
-/// In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Method (implemented in the DEIM class) for the approximation of a non-linear function.
+/// In this tutorial we propose an example concerning the usage of the Discrete Empirical Interpolation Method (implemented in the HyperReduction class) for the approximation of a non-linear function.
 /// The following image illustrates the computational domain used to discretize the problem
 /// \htmlonly <style>div.image img[src="mesh.png"]{width:500px;}</style> \endhtmlonly @image html mesh.png "Computational Domain"
 ///
-/// The non-liner function is described by a parametric Gaussian function:
+/// The non-linear function is described by a parametric Gaussian function:
 /// \f[
 /// S(\mathbf{x},\mathbf{\mu}) = e^{-2(x-\mu_x-1)^2 - 2(y-\mu_y-0.5)^2},
 ///  \f]
-/// that is depending on the parameter vector \f$\mathbf{\mu} = [\mu_x, \mu_y] \f$ and on the location inside the domain \f$ \mathbf{x} = [x,y] \f$. A training set of 100 samples is used to construct the DEIM modes which are later used for the approximation.
+/// that is depending on the parameter vector \f$\mathbf{\mu} = [\mu_x, \mu_y] \f$ and on the location inside the domain \f$ \mathbf{x} = [x,y] \f$. A training set of 100 samples is used to construct the "DEIM" modes which are later used for the approximation.
 ///
 /// \subsection header The necessary header files
 /// First of all let's have a look to the header files that needs to be included and what they are responsible for:
-/// The header files of ITHACA-FV necessary for this tutorial are: <Foam2Eigen.H> for Eigen to OpenFOAM conversion of objects, <ITHACAstream.H> for ITHACA-FV input-output operations. <ITHACAPOD.H> for the POD decomposition, <DEIM.H> for the DEIM approximation.
+/// The header files of ITHACA-FV necessary for this tutorial are: <Foam2Eigen.H> for Eigen to OpenFOAM conversion of objects, <ITHACAstream.H> for ITHACA-FV input-output operations. <ITHACAPOD.H> for the POD decomposition, <hyperReduction.templates.H> for the "DEIM" approximation.
 ///
 ///
 /// \section code08 A detailed look into the code
@@ -172,14 +196,14 @@ int main(int argc, char* argv[])
 ///
 /// ITHACA-FV header files
 ///
-/// \until DEIM
+/// \until hyperReduction
 ///
 /// chrono to compute the speedup
 /// \until chrono
 ///
-/// Construction of the function to be approximated with the DEIM method.
+/// Construction of the function to be approximated with the "DEIM" method from the HyperReduction class.
 /// \skip class
-/// \until DEIM::DEIM
+/// \until HyperReduction::HyperReduction
 ///
 /// Method with the explicit definition of the non-linear function
 /// \skip evaluate_expression
@@ -201,15 +225,27 @@ int main(int argc, char* argv[])
 /// Offline training of the function and assembly of the snapshots list
 /// \skip for
 /// \until }
-/// Construction of the DEIM object passing the list of snapshots Sp, the maximum number of DEIM modes NDEIM, and the name used to store the output "Gaussian_function".
-/// \skipline DEIM_function
+///
+/// Compute the "DEIM" modes using the ITHACAPOD class 
+/// \skip normalizingWeights
+/// \until snapshotsModes
+///
+/// Construction of the HyperReduction object passing the maximum number of "DEIM" modes NDEIM, the initSeeds (none in this tutorial), the name used to store the output "DEIM" and the list of snapshots Sp. The constructor is taking the number of modes and the number of point to compute, for the "DEIM" method these numbers are equal. 
+/// \skip initSeeds 
+/// \until DEIM_function
+///
+/// Compute the "DEIM" method HyperReduction::offlineGappyDEIM passing the "DEIM" modes and the normalizingWeights
+/// \skipline c.offlineGappyDEIM
+///
 /// Command to generate the submeshes used for pointwise evaluation of the function
-/// \skipline c.
+/// \skip c.generateSubmesh
+/// \until c.subField
+///
 /// Definition of a new sample value to test the accuracy of the method \f$ \mu* = (0,0) \f$
 /// \skip Eigen
 /// \until 1,
 ///
-/// Evaluation of the function using DEIM and reconstruction of the field
+/// Evaluation of the function using "DEIM" and reconstruction of the field
 /// \skip Eigen
 /// \until volSca
 ///
