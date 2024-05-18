@@ -424,6 +424,61 @@ template volTensorField Foam2Eigen::Eigen2field(
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     GeometricField<vector, PatchField, GeoMesh>& field_in,
+    Eigen::VectorXd& eigen_vector, List<Eigen::VectorXd>& eigen_vector_boundary)
+{
+    GeometricField<vector, PatchField, GeoMesh> field_out(field_in);
+
+    for (auto i = 0; i < field_out.size(); i++)
+    {
+        field_out.ref()[i][0] = eigen_vector(i);
+        field_out.ref()[i][1] = eigen_vector(i + field_out.size());
+        field_out.ref()[i][2] = eigen_vector(i + field_out.size() * 2);
+    }
+
+    for(unsigned int id = 0; id < field_out.boundaryField().size(); id++)
+    {
+        unsigned int idBSize = field_out.boundaryField()[id].size();
+        for (unsigned int ith_bcell = 0; ith_bcell < idBSize; ith_bcell++)
+        {
+            ITHACAutilities::assignBC(field_out, id, eigen_vector_boundary[id]);
+        }
+    }
+
+    return field_out;
+}
+
+template volVectorField Foam2Eigen::Eigen2field(
+    volVectorField& field_in, Eigen::VectorXd& eigen_vector, List<Eigen::VectorXd>& eigen_vector_boundary);
+
+template<template<class> class PatchField, class GeoMesh>
+GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
+    GeometricField<scalar, PatchField, GeoMesh>& field_in,
+    Eigen::VectorXd& eigen_vector, List<Eigen::VectorXd>& eigen_vector_boundary)
+{
+    GeometricField<scalar, PatchField, GeoMesh> field_out(field_in);
+
+    for (auto i = 0; i < field_out.size(); i++)
+    {
+        field_out.ref()[i] = eigen_vector(i);
+    }
+
+    for(unsigned int id = 0; id < field_out.boundaryField().size(); id++)
+    {
+        for (unsigned int ith_bcell = 0; ith_bcell < field_out.boundaryField()[id].size(); ith_bcell++)
+        {
+            ITHACAutilities::assignBC(field_out, id, eigen_vector_boundary[id]);
+        }
+    }
+
+    return field_out;
+}
+
+template volScalarField Foam2Eigen::Eigen2field(
+    volScalarField& field_in, Eigen::VectorXd& eigen_vector, List<Eigen::VectorXd>& eigen_vector_boundary);
+
+template<template<class> class PatchField, class GeoMesh>
+GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
+    GeometricField<vector, PatchField, GeoMesh>& field_in,
     Eigen::VectorXd& eigen_vector, bool correctBC)
 {
     GeometricField<vector, PatchField, GeoMesh> field_out(field_in);
