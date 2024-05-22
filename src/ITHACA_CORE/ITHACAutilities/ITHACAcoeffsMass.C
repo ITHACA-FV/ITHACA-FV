@@ -191,6 +191,84 @@ template Eigen::MatrixXd getMassMatrix(
     PtrList<GeometricField<tensor, fvPatchField, volMesh>>& modes2, label Nmodes,
     bool consider_volumes);
 
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+                              PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes2, 
+                              Eigen::VectorXd weights,
+                              label Nmodes,
+                              bool consider_volumes)
+{
+    label Msize,Msize2;
+    if (Nmodes == 0)
+    {
+        Msize =  modes.size();
+        Msize2 =  modes2.size();
+    }
+    else
+    {
+        Msize = Nmodes;
+        Msize2 = Nmodes;
+    }
+    M_Assert(modes.size() >= Msize,
+             "The Number of requested modes is larger then the available quantity.");
+    M_Assert(modes2.size() >= Msize2,
+             "The Number of requested modes is larger then the available quantity.");
+
+    Eigen::MatrixXd F = Foam2Eigen::PtrList2Eigen(modes);
+    Eigen::MatrixXd F2 = Foam2Eigen::PtrList2Eigen(modes2);
+    Eigen::MatrixXd M = Eigen::MatrixXd::Zero(Msize,Msize2);
+    
+    if (consider_volumes)
+    {
+        Eigen::VectorXd V = getMassMatrixFV(modes[0]);
+        for (int i=0; i<weights.size(); i++)
+        {
+          M += (V(i) * weights(i)) * F.transpose().topRows(Msize).col(i) * F2.leftCols(Msize2).row(i);
+        }
+    }
+    else
+    {
+        M = weights.asDiagonal() * F.transpose().topRows(Msize) * F2.leftCols(Msize2);
+    }
+
+    if (Pstream::parRun())
+    {
+        reduce(M, sumOp<Eigen::MatrixXd>());
+    }
+
+    return M;
+}
+
+template Eigen::MatrixXd getMassMatrix(
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& modes,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& modes2, 
+    Eigen::VectorXd weights,
+    label Nmodes = 0,
+    bool consider_volumes);
+
+template Eigen::MatrixXd getMassMatrix(
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& modes,
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>>& modes2,
+    Eigen::VectorXd weights,
+    label Nmodes = 0,
+    bool consider_volumes);
+
+template Eigen::MatrixXd getMassMatrix(
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes,
+    PtrList<GeometricField<vector, fvPatchField, volMesh>>& modes2, 
+    Eigen::VectorXd weights,
+    label Nmodes = 0,
+    bool consider_volumes);
+
+template Eigen::MatrixXd getMassMatrix(
+    PtrList<GeometricField<tensor, fvPatchField, volMesh>>& modes,
+    PtrList<GeometricField<tensor, fvPatchField, volMesh>>& modes2, 
+    Eigen::VectorXd weights,
+    label Nmodes = 0,
+    bool consider_volumes);
+
+
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd getMassMatrixFV(
     GeometricField<Type, PatchField, GeoMesh>& snapshot)

@@ -28,3 +28,9 @@ OutType fixed;
 HyperReduction GappyDEIM;//GappyDEIM, ECP
 GreedyMetric L2;//L2, SOPT, SOPTE
 
+// Inversion method 
+// Possibilities : pinv_eigen_based, half_pinv_eigen_based, direct, fullPivLu, 
+// partialPivLu, householderQr, colPivHouseholderQr, fullPivHouseholderQr, 
+// completeOrthogonalDecomposition, jacobiSvd, llt, ldlt, bdcSvd  
+InversionMethod completeOrthogonalDecomposition;
+

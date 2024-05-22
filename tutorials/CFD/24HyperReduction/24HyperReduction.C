@@ -110,11 +110,11 @@ class HyperReduction_vectorFunction : public HyperReduction<PtrList<volVectorFie
 
             for (auto i = 0; i < nodesList.size(); i++)
             {
-                ret(i*3) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
+                ret(i) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i*3 + 1) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 0.5,
+                ret(i + nodesList.size()) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 0.5,
                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i*3 + 2) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1.5,
+                ret(i + 2 * nodesList.size()) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1.5,
                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0., 2));
             }
 
@@ -161,13 +161,13 @@ class HyperReduction_vectorScalarFunction : public HyperReduction<PtrList<volVec
 
             for (auto i = 0; i < nodesList.size(); i++)
             {
-                ret(i*4) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
+                ret(i) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i*4 + 1) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 0.5,
+                ret(i + nodesList.size()) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 0.5,
                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i*4 + 2) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1.5,
+                ret(i + 2 * nodesList.size()) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1.5,
                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0., 2));
-                ret(i*4 + 3) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
+                ret(i + 3 * nodesList.size()) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
             }
 
