@@ -238,11 +238,20 @@ Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
     
     if (consider_volumes)
     {
-        Eigen::VectorXd V = getMassMatrixFV(modes[0]);
-        for (int i=0; i<weights.size(); i++)
-        {
-          M += (V(i) * weights(i)) * F.transpose().topRows(Msize).col(i) * F2.leftCols(Msize2).row(i);
-        }
+       Eigen::VectorXd V = getMassMatrixFV(modes[0]);
+       // If V is too big then we need a for loop to avoid RAM overload
+       if (V.size() > 1e6)
+       {
+            for (int i=0; i<V.size(); i++)
+            {
+             M += (V(i) * weights(i)) * F.transpose().topRows(Msize).col(i) * F2.leftCols(Msize2).row(i);
+            }
+       }
+       else
+       {
+        // Classical M computation
+        M = F.transpose().topRows(Msize) * ( V * weights ).asDiagonal() * F2.leftCols(Msize2);
+       }
     }
     else
     {
