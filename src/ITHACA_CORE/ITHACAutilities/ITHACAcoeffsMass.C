@@ -246,7 +246,7 @@ Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
     }
     else
     {
-        M = weights.asDiagonal() * F.transpose().topRows(Msize) * F2.leftCols(Msize2);
+        M = F.transpose().topRows(Msize) * weights.asDiagonal() * F2.leftCols(Msize2);
     }
 
     if (Pstream::parRun())
