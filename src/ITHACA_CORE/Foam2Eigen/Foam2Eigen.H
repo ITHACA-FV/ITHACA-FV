@@ -40,6 +40,7 @@
 #include "fvCFD.H"
 #include "IOmanip.H"
 #include "ITHACAassert.H"
+#include "ITHACAutilities.H"
 #include <tuple>
 #include <sys/stat.h>
 #pragma GCC diagnostic push
@@ -356,6 +357,43 @@ class Foam2Eigen
         static GeometricField<vector, PatchField, GeoMesh> Eigen2field(
             GeometricField<vector, PatchField, GeoMesh>& field,
             Eigen::VectorXd& eigen_vector, bool correctBC = true);
+        
+        //----------------------------------------------------------------------
+        /// @brief         Convert a vector in Eigen format into an OpenFOAM
+        ///                scalar GeometricField
+        ///
+        /// @param[in/out] field         OpenFOAM GeometricField
+        /// @param[in]     eigen_vector  Vector in Eigen format
+        /// @param[in]     eigen_vector_boundary  Vector in Eigen format
+        ///
+        /// @tparam        PatchField    fvPatchField or fvsPatchField.
+        /// @tparam        GeoMesh       volMesh or surfaceMesh.
+        ///
+        /// @return        OpenFOAM GeometricField
+        ///
+        template<template<class> class PatchField, class GeoMesh>
+        static GeometricField<scalar, PatchField, GeoMesh> Eigen2field(
+            GeometricField<scalar, PatchField, GeoMesh>& field,
+            Eigen::VectorXd& eigen_vector, List<Eigen::VectorXd>& eigen_vector_boundary);
+
+        //----------------------------------------------------------------------
+        /// @brief         Convert a vector in Eigen format into an OpenFOAM
+        ///                vector GeometricField
+        ///
+        /// @param[in/out] field         OpenFOAM GeometricField
+        /// @param[in]     eigen_vector  Vector in Eigen format
+        /// @param[in]     eigen_vector_boundary  Vector in Eigen format
+        ///
+        /// @tparam        PatchField    fvPatchField or fvsPatchField.
+        /// @tparam        GeoMesh       volMesh or surfaceMesh.
+        ///
+        /// @return        OpenFOAM GeometricField
+        ///
+        template<template<class> class PatchField, class GeoMesh>
+        static GeometricField<vector, PatchField, GeoMesh> Eigen2field(
+            GeometricField<vector, PatchField, GeoMesh>& field,
+            Eigen::VectorXd& eigen_vector, List<Eigen::VectorXd>& eigen_vector_boundary);
+
 
         //----------------------------------------------------------------------
         /// @brief         Convert a vector in Eigen format into an OpenFOAM
