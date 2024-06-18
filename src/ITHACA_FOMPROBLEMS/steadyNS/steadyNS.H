@@ -109,6 +109,9 @@ class steadyNS: public reductionProblem
         /// List of pointers used to form the list of lifting functions
         PtrList<volVectorField> liftfield;
 
+        /// List of pointer used to form the list of lifting functions for the pressure
+        PtrList<volScalarField> liftfieldP;
+
         /// List of pointers used to form the homogeneous velocity snapshots
         PtrList<volVectorField> Uomfield;
 

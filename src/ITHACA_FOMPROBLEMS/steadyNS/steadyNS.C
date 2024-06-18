@@ -924,7 +924,7 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term(label NUmodes, label NPmodes,
         label NSUPmodes)
 {
     label K1size = NUmodes + NSUPmodes + liftfield.size();
-    label K2size = NPmodes;
+    label K2size = NPmodes + liftfieldP.size();
     Eigen::MatrixXd K_matrix(K1size, K2size);
 
     // Project everything
