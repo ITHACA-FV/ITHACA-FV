@@ -485,7 +485,7 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the Large Scale Advection
         ///
-        Eigen::MatrixXd large_scale_advection(label NUmodes, volTensorField t_a);
+        Eigen::MatrixXd convective_background(label NUmodes, volVectorField vls);
         //--------------------------------------------------------------------------
         /// @brief      Term N° 1 given by the additional boundary condition using a PPE approach
         ///

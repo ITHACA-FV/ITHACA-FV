@@ -1180,7 +1180,8 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
     return gTensor;
 }
 
-Eigen::MatrixXd steadyNS::large_scale_advection(label NUmodes, volTensorField t_a)
+// large scale convection (or background convection)
+Eigen::MatrixXd steadyNS::convective_background(label NUmodes, volVectorField vls)
 {
   label Lsize = NUmodes + liftfield.size();
     Eigen::MatrixXd L_matrix(Lsize, Lsize);
@@ -1189,8 +1190,8 @@ Eigen::MatrixXd steadyNS::large_scale_advection(label NUmodes, volTensorField t_
   {
       for (label j = 0; j < Lsize; j++)
       {
-        L_matrix(i, j) = 0.5*fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::div(
-                              fvc::interpolate(fvc::div(t_a)) & t_a.mesh().Sf(),
+        L_matrix(i, j) = - fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::div(
+                              fvc::interpolate(vls) & vls.mesh().Sf(),
                                 L_U_SUPmodes[j])).value();
       }
   }
