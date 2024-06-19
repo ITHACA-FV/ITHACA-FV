@@ -1180,6 +1180,24 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
     return gTensor;
 }
 
+Eigen::MatrixXd steadyNS::large_scale_advection(label NUmodes, volTensorField t_a)
+{
+  label Lsize = NUmodes + liftfield.size();
+    Eigen::MatrixXd L_matrix(Lsize, Lsize);
+
+  for (label i = 0; i < Lsize; i++)
+  {
+      for (label j = 0; j < Lsize; j++)
+      {
+        L_matrix(i, j) = 0.5*fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::div(
+                              fvc::interpolate(fvc::div(t_a)) & t_a.mesh().Sf(),
+                                L_U_SUPmodes[j])).value();
+      }
+  }
+
+  return L_matrix;
+}
+
 Eigen::MatrixXd steadyNS::laplacian_pressure(label NPmodes)
 {
     label Dsize = NPmodes;

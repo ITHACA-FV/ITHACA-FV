@@ -478,6 +478,15 @@ class steadyNS: public reductionProblem
         Eigen::MatrixXd laplacian_pressure(label NPmodes);
 
         //--------------------------------------------------------------------------
+        /// Large Scale Advection
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  t_a        Variance Tensor
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the Large Scale Advection
+        ///
+        Eigen::MatrixXd large_scale_advection(label NUmodes, volTensorField t_a);
+        //--------------------------------------------------------------------------
         /// @brief      Term N° 1 given by the additional boundary condition using a PPE approach
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
