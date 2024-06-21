@@ -1220,7 +1220,7 @@ Eigen::MatrixXd steadyNS::divergent_convective_background(label NPmodes, label N
 
 Eigen::MatrixXd steadyNS::laplacian_pressure(label NPmodes)
 {
-    label Dsize = NPmodes;
+    label Dsize = NPmodes + liftfieldP.size();
     Eigen::MatrixXd D_matrix(Dsize, Dsize);
 
     // Project everything
