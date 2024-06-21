@@ -66,7 +66,7 @@ class tutorial18 : public SteadyNSSimple
                 ITHACAstream::readMiddleFields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::readMiddleFields(Pfield, p, "./ITHACAoutput/Offline/");
                 auto nut = _mesh().lookupObject<volScalarField>("nut");
-                ITHACAstream::readConvergedFields(nutFields, nut, "./ITHACAoutput/Offline/");
+                ITHACAstream::readLastFields(nutFields, nut, "./ITHACAoutput/Offline/");
                 mu_samples =
                     ITHACAstream::readMatrix("./ITHACAoutput/Offline/mu_samples_mat.txt");
             }
