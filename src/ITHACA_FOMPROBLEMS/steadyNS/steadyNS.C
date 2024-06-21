@@ -1184,7 +1184,7 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
 Eigen::MatrixXd steadyNS::convective_background(label NUmodes, volVectorField vls)
 {
   label Lsize = NUmodes + liftfield.size();
-    Eigen::MatrixXd L_matrix(Lsize, Lsize);
+  Eigen::MatrixXd L_matrix(Lsize, Lsize);
 
   for (label i = 0; i < Lsize; i++)
   {
