@@ -1199,6 +1199,25 @@ Eigen::MatrixXd steadyNS::convective_background(label NUmodes, volVectorField vl
   return L_matrix;
 }
 
+Eigen::MatrixXd steadyNS::divergent_convective_background(label NPmodes, label NUmodes, volVectorField vls)
+{
+  label LDsize1 = NPmodes + liftfieldP.size();
+  label LDsize2 = NUmodes + liftfield.size();
+  Eigen::MatrixXd L_D_matrix(LDsize1, LDsize2);
+
+  for (label i = 0; i < LDsize1; i++)
+  {
+    for (label j = 0; j < LDsize2; j++)
+    {
+      L_D_matrix(i, j) = - fvc::domainIntegrate( fvc::grad(Pmodes[i]) & fvc::div(
+                            fvc::interpolate(vls) & vls.mesh().Sf(),
+                              L_U_SUPmodes[j])).value();
+    }
+  }
+
+  return L_D_matrix;
+}
+
 Eigen::MatrixXd steadyNS::laplacian_pressure(label NPmodes)
 {
     label Dsize = NPmodes;
