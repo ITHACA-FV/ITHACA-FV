@@ -1146,7 +1146,7 @@ List <Eigen::MatrixXd> steadyNS::div_momentum(label NUmodes, label NPmodes)
 
 Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
 {
-    label g1Size = NPmodes;
+    label g1Size = NPmodes + liftfieldP.size();
     label g2Size = NUmodes + NSUPmodes + liftfield.size();
     Eigen::Tensor<double, 3> gTensor;
     gTensor.resize(g1Size, g2Size, g2Size);
