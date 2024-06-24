@@ -245,8 +245,8 @@ void readConvergedFields(
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_last_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
                  Lfield,
-                 GeometricField<Type, PatchField, GeoMesh>& field,
-                 fileName casename); 
+                 const GeometricField<Type, PatchField, GeoMesh>& field,
+                 const fileName casename); 
 
 //----------------------------------------------------------------------
 /// Funtion to read a list of volVectorField from name of the field including only the last snapshots
@@ -264,8 +264,8 @@ void read_last_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readLastFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
                       Lfield,
-                      GeometricField<Type, PatchField, GeoMesh>& field,
-                      fileName casename);
+                      const GeometricField<Type, PatchField, GeoMesh>& field,
+                      const fileName casename);
 
 //--------------------------------------------------------------------------
 /// Function to export a scalar of vector field

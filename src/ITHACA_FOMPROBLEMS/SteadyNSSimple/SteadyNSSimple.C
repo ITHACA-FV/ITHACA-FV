@@ -88,7 +88,8 @@ void SteadyNSSimple::getTurbRBF(label NNutModes)
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weights/", weightName);
             rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            // std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            Info<< "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
         else
         {
@@ -104,7 +105,8 @@ void SteadyNSSimple::getTurbRBF(label NNutModes)
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weights/", weightName);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            // std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            Info<< "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
     }
 }

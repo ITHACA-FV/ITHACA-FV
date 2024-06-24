@@ -694,8 +694,8 @@ void readConvergedFields(
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_last_fields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
-    GeometricField<Type, PatchField, GeoMesh>& field,
-    fileName casename)
+    const GeometricField<Type, PatchField, GeoMesh>& field,
+    const fileName casename)
 {
     if (!Pstream::parRun())
     {
@@ -705,7 +705,9 @@ void read_last_fields(
         Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
         int last_s (runTime2.times().size());
 
-        GeometricField<Type, PatchField, GeoMesh> tmp_field(
+        #if defined(OFVER) && (OFVER >= 2212)
+        Lfield.emplace_back
+        (
             IOobject
             (
                 field.name(),
@@ -715,7 +717,21 @@ void read_last_fields(
             ),
             field.mesh()
         );
-        Lfield.append(tmp_field.clone());
+        #else 
+        auto tfld =
+            autoPtr<GeometricField<Type, PatchField, GeoMesh>>::New
+            (
+                IOobject
+                (
+                    field.name(),
+                    casename + runTime2.times()[last_s-1].name(),
+                    field.mesh(),
+                    IOobject::MUST_READ
+                ),
+                field.mesh()
+            );
+        Lfield.append(std::move(tfld));
+        #endif
 
         std::cout << std::endl;
     }
@@ -730,7 +746,9 @@ void read_last_fields(
         int last_s = numberOfFiles(casename,
                                    "processor" + name(Pstream::myProcNo()) + "/");
 
-        GeometricField<Type, PatchField, GeoMesh> tmp_field(
+        #if defined(OFVER) && (OFVER >= 2212)
+        Lfield.emplace_back
+        (
             IOobject
             (
                 field.name(),
@@ -740,7 +758,21 @@ void read_last_fields(
             ),
             field.mesh()
         );
-        Lfield.append(tmp_field.clone());
+        #else
+        auto tfld =
+            autoPtr<GeometricField<Type, PatchField, GeoMesh>>::New
+            (
+                IOobject
+                (
+                    field.name(),
+                    timename + "/" + name(last_s-1),
+                    field.mesh(),
+                    IOobject::MUST_READ
+                ),
+                field.mesh()
+            );
+        Lfield.append(std::move(tfld));
+        #endif
 
         Info << endl;
     }
@@ -749,7 +781,7 @@ void read_last_fields(
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readLastFields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
-    GeometricField<Type, PatchField, GeoMesh>& field, fileName casename)
+    const GeometricField<Type, PatchField, GeoMesh>& field, const fileName casename)
 {
     int par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
@@ -1024,25 +1056,25 @@ template void readConvergedFields(PtrList<surfaceVectorField>&
                                   Lfield, surfaceVectorField& field, fileName casename);
 
 template void read_last_fields(PtrList<volScalarField>& Lfield,
-                          volScalarField& field, fileName casename);
+                         const volScalarField& field, const fileName casename);
 template void read_last_fields(PtrList<volVectorField>& Lfield,
-                          volVectorField& field, fileName casename);
+                         const volVectorField& field, const fileName casename);
 template void read_last_fields(PtrList<volTensorField>& Lfield,
-                          volTensorField& field, fileName casename);
+                         const volTensorField& field, const fileName casename);
 template void read_last_fields(PtrList<surfaceScalarField>& Lfield,
-                          surfaceScalarField& field, fileName casename);
+                         const surfaceScalarField& field, const fileName casename);
 template void read_last_fields(PtrList<surfaceVectorField>& Lfield,
-                          surfaceVectorField& field, fileName casename);
+                         const surfaceVectorField& field, const fileName casename);
 template void readLastFields(PtrList<volScalarField>& Lfield,
-                               volScalarField& field, fileName casename);
+                              const volScalarField& field, const fileName casename);
 template void readLastFields(PtrList<volVectorField>& Lfield,
-                               volVectorField& field, fileName casename);
+                              const volVectorField& field, const fileName casename);
 template void readLastFields(PtrList<volTensorField>& Lfield,
-                               volTensorField& field, fileName casename);
+                              const volTensorField& field, const fileName casename);
 template void readLastFields(PtrList<surfaceScalarField>&
-                               Lfield, surfaceScalarField& field, fileName casename);
+                               Lfield, const surfaceScalarField& field, const fileName casename);
 template void readLastFields(PtrList<surfaceVectorField>&
-                               Lfield, surfaceVectorField& field, fileName casename);
+                               Lfield, const surfaceVectorField& field, const fileName casename);
 
 template<typename T>
 void exportList(T& list, word folder, word filename)
