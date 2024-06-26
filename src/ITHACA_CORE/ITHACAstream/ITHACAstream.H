@@ -229,6 +229,44 @@ void readConvergedFields(
     GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename);
 
+//----------------------------------------------------------------------
+/// Function to read a list of fields from the name of the field including only the last snapshot
+///
+/// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
+///                         to store the field.
+/// @param[in]  field       The field used as template to read other
+///                         fields.
+/// @param[in]  casename    The folder where the field is stored.
+
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void read_last_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                 Lfield,
+                 const GeometricField<Type, PatchField, GeoMesh>& field,
+                 const fileName casename); 
+
+//----------------------------------------------------------------------
+/// Funtion to read a list of volVectorField from name of the field including only the last snapshots
+///
+/// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
+///                         to store the field.
+/// @param[in]  field       The field used as template to read other
+///                         fields.
+/// @param[in]  casename    The folder where the field is stored.
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void readLastFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+                      Lfield,
+                      const GeometricField<Type, PatchField, GeoMesh>& field,
+                      const fileName casename);
+
 //--------------------------------------------------------------------------
 /// Function to export a scalar of vector field
 ///
