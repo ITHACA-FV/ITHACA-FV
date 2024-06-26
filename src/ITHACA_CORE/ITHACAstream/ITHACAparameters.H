@@ -55,6 +55,7 @@ class ITHACAparameters
         bool exportTxt;
         bool debug;
         bool warnings;
+        bool correctBC;
 
         /// type of output format can be fixed or scientific
         std::_Ios_Fmtflags outytpe;
