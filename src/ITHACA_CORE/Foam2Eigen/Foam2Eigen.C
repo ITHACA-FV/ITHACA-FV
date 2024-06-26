@@ -101,6 +101,14 @@ Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
     return std::move(output);
 }
 
+template <template <class> class PatchField, class GeoMesh>
+Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMapBC(
+    GeometricField<scalar, PatchField, GeoMesh>& field, int BC_index)
+{
+    Eigen::Map<Eigen::MatrixXd> output(field.boundaryFieldRef()[BC_index].data(), field.boundaryField()[BC_index].size(), 1);
+    return std::move(output);
+}
+
 template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
     volScalarField& field);
 
