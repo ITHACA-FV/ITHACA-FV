@@ -348,8 +348,8 @@ class reductionProblem
  * ITHACA-FV (In real Time Highly Advanced Computational Applications for
 Finite Volumes) is C++ library based on the finite volume solver
 [<b> OpenFOAM </b>](https://openfoam.org/). It consists of the implementation of several reduced order
-modeling techniques for parametrized problems. ITHACA-FV is developed and maintained by
-[<b> Dr. Giovanni Stabile </b>](https://www.giovannistabile.com/) at the [<b>University of Urbino Carlo Bo](https://www.uniurb.it/) and at [<b> SISSA mathLab </b>](https://mathlab.sissa.it/) in collaboration with [<b> Prof. Gianluigi Rozza's Group </b>](http://people.sissa.it/~grozza/). Check also the GitHub [webpage](https://github.com/ITHACA-FV/ITHACA-FV) for more info.
+modeling techniques for parametrized problems. ITHACA-FV is developed and maintained mainly by the group of 
+[<b> Prof. Giovanni Stabile </b>](https://www.giovannistabile.com/) at the [<b>Sant'Anna School of Advanced Studies](https://www.santannapisa.it/en) and partially at [<b> SISSA mathLab </b>](https://mathlab.sissa.it/) in collaboration with [<b> Prof. Gianluigi Rozza's Group </b>](http://people.sissa.it/~grozza/). Check also the GitHub [webpage](https://github.com/ITHACA-FV/ITHACA-FV) for more info.
 
  *
  * \section structure ITHACA-FV directory structure

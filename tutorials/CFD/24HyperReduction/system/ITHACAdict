@@ -18,7 +18,8 @@ FoamFile
 EigenSolver eigen;
 
 // Number of modes to output and to use for projection
-NDEIM 50;
+Nodes 31;
+Modes 30;
 
 // Output format to save market vectors.
 OutPrecision 20;
@@ -28,9 +29,5 @@ OutType fixed;
 HyperReduction GappyDEIM;//GappyDEIM, ECP
 GreedyMetric L2;//L2, SOPT, SOPTE
 
-// Inversion method 
-// Possibilities : pinv_eigen_based, half_pinv_eigen_based, direct, fullPivLu, 
-// partialPivLu, householderQr, colPivHouseholderQr, fullPivHouseholderQr, 
-// completeOrthogonalDecomposition, jacobiSvd, llt, ldlt, bdcSvd  
+// Inversion Method 
 InversionMethod completeOrthogonalDecomposition;
-

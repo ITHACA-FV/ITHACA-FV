@@ -924,7 +924,7 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term(label NUmodes, label NPmodes,
         label NSUPmodes)
 {
     label K1size = NUmodes + NSUPmodes + liftfield.size();
-    label K2size = NPmodes;
+    label K2size = NPmodes + liftfieldP.size();
     Eigen::MatrixXd K_matrix(K1size, K2size);
 
     // Project everything
@@ -1146,7 +1146,7 @@ List <Eigen::MatrixXd> steadyNS::div_momentum(label NUmodes, label NPmodes)
 
 Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
 {
-    label g1Size = NPmodes;
+    label g1Size = NPmodes + liftfieldP.size();
     label g2Size = NUmodes + NSUPmodes + liftfield.size();
     Eigen::Tensor<double, 3> gTensor;
     gTensor.resize(g1Size, g2Size, g2Size);
@@ -1180,9 +1180,47 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
     return gTensor;
 }
 
+// large scale convection (or background convection)
+Eigen::MatrixXd steadyNS::convective_background(label NUmodes, volVectorField vls)
+{
+  label Lsize = NUmodes + liftfield.size();
+  Eigen::MatrixXd L_matrix(Lsize, Lsize);
+
+  for (label i = 0; i < Lsize; i++)
+  {
+      for (label j = 0; j < Lsize; j++)
+      {
+        L_matrix(i, j) = - fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::div(
+                              fvc::interpolate(vls) & vls.mesh().Sf(),
+                                L_U_SUPmodes[j])).value();
+      }
+  }
+
+  return L_matrix;
+}
+
+Eigen::MatrixXd steadyNS::divergent_convective_background(label NPmodes, label NUmodes, volVectorField vls)
+{
+  label LDsize1 = NPmodes + liftfieldP.size();
+  label LDsize2 = NUmodes + liftfield.size();
+  Eigen::MatrixXd L_D_matrix(LDsize1, LDsize2);
+
+  for (label i = 0; i < LDsize1; i++)
+  {
+    for (label j = 0; j < LDsize2; j++)
+    {
+      L_D_matrix(i, j) = - fvc::domainIntegrate( fvc::grad(Pmodes[i]) & fvc::div(
+                            fvc::interpolate(vls) & vls.mesh().Sf(),
+                              L_U_SUPmodes[j])).value();
+    }
+  }
+
+  return L_D_matrix;
+}
+
 Eigen::MatrixXd steadyNS::laplacian_pressure(label NPmodes)
 {
-    label Dsize = NPmodes;
+    label Dsize = NPmodes + liftfieldP.size();
     Eigen::MatrixXd D_matrix(Dsize, Dsize);
 
     // Project everything
