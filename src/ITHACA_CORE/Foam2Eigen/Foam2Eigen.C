@@ -112,6 +112,9 @@ Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMapBC(
 template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
     volScalarField& field);
 
+template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMapBC(
+    volScalarField& field, int BC_index);
+
 template Eigen::VectorXd Foam2Eigen::field2Eigen(
     volScalarField& field);
 template Eigen::VectorXd Foam2Eigen::field2Eigen(
