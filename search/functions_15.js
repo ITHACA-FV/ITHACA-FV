@@ -1,0 +1,13 @@
+var searchData=
+[
+  ['v0_0',['v0',['../msrProblem_2createConstants_8H.html#a5cb9477af496b1370b25434b206c736e',1,'v0(v):&#160;createConstants.H'],['../unsteadymsrProblem_2createConstants_8H.html#a5cb9477af496b1370b25434b206c736e',1,'v0(v):&#160;createConstants.H']]],
+  ['values_1',['values',['../classnewton__argument.html#aff62a840303fc1397e5057981494f374',1,'newton_argument']]],
+  ['vectorize_2',['vectorize',['../namespaceEigenFunctions.html#ab96ee3dbee53e86afc6f34c9cfe6f36c',1,'EigenFunctions']]],
+  ['vectortensormult_3',['vectorTensorMult',['../classtutorial22.html#ae1f2f7bd3f818d4721e71500f1bb5d9e',1,'tutorial22']]],
+  ['vectortensorproduct_4',['vectorTensorProduct',['../namespaceEigenFunctions.html#a415a8b03696cd6b294637b485a51a79d',1,'EigenFunctions::vectorTensorProduct(const Eigen::Matrix&lt; T, Eigen::Dynamic, 1 &gt; &amp;g, const Eigen::Tensor&lt; T, 3 &gt; &amp;c, const Eigen::Matrix&lt; T, Eigen::Dynamic, 1 &gt; &amp;a)'],['../namespaceEigenFunctions.html#a2e93e373974526563947cfdf679a8947',1,'EigenFunctions::vectorTensorProduct(const Eigen::Matrix&lt; double, Eigen::Dynamic, 1 &gt; &amp;g, const Eigen::Tensor&lt; double, 3 &gt; &amp;c, const Eigen::Matrix&lt; double, Eigen::Dynamic, 1 &gt; &amp;a)'],['../namespaceEigenFunctions.html#af618051fa8e272d9778f6b77aa12f1d0',1,'EigenFunctions::vectorTensorProduct(const Eigen::Matrix&lt; int, Eigen::Dynamic, 1 &gt; &amp;g, const Eigen::Tensor&lt; int, 3 &gt; &amp;c, const Eigen::Matrix&lt; int, Eigen::Dynamic, 1 &gt; &amp;a)'],['../namespaceEigenFunctions.html#a65f0c1dd3c87caf8d304b28418a877c1',1,'EigenFunctions::vectorTensorProduct(const Eigen::Matrix&lt; float, Eigen::Dynamic, 1 &gt; &amp;g, const Eigen::Tensor&lt; float, 3 &gt; &amp;c, const Eigen::Matrix&lt; float, Eigen::Dynamic, 1 &gt; &amp;a)']]],
+  ['vectortodensevector_5',['vectorToDenseVector',['../namespaceSPLINTER.html#a6bef743c45d103474ed294dc29724f5b',1,'SPLINTER']]],
+  ['vectorvectortodensematrix_6',['vectorVectorToDenseMatrix',['../namespaceSPLINTER.html#a09eb2c32d3e2bb5feb910612a5526f59',1,'SPLINTER']]],
+  ['velderivativecoeff_7',['velDerivativeCoeff',['../classUnsteadyNSTurb.html#accd4d55e6d85ab14aae3487bec36a7f8',1,'UnsteadyNSTurb']]],
+  ['velparcoeff_8',['velParCoeff',['../classUnsteadyNSTurb.html#ac2c3026ee3b4ceda7828303f9169cd00',1,'UnsteadyNSTurb']]],
+  ['velparderivativecoeff_9',['velParDerivativeCoeff',['../classUnsteadyNSTurb.html#a48bf9a07a06741a588d4371c4be3f259',1,'UnsteadyNSTurb::velParDerivativeCoeff(Eigen::MatrixXd A, Eigen::MatrixXd G, Eigen::VectorXd initSnapInd, Eigen::VectorXd timeSnap)'],['../classUnsteadyNSTurb.html#a6bd02dc42e98f72853d0d21f4c29f723',1,'UnsteadyNSTurb::velParDerivativeCoeff(Eigen::MatrixXd A, Eigen::VectorXd par, double timeSnap)']]]
+];
