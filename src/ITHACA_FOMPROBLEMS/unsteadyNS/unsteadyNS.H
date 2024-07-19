@@ -86,6 +86,8 @@ class unsteadyNS: public steadyNS, public UnsteadyProblem
 
         // Counter used for the time-dependent boundary conditions
         label counter2 = 1;
+        
+        word method;
 
         /// Time-dependent Boundary Method
         word timedepbcMethod;
