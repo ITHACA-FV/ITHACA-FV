@@ -109,6 +109,9 @@ class steadyNS: public reductionProblem
         /// List of pointers used to form the list of lifting functions
         PtrList<volVectorField> liftfield;
 
+        /// List of pointer used to form the list of lifting functions for the pressure
+        PtrList<volScalarField> liftfieldP;
+
         /// List of pointers used to form the homogeneous velocity snapshots
         PtrList<volVectorField> Uomfield;
 
@@ -168,6 +171,12 @@ class steadyNS: public reductionProblem
 
         /// Div of velocity
         Eigen::MatrixXd P_matrix;
+
+        /// Convective background / Large scale advection term
+        Eigen::MatrixXd L_matrix;
+
+        /// Divergent convective background / Large scale advection term
+        Eigen::MatrixXd L_D_matrix;
 
         /// Laplacian term PPE
         Eigen::MatrixXd D_matrix;
@@ -473,6 +482,27 @@ class steadyNS: public reductionProblem
         /// @return     reduced matrix in Eigen::MatrixXd format for the laplacian of pressure.
         ///
         Eigen::MatrixXd laplacian_pressure(label NPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Large Scale / Background Advection
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  vls        Additional advecting field
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the Large Scale Advection
+        ///
+        Eigen::MatrixXd convective_background(label NUmodes, volVectorField vls);
+
+        //--------------------------------------------------------------------------
+        /// Divergent of Large Scale / Background Advection
+        ///
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  vls        Additional advecting field
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the Large Scale Advection
+        ///
+        Eigen::MatrixXd divergent_convective_background(label NPmodes, label NUmodes, volVectorField vls);
 
         //--------------------------------------------------------------------------
         /// @brief      Term N° 1 given by the additional boundary condition using a PPE approach
