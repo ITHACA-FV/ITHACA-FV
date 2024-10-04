@@ -137,18 +137,21 @@ void Foam::functionObjects::ITHACAforces::writeBinHeader
         binPoints[pointi] = (binMin_ + (pointi + 1) * binDx_) * binDir_;
         os  << tab << binPoints[pointi].x();
     }
+
     os  << nl;
     writeCommented(os, "y co-ords  :");
     forAll(binPoints, pointi)
     {
         os  << tab << binPoints[pointi].y();
     }
+
     os  << nl;
     writeCommented(os, "z co-ords  :");
     forAll(binPoints, pointi)
     {
         os  << tab << binPoints[pointi].z();
     }
+
     os  << nl;
     writeHeader(os, "");
     writeCommented(os, "Time");
@@ -239,7 +242,7 @@ void Foam::functionObjects::ITHACAforces::initialiseBins()
             const scalarField dd(mesh_.C() & binDir_);
             forAllConstIter(HashTable<const porosityModel*>, models, iter)
             {
-                const porosityModel& pm = *iter();
+                const porosityModel& pm = * iter();
                 const labelList& cellZoneIDs = pm.cellZoneIDs();
 
                 for (const label zonei : cellZoneIDs)
@@ -334,7 +337,7 @@ Foam::functionObjects::ITHACAforces::devRhoReff() const
             lookupObject<dictionary>("transportProperties");
         dimensionedScalar nu("nu", dimViscosity, transportProperties);
         const volVectorField& U = lookupObject<volVectorField>(UName_);
-        return -rho() * nu * dev(twoSymm(fvc::grad(U)));
+        return -rho() * nu* dev(twoSymm(fvc::grad(U)));
     }
     else
     {
@@ -436,13 +439,13 @@ void Foam::functionObjects::ITHACAforces::applyBins
         force_[0][0] += sum(fN);
         force_[1][0] += sum(fT);
         force_[2][0] += sum(fP);
-        moment_[0][0] += sum(Md ^ fN);
-        moment_[1][0] += sum(Md ^ fT);
-        moment_[2][0] += sum(Md ^ fP);
+        moment_[0][0] += sum(Md^ fN);
+        moment_[1][0] += sum(Md^ fT);
+        moment_[2][0] += sum(Md^ fP);
     }
     else
     {
-        scalarField dd((d & binDir_) - binMin_);
+        scalarField dd((d& binDir_) - binMin_);
         forAll(dd, i)
         {
             label bini = min(max(floor(dd[i] / binDx_), 0), force_[0].size() - 1);
@@ -515,7 +518,7 @@ void Foam::functionObjects::ITHACAforces::writeIntegratedForceMoment
     const vectorField& fm0,
     const vectorField& fm1,
     const vectorField& fm2,
-    autoPtr<OFstream>& osPtr
+    autoPtr<OFstream> & osPtr
 ) const
 {
     vector pressure = sum(fm0);
@@ -600,8 +603,8 @@ void Foam::functionObjects::ITHACAforces::writeForces()
 
 void Foam::functionObjects::ITHACAforces::writeBinnedForceMoment
 (
-    const List<Field<vector>>& fm,
-    autoPtr<OFstream>& osPtr
+    const List<Field<vector>> & fm,
+    autoPtr<OFstream> & osPtr
 ) const
 {
     if ((nBin_ == 1) || !writeToFile())
@@ -639,6 +642,7 @@ void Foam::functionObjects::ITHACAforces::writeBinnedForceMoment
             os  << tab << f[2][i];
         }
     }
+
     os  << nl;
 }
 
@@ -909,7 +913,7 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
                     IOobject::NO_WRITE
                 ),
                 mesh_,
-                dimensionedVector(dimForce * dimLength, Zero)
+                dimensionedVector(dimForce* dimLength, Zero)
             )
         );
         mesh_.objectRegistry::store(momentPtr);
@@ -945,7 +949,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
                 )
             );
             // Tangential force (total force minus normal fN)
-            vectorField fT(sA * fD.boundaryField()[patchi] - fN);
+            vectorField fT(sA* fD.boundaryField()[patchi] - fN);
             // Porous force
             vectorField fP(Md.size(), Zero);
             addToFields(patchi, Md, fN, fT, fP);
@@ -970,7 +974,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
             );
             vectorField fN
             (
-                rho(p)*Sfb[patchi] * (p.boundaryField()[patchi] - pRef)
+                rho(p) * Sfb[patchi] * (p.boundaryField()[patchi] - pRef)
             );
             vectorField fT(Sfb[patchi] & devRhoReffb[patchi]);
             vectorField fP(Md.size(), Zero);
@@ -998,7 +1002,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
         forAllConstIters(models, iter)
         {
             // Non-const access required if mesh is changing
-            porosityModel& pm = const_cast<porosityModel&>(*iter());
+            porosityModel& pm = const_cast<porosityModel&>( * iter());
             vectorField fPTot(pm.force(U, rho, mu));
             const labelList& cellZoneIDs = pm.cellZoneIDs();
 
@@ -1174,18 +1178,21 @@ void Foam::functionObjects::ITHACAforces::writeFileHeader(const label i)
                 binPoints[pointi] = (binMin_ + (pointi + 1) * binDx_) * binDir_;
                 file(i) << tab << binPoints[pointi].x();
             }
+
             file(i) << nl;
             writeCommented(file(i), "y co-ords  :");
             forAll(binPoints, pointi)
             {
                 file(i) << tab << binPoints[pointi].y();
             }
+
             file(i) << nl;
             writeCommented(file(i), "z co-ords  :");
             forAll(binPoints, pointi)
             {
                 file(i) << tab << binPoints[pointi].z();
             }
+
             file(i) << nl;
             writeCommented(file(i), "Time");
             const word binForceTypes("[pressure,viscous,porous]");
@@ -1310,7 +1317,7 @@ Foam::functionObjects::ITHACAforces::devRhoReff() const
             obr_.lookupObject<dictionary>("transportProperties");
         dimensionedScalar nu(transportProperties.lookup("nu"));
         const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
-        return -rho() * nu * dev(twoSymm(fvc::grad(U)));
+        return -rho() * nu* dev(twoSymm(fvc::grad(U)));
     }
     else
     {
@@ -1422,13 +1429,13 @@ void Foam::functionObjects::ITHACAforces::applyBins
         force_[0][0] += sum(fN);
         force_[1][0] += sum(fT);
         force_[2][0] += sum(fP);
-        moment_[0][0] += sum(Md ^ fN);
-        moment_[1][0] += sum(Md ^ fT);
-        moment_[2][0] += sum(Md ^ fP);
+        moment_[0][0] += sum(Md^ fN);
+        moment_[1][0] += sum(Md^ fT);
+        moment_[2][0] += sum(Md^ fP);
     }
     else
     {
-        scalarField dd((d & binDir_) - binMin_);
+        scalarField dd((d& binDir_) - binMin_);
         forAll(dd, i)
         {
             label bini = min(max(floor(dd[i] / binDx_), 0), force_[0].size() - 1);
@@ -1730,6 +1737,7 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
                 binMin_ = min(min(d), binMin_);
                 binMax = max(max(d), binMax);
             }
+
             reduce(binMin_, minOp<scalar>());
             reduce(binMax, maxOp<scalar>());
             // slightly boost binMax so that region of interest is fully
@@ -1742,6 +1750,7 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
             {
                 binPoints_[i] = (i + 0.5) * binDir_ * binDx_;
             }
+
             binDict.lookup("cumulative") >> binCumulative_;
             // allocate storage for forces and moments
             forAll(force_, i)
@@ -1799,7 +1808,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
                 )
             );
             // Tangential force (total force minus normal fN)
-            vectorField fT(sA * fD.boundaryField()[patchi] - fN);
+            vectorField fT(sA* fD.boundaryField()[patchi] - fN);
             //- Porous force
             vectorField fP(Md.size(), Zero);
             applyBins(Md, fN, fT, fP, mesh_.C().boundaryField()[patchi]);
@@ -1824,7 +1833,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
             );
             vectorField fN
             (
-                rho(p)*Sfb[patchi] * (p.boundaryField()[patchi] - pRef)
+                rho(p) * Sfb[patchi] * (p.boundaryField()[patchi] - pRef)
             );
             vectorField fT(Sfb[patchi] & devRhoReffb[patchi]);
             vectorField fP(Md.size(), Zero);
@@ -1851,7 +1860,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
         forAllConstIter(HashTable<const porosityModel*>, models, iter)
         {
             // non-const access required if mesh is changing
-            porosityModel& pm = const_cast<porosityModel&>(*iter());
+            porosityModel& pm = const_cast<porosityModel&>( * iter());
             vectorField fPTot(pm.force(U, rho, mu));
             const labelList& cellZoneIDs = pm.cellZoneIDs();
             forAll(cellZoneIDs, i)
@@ -1921,5 +1930,6 @@ bool Foam::functionObjects::ITHACAforces::write()
 
     return true;
 }
+
 #endif
 // ************************************************************************* //

@@ -44,7 +44,7 @@ fvScalarMatrix NEqn
     + lam7* prec7
     + lam8* prec8
 
-    );
+);
 
 NEqn.relax();
 NEqn.solve();

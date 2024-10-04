@@ -43,8 +43,8 @@
 
 namespace ITHACAtorch
 {
-torch::Tensor removeConstValues(torch::Tensor input, std::vector<int>& indices,
-                                std::vector<double>& constValues);
+torch::Tensor removeConstValues(torch::Tensor input, std::vector<int> & indices,
+                                std::vector<double> & constValues);
 bool isConst(torch::Tensor& tTensor);
 
 void save(const torch::Tensor& tensor, const std::string fname);

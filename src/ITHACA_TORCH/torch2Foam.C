@@ -36,21 +36,21 @@ namespace torch2Foam
 {
 
 template<>
-torch::Tensor field2Torch(Field<vector>& field)
+torch::Tensor field2Torch(Field<vector> & field)
 {
     int rows = 1;
     int cols = field.size() * 3;
-    double* dataPtr = &field[0][0];
+    double* dataPtr = & field[0][0];
     return torch::from_blob(dataPtr, {rows, cols}, {torch::kFloat64}).clone().to(
                torch::kFloat32);
 }
 
 template<>
-torch::Tensor field2Torch(Field<scalar>& field)
+torch::Tensor field2Torch(Field<scalar> & field)
 {
     int rows = 1;
     int cols = field.size();
-    double* dataPtr = &field[0];
+    double* dataPtr = & field[0];
     return torch::from_blob(dataPtr, {rows, cols}, {torch::kFloat64}).clone().to(
                torch::kFloat32);
 }
@@ -64,8 +64,8 @@ Field<vector> torch2Field(torch::Tensor& torchTensor)
     M_Assert(torchTensor.dim() <= 2, error_message.c_str());
     M_Assert(torchTensor.dim() != 0, "The provided tensor has 0 dimension");
     Field<vector> a(torchTensor.numel() / 3);
-    std::memcpy(&a[0][0], torchTensor.to(torch::kFloat64).data_ptr(),
-                sizeof (double)*torchTensor.numel());
+    std::memcpy( & a[0][0], torchTensor.to(torch::kFloat64).data_ptr(),
+                 sizeof (double) * torchTensor.numel());
     return a;
 }
 
@@ -78,13 +78,13 @@ Field<scalar> torch2Field(torch::Tensor& torchTensor)
     M_Assert(torchTensor.dim() <= 2, error_message.c_str());
     M_Assert(torchTensor.dim() != 0, "The provided tensor has 0 dimension");
     Field<scalar> a(torchTensor.numel());
-    std::memcpy(&a[0], torchTensor.to(torch::kFloat64).data_ptr(),
-                sizeof (double)*torchTensor.numel());
+    std::memcpy( & a[0], torchTensor.to(torch::kFloat64).data_ptr(),
+                 sizeof (double) * torchTensor.numel());
     return a;
 }
 
 template<>
-torch::Tensor ptrList2Torch(PtrList<Field<vector>>& ptrList)
+torch::Tensor ptrList2Torch(PtrList<Field<vector>> & ptrList)
 {
     int Nrows = ptrList.size();
     int Ncols = ptrList[0].size() * 3;
@@ -99,7 +99,7 @@ torch::Tensor ptrList2Torch(PtrList<Field<vector>>& ptrList)
 }
 
 template<>
-torch::Tensor ptrList2Torch(PtrList<Field<scalar>>& ptrList)
+torch::Tensor ptrList2Torch(PtrList<Field<scalar>> & ptrList)
 {
     int Nrows = ptrList.size();
     int Ncols = ptrList[0].size();

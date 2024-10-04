@@ -53,6 +53,7 @@ class ITHACAparameters
         bool exportPython;
         bool exportMatlab;
         bool exportTxt;
+        bool exportNpy;
         bool debug;
         bool warnings;
         bool correctBC;

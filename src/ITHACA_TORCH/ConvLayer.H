@@ -57,9 +57,9 @@ class ConvLayer
         ///
         /// @param[in]  db    The database
         ///
-        ConvLayer(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots);
+        ConvLayer(PtrList<GeometricField<Type, PatchField, GeoMesh>> & snapshots);
 
-        PtrList<GeometricField<Type, PatchField, GeoMesh>>& _snapshots;
+        PtrList<GeometricField<Type, PatchField, GeoMesh>> & _snapshots;
         const fvMesh& mesh;
 
         Vector<label> domainDivision;
@@ -90,4 +90,5 @@ typedef ConvLayer<vector, fvPatchField, volMesh> volVectorLayer;
 typedef ConvLayer<scalar, fvsPatchField, surfaceMesh> surfaceScalarLayer;
 
 }
+
 #endif

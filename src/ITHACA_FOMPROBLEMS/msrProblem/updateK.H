@@ -23,5 +23,5 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
 Keff = (fvc::domainIntegrate(flux).value()) / (fvc::domainIntegrate(
-            flux_old).value());
+           flux_old).value());
 

@@ -226,7 +226,7 @@ class ITHACAforces
             const vectorField& fm0,
             const vectorField& fm1,
             const vectorField& fm2,
-            autoPtr<OFstream>& osPtr
+            autoPtr<OFstream> & osPtr
         ) const;
 
         //- Write force data
@@ -235,8 +235,8 @@ class ITHACAforces
         //- Helper function to write binned forces and moments
         void writeBinnedForceMoment
         (
-            const List<Field<vector>>& fm,
-            autoPtr<OFstream>& osPtr
+            const List<Field<vector>> & fm,
+            autoPtr<OFstream> & osPtr
         ) const;
 
         //- Write binned data

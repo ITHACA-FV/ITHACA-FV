@@ -34,7 +34,7 @@ fvVectorMatrix UEqn
     + turbulence->divDevReff(U)
     ==
     fvOptions(U)
-    );
+);
 
 UEqn.relax();
 
@@ -49,9 +49,9 @@ if (pimple.momentumPredictor())
         fvc::reconstruct
         (
             (
-                - ghf * fvc::snGrad(rhok)
+                - ghf* fvc::snGrad(rhok)
                 - fvc::snGrad(p_rgh)
-            )*mesh.magSf()
+            ) * mesh.magSf()
         )
     );
     fvOptions.correct(U);

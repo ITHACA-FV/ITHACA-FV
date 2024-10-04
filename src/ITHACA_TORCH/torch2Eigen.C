@@ -86,13 +86,13 @@ Eigen::Matrix<type, Eigen::Dynamic, Eigen::Dynamic> torchTensor2eigenMatrix(
 
     for (int i = 0; i < nElem; i++)
     {
-        type d(*(data_p + i));
+        type d( * (data_p + i));
         type a = static_cast <type>(d);
         raw[i] = a;
     }
 
-    Eigen::Map<MatrixXf_rm> eigenMatrix(&raw[0], rows,
-                                        cols);
+    Eigen::Map<MatrixXf_rm> eigenMatrix( & raw[0], rows,
+                                         cols);
     return eigenMatrix;
 }
 
