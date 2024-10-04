@@ -250,7 +250,7 @@ Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
        else
        {
         // Classical M computation
-        M = F.transpose().topRows(Msize) * ( V * weights ).asDiagonal() * F2.leftCols(Msize2);
+        M = F.transpose().topRows(Msize) * V.asDiagonal() * ( weights.asDiagonal() * F2.leftCols(Msize2) );
        }
     }
     else
