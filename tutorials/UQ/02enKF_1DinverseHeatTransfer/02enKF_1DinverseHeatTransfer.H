@@ -146,6 +146,7 @@ class EnKF_1DinverseHeatTransfer: public laplacianProblem
                 //add check if I put two measurements on the same cell
                 measures(pntI) = field[mesh.findCell(measurementPoints[pntI])];
             }
+
             return measures;
         }
 
@@ -159,7 +160,7 @@ class EnKF_1DinverseHeatTransfer: public laplacianProblem
             simpleControl& simple = _simple();
             fv::options& fvOptions(_fvOptions());
             dimensionedScalar diffusivity("diffusivity", dimensionSet(0, 2, -1, 0, 0, 0, 0),
-                                          k / (rho * Cp));
+                                          k / (rho* Cp));
             Info << "Thermal diffusivity = " << diffusivity << " m2/s" << endl;
             int timeI = 0;
 
@@ -271,7 +272,7 @@ class EnKF_1DinverseHeatTransfer: public laplacianProblem
 
             for (int timeI = 0; timeI < Ntimes; timeI++)
             {
-                double initialTime = timeI * deltaTime + startTime;
+                double initialTime = timeI* deltaTime + startTime;
                 Info << "\n\nTime " << initialTime + deltaTime << endl;
                 Eigen::MatrixXd forecastOutput = forecastStep(initialTime, timeI,
                                                  initialTime + deltaTime);

@@ -15,7 +15,7 @@ LRSensitivity::LRSensitivity(label Npara, label Np)
 }
 
 
-void LRSensitivity::buildSamplingSet(std::vector<std::string>& pdflist,
+void LRSensitivity::buildSamplingSet(std::vector<std::string> & pdflist,
                                      Eigen::MatrixXd plist)
 {
     for (label i = 0; i < No_parameters; i++)
