@@ -24,7 +24,7 @@ std::vector<double> denseVectorToVector(const DenseVector& denseVec)
     return vec;
 }
 
-DenseVector vectorToDenseVector(const std::vector<double>& vec)
+DenseVector vectorToDenseVector(const std::vector<double> & vec)
 {
     DenseVector denseVec(vec.size());
 
@@ -37,7 +37,7 @@ DenseVector vectorToDenseVector(const std::vector<double>& vec)
 }
 
 std::vector<std::vector<double>> denseMatrixToVectorVector(
-                                  const DenseMatrix& mat)
+    const DenseMatrix& mat)
 {
     std::vector<std::vector<double>> vec(mat.rows());
 
@@ -52,7 +52,7 @@ std::vector<std::vector<double>> denseMatrixToVectorVector(
     return vec;
 }
 
-DenseMatrix vectorVectorToDenseMatrix(const std::vector<std::vector<double>>&
+DenseMatrix vectorVectorToDenseMatrix(const std::vector<std::vector<double>> &
                                       vec)
 {
     size_t numRows = vec.size();
@@ -82,7 +82,7 @@ std::vector<double> linspace(double start, double stop, unsigned int num)
 
     for (unsigned int i = 0; i < num; ++i)
     {
-        ret.push_back(start + i * dx);
+        ret.push_back(start + i* dx);
     }
 
     return ret;

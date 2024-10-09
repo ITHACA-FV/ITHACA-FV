@@ -53,6 +53,7 @@ class tutorialIPOD: public laplacianProblem
             nu(_nu()),
             S(_S())
         {}
+
         //! [tutorialIPOD]
         /// Temperature field
         volScalarField& T;
@@ -289,6 +290,7 @@ int main(int argc, char* argv[])
     Info << "\n\nRelative error L2 norm incrementalPOD = " <<
          ITHACAutilities::L2Norm(relativeErrorField) << endl;
 }
+
 //--------
 /// \dir 20incrementalPOD Folder of the tutorial
 /// \file

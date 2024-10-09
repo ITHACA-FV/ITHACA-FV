@@ -31,7 +31,8 @@ License
 #include "DEIM.H"
 // Template function constructor
 template<typename T>
-DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
+DEIM<T>::DEIM (PtrList<T> & s, label MaxModes, word FunctionName,
+               word FieldName)
     :
     SnapShotsMatrix(s),
     MaxModes(MaxModes),
@@ -82,7 +83,7 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
         MatrixModes = Foam2Eigen::PtrList2Eigen(modes);
         Ncells = modes[0].size();
         label ind_max, c1, xyz_in;
-        double max = MatrixModes.cwiseAbs().col(0).maxCoeff(&ind_max, &c1);
+        double max = MatrixModes.cwiseAbs().col(0).maxCoeff( & ind_max, & c1);
         check3DIndices(ind_max, xyz_in);
         rho(0) = max;
         magicPoints().append(ind_max);
@@ -96,8 +97,8 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
             A = P.transpose() * U;
             b = P.transpose() * MatrixModes.col(i);
             c = A.fullPivLu().solve(b);
-            r = MatrixModes.col(i) - U * c;
-            max = r.cwiseAbs().maxCoeff(&ind_max, &c1);
+            r = MatrixModes.col(i) - U* c;
+            max = r.cwiseAbs().maxCoeff( & ind_max, & c1);
             P.conservativeResize(MatrixModes.rows(), i + 1);
             P.insert(ind_max, i) = 1;
             U.conservativeResize(MatrixModes.rows(), i + 1);
@@ -123,7 +124,8 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName, word FieldName)
 
 // constructor for matrix DEIM
 template<typename T>
-DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
+DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
+               word MatrixName)
     :
     SnapShotsMatrix(s),
     MaxModesA(MaxModesA),
@@ -289,8 +291,8 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
         Eigen::VectorXd rB;
         Eigen::VectorXd rhoB(1);
         label ind_rowB, xyz_rowB, c1;
-        double maxB = std::get<1>(Matrix_Modes)[0].cwiseAbs().maxCoeff(&ind_rowB,
-                      &c1);
+        double maxB = std::get<1>(Matrix_Modes)[0].cwiseAbs().maxCoeff( & ind_rowB,
+                      & c1);
         label ind_rowBOF = ind_rowB;
         check3DIndices(ind_rowBOF, xyz_rowB);
         rhoB(0) = maxB;
@@ -305,8 +307,8 @@ DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB, word MatrixName)
             AB = PB.transpose() * UB;
             bB = PB.transpose() * std::get<1>(Matrix_Modes)[i];
             cB = AB.fullPivLu().solve(bB);
-            rB = std::get<1>(Matrix_Modes)[i] - UB * cB;
-            maxB = rB.cwiseAbs().maxCoeff(&ind_rowB, &c1);
+            rB = std::get<1>(Matrix_Modes)[i] - UB* cB;
+            maxB = rB.cwiseAbs().maxCoeff( & ind_rowB, & c1);
             ind_rowBOF = ind_rowB;
             check3DIndices(ind_rowBOF, xyz_rowB);
             xyz_B().append(xyz_rowB);
@@ -635,7 +637,7 @@ S DEIM<T>::generateSubmeshVector(label layers, const fvMesh& mesh, S field,
 
 
 template<typename T>
-List<label> DEIM<T>::global2local(List<label>& points,
+List<label> DEIM<T>::global2local(List<label> & points,
                                   fvMeshSubset& submesh)
 {
     List<label> localPoints;
@@ -818,15 +820,15 @@ void DEIM<T>::setMagicPoints(labelList& newMagicPoints, labelList& newxyz)
 }
 
 // Specialization of the constructor
-template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix>& s,
+template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix> & s,
                                      label MaxModesA,
                                      label MaxModesB, word MatrixName);
-template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix>& s,
+template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix> & s,
                                      label MaxModesA,
                                      label MaxModesB, word MatrixName);
-template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, label MaxModes,
+template DEIM<volScalarField>::DEIM(PtrList<volScalarField> & s, label MaxModes,
                                     word FunctionName, word FieldName);
-template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, label MaxModes,
+template DEIM<volVectorField>::DEIM(PtrList<volVectorField> & s, label MaxModes,
                                     word FunctionName, word FieldName);
 
 // Specialization for generateSubField

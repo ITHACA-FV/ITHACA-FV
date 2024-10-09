@@ -31,4 +31,4 @@ NSF = (1 / Keff) * (NSF1_0 + alfa_NSF1* logT) * (1 - betaTE * (T - Tref));
 A = (A1_0 + alfa_A1* logT) * (1 - betaTE * (T - Tref));
 D = (D1_0 + alfa_D1* logT) / (1 - betaTE * (T - Tref));
 SP = (1 / Keff) * (SP1_0 + alfa_SP1* logT) * (1 - betaTE * (T - Tref));
-TXS = v * SP;
+TXS = v* SP;

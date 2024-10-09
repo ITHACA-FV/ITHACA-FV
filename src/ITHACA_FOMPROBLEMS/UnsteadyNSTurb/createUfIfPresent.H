@@ -1,7 +1,7 @@
+
 if (mesh.dynamic())
 {
-    Info<< "Constructing face velocity Uf\n" << endl;
-
+    Info << "Constructing face velocity Uf\n" << endl;
     _Uf.reset
     (
         new surfaceVectorField

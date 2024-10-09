@@ -114,14 +114,14 @@ class turbulentHeatFluxTemperatureFvPatchScalarField
         turbulentHeatFluxTemperatureFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<scalar, volMesh>&
+            const DimensionedField<scalar, volMesh> &
         );
 
         //- Construct from patch, internal field and dictionary
         turbulentHeatFluxTemperatureFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<scalar, volMesh> &,
             const dictionary&
         );
 
@@ -132,7 +132,7 @@ class turbulentHeatFluxTemperatureFvPatchScalarField
         (
             const turbulentHeatFluxTemperatureFvPatchScalarField&,
             const fvPatch&,
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<scalar, volMesh> &,
             const fvPatchFieldMapper&
         );
 
@@ -147,7 +147,7 @@ class turbulentHeatFluxTemperatureFvPatchScalarField
         {
             return tmp<fvPatchScalarField>
                    (
-                       new turbulentHeatFluxTemperatureFvPatchScalarField(*this)
+                       new turbulentHeatFluxTemperatureFvPatchScalarField( * this)
                    );
         }
 
@@ -155,20 +155,20 @@ class turbulentHeatFluxTemperatureFvPatchScalarField
         turbulentHeatFluxTemperatureFvPatchScalarField
         (
             const turbulentHeatFluxTemperatureFvPatchScalarField&,
-            const DimensionedField<scalar, volMesh>&
+            const DimensionedField<scalar, volMesh> &
         );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatchScalarField> clone
         (
-            const DimensionedField<scalar, volMesh>& iF
+            const DimensionedField<scalar, volMesh> & iF
         ) const
         {
             return tmp<fvPatchScalarField>
                    (
                        new turbulentHeatFluxTemperatureFvPatchScalarField
                        (
-                           *this,
+                           * this,
                            iF
                        )
                    );

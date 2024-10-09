@@ -115,7 +115,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
 
         for (auto it2 = samples.cbegin(); it2 != samples.cend(); ++it2, ++j)
         {
-            double val = fn->eval(dist(*it1, *it2));
+            double val = fn->eval(dist( * it1, * it2));
 
             if (val != 0)
             {
@@ -129,7 +129,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
 
         if (normalized)
         {
-            b(i) = sum * y;
+            b(i) = sum* y;
         }
         else
         {
@@ -144,8 +144,8 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
         // Calcualte precondition matrix P
         DenseMatrix P = computePreconditionMatrix();
         // Preconditioned A and b
-        DenseMatrix Ap = P * A;
-        DenseMatrix bp = P * b;
+        DenseMatrix Ap = P* A;
+        DenseMatrix bp = P* b;
         A = Ap;
         b = bp;
     }
@@ -171,7 +171,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
     weights = A.colPivHouseholderQr().solve(b);
 #ifndef NDEBUG
     // Compute error. If it is used later on, move this statement above the NDEBUG
-    double err = (A * weights - b).norm() / b.norm();
+    double err = (A* weights - b).norm() / b.norm();
     std::cout << "Error: " << std::setprecision(10) << err << std::endl;
 #endif // NDEBUG
     //    // Alternative solver
@@ -301,7 +301,7 @@ DenseMatrix RBFSpline::computePreconditionMatrix() const
             Point p2 = p + p1;
             p2.setIndex(p.getIndex());
             points.push_back(
-                p2); // The resulting point has a different index than that of p
+                      p2); // The resulting point has a different index than that of p
             //                cout << p.getIndex() << "/" << p1.getIndex() << "/" << p2.getIndex() << endl;
             //                assert(p.getIndex() == p2.getIndex());
         }

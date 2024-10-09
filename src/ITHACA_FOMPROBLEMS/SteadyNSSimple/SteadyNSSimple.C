@@ -94,10 +94,10 @@ void SteadyNSSimple::getTurbRBF(label NNutModes)
             }
 
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weights/", weightName);
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
+            rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
+                SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
             // std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
-            Info<< "Constructing RadialBasisFunction for mode " << i + 1 << endl;
+            Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
         else
         {
@@ -109,12 +109,12 @@ void SteadyNSSimple::getTurbRBF(label NNutModes)
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
 
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+            rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
+                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weights/", weightName);
             // std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
-            Info<< "Constructing RadialBasisFunction for mode " << i + 1 << endl;
+            Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
     }
 }
@@ -163,7 +163,7 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         (
             fvm::div(phi, U)
             - fvm::laplacian(nueff, U)
-            - fvc::div(nueff * dev2(T(fvc::grad(U))))
+            - fvc::div(nueff* dev2(T(fvc::grad(U))))
         );
         UEqn.relax();
 

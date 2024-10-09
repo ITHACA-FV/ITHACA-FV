@@ -47,7 +47,7 @@ reducedProblem::reducedProblem()
 
 reducedProblem::reducedProblem(reductionProblem& problem)
     :
-    problem(&problem)
+    problem( & problem)
 {
 }
 

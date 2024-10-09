@@ -77,14 +77,13 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
 #include "createFields.H"
 #include "createFvOptions.H"
     para = ITHACAparameters::getInstance(mesh, runTime);
-    
     method = ITHACAdict->lookupOrDefault<word>("method", "supremizer");
-    M_Assert(method == "supremizer" || method == "PPE", "The method must be set to supremizer or PPE in ITHACAdict");
-    
+    M_Assert(method == "supremizer"
+             || method == "PPE",
+             "The method must be set to supremizer or PPE in ITHACAdict");
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
     M_Assert(bcMethod == "lift" || bcMethod == "penalty",
              "The BC method must be set to lift or penalty in ITHACAdict");
-    
     timedepbcMethod = ITHACAdict->lookupOrDefault<word>("timedepbcMethod", "no");
     M_Assert(timedepbcMethod == "yes" || timedepbcMethod == "no",
              "The BC method can be set to yes or no");
@@ -128,7 +127,7 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
 
             for (label j = 0; j < inl.size(); j++)
             {
-                inl[j] = timeBCoff(i * inl.size() + j, 0);
+                inl[j] = timeBCoff(i* inl.size() + j, 0);
             }
 
             assignBC(U, inletPatch(i, 0), inl);
@@ -164,7 +163,7 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
 
                 for (label j = 0; j < inl.size(); j++)
                 {
-                    inl[j] = timeBCoff(i * inl.size() + j, counter2);
+                    inl[j] = timeBCoff(i* inl.size() + j, counter2);
                 }
 
                 assignBC(U, inletPatch(i, 0), inl);
@@ -221,7 +220,7 @@ void unsteadyNS::truthSolve(List<scalar> mu_now, fileName folder)
         mu.resize(1, 1);
     }
 
-    if (mu_samples.rows() == counter * mu.cols())
+    if (mu_samples.rows() == counter* mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
                                    folder);
