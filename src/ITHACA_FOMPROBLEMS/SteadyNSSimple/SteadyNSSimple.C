@@ -66,7 +66,15 @@ void SteadyNSSimple::getTurbRBF(label NNutModes)
         NNutModes = nutModes.size();
     }
 
-    coeffL2 = ITHACAutilities::getCoeffs(nutFields, nutModes, NNutModes);
+    if (ITHACAutilities::check_file("./ITHACAoutput/coeffL2/nutcoeffL2"))
+    {
+        ITHACAstream::ReadDenseMatrix(coeffL2, "./ITHACAoutput/coeffL2/", "nutcoeffL2");
+    }
+    else
+    {
+        coeffL2 = ITHACAutilities::getCoeffs(nutFields, nutModes, NNutModes);
+    }
+
     samples.resize(NNutModes);
     rbfSplines.resize(NNutModes);
     Eigen::MatrixXd weights;

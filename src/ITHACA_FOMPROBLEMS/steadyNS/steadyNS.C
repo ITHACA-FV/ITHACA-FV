@@ -81,7 +81,7 @@ steadyNS::steadyNS(int argc, char* argv[])
     M_Assert(bcMethod == "lift" || bcMethod == "penalty" || bcMethod == "none",
              "The BC method must be set to lift or penalty or none in ITHACAdict");
     fluxMethod = ITHACAdict->lookupOrDefault<word>("fluxMethod", "inconsistent");
-    M_Assert(fluxMethod == "inconsistent" || bcMethod == "consistent",
+    M_Assert(fluxMethod == "inconsistent" || fluxMethod == "consistent",
              "The flux method must be set to inconsistent or consistent in ITHACAdict");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
@@ -129,6 +129,46 @@ void steadyNS::truthSolve(List<scalar> mu_now)
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
                                    "./ITHACAoutput/Offline");
+    }
+}
+
+// Method to perform a truthSolve for online parameters
+void steadyNS::truthSolveOnline(List<scalar> mu_now)
+{
+    Time& runTime = _runTime();
+    fvMesh& mesh = _mesh();
+    volScalarField& p = _p();
+    volVectorField& U = _U();
+    surfaceScalarField& phi = _phi();
+    fv::options& fvOptions = _fvOptions();
+    simpleControl& simple = _simple();
+    IOMRFZoneList& MRF = _MRF();
+    singlePhaseTransportModel& laminarTransport = _laminarTransport();
+#include "NLsolvesteadyNS.H"
+    ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Online/");
+    ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Online/");
+    Ufield.append(U.clone());
+    Pfield.append(p.clone());
+    counter++;
+    writeMu(mu_now);
+    // --- Fill in the mu_samples with parameters (mu) to be used for the PODI sample points
+    mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size());
+
+    for (label i = 0; i < mu_now.size(); i++)
+    {
+        mu_samples(mu_samples.rows() - 1, i) = mu_now[i];
+    }
+
+    // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
+    if (mu.cols() == 0)
+    {
+        mu.resize(1, 1);
+    }
+
+    if (mu_samples.rows() == mu.cols())
+    {
+        ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
+                                   "./ITHACAoutput/Online");
     }
 }
 
