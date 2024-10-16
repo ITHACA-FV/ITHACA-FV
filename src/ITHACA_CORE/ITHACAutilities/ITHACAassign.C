@@ -356,8 +356,13 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh> & s, label BC_ind,
 
     if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
-        Info << "This Feature is not implemented for this boundary condition" << endl;
-        exit(0);
+        fixedGradientFvPatchField<vector> & Tpatch =
+            refCast<fixedGradientFvPatchField<vector>>(s.boundaryFieldRef()[BC_ind]);
+        Field<vector> & gradTpatch = Tpatch.gradient();
+        forAll(gradTpatch, faceI)
+        {
+            gradTpatch[faceI] = valueList[faceI];
+        }
     }
     else if (s.boundaryField()[BC_ind].type() == "freestream")
     {
