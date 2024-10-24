@@ -111,6 +111,30 @@ void reductionProblem::computeLiftT(T& Lfield, T& liftfield, T& omfield)
 }
 
 
+template<typename T>
+void reductionProblem::computeLift(T& Lfield, T& liftfield, T& omfield, Eigen::MatrixXd& intUCoeffs)
+{
+    for (label k = 0; k < inletIndex.rows(); k++)
+    {
+        label p = inletIndex(k, 0);
+        label l = inletIndex(k, 1);
+
+        for (label j = 0; j < Lfield.size(); j++)
+        {
+            if (k == 0)
+            {
+                volVectorField C("U", Lfield[j] - liftfield[k] * intUCoeffs(k, j));
+                omfield.append(C.clone());
+            }
+            else
+            {
+                volVectorField C("U", omfield[j] - liftfield[k] * intUCoeffs(k, j));
+                omfield.set(j, C.clone());
+            }
+        }
+    }
+}
+
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -59,7 +59,8 @@ struct newton_steadyNS: public newton_argument<double>
             problem( & problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows())
+            N_BC(problem.inletIndex.rows()),
+            N_NeuBC(problem.outletIndex.rows())
         {}
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
@@ -69,11 +70,45 @@ struct newton_steadyNS: public newton_argument<double>
         int Nphi_u;
         int Nphi_p;
         int N_BC;
+        int N_NeuBC;
         scalar nu;
         Eigen::MatrixXd tauU;
+        Eigen::MatrixXd tauGradU;
         Eigen::VectorXd BC;
+        Eigen::VectorXd NeuBC;
 };
 
+
+/// Structure to implement a newton object for a stationary NS problem using PPE
+struct newton_steadyNS_PPE: public newton_argument<double>
+{
+    public:
+        newton_steadyNS_PPE() {}
+
+        newton_steadyNS_PPE(int Nx, int Ny,
+                        steadyNS& problem): newton_argument<double>(Nx,
+                                    Ny),
+            problem( & problem),
+            Nphi_u(problem.NUmodes + problem.liftfield.size()),
+            Nphi_p(problem.NPmodes),
+            N_BC(problem.inletIndex.rows()),
+            N_NeuBC(problem.outletIndex.rows())
+        {}
+
+        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+
+        steadyNS* problem;
+        int Nphi_u;
+        int Nphi_p;
+        int N_BC;
+        int N_NeuBC;
+        scalar nu;
+        Eigen::MatrixXd tauU;
+        Eigen::MatrixXd tauGradU;
+        Eigen::VectorXd BC;
+        Eigen::VectorXd NeuBC;
+};
 
 /*---------------------------------------------------------------------------*\
                         Class reducedProblem Declaration
@@ -151,6 +186,9 @@ class reducedSteadyNS: public reducedProblem
         /// Newton object used to solve the non linear problem
         newton_steadyNS newton_object;
 
+        /// Newton object used to solve the non linear problem with PPE
+        newton_steadyNS_PPE newton_object_PPE;
+
         /// Pointer to the FOM problem
         steadyNS* problem;
 
@@ -166,11 +204,17 @@ class reducedSteadyNS: public reducedProblem
         /// Number of parametrized boundary conditions
         int N_BC;
 
+        /// Number of parametrized neumann boundary conditions
+        int N_NeuBC;
+
         /// Counter to count the online solutions
         int count_online_solve = 1;
 
-        /// Penalty Factor
+        /// Penalty Factor for Dirichlet BCs
         Eigen::MatrixXd tauU;
+
+        /// Penalty Factor for Neumann BCs
+        Eigen::MatrixXd tauGradU;
 
         // Functions
 
@@ -185,11 +229,35 @@ class reducedSteadyNS: public reducedProblem
         /// Method to perform an online solve using a supremizer stabilisation
         /// method
         ///
+        /// @param[in]  vel_now  The vector of online Drichlet coeffs. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized Drichlet boundary conditions.
+        /// @param[in]  neuVel   The vector of online Neumann  coeffs. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized Neumann boundary conditions.
+        ///
+        void solveOnline_PPE(Eigen::MatrixXd vel_now, Eigen::MatrixXd neuVel);
+
+        /// Method to perform an online solve using a supremizer stabilisation
+        /// method
+        ///
         /// @param[in]  vel_now  The vector of online velocity. It is defined in
         /// with an Eigen::MatrixXd and must have one col and as many rows as the number
         /// of parametrized boundary conditions.
         ///
         void solveOnline_sup(Eigen::MatrixXd vel_now);
+
+        /// Method to perform an online solve using a supremizer stabilisation
+        /// method
+        ///
+        /// @param[in]  vel_now  The vector of online Drichlet coeffs. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized Drichlet boundary conditions.
+        /// @param[in]  neuVel   The vector of online Neumann  coeffs. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized Neumann boundary conditions.
+        ///
+        void solveOnline_sup(Eigen::MatrixXd vel_now, Eigen::MatrixXd neuVel);
 
         /// Method to reconstruct a solution from an online solve with a PPE stabilisation technique.
         /// stabilisation method
@@ -232,6 +300,15 @@ class reducedSteadyNS: public reducedProblem
         /// @return     The rescaled velocity vector
         ///
         Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
+
+        ///
+        /// @brief      Sets the non-uniform online velocity.
+        ///
+        /// @param[in]  vel   The velocity
+        ///
+        /// @return     The rescaled velocity vector (coeffcients)
+        ///
+        Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel, bool nonUniform);
 
 };
 

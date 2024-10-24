@@ -220,6 +220,12 @@ class steadyNS: public reductionProblem
         /// Boundary term for penalty method - matrix
         List <Eigen::MatrixXd> bcVelMat;
 
+        /// Neumann Boundary term for penalty method - vector
+        List <Eigen::MatrixXd> bcGradVelVec;
+
+        /// Neumann Boundary term for penalty method - matrix
+        List <Eigen::MatrixXd> bcGradVelMat;
+
         /// Diffusion term for flux method PPE
         Eigen::MatrixXd BP_matrix;
 
@@ -316,6 +322,21 @@ class steadyNS: public reductionProblem
         /// Boundary Method
         word bcMethod;
 
+        /// Stablization method
+        word method;
+
+        /// Nonuniform Boundaries
+        bool nonUniformbc;
+
+        /// Boundary Method for neumann boundaries
+        word neumannMethod;
+
+        /// Penalty Factor for Dirichlet BCs
+        scalar tauU;
+
+        /// Penalty Factor for Neumann BCs
+        scalar tauGradU;
+
         /// Flux Method
         word fluxMethod;
 
@@ -335,7 +356,7 @@ class steadyNS: public reductionProblem
         /// to construct mu_interp matrix which is written out in the Offline folder, also for par file in
         /// the Parameters folder.
         ///
-        void truthSolveOnline(List<scalar> mu_now);
+        void truthSolve(List<scalar> mu_now, fileName onlineFolder);
 
         ///
         /// solve the supremizer either with the use of the pressure snaphots or the pressure modes
@@ -553,6 +574,26 @@ class steadyNS: public reductionProblem
         /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the penalty method.
         ///
         List< Eigen::MatrixXd > bcVelocityMat(label NUmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Boundary integral modes on neumann boundary used by the penaly method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the penalty method.
+        ///
+        List< Eigen::MatrixXd > bcGradVelocityVec(label NUmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Boundary integral modes on neumann boundary used by the penaly method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced third order tensor in List <Eigen::MatrixXd> format for the penalty method.
+        ///
+        List< Eigen::MatrixXd > bcGradVelocityMat(label NUmodes, label NSUPmodes);
 
         //--------------------------------------------------------------------------
         //  Projection Methods Momentum Equation

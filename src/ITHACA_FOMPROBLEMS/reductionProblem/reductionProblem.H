@@ -136,6 +136,8 @@ class reductionProblem
         /// \\]
         Eigen::MatrixXi inletIndex;
 
+        Eigen::MatrixXi outletIndex;
+
         /// Matrix that contains informations about the inlet boundaries
         /// without specifing the direction
         /// Rows = Number of parametrized boundary conditions <br>
@@ -259,6 +261,19 @@ class reductionProblem
 
         template<typename T>
         void computeLiftT(T& Lfield, T& liftfield, T& omfield);
+
+        //--------------------------------------------------------------------------
+        /// Homogenize the snapshot matrix, it works with PtrList of volVectorField and volScalarField
+        ///
+        /// @param[in]      Lfield     The list of snapshots to be homogenized.
+        /// @param[in]      liftfield  The list containing.
+        /// @param[out]     omfield    The homogenized snapshot matrix.
+        ///
+        /// @tparam     T          { description }
+        ///
+        template<typename T>
+        void computeLift(T& Lfield, T& liftfield, T& omfield, Eigen::MatrixXd& intUCoeffs);
+
         //--------------------------------------------------------------------------
         /// Virtual function to compute the lifting function for scalar field
         ///

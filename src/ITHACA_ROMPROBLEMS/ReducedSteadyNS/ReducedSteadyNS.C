@@ -48,6 +48,15 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
+    tauU.resize(1, 1);
+    tauU(0,0) = problem->tauU;
+    tauGradU.resize(1, 1);
+    tauGradU(0,0) = problem->tauGradU;
+
+    if (problem->neumannMethod == "penalty")
+    {
+        N_NeuBC = problem->outletIndex.rows();
+    }
 
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
@@ -65,6 +74,7 @@ reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
     }
 
     newton_object = newton_steadyNS(Nphi_u + Nphi_p, Nphi_u + Nphi_p, FOMproblem);
+    newton_object_PPE = newton_steadyNS_PPE(Nphi_u + Nphi_p, Nphi_u + Nphi_p, FOMproblem);
 }
 
 int newton_steadyNS::operator()(const Eigen::VectorXd& x,
@@ -84,6 +94,8 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd M3 = problem->P_matrix* a_tmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+    // Penalty term
+    Eigen::MatrixXd penaltyGradU = Eigen::MatrixXd::Zero(Nphi_u, N_NeuBC);
 
     // Term for penalty method
     if (problem->bcMethod == "penalty")
@@ -91,6 +103,16 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
         for (int l = 0; l < N_BC; l++)
         {
             penaltyU.col(l) = BC(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
+                              a_tmp;
+        }
+    }
+
+    // Term for Neumann penalty method
+    if (problem->neumannMethod == "penalty")
+    {
+        for (int l = 0; l < N_NeuBC; l++)
+        {
+            penaltyGradU.col(l) = NeuBC(l) * problem->bcGradVelVec[l] - problem->bcGradVelMat[l] *
                               a_tmp;
         }
     }
@@ -104,6 +126,11 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
         if (problem->bcMethod == "penalty")
         {
             fvec(i) += (penaltyU.row(i) * tauU)(0, 0);
+        }
+
+        if (problem->neumannMethod == "penalty")
+        {
+            fvec(i) += (penaltyGradU.row(i) * tauGradU)(0, 0);
         }
     }
 
@@ -133,21 +160,280 @@ int newton_steadyNS::df(const Eigen::VectorXd& x,
     return 0;
 }
 
+// * * * * * * * * * * * * * * * Operators PPE * * * * * * * * * * * * * * * //
+ 
+// Operator to evaluate the residual for the Pressure Poisson Equation (PPE) approach
+int newton_steadyNS_PPE::operator()(const Eigen::VectorXd& x,
+                                      Eigen::VectorXd& fvec) const
+{
+    Eigen::VectorXd a_tmp(Nphi_u);
+    Eigen::VectorXd b_tmp(Nphi_p);
+    a_tmp = x.head(Nphi_u);
+    b_tmp = x.tail(Nphi_p);
+ 
+    // Convective terms
+    Eigen::MatrixXd cc(1, 1);
+    Eigen::MatrixXd gg(1, 1);
+    // Mom Term
+    Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
+    // Gradient of pressure
+    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
+    // Pressure Term
+    Eigen::VectorXd M3 = problem->D_matrix * b_tmp;
+    // BC PPE
+    Eigen::VectorXd M7 = problem->BC3_matrix * a_tmp * nu;
+    // Penalty term
+    Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+    // Penalty term
+    Eigen::MatrixXd penaltyGradU = Eigen::MatrixXd::Zero(Nphi_u, N_NeuBC);
+ 
+    // Term for penalty method
+    if (problem->bcMethod == "penalty")
+    {
+        for (int l = 0; l < N_BC; l++)
+        {
+            penaltyU.col(l) = BC(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
+                              a_tmp;
+        }
+    }
+
+    // Term for Neumann penalty method
+    if (problem->neumannMethod == "penalty")
+    {
+        for (int l = 0; l < N_NeuBC; l++)
+        {
+            penaltyGradU.col(l) = NeuBC(l) * problem->bcGradVelVec[l] - problem->bcGradVelMat[l] *
+                              a_tmp;
+        }
+    }
+ 
+    for (int i = 0; i < Nphi_u; i++)
+    {
+        cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
+                i) * a_tmp;
+        fvec(i) = M1(i) - cc(0, 0) - M2(i);
+ 
+        if (problem->bcMethod == "penalty")
+        {
+            for (int l = 0; l < N_BC; l++)
+            {
+                fvec(i) += (penaltyU.row(i) * tauU)(0, 0);
+            }
+        }
+
+        if (problem->neumannMethod == "penalty")
+        {
+            fvec(i) += (penaltyGradU.row(i) * tauGradU)(0, 0);
+        }
+    }
+ 
+    for (int j = 0; j < Nphi_p; j++)
+    {
+        int k = j + Nphi_u;
+        gg = a_tmp.transpose() * Eigen::SliceFromTensor(problem->gTensor, 0,
+                j) * a_tmp;
+        fvec(k) = M3(j, 0) + gg(0, 0) - M7(j, 0);
+    }
+ 
+    if (problem->bcMethod == "lift")
+    {
+        for (int j = 0; j < N_BC; j++)
+        {
+            fvec(j) = x(j) - BC(j);
+        }
+    }
+ 
+    return 0;
+}
+ 
+// Operator to evaluate the Jacobian for the supremizer approach
+int newton_steadyNS_PPE::df(const Eigen::VectorXd& x,
+                            Eigen::MatrixXd& fjac) const
+{
+    Eigen::NumericalDiff<newton_steadyNS_PPE> numDiff(*this);
+    numDiff.df(x, fjac);
+    return 0;
+}
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel_now)
+void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel)
+{ 
+    if (problem->bcMethod == "lift")
+    {
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, 1);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
+    }
+    else if (problem->bcMethod == "penalty")
+    {
+        vel_now = vel;
+    }
+    else
+    {
+        M_Assert(false,
+                 "The BC method must be set to lift or penalty in ITHACAdict");
+    }
+ 
+    // Create and resize the solution vector
+    y.resize(Nphi_u + Nphi_p, 1);
+    y.setZero();
+ 
+    // Change initial condition for the lifting function
+    if (problem->bcMethod == "lift")
+    {
+        for (int j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
+    }
+ 
+    // Set output colors for fancy output
+    Color::Modifier red(Color::FG_RED);
+    Color::Modifier green(Color::FG_GREEN);
+    Color::Modifier def(Color::FG_DEFAULT);
+    // Set some properties of the newton object
+    Eigen::HybridNonLinearSolver<newton_steadyNS_PPE> hnls(newton_object_PPE);
+    newton_object_PPE.BC.resize(N_BC);
+    newton_object_PPE.tauU = tauU;
+    newton_object_PPE.tauGradU = tauGradU;
+ 
+    for (int j = 0; j < N_BC; j++)
+    {
+        newton_object_PPE.BC(j) = vel_now(j, 0);
+    }
+
+    newton_object_PPE.nu = nu;
+    hnls.solve(y);
+    Eigen::VectorXd res(y);
+    newton_object_PPE.operator()(y, res);
+
+    Info << "################## Online solve N° " << count_online_solve <<
+         " ##################" << endl;
+
+    if (Pstream::master())
+    {
+        std::cout << "Solving for the parameter: " << vel_now << std::endl;
+    }
+
+    if (res.norm() < 1e-5 && Pstream::master())
+    {
+        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
+    }
+    else if (Pstream::master())
+    {
+        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
+    }
+
+    count_online_solve += 1;
+}
+
+void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel, Eigen::MatrixXd neuVel)
 {
-    Info << "This function is still not implemented for the stationary case" <<
-         endl;
-    exit(0);
+    if (problem->bcMethod == "lift")
+    {
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, 1);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
+    }
+    else if (problem->bcMethod == "penalty")
+    {
+        vel_now = vel;
+    }
+    else
+    {
+        M_Assert(false,
+                 "The BC method must be set to lift or penalty in ITHACAdict");
+    }
+ 
+    // Create and resize the solution vector
+    y.resize(Nphi_u + Nphi_p, 1);
+    y.setZero();
+ 
+    // Change initial condition for the lifting function
+    if (problem->bcMethod == "lift")
+    {
+        for (int j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
+    }
+ 
+    // Set output colors for fancy output
+    Color::Modifier red(Color::FG_RED);
+    Color::Modifier green(Color::FG_GREEN);
+    Color::Modifier def(Color::FG_DEFAULT);
+    // Set some properties of the newton object
+    Eigen::HybridNonLinearSolver<newton_steadyNS_PPE> hnls(newton_object_PPE);
+    newton_object_PPE.BC.resize(N_BC);
+    newton_object_PPE.NeuBC.resize(N_NeuBC);
+    newton_object_PPE.tauU = tauU;
+    newton_object_PPE.tauGradU = tauGradU;
+ 
+    for (int j = 0; j < N_BC; j++)
+    {
+        newton_object_PPE.BC(j) = vel_now(j, 0);
+    }
+
+    if (problem->neumannMethod == "penalty")
+    {
+        for (int j = 0; j < N_NeuBC; j++)
+        {
+            newton_object_PPE.NeuBC(j) = neuVel(j, 0);
+        }
+    }
+
+    newton_object_PPE.nu = nu;
+    hnls.solve(y);
+    Eigen::VectorXd res(y);
+    newton_object_PPE.operator()(y, res);
+    
+    Info << "################## Online solve N° " << count_online_solve <<
+         " ##################" << endl;
+
+    if (Pstream::master())
+    {
+        std::cout << "Solving for the parameter: " << vel_now << std::endl;
+    }
+
+    if (res.norm() < 1e-5 && Pstream::master())
+    {
+        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
+    }
+    else if (Pstream::master())
+    {
+        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
+    }
+
+    count_online_solve += 1;
 }
 
 void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
 {
     if (problem->bcMethod == "lift")
     {
-        vel_now = setOnlineVelocity(vel);
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, 1);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
     }
     else if (problem->bcMethod == "penalty")
     {
@@ -177,6 +463,7 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
     Eigen::HybridNonLinearSolver<newton_steadyNS> hnls(newton_object);
     newton_object.BC.resize(N_BC);
     newton_object.tauU = tauU;
+    newton_object.tauGradU = tauGradU;
 
     for (int j = 0; j < N_BC; j++)
     {
@@ -209,6 +496,88 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
     count_online_solve += 1;
 }
 
+void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel, Eigen::MatrixXd neuVel)
+{
+    if (problem->bcMethod == "lift")
+    {
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, 1);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
+    }
+    else if (problem->bcMethod == "penalty")
+    {
+        vel_now = vel;
+    }
+    else
+    {
+        M_Assert(false,
+                 "The BC method must be set to lift or penalty in ITHACAdict");
+    }
+
+    y.resize(Nphi_u + Nphi_p, 1);
+    y.setZero();
+
+    // Change initial condition for the lifting function
+    if (problem->bcMethod == "lift")
+    {
+        for (int j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
+    }
+
+    Color::Modifier red(Color::FG_RED);
+    Color::Modifier green(Color::FG_GREEN);
+    Color::Modifier def(Color::FG_DEFAULT);
+    Eigen::HybridNonLinearSolver<newton_steadyNS> hnls(newton_object);
+    newton_object.BC.resize(N_BC);
+    newton_object.NeuBC.resize(N_NeuBC);
+    newton_object.tauU = tauU;
+    newton_object.tauGradU = tauGradU;
+
+    for (int j = 0; j < N_BC; j++)
+    {
+        newton_object.BC(j) = vel_now(j, 0);
+    }
+
+    if (problem->neumannMethod == "penalty")
+    {
+        for (int j = 0; j < N_NeuBC; j++)
+        {
+            newton_object.NeuBC(j) = neuVel(j, 0);
+        }
+    }
+    
+    newton_object.nu = nu;
+    hnls.solve(y);
+    Eigen::VectorXd res(y);
+    newton_object.operator()(y, res);
+    Info << "################## Online solve N° " << count_online_solve <<
+         " ##################" << endl;
+
+    if (Pstream::master())
+    {
+        std::cout << "Solving for the parameter: " << vel_now << std::endl;
+    }
+
+    if (res.norm() < 1e-5 && Pstream::master())
+    {
+        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
+    }
+    else if (Pstream::master())
+    {
+        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << std::endl << std::endl;
+    }
+
+    count_online_solve += 1;
+}
 
 // * * * * * * * * * * * * * * * Jacobian Evaluation  * * * * * * * * * * * * * //
 
@@ -392,6 +761,16 @@ Eigen::MatrixXd reducedSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
                            problem->liftfield[k].boundaryField()[p]).component(l) / area;
         vel_scal(k, 0) = vel(k, 0) / u_lf;
     }
+
+    return vel_scal;
+}
+
+
+Eigen::MatrixXd reducedSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel, bool nonUniform)
+{
+    assert(problem->inletIndex.rows() == vel.rows()
+           && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+    Eigen::MatrixXd vel_scal(vel);
 
     return vel_scal;
 }

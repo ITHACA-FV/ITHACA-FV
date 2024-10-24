@@ -78,12 +78,20 @@ steadyNS::steadyNS(int argc, char* argv[])
     );
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
+    method = ITHACAdict->lookupOrDefault<word>("method", "supremizer");
+    M_Assert(method == "supremizer" || method == "PPE", "The method must be set to supremizer or PPE in ITHACAdict");
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
     M_Assert(bcMethod == "lift" || bcMethod == "penalty" || bcMethod == "none",
              "The BC method must be set to lift or penalty or none in ITHACAdict");
+    neumannMethod = ITHACAdict->lookupOrDefault<word>("neumannMethod", "none");
+    M_Assert(neumannMethod == "penalty" || neumannMethod == "none",
+             "The neumann BC method must be set to penalty or none in ITHACAdict");
+    nonUniformbc = ITHACAdict->lookupOrDefault<bool>("nonUniformbc", "0");
     fluxMethod = ITHACAdict->lookupOrDefault<word>("fluxMethod", "inconsistent");
     M_Assert(fluxMethod == "inconsistent" || fluxMethod == "consistent",
-             "The flux method must be set to inconsistent or consistent in ITHACAdict");
+             "The flux method must be set to inconsistent or consistent in ITHACAdict");    
+    tauU = ITHACAdict->lookupOrDefault<scalar>("tauU", 1e-1);
+    tauGradU = ITHACAdict->lookupOrDefault<scalar>("tauGradU", 1e-1);
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -134,7 +142,7 @@ void steadyNS::truthSolve(List<scalar> mu_now)
 }
 
 // Method to perform a truthSolve for online parameters
-void steadyNS::truthSolveOnline(List<scalar> mu_now)
+void steadyNS::truthSolve(List<scalar> mu_now, fileName onlineFolder)
 {
     Time& runTime = _runTime();
     fvMesh& mesh = _mesh();
@@ -146,8 +154,8 @@ void steadyNS::truthSolveOnline(List<scalar> mu_now)
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
 #include "NLsolvesteadyNS.H"
-    ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Online/");
-    ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/Online/");
+    ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/"+onlineFolder);
+    ITHACAstream::exportSolution(p, name(counter), "./ITHACAoutput/"+onlineFolder);
     Ufield.append(U.clone());
     Pfield.append(p.clone());
     counter++;
@@ -169,7 +177,7 @@ void steadyNS::truthSolveOnline(List<scalar> mu_now)
     if (mu_samples.rows() == mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
-                                   "./ITHACAoutput/Online");
+                                   "./ITHACAoutput/"+onlineFolder);
     }
 }
 
@@ -516,6 +524,12 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
             bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
+
+        if (neumannMethod == "penalty")
+        {
+            bcGradVelVec = bcGradVelocityVec(NUmodes, NSUPmodes);
+            bcGradVelMat = bcGradVelocityMat(NUmodes, NSUPmodes);
+        }
     }
     else
     {
@@ -532,6 +546,12 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         {
             bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
+        }
+
+        if (neumannMethod == "penalty")
+        {
+            bcGradVelVec = bcGradVelocityVec(NUmodes, NSUPmodes);
+            bcGradVelMat = bcGradVelocityMat(NUmodes, NSUPmodes);
         }
     }
 
@@ -691,6 +711,12 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
             bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
+
+        if (neumannMethod == "penalty")
+        {
+            bcGradVelVec = bcGradVelocityVec(NUmodes, NSUPmodes);
+            bcGradVelMat = bcGradVelocityMat(NUmodes, NSUPmodes);
+        }
     }
     else
     {
@@ -704,6 +730,12 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         {
             bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
+        }
+
+        if (neumannMethod == "penalty")
+        {
+            bcGradVelVec = bcGradVelocityVec(NUmodes, NSUPmodes);
+            bcGradVelMat = bcGradVelocityMat(NUmodes, NSUPmodes);
         }
     }
 
@@ -1508,7 +1540,7 @@ List<Eigen::MatrixXd> steadyNS::bcVelocityVec(label NUmodes,
     if (Pstream::master())
     {
         ITHACAstream::exportMatrix(bcVelVec, "bcVelVec", "eigen",
-                                   "./ITHACAoutput/Matrices/bcVelVec");
+                                   "./ITHACAoutput/Matrices");
     }
 
     return bcVelVec;
@@ -1550,10 +1582,99 @@ List<Eigen::MatrixXd> steadyNS::bcVelocityMat(label NUmodes,
     if (Pstream::master())
     {
         ITHACAstream::exportMatrix(bcVelMat, "bcVelMat", "eigen",
-                                   "./ITHACAoutput/Matrices/bcVelMat");
+                                   "./ITHACAoutput/Matrices");
     }
 
     return bcVelMat;
+}
+
+List<Eigen::MatrixXd> steadyNS::bcGradVelocityVec(label NUmodes,
+        label NSUPmodes)
+{    
+    label BCsize = NUmodes + NSUPmodes + inletIndex.rows();
+    List <Eigen::MatrixXd> bcGradVelVec(outletIndex.rows());
+
+    for (label j = 0; j < outletIndex.rows(); j++)
+    {
+        bcGradVelVec[j].resize(BCsize, 1);
+    }
+
+    for (label k = 0; k < outletIndex.rows(); k++)
+    {
+        label BCind = outletIndex(k, 0);
+        label BCcomp = outletIndex(k, 1);
+
+        for (label i = 0; i < BCsize; i++)
+        {
+            bcGradVelVec[k](i, 0) = gSum(L_U_SUPmodes[i].boundaryField()[BCind].component(
+                                         BCcomp));
+        }
+
+        if (Pstream::parRun())
+        {
+            reduce(bcGradVelVec[k], sumOp<Eigen::MatrixXd>());
+        }
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::exportMatrix(bcGradVelVec, "bcGradVelVec", "eigen",
+                                   "./ITHACAoutput/Matrices");
+    }
+    
+    return bcGradVelVec;
+}
+
+// Function to calculate grad of fields. 
+// It will have error without the individual function.
+volTensorField calculateGrad(volVectorField field)
+{
+    return fvc::grad(field);
+}
+
+List<Eigen::MatrixXd> steadyNS::bcGradVelocityMat(label NUmodes,
+        label NSUPmodes)
+{        
+    label BCsize = NUmodes + NSUPmodes + inletIndex.rows();
+    label BCUsize = outletIndex.rows();
+    List <Eigen::MatrixXd> bcGradVelMat(BCUsize);
+
+    for (label j = 0; j < outletIndex.rows(); j++)
+    {
+        bcGradVelMat[j].resize(BCsize, BCsize);
+    }
+
+    for (label k = 0; k < outletIndex.rows(); k++)
+    {
+        label BCind = outletIndex(k, 0);
+        label BCcomp = outletIndex(k, 1);
+        
+        // inverse the order of rows 'i' and cols 'j' to reduced computational cost
+        for (label j = 0; j < BCsize; j++)
+        {
+            volTensorField gradmodes(calculateGrad(L_U_SUPmodes[j]));
+            Field<vector> gradmodesPatch(L_U_SUPmodes[j].mesh().boundary()[BCind].nf() &
+                gradmodes.boundaryField()[BCind]);
+            for (label i = 0; i < BCsize; i++)
+            {
+                bcGradVelMat[k](i, j) = gSum(gradmodesPatch.component(BCcomp) *
+                    L_U_SUPmodes[i].boundaryField()[BCind].component(BCcomp));
+            }
+        }
+
+        if (Pstream::parRun())
+        {
+            reduce(bcGradVelMat[k], sumOp<Eigen::MatrixXd>());
+        }
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::exportMatrix(bcGradVelMat, "bcGradVelMat", "eigen",
+                                   "./ITHACAoutput/Matrices");
+    }
+
+    return bcGradVelMat;
 }
 
 Eigen::MatrixXd steadyNS::diffusive_term_flux_method(label NUmodes,
