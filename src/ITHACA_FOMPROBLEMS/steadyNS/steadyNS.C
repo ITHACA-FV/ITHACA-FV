@@ -326,7 +326,10 @@ void steadyNS::liftSolve()
             }
             else if (U.boundaryField()[BCind].type() == "fixedValue")
             {
-                assignBC(Ulift, j, v0);
+                if (U.boundaryField()[j].type() != "fixedGradient")
+                {
+                    assignBC(Ulift, j, v0);
+                }
             }
             else
             {
@@ -1594,6 +1597,9 @@ List<Eigen::MatrixXd> steadyNS::bcGradVelocityVec(label NUmodes,
     label BCsize = NUmodes + NSUPmodes + inletIndex.rows();
     List <Eigen::MatrixXd> bcGradVelVec(outletIndex.rows());
 
+    M_Assert(outletIndex.rows() != 0,
+             "The outletIndex should be assigned.");
+
     for (label j = 0; j < outletIndex.rows(); j++)
     {
         bcGradVelVec[j].resize(BCsize, 1);
@@ -1636,8 +1642,10 @@ List<Eigen::MatrixXd> steadyNS::bcGradVelocityMat(label NUmodes,
         label NSUPmodes)
 {        
     label BCsize = NUmodes + NSUPmodes + inletIndex.rows();
-    label BCUsize = outletIndex.rows();
-    List <Eigen::MatrixXd> bcGradVelMat(BCUsize);
+    List <Eigen::MatrixXd> bcGradVelMat(outletIndex.rows());
+
+    M_Assert(outletIndex.rows() != 0,
+             "The outletIndex should be assigned.");
 
     for (label j = 0; j < outletIndex.rows(); j++)
     {

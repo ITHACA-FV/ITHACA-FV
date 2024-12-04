@@ -95,6 +95,12 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();
+
+    neumannMethod = ITHACAdict->lookupOrDefault<word>("neumannMethod", "none");
+    M_Assert(neumannMethod == "penalty" || neumannMethod == "none",
+             "The neumann BC method must be set to penalty or none in ITHACAdict");    
+    tauU = ITHACAdict->lookupOrDefault<scalar>("tauU", 1e-1);
+    tauGradU = ITHACAdict->lookupOrDefault<scalar>("tauGradU", 1e-1);
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

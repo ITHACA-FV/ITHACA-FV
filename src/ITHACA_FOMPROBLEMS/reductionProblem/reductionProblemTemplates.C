@@ -135,6 +135,39 @@ void reductionProblem::computeLift(T& Lfield, T& liftfield, T& omfield, Eigen::M
     }
 }
 
+template<typename T>
+void reductionProblem::computeLift(T& Lfield, T& liftfield, T& omfield, Eigen::MatrixXd& intUCoeffs, bool unSteady)
+{
+    for (label k = 0; k < inletIndex.rows(); k++)
+    {
+        label snapshotCase = label(Lfield.size() / Tnumber);
+        label snapshotIndex = 0;
+        label liftIndex = 0;
+
+        for (label j = 0; j < Lfield.size(); j++)
+        {
+            if (snapshotIndex == snapshotCase)
+            {
+                liftIndex++;
+                snapshotIndex = 0;
+            }
+            
+            if (k == 0)
+            {
+                volVectorField C("U", Lfield[j] - liftfield[k] * intUCoeffs(k, liftIndex));
+                omfield.append(C.clone());
+            }
+            else
+            {
+                volVectorField C("U", omfield[j] - liftfield[k] * intUCoeffs(k, liftIndex));
+                omfield.set(j, C.clone());
+            }
+
+            snapshotIndex++;
+        }
+    }
+}
+
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

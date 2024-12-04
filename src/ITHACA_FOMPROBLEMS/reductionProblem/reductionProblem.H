@@ -268,11 +268,26 @@ class reductionProblem
         /// @param[in]      Lfield     The list of snapshots to be homogenized.
         /// @param[in]      liftfield  The list containing.
         /// @param[out]     omfield    The homogenized snapshot matrix.
+        /// @param[in]      intUCoeffs The coefficients for Dirichlet profiles.
         ///
         /// @tparam     T          { description }
         ///
         template<typename T>
         void computeLift(T& Lfield, T& liftfield, T& omfield, Eigen::MatrixXd& intUCoeffs);
+
+        //--------------------------------------------------------------------------
+        /// Homogenize the snapshot matrix, it works with PtrList of volVectorField and volScalarField
+        ///
+        /// @param[in]      Lfield     The list of snapshots to be homogenized.
+        /// @param[in]      liftfield  The list containing.
+        /// @param[out]     omfield    The homogenized snapshot matrix.
+        /// @param[in]      intUCoeffs The coefficients for Dirichlet profiles.
+        /// @param[in]      unSteady   The coefficients for Dirichlet profiles.
+        ///
+        /// @tparam     T          { description }
+        ///
+        template<typename T>
+        void computeLift(T& Lfield, T& liftfield, T& omfield, Eigen::MatrixXd& intUCoeffs, bool unSteady);
 
         //--------------------------------------------------------------------------
         /// Virtual function to compute the lifting function for scalar field

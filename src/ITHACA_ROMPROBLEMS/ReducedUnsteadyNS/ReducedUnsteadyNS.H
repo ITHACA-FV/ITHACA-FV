@@ -56,7 +56,8 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
             problem( & problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows())
+            N_BC(problem.inletIndex.rows()),
+            N_NeuBC(problem.outletIndex.rows())
         {}
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
@@ -66,12 +67,15 @@ struct newton_unsteadyNS_sup: public newton_argument<double>
         int Nphi_u;
         int Nphi_p;
         int N_BC;
+        int N_NeuBC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
         Eigen::VectorXd yOldOld;
         Eigen::VectorXd BC;
         Eigen::MatrixXd tauU;
+        Eigen::VectorXd NeuBC;
+        Eigen::MatrixXd tauGradU;
 };
 
 
@@ -86,7 +90,8 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
             problem( & problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows())
+            N_BC(problem.inletIndex.rows()),
+            N_NeuBC(problem.outletIndex.rows())
         {}
 
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
@@ -96,12 +101,15 @@ struct newton_unsteadyNS_PPE: public newton_argument<double>
         int Nphi_u;
         int Nphi_p;
         int N_BC;
+        int N_NeuBC;
         scalar nu;
         scalar dt;
         Eigen::VectorXd y_old;
         Eigen::VectorXd yOldOld;
         Eigen::VectorXd BC;
         Eigen::MatrixXd tauU;
+        Eigen::VectorXd NeuBC;
+        Eigen::MatrixXd tauGradU;
 };
 
 
@@ -210,6 +218,19 @@ class reducedUnsteadyNS: public reducedSteadyNS
         ///
         void solveOnline_PPE(Eigen::MatrixXd vel_now, int startSnap = 0);
 
+        /// Method to perform an online solve using a PPE stabilisation method
+        ///
+        /// @param[in]  vel_now   The vector of online velocity. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized boundary conditions.
+        /// @param[in]  neuVel   The vector of online Neumann  coeffs. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized Neumann boundary conditions.
+        /// @param[in]  startSnap The first snapshot taken from the offline snapshots
+        /// and used to get the reduced initial condition.
+        ///
+        void solveOnline_PPE(Eigen::MatrixXd vel_now, Eigen::MatrixXd neuVel, int startSnap = 0);
+
         /// Method to perform an online solve using a supremizer stabilisation method
         ///
         /// @param[in]  vel_now   The vector of online velocity. It is defined in
@@ -219,6 +240,19 @@ class reducedUnsteadyNS: public reducedSteadyNS
         /// and used to get the reduced initial condition.
         ///
         void solveOnline_sup(Eigen::MatrixXd vel_now, int startSnap = 0);
+
+        /// Method to perform an online solve using a supremizer stabilisation method
+        ///
+        /// @param[in]  vel_now   The vector of online velocity. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized boundary conditions.
+        /// @param[in]  neuVel   The vector of online Neumann  coeffs. It is defined in
+        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
+        /// of parametrized Neumann boundary conditions.
+        /// @param[in]  startSnap The first snapshot taken from the offline snapshots
+        /// and used to get the reduced initial condition.
+        ///
+        void solveOnline_sup(Eigen::MatrixXd vel_now, Eigen::MatrixXd neuVel, int startSnap = 0);
 
         /// Method to reconstruct the solutions from an online solve with a
         /// supremizer stabilisation technique. stabilisation method

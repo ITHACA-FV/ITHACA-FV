@@ -50,6 +50,16 @@ reducedUnsteadyNS::reducedUnsteadyNS(unsteadyNS& FOMproblem)
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
 
+    tauU.resize(1, 1);
+    tauU(0,0) = problem->tauU;    
+    tauGradU.resize(1, 1);
+    tauGradU(0,0) = problem->tauGradU;
+
+    if (problem->neumannMethod == "penalty")
+    {
+        N_NeuBC = problem->outletIndex.rows();
+    }
+
     // Create locally the velocity modes
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
@@ -113,6 +123,8 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd M3 = problem->P_matrix* a_tmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+    // Penalty term
+    Eigen::MatrixXd penaltyGradU = Eigen::MatrixXd::Zero(Nphi_u, N_NeuBC);
 
     // Term for penalty method
     if (problem->bcMethod == "penalty")
@@ -121,6 +133,16 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
         {
             penaltyU.col(l) = tauU(l,
                                    0) * (BC(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
+                                         a_tmp);
+        }
+    }
+
+    if (problem->neumannMethod == "penalty")
+    {
+        for (int l = 0; l < N_NeuBC; l++)
+        {
+            penaltyGradU.col(l) = tauGradU(l,
+                                   0) * (NeuBC(l) * problem->bcGradVelVec[l] - problem->bcGradVelMat[l] *
                                          a_tmp);
         }
     }
@@ -136,6 +158,14 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
             for (int l = 0; l < N_BC; l++)
             {
                 fvec(i) += penaltyU(i, l);
+            }
+        }
+
+        if (problem->neumannMethod == "penalty")
+        {
+            for (int l = 0; l < N_NeuBC; l++)
+            {
+                fvec(i) += penaltyGradU(i, l);
             }
         }
     }
@@ -206,6 +236,8 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
     Eigen::VectorXd M8 = problem->BC4_matrix* a_dot;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+    // Penalty term
+    Eigen::MatrixXd penaltyGradU = Eigen::MatrixXd::Zero(Nphi_u, N_NeuBC);
 
     // Term for penalty method
     if (problem->bcMethod == "penalty")
@@ -214,6 +246,16 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
         {
             penaltyU.col(l) = tauU(l,
                                    0) * (BC(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
+                                         a_tmp);
+        }
+    }
+
+    if (problem->neumannMethod == "penalty")
+    {
+        for (int l = 0; l < N_NeuBC; l++)
+        {
+            penaltyGradU.col(l) = tauGradU(l,
+                                   0) * (NeuBC(l) * problem->bcGradVelVec[l] - problem->bcGradVelMat[l] *
                                          a_tmp);
         }
     }
@@ -229,6 +271,14 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
             for (int l = 0; l < N_BC; l++)
             {
                 fvec(i) += penaltyU(i, l);
+            }
+        }
+
+        if (problem->neumannMethod == "penalty")
+        {
+            for (int l = 0; l < N_NeuBC; l++)
+            {
+                fvec(i) += penaltyGradU(i, l);
             }
         }
     }
@@ -426,6 +476,174 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
                                "./ITHACAoutput/red_coeff");
 }
 
+void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel, Eigen::MatrixXd neuVel,
+                                        int startSnap)
+{
+    M_Assert(exportEvery >= dt,
+             "The time step dt must be smaller than exportEvery.");
+    M_Assert(storeEvery >= dt,
+             "The time step dt must be smaller than storeEvery.");
+    M_Assert(ITHACAutilities::isInteger(storeEvery / dt) == true,
+             "The variable storeEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / dt) == true,
+             "The variable exportEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
+             "The variable exportEvery must be an integer multiple of the variable storeEvery.");
+    int numberOfStores = round(storeEvery / dt);
+
+    if (problem->bcMethod == "lift")
+    {
+        vel_now = setOnlineVelocity(vel);
+    }
+    else if (problem->bcMethod == "penalty")
+    {
+        vel_now = vel;
+    }
+
+    // Create and resize the solution vector
+    y.resize(Nphi_u + Nphi_p, 1);
+    y.setZero();
+    y.head(Nphi_u) = ITHACAutilities::getCoeffs(problem->Ufield[startSnap],
+                     Umodes);
+    y.tail(Nphi_p) = ITHACAutilities::getCoeffs(problem->Pfield[startSnap],
+                     Pmodes);
+    int nextStore = 0;
+    int counter2 = 0;
+
+    // Change initial condition for the lifting function
+    if (problem->bcMethod == "lift")
+    {
+        for (int j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
+    }
+
+    // Set some properties of the newton object
+    newton_object_sup.nu = nu;
+    newton_object_sup.y_old = y;
+    newton_object_sup.yOldOld = newton_object_sup.y_old;
+    newton_object_sup.dt = dt;
+    newton_object_sup.BC.resize(N_BC);
+    newton_object_sup.tauU = tauU;
+    newton_object_sup.NeuBC.resize(N_NeuBC);
+    newton_object_sup.tauGradU = tauGradU;
+
+    for (int j = 0; j < N_BC; j++)
+    {
+        newton_object_sup.BC(j) = vel_now(j, 0);
+    }
+
+    if (problem->neumannMethod == "penalty")
+    {
+        for (int j = 0; j < N_NeuBC; j++)
+        {
+            newton_object_sup.NeuBC(j) = neuVel(j, 0);
+        }
+    }
+
+    // Set number of online solutions
+    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    online_solution.resize(onlineSize);
+    // Set the initial time
+    time = tstart;
+    // Counting variable
+    int counter = 0;
+    // Create vector to store temporal solution and save initial condition as first solution
+    Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
+    tmp_sol(0) = time;
+    tmp_sol.col(0).tail(y.rows()) = y;
+    online_solution[counter] = tmp_sol;
+    counter ++;
+    counter2++;
+    nextStore += numberOfStores;
+    // Create nonlinear solver object
+    Eigen::HybridNonLinearSolver<newton_unsteadyNS_sup> hnls(newton_object_sup);
+    // Set output colors for fancy output
+    Color::Modifier red(Color::FG_RED);
+    Color::Modifier green(Color::FG_GREEN);
+    Color::Modifier def(Color::FG_DEFAULT);
+
+    while (time < finalTime)
+    {
+        time = time + dt;
+
+        // Set time-dependent BCs
+        if (problem->timedepbcMethod == "yes" )
+        {
+            for (int j = 0; j < N_BC; j++)
+            {
+                newton_object_sup.BC(j) = vel_now(j, counter);
+            }
+        }
+
+        Eigen::VectorXd res(y);
+        res.setZero();
+        hnls.solve(y);
+
+        if (problem->bcMethod == "lift")
+        {
+            for (int j = 0; j < N_BC; j++)
+            {
+                if (problem->timedepbcMethod == "no" )
+                {
+                    y(j) = vel_now(j, 0);
+                }
+                else if (problem->timedepbcMethod == "yes" )
+                {
+                    y(j) = vel_now(j, counter);
+                }
+            }
+        }
+
+        newton_object_sup.operator()(y, res);
+        newton_object_sup.yOldOld = newton_object_sup.y_old;
+        newton_object_sup.y_old = y;
+        std::cout << "################## Online solve N° " << counter <<
+                  " ##################" << std::endl;
+        Info << "Time = " << time << endl;
+
+        if (res.norm() < 1e-5)
+        {
+            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << std::endl << std::endl;
+        }
+        else
+        {
+            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << std::endl << std::endl;
+        }
+
+        tmp_sol(0) = time;
+        tmp_sol.col(0).tail(y.rows()) = y;
+
+        if (counter == nextStore)
+        {
+            if (counter2 >= online_solution.size())
+            {
+                online_solution.append(tmp_sol);
+            }
+            else
+            {
+                online_solution[counter2] = tmp_sol;
+            }
+
+            nextStore += numberOfStores;
+            counter2 ++;
+        }
+
+        counter ++;
+    }
+
+    // Export the solution
+    ITHACAstream::exportMatrix(online_solution, "red_coeff", "python",
+                               "./ITHACAoutput/red_coeff");
+    ITHACAstream::exportMatrix(online_solution, "red_coeff", "matlab",
+                               "./ITHACAoutput/red_coeff");
+}
+
+
 // * * * * * * * * * * * * * * * Solve Functions PPE * * * * * * * * * * * * * //
 
 void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
@@ -483,6 +701,175 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
     for (int j = 0; j < N_BC; j++)
     {
         newton_object_PPE.BC(j) = vel_now(j, 0);
+    }
+
+    // Set number of online solutions
+    int Ntsteps = static_cast<int>((finalTime - tstart) / dt);
+    int onlineSize = static_cast<int>(Ntsteps / numberOfStores);
+    online_solution.resize(onlineSize);
+    // Set the initial time
+    time = tstart;
+    // Counting variable
+    int counter = 0;
+    // Create vector to store temporal solution and save initial condition as first solution
+    Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + 1, 1);
+    tmp_sol(0) = time;
+    tmp_sol.col(0).tail(y.rows()) = y;
+    online_solution[counter] = tmp_sol;
+    counter ++;
+    counter2++;
+    nextStore += numberOfStores;
+    // Create nonlinear solver object
+    Eigen::HybridNonLinearSolver<newton_unsteadyNS_PPE> hnls(newton_object_PPE);
+    // Set output colors for fancy output
+    Color::Modifier red(Color::FG_RED);
+    Color::Modifier green(Color::FG_GREEN);
+    Color::Modifier def(Color::FG_DEFAULT);
+
+    // Start the time loop
+    while (time < finalTime)
+    {
+        time = time + dt;
+
+        // Set time-dependent BCs
+        if (problem->timedepbcMethod == "yes" )
+        {
+            for (int j = 0; j < N_BC; j++)
+            {
+                newton_object_PPE.BC(j) = vel_now(j, counter);
+            }
+        }
+
+        Eigen::VectorXd res(y);
+        res.setZero();
+        hnls.solve(y);
+
+        if (problem->bcMethod == "lift")
+        {
+            for (int j = 0; j < N_BC; j++)
+            {
+                if (problem->timedepbcMethod == "no" )
+                {
+                    y(j) = vel_now(j, 0);
+                }
+                else if (problem->timedepbcMethod == "yes" )
+                {
+                    y(j) = vel_now(j, counter);
+                }
+            }
+        }
+
+        newton_object_PPE.operator()(y, res);
+        newton_object_PPE.yOldOld = newton_object_PPE.y_old;
+        newton_object_PPE.y_old = y;
+        std::cout << "################## Online solve N° " << counter <<
+                  " ##################" << std::endl;
+        Info << "Time = " << time << endl;
+
+        if (res.norm() < 1e-5)
+        {
+            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << std::endl << std::endl;
+        }
+        else
+        {
+            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << std::endl << std::endl;
+        }
+
+        tmp_sol(0) = time;
+        tmp_sol.col(0).tail(y.rows()) = y;
+
+        if (counter == nextStore)
+        {
+            if (counter2 >= online_solution.size())
+            {
+                online_solution.append(tmp_sol);
+            }
+            else
+            {
+                online_solution[counter2] = tmp_sol;
+            }
+
+            nextStore += numberOfStores;
+            counter2 ++;
+        }
+
+        counter ++;
+    }
+
+    // Export the solution
+    ITHACAstream::exportMatrix(online_solution, "red_coeff", "python",
+                               "./ITHACAoutput/red_coeff");
+    ITHACAstream::exportMatrix(online_solution, "red_coeff", "matlab",
+                               "./ITHACAoutput/red_coeff");
+}
+
+void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel, Eigen::MatrixXd neuVel,
+                                        int startSnap)
+{
+    M_Assert(exportEvery >= dt,
+             "The time step dt must be smaller than exportEvery.");
+    M_Assert(storeEvery >= dt,
+             "The time step dt must be smaller than storeEvery.");
+    M_Assert(ITHACAutilities::isInteger(storeEvery / dt) == true,
+             "The variable storeEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / dt) == true,
+             "The variable exportEvery must be an integer multiple of the time step dt.");
+    M_Assert(ITHACAutilities::isInteger(exportEvery / storeEvery) == true,
+             "The variable exportEvery must be an integer multiple of the variable storeEvery.");
+    int numberOfStores = round(storeEvery / dt);
+
+    if (problem->bcMethod == "lift")
+    {
+        vel_now = setOnlineVelocity(vel);
+    }
+    else if (problem->bcMethod == "penalty")
+    {
+        vel_now = vel;
+    }
+
+    // Create and resize the solution vector
+    y.resize(Nphi_u + Nphi_p, 1);
+    y.setZero();
+    // Set Initial Conditions
+    y.head(Nphi_u) = ITHACAutilities::getCoeffs(problem->Ufield[startSnap],
+                     Umodes);
+    y.tail(Nphi_p) = ITHACAutilities::getCoeffs(problem->Pfield[startSnap],
+                     Pmodes);
+    int nextStore = 0;
+    int counter2 = 0;
+
+    // Change initial condition for the lifting function
+    if (problem->bcMethod == "lift")
+    {
+        for (int j = 0; j < N_BC; j++)
+        {
+            y(j) = vel_now(j, 0);
+        }
+    }
+
+    // Set some properties of the newton object
+    newton_object_PPE.nu = nu;
+    newton_object_PPE.y_old = y;
+    newton_object_PPE.yOldOld = newton_object_PPE.y_old;
+    newton_object_PPE.dt = dt;
+    newton_object_PPE.BC.resize(N_BC);
+    newton_object_PPE.tauU = tauU;    
+    newton_object_PPE.NeuBC.resize(N_NeuBC);
+    newton_object_PPE.tauGradU = tauGradU;
+
+    for (int j = 0; j < N_BC; j++)
+    {
+        newton_object_PPE.BC(j) = vel_now(j, 0);
+    }
+
+    if (problem->neumannMethod == "penalty")
+    {
+        for (int j = 0; j < N_NeuBC; j++)
+        {
+            newton_object_PPE.NeuBC(j) = neuVel(j, 0);
+        }
     }
 
     // Set number of online solutions
