@@ -23,7 +23,5 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
 
-Foam::Info << "Create time\n" << Foam::endl;
-_runTime = autoPtr<Foam::Time>( new Foam::Time( Foam::Time::controlDictName,
-                                args ) );
-Foam::Time& runTime = _runTime();
+_fvOptions = autoPtr<fv::options>(new fv::options(mesh));
+
