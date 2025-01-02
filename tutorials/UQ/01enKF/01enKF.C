@@ -79,10 +79,10 @@ int main(int argc, char* argv[])
 
     for (int timeI = 0; timeI < Ntimes - 1; timeI++)
     {
-        Eigen::VectorXd xNew = (A * deltaTime + Eigen::MatrixXd::Identity(A.rows(),
+        Eigen::VectorXd xNew = (A* deltaTime + Eigen::MatrixXd::Identity(A.rows(),
                                 A.cols()))  * xOld;
         xOld = xNew;
-        Eigen::VectorXd dNew = H * xNew;
+        Eigen::VectorXd dNew = H* xNew;
         X.col(timeI + 1) = xNew;
         sampleFlag--;
 
@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
         //Forecast step
         for (int i = 0; i < Nseeds; i++)
         {
-            forwardSamples.col(i) = (A * deltaTime + Eigen::MatrixXd::Identity(A.rows(),
+            forwardSamples.col(i) = (A* deltaTime + Eigen::MatrixXd::Identity(A.rows(),
                                      A.cols())) * priorSamples.col(i) + modelErrorDensity->Sample();
         }
 
@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
             Eigen::VectorXd meas = obs.col(sampleI);
             //Kalman filter
             posteriorSamples = ITHACAmuq::muq2ithaca::EnsembleKalmanFilter(forwardSamples,
-                               meas, meas_cov, H * forwardSamples);
+                               meas, meas_cov, H* forwardSamples);
             sampleI++;
         }
         else

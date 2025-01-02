@@ -45,7 +45,7 @@ ReducedUnsteadyBB::ReducedUnsteadyBB()
 
 ReducedUnsteadyBB::ReducedUnsteadyBB(UnsteadyBB& FOMproblem)
     :
-    problem(&FOMproblem)
+    problem( & FOMproblem)
 {
     N_BC_t    = problem->inletIndexT.rows();
     N_BC      = problem->inletIndex.rows();
@@ -107,26 +107,26 @@ int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Diffusive Term
-    Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
+    Eigen::VectorXd M1 = problem->B_matrix* a_tmp* nu;
     // Mass Term Velocity
-    Eigen::VectorXd M5 = problem->M_matrix * a_dot;
+    Eigen::VectorXd M5 = problem->M_matrix* a_dot;
     // Gradient of pressure
-    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
+    Eigen::VectorXd M2 = problem->K_matrix* b_tmp;
     // Continuity
-    Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
+    Eigen::VectorXd M3 = problem->P_matrix* a_tmp;
     // Buoyancy Term
-    Eigen::VectorXd M10 = problem->H_matrix * c_tmp;
+    Eigen::VectorXd M10 = problem->H_matrix* c_tmp;
     // Convective term temperature
     Eigen::MatrixXd qq(1, 1);
     // diffusive term temperature
-    Eigen::VectorXd M6 = problem->Y_matrix * c_tmp * (nu / Pr);
+    Eigen::VectorXd M6 = problem->Y_matrix* c_tmp * (nu / Pr);
     // Mass Term Temperature
-    Eigen::VectorXd M8 = problem->W_matrix * c_dot;
+    Eigen::VectorXd M8 = problem->W_matrix* c_dot;
 
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * a_tmp;
+             i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M10(i) - M2(i);
     }
 
@@ -161,7 +161,7 @@ int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
                               Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyBB_sup> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyBB_sup> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -190,29 +190,29 @@ int newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
     Eigen::MatrixXd qq(1, 1);
     // Eigen::MatrixXd st(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
+    Eigen::VectorXd M1 = problem->B_matrix* a_tmp* nu;
     // Gradient of pressure
-    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
+    Eigen::VectorXd M2 = problem->K_matrix* b_tmp;
     // Mass Term
-    Eigen::VectorXd M5 = problem->M_matrix * a_dot;
+    Eigen::VectorXd M5 = problem->M_matrix* a_dot;
     // Pressure Term
-    Eigen::VectorXd M3 = problem->D_matrix * b_tmp;
+    Eigen::VectorXd M3 = problem->D_matrix* b_tmp;
     // BC PPE
-    Eigen::VectorXd M6 = problem->BC1_matrix * a_tmp * nu;
+    Eigen::VectorXd M6 = problem->BC1_matrix* a_tmp* nu;
     // BC PPE
     // Buoyancy Term
-    Eigen::VectorXd M10 = problem->H_matrix * c_tmp;
-    Eigen::VectorXd M11 = problem->HP_matrix * c_tmp;
-    Eigen::VectorXd M7 = problem->BC3_matrix * a_tmp * nu;
+    Eigen::VectorXd M10 = problem->H_matrix* c_tmp;
+    Eigen::VectorXd M11 = problem->HP_matrix* c_tmp;
+    Eigen::VectorXd M7 = problem->BC3_matrix* a_tmp* nu;
     // diffusive term temperature
-    Eigen::VectorXd M9 = problem->Y_matrix * c_tmp * (nu / Pr);
+    Eigen::VectorXd M9 = problem->Y_matrix* c_tmp * (nu / Pr);
     // Mass Term Temperature
-    Eigen::VectorXd M8 = problem->W_matrix * c_dot;
+    Eigen::VectorXd M8 = problem->W_matrix* c_dot;
 
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * a_tmp;
+             i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M10(i) - M2(i);
     }
 
@@ -243,7 +243,7 @@ int newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
                               Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyBB_PPE> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyBB_PPE> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }

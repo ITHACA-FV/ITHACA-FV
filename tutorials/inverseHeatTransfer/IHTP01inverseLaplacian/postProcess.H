@@ -51,6 +51,7 @@ forAll(gField, solutionI)
                                   relativeErrorField,
                                   "hotSide");
 }
+
 ITHACAstream::exportMatrix(heatFluxL2norm, "relError_L2norm", "eigen",
                            folder);
 ITHACAstream::exportMatrix(heatFluxLinfNorm, "relError_LinfNorm", "eigen",

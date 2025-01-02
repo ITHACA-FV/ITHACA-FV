@@ -121,7 +121,7 @@ class tutorial17: public unsteadyNS
                         IOobject::NO_WRITE
                     ),
                     mesh,
-                    dimensionedScalar("Phi", dimLength * dimVelocity, 0),
+                    dimensionedScalar("Phi", dimLength* dimVelocity, 0),
                     p.boundaryField().types()
                 );
                 label PhiRefCell = 0;

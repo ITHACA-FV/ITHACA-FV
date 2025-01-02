@@ -44,7 +44,7 @@ ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb()
 
 ReducedUnsteadyNSTurb::ReducedUnsteadyNSTurb(UnsteadyNSTurb& fomProblem)
 {
-    problem = &fomProblem;
+    problem = & fomProblem;
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
     Nphi_p = problem->K_matrix.cols();
@@ -119,13 +119,13 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
+    Eigen::VectorXd m1 = problem->bTotalMatrix* aTmp* nu;
     // Gradient of pressure
-    Eigen::VectorXd m2 = problem->K_matrix * bTmp;
+    Eigen::VectorXd m2 = problem->K_matrix* bTmp;
     // Mass Term
-    Eigen::VectorXd m5 = problem->M_matrix * a_dot;
+    Eigen::VectorXd m5 = problem->M_matrix* a_dot;
     // Pressure Term
-    Eigen::VectorXd m3 = problem->P_matrix * aTmp;
+    Eigen::VectorXd m3 = problem->P_matrix* aTmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -142,13 +142,13 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * aTmp - gNut.transpose() *
+             i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
         fvec(i) = - m5(i) + m1(i) - cc(0, 0) - m2(i);
 
         if (problem->bcMethod == "penalty")
         {
-            fvec(i) += ((penaltyU * tauU)(i, 0));
+            fvec(i) += ((penaltyU* tauU)(i, 0));
         }
     }
 
@@ -173,7 +173,7 @@ int newtonUnsteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
 int newtonUnsteadyNSTurbSUP::df(const Eigen::VectorXd& x,
                                 Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonUnsteadyNSTurbSUP> numDiff(*this);
+    Eigen::NumericalDiff<newtonUnsteadyNSTurbSUP> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -202,13 +202,13 @@ int newtonUnsteadyNSTurbSUPAve::operator()(const Eigen::VectorXd& x,
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
+    Eigen::VectorXd m1 = problem->bTotalMatrix* aTmp* nu;
     // Gradient of pressure
-    Eigen::VectorXd m2 = problem->K_matrix * bTmp;
+    Eigen::VectorXd m2 = problem->K_matrix* bTmp;
     // Mass Term
-    Eigen::VectorXd m5 = problem->M_matrix * a_dot;
+    Eigen::VectorXd m5 = problem->M_matrix* a_dot;
     // Pressure Term
-    Eigen::VectorXd m3 = problem->P_matrix * aTmp;
+    Eigen::VectorXd m3 = problem->P_matrix* aTmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -225,7 +225,7 @@ int newtonUnsteadyNSTurbSUPAve::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * aTmp - gNut.transpose() *
+             i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0,
                                     i) * aTmp - gNutAve.transpose() *
              Eigen::SliceFromTensor(problem->cTotalAveTensor, 0, i) * aTmp;
@@ -233,7 +233,7 @@ int newtonUnsteadyNSTurbSUPAve::operator()(const Eigen::VectorXd& x,
 
         if (problem->bcMethod == "penalty")
         {
-            fvec(i) += ((penaltyU * tauU)(i, 0));
+            fvec(i) += ((penaltyU* tauU)(i, 0));
         }
     }
 
@@ -258,7 +258,7 @@ int newtonUnsteadyNSTurbSUPAve::operator()(const Eigen::VectorXd& x,
 int newtonUnsteadyNSTurbSUPAve::df(const Eigen::VectorXd& x,
                                    Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonUnsteadyNSTurbSUPAve> numDiff(*this);
+    Eigen::NumericalDiff<newtonUnsteadyNSTurbSUPAve> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -291,17 +291,17 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
     Eigen::MatrixXd gg(1, 1);
     Eigen::MatrixXd bb(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
+    Eigen::VectorXd m1 = problem->bTotalMatrix* aTmp* nu;
     // Gradient of pressure
-    Eigen::VectorXd m2 = problem->K_matrix * bTmp;
+    Eigen::VectorXd m2 = problem->K_matrix* bTmp;
     // Mass Term
-    Eigen::VectorXd m5 = problem->M_matrix * a_dot;
+    Eigen::VectorXd m5 = problem->M_matrix* a_dot;
     // Pressure Term
-    Eigen::VectorXd m3 = problem->D_matrix * bTmp;
+    Eigen::VectorXd m3 = problem->D_matrix* bTmp;
     // BC PPE
-    Eigen::VectorXd m6 = problem->BC1_matrix * aTmp * nu;
+    Eigen::VectorXd m6 = problem->BC1_matrix* aTmp* nu;
     // BC PPE
-    Eigen::VectorXd m7 = problem->BC3_matrix * aTmp * nu;
+    Eigen::VectorXd m7 = problem->BC3_matrix* aTmp* nu;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -318,13 +318,13 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * aTmp - gNut.transpose() *
+             i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
         fvec(i) = - m5(i) + m1(i) - cc(0, 0) - m2(i);
 
         if (problem->bcMethod == "penalty")
         {
-            fvec(i) += ((penaltyU * tauU)(i, 0));
+            fvec(i) += ((penaltyU* tauU)(i, 0));
         }
     }
 
@@ -332,9 +332,9 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
     {
         int k = j + Nphi_u;
         gg = aTmp.transpose() * Eigen::SliceFromTensor(problem->gTensor, 0,
-                j) * aTmp;
+             j) * aTmp;
         bb = aTmp.transpose() * Eigen::SliceFromTensor(problem->bc2Tensor, 0,
-                j) * aTmp;
+             j) * aTmp;
         //fvec(k) = m3(j, 0) - gg(0, 0) - m6(j, 0) + bb(0, 0);
         fvec(k) = m3(j, 0) + gg(0, 0) - m7(j, 0);
     }
@@ -354,7 +354,7 @@ int newtonUnsteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
 int newtonUnsteadyNSTurbPPE::df(const Eigen::VectorXd& x,
                                 Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonUnsteadyNSTurbPPE> numDiff(*this);
+    Eigen::NumericalDiff<newtonUnsteadyNSTurbPPE> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -385,19 +385,19 @@ int newtonUnsteadyNSTurbPPEAve::operator()(const Eigen::VectorXd& x,
     Eigen::MatrixXd bb(1, 1);
     Eigen::MatrixXd nn(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
+    Eigen::VectorXd m1 = problem->bTotalMatrix* aTmp* nu;
     // Gradient of pressure
-    Eigen::VectorXd m2 = problem->K_matrix * bTmp;
+    Eigen::VectorXd m2 = problem->K_matrix* bTmp;
     // Mass Term
-    Eigen::VectorXd m5 = problem->M_matrix * a_dot;
+    Eigen::VectorXd m5 = problem->M_matrix* a_dot;
     // Time-derivative of the divergence Term
     //Eigen::VectorXd m5 = problem->M_matrix * a_dot;
     // Pressure Term
-    Eigen::VectorXd m3 = problem->D_matrix * bTmp;
+    Eigen::VectorXd m3 = problem->D_matrix* bTmp;
     // BC PPE
-    Eigen::VectorXd m6 = problem->BC1_matrix * aTmp * nu;
+    Eigen::VectorXd m6 = problem->BC1_matrix* aTmp* nu;
     // BC PPE
-    Eigen::VectorXd m7 = problem->BC3_matrix * aTmp * nu;
+    Eigen::VectorXd m7 = problem->BC3_matrix* aTmp* nu;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -414,7 +414,7 @@ int newtonUnsteadyNSTurbPPEAve::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * aTmp - gNut.transpose() *
+             i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0,
                                     i) * aTmp - gNutAve.transpose() *
              Eigen::SliceFromTensor(problem->cTotalAveTensor, 0, i) * aTmp;
@@ -422,7 +422,7 @@ int newtonUnsteadyNSTurbPPEAve::operator()(const Eigen::VectorXd& x,
 
         if (problem->bcMethod == "penalty")
         {
-            fvec(i) += ((penaltyU * tauU)(i, 0));
+            fvec(i) += ((penaltyU* tauU)(i, 0));
         }
     }
 
@@ -430,9 +430,9 @@ int newtonUnsteadyNSTurbPPEAve::operator()(const Eigen::VectorXd& x,
     {
         int k = j + Nphi_u;
         gg = aTmp.transpose() * Eigen::SliceFromTensor(problem->gTensor, 0,
-                j) * aTmp;
+             j) * aTmp;
         bb = aTmp.transpose() * Eigen::SliceFromTensor(problem->bc2Tensor, 0,
-                j) * aTmp;
+             j) * aTmp;
         nn = gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalPPETensor, 0,
                                     j) * aTmp + gNutAve.transpose() *
@@ -457,7 +457,7 @@ int newtonUnsteadyNSTurbPPEAve::operator()(const Eigen::VectorXd& x,
 int newtonUnsteadyNSTurbPPEAve::df(const Eigen::VectorXd& x,
                                    Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonUnsteadyNSTurbPPEAve> numDiff(*this);
+    Eigen::NumericalDiff<newtonUnsteadyNSTurbPPEAve> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -1350,5 +1350,6 @@ Eigen::MatrixXd ReducedUnsteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
 
     return vel_scal;
 }
+
 // ************************************************************************* //
 

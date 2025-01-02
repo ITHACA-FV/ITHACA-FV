@@ -207,6 +207,7 @@ A significant part of ITHACA-FV has been written either as a by-product for othe
 Beyond this, ITHACA-FV has also been supported by some dedicated projects that have allowed us to work on extensions, documentation, training and dissemination that would otherwise not have been possible. In particular, we acknowledge the following sources of support with great gratitude:
 
 * [H2020 ERC CoG 2015 AROMA-CFD project 681447](https://people.sissa.it/~grozza/aroma-cfd/), P.I. Professor [Gianluigi Rozza](https://people.sissa.it/~grozza) at [SISSA mathLab](https://mathlab.sissa.it/).
+* [Horizon Europe ERC StG 2023 DANTE project 	101115741](https://www.santannapisa.it/it/istituto/biorobotica/dante), P.I. Professor [Giovanni Stabile](https://www.giovannistabile.com) at the [Biorobotics Institute](https://www.santannapisa.it/en/institute/biorobotics) of the [Scuola Superiore Sant'Anna di Pisa](https://www.santannapisa.it/en).
 
 ### 8. License
 **ITHACA-FV** is freely available under the GNU LGPL, version 3.

@@ -46,422 +46,458 @@ SourceFiles
 template <typename... SnapshotsLists>
 class HyperReduction
 {
-public:
-    word methodName;
+    public:
+        word methodName;
 
-    using SnapshotsListTuple = std::tuple<std::decay_t<SnapshotsLists>...>;
-    using FieldsTuple = std::tuple<typename std::decay_t<SnapshotsLists>::value_type ...>;
-    static constexpr auto n_fields = sizeof...(SnapshotsLists);
+        using SnapshotsListTuple = std::tuple<std::decay_t<SnapshotsLists>...>;
+        using FieldsTuple =
+            std::tuple<typename std::decay_t<SnapshotsLists>::value_type ...>;
+        static constexpr auto n_fields = sizeof...(SnapshotsLists);
 
-    // TODO get vectorial dim from class template parameters
-    unsigned int vectorial_dim;
-    unsigned int sumFieldsDim;
+        // TODO get vectorial dim from class template parameters
+        unsigned int vectorial_dim;
+        unsigned int sumFieldsDim;
 
-    template <std::size_t N>
-    using NthFieldListType = typename std::tuple_element<N, SnapshotsListTuple>::type;
+        template <std::size_t N>
+        using NthFieldListType = typename
+                                 std::tuple_element<N, SnapshotsListTuple>::type;
 
-    template <std::size_t N>
-    using NthFieldType = typename NthFieldListType<N>::value_type;
+        template <std::size_t N>
+        using NthFieldType = typename NthFieldListType<N>::value_type;
 
-    //----------------------------------------------------------------------
-    /// @brief      Construct HyperReduction class, interpolation-based.`SnapshotsLists` is a variadic argument of PtrLists of fields e.g. for incompressible Navier-Stokes PtrList<volVectorField>, PtrList<volScalarField> for velocity and pressure.
-    ///
-    /// @param[in]  hrMethod          the chosen HR method
-    /// @param[in]  n_modes           dimension of the HR basis
-    /// @param[in]  n_nodes           number of nodes
-    /// @param[in]  initialSeeds      initial nodes
-    /// @param[in]  problemName       name of the function to be hyper-reduced
-    /// @param[in]  snapshotsLists    lists of fields
-    ///
-    HyperReduction(label n_modes,
-                   label n_nodes,
-                   Eigen::VectorXi initialSeeds,
-                   word problemName,
-                   SnapshotsLists &&...snapshotsLists);
-    
-    //----------------------------------------------------------------------
-    /// @brief      Construct HyperReduction class
-    ///
-    /// @param[in]  n_modes           Dimension of the HR basis
-    /// @param[in]  n_nodes           Number of nodes
-    /// @param[in]  vectorial_dim     Field dimension (1 for volScalarField 3 for volVectorField)
-    /// @param[in]  n_cells           Number of cells
-    /// @param[in]  initialSeeds      Initial nodes
-    /// @param[in]  problemName       Name of the function to be hyper-reduced
-    ///
-    HyperReduction(label n_modes,
-                   label n_nodes,
-                   unsigned int vectorial_dim, 
-                   label n_cells,
-                   Eigen::VectorXi initialSeeds,
-                   word problemName);
-    
-    // ITHACA parameters dict
-    ITHACAparameters* para;
+        //----------------------------------------------------------------------
+        /// @brief      Construct HyperReduction class, interpolation-based.`SnapshotsLists` is a variadic argument of PtrLists of fields e.g. for incompressible Navier-Stokes PtrList<volVectorField>, PtrList<volScalarField> for velocity and pressure.
+        ///
+        /// @param[in]  hrMethod          the chosen HR method
+        /// @param[in]  n_modes           dimension of the HR basis
+        /// @param[in]  n_nodes           number of nodes
+        /// @param[in]  initialSeeds      initial nodes
+        /// @param[in]  problemName       name of the function to be hyper-reduced
+        /// @param[in]  snapshotsLists    lists of fields
+        ///
+        HyperReduction(label n_modes,
+                       label n_nodes,
+                       Eigen::VectorXi initialSeeds,
+                       word problemName,
+                       SnapshotsLists &&...snapshotsLists);
 
-    //TODO
-    label n_boundary_patches;
+        //----------------------------------------------------------------------
+        /// @brief      Construct HyperReduction class
+        ///
+        /// @param[in]  n_modes           Dimension of the HR basis
+        /// @param[in]  n_nodes           Number of nodes
+        /// @param[in]  vectorial_dim     Field dimension (1 for volScalarField 3 for volVectorField)
+        /// @param[in]  n_cells           Number of cells
+        /// @param[in]  initialSeeds      Initial nodes
+        /// @param[in]  problemName       Name of the function to be hyper-reduced
+        ///
+        HyperReduction(label n_modes,
+                       label n_nodes,
+                       unsigned int vectorial_dim,
+                       label n_cells,
+                       Eigen::VectorXi initialSeeds,
+                       word problemName);
 
-    //TODO
-    List<label> n_boundary_cells_list;
+        // ITHACA parameters dict
+        ITHACAparameters* para;
 
-    //TODO
-    label n_boundary_cells;
+        //TODO
+        label n_boundary_patches;
 
-    /// The maximum number of modes to be considered
-    label n_modes;
+        //TODO
+        List<label> n_boundary_cells_list;
 
-    /// The maximum number of modes to be considered
-    label n_nodes;
+        //TODO
+        label n_boundary_cells;
 
-    /// The length of the snapshots lists
-    label n_snapshots;
+        /// The maximum number of modes to be considered
+        label n_modes;
 
-    // Initial nodes
-    Eigen::VectorXi initialSeeds;
+        /// The maximum number of modes to be considered
+        label n_nodes;
 
-    // nodes
-    Eigen::VectorXi nodes;
+        /// The length of the snapshots lists
+        label n_snapshots;
 
-    /// The name of the non-linear function e.g. HR_method/residual
-    word problemName;
+        // Initial nodes
+        Eigen::VectorXi initialSeeds;
 
-    /// The snapshots matrix containing the nonlinear function or operator
-    SnapshotsListTuple snapshotsListTuple;
+        // nodes
+        Eigen::VectorXi nodes;
 
-    /// Names of the fields
-    List<word> fieldNames;
+        /// The name of the non-linear function e.g. HR_method/residual
+        word problemName;
 
-    /// Dimensions of the fields
-    List<unsigned int> fieldDims;
+        /// The snapshots matrix containing the nonlinear function or operator
+        SnapshotsListTuple snapshotsListTuple;
 
-    /// Int Number of Cells;
-    label n_cells;
+        /// Names of the fields
+        List<word> fieldNames;
 
-    /// Int Number of Cells in submeshes;
-    label n_cellsSubfields;
+        /// Dimensions of the fields
+        List<unsigned int> fieldDims;
 
-    /// Nodes in the case of the a nonlinear function
-    autoPtr<IOList<label>> nodePoints;
+        /// Int Number of Cells;
+        label n_cells;
 
-    /// List of label lists of the nodes and corresponding surrounding nodes
-    autoPtr<IOList<labelList>> totalNodePoints;
+        /// Int Number of Cells in submeshes;
+        label n_cellsSubfields;
 
-    /// List of the unique indices of the nodes that define the submesh
-    autoPtr<IOList<label>> uniqueNodePoints;
+        /// Nodes in the case of the a nonlinear function
+        autoPtr<IOList<label>> nodePoints;
 
-    /// Folder for the HR problem
-    word folderProblem;
+        /// List of label lists of the nodes and corresponding surrounding nodes
+        autoPtr<IOList<labelList>> totalNodePoints;
 
-    /// Folder for the selected HR method
-    word folderMethod;
+        /// List of the unique indices of the nodes that define the submesh
+        autoPtr<IOList<label>> uniqueNodePoints;
 
-    /// Indices of the local node points in the subMesh
-    List<label> localNodePoints;
-    
-    // Outputs
-    /// Orthonormal basis of HR
-    Eigen::MatrixXd basisMatrix;
+        /// Folder for the HR problem
+        word folderProblem;
 
-    // Normalizing weights of SVD decomposition
-    Eigen::VectorXd normalizingWeights;
+        /// Folder for the selected HR method
+        word folderMethod;
 
-    /// Renormalized basis of HR
-    Eigen::MatrixXd renormalizedBasisMatrix;
+        /// Indices of the local node points in the subMesh
+        List<label> localNodePoints;
 
-    // TODO
-    Eigen::MatrixXd pinvPU;
+        // Outputs
+        /// Orthonormal basis of HR
+        Eigen::MatrixXd basisMatrix;
 
-    // TODO
-    Eigen::MatrixXd wPU;
+        // Normalizing weights of SVD decomposition
+        Eigen::VectorXd normalizingWeights;
 
-    // TODO
-    Eigen::VectorXd eigenValueseig;
+        /// Renormalized basis of HR
+        Eigen::MatrixXd renormalizedBasisMatrix;
 
-    /// The P matrix of the HyperReduction method. The nodes are ordered in the order of insertion during the greedy procedure. The components related to the same node follow immediately.
-    Eigen::SparseMatrix<double> P;
+        // TODO
+        Eigen::MatrixXd pinvPU;
 
-    // Mask field to submesh
-    Eigen::SparseMatrix<double> field2submesh;
+        // TODO
+        Eigen::MatrixXd wPU;
 
-    // Mask submesh to nodes
-    Eigen::SparseMatrix<double> submesh2nodes;
+        // TODO
+        Eigen::VectorXd eigenValueseig;
 
-    // Indices submesh to nodes
-    Eigen::VectorXi submesh2nodesMask;
+        /// The P matrix of the HyperReduction method. The nodes are ordered in the order of insertion during the greedy procedure. The components related to the same node follow immediately.
+        Eigen::SparseMatrix<double> P;
 
-    /// Quadrature weights. Ordered in the same order of matrix P.
-    Eigen::VectorXd quadratureWeights;
+        // Mask field to submesh
+        Eigen::SparseMatrix<double> field2submesh;
 
-    /// Submesh of the HyperReduction method
-    autoPtr<fvMeshSubset> submesh;
-    
-    /// Submeshes
-    autoPtr<volVectorField> submesh_field;
+        // Mask submesh to nodes
+        Eigen::SparseMatrix<double> submesh2nodes;
 
-    /// Online Matrix
-    Eigen::MatrixXd MatrixOnline;
-    
-    //----------------------------------------------------------------------
-    /// @brief      Methods implemented: 'GappyDEIM'  from "DEIM, Chaturantabut, Saifon, and Danny C. Sorensen. "Nonlinear model reduction via discrete empirical interpolation." SIAM Journal on Scientific Computing 32.5 (2010): 2737-2764" and "GNAT, Carlberg, Kevin, et al. "The GNAT method for nonlinear model reduction: effective implementation and application to computational fluid dynamics and turbulent flows." Journal of Computational Physics 242 (2013): 623-647.". Quasi-optimal point selection algorithm 'SOPT' and optimal point selection 'SOPTE' from "Lauzon, Jessica T., Siu Wun Cheung, Yeonjong Shin, Youngsoo Choi, Dylan Matthew Copeland, and Kevin Huynh. "S-OPT: A Points Selection Algorithm for Hyper-Reduction in Reduced Order Models." arXiv preprint arXiv:2203.16494 (2022).""
-    ///
-    void offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights){
-        methodName = "GappyDEIM";
-        word name = "ITHACAoutput/" + problemName + "/" + methodName;
-        offlineGappyDEIM(snapshotsModes, normalizingWeights, name);
-    }
+        // Indices submesh to nodes
+        Eigen::VectorXi submesh2nodesMask;
 
-    void offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights, word folderMethodName);
+        /// Quadrature weights. Ordered in the same order of matrix P.
+        Eigen::VectorXd quadratureWeights;
 
-    //----------------------------------------------------------------------
-    /// @brief      Methods implemented: 'ECP' from "ECP, Hernandez, Joaquin Alberto, Manuel Alejandro Caicedo, and Alex Ferrer. "Dimensional hyper-reduction of nonlinear finite element models via empirical cubature." Computer methods in applied mechanics and engineering 313 (2017): 687-722.". TODO implement non-negative LS.
-    ///
-    void offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights){
-        methodName = "ECP";
-        word name = "ITHACAoutput/" + problemName + "/" + methodName;
-        offlineECP(snapshotsModes, normalizingWeights, name);
-    }
+        /// Submesh of the HyperReduction method
+        autoPtr<fvMeshSubset> submesh;
 
-    void offlineECP(Eigen::MatrixXd& snapshotsModes, Eigen::VectorXd& normalizingWeights, word folderMethodName);
-    
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    void initSeeds(Eigen::VectorXd mp_not_mask, std::set<label> nodePointsSet);
+        /// Submeshes
+        autoPtr<volVectorField> submesh_field;
 
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    void computeLS(Eigen::MatrixXd& J, Eigen::MatrixXd& JWhole, Eigen::VectorXd& b, Eigen::VectorXd& q);
+        /// Online Matrix
+        Eigen::MatrixXd MatrixOnline;
 
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    void getModesSVD(SnapshotsListTuple &SnapshotsListTuple, Eigen::MatrixXd &modesSVD, Eigen::VectorXd &fieldWeights, bool saveModesFlag = false);
+        //----------------------------------------------------------------------
+        /// @brief      Methods implemented: 'GappyDEIM'  from "DEIM, Chaturantabut, Saifon, and Danny C. Sorensen. "Nonlinear model reduction via discrete empirical interpolation." SIAM Journal on Scientific Computing 32.5 (2010): 2737-2764" and "GNAT, Carlberg, Kevin, et al. "The GNAT method for nonlinear model reduction: effective implementation and application to computational fluid dynamics and turbulent flows." Journal of Computational Physics 242 (2013): 623-647.". Quasi-optimal point selection algorithm 'SOPT' and optimal point selection 'SOPTE' from "Lauzon, Jessica T., Siu Wun Cheung, Yeonjong Shin, Youngsoo Choi, Dylan Matthew Copeland, and Kevin Huynh. "S-OPT: A Points Selection Algorithm for Hyper-Reduction in Reduced Order Models." arXiv preprint arXiv:2203.16494 (2022).""
+        ///
+        void offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes,
+                              Eigen::VectorXd& normalizingWeights)
+        {
+            methodName = "GappyDEIM";
+            word name = "ITHACAoutput/" + problemName + "/" + methodName;
+            offlineGappyDEIM(snapshotsModes, normalizingWeights, name);
+        }
 
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    void getModesSVD(SnapshotsListTuple& snapshotsListTuple, Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights, Eigen::MatrixXd& modesSVDBoundary, Eigen::VectorXd& fieldWeightsBoundary, bool saveModesFlag);
-    
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    void updateNodes(Eigen::SparseMatrix<double>& P, label& ind_max, Eigen::VectorXd& mp_not_mask);
+        void offlineGappyDEIM(Eigen::MatrixXd& snapshotsModes,
+                              Eigen::VectorXd& normalizingWeights, word folderMethodName);
 
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename SnapshotsList>
-    void stackSnapshots(SnapshotsList sList, Eigen::MatrixXd &snapshotsMatrix, Eigen::VectorXd &fieldWeights);
+        //----------------------------------------------------------------------
+        /// @brief      Methods implemented: 'ECP' from "ECP, Hernandez, Joaquin Alberto, Manuel Alejandro Caicedo, and Alex Ferrer. "Dimensional hyper-reduction of nonlinear finite element models via empirical cubature." Computer methods in applied mechanics and engineering 313 (2017): 687-722.". TODO implement non-negative LS.
+        ///
+        void offlineECP(Eigen::MatrixXd& snapshotsModes,
+                        Eigen::VectorXd& normalizingWeights)
+        {
+            methodName = "ECP";
+            word name = "ITHACAoutput/" + problemName + "/" + methodName;
+            offlineECP(snapshotsModes, normalizingWeights, name);
+        }
 
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename SnapshotsList>
-    void stackSnapshotsBoundary(SnapshotsList sList, List<Eigen::MatrixXd>& snapshotsMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
-    
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename SnapshotsList>
-    void saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, unsigned int &rowIndex, unsigned int &modeIndex, word folder);
+        void offlineECP(Eigen::MatrixXd& snapshotsModes,
+                        Eigen::VectorXd& normalizingWeights, word folderMethodName);
 
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename SnapshotsList>
-    void saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix, Eigen::MatrixXd& snapshotsMatrixBoundary, unsigned int &rowIndex,  unsigned int& rowIndexBoundary, unsigned int &modeIndex, word folder);
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        void initSeeds(Eigen::VectorXd mp_not_mask, std::set<label> nodePointsSet);
 
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename SnapshotsList>
-    void stackNames(SnapshotsList sList){
-        fieldNames.append(sList[0].name());
-    }
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        void computeLS(Eigen::MatrixXd& J, Eigen::MatrixXd& JWhole, Eigen::VectorXd& b,
+                       Eigen::VectorXd& q);
 
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename SnapshotsList>
-    inline void stackDimensions(SnapshotsList sList){
-        fieldDims.append(get_field_dim<typename SnapshotsList::value_type>());}
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        void getModesSVD(SnapshotsListTuple& SnapshotsListTuple,
+                         Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights,
+                         bool saveModesFlag = false);
 
-    //----------------------------------------------------------------------
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename SnapshotsList>
-    inline void sumDimensions(double sum, SnapshotsList sList){
-        sum+=get_field_dim<typename SnapshotsList::value_type>();}
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        void getModesSVD(SnapshotsListTuple& snapshotsListTuple,
+                         Eigen::MatrixXd& modesSVD, Eigen::VectorXd& fieldWeights,
+                         Eigen::MatrixXd& modesSVDBoundary, Eigen::VectorXd& fieldWeightsBoundary,
+                         bool saveModesFlag);
 
-    //----------------------------------------------------------------------
-    /// @brief      Compute the pseudo-inverse of the matrix M restricted with the projector P
-    ///
-    /// @param[in]  Projector  projector into interpolation nodes
-    /// @param[in]  Modes      matrix to restrict and invert
-    ///
-    void evaluatePinv(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd& fieldWeights);
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        void updateNodes(Eigen::SparseMatrix<double> & P, label& ind_max,
+                         Eigen::VectorXd& mp_not_mask);
 
-     //----------------------------------------------------------------------
-    /// @brief      Compute the pseudo-inverse of the matrix M restricted with the projector P
-    ///
-    /// @param[in]  Projector  projector into interpolation nodes
-    /// @param[in]  Modes      matrix to restrict and invert
-    ///
-    void evaluateWPU(Eigen::SparseMatrix<double> &Projector, Eigen::MatrixXd &Modes, Eigen::VectorXd& fieldWeights, Eigen::VectorXd& quadratureWeights);
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename SnapshotsList>
+        void stackSnapshots(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix,
+                            Eigen::VectorXd& fieldWeights);
 
-    //----------------------------------------------------------------------
-    /// @brief      Compute the submesh common to all fields in SnapshotsLists
-    ///
-    /// @param[in]  layers          projector into interpolation nodes
-    /// @param[in]  mesh            matrix to restrict and invert
-    ///
-    void generateSubmesh(label layers, const fvMesh &mesh);
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename SnapshotsList>
+        void stackSnapshotsBoundary(SnapshotsList sList,
+                                    List<Eigen::MatrixXd> & snapshotsMatrixBoundary,
+                                    List<Eigen::VectorXd> & fieldWeightsBoundary);
 
-    //----------------------------------------------------------------------
-    /// @brief      Get local indices in the submesh from indices in the global ones
-    ///
-    /// @param      points       The points
-    /// @param      submesh      The submesh
-    ///
-    /// @return     The local indices
-    ///
-    List<label> global2local(List<label> &points, fvMeshSubset &submesh);
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename SnapshotsList>
+        void saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix,
+                       unsigned int& rowIndex, unsigned int& modeIndex, word folder);
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename FieldType>
-    inline autoPtr<FieldType> interpolateField(const FieldType &field)
-    {
-        return autoPtr<FieldType>(new FieldType(submesh->interpolate(field)));
-    }
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename SnapshotsList>
+        void saveModes(SnapshotsList sList, Eigen::MatrixXd& snapshotsMatrix,
+                       Eigen::MatrixXd& snapshotsMatrixBoundary, unsigned int& rowIndex,
+                       unsigned int& rowIndexBoundary, unsigned int& modeIndex, word folder);
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    // TODO expand with sphericalTensor, symmTensor, tensor
-    template <typename Field>
-    inline constexpr unsigned int get_field_dim()
-    {
-        return std::is_same<Field, volScalarField>::value ? 1 : 3;
-    }
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename SnapshotsList>
+        void stackNames(SnapshotsList sList)
+        {
+            fieldNames.append(sList[0].name());
+        }
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename LastList>
-    inline constexpr unsigned int compute_vectorial_dim(LastList x) { return get_field_dim<typename std::decay_t<LastList>::value_type>(); }
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename SnapshotsList>
+        inline void stackDimensions(SnapshotsList sList)
+        {
+            fieldDims.append(get_field_dim<typename SnapshotsList::value_type>());
+        }
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename List, typename... RemainingLists>
-    inline constexpr unsigned int compute_vectorial_dim(List &&head, RemainingLists &&...tail)
-    {
-        return get_field_dim<typename std::decay_t<List>::value_type>() + compute_vectorial_dim<RemainingLists...>(tail...);
-    }
+        //----------------------------------------------------------------------
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename SnapshotsList>
+        inline void sumDimensions(double sum, SnapshotsList sList)
+        {
+            sum += get_field_dim<typename SnapshotsList::value_type>();
+        }
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    static inline double s_optimality(Eigen::MatrixXd& A)
-    {   
-        return std::pow(
-            std::sqrt((A.transpose()*A).determinant())/\
-            A.colwise().lpNorm<2>().prod(),
-            1.0/A.cols());
-    }
+        //----------------------------------------------------------------------
+        /// @brief      Compute the pseudo-inverse of the matrix M restricted with the projector P
+        ///
+        /// @param[in]  Projector  projector into interpolation nodes
+        /// @param[in]  Modes      matrix to restrict and invert
+        ///
+        void evaluatePinv(Eigen::SparseMatrix<double> & Projector,
+                          Eigen::MatrixXd& Modes, Eigen::VectorXd& fieldWeights);
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    template <typename... FieldsArgs>
-    void eigen2fields(Eigen::VectorXd& eFields, FieldsArgs&&... oFields)
-    {   
-        unsigned int cumulativeSize{0}, ith_field{0};
-        
-        ([&](auto& oFieldsArg)
+        //----------------------------------------------------------------------
+        /// @brief      Compute the pseudo-inverse of the matrix M restricted with the projector P
+        ///
+        /// @param[in]  Projector  projector into interpolation nodes
+        /// @param[in]  Modes      matrix to restrict and invert
+        ///
+        void evaluateWPU(Eigen::SparseMatrix<double> & Projector,
+                         Eigen::MatrixXd& Modes, Eigen::VectorXd& fieldWeights,
+                         Eigen::VectorXd& quadratureWeights);
+
+        //----------------------------------------------------------------------
+        /// @brief      Compute the submesh common to all fields in SnapshotsLists
+        ///
+        /// @param[in]  layers          projector into interpolation nodes
+        /// @param[in]  mesh            matrix to restrict and invert
+        ///
+        void generateSubmesh(label layers, const fvMesh& mesh);
+
+        //----------------------------------------------------------------------
+        /// @brief      Get local indices in the submesh from indices in the global ones
+        ///
+        /// @param      points       The points
+        /// @param      submesh      The submesh
+        ///
+        /// @return     The local indices
+        ///
+        List<label> global2local(List<label> & points, fvMeshSubset& submesh);
+
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename FieldType>
+        inline autoPtr<FieldType> interpolateField(const FieldType& field)
+        {
+            return autoPtr<FieldType>(new FieldType(submesh->interpolate(field)));
+        }
+
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        // TODO expand with sphericalTensor, symmTensor, tensor
+        template <typename Field>
+        inline constexpr unsigned int get_field_dim()
+        {
+            return std::is_same<Field, volScalarField>::value ? 1 : 3;
+        }
+
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename LastList>
+        inline constexpr unsigned int compute_vectorial_dim(LastList x)
+        {
+            return get_field_dim<typename std::decay_t<LastList>::value_type>();
+        }
+
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename List, typename... RemainingLists>
+        inline constexpr unsigned int compute_vectorial_dim(List &&head,
+                RemainingLists &&...tail)
+        {
+            return get_field_dim<typename std::decay_t<List>::value_type>() +
+                   compute_vectorial_dim<RemainingLists...>(tail...);
+        }
+
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        static inline double s_optimality(Eigen::MatrixXd& A)
+        {
+            return std::pow(
+                       std::sqrt((A.transpose() * A).determinant()) / \
+                       A.colwise().lpNorm<2>().prod(),
+                       1.0 / A.cols());
+        }
+
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        template <typename... FieldsArgs>
+        void eigen2fields(Eigen::VectorXd& eFields, FieldsArgs&&... oFields)
+        {
+            unsigned int cumulativeSize{0}, ith_field{0};
+            ([ & ](auto& oFieldsArg)
             {
-                double ith_fieldSize = fieldDims[ith_field]*oFieldsArg.size();
+                double ith_fieldSize = fieldDims[ith_field] * oFieldsArg.size();
                 Eigen::VectorXd vec = eFields.segment(cumulativeSize, ith_fieldSize);
                 oFieldsArg = Foam2Eigen::Eigen2field(oFieldsArg, vec);
-                cumulativeSize+=ith_fieldSize;
+                cumulativeSize += ith_fieldSize;
                 ith_field++;
-            }(oFields), ...);
+            }
 
-    }
+            (oFields), ...);
+        }
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    void initReshapeMat(Eigen::SparseMatrix<double> &reshapeMat);
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        void initReshapeMat(Eigen::SparseMatrix<double> & reshapeMat);
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    void createMasks(bool offlineStage = true);
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        void createMasks(bool offlineStage = true);
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    void getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights);
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        void getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights);
 
-    /// @brief      TODO
-    ///
-    /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
-    /// @param[in]  sList  The list of snapshots
-    ///
-    void getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights, List<Eigen::MatrixXd>& snapMatrixBoundary, List<Eigen::VectorXd>& fieldWeightsBoundary);
+        /// @brief      TODO
+        ///
+        /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
+        /// @param[in]  sList  The list of snapshots
+        ///
+        void getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights,
+                           List<Eigen::MatrixXd> & snapMatrixBoundary,
+                           List<Eigen::VectorXd> & fieldWeightsBoundary);
 };
 
 #endif
