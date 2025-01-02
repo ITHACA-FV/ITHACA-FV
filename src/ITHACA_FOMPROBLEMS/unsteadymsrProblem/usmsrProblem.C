@@ -142,8 +142,8 @@ void usmsrProblem::truthSolve(List<scalar> mu_now)
     volScalarField& alphat = _alphat();
     volScalarField& difft = _difft();
     dimensionedScalar& tau = _tau();
-    volScalarField powerDens = ((1 - decbetaTot) * flux * SP +
-                                (decLam1 * dec1 + decLam2 * dec2 + decLam3 * dec3)).ref();
+    volScalarField powerDens = ((1 - decbetaTot) * flux* SP +
+                                (decLam1* dec1 + decLam2* dec2 + decLam3* dec3)).ref();
     powerDens.rename("powerDens");
     para = ITHACAparameters::getInstance(mesh, runTime);
     startTime = para->ITHACAdict->lookupOrDefault("startTime", 0);
@@ -202,8 +202,8 @@ void usmsrProblem::truthSolve(List<scalar> mu_now)
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
              << "  ClockTime = " << runTime.elapsedClockTime() << " s"
              << nl << endl;
-        powerDens = (1 - decbetaTot) * flux * SP + (decLam1 * dec1 + decLam2 * dec2 +
-                    decLam3 * dec3);
+        powerDens = (1 - decbetaTot) * flux* SP + (decLam1* dec1 + decLam2* dec2 +
+                    decLam3* dec3);
 
         if (checkWrite(runTime))
         {
@@ -296,7 +296,7 @@ void usmsrProblem::truthSolve(List<scalar> mu_now)
         mu.resize(1, 1);
     }
 
-    if (mu_samples.rows() == nsnapshots * mu.cols())
+    if (mu_samples.rows() == nsnapshots* mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
                                    "./ITHACAoutput/Offline");
@@ -406,8 +406,8 @@ void usmsrProblem::truthSolve(List<scalar> mu_now, std::string folder)
     volScalarField& logT = _logT();
     volScalarField& alphat = _alphat();
     volScalarField& difft = _difft();
-    volScalarField powerDens = ((1 - decbetaTot) * flux * SP +
-                                (decLam1 * dec1 + decLam2 * dec2 + decLam3 * dec3)).ref();
+    volScalarField powerDens = ((1 - decbetaTot) * flux* SP +
+                                (decLam1* dec1 + decLam2* dec2 + decLam3* dec3)).ref();
     powerDens.rename("powerDens");
     dimensionedScalar& tau = _tau();
     para = ITHACAparameters::getInstance(mesh, runTime);
@@ -467,8 +467,8 @@ void usmsrProblem::truthSolve(List<scalar> mu_now, std::string folder)
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
              << "  ClockTime = " << runTime.elapsedClockTime() << " s"
              << nl << endl;
-        powerDens = (1 - decbetaTot) * flux * SP + (decLam1 * dec1 + decLam2 * dec2 +
-                    decLam3 * dec3);
+        powerDens = (1 - decbetaTot) * flux* SP + (decLam1* dec1 + decLam2* dec2 +
+                    decLam3* dec3);
 
         if (checkWrite(runTime))
         {
@@ -606,35 +606,35 @@ void usmsrProblem::computePrecsBC(label call)
     bc_prec(0, call) = gSum(prec1.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam1.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(1, call) = gSum(prec2.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam2.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(2, call) = gSum(prec3.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam3.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(3, call) = gSum(prec4.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam4.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(4, call) = gSum(prec5.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam5.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(5, call) = gSum(prec6.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam6.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(6, call) = gSum(prec7.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam7.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(7, call) = gSum(prec8.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam8.value() *
-                                   tau.value());
+                               tau.value());
 }
 
 void usmsrProblem::assignPrecsBC(label call, label Ntau)

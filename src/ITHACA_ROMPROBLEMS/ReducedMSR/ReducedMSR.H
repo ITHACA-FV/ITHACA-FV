@@ -39,13 +39,15 @@ struct newton_msr_fd: public newton_argument<double>
 {
     public:
         newton_msr_fd() {}
+
         newton_msr_fd(int Nx, int Ny, msrProblem& problem) :
             newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows())
         {}
+
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
 
@@ -63,9 +65,10 @@ struct newton_msr_n: public newton_argument<double>
 {
     public:
         newton_msr_n() {}
+
         newton_msr_n(int Nx, int Ny, msrProblem& problem) :
             newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_flux(problem.NFluxmodes),
             Nphi_prec1(problem.NPrecmodes(0)),
             Nphi_prec2(problem.NPrecmodes(1)),
@@ -80,6 +83,7 @@ struct newton_msr_n: public newton_argument<double>
             nsf_c(problem.NCmodes),
             a_c(problem.NCmodes)
         {}
+
         int operator()(const Eigen::VectorXd& n, Eigen::VectorXd& fvecn) const;
         int df(const Eigen::VectorXd& n,  Eigen::MatrixXd& fjacn) const;
 
@@ -131,9 +135,10 @@ struct newton_msr_t: public newton_argument<double>
 {
     public:
         newton_msr_t() {}
+
         newton_msr_t(int Nx, int Ny, msrProblem& problem) :
             newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_T(problem.NTmodes),
             Nphi_dec1(problem.NDecmodes(0)),
             Nphi_dec2(problem.NDecmodes(1)),
@@ -144,6 +149,7 @@ struct newton_msr_t: public newton_argument<double>
             sp_c(problem.NCmodes),
             txs_c(problem.NCmodes)
         {}
+
         int operator()(const Eigen::VectorXd& n, Eigen::VectorXd& fvecn) const;
         int df(const Eigen::VectorXd& n,  Eigen::MatrixXd& fjacn) const;
 

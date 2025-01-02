@@ -404,7 +404,8 @@ class steadyNS: public reductionProblem
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
         ///
-        Eigen::MatrixXd diffusive_term_sym(label NUmodes, label NPmodes, label NSUPmodes);
+        Eigen::MatrixXd diffusive_term_sym(label NUmodes, label NPmodes,
+                                           label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// Gradient of pressure

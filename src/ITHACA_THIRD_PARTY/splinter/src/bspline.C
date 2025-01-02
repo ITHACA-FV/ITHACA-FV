@@ -116,7 +116,7 @@ DenseMatrix BSpline::evalHessian(DenseVector x) const
     DenseMatrix identity = DenseMatrix::Identity(numVariables, numVariables);
     DenseMatrix caug = kroneckerProduct(identity, coefficients.transpose());
     DenseMatrix DB = basis.evalBasisHessian(x);
-    H = caug * DB;
+    H = caug* DB;
 
     // Fill in upper triangular of Hessian
     for (size_t i = 0; i < numVariables; ++i)
@@ -230,8 +230,8 @@ void BSpline::updateControlPoints(const DenseMatrix& A)
         throw Exception("BSpline::updateControlPoints: Incompatible size of linear transformation matrix.");
     }
 
-    coefficients = A * coefficients;
-    knotaverages = A * knotaverages;
+    coefficients = A* coefficients;
+    knotaverages = A* knotaverages;
 }
 
 void BSpline::checkControlPoints() const
@@ -396,8 +396,8 @@ void BSpline::insertKnots(double tau, unsigned int dim,
     updateControlPoints(A);
 }
 
-void BSpline::regularizeKnotVectors(std::vector<double>& lb,
-                                    std::vector<double>& ub)
+void BSpline::regularizeKnotVectors(std::vector<double> & lb,
+                                    std::vector<double> & ub)
 {
     // Add and remove controlpoints and knots to make the b-spline p-regular with support [lb, ub]
     if (!(lb.size() == numVariables && ub.size() == numVariables))
@@ -432,8 +432,8 @@ void BSpline::regularizeKnotVectors(std::vector<double>& lb,
     }
 }
 
-bool BSpline::removeUnsupportedBasisFunctions(std::vector<double>& lb,
-        std::vector<double>& ub)
+bool BSpline::removeUnsupportedBasisFunctions(std::vector<double> & lb,
+        std::vector<double> & ub)
 {
     if (lb.size() != numVariables || ub.size() != numVariables)
     {
@@ -455,14 +455,14 @@ bool BSpline::removeUnsupportedBasisFunctions(std::vector<double>& lb,
 void BSpline::save(const std::string& fileName) const
 {
     Serializer s;
-    s.serialize(*this);
+    s.serialize( * this);
     s.saveToFile(fileName);
 }
 
 void BSpline::load(const std::string& fileName)
 {
     Serializer s(fileName);
-    s.deserialize(*this);
+    s.deserialize( * this);
 }
 
 std::string BSpline::getDescription() const

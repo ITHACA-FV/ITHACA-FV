@@ -217,11 +217,11 @@ int main(int argc, char *argv[])
 
         if (field_type == "vector")
         {
-            ITHACAPOD::getModes(Vfield, Vmodes, field_name, 0, 0, 0, nmodes);
+            ITHACAPOD::getModes(Vfield, Vmodes, field_name, 0, 0, 0, nmodes, para->correctBC);
         }
         if (field_type == "scalar")
         {
-            ITHACAPOD::getModes(Sfield, Smodes, field_name, 0, 0, 0, nmodes);
+            ITHACAPOD::getModes(Sfield, Smodes, field_name, 0, 0, 0, nmodes, para->correctBC);
         }
 
         Vfield.clear();

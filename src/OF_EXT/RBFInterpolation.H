@@ -77,7 +77,7 @@ namespace Foam
                         Class RBFInterpolation Declaration
 \*---------------------------------------------------------------------------*/
 
-SquareMatrix<double> EigenInvert(SquareMatrix<double>& A);
+SquareMatrix<double> EigenInvert(SquareMatrix<double> & A);
 
 class RBFInterpolation
 {
@@ -161,7 +161,7 @@ class RBFInterpolation
 
         //- Interpolate
         template<class Type>
-        tmp<Field<Type>> interpolate(const Field<Type>& ctrlField) const;
+        tmp<Field<Type>> interpolate(const Field<Type> & ctrlField) const;
 
         //- Move points
         void movePoints();
