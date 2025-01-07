@@ -451,7 +451,7 @@ Eigen::MatrixXd readMatrix(word filename)
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-GeometricField<Type, PatchField, GeoMesh> ITHACAstream::readFieldByIndex(
+GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
     const GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename,
     label index)
@@ -1163,31 +1163,31 @@ template void load(List<Eigen::SparseMatrix<double>> & MatrixList, word folder,
 
 
 template GeometricField<scalar, fvPatchField, volMesh>
-ITHACAstream::readFieldByIndex(
+readFieldByIndex(
     const GeometricField<scalar, fvPatchField, volMesh>&,
     fileName,
     label);
 
 template GeometricField<vector, fvPatchField, volMesh>
-ITHACAstream::readFieldByIndex(
+readFieldByIndex(
     const GeometricField<vector, fvPatchField, volMesh>&,
     fileName,
     label);
 
 template GeometricField<tensor, fvPatchField, volMesh>
-ITHACAstream::readFieldByIndex(
+readFieldByIndex(
     const GeometricField<tensor, fvPatchField, volMesh>&,
     fileName,
     label);
 
 template GeometricField<scalar, fvsPatchField, surfaceMesh>
-ITHACAstream::readFieldByIndex(
+readFieldByIndex(
     const GeometricField<scalar, fvsPatchField, surfaceMesh>&,
     fileName,
     label);
 
 template GeometricField<vector, fvsPatchField, surfaceMesh>
-ITHACAstream::readFieldByIndex(
+readFieldByIndex(
     const GeometricField<vector, fvsPatchField, surfaceMesh>&,
     fileName,
     label);
