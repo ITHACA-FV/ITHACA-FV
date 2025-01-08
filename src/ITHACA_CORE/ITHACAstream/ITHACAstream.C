@@ -451,6 +451,68 @@ Eigen::MatrixXd readMatrix(word filename)
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
+    const GeometricField<Type, PatchField, GeoMesh>& field,
+    fileName casename,
+    label index)
+{
+    if (!Pstream::parRun())
+    {
+        fileName rootpath(".");
+        Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
+
+        if (index >= runTime2.times().size() - 2)
+        {
+            FatalError
+                << "Error: Index " << index << " is out of range. "
+                << "Maximum available index is " << runTime2.times().size() - 3
+                << exit(FatalError);
+        }
+
+        return GeometricField<Type, PatchField, GeoMesh>
+        (
+            IOobject
+            (
+                field.name(),
+                casename + runTime2.times()[index + 2].name(),
+                field.mesh(),
+                IOobject::MUST_READ
+            ),
+            field.mesh()
+        );
+    }
+    else
+    {
+        word timename(field.mesh().time().rootPath() + "/" +
+                     field.mesh().time().caseName());
+        timename = timename.substr(0, timename.find_last_of("\\/"));
+        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
+
+        int last_s = numberOfFiles(casename,
+                                 "processor" + name(Pstream::myProcNo()) + "/");
+        if (index >= last_s - 1)
+        {
+            FatalError
+                << "Error: Index " << index << " is out of range. "
+                << "Maximum available index is " << last_s - 2
+                << exit(FatalError);
+        }
+
+        return GeometricField<Type, PatchField, GeoMesh>
+        (
+            IOobject
+            (
+                field.name(),
+                timename + "/" + name(index + 1),
+                field.mesh(),
+                IOobject::MUST_READ
+            ),
+            field.mesh()
+        );
+    }
+}
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 void read_fields(
     PtrList<GeometricField<Type, PatchField, GeoMesh>> & Lfield, word Name,
     fileName casename, int first_snap, int n_snap)
@@ -1098,5 +1160,36 @@ template void save(const List<Eigen::SparseMatrix<double>> & MatrixList,
 
 template void load(List<Eigen::SparseMatrix<double>> & MatrixList, word folder,
                    word MatrixName);
+
+
+template GeometricField<scalar, fvPatchField, volMesh>
+readFieldByIndex(
+    const GeometricField<scalar, fvPatchField, volMesh>&,
+    fileName,
+    label);
+
+template GeometricField<vector, fvPatchField, volMesh>
+readFieldByIndex(
+    const GeometricField<vector, fvPatchField, volMesh>&,
+    fileName,
+    label);
+
+template GeometricField<tensor, fvPatchField, volMesh>
+readFieldByIndex(
+    const GeometricField<tensor, fvPatchField, volMesh>&,
+    fileName,
+    label);
+
+template GeometricField<scalar, fvsPatchField, surfaceMesh>
+readFieldByIndex(
+    const GeometricField<scalar, fvsPatchField, surfaceMesh>&,
+    fileName,
+    label);
+
+template GeometricField<vector, fvsPatchField, surfaceMesh>
+readFieldByIndex(
+    const GeometricField<vector, fvsPatchField, surfaceMesh>&,
+    fileName,
+    label);
 
 }

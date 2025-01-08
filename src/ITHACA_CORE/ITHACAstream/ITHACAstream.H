@@ -521,6 +521,26 @@ template<typename T>
 void load(List<Eigen::SparseMatrix<T>> & MatrixList, word folder,
           word MatrixName);
 
+//--------------------------------------------------------------------------
+/// Function to read a single field by index from a folder
+///
+/// @param[in]  field      The field template to use for reading
+/// @param[in]  casename   The folder where the field is stored
+/// @param[in]  index      The index of the field to read
+///
+/// @return     The read field
+///
+/// @tparam     Type        vector or scalar
+/// @tparam     PatchField  fvPatchField or fvsPatchField
+/// @tparam     GeoMesh     volMesh or surfaceMesh
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
+    const GeometricField<Type, PatchField, GeoMesh>& field,
+    fileName casename,
+    label index
+);
+
 };
 
 namespace Foam
