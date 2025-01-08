@@ -354,6 +354,64 @@ void getModes(PtrList<Field_type> & snapshots, PtrList<Field_type> & modes,
               bool sup = 0,
               label nmodes = 0);
 
+//------------------------------------------------------------------------------
+/// @brief      Gets the modes in a memory-efficient manner
+///
+/// @param[in]  templateField  The template field
+/// @param[in]  snapshotsPath  The path to the snapshots
+/// @param[out] modes         The modes
+/// @param[in]  fieldName      The field name
+/// @param[in]  podex          If 1, the functions read the stored mode. If 0, the
+///                            function computes the modes and stores them.
+/// @param[in]  supex         If 1, the functions read the stored supremizer mode.
+///                            If 0, the function computes and stores them.
+/// @param[in]  sup            If 1, it computes the supremizer modes.
+/// @param[in]  nmodes         Number of modes to be stored. If 0, the maximum
+///                            number of modes will computed.
+/// @param[in]  correctBC      If true, correct the boundary conditions.
+///
+/// @tparam     Type           The type of the field
+/// @tparam     PatchField     The patch field type
+/// @tparam     GeoMesh        The mesh type
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+static void getModesMemoryEfficient(
+    GeometricField<Type, PatchField, GeoMesh>& templateField,
+    word snapshotsPath,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    word fieldName,
+    bool podex = false,
+    bool supex = false,
+    bool sup = false,
+    label nmodes = 0,
+    bool correctBC = true);
+
+//------------------------------------------------------------------------------
+/// @brief      Helper function to compute inner product value for different field types
+///
+/// @param[in]  field1  First field
+/// @param[in]  field2  Second field
+///
+/// @return     Inner product value as scalar
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+scalar computeInnerProduct(
+    const GeometricField<Type, PatchField, GeoMesh>& field1,
+    const GeometricField<Type, PatchField, GeoMesh>& field2);
+
+//------------------------------------------------------------------------------
+/// @brief      Helper function to compute Frobenius norm inner product
+///
+/// @param[in]  field1  First field
+/// @param[in]  field2  Second field
+///
+/// @return     Inner product value as scalar
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+scalar computeFrobeniusInnerProduct(
+    const GeometricField<Type, PatchField, GeoMesh>& field1,
+    const GeometricField<Type, PatchField, GeoMesh>& field2);
+
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
