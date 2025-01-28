@@ -78,7 +78,7 @@ _E = autoPtr<volScalarField>
          new volScalarField(thermo.he())
      );
 
-volScalarField E0(_E);
+volScalarField E0(_E());
 
 _E0 = autoPtr<volScalarField>
       (
