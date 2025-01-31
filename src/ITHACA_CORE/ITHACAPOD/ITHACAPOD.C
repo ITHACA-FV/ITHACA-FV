@@ -334,7 +334,8 @@ void getModesMemoryEfficient(
     bool supex,
     bool sup,
     label nmodes,
-    bool correctBC)
+    bool correctBC,
+    autoPtr<GeometricField<Type, PatchField, GeoMesh>> meanField)
 {
     // Get parameters instance for POD settings
     ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -405,6 +406,12 @@ void getModesMemoryEfficient(
             GeometricField<Type, PatchField, GeoMesh> snapI = 
                 ITHACAstream::readFieldByIndex(templateField, snapshotsPath, i);
 
+            // Substract mean field if provided
+            if (meanField)
+            {
+                snapI -= *meanField;
+            }
+
             // Store boundary field data for snapshot i
             List<Eigen::VectorXd> snapIBC = Foam2Eigen::field2EigenBC(snapI);
             for (label k = 0; k < NBC; k++)
@@ -417,6 +424,12 @@ void getModesMemoryEfficient(
             {
                 GeometricField<Type, PatchField, GeoMesh> snapJ = 
                     ITHACAstream::readFieldByIndex(templateField, snapshotsPath, j);
+
+                // Subtract mean field if provided
+                if (meanField)
+                {
+                    snapJ -= *meanField;
+                }
 
                 // Calculate correlation using specified norm
                 if (PODnorm == "L2")
@@ -493,12 +506,12 @@ void getModesMemoryEfficient(
         // Construct POD modes
         modes.resize(nmodes);
         
-        for (label i = 0; i < nmodes; i++)
-        {
-            // Read first snapshot to get boundary conditions
-            GeometricField<Type, PatchField, GeoMesh> firstSnap = 
-                ITHACAstream::readFieldByIndex(templateField, snapshotsPath, 0);
+        // Read first snapshot to get boundary conditions
+        GeometricField<Type, PatchField, GeoMesh> firstSnap = 
+            ITHACAstream::readFieldByIndex(templateField, snapshotsPath, 0);
                 
+        for (label i = 0; i < nmodes; i++)
+        {                
             // Initialize mode with proper dimensions and boundary conditions
             GeometricField<Type, PatchField, GeoMesh> modeI
             (
@@ -599,7 +612,7 @@ void getModesMemoryEfficient(
     }
 }
 
-template void getModesMemoryEfficient<scalar, fvPatchField, volMesh>
+template void getModesMemoryEfficient
 (
     GeometricField<scalar, fvPatchField, volMesh>&,
     word,
@@ -609,11 +622,12 @@ template void getModesMemoryEfficient<scalar, fvPatchField, volMesh>
     bool,
     bool,
     label,
-    bool
+    bool,
+    autoPtr<GeometricField<scalar, fvPatchField, volMesh>>
 );
 
 
-template void getModesMemoryEfficient<vector, fvPatchField, volMesh>
+template void getModesMemoryEfficient
 (
     GeometricField<vector, fvPatchField, volMesh>&,
     word,
@@ -623,9 +637,63 @@ template void getModesMemoryEfficient<vector, fvPatchField, volMesh>
     bool,
     bool,
     label,
+    bool,
+    autoPtr<GeometricField<vector, fvPatchField, volMesh>>
+);
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void getMeanMemoryEfficient(
+    GeometricField<Type, PatchField, GeoMesh>& templateField,
+    word snapshotsPath,
+    autoPtr<GeometricField<Type, PatchField, GeoMesh>>& meanField,
+    bool meanex)
+    {
+        // Count number of snapshots in directory (excluding 0/ and constant/)
+        fileName rootPath(".");
+        Foam::Time runTime2(Foam::Time::controlDictName, rootPath, snapshotsPath);
+        label nSnaps = runTime2.times().size() - 2;
+        std::cout << "Found " << nSnaps << " time directories" << endl;
+                        
+        // Compute mean field
+        if(!meanex)
+        {
+            Info << "Computing the mean of snapshots" << endl;
+            // Initialize mean field to zero
+            *meanField = templateField*0.;
+
+            for(int i=0; i<nSnaps; i++)
+            {
+                // Read snapshot i
+                GeometricField<Type, PatchField, GeoMesh> snapI = ITHACAstream::readFieldByIndex(templateField, snapshotsPath, i);
+
+                // Sum the snapshots
+                *meanField += snapI;
+            }
+            *meanField *= 1./nSnaps;
+            ITHACAstream::exportSolution(*meanField, "ITHACAoutput", "mean");
+        }
+        else
+        {
+            Info << "Reading the mean of snapshots" << endl;
+            ITHACAstream::readFieldByIndex(templateField, "ITHACAoutput/mean/", 0);
+        }
+    }
+
+template void getMeanMemoryEfficient
+(
+    GeometricField<scalar, fvPatchField, volMesh>&,
+    word snapshotsPath,
+    autoPtr<GeometricField<scalar, fvPatchField, volMesh>>&,
     bool
 );
 
+template void getMeanMemoryEfficient
+(
+    GeometricField<vector, fvPatchField, volMesh>&,
+    word snapshotsPath,
+    autoPtr<GeometricField<vector, fvPatchField, volMesh>>&,
+    bool
+);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getWeightedModes(
