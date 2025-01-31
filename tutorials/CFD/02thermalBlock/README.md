@@ -6,11 +6,10 @@ The problem equation is
 $$\nabla \cdot (k \nabla T) = S$$
 
 where *k* is the diffusivity, *T* is the temperature and *S* is the source term. The problem discretised and formalized in matrix equation reads:
-<center>
-<img src="https://render.githubusercontent.com/render/math?math=AT = S">
-</center>
 
-where *A* is the matrix of interpolation coefficients, *T*  is the vector of unknowns and *S* is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
+$$AT = S$$
+
+where $A$ is the matrix of interpolation coefficients, *T*  is the vector of unknowns and *S* is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
 
 ![drawing](../../../docs/images/drawing.png)
 
