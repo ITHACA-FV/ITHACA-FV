@@ -37,6 +37,9 @@ EXE_LIBS = \
     -lmeshTools \
     -lfvOptions \
     -lsampling \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lfluidThermophysicalModels \
     -lradiationModels \
     -lspecie \
