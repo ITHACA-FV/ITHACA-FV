@@ -489,3 +489,4 @@ void Modes<Type, PatchField, GeoMesh>::operator=(const
 template class Modes<scalar, fvPatchField, volMesh>;
 template class Modes<vector, fvPatchField, volMesh>;
 template class Modes<scalar, fvsPatchField, surfaceMesh>;
+template class Modes<vector, pointPatchField, pointMesh>;
