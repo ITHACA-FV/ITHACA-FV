@@ -221,7 +221,8 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     Out.resize(size);
 
     constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value || std::is_same<surfaceMesh, GeoMesh>::value;
-    if  constexpr(check_vol){
+    if  constexpr(check_vol)
+    {
         for (label i = 0; i < size; i++ )
         {
             label sizei = field.boundaryField()[i].size();
@@ -236,7 +237,8 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
         }
     }
 
-    else if  constexpr(std::is_same<pointMesh, GeoMesh>::value){
+    else if  constexpr(std::is_same<pointMesh, GeoMesh>::value)
+   {
         for (label i = 0; i < size; i++ )
         {
             label sizei = field.boundaryField()[i].size();
@@ -247,11 +249,8 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
                 Out[i](k) = field.boundaryField()[i].patchInternalField()()[k][0];
                 Out[i](k + sizei) = field.boundaryField()[i].patchInternalField()()[k][1];
                 Out[i](k + 2 * sizei) = field.boundaryField()[i].patchInternalField()()[k][2];
-            for (label j = 0; j < 3; j++)
-            {
-                Out[i](k + j* sizei) = field.boundaryField()[i][k][j];
-            }
-        }
+             }
+         }
     }
 
     return Out;
