@@ -92,6 +92,8 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(
 
     return out;
 }
+template Eigen::VectorXd Foam2Eigen::field2Eigen(
+    volScalarField& field);
 
 template <template <class> class PatchField, class GeoMesh>
 Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
