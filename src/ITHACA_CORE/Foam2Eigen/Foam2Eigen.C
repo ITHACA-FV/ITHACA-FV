@@ -209,8 +209,6 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     return Out;
 }
 
-template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    volTensorField& field);
 
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
@@ -257,9 +255,6 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     return Out;
 }
 
-template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    volVectorField& field);
-
 
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
@@ -285,6 +280,10 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 
 template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     volScalarField& field);
+template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    volVectorField& field);
+template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    volTensorField& field);
 
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
@@ -328,11 +327,6 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
 
     return Out;
 }
-
-template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<volScalarField> & fields, label Nfields);
-template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<surfaceScalarField> & fields, label Nfields);
 
 
 template <template <class> class PatchField, class GeoMesh>
@@ -378,11 +372,7 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     return Out;
 }
 
-template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<volVectorField>& fields, label Nfields);
-template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-PtrList<pointVectorField>& fields, label Nfields);
-    PtrList<volVectorField> & fields, label Nfields);
+
 
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
@@ -428,6 +418,17 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
 }
 
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<volScalarField> & fields, label Nfields);
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<surfaceScalarField> & fields, label Nfields);
+
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<volVectorField>& fields, label Nfields);
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+PtrList<pointVectorField>& fields, label Nfields);
+    PtrList<volVectorField> & fields, label Nfields);
+
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     PtrList<volTensorField> & fields, label Nfields);
 
 template <template <class> class PatchField, class GeoMesh>
@@ -453,8 +454,7 @@ GeometricField<tensor, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     return field_out;
 }
 
-template volTensorField Foam2Eigen::Eigen2field(
-    volTensorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
+
 
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
@@ -483,9 +483,6 @@ GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     return field_out;
 }
 
-template volVectorField Foam2Eigen::Eigen2field(
-    volVectorField& field_in, Eigen::VectorXd& eigen_vector,
-    List<Eigen::VectorXd> & eigen_vector_boundary);
 
 template<template<class> class PatchField, class GeoMesh>
 GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
@@ -511,9 +508,7 @@ GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     return field_out;
 }
 
-template volScalarField Foam2Eigen::Eigen2field(
-    volScalarField& field_in, Eigen::VectorXd& eigen_vector,
-    List<Eigen::VectorXd> & eigen_vector_boundary);
+
 
 template<template<class> class PatchField, class GeoMesh>
 GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
@@ -538,11 +533,6 @@ GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     return field_out;
 }
 
-template volVectorField Foam2Eigen::Eigen2field(
-    volVectorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
-template pointVectorField Foam2Eigen::Eigen2field(
-    pointVectorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
-
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     GeometricField<scalar, PatchField, GeoMesh> & field_in,
@@ -557,6 +547,21 @@ GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
 
     return field_out;
 }
+template volTensorField Foam2Eigen::Eigen2field(
+    volTensorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
+
+template volVectorField Foam2Eigen::Eigen2field(
+    volVectorField& field_in, Eigen::VectorXd& eigen_vector,
+    List<Eigen::VectorXd> & eigen_vector_boundary);
+
+template volScalarField Foam2Eigen::Eigen2field(
+    volScalarField& field_in, Eigen::VectorXd& eigen_vector,
+    List<Eigen::VectorXd> & eigen_vector_boundary);
+
+template volVectorField Foam2Eigen::Eigen2field(
+    volVectorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
+template pointVectorField Foam2Eigen::Eigen2field(
+    pointVectorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
 
 template surfaceScalarField Foam2Eigen::Eigen2field(
     surfaceScalarField& field_in,
