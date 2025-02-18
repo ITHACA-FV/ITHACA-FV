@@ -25,7 +25,7 @@ EXE_INC = \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(LIB_SRC)/functionObjects/forces/lnInclude \
     -w \
-    -std=c++11
+    -std=c++14
 
 EXE_LIBS = \
     -lturbulenceModels \

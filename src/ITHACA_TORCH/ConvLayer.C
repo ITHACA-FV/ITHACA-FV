@@ -33,7 +33,7 @@ namespace ITHACAtorch
 {
 template<class Type, template<class> class PatchField, class GeoMesh>
 ConvLayer<Type, PatchField, GeoMesh>::ConvLayer(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots):
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & snapshots):
     _snapshots(snapshots),
     mesh(snapshots[0].mesh()),
     convDict(autoPtr<IOdictionary>
@@ -87,7 +87,7 @@ void ConvLayer<Type, PatchField, GeoMesh>::setDomainDivision(label Nx, label Ny,
         }
     }
 
-    convPoints = List<point>(Nx * Ny * Nz);
+    convPoints = List<point>(Nx* Ny* Nz);
     label index = 0;
 
     for (label i = 0; i < Nx; i++)
@@ -111,9 +111,9 @@ void ConvLayer<Type, PatchField, GeoMesh>::setDomainDivision(label Nx, label Ny,
                     k = 1;
                 }
 
-                convPoints[index] = mesh.bounds().min() + cmptMultiply((ds * i), vector(1, 0,
-                                    0)) + cmptMultiply((ds * j), vector(0, 1, 0)) + cmptMultiply((ds * k), vector(0,
-                                            0, 1));
+                convPoints[index] = mesh.bounds().min() + cmptMultiply((ds* i), vector(1, 0,
+                                    0)) + cmptMultiply((ds* j), vector(0, 1, 0)) + cmptMultiply((ds* k), vector(0,
+                                        0, 1));
                 index++;
             }
         }

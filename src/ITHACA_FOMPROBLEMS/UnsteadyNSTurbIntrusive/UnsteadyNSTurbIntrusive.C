@@ -179,7 +179,7 @@ void UnsteadyNSTurbIntrusive::truthSolve(List<scalar> mu_now)
         mu.resize(1, 1);
     }
 
-    if (mu_samples.rows() == nsnapshots * mu.cols())
+    if (mu_samples.rows() == nsnapshots* mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
                                    "./ITHACAoutput/Offline");
@@ -805,7 +805,7 @@ Eigen::MatrixXd UnsteadyNSTurbIntrusive::laplacianPressure(label nPModes)
     {
         for (label j = 0; j < nPModes; j++)
         {
-            dMatrix(i, j) = fvc::domainIntegrate(fvc::grad(Pmodes[i])&fvc::grad(
+            dMatrix(i, j) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & fvc::grad(
                     Pmodes[j])).value();
         }
     }
@@ -866,7 +866,7 @@ Eigen::MatrixXd UnsteadyNSTurbIntrusive::pressureBC1(label nUModes,
         for (label j = 0; j < P_BC2size; j++)
         {
             surfaceScalarField lpl((fvc::interpolate(fvc::laplacian(
-                                        Umodes[j]))&mesh.Sf())*fvc::interpolate(Pmodes[i]));
+                                        Umodes[j])) & mesh.Sf()) * fvc::interpolate(Pmodes[i]));
             double s = 0;
 
             for (label k = 0; k < lpl.boundaryField().size(); k++)
@@ -905,7 +905,7 @@ Eigen::Tensor<double, 3 > UnsteadyNSTurbIntrusive::pressureBC2(label nUModes,
             {
                 surfaceScalarField div_m(fvc::interpolate(fvc::div(fvc::interpolate(
                                              Umodes[j]) & mesh.Sf(),
-                                         Umodes[k]))&mesh.Sf()*fvc::interpolate(Pmodes[i]));
+                                         Umodes[k])) & mesh.Sf() * fvc::interpolate(Pmodes[i]));
                 double s = 0;
 
                 for (label k = 0; k < div_m.boundaryField().size(); k++)
@@ -943,8 +943,8 @@ Eigen::MatrixXd UnsteadyNSTurbIntrusive::pressureBC3(label nUModes,
         for (label j = 0; j < P3_BC2size; j++)
         {
             surfaceVectorField BC3 = fvc::interpolate(fvc::curl(Umodes[j])).ref();
-            surfaceVectorField BC4 = (n ^ fvc::interpolate(fvc::grad(Pmodes[i]))).ref();
-            surfaceScalarField BC5 = ((BC3 & BC4) * mesh.magSf()).ref();
+            surfaceVectorField BC4 = (n^ fvc::interpolate(fvc::grad(Pmodes[i]))).ref();
+            surfaceScalarField BC5 = ((BC3& BC4) * mesh.magSf()).ref();
             double s = 0;
 
             for (label k = 0; k < BC5.boundaryField().size(); k++)
@@ -980,8 +980,8 @@ Eigen::MatrixXd UnsteadyNSTurbIntrusive::pressureBC4(label nUModes,
         for (label j = 0; j < P4_BC2size; j++)
         {
             surfaceScalarField BC3 = fvc::interpolate(Pmodes[i]).ref();
-            surfaceScalarField BC4 = (n & fvc::interpolate(Umodes[j])).ref();
-            surfaceScalarField BC5 = ((BC3 * BC4) * mesh.magSf()).ref();
+            surfaceScalarField BC4 = (n& fvc::interpolate(Umodes[j])).ref();
+            surfaceScalarField BC5 = ((BC3* BC4) * mesh.magSf()).ref();
             double s = 0;
 
             for (label k = 0; k < BC5.boundaryField().size(); k++)

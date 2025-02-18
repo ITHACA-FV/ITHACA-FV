@@ -53,8 +53,10 @@ class ITHACAparameters
         bool exportPython;
         bool exportMatlab;
         bool exportTxt;
+        bool exportNpy;
         bool debug;
         bool warnings;
+        bool correctBC;
 
         /// type of output format can be fixed or scientific
         std::_Ios_Fmtflags outytpe;

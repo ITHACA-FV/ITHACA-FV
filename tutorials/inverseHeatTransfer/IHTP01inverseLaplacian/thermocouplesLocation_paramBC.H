@@ -42,7 +42,7 @@ for (int i = 0; i < testSize; i++)
         auto cx = Ttrue.mesh().C()[i].component(vector::X);
         auto cy = Ttrue.mesh().C()[i].component(vector::Y);
         auto cz = Ttrue.mesh().C()[i].component(vector::Z);
-        Ttrue.ref()[i] = a * cx * cx + b * cx * cy + c * cy - a * cz * cz + c;
+        Ttrue.ref()[i] = a* cx* cx + b* cx* cy + c* cy - a* cz* cz + c;
     }
 
     example_paramBC.thermocouplesRead = 0;

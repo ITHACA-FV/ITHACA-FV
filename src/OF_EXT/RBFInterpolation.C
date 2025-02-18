@@ -42,7 +42,7 @@ const Foam::scalarSquareMatrix& Foam::RBFInterpolation::B() const
     return *BPtr_;
 }
 
-Foam::SquareMatrix<double> Foam::EigenInvert(Foam::SquareMatrix<double>& A)
+Foam::SquareMatrix<double> Foam::EigenInvert(Foam::SquareMatrix<double> & A)
 {
     Foam::SquareMatrix<double> invMatrix = A;
     Eigen::MatrixXd Aeig(A.n(), A.n());

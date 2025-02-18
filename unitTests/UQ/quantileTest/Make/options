@@ -10,7 +10,7 @@ EXE_INC = \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -Wno-comment \
     -g \
-    -std=c++11 \
+    -std=c++14 \
     -Wno-maybe-uninitialized \
     -Wno-sign-compare \
     -Wno-unknown-pragmas \

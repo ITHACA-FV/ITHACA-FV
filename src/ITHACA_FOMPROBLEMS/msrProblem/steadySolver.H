@@ -33,10 +33,10 @@ while (simple.loop(runTime))
 #include "pEqn.H"
         rho = rhoRef * (1 - betaTE * (T - Tref));
         logT = log(max(0.5, (T / TrefXS)));
-        NSF1 = (1 / Keff) * (NSF1_0 + alfa_NSF1 * logT);
-        M11 = NSF1 * (1 - betaTot) - (A1_0 + alfa_A1 * logT);
-        D1 = (D1_0 + alfa_D1 * logT);
-        SP1 = (1 / Keff) * (SP1_0 + alfa_SP1 * logT);
+        NSF1 = (1 / Keff) * (NSF1_0 + alfa_NSF1* logT);
+        M11 = NSF1 * (1 - betaTot) - (A1_0 + alfa_A1* logT);
+        D1 = (D1_0 + alfa_D1* logT);
+        SP1 = (1 / Keff) * (SP1_0 + alfa_SP1* logT);
         alphaEff = turbulence->nu() / Pr + turbulence->nut() / Prt;
         diffEff = turbulence->nu() / Sc + turbulence->nut() / Sct;
 #include "DiffEqn.H"
@@ -44,14 +44,15 @@ while (simple.loop(runTime))
 #include "decEqns.H"
 #include "TEqn.H"
     }
+
     laminarTransport.correct();
     turbulence->correct();
     runTime.write();
     Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
          << "  ClockTime = " << runTime.elapsedClockTime() << " s"
          << nl << endl;
-    powerDens = (1 - decbetaTot) * flux * SP1 + (decLam1 * dec1 + decLam2 * dec2 +
-                decLam3 * dec3);
+    powerDens = (1 - decbetaTot) * flux* SP1 + (decLam1* dec1 + decLam2* dec2 +
+                decLam3* dec3);
     exportSolution(U, name(counter), "./ITHACAoutput/Offline/");
     exportSolution(p, name(counter), "./ITHACAoutput/Offline/");
     exportSolution(flux, name(counter), "./ITHACAoutput/Offline/");

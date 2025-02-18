@@ -75,7 +75,7 @@ Eigen::VectorXd  TSVD(Eigen::MatrixXd A,
                 f += tempU.col(i).dot(bVect) * tempU.col(i).dot(bVect);
             }
 
-            f += 2 * noiseVariance * col;
+            f += 2 * noiseVariance* col;
 
             if (col == 0)
             {
@@ -111,7 +111,7 @@ Eigen::VectorXd  Tikhonov(Eigen::MatrixXd A,
                           Eigen::MatrixXd b, double regularizationParameter)
 {
     M_Assert(b.cols() == 1, "The b input in TSVD must have only one column");
-    Eigen::MatrixXd Anew = A.transpose() * A + regularizationParameter *
+    Eigen::MatrixXd Anew = A.transpose() * A + regularizationParameter*
                            Eigen::MatrixXd::Identity(A.rows(), A.cols());
     Eigen::MatrixXd bNew = A.transpose() * b;
     Eigen::VectorXd x = A.inverse() * b;

@@ -91,7 +91,7 @@ bool check_folder(word folder)
     struct stat sb;
     bool exist;
 
-    if (stat(folder.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode))
+    if (stat(folder.c_str(), & sb) == 0 && S_ISDIR(sb.st_mode))
     {
         exist = true;
     }

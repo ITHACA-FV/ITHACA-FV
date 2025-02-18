@@ -9,7 +9,7 @@ fvVectorMatrix UEqn
     + turbulence->divDevReff(U)
     ==
     fvOptions(U)
-    );
+);
 
 UEqn.relax();
 

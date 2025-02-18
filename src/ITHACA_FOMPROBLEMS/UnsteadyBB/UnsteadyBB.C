@@ -39,6 +39,7 @@
 
 // Constructor
 UnsteadyBB::UnsteadyBB() {}
+
 UnsteadyBB::UnsteadyBB(int argc, char* argv[])
 {
     _args = autoPtr<argList>
@@ -831,6 +832,7 @@ void UnsteadyBB::projectPPE(fileName folder, label NU, label NP, label NT,
         HP_matrix = buoyant_term_poisson(NPrghmodes, NTmodes);
     }
 }
+
 // * * * * * * * * * * * * * * Momentum Eq. Methods * * * * * * * * * * * * * //
 Eigen::MatrixXd UnsteadyBB::pressure_gradient_term(label NUmodes,
         label NPrghmodes,
@@ -848,7 +850,7 @@ Eigen::MatrixXd UnsteadyBB::pressure_gradient_term(label NUmodes,
         {
             K_matrix(i, j) = fvc::domainIntegrate(L_U_SUPmodes[i] &
                                                   fvc::reconstruct(fvc::snGrad(Prghmodes[j]) *
-                                                          Prghmodes[j].mesh().magSf())).value();
+                                                      Prghmodes[j].mesh().magSf())).value();
         }
     }
 
@@ -921,7 +923,7 @@ Eigen::MatrixXd UnsteadyBB::buoyant_term(label NUmodes, label NTmodes,
         for (label j = 0; j < H2size; j++)
         {
             H_matrix(i, j) = fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::reconstruct(
-                    ghf * fvc::snGrad(1.0 - (beta * (L_T_modes[j] - TRef)))
+                    ghf* fvc::snGrad(1.0 - (beta * (L_T_modes[j] - TRef)))
                     * L_T_modes[j].mesh().magSf())).value();
         }
     }
@@ -964,8 +966,8 @@ Eigen::MatrixXd UnsteadyBB::buoyant_term_poisson(label NPrghmodes,
         {
             HP_matrix(i, j) = fvc::domainIntegrate(fvc::reconstruct(fvc::snGrad(
                     Prghmodes[i]) *
-                                                   Prghmodes[i].mesh().magSf())  &fvc::reconstruct(
-                                                           ghf * fvc::snGrad( -(beta * (L_T_modes[j])))
+                                                   Prghmodes[i].mesh().magSf())  & fvc::reconstruct(
+                                                           ghf* fvc::snGrad( -(beta * (L_T_modes[j])))
                                                            * L_T_modes[j].mesh().magSf())).value();
         }
     }
@@ -1148,7 +1150,7 @@ void UnsteadyBB::liftSolve()
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("Phi", dimLength * dimVelocity, 0),
+            dimensionedScalar("Phi", dimLength* dimVelocity, 0),
             UliftBC.boundaryField().types()
         );
         label PhiRefCell = 0;

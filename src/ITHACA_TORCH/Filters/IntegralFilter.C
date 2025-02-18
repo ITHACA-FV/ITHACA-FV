@@ -15,8 +15,8 @@ Foam::IntegralFilter::IntegralFilter(const dictionary& dict)
     Info << "Is IntegralFilter" << endl;
 }
 
-List<scalarList> Foam::IntegralFilter::apply(const List<labelList>& cells,
-        const List<point>& convPoints, const fvMesh& mesh) const
+List<scalarList> Foam::IntegralFilter::apply(const List<labelList> & cells,
+        const List<point> & convPoints, const fvMesh& mesh) const
 {
     List<scalarList> weights(cells.size());
 

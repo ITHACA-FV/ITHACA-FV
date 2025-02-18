@@ -30,7 +30,7 @@ reducedMSR::reducedMSR()
 
 reducedMSR::reducedMSR(msrProblem& FOMproblem)
 {
-    problem = &FOMproblem;
+    problem = & FOMproblem;
     N_BC = problem->inletIndex.rows();
     N_BCt = problem->inletIndexT.rows();
     Nphi_u = problem->B_matrix.rows();
@@ -195,15 +195,15 @@ int newton_msr_fd::operator()(const Eigen::VectorXd& x,
     Eigen::MatrixXd gg(1, 1);
     Eigen::MatrixXd bb(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
+    Eigen::VectorXd M1 = problem->B_matrix* a_tmp* nu;
     // Gradient of pressure
-    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
+    Eigen::VectorXd M2 = problem->K_matrix* b_tmp;
     // Pressure Term
-    Eigen::VectorXd M3 = problem->D_matrix * b_tmp;
+    Eigen::VectorXd M3 = problem->D_matrix* b_tmp;
     // BC PPE
-    Eigen::VectorXd M6 = problem->BC1_matrix * a_tmp * nu;
+    Eigen::VectorXd M6 = problem->BC1_matrix* a_tmp* nu;
     // BC PPE
-    Eigen::VectorXd M7 = problem->BC3_matrix * a_tmp * nu;
+    Eigen::VectorXd M7 = problem->BC3_matrix* a_tmp* nu;
 
     for (int i = 0; i < Nphi_u; i++)
     {
@@ -231,7 +231,7 @@ int newton_msr_fd::operator()(const Eigen::VectorXd& x,
 
 int newton_msr_fd::df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_msr_fd> numDiff(*this);
+    Eigen::NumericalDiff<newton_msr_fd> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -273,14 +273,14 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     // flux absorption term
     Eigen::MatrixXd af(1, 1);
     // precursor sources
-    Eigen::VectorXd F3_1 = problem->PS1_matrix * d1_tmp * l1;
-    Eigen::VectorXd F3_2 = problem->PS2_matrix * d2_tmp * l2;
-    Eigen::VectorXd F3_3 = problem->PS3_matrix * d3_tmp * l3;
-    Eigen::VectorXd F3_4 = problem->PS4_matrix * d4_tmp * l4;
-    Eigen::VectorXd F3_5 = problem->PS5_matrix * d5_tmp * l5;
-    Eigen::VectorXd F3_6 = problem->PS6_matrix * d6_tmp * l6;
-    Eigen::VectorXd F3_7 = problem->PS7_matrix * d7_tmp * l7;
-    Eigen::VectorXd F3_8 = problem->PS8_matrix * d8_tmp * l8;
+    Eigen::VectorXd F3_1 = problem->PS1_matrix* d1_tmp* l1;
+    Eigen::VectorXd F3_2 = problem->PS2_matrix* d2_tmp* l2;
+    Eigen::VectorXd F3_3 = problem->PS3_matrix* d3_tmp* l3;
+    Eigen::VectorXd F3_4 = problem->PS4_matrix* d4_tmp* l4;
+    Eigen::VectorXd F3_5 = problem->PS5_matrix* d5_tmp* l5;
+    Eigen::VectorXd F3_6 = problem->PS6_matrix* d6_tmp* l6;
+    Eigen::VectorXd F3_7 = problem->PS7_matrix* d7_tmp* l7;
+    Eigen::VectorXd F3_8 = problem->PS8_matrix* d8_tmp* l8;
     // Convective terms in prec-eq:
     Eigen::MatrixXd pp1(1, 1);
     Eigen::MatrixXd pp2(1, 1);
@@ -291,23 +291,23 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     Eigen::MatrixXd pp7(1, 1);
     Eigen::MatrixXd pp8(1, 1);
     // laplacian of precursor
-    Eigen::VectorXd P1_1 = problem->LP1_matrix * d1_tmp * (nu / Sc);
-    Eigen::VectorXd P1_2 = problem->LP2_matrix * d2_tmp * (nu / Sc);
-    Eigen::VectorXd P1_3 = problem->LP3_matrix * d3_tmp * (nu / Sc);
-    Eigen::VectorXd P1_4 = problem->LP4_matrix * d4_tmp * (nu / Sc);
-    Eigen::VectorXd P1_5 = problem->LP5_matrix * d5_tmp * (nu / Sc);
-    Eigen::VectorXd P1_6 = problem->LP6_matrix * d6_tmp * (nu / Sc);
-    Eigen::VectorXd P1_7 = problem->LP7_matrix * d7_tmp * (nu / Sc);
-    Eigen::VectorXd P1_8 = problem->LP8_matrix * d8_tmp * (nu / Sc);
+    Eigen::VectorXd P1_1 = problem->LP1_matrix* d1_tmp * (nu / Sc);
+    Eigen::VectorXd P1_2 = problem->LP2_matrix* d2_tmp * (nu / Sc);
+    Eigen::VectorXd P1_3 = problem->LP3_matrix* d3_tmp * (nu / Sc);
+    Eigen::VectorXd P1_4 = problem->LP4_matrix* d4_tmp * (nu / Sc);
+    Eigen::VectorXd P1_5 = problem->LP5_matrix* d5_tmp * (nu / Sc);
+    Eigen::VectorXd P1_6 = problem->LP6_matrix* d6_tmp * (nu / Sc);
+    Eigen::VectorXd P1_7 = problem->LP7_matrix* d7_tmp * (nu / Sc);
+    Eigen::VectorXd P1_8 = problem->LP8_matrix* d8_tmp * (nu / Sc);
     // algebric term
-    Eigen::VectorXd P2_1 = problem->MP1_matrix * d1_tmp * l1;
-    Eigen::VectorXd P2_2 = problem->MP2_matrix * d2_tmp * l2;
-    Eigen::VectorXd P2_3 = problem->MP3_matrix * d3_tmp * l3;
-    Eigen::VectorXd P2_4 = problem->MP4_matrix * d4_tmp * l4;
-    Eigen::VectorXd P2_5 = problem->MP5_matrix * d5_tmp * l5;
-    Eigen::VectorXd P2_6 = problem->MP6_matrix * d6_tmp * l6;
-    Eigen::VectorXd P2_7 = problem->MP7_matrix * d7_tmp * l7;
-    Eigen::VectorXd P2_8 = problem->MP8_matrix * d8_tmp * l8;
+    Eigen::VectorXd P2_1 = problem->MP1_matrix* d1_tmp* l1;
+    Eigen::VectorXd P2_2 = problem->MP2_matrix* d2_tmp* l2;
+    Eigen::VectorXd P2_3 = problem->MP3_matrix* d3_tmp* l3;
+    Eigen::VectorXd P2_4 = problem->MP4_matrix* d4_tmp* l4;
+    Eigen::VectorXd P2_5 = problem->MP5_matrix* d5_tmp* l5;
+    Eigen::VectorXd P2_6 = problem->MP6_matrix* d6_tmp* l6;
+    Eigen::VectorXd P2_7 = problem->MP7_matrix* d7_tmp* l7;
+    Eigen::VectorXd P2_8 = problem->MP8_matrix* d8_tmp* l8;
     // flux source term
     Eigen::MatrixXd fs1(1, 1);
     Eigen::MatrixXd fs2(1, 1);
@@ -334,7 +334,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     {
         int k = i + pfvecn;
         pp1 = a_tmp.transpose() * problem->ST1_matrix[i] * d1_tmp;
-        fs1 = nsf_c.transpose() * problem->FS1_matrix[i] * c_tmp * b1;
+        fs1 = nsf_c.transpose() * problem->FS1_matrix[i] * c_tmp* b1;
         fvecn(k) = -pp1(0, 0) + P1_1(i) - P2_1(i) + fs1(0, 0);
     }
 
@@ -344,7 +344,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     {
         int k = i + pfvecn;
         pp2 = a_tmp.transpose() * problem->ST2_matrix[i] * d2_tmp;
-        fs2 = nsf_c.transpose() * problem->FS2_matrix[i] * c_tmp * b2;
+        fs2 = nsf_c.transpose() * problem->FS2_matrix[i] * c_tmp* b2;
         fvecn(k) = -pp2(0, 0) + P1_2(i) - P2_2(i) + fs2(0, 0);
     }
 
@@ -354,7 +354,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     {
         int k = i + pfvecn;
         pp3 = a_tmp.transpose() * problem->ST3_matrix[i] * d3_tmp;
-        fs3 = nsf_c.transpose() * problem->FS3_matrix[i] * c_tmp * b3;
+        fs3 = nsf_c.transpose() * problem->FS3_matrix[i] * c_tmp* b3;
         fvecn(k) = -pp3(0, 0) + P1_3(i) - P2_3(i) + fs3(0, 0);
     }
 
@@ -364,7 +364,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     {
         int k = i + pfvecn;
         pp4 = a_tmp.transpose() * problem->ST4_matrix[i] * d4_tmp;
-        fs4 = nsf_c.transpose() * problem->FS4_matrix[i] * c_tmp * b4;
+        fs4 = nsf_c.transpose() * problem->FS4_matrix[i] * c_tmp* b4;
         fvecn(k) = -pp4(0, 0) + P1_4(i) - P2_4(i) + fs4(0, 0);
     }
 
@@ -374,7 +374,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     {
         int k = i + pfvecn;
         pp5 = a_tmp.transpose() * problem->ST5_matrix[i] * d5_tmp;
-        fs5 = nsf_c.transpose() * problem->FS5_matrix[i] * c_tmp * b5;
+        fs5 = nsf_c.transpose() * problem->FS5_matrix[i] * c_tmp* b5;
         fvecn(k) = -pp5(0, 0) + P1_5(i) - P2_5(i) + fs5(0, 0);
     }
 
@@ -384,7 +384,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     {
         int k = i + pfvecn;
         pp6 = a_tmp.transpose() * problem->ST6_matrix[i] * d6_tmp;
-        fs6 = nsf_c.transpose() * problem->FS6_matrix[i] * c_tmp * b6;
+        fs6 = nsf_c.transpose() * problem->FS6_matrix[i] * c_tmp* b6;
         fvecn(k) = -pp6(0, 0) + P1_6(i) - P2_6(i) + fs6(0, 0);
     }
 
@@ -394,7 +394,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     {
         int k = i + pfvecn;
         pp7 = a_tmp.transpose() * problem->ST7_matrix[i] * d7_tmp;
-        fs7 = nsf_c.transpose() * problem->FS7_matrix[i] * c_tmp * b7;
+        fs7 = nsf_c.transpose() * problem->FS7_matrix[i] * c_tmp* b7;
         fvecn(k) = -pp7(0, 0) + P1_7(i) - P2_7(i) + fs7(0, 0);
     }
 
@@ -404,7 +404,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
     {
         int k = i + pfvecn;
         pp8 = a_tmp.transpose() * problem->ST8_matrix[i] * d8_tmp;
-        fs8 = nsf_c.transpose() * problem->FS8_matrix[i] * c_tmp * b8;
+        fs8 = nsf_c.transpose() * problem->FS8_matrix[i] * c_tmp* b8;
         fvecn(k) = -pp8(0, 0) + P1_8(i) - P2_8(i) + fs8(0, 0);
     }
 
@@ -414,7 +414,7 @@ int newton_msr_n::operator()(const Eigen::VectorXd& n,
 int newton_msr_n::df(const Eigen::VectorXd& n,
                      Eigen::MatrixXd& fjacn) const
 {
-    Eigen::NumericalDiff<newton_msr_n> numDiff(*this);
+    Eigen::NumericalDiff<newton_msr_n> numDiff( * this);
     numDiff.df(n, fjacn);
     return 0;
 }
@@ -437,7 +437,7 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
     // convective term in T_eqn
     Eigen::MatrixXd tt(1, 1);
     // laplacian of T
-    Eigen::VectorXd T1 = problem->LT_matrix * e_tmp * nu / Pr;
+    Eigen::VectorXd T1 = problem->LT_matrix* e_tmp* nu / Pr;
     // temp flux source
     Eigen::MatrixXd xsf(1, 1);
     // decay heat source term (*dli/cp)
@@ -449,13 +449,13 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
     Eigen::MatrixXd dh2(1, 1);
     Eigen::MatrixXd dh3(1, 1);
     //laplacian of dh
-    Eigen::VectorXd DH1_1 = problem->LD1_matrix * f1_tmp * nu / Sc;
-    Eigen::VectorXd DH1_2 = problem->LD2_matrix * f2_tmp * nu / Sc;
-    Eigen::VectorXd DH1_3 = problem->LD3_matrix * f3_tmp * nu / Sc;
+    Eigen::VectorXd DH1_1 = problem->LD1_matrix* f1_tmp* nu / Sc;
+    Eigen::VectorXd DH1_2 = problem->LD2_matrix* f2_tmp* nu / Sc;
+    Eigen::VectorXd DH1_3 = problem->LD3_matrix* f3_tmp* nu / Sc;
     //algebric term in dh eq
-    Eigen::VectorXd DH2_1 = problem->MD1_matrix * f1_tmp * dl1;
-    Eigen::VectorXd DH2_2 = problem->MD2_matrix * f2_tmp * dl2;
-    Eigen::VectorXd DH2_3 = problem->MD3_matrix * f3_tmp * dl3;
+    Eigen::VectorXd DH2_1 = problem->MD1_matrix* f1_tmp* dl1;
+    Eigen::VectorXd DH2_2 = problem->MD2_matrix* f2_tmp* dl2;
+    Eigen::VectorXd DH2_3 = problem->MD3_matrix* f3_tmp* dl3;
     // flux source in term dh eq (*dbi)
     Eigen::MatrixXd dfs1(1, 1);
     Eigen::MatrixXd dfs2(1, 1);
@@ -477,7 +477,7 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
     {
         int k = i + pfvect;
         dh1 = a_tmp.transpose() * problem->SD1_matrix[i] * f1_tmp;
-        dfs1 = sp_c.transpose() * problem->DFS1_matrix[i] * c_tmp * db1;
+        dfs1 = sp_c.transpose() * problem->DFS1_matrix[i] * c_tmp* db1;
         fvect(k) = -dh1(0, 0) + DH1_1(i) - DH2_1(i) + dfs1(0, 0);
     }
 
@@ -487,7 +487,7 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
     {
         int k = i + pfvect;
         dh2 = a_tmp.transpose() * problem->SD2_matrix[i] * f2_tmp;
-        dfs2 = sp_c.transpose() * problem->DFS2_matrix[i] * c_tmp * db2;
+        dfs2 = sp_c.transpose() * problem->DFS2_matrix[i] * c_tmp* db2;
         fvect(k) = -dh2(0, 0) + DH1_2(i) - DH2_2(i) + dfs2(0, 0);
     }
 
@@ -497,7 +497,7 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
     {
         int k = i + pfvect;
         dh3 = a_tmp.transpose() * problem->SD3_matrix[i] * f3_tmp;
-        dfs3 = sp_c.transpose() * problem->DFS3_matrix[i] * c_tmp * db3;
+        dfs3 = sp_c.transpose() * problem->DFS3_matrix[i] * c_tmp* db3;
         fvect(k) = -dh3(0, 0) + DH1_3(i) - DH2_3(i) + dfs3(0, 0);
     }
 
@@ -512,7 +512,7 @@ int newton_msr_t::operator()(const Eigen::VectorXd& t,
 int newton_msr_t::df(const Eigen::VectorXd& t,
                      Eigen::MatrixXd& fjact) const
 {
-    Eigen::NumericalDiff<newton_msr_t> numDiff(*this);
+    Eigen::NumericalDiff<newton_msr_t> numDiff( * this);
     numDiff.df(t, fjact);
     return 0;
 }

@@ -205,7 +205,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
         /// Constructor
         explicit reducedSimpleSteadyNN(SteadyNSSimpleNN& FOMproblem)
             :
-            problem(&FOMproblem)
+            problem( & FOMproblem)
         {}
 
         /// Full problem.
@@ -253,7 +253,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
                 problem->para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
             float normalizedResidualLim =
                 problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim",
-                        1e-5);
+                    1e-5);
             scalar residual_jump(1 + residualJumpLim);
             volScalarField& P = problem->_p();
             volVectorField& U = problem->_U();
@@ -314,7 +314,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
                 (
                     fvm::div(phi, U)
                     - fvm::laplacian(nueff, U)
-                    - fvc::div(nueff * dev2(T(fvc::grad(U))))
+                    - fvc::div(nueff* dev2(T(fvc::grad(U))))
                 );
                 UEqn.relax();
                 //solve(UEqn == - fvc::grad(P));
@@ -500,7 +500,7 @@ class tutorial01cl : public SteadyNSSimpleNN
             }
         }
 
-        void linearMovePts(double angle, List<vector>& points2Move)
+        void linearMovePts(double angle, List<vector> & points2Move)
         {
             double sMax;
             scalarList x;
@@ -516,13 +516,13 @@ class tutorial01cl : public SteadyNSSimpleNN
             double xMax = max(x);
             double yMin = min(y);
             double yMax = max(y);
-            sMax = (yMax - yMin) * std::tan(M_PI * angle / 180);
+            sMax = (yMax - yMin) * std::tan(M_PI* angle / 180);
 
             for (label i = 0; i < points2Move.size(); i++)
             {
                 points2Move[i].component(0) = points2Move[i].component(0) +
                                               (yMax - points2Move[i].component(1)) / (yMax - yMin) * (xMax -
-                                                      points2Move[i].component(0)) / (xMax - xMin) * sMax;
+                                                  points2Move[i].component(0)) / (xMax - xMin) * sMax;
             }
         }
 };

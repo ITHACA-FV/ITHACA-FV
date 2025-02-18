@@ -64,6 +64,7 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
         Info << "\nResidual: " << residual << endl << endl;
         //Info << "Residual U: " << solve(UEqn() == -fvc::grad(p)).initialResidual() << endl;
     }
+
     laminarTransport.correct();
     turbulence->correct();
     csolve = csolve + 1;

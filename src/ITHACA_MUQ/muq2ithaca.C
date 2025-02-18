@@ -36,7 +36,7 @@ Eigen::MatrixXd EnsembleKalmanFilter(Eigen::MatrixXd prior,
 
     Eigen::MatrixXd Y = D -
                         observedState; //diff measurement data and simulated data
-    Eigen::MatrixXd P = HA * HA.transpose() / (Nseeds - 1.) + measurementsCov;
+    Eigen::MatrixXd P = HA* HA.transpose() / (Nseeds - 1.) + measurementsCov;
     Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(P);
     auto P_rank = lu_decomp.rank();
 
@@ -53,10 +53,10 @@ Eigen::MatrixXd EnsembleKalmanFilter(Eigen::MatrixXd prior,
     }
 
     //KF update
-    Eigen::MatrixXd M = P * Y;
-    Eigen::MatrixXd Z = (1. / (Nseeds - 1.)) * A * HA.transpose();
+    Eigen::MatrixXd M = P* Y;
+    Eigen::MatrixXd Z = (1. / (Nseeds - 1.)) * A* HA.transpose();
     //Kalman Gain
-    Eigen::MatrixXd K = (1. / (Nseeds - 1.)) * A * HA.transpose() * P;
+    Eigen::MatrixXd K = (1. / (Nseeds - 1.)) * A* HA.transpose() * P;
 
     if ((K.array() < 0.0).any())
     {
@@ -64,10 +64,10 @@ Eigen::MatrixXd EnsembleKalmanFilter(Eigen::MatrixXd prior,
                   std::endl;
     }
 
-    return prior + Z * M;
+    return prior + Z* M;
 }
 
-Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField>& prior,
+Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField> & prior,
                                      Eigen::VectorXd measurements,
                                      Eigen::MatrixXd measurementsCov,
                                      Eigen::MatrixXd observedState)
@@ -100,7 +100,7 @@ Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField>& prior,
 
     Eigen::MatrixXd Y = D -
                         observedState; //diff measurement data and simulated data
-    Eigen::MatrixXd P = HA * HA.transpose() / (Nseeds - 1.) + measurementsCov;
+    Eigen::MatrixXd P = HA* HA.transpose() / (Nseeds - 1.) + measurementsCov;
     Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(P);
     auto P_rank = lu_decomp.rank();
 
@@ -117,10 +117,10 @@ Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField>& prior,
     }
 
     //KF update
-    Eigen::MatrixXd M = P * Y;
-    Eigen::MatrixXd Z = (1. / (Nseeds - 1.)) * A * HA.transpose();
+    Eigen::MatrixXd M = P* Y;
+    Eigen::MatrixXd Z = (1. / (Nseeds - 1.)) * A* HA.transpose();
     //Kalman Gain
-    Eigen::MatrixXd K = (1. / (Nseeds - 1.)) * A * HA.transpose() * P;
+    Eigen::MatrixXd K = (1. / (Nseeds - 1.)) * A* HA.transpose() * P;
 
     if ((K.array() < 0.0).any())
     {
@@ -128,7 +128,7 @@ Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField>& prior,
                   std::endl;
     }
 
-    return priorMatrix + Z * M;
+    return priorMatrix + Z* M;
 }
 
 double quantile(Eigen::VectorXd samps, double p, int method)
@@ -142,8 +142,8 @@ double quantile(Eigen::VectorXd samps, double p, int method)
     if (method == 1)
     {
         m = 0;
-        j = std::floor(p * n + m);
-        double g = p * n + m - j * 1.0;
+        j = std::floor(p* n + m);
+        double g = p* n + m - j * 1.0;
 
         if (g > 0)
         {
@@ -154,8 +154,8 @@ double quantile(Eigen::VectorXd samps, double p, int method)
     {
         gamma = 0.5;
         m = 0;
-        j = std::floor(p * n + m);
-        double g = p * n + m - j * 1.0;
+        j = std::floor(p* n + m);
+        double g = p* n + m - j * 1.0;
 
         if (g > 0)
         {
@@ -166,8 +166,8 @@ double quantile(Eigen::VectorXd samps, double p, int method)
     {
         gamma = 1.0;
         m = -0.5;
-        j = std::floor(p * n + m);
-        double g = p * n + m - j * 1.0;
+        j = std::floor(p* n + m);
+        double g = p* n + m - j * 1.0;
 
         if (g == 0 && j % 2 == 0)
         {
@@ -185,7 +185,7 @@ double quantile(Eigen::VectorXd samps, double p, int method)
         j = samps.size() - 2;
     }
 
-    return (1 - gamma) * samps(j) + gamma * samps(j + 1);
+    return (1 - gamma) * samps(j) + gamma* samps(j + 1);
 }
 
 Eigen::VectorXd quantile(Eigen::MatrixXd samps, double p, int method)

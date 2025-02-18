@@ -29,8 +29,8 @@ surfaceScalarField phiHbyA
 (
     "phiHbyA",
     fvc::flux(HbyA)
-    + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi)
-    );
+    + fvc::interpolate(rAU) * fvc::ddtCorr(U, phi)
+);
 
 //MRF.makeRelative(phiHbyA);
 
@@ -58,6 +58,6 @@ while (piso.correctNonOrthogonal())
 
 #include "continuityErrs.H"
 
-U = HbyA - rAU * fvc::grad(p);
+U = HbyA - rAU* fvc::grad(p);
 U.correctBoundaryConditions();
 //fvOptions.correct(U);

@@ -12,7 +12,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra-0.6.1/include \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11
+    -std=c++14
 
 EXE_LIBS = \
     -lturbulenceModels \

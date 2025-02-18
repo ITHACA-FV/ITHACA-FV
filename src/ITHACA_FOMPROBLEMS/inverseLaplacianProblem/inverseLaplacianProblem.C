@@ -115,6 +115,7 @@ volScalarField inverseLaplacianProblem::list2Field(List<scalar> list,
         label faceOwner = faceCells[faceI] ;
         field[faceOwner] = list[faceI];
     }
+
     return field;
 }
 
@@ -132,6 +133,7 @@ void inverseLaplacianProblem::set_valueFraction()
         valueFraction[faceI] =  1.0 / (1.0 + (k / H / faceDist));
         homogeneousBCcoldSide[faceI] =  0;
     }
+
     refGrad = homogeneousBCcoldSide;
 }
 
@@ -225,16 +227,18 @@ void inverseLaplacianProblem::readThermocouples()
             {
                 thermocouplesCellID[tcI] = mesh.findCell(thermocouplesPos[tcI]);
             }
+
             volScalarField thermocouplesField(T);
             ITHACAutilities::assignIF(thermocouplesField, homogeneousBC);
             forAll(thermocouplesCellID, tcI)
             {
                 thermocouplesField.ref()[thermocouplesCellID[tcI]] = 1;
             }
+
             ITHACAstream::exportSolution(thermocouplesField, "1", "./ITHACAoutput/debug/",
                                          "thermocouplesField,");
             Eigen::MatrixXi thermocouplesCellID_eigen = Foam2Eigen::List2EigenMatrix(
-                        thermocouplesCellID);
+                    thermocouplesCellID);
             ITHACAstream::exportMatrix(thermocouplesCellID_eigen, fileName,
                                        "eigen", "./");
         }
@@ -261,7 +265,7 @@ Eigen::VectorXd inverseLaplacianProblem::fieldValueAtThermocouples(
     dictionary interpolationDict =
         mesh.solutionDict().subDict("interpolationSchemes");
     autoPtr<Foam::interpolation<scalar>> fieldInterp =
-                                          Foam::interpolation<scalar>::New(interpolationDict, field);
+        Foam::interpolation<scalar>::New(interpolationDict, field);
     Eigen::VectorXd fieldInt;
     fieldInt.resize(thermocouplesPos.size());
     forAll(thermocouplesPos, tcI)
@@ -269,6 +273,7 @@ Eigen::VectorXd inverseLaplacianProblem::fieldValueAtThermocouples(
         fieldInt(tcI) = fieldInterp->interpolate(thermocouplesPos[tcI],
                         thermocouplesCellID[tcI]);
     }
+
     return fieldInt;
 }
 
@@ -286,12 +291,12 @@ Foam::vector inverseLaplacianProblem::cellDim(const faceList& ff,
 {
     forAll (pLabels, pointi)
     pLocal[pointi] = pp[pLabels[pointi]];
-    double  xDim = Foam::max(pLocal & Foam::vector(1, 0, 0))
-                   - Foam::min(pLocal & Foam::vector(1, 0, 0));
-    double  yDim = Foam::max(pLocal & Foam::vector(0, 1, 0))
-                   - Foam::min(pLocal & Foam::vector(0, 1, 0));
-    double  zDim = Foam::max(pLocal & Foam::vector(0, 0, 1))
-                   - Foam::min(pLocal & Foam::vector(0, 0, 1));
+    double  xDim = Foam::max(pLocal& Foam::vector(1, 0, 0))
+                   - Foam::min(pLocal& Foam::vector(1, 0, 0));
+    double  yDim = Foam::max(pLocal& Foam::vector(0, 1, 0))
+                   - Foam::min(pLocal& Foam::vector(0, 1, 0));
+    double  zDim = Foam::max(pLocal& Foam::vector(0, 0, 1))
+                   - Foam::min(pLocal& Foam::vector(0, 0, 1));
     Foam::vector dim (xDim, yDim, zDim);
     return dim;
 }

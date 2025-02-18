@@ -69,8 +69,8 @@ namespace ITHACAutilities
 /// @return     Frobenius norm of the relative error.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-double errorFrobRel(GeometricField<Type, PatchField, GeoMesh>& field1,
-                    GeometricField<Type, PatchField, GeoMesh>& field2, List<label>* labels = NULL);
+double errorFrobRel(GeometricField<Type, PatchField, GeoMesh> & field1,
+                    GeometricField<Type, PatchField, GeoMesh> & field2, List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
 /// @brief      Computes the relative error between two geometric Fields in L2 norm
@@ -84,8 +84,8 @@ double errorFrobRel(GeometricField<Type, PatchField, GeoMesh>& field1,
 /// @return     L2 norm of the relative error.
 ///
 template<typename T>
-double errorL2Rel(GeometricField<T, fvPatchField, volMesh>& field1,
-                  GeometricField<T, fvPatchField, volMesh>& field2, List<label>* labels = NULL);
+double errorL2Rel(GeometricField<T, fvPatchField, volMesh> & field1,
+                  GeometricField<T, fvPatchField, volMesh> & field2, List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
 /// @brief      Computes the relative error between two geometric Fields in Linf norm
@@ -99,8 +99,8 @@ double errorL2Rel(GeometricField<T, fvPatchField, volMesh>& field1,
 /// @return     Linf norm of the relative error.
 ///
 template<typename T>
-double errorLinfRel(GeometricField<T, fvPatchField, volMesh>& field1,
-                    GeometricField<T, fvPatchField, volMesh>& field2, List<label>* labels = NULL);
+double errorLinfRel(GeometricField<T, fvPatchField, volMesh> & field1,
+                    GeometricField<T, fvPatchField, volMesh> & field2, List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
 /// @brief      Computes the absolute error between two geometric Fields in
@@ -115,8 +115,8 @@ double errorLinfRel(GeometricField<T, fvPatchField, volMesh>& field1,
 /// @return     L2 norm of the absolute error.
 ///
 template<typename T>
-double errorL2Abs(GeometricField<T, fvPatchField, volMesh>& field1,
-                  GeometricField<T, fvPatchField, volMesh>& field2, volScalarField& Volumes);
+double errorL2Abs(GeometricField<T, fvPatchField, volMesh> & field1,
+                  GeometricField<T, fvPatchField, volMesh> & field2, volScalarField& Volumes);
 
 //--------------------------------------------------------------------------
 /// @brief      Computes the absolute error between two Fields in L2 norm
@@ -130,8 +130,8 @@ double errorL2Abs(GeometricField<T, fvPatchField, volMesh>& field1,
 /// @return     L2 norm of the absolute error.
 ///
 template<typename T>
-double errorL2Abs(GeometricField<T, fvPatchField, volMesh>& field1,
-                  GeometricField<T, fvPatchField, volMesh>& field2, List<label>* labels = NULL);
+double errorL2Abs(GeometricField<T, fvPatchField, volMesh> & field1,
+                  GeometricField<T, fvPatchField, volMesh> & field2, List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
 /// @brief      Computes the relative error in L2 norm between two lists of fields
@@ -145,9 +145,9 @@ double errorL2Abs(GeometricField<T, fvPatchField, volMesh>& field1,
 /// @return     Column vector, in each row the L2 norm of the relative error.
 ///
 template<typename T>
-Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh>>&
+Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh>> &
                            fields1,
-                           PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2,
+                           PtrList<GeometricField<T, fvPatchField, volMesh>> & fields2,
                            List<label>* labels = NULL);
 
 //--------------------------------------------------------------------------
@@ -162,9 +162,9 @@ Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh>>&
 /// @return     Column vector, in each row the Frobenius norm of the relative error.
 ///
 template<class T, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh>>&
+Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh>> &
                              fields1,
-                             PtrList<GeometricField<T, PatchField, GeoMesh>>& fields2,
+                             PtrList<GeometricField<T, PatchField, GeoMesh>> & fields2,
                              List<label>* labels = NULL);
 //--------------------------------------------------------------------------
 
@@ -181,9 +181,9 @@ Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh>>&
 ///
 template<typename T>
 Eigen::MatrixXd errorL2Abs(
-    PtrList<GeometricField<T, fvPatchField, volMesh>>& fields1,
-    PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2,
-    PtrList<volScalarField>& Volumes);
+    PtrList<GeometricField<T, fvPatchField, volMesh>> & fields1,
+    PtrList<GeometricField<T, fvPatchField, volMesh>> & fields2,
+    PtrList<volScalarField> & Volumes);
 
 //--------------------------------------------------------------------------
 /// @brief      Computes the absolute error in L2 norm between two lists of Fields
@@ -197,9 +197,9 @@ Eigen::MatrixXd errorL2Abs(
 /// @return     column vector, in each row the L2 norm of the absolute error.
 ///
 template<typename T>
-Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh>>&
+Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh>> &
                            fields1,
-                           PtrList<GeometricField<T, fvPatchField, volMesh>>& fields2,
+                           PtrList<GeometricField<T, fvPatchField, volMesh>> & fields2,
                            List<label>* labels = NULL);
 
 //------------------------------------------------------------------------------
@@ -212,7 +212,7 @@ Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh>>&
 /// @return     L2 norm of the volVectorField.
 ///
 template<class T>
-double L2Norm(GeometricField<T, fvPatchField, volMesh>& field);
+double L2Norm(GeometricField<T, fvPatchField, volMesh> & field);
 
 //------------------------------------------------------------------------------
 /// Evaluate the Linf norm of a geometric field
@@ -224,7 +224,7 @@ double L2Norm(GeometricField<T, fvPatchField, volMesh>& field);
 /// @return     Linf norm of the volVectorField.
 ///
 template<class T>
-double LinfNorm(GeometricField<T, fvPatchField, volMesh>& field);
+double LinfNorm(GeometricField<T, fvPatchField, volMesh> & field);
 
 //------------------------------------------------------------------------------
 /// Evaluate the H1 seminorm of a geoemtri
@@ -236,7 +236,7 @@ double LinfNorm(GeometricField<T, fvPatchField, volMesh>& field);
 /// @return     H1 seminorm of the volVectorField.
 ///
 template<class T>
-double H1Seminorm(GeometricField<T, fvPatchField, volMesh>& field);
+double H1Seminorm(GeometricField<T, fvPatchField, volMesh> & field);
 
 //------------------------------------------------------------------------------
 /// Evaluate the Frobenius norm of a field
@@ -248,7 +248,7 @@ double H1Seminorm(GeometricField<T, fvPatchField, volMesh>& field);
 /// @return     Frobenius norm of the field.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-double frobNorm(GeometricField<Type, PatchField, GeoMesh>& field);
+double frobNorm(GeometricField<Type, PatchField, GeoMesh> & field);
 
 //--------------------------------------------------------------------------
 /// Evaluate the L2 norm of a field on a boundary patch
@@ -271,8 +271,8 @@ double L2normOnPatch(fvMesh& mesh, volScalarField& field, word patch);
 ///
 /// @return     L2 norm of the field on the patch.
 ///
-double L2productOnPatch(fvMesh& mesh, List<scalar>& field1,
-                        List<scalar>& field2, word patch);
+double L2productOnPatch(fvMesh& mesh, List<scalar> & field1,
+                        List<scalar> & field2, word patch);
 
 //--------------------------------------------------------------------------
 /// Evaluate the Linf norm of a field on a boundary patch

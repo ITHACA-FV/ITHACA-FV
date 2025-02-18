@@ -62,6 +62,7 @@ class tutorial06 : public SteadyNSTurb
             p(_p()),
             nut(_nut())
         {}
+
         //! [tutorial06]
         // Relevant Fields
         volVectorField& U;
@@ -110,6 +111,7 @@ class tutorial06 : public SteadyNSTurb
                 }
             }
         }
+
         /// Perform an Offline solve for a special set of parameter samples called par
         void offlineSolve(Eigen::MatrixXd par, fileName folder)
         {
@@ -126,6 +128,7 @@ class tutorial06 : public SteadyNSTurb
                 truthSolve(folder);
             }
         }
+
         void truthSolve(fileName folder)
         {
             Time& runTime = _runTime();

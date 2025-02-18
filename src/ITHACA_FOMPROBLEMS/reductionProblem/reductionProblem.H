@@ -193,7 +193,7 @@ class reductionProblem
         /// @param[in]  BC_ind  The BC index.
         /// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
         ///
-        void assignBC(volVectorField& s, label BC_ind, Vector<double>& value);
+        void assignBC(volVectorField& s, label BC_ind, Vector<double> & value);
 
         //--------------------------------------------------------------------------
         /// Assign Boundary Condition to a volScalarField
@@ -213,8 +213,8 @@ class reductionProblem
         /// @param[in]  Nmodes        The number of modes you want to use.
         /// @param[in]  coeff_matrix  The matrix of coefficients.
         ///
-        void reconstructFromMatrix(PtrList<volVectorField>& rec_field2,
-                                   PtrList<volVectorField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
+        void reconstructFromMatrix(PtrList<volVectorField> & rec_field2,
+                                   PtrList<volVectorField> & modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
         //--------------------------------------------------------------------------
         /// Exact reconstruction using a certain number of modes for vector list of
@@ -226,8 +226,8 @@ class reductionProblem
         /// @param[in]  coeff_matrix  The matrix of coefficients.
         ///
         /// Exact reconstruction using a certain number of modes for scalar list of fields
-        void reconstructFromMatrix(PtrList<volScalarField>& rec_field2,
-                                   PtrList<volScalarField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
+        void reconstructFromMatrix(PtrList<volScalarField> & rec_field2,
+                                   PtrList<volScalarField> & modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
         //--------------------------------------------------------------------------
         /// Assign internal field condition
@@ -286,7 +286,7 @@ class reductionProblem
         /// @return     Vector of objects to the RBF splines corresponding to each mode
         ///
         std::vector<SPLINTER::RBFSpline> getCoeffManifoldRBF(PtrList<volVectorField>
-                snapshots, PtrList<volVectorField>& modes, word rbfBasis = "GAUSSIAN");
+                snapshots, PtrList<volVectorField> & modes, word rbfBasis = "GAUSSIAN");
 
         //--------------------------------------------------------------------------
         /// @brief      Constructs the parameters-coefficients manifold for scalar fields, based on RBF-spline model
@@ -298,7 +298,7 @@ class reductionProblem
         /// @return     Vector of objects to the RBF splines corresponding to each mode
         ///
         std::vector<SPLINTER::RBFSpline> getCoeffManifoldRBF(PtrList<volScalarField>
-                snapshots, PtrList<volScalarField>& modes, word rbfBasis = "GAUSSIAN");
+                snapshots, PtrList<volScalarField> & modes, word rbfBasis = "GAUSSIAN");
 
         //--------------------------------------------------------------------------
         /// @brief      Constructs the parameters-coefficients manifold for vector fields, based on the B-spline model
@@ -310,7 +310,7 @@ class reductionProblem
         ///
         // std::vector<SPLINTER::BSpline*> getCoeffManifoldSPL(PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes, label splDeg=3);
         std::vector<SPLINTER::BSpline> getCoeffManifoldSPL(PtrList<volVectorField>
-                snapshots, PtrList<volVectorField>& modes, label splDeg = 3);
+                snapshots, PtrList<volVectorField> & modes, label splDeg = 3);
 
         //--------------------------------------------------------------------------
         /// @brief      Constructs the parameters-coefficients manifold for scalar fields, based on the B-spline model
@@ -321,7 +321,7 @@ class reductionProblem
         /// @return     Vector of objects to the B-splines corresponding to each mode
         ///
         std::vector<SPLINTER::BSpline> getCoeffManifoldSPL(PtrList<volScalarField>
-                snapshots, PtrList<volScalarField>& modes, label splDeg = 3);
+                snapshots, PtrList<volScalarField> & modes, label splDeg = 3);
 
 };
 
@@ -348,9 +348,8 @@ class reductionProblem
  * ITHACA-FV (In real Time Highly Advanced Computational Applications for
 Finite Volumes) is C++ library based on the finite volume solver
 [<b> OpenFOAM </b>](https://openfoam.org/). It consists of the implementation of several reduced order
-modeling techniques for parametrized problems. ITHACA-FV is developed and maintained by
-[<b> Dr. Giovanni Stabile </b>](http://people.sissa.it/~gstabile/) under the supervision of [<b> Prof. Gianluigi Rozza </b>](http://people.sissa.it/~grozza/) at [<b> SISSA mathLab </b>](https://mathlab.sissa.it/) an applied math laboratory of the
-[<b> International School for advanced studies </b>](https://www.sissa.it/).
+modeling techniques for parametrized problems. ITHACA-FV is developed and maintained mainly by the group of
+[<b> Prof. Giovanni Stabile </b>](https://www.giovannistabile.com/) at the [<b>Sant'Anna School of Advanced Studies](https://www.santannapisa.it/en) and partially at [<b> SISSA mathLab </b>](https://mathlab.sissa.it/) in collaboration with [<b> Prof. Gianluigi Rozza's Group </b>](http://people.sissa.it/~grozza/). Check also the GitHub [webpage](https://github.com/ITHACA-FV/ITHACA-FV) for more info.
 
  *
  * \section structure ITHACA-FV directory structure
@@ -365,7 +364,6 @@ modeling techniques for parametrized problems. ITHACA-FV is developed and mainta
  *
 Most of the theoretical aspects behind ITHACA-FV are deeply explained in [<b> Stabile2017CAIM </b>](https://doi.org/10.1515/caim-2017-0011) and [<b> Stabile2017CAF </b>](https://doi.org/10.1016/j.compfluid.2018.01.035).
 For this reason, if you use this software, please consider citing the mentioned works, reported in the following bibtex entries:
-
 
 @Article{Stabile2017CAIM,
 Title                    = {{POD-Galerkin reduced order methods for CFD using Finite Volume Discretisation: vortex shedding around a circular cylinder}},
@@ -384,7 +382,7 @@ Journal                  = {Computers & Fluids},
 Year                     = {2018},
 Doi                      = {10.1016/j.compfluid.2018.01.035}}
 
-And cite the ITHACA-FV [website](https://mathlab.sissa.it/ithaca-fv).
+And cite the ITHACA-FV [website](https://ithaca-fv.github.io/ITHACA-FV).
 
  */
 

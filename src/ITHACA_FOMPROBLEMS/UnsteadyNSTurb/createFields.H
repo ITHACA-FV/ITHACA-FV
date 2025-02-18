@@ -76,10 +76,9 @@ _nut = autoPtr<volScalarField>
 
 #include "createPhi.H"
 
-
-label pRefCell = 0;
-scalar pRefValue = 0.0;
-setRefCell(p, mesh.solutionDict().subDict("SIMPLE"), pRefCell, pRefValue);
+_pRefCell = 0;
+_pRefValue = 0.0;
+setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), _pRefCell, _pRefValue);
 
 _laminarTransport = autoPtr<singlePhaseTransportModel>
                     (

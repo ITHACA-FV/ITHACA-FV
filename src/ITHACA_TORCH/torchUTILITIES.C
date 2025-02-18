@@ -32,8 +32,8 @@
 
 namespace ITHACAtorch
 {
-torch::Tensor removeConstValues(torch::Tensor input, std::vector<int>& indices,
-                                std::vector<double>& constValues)
+torch::Tensor removeConstValues(torch::Tensor input, std::vector<int> & indices,
+                                std::vector<double> & constValues)
 {
     torch::Tensor output;
     return output;
@@ -46,7 +46,7 @@ bool isConst(torch::Tensor& tTensor)
 
     for (std::size_t i = 1, s = tTensor.numel(); i < s && all_equal; i++)
     {
-        all_equal = *ptr == *(ptr + i);
+        all_equal = * ptr == * (ptr + i);
     }
 
     return all_equal;

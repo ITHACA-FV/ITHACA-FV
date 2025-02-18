@@ -52,7 +52,7 @@ EXE_INC = \
     -I$(includepybind1) \
     -I$(includepybind2) \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11 \
+    -std=c++14 \
     -O3 \
     -w \
     -shared \

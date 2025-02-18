@@ -45,6 +45,7 @@ class Tm_time : public FofM
         Tm_time();
         Tm_time(int argc, char* argv[], label Nsampled);
         ~Tm_time() {};
+
         //Members
         /// List of pointers to temperature field
         autoPtr<volScalarField> _T;

@@ -13,7 +13,7 @@
 namespace SPLINTER
 {
 
-bool isKnotVectorRegular(const std::vector<double>& knots, unsigned int degree)
+bool isKnotVectorRegular(const std::vector<double> & knots, unsigned int degree)
 {
     // Check size
     if (knots.size() < 2 * (degree + 1))
@@ -31,7 +31,7 @@ bool isKnotVectorRegular(const std::vector<double>& knots, unsigned int degree)
     for (std::vector<double>::const_iterator it = knots.begin(); it != knots.end();
             ++it)
     {
-        if (count(knots.begin(), knots.end(), *it) > degree + 1)
+        if (count(knots.begin(), knots.end(), * it) > degree + 1)
         {
             return false;
         }
@@ -40,7 +40,7 @@ bool isKnotVectorRegular(const std::vector<double>& knots, unsigned int degree)
     return true;
 }
 
-bool isKnotVectorClamped(const std::vector<double>& knots, unsigned int degree)
+bool isKnotVectorClamped(const std::vector<double> & knots, unsigned int degree)
 {
     // Check multiplicity of first knot
     if (std::count(knots.begin(), knots.begin() + degree + 1,
@@ -59,8 +59,8 @@ bool isKnotVectorClamped(const std::vector<double>& knots, unsigned int degree)
     return true;
 }
 
-bool isKnotVectorRefinement(const std::vector<double>& knots,
-                            const std::vector<double>& refinedKnots)
+bool isKnotVectorRefinement(const std::vector<double> & knots,
+                            const std::vector<double> & refinedKnots)
 {
     // Check size
     if (refinedKnots.size() < knots.size())
@@ -72,8 +72,8 @@ bool isKnotVectorRefinement(const std::vector<double>& knots,
     for (std::vector<double>::const_iterator it = knots.begin() ; it != knots.end();
             ++it)
     {
-        int m_tau = count(knots.begin(), knots.end(), *it);
-        int m_t = count(refinedKnots.begin(), refinedKnots.end(), *it);
+        int m_tau = count(knots.begin(), knots.end(), * it);
+        int m_t = count(refinedKnots.begin(), refinedKnots.end(), * it);
 
         if (m_t < m_tau)
         {

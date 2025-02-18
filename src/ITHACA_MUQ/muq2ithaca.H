@@ -81,7 +81,7 @@ Eigen::MatrixXd EnsembleKalmanFilter(Eigen::MatrixXd prior,
 ///
 /// @return     Ensamble of the posterior
 ///
-Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField>& prior,
+Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField> & prior,
                                      Eigen::VectorXd measurements,
                                      Eigen::MatrixXd measurementsCov,
                                      Eigen::MatrixXd observedState);

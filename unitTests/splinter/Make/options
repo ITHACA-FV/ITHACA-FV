@@ -2,7 +2,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -w \
-    -std=c++11
+    -std=c++14
 
 EXE_LIBS = \
     -L$(FOAM_USER_LIBBIN) \

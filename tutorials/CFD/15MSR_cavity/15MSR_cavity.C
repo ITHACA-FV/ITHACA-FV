@@ -101,14 +101,14 @@ class msr : public usmsrProblem
                     _nu().value() = mu(0, i);
                     change_viscosity(mu(0, i));
                     _betaTot().value() = mu(1, i);
-                    _beta1().value() = r1 * mu(1, i);
-                    _beta2().value() = r2 * mu(1, i);
-                    _beta3().value() = r3 * mu(1, i);
-                    _beta4().value() = r4 * mu(1, i);
-                    _beta5().value() = r5 * mu(1, i);
-                    _beta6().value() = r6 * mu(1, i);
-                    _beta7().value() = r7 * mu(1, i);
-                    _beta8().value() = r8 * mu(1, i);
+                    _beta1().value() = r1* mu(1, i);
+                    _beta2().value() = r2* mu(1, i);
+                    _beta3().value() = r3* mu(1, i);
+                    _beta4().value() = r4* mu(1, i);
+                    _beta5().value() = r5* mu(1, i);
+                    _beta6().value() = r6* mu(1, i);
+                    _beta7().value() = r7* mu(1, i);
+                    _beta8().value() = r8* mu(1, i);
                     _decLam3().value() = mu(2, i);
                     mu_now[0] = mu(0, i);
                     mu_now[1] = mu(1, i);
@@ -148,6 +148,7 @@ class Ploct: public Ptot_time
 
         volScalarField& powerDens;
 };
+
 class Plocal: public Ptot
 {
     public:
@@ -159,6 +160,7 @@ class Plocal: public Ptot
 
         volScalarField& powerDens;
 };
+
 class Tmloct: public Tm_time
 {
     public:
@@ -289,14 +291,14 @@ int main(int argc, char* argv[])
     Eigen::VectorXd mu_on(3);
     ridotto.nu = mu_f(0, central);
     ridotto.btot = mu_f(1, central);
-    ridotto.b1 = prova.r1 * ridotto.btot;
-    ridotto.b2 = prova.r2 * ridotto.btot;
-    ridotto.b3 = prova.r3 * ridotto.btot;
-    ridotto.b4 = prova.r4 * ridotto.btot;
-    ridotto.b5 = prova.r5 * ridotto.btot;
-    ridotto.b6 = prova.r6 * ridotto.btot;
-    ridotto.b7 = prova.r7 * ridotto.btot;
-    ridotto.b8 = prova.r8 * ridotto.btot;
+    ridotto.b1 = prova.r1* ridotto.btot;
+    ridotto.b2 = prova.r2* ridotto.btot;
+    ridotto.b3 = prova.r3* ridotto.btot;
+    ridotto.b4 = prova.r4* ridotto.btot;
+    ridotto.b5 = prova.r5* ridotto.btot;
+    ridotto.b6 = prova.r6* ridotto.btot;
+    ridotto.b7 = prova.r7* ridotto.btot;
+    ridotto.b8 = prova.r8* ridotto.btot;
     ridotto.dl3 = mu_f(2, central);
     // index corresponding at central solution
     int ref_start = 465;
@@ -384,14 +386,14 @@ int main(int argc, char* argv[])
     {
         ridotto.nu = mu_f(0, i);
         ridotto.btot = mu_f(1, i);
-        ridotto.b1 = prova.r1 * ridotto.btot;
-        ridotto.b2 = prova.r2 * ridotto.btot;
-        ridotto.b3 = prova.r3 * ridotto.btot;
-        ridotto.b4 = prova.r4 * ridotto.btot;
-        ridotto.b5 = prova.r5 * ridotto.btot;
-        ridotto.b6 = prova.r6 * ridotto.btot;
-        ridotto.b7 = prova.r7 * ridotto.btot;
-        ridotto.b8 = prova.r8 * ridotto.btot;
+        ridotto.b1 = prova.r1* ridotto.btot;
+        ridotto.b2 = prova.r2* ridotto.btot;
+        ridotto.b3 = prova.r3* ridotto.btot;
+        ridotto.b4 = prova.r4* ridotto.btot;
+        ridotto.b5 = prova.r5* ridotto.btot;
+        ridotto.b6 = prova.r6* ridotto.btot;
+        ridotto.b7 = prova.r7* ridotto.btot;
+        ridotto.b8 = prova.r8* ridotto.btot;
         ridotto.dl3 = mu_f(2, i);
         mu_on(0) = ridotto.nu;
         mu_on(1) = ridotto.btot;
@@ -453,14 +455,14 @@ int main(int argc, char* argv[])
     {
         ridotto.nu = analisi.MatX(j, 0);
         ridotto.btot = analisi.MatX(j, 1);
-        ridotto.b1 = prova.r1 * ridotto.btot;
-        ridotto.b2 = prova.r2 * ridotto.btot;
-        ridotto.b3 = prova.r3 * ridotto.btot;
-        ridotto.b4 = prova.r4 * ridotto.btot;
-        ridotto.b5 = prova.r5 * ridotto.btot;
-        ridotto.b6 = prova.r6 * ridotto.btot;
-        ridotto.b7 = prova.r7 * ridotto.btot;
-        ridotto.b8 = prova.r8 * ridotto.btot;
+        ridotto.b1 = prova.r1* ridotto.btot;
+        ridotto.b2 = prova.r2* ridotto.btot;
+        ridotto.b3 = prova.r3* ridotto.btot;
+        ridotto.b4 = prova.r4* ridotto.btot;
+        ridotto.b5 = prova.r5* ridotto.btot;
+        ridotto.b6 = prova.r6* ridotto.btot;
+        ridotto.b7 = prova.r7* ridotto.btot;
+        ridotto.b8 = prova.r8* ridotto.btot;
         ridotto.dl3 = analisi.MatX(j, 2);
         mu_on(0) = ridotto.nu;
         mu_on(1) = ridotto.btot;
@@ -486,7 +488,7 @@ int main(int argc, char* argv[])
     TmediaSA.buildMO(folder);
     PtotSA.buildMO(folder);
     //assign FofM to LRSensitivity object, first figure of merit considered is the average temperature
-    analisi.M = autoPtr<FofM>(&TmediaSA);
+    analisi.M = autoPtr<FofM>( & TmediaSA);
     //load the model output in the LRSensitivity object
     analisi.load_output();
     //compute output statistics
@@ -519,7 +521,7 @@ int main(int argc, char* argv[])
     coeffsT.row(3) = analisi.betas;
     ITHACAstream::exportMatrix(coeffsT, "coeffsT", "eigen", "./ITHACAoutput");
     //assign FofM object to LRSensitivity object
-    analisi.M = autoPtr<FofM>(&PtotSA);
+    analisi.M = autoPtr<FofM>( & PtotSA);
     //load the model output in the LRSensitivity object, repeat all the previous step
     // for the total power
     analisi.load_output();

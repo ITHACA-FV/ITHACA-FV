@@ -34,7 +34,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
     -Wno-comment \
     -w \
-    -std=c++11
+    -std=c++14
 
 EXE_LIBS = \
     -lturbulenceModels \

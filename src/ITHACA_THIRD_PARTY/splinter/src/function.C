@@ -13,26 +13,26 @@
 namespace SPLINTER
 {
 
-double Function::eval(const std::vector<double>& x) const
+double Function::eval(const std::vector<double> & x) const
 {
     auto denseX = vectorToDenseVector(x);
     return eval(denseX);
 }
 
-std::vector<double> Function::evalJacobian(const std::vector<double>& x) const
+std::vector<double> Function::evalJacobian(const std::vector<double> & x) const
 {
     auto denseX = vectorToDenseVector(x);
     return denseVectorToVector(evalJacobian(denseX));
 }
 
 std::vector<std::vector<double>> Function::evalHessian(const std::vector<double>
-                              & x) const
+        & x) const
 {
     auto denseX = vectorToDenseVector(x);
     return denseMatrixToVectorVector(secondOrderCentralDifference(denseX));
 }
 
-std::vector<double> Function::centralDifference(const std::vector<double>& x)
+std::vector<double> Function::centralDifference(const std::vector<double> & x)
 const
 {
     auto denseX = vectorToDenseVector(x);
@@ -41,7 +41,7 @@ const
 }
 
 std::vector<std::vector<double>> Function::secondOrderCentralDifference(
-                                  const std::vector<double>& x) const
+    const std::vector<double> & x) const
 {
     auto denseX = vectorToDenseVector(x);
     DenseMatrix ddx = secondOrderCentralDifference(denseX);
@@ -104,7 +104,7 @@ DenseMatrix Function::secondOrderCentralDifference(DenseVector x) const
             x2(j) = x2(j) - hBackward;
             x3(i) = x3(i) - hBackward;
             x3(j) = x3(j) - hBackward;
-            ddx(i, j) = (eval(x0) - eval(x1) - eval(x2) + eval(x3)) / (h * h);
+            ddx(i, j) = (eval(x0) - eval(x1) - eval(x2) + eval(x3)) / (h* h);
         }
     }
 

@@ -96,7 +96,7 @@ class incrementalPOD : public Modes<Type, PatchField, GeoMesh>
         /// @param[in]  _tol        Incremental SVD tollerance
         /// @param[in]  _maxRank   i Maximum POD rank
         ///
-        incrementalPOD(GeometricField<Type, PatchField, GeoMesh>& snapshot,
+        incrementalPOD(GeometricField<Type, PatchField, GeoMesh> & snapshot,
                        double _tol, word _PODnorm);
 
         /// Destructor
@@ -107,14 +107,14 @@ class incrementalPOD : public Modes<Type, PatchField, GeoMesh>
         ///
         /// @param[in]  snapshot    A first snapshot
         ///
-        void initialize(GeometricField<Type, PatchField, GeoMesh>& snapshot);
+        void initialize(GeometricField<Type, PatchField, GeoMesh> & snapshot);
 
         //--------------------------------------------------------------------------
         /// @brief      Add a snapshot to the POD space
         ///
         /// @param[in]  snapshot    Snapshot to add
         ///
-        void addSnapshot(GeometricField<Type, PatchField, GeoMesh>& snapshot);
+        void addSnapshot(GeometricField<Type, PatchField, GeoMesh> & snapshot);
 
         //--------------------------------------------------------------------------
         /// @brief      Fill the POD modes prtList from the Eigen matrix
@@ -129,7 +129,7 @@ class incrementalPOD : public Modes<Type, PatchField, GeoMesh>
         /// @return     The coefficient of the projected field into the reduced space
         ///
         Eigen::VectorXd project(
-            GeometricField<Type, PatchField, GeoMesh>& inputField,
+            GeometricField<Type, PatchField, GeoMesh> & inputField,
             label numberOfModes = 0);
 
         //--------------------------------------------------------------------------
@@ -142,7 +142,7 @@ class incrementalPOD : public Modes<Type, PatchField, GeoMesh>
         /// @return     Reconstructed field
         ///
         GeometricField<Type, PatchField, GeoMesh> reconstruct(
-            GeometricField<Type, PatchField, GeoMesh>& inputField,
+            GeometricField<Type, PatchField, GeoMesh> & inputField,
             Eigen::MatrixXd Coeff,
             word Name);
 
@@ -155,7 +155,7 @@ class incrementalPOD : public Modes<Type, PatchField, GeoMesh>
         /// @return     The projected snapshot
         ///
         GeometricField<Type, PatchField, GeoMesh> projectSnapshot(
-            GeometricField<Type, PatchField, GeoMesh>& snapshot,
+            GeometricField<Type, PatchField, GeoMesh> & snapshot,
             label numberOfModes = 0);
 
         //--------------------------------------------------------------------------
@@ -167,7 +167,7 @@ class incrementalPOD : public Modes<Type, PatchField, GeoMesh>
         ///
         void projectSnapshots(
             PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
-            PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
+            PtrList<GeometricField<Type, PatchField, GeoMesh>> & projSnapshots,
             label numberOfModes = 0);
 
         //--------------------------------------------------------------------------
@@ -205,7 +205,7 @@ void weightedGramSchmidt(
             double den = (Ortho.col(k).transpose() * weights.asDiagonal()
                           * Ortho.col(k));
             double fact = num / den;
-            Ortho.col(i) -= fact * Ortho.col(k) ;
+            Ortho.col(i) -= fact* Ortho.col(k) ;
         }
 
         Ortho.col(i).normalize();
@@ -214,6 +214,7 @@ void weightedGramSchmidt(
     matrix = Ortho;
 };
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif

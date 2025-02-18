@@ -136,7 +136,7 @@ void reductionProblem::assignBC(volScalarField& s, label BC_ind, double& value)
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
 
-        freestreamFvPatchField<scalar>& Tpatch =
+        freestreamFvPatchField<scalar> & Tpatch =
             refCast<freestreamFvPatchField<scalar>>(s.boundaryFieldRef()[BC_ind]);
         scalarField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
@@ -158,7 +158,7 @@ void reductionProblem::assignBC(volScalarField& s, label BC_ind, double& value)
 
 // Assign a BC for a scalar field
 void reductionProblem::assignBC(volVectorField& s, label BC_ind,
-                                Vector<double>& value)
+                                Vector<double> & value)
 {
     if (s.boundaryField()[BC_ind].type() == "fixedValue")
     {
@@ -179,7 +179,7 @@ void reductionProblem::assignBC(volVectorField& s, label BC_ind,
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
 
-        freestreamFvPatchField<vector>& Tpatch =
+        freestreamFvPatchField<vector> & Tpatch =
             refCast<freestreamFvPatchField<vector>>(s.boundaryFieldRef()[BC_ind]);
         vectorField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
@@ -190,8 +190,8 @@ void reductionProblem::assignBC(volVectorField& s, label BC_ind,
 }
 
 // Reconstruct using a Matrix of coefficients (vector field)
-void reductionProblem::reconstructFromMatrix(PtrList<volVectorField>&
-        rec_field2, PtrList<volVectorField>& modes, label Nmodes,
+void reductionProblem::reconstructFromMatrix(PtrList<volVectorField> &
+        rec_field2, PtrList<volVectorField> & modes, label Nmodes,
         Eigen::MatrixXd coeff_matrix)
 {
     for (label k = 0; k < coeff_matrix.cols(); k++)
@@ -200,7 +200,7 @@ void reductionProblem::reconstructFromMatrix(PtrList<volVectorField>&
         {
             if ( i == 0)
             {
-                rec_field2.append(coeff_matrix(i, k)*modes[i]);
+                rec_field2.append(coeff_matrix(i, k) * modes[i]);
             }
             else
             {
@@ -212,8 +212,8 @@ void reductionProblem::reconstructFromMatrix(PtrList<volVectorField>&
 
 
 // Reconstruct using a Matrix of coefficients (vector field)
-void reductionProblem::reconstructFromMatrix(PtrList<volScalarField>&
-        rec_field2, PtrList<volScalarField>& modes, label Nmodes,
+void reductionProblem::reconstructFromMatrix(PtrList<volScalarField> &
+        rec_field2, PtrList<volScalarField> & modes, label Nmodes,
         Eigen::MatrixXd coeff_matrix)
 {
     for (label k = 0; k < coeff_matrix.cols(); k++)
@@ -222,7 +222,7 @@ void reductionProblem::reconstructFromMatrix(PtrList<volScalarField>&
         {
             if ( i == 0)
             {
-                rec_field2.append(coeff_matrix(i, k)*modes[i]);
+                rec_field2.append(coeff_matrix(i, k) * modes[i]);
             }
             else
             {
@@ -249,6 +249,7 @@ void reductionProblem::writeMu(List<scalar> mu_now)
     {
         ofs << mu_now[i] << ' ';
     }
+
     ofs << "\n";
     ofs.close();
 }
@@ -268,7 +269,7 @@ void reductionProblem::liftSolveT()
 }
 
 std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
-    PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes,
+    PtrList<volVectorField> snapshots, PtrList<volVectorField> & modes,
     word rbfBasis)
 {
     Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
@@ -352,7 +353,7 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
 
 
 std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
-    PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes,
+    PtrList<volScalarField> snapshots, PtrList<volScalarField> & modes,
     word rbfBasis)
 {
     Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
@@ -436,7 +437,8 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
 
 
 std::vector<SPLINTER::BSpline> reductionProblem::getCoeffManifoldSPL(
-    PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes, label splDeg)
+    PtrList<volVectorField> snapshots, PtrList<volVectorField> & modes,
+    label splDeg)
 {
     Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
     M_Assert(mu_samples.rows() == coeff.cols() * mu.rows(),
@@ -490,7 +492,8 @@ std::vector<SPLINTER::BSpline> reductionProblem::getCoeffManifoldSPL(
 
 
 std::vector<SPLINTER::BSpline> reductionProblem::getCoeffManifoldSPL(
-    PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes, label splDeg)
+    PtrList<volScalarField> snapshots, PtrList<volScalarField> & modes,
+    label splDeg)
 {
     Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
     M_Assert(mu_samples.rows() == coeff.cols() * mu.rows(),

@@ -1,0 +1,124 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+scale   0.1;
+
+vertices
+(
+    (0 0 0)
+    (1 0 0)
+    (1 1 0)
+    (0 1 0)
+    (0 0 0.1)
+    (1 0 0.1)
+    (1 1 0.1)
+    (0 1 0.1)
+    (1 0 0)
+    (2 0 0)
+    (2 1 0)
+    (1 1 0)
+    (1 0 0.1)
+    (2 0 0.1)
+    (2 1 0.1)
+    (1 1 0.1)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (10 10 1) simpleGrading (1 1 1)
+    hex (8 9 10 11 12 13 14 15) (10 20 1) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+    	type patch;
+    	faces
+    	(
+            (0 4 7 3)
+    	);
+    }
+    outlet
+    {
+    	type patch;
+    	faces
+    	(
+            (10 14 13 9)
+    	);
+    }
+    fixedWallsLeft
+    {
+        type wall;
+        faces
+        (
+            (1 5 4 0)
+            (3 7 6 2)
+        );
+    }
+    fixedWallsRight
+    {
+        type wall;
+        faces
+        (
+            (9 13 12 8)
+            (11 15 14 10)
+        );
+    }
+    frontAndBackLeft
+    {
+        type empty;
+        faces
+        (
+            (0 3 2 1)
+            (4 5 6 7)
+        );
+    }
+    frontAndBackRight
+    {
+        type empty;
+        faces
+        (
+            (8 11 10 9)
+            (12 13 14 15)
+        );
+    }
+    left
+    {
+    	type cyclicAMI;
+    	neighbourPatch right;
+    	faces
+    	(
+    	    (2 6 5 1)
+    	);
+    }
+    right
+    {
+    	type cyclicAMI;
+    	neighbourPatch left;
+    	faces
+    	(
+    	    (8 12 15 11)
+    	);
+    }
+);
+
+
+// ************************************************************************* //

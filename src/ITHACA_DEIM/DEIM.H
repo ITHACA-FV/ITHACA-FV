@@ -49,7 +49,7 @@ class DEIM
         /// @param[in]  FunctionName     The function name, used to save the results
         /// @param[in]  FieldName        The field name
         ///
-        DEIM (PtrList<T>& SnapShotsMatrix, label MaxModes, word FunctionName,
+        DEIM (PtrList<T> & SnapShotsMatrix, label MaxModes, word FunctionName,
               word FieldName);
 
         //----------------------------------------------------------------------
@@ -60,7 +60,7 @@ class DEIM
         /// @param[in]  MaxModesB        The maximum number of modes for the source term b
         /// @param[in]  MatrixName       The matrix name, used to save the results
         ///
-        DEIM (PtrList<T>& SnapShotsMatrix, label MaxModesA, label MaxModesB,
+        DEIM (PtrList<T> & SnapShotsMatrix, label MaxModesA, label MaxModesB,
               word MatrixName);
 
         /// The snapshots matrix containing the nonlinear function or operator
@@ -71,7 +71,7 @@ class DEIM
 
         /// Matrix Modes
         std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-                Matrix_Modes;
+        Matrix_Modes;
 
         /// The maximum number of modes to be considered
         label MaxModes;
@@ -279,7 +279,7 @@ class DEIM
         ///
         /// @return     The local indices
         ///
-        List<label> global2local(List<label>& points,
+        List<label> global2local(List<label> & points,
                                  fvMeshSubset& submesh);
 
         //----------------------------------------------------------------------

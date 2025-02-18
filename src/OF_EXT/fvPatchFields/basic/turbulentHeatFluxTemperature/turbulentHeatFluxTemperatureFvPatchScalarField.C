@@ -70,7 +70,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField::
 turbulentHeatFluxTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, volMesh> & iF
 )
     :
     fixedGradientFvPatchScalarField(p, iF),
@@ -85,7 +85,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField
 (
     const turbulentHeatFluxTemperatureFvPatchScalarField& ptf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, volMesh> & iF,
     const fvPatchFieldMapper& mapper
 )
     :
@@ -100,7 +100,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField::
 turbulentHeatFluxTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, volMesh> & iF,
     const dictionary& dict
 )
     :
@@ -139,7 +139,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField::
 turbulentHeatFluxTemperatureFvPatchScalarField
 (
     const turbulentHeatFluxTemperatureFvPatchScalarField& thftpsf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, volMesh> & iF
 )
     :
     fixedGradientFvPatchScalarField(thftpsf, iF),
@@ -196,13 +196,13 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         case hsPower:
         {
             const scalar Ap = gSum(patch().magSf());
-            gradient() = q_ / (Ap * rhoCp0 * alphaEffp);
+            gradient() = q_ / (Ap* rhoCp0* alphaEffp);
             break;
         }
 
         case hsFlux:
         {
-            gradient() = q_ / (rhoCp0 * alphaEffp);
+            gradient() = q_ / (rhoCp0* alphaEffp);
             break;
         }
 
@@ -229,7 +229,7 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::write(Ostream& os) const
 {
     fixedGradientFvPatchScalarField::write(os);
     os.writeKeyword("heatSource") << heatSourceTypeNames_[heatSource_]
-                                  << token::END_STATEMENT << nl;
+      << token::END_STATEMENT << nl;
     q_.writeEntry("q", os);
     os.writeKeyword("alphaEff") << alphaEffName_ << token::END_STATEMENT << nl;
     writeEntry("value", os);

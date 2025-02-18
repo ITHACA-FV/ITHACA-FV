@@ -92,7 +92,8 @@ class LRSensitivity
         /// Method to build MatX, it internally calls ITHACAsampling::samplingMC
         /// pdflist is the list with the names of the distributions of the parameters
         /// plist contains the parameters of the distributions, therefore its size must be (No_parameters,2)
-        void buildSamplingSet(std::vector<std::string>& pdflist, Eigen::MatrixXd plist);
+        void buildSamplingSet(std::vector<std::string> & pdflist,
+                              Eigen::MatrixXd plist);
         ///----------------------------------------------------------------------------------------
 
         /// Method to load the output of FOM/ROM inside member LRsensitivity member y

@@ -228,8 +228,9 @@ void unsteadyNST::liftSolveT()
         scalar dt = mesh.time().deltaTValue();
         forAll(Tlift, i)
         {
-            Tlift[i] = (totalTime * Tlift[i] + dt * Tlift[i] ) / (totalTime + dt);
+            Tlift[i] = (totalTime* Tlift[i] + dt* Tlift[i] ) / (totalTime + dt);
         }
+
         Tlift.write();
         liftfieldT.append(Tlift.clone());
     }
@@ -440,6 +441,7 @@ Eigen::MatrixXd unsteadyNST::diffusive_term_temperature(label NUmodes,
             }
         }
     }
+
     // Export the matrix
     ITHACAstream::SaveDenseMatrix(Y_matrix, "./ITHACAoutput/Matrices/",
                                   "Y_" + name(liftfieldT.size()) + "_" + name(NTmodes));
@@ -465,6 +467,7 @@ Eigen::MatrixXd unsteadyNST::mass_term_temperature(label NUmodes, label NTmodes,
                                   "MT_" + name(liftfieldT.size()) + "_" + name(NTmodes));
     return MT_matrix;
 }
+
 // Calculate lifting function for velocity
 void unsteadyNST::liftSolve()
 {
@@ -517,7 +520,7 @@ void unsteadyNST::liftSolve()
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("Phi", dimLength * dimVelocity, 0),
+            dimensionedScalar("Phi", dimLength* dimVelocity, 0),
             p.boundaryField().types()
         );
         label PhiRefCell = 0;

@@ -71,7 +71,7 @@ namespace ITHACAutilities
 /// @return     the labels list of the points
 ///
 labelList getIndicesFromBox(const fvMesh& mesh, List<label> indices,
-                            Eigen::MatrixXd Box, List<vector>& points2Move);
+                            Eigen::MatrixXd Box, List<vector> & points2Move);
 
 //--------------------------------------------------------------------------
 /// @brief      Gets the indices of the cells around a certain cell.
@@ -105,7 +105,7 @@ List<label> getIndices(const fvMesh& mesh, int index_row, int index_col,
 /// @param[out] points   The coordinates of the points on the patch
 /// @param[out] indices  The indices of the points on the patch
 ///
-void getPointsFromPatch(fvMesh& mesh, label ind, List<vector>& points,
+void getPointsFromPatch(fvMesh& mesh, label ind, List<vector> & points,
                         labelList& indices);
 
 //--------------------------------------------------------------------------
@@ -195,7 +195,7 @@ Eigen::VectorXd boudaryFaceToCellDistance(fvMesh& mesh, label BC_ind);
 /// @return     The indices of the points lying inside the specified the disc.
 ///
 List<label> getIndicesFromDisc(const fvMesh& mesh, double radius,
-                               vector origin, vector axis, List<double>& radii);
+                               vector origin, vector axis, List<double> & radii);
 
 //--------------------------------------------------------------------------
 /// @brief      Gets the indices from coordinates of a given box.
@@ -209,7 +209,7 @@ List<label> getIndicesFromDisc(const fvMesh& mesh, double radius,
 ///
 template<typename type_f>
 List<label> getIndicesFromBox(
-    GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+    GeometricField<type_f, fvPatchField, volMesh> & field, Eigen::MatrixXd Box);
 
 //--------------------------------------------------------------------------
 /// @brief      Gets a subMesh from a box of coordinates and a given field (used only for the mesh).
@@ -223,7 +223,7 @@ List<label> getIndicesFromBox(
 ///
 template<typename type_f>
 fvMeshSubset* getSubMeshFromBox(
-    GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+    GeometricField<type_f, fvPatchField, volMesh> & field, Eigen::MatrixXd Box);
 
 //--------------------------------------------------------------------------
 /// @brief      Returns a scalarField that containes the non-orthogonality value of a given mesh
@@ -245,7 +245,7 @@ volScalarField meshNonOrtho(fvMesh& mesh, volScalarField& NonOrtho);
 ///
 /// @return     The Rotated Points
 ///
-List<vector> rotatePoints(const List<vector>& originalPoints,
+List<vector> rotatePoints(const List<vector> & originalPoints,
                           vector AxisOfRotation, double AngleOfRotation);
 
 }

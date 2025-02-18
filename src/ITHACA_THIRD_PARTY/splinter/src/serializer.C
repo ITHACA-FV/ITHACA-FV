@@ -34,7 +34,7 @@ void Serializer::saveToFile(const std::string& fileName)
 {
     std::fstream fs(fileName, std::fstream::out | std::fstream::binary);
 
-    for (const auto& byte : stream)
+    for (const auto & byte : stream)
     {
         fs << byte;
     }
@@ -65,7 +65,7 @@ void Serializer::loadFromFile(const std::string& fileName)
     stream.clear();
 
     // Convert from char to uint_8 vector
-    for (const char& byte : result)
+    for (const char & byte : result)
     {
         stream.push_back((uint8_t)byte);
     }
@@ -121,7 +121,7 @@ size_t Serializer::get_size(const DenseMatrix& obj)
 
     if (numElements > 0)
     {
-        size += numElements * sizeof(obj(0, 0));
+        size += numElements* sizeof(obj(0, 0));
     }
 
     return size;
@@ -134,7 +134,7 @@ size_t Serializer::get_size(const DenseVector& obj)
 
     if (numElements > 0)
     {
-        size += numElements * sizeof(obj(0));
+        size += numElements* sizeof(obj(0));
     }
 
     return size;

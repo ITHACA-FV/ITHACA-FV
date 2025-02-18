@@ -104,14 +104,14 @@ class msr : public usmsrProblem
                     _nu().value() = mu(0, i);
                     change_viscosity(mu(0, i));
                     _betaTot().value() = mu(1, i);
-                    _beta1().value() = r1 * mu(1, i);
-                    _beta2().value() = r2 * mu(1, i);
-                    _beta3().value() = r3 * mu(1, i);
-                    _beta4().value() = r4 * mu(1, i);
-                    _beta5().value() = r5 * mu(1, i);
-                    _beta6().value() = r6 * mu(1, i);
-                    _beta7().value() = r7 * mu(1, i);
-                    _beta8().value() = r8 * mu(1, i);
+                    _beta1().value() = r1* mu(1, i);
+                    _beta2().value() = r2* mu(1, i);
+                    _beta3().value() = r3* mu(1, i);
+                    _beta4().value() = r4* mu(1, i);
+                    _beta5().value() = r5* mu(1, i);
+                    _beta6().value() = r6* mu(1, i);
+                    _beta7().value() = r7* mu(1, i);
+                    _beta8().value() = r8* mu(1, i);
                     _decLam3().value() = mu(2, i);
                     mu_now[0] = mu(0, i);
                     mu_now[1] = mu(1, i);
@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
     TmediaSA.buildMO(folder);
     PtotSA.buildMO(folder);
     //assign it to VDSensitivity object
-    analisi.M = autoPtr<FofM>(&TmediaSA);
+    analisi.M = autoPtr<FofM>( & TmediaSA);
     //load the model output in the VDSensitivity object
     analisi.load_output();
     analisi.getYstat();
@@ -251,7 +251,7 @@ int main(int argc, char* argv[])
     coeffsT.row(3) = analisi.betas;
     ITHACAstream::exportMatrix(coeffsT, "coeffsT", "eigen", "./ITHACAoutput");
     //assign it to VDSensitivity object
-    analisi.M = autoPtr<FofM>(&PtotSA);
+    analisi.M = autoPtr<FofM>( & PtotSA);
     //load the model output in the VDSensitivity object
     analisi.load_output();
     analisi.getYstat();

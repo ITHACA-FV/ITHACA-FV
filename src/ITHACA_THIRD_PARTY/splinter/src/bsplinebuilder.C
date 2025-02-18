@@ -79,11 +79,11 @@ DenseVector BSpline::Builder::computeCoefficients(const BSpline& bspline) const
          * NOTE2: consider changing regularization factor to (alpha/numSample)
          */
         SparseMatrix Bt = B.transpose();
-        A = Bt * B;
-        b = Bt * b;
+        A = Bt* B;
+        b = Bt* b;
         auto I = SparseMatrix(A.cols(), A.cols());
         I.setIdentity();
-        A += _alpha * I;
+        A += _alpha* I;
     }
     else if (_smoothing == Smoothing::PSPLINE)
     {
@@ -113,9 +113,9 @@ DenseVector BSpline::Builder::computeCoefficients(const BSpline& bspline) const
         // Second order finite difference matrix
         SparseMatrix D = getSecondOrderFiniteDifferenceMatrix(bspline);
         // Left-hand side matrix
-        A = Bt * W * B + _alpha * D.transpose() * D;
+        A = Bt* W* B + _alpha* D.transpose() * D;
         // Compute right-hand side matrices
-        b = Bt * W * b;
+        b = Bt* W* b;
     }
 
     DenseVector x;
@@ -282,7 +282,7 @@ SparseMatrix BSpline::Builder::getSecondOrderFiniteDifferenceMatrix(
         for (int j = 0; j < rightProd; j++)
         {
             // Start column of current subblock
-            int blkBaseCol = j * leftProd * dims[d];
+            int blkBaseCol = j* leftProd* dims[d];
 
             // Block rows [I -2I I] of subblock
             for (unsigned int l = 0; l < (dims[d] - 2); l++)
@@ -290,7 +290,7 @@ SparseMatrix BSpline::Builder::getSecondOrderFiniteDifferenceMatrix(
                 // Special case for first dimension
                 if (d == 0)
                 {
-                    int k = j * leftProd * dims[d] + l;
+                    int k = j* leftProd* dims[d] + l;
                     D.insert(i, k) = 1;
                     k += leftProd;
                     D.insert(i, k) = -2;
@@ -303,7 +303,7 @@ SparseMatrix BSpline::Builder::getSecondOrderFiniteDifferenceMatrix(
                     // Loop for identity matrix
                     for (int n = 0; n < leftProd; n++)
                     {
-                        int k = blkBaseCol + l * leftProd + n;
+                        int k = blkBaseCol + l* leftProd + n;
                         D.insert(i, k) = 1;
                         k += leftProd;
                         D.insert(i, k) = -2;
@@ -344,7 +344,7 @@ std::vector<std::vector<double>> BSpline::Builder::computeKnotVectors() const
 
 // Compute a single knot vector from sample grid and degree
 std::vector<double> BSpline::Builder::computeKnotVector(
-    const std::vector<double>& values,
+    const std::vector<double> & values,
     unsigned int degree,
     unsigned int numBasisFunctions) const
 {
@@ -395,7 +395,7 @@ std::vector<double> BSpline::Builder::computeKnotVector(
 * samples are added to buckets and the knots computed as the average of these.
 */
 std::vector<double> BSpline::Builder::knotVectorMovingAverage(
-    const std::vector<double>& values,
+    const std::vector<double> & values,
     unsigned int degree) const
 {
     // Sort and remove duplicates
@@ -450,7 +450,7 @@ std::vector<double> BSpline::Builder::knotVectorMovingAverage(
 }
 
 std::vector<double> BSpline::Builder::knotVectorEquidistant(
-    const std::vector<double>& values,
+    const std::vector<double> & values,
     unsigned int degree,
     unsigned int numBasisFunctions = 0) const
 {
@@ -502,7 +502,7 @@ std::vector<double> BSpline::Builder::knotVectorEquidistant(
 }
 
 std::vector<double> BSpline::Builder::knotVectorBuckets(
-    const std::vector<double>& values, unsigned int degree,
+    const std::vector<double> & values, unsigned int degree,
     unsigned int maxSegments) const
 {
     // Sort and remove duplicates
@@ -549,7 +549,7 @@ std::vector<double> BSpline::Builder::knotVectorBuckets(
     }
 
     // Residual
-    unsigned int res = unique.size() - w * ni;
+    unsigned int res = unique.size() - w* ni;
     // Create array with window sizes
     std::vector<unsigned int> windows(ni, w);
 
@@ -591,7 +591,7 @@ std::vector<double> BSpline::Builder::knotVectorBuckets(
 }
 
 std::vector<double> BSpline::Builder::extractUniqueSorted(
-    const std::vector<double>& values) const
+    const std::vector<double> & values) const
 {
     // Sort and remove duplicates
     std::vector<double> unique(values);

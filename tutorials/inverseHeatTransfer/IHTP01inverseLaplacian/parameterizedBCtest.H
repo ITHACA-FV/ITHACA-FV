@@ -43,6 +43,7 @@ forAll(linSys_solvers, solverI)
     residualNorms(solverI) = Foam::sqrt(
                                  example_paramBC.residual.squaredNorm());
 }
+
 Eigen::MatrixXd A = example_paramBC.Theta.transpose() * example_paramBC.Theta;
 ITHACAstream::exportMatrix(residualNorms, "residuals2norm", "eigen",
                            outputFolder);

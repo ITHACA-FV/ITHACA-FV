@@ -23,4 +23,5 @@ class thermocouplesPlane
         List<scalar> thermocoupleZ;
         Foam::vector thermocoupleCellDim;
 };
+
 #endif

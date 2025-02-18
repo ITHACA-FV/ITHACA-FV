@@ -62,6 +62,7 @@ UnsteadyNSTurb::UnsteadyNSTurb(int argc, char* argv[])
                   )
               );
 #include "createFields.H"
+#include "createUfIfPresent.H"
 #include "createFvOptions.H"
     ITHACAdict = new IOdictionary
     (
@@ -114,18 +115,19 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
 #include "initContinuityErrs.H"
     fv::options& fvOptions = _fvOptions();
     pimpleControl& pimple = _pimple();
-    volScalarField p = _p();
-    volVectorField U = _U();
-    volScalarField nut = _nut();
+    volScalarField& p = _p();
+    volVectorField& U = _U();
+    volScalarField& nut = _nut();
     IOMRFZoneList& MRF = _MRF();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
     instantList Times = runTime.times();
+    label& pRefCell = _pRefCell;
+    scalar& pRefValue = _pRefValue;
+    mesh.setFluxRequired(p.name());
     runTime.setEndTime(finalTime);
-    // Perform a TruthSolve
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
-    nextWrite = startTime;
-    // Initialize Nsnapshots
+    nextWrite = startTime + writeEvery;
     label nsnapshots = 0;
 
     // Start the time loop
@@ -134,7 +136,7 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
 #include "readTimeControls.H"
 #include "CourantNo.H"
 #include "setDeltaT.H"
-        runTime.setEndTime(finalTime + timeStep);
+        ++runTime;
         Info << "Time = " << runTime.timeName() << nl << endl;
 
         // --- Pressure-velocity PIMPLE corrector loop
@@ -164,6 +166,7 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
             nsnapshots += 1;
             // Produces error when uncommented
             // volScalarField nut = turbulence->nut().ref();
+            nut = turbulence->nut();
             ITHACAstream::exportSolution(U, name(counter), offlinepath);
             ITHACAstream::exportSolution(p, name(counter), offlinepath);
             ITHACAstream::exportSolution(nut, name(counter), offlinepath);
@@ -184,8 +187,6 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
                 mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
             }
         }
-
-        runTime++;
     }
 
     // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
@@ -194,7 +195,7 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
         mu.resize(1, 1);
     }
 
-    if (mu_samples.rows() == nsnapshots * mu.cols())
+    if (mu_samples.rows() == nsnapshots* mu.cols())
     {
         ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",
                                    offlinepath);
@@ -776,8 +777,8 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
                 ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsSUP/",
                                               weightName);
-                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                        SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, radii(i));
+                rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
+                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, radii(i));
                 std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
             }
             else
@@ -789,8 +790,8 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                     samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
                 }
 
-                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                        SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, radii(i));
+                rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
+                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, radii(i));
                 ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                               "./ITHACAoutput/weightsSUP/", weightName);
                 std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
@@ -1263,8 +1264,8 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
 
                 ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsPPE/",
                                               weightName);
-                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                        SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, radii(i));
+                rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
+                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, radii(i));
                 std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
             }
             else
@@ -1276,8 +1277,8 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                     samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
                 }
 
-                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
-                                                        SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, radii(i));
+                rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
+                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, radii(i));
                 ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                               "./ITHACAoutput/weightsPPE/", weightName);
                 std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
@@ -1304,17 +1305,17 @@ List < Eigen::MatrixXd > UnsteadyNSTurb::velDerivativeCoeff(Eigen::MatrixXd A,
 
     for (label j = 0; j < parsSamplesNum; j++)
     {
-        Eigen::MatrixXd b0 = A.middleRows(j * timeSnapshotsPerSample,
+        Eigen::MatrixXd b0 = A.middleRows(j* timeSnapshotsPerSample,
                                           timeSnapshotsPerSample - 1);
-        Eigen::MatrixXd b2 = A.middleRows(j * timeSnapshotsPerSample + 1,
+        Eigen::MatrixXd b2 = A.middleRows(j* timeSnapshotsPerSample + 1,
                                           timeSnapshotsPerSample - 1);
         Eigen::MatrixXd bNew(b0.rows(), b0.cols() + b2.cols());
         bNew << b2, (b2 - b0) / (timeSnap(j, 0));
-        newCoeffs[0].block(j * timeSnapshotsPerSample - j, 0,
+        newCoeffs[0].block(j* timeSnapshotsPerSample - j, 0,
                            timeSnapshotsPerSample - 1, newColsNum) = bNew;
-        newCoeffs[1].middleRows(j * timeSnapshotsPerSample - j,
-                                timeSnapshotsPerSample - 1) = G.middleRows(j * timeSnapshotsPerSample + 1,
-                                        timeSnapshotsPerSample - 1);
+        newCoeffs[1].middleRows(j* timeSnapshotsPerSample - j,
+                                timeSnapshotsPerSample - 1) = G.middleRows(j* timeSnapshotsPerSample + 1,
+                                    timeSnapshotsPerSample - 1);
     }
 
     interChoice = 3;
@@ -1355,21 +1356,21 @@ List < Eigen::MatrixXd > UnsteadyNSTurb::velParDerivativeCoeff(
 
     for (label j = 0; j < parsSamplesNum; j++)
     {
-        Eigen::MatrixXd b0 = A.middleRows(j * timeSnapshotsPerSample,
+        Eigen::MatrixXd b0 = A.middleRows(j* timeSnapshotsPerSample,
                                           timeSnapshotsPerSample - 1);
-        Eigen::MatrixXd b2 = A.middleRows(j * timeSnapshotsPerSample + 1,
+        Eigen::MatrixXd b2 = A.middleRows(j* timeSnapshotsPerSample + 1,
                                           timeSnapshotsPerSample - 1);
         Eigen::MatrixXd bNew(b0.rows(), b0.cols() + b2.cols());
         bNew << b2, (b2 - b0) / (timeSnap(j, 0));
-        newCoeffs[0].block(j * timeSnapshotsPerSample - j, 0,
+        newCoeffs[0].block(j* timeSnapshotsPerSample - j, 0,
                            timeSnapshotsPerSample - 1, z.cols() - 1) = pars.middleRows(
-                                       j * timeSnapshotsPerSample + 1,
-                                       timeSnapshotsPerSample - 1);
-        newCoeffs[0].block(j * timeSnapshotsPerSample - j, z.cols() - 1,
+                                   j* timeSnapshotsPerSample + 1,
+                                   timeSnapshotsPerSample - 1);
+        newCoeffs[0].block(j* timeSnapshotsPerSample - j, z.cols() - 1,
                            timeSnapshotsPerSample - 1, newColsNum) = bNew;
-        newCoeffs[1].middleRows(j * timeSnapshotsPerSample - j,
-                                timeSnapshotsPerSample - 1) = G.middleRows(j * timeSnapshotsPerSample + 1,
-                                        timeSnapshotsPerSample - 1);
+        newCoeffs[1].middleRows(j* timeSnapshotsPerSample - j,
+                                timeSnapshotsPerSample - 1) = G.middleRows(j* timeSnapshotsPerSample + 1,
+                                    timeSnapshotsPerSample - 1);
     }
 
     interChoice = 4;

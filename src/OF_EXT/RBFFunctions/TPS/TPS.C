@@ -78,6 +78,7 @@ Foam::scalarField Foam::TPS::weights
             RBF[i] = 0.0;
         }
     }
+
     return RBF;
 }
 
