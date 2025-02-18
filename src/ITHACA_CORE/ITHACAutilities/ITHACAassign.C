@@ -542,7 +542,7 @@ void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_in
     label sizeBC = s.boundaryField()[BC_ind].size();
     M_Assert(sizeBC == valueList.size(),
              "The size of the given values list has to be equal to the dimension of the boundaryField");
-
+    ITHACAparameters* para(ITHACAparameters::getInstance());
     if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         Info << "This Feature is not implemented for this boundary condition" << endl;
