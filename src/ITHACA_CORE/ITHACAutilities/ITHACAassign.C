@@ -435,10 +435,48 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh> & s, label BC_ind,
     }
 }
 
-
-// Assign a BC for a vector field
+// Assign a BC for a pointPatch field
 void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
               List<vector> valueList)
+{
+    word typeBC = s.boundaryField()[BC_ind].type();
+    label sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC == valueList.size(),
+             "The size of the given values list has to be equal to the dimension of the boundaryField");
+
+    if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        Info << "This Feature is not implemented for this boundary condition" << endl;
+        exit(0);
+    }
+    else if (s.boundaryField()[BC_ind].type() == "empty"
+             || s.boundaryField()[BC_ind].type() == "zeroGradient")
+    {}
+    else
+    {
+        try
+        {
+            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty"
+                    && typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated"
+                    &&  typeBC != "processor")
+            {
+                word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
+                               " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                throw (message);
+            }
+        }
+        catch (const word message)
+        {
+            cerr << "WARNING: " << message << endl;
+        }
+
+        for (label i = 0; i < sizeBC; i++)
+        {
+             s.boundaryFieldRef()[BC_ind].patchInternalField()()[i] == valueList[i];
+            
+        }
+    }
+}
 // Assign a BC for a tensor field
 void assignBC(GeometricField<tensor, fvPatchField, volMesh> & s, label BC_ind,
               List<tensor> valueList)
