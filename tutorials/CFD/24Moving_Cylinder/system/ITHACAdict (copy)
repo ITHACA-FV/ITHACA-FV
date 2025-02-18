@@ -1,0 +1,54 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      ITHACAdict;
+}
+
+// EigenValue solver, can be eigen or spectra
+EigenSolver eigen;
+//EigenSolver spectra;
+
+// Number of modes to output and to use for projection
+NmodesUout 50;
+NmodesUproj 16; //15
+
+NmodePUout 50;
+NmodesPproj 21;
+
+NmodesDout 3;
+NmodesDproj 3; //3
+
+debug 1;
+// Output format to save market vectors.
+OutPrecision 20;
+OutType fixed;
+
+//bcMethod penalty;
+warning false;
+POD_pointDisplacement  Frobenius;
+
+bcMethod      lift; 
+/// ####### ldlt solver:
+/// Nu = Np = 30, cpu time = 1.3023e+09
+/// Nu = Np = 21, cpu time = 1.16318e+09
+/// Nu = Np = 5, cpu time  = 8.95933e+08
+/// Nu = Np = 11, cpu time = 9.76184e+08
+/// Nu = 16,  Np = 21, cpu time = 1.10124e+09
+
+// ##### colPivHH ######
+// Nu =Np = 30, cpu time = 1344624761
+// Nu =Np = 20, cpu time = 1.15692e+09
+// Nu =Np = 5, cpu time  = 9.02333e+08
+// Nu = Np= 15, cpu time = 1.06528e+09 
+// Nu =20,  Np = 10, cpu time = 1.09818e+09
+
