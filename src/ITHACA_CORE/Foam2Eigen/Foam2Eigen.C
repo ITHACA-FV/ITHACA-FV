@@ -722,11 +722,6 @@ Foam2Eigen::PtrList2Eigen<vector, pointPatchField, pointMesh>(PtrList<pointVecto
         fields, label Nfields);
 
 template Eigen::MatrixXd
-Foam2Eigen::PtrList2Eigen<vector, fvPatchField, volMesh>
-(PtrList<volVectorField> &
- fields,
- label Nfields);
-template Eigen::MatrixXd
 Foam2Eigen::PtrList2Eigen<tensor, fvPatchField, volMesh>
 (PtrList<volTensorField> &
  fields,
