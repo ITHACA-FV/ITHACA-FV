@@ -535,7 +535,6 @@ void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s,
 
     assignBC(s, BC_ind, valueList);
 }
-
 void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
               List<double> valueList)
 {
@@ -549,25 +548,7 @@ void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_in
         Info << "This Feature is not implemented for this boundary condition" << endl;
         exit(0);
     }
-    else if (typeBC == "empty"){}
-  
-    else if (s.boundaryField()[BC_ind].type() == "freestream")
-    {
-        for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
-        {
-            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
-        }
-
-        freestreamFvPatchField<tensor> & Tpatch =
-            refCast<freestreamFvPatchField<tensor>>(s.boundaryFieldRef()[BC_ind]);
-        tensorField& gradTpatch = Tpatch.freestreamValue();
-        forAll(gradTpatch, faceI)
-        {
-            gradTpatch[faceI] = valueList[faceI];
-        }
-    }
-    else if (s.boundaryField()[BC_ind].type() == "empty"
-             || s.boundaryField()[BC_ind].type() == "zeroGradient")
+    else if (typeBC == "empty")
     {}
     else
     {
@@ -585,10 +566,6 @@ void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_in
         catch (const word message)
         {
             cerr << "WARNING: " << message << endl;
-            if (para->warnings)
-            {
-                WarningInFunction << message << endl;
-            }
         }
 
         for (label i = 0; i < sizeBC; i++)
@@ -600,6 +577,7 @@ void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_in
         }
     }
 }
+
 
 template<typename Type>
 void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh> & s,
