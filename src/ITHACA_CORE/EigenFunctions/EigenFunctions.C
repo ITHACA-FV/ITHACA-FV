@@ -86,10 +86,10 @@ Eigen::VectorXd ExpSpaced(double first, double last, int n)
 
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>
-vectorTensorProduct(const Eigen::Matrix<T, Eigen::Dynamic, 1>&
+vectorTensorProduct(const Eigen::Matrix<T, Eigen::Dynamic, 1> &
                     g,
-                    const Eigen::Tensor<T, 3 >& c,
-                    const Eigen::Matrix<T, Eigen::Dynamic, 1>& a)
+                    const Eigen::Tensor<T, 3 > & c,
+                    const Eigen::Matrix<T, Eigen::Dynamic, 1> & a)
 {
     int prodDim = c.dimension(0);
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> prod;
@@ -106,18 +106,19 @@ vectorTensorProduct(const Eigen::Matrix<T, Eigen::Dynamic, 1>&
 
 template Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
 vectorTensorProduct<>(
-    const Eigen::Matrix<double, Eigen::Dynamic, 1>& g,
-    const Eigen::Tensor<double, 3 >& c,
-    const Eigen::Matrix<double, Eigen::Dynamic, 1>& a);
+    const Eigen::Matrix<double, Eigen::Dynamic, 1> & g,
+    const Eigen::Tensor<double, 3 > & c,
+    const Eigen::Matrix<double, Eigen::Dynamic, 1> & a);
 
 template Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>
 vectorTensorProduct(
-    const Eigen::Matrix<int, Eigen::Dynamic, 1>& g, const Eigen::Tensor<int, 3 >& c,
-    const Eigen::Matrix<int, Eigen::Dynamic, 1>& a);
+    const Eigen::Matrix<int, Eigen::Dynamic, 1> & g,
+    const Eigen::Tensor<int, 3 > & c,
+    const Eigen::Matrix<int, Eigen::Dynamic, 1> & a);
 
 template Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>
 vectorTensorProduct(
-    const Eigen::Matrix<float, Eigen::Dynamic, 1>& g,
-    const Eigen::Tensor<float, 3 >& c,
-    const Eigen::Matrix<float, Eigen::Dynamic, 1>& a);
+    const Eigen::Matrix<float, Eigen::Dynamic, 1> & g,
+    const Eigen::Tensor<float, 3 > & c,
+    const Eigen::Matrix<float, Eigen::Dynamic, 1> & a);
 }

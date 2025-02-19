@@ -38,16 +38,38 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 template <template <class> class PatchField, class GeoMesh>
 Eigen::VectorXd Foam2Eigen::field2Eigen(
-    GeometricField<vector, PatchField, GeoMesh>& field)
+    GeometricField<tensor, PatchField, GeoMesh> & field)
+{
+    Eigen::VectorXd out;
+    out.resize(label(field.size() * 9));
+
+    for (label l = 0; l < field.size(); l++)
+    {
+        for (label j = 0; j < 9; j++)
+        {
+            out(j* field.size() + l) = field[l][j];
+        }
+    }
+
+    return out;
+}
+
+template Eigen::VectorXd Foam2Eigen::field2Eigen(
+    volTensorField& field);
+
+template <template <class> class PatchField, class GeoMesh>
+Eigen::VectorXd Foam2Eigen::field2Eigen(
+    GeometricField<vector, PatchField, GeoMesh> & field)
 {
     Eigen::VectorXd out;
     out.resize(label(field.size() * 3));
 
     for (label l = 0; l < field.size(); l++)
     {
-        out(l) = field[l][0];
-        out(field.size() + l) = field[l][1];
-        out(2 * field.size() + l) = field[l][2];
+        for (label j = 0; j < 3; j++)
+        {
+            out(j* field.size() + l) = field[l][j];
+        }
     }
 
     return out;
@@ -58,7 +80,7 @@ template Eigen::VectorXd Foam2Eigen::field2Eigen(
 
 template <template <class> class PatchField, class GeoMesh>
 Eigen::VectorXd Foam2Eigen::field2Eigen(
-    GeometricField<scalar, PatchField, GeoMesh>& field)
+    GeometricField<scalar, PatchField, GeoMesh> & field)
 {
     Eigen::VectorXd out;
     out.resize(label(field.size()));
@@ -73,14 +95,26 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(
 
 template <template <class> class PatchField, class GeoMesh>
 Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
-    GeometricField<scalar, PatchField, GeoMesh>& field)
+    GeometricField<scalar, PatchField, GeoMesh> & field)
 {
     Eigen::Map<Eigen::MatrixXd> output(field.ref().data(), field.size(), 1);
     return std::move(output);
 }
 
+template <template <class> class PatchField, class GeoMesh>
+Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMapBC(
+    GeometricField<scalar, PatchField, GeoMesh> & field, int BC_index)
+{
+    Eigen::Map<Eigen::MatrixXd> output(field.boundaryFieldRef()[BC_index].data(),
+                                       field.boundaryField()[BC_index].size(), 1);
+    return std::move(output);
+}
+
 template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
     volScalarField& field);
+
+template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMapBC(
+    volScalarField& field, int BC_index);
 
 template Eigen::VectorXd Foam2Eigen::field2Eigen(
     volScalarField& field);
@@ -88,7 +122,7 @@ template Eigen::VectorXd Foam2Eigen::field2Eigen(
     surfaceScalarField& field);
 
 template <>
-Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<scalar>& field)
+Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<scalar> & field)
 {
     Eigen::VectorXd out;
     out.resize(label(field.size()));
@@ -102,16 +136,34 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<scalar>& field)
 }
 
 template <>
-Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<vector>& field)
+Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<vector> & field)
 {
     Eigen::VectorXd out;
     out.resize(label(field.size() * 3));
 
     for (label l = 0; l < field.size(); l++)
     {
-        out(l) = field[l][0];
-        out(field.size() + l) = field[l][1];
-        out(2 * field.size() + l) = field[l][2];
+        for (label j = 0; j < 3; j++)
+        {
+            out(j* field.size() + l) = field[l][j];
+        }
+    }
+
+    return out;
+}
+
+template <>
+Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<tensor> & field)
+{
+    Eigen::VectorXd out;
+    out.resize(label(field.size() * 9));
+
+    for (label l = 0; l < field.size(); l++)
+    {
+        for (label j = 0; j < 9; j++)
+        {
+            out(j* field.size() + l) = field[l][j];
+        }
     }
 
     return out;
@@ -119,7 +171,7 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<vector>& field)
 
 template <>
 Eigen::VectorXd Foam2Eigen::field2Eigen(const
-                                        DimensionedField<scalar, Foam::volMesh>& field)
+                                        DimensionedField<scalar, Foam::volMesh> & field)
 {
     Eigen::VectorXd out;
     out.resize(label(field.size()));
@@ -134,7 +186,35 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const
 
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    GeometricField<vector, PatchField, GeoMesh>& field)
+    GeometricField<tensor, PatchField, GeoMesh> & field)
+{
+    List<Eigen::VectorXd> Out;
+    label size = field.boundaryField().size();
+    Out.resize(size);
+
+    for (label i = 0; i < size; i++)
+    {
+        label sizei = field.boundaryField()[i].size();
+        Out[i].resize(sizei * 9);
+
+        for (label k = 0; k < sizei; k++)
+        {
+            for (label j = 0; j < 9; j++)
+            {
+                Out[i](k + j* sizei) = field.boundaryField()[i][k][j];
+            }
+        }
+    }
+
+    return Out;
+}
+
+template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    volTensorField& field);
+
+template <template <class> class PatchField, class GeoMesh>
+List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    GeometricField<vector, PatchField, GeoMesh> & field)
 {
     List<Eigen::VectorXd> Out;
     label size = field.boundaryField().size();
@@ -156,7 +236,8 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
         }
     }
 
-    else if  constexpr(std::is_same<pointMesh, GeoMesh>::value){
+    else if  constexpr(std::is_same<pointMesh, GeoMesh>::value)
+    {
         for (label i = 0; i < size; i++ )
         {
             label sizei = field.boundaryField()[i].size();
@@ -180,7 +261,7 @@ template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    GeometricField<scalar, PatchField, GeoMesh>& field)
+    GeometricField<scalar, PatchField, GeoMesh> & field)
 {
     List<Eigen::VectorXd> Out;
     label size = field.boundaryField().size();
@@ -199,12 +280,13 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 
     return Out;
 }
+
 template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     volScalarField& field);
 
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<GeometricField<scalar, PatchField, GeoMesh>>&
+    PtrList<GeometricField<scalar, PatchField, GeoMesh>> &
     fields,
     label Nfields)
 {
@@ -246,14 +328,14 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
 }
 
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<volScalarField>& fields, label Nfields);
+    PtrList<volScalarField> & fields, label Nfields);
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<surfaceScalarField>& fields, label Nfields);
+    PtrList<surfaceScalarField> & fields, label Nfields);
 
 
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<GeometricField<vector, PatchField, GeoMesh>>&
+    PtrList<GeometricField<vector, PatchField, GeoMesh>> &
     fields,
     label Nfields)
 {
@@ -296,13 +378,88 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
 
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     PtrList<volVectorField>& fields, label Nfields);
+
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
 PtrList<pointVectorField>& fields, label Nfields);
 
+
+
+template <template <class> class PatchField, class GeoMesh>
+List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<GeometricField<tensor, PatchField, GeoMesh>> &
+    fields,
+    label Nfields)
+{
+    label Nf;
+    M_Assert(Nfields <= fields.size(),
+             "The Number of requested fields cannot be bigger than the number of requested entries.");
+
+    if (Nfields == -1)
+    {
+        Nf = fields.size();
+    }
+    else
+    {
+        Nf = Nfields;
+    }
+
+    List<Eigen::MatrixXd> Out;
+    label NBound = fields[0].boundaryField().size();
+    Out.resize(NBound);
+
+    for (label i = 0; i < NBound; i++)
+    {
+        label sizei = fields[0].boundaryField()[i].size();
+        Out[i].resize(sizei * 9, Nf);
+    }
+
+    for (label k = 0; k < Nf; k++)
+    {
+        List<Eigen::VectorXd> temp;
+        temp = field2EigenBC(fields[k]);
+
+        for (label i = 0; i < NBound; i++)
+        {
+            Out[i].col(k) = temp[i];
+        }
+    }
+
+    return Out;
+}
+
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    PtrList<volTensorField> & fields, label Nfields);
+
+template <template <class> class PatchField, class GeoMesh>
+GeometricField<tensor, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
+    GeometricField<tensor, PatchField, GeoMesh> & field_in,
+    Eigen::VectorXd& eigen_vector, bool correctBC)
+{
+    GeometricField<tensor, PatchField, GeoMesh> field_out(field_in);
+
+    for (auto i = 0; i < field_out.size(); i++)
+    {
+        for (label j = 0; j < 9; j++)
+        {
+            field_out.ref()[i][j] = eigen_vector(i + field_out.size() * j);
+        }
+    }
+
+    if (correctBC)
+    {
+        field_out.correctBoundaryConditions();
+    }
+
+    return field_out;
+}
+
+template volTensorField Foam2Eigen::Eigen2field(
+    volTensorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
+
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
-    GeometricField<vector, PatchField, GeoMesh>& field_in,
-    Eigen::VectorXd& eigen_vector, bool correctBC)
+    GeometricField<vector, PatchField, GeoMesh> & field_in,
+    Eigen::VectorXd& eigen_vector, List<Eigen::VectorXd> & eigen_vector_boundary)
 {
     GeometricField<vector, PatchField, GeoMesh> field_out(field_in);
 
@@ -311,6 +468,66 @@ GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
         field_out.ref()[i][0] = eigen_vector(i);
         field_out.ref()[i][1] = eigen_vector(i + field_out.size());
         field_out.ref()[i][2] = eigen_vector(i + field_out.size() * 2);
+    }
+
+    for (unsigned int id = 0; id < field_out.boundaryField().size(); id++)
+    {
+        unsigned int idBSize = field_out.boundaryField()[id].size();
+
+        for (unsigned int ith_bcell = 0; ith_bcell < idBSize; ith_bcell++)
+        {
+            ITHACAutilities::assignBC(field_out, id, eigen_vector_boundary[id]);
+        }
+    }
+
+    return field_out;
+}
+
+template volVectorField Foam2Eigen::Eigen2field(
+    volVectorField& field_in, Eigen::VectorXd& eigen_vector,
+    List<Eigen::VectorXd> & eigen_vector_boundary);
+
+template<template<class> class PatchField, class GeoMesh>
+GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
+    GeometricField<scalar, PatchField, GeoMesh> & field_in,
+    Eigen::VectorXd& eigen_vector, List<Eigen::VectorXd> & eigen_vector_boundary)
+{
+    GeometricField<scalar, PatchField, GeoMesh> field_out(field_in);
+
+    for (auto i = 0; i < field_out.size(); i++)
+    {
+        field_out.ref()[i] = eigen_vector(i);
+    }
+
+    for (unsigned int id = 0; id < field_out.boundaryField().size(); id++)
+    {
+        for (unsigned int ith_bcell = 0;
+                ith_bcell < field_out.boundaryField()[id].size(); ith_bcell++)
+        {
+            ITHACAutilities::assignBC(field_out, id, eigen_vector_boundary[id]);
+        }
+    }
+
+    return field_out;
+}
+
+template volScalarField Foam2Eigen::Eigen2field(
+    volScalarField& field_in, Eigen::VectorXd& eigen_vector,
+    List<Eigen::VectorXd> & eigen_vector_boundary);
+
+template<template<class> class PatchField, class GeoMesh>
+GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
+    GeometricField<vector, PatchField, GeoMesh> & field_in,
+    Eigen::VectorXd& eigen_vector, bool correctBC)
+{
+    GeometricField<vector, PatchField, GeoMesh> field_out(field_in);
+
+    for (auto i = 0; i < field_out.size(); i++)
+    {
+        for (label j = 0; j < 3; j++)
+        {
+            field_out.ref()[i][j] = eigen_vector(i + field_out.size() * j);
+        }
     }
 
     if (correctBC)
@@ -328,7 +545,7 @@ template pointVectorField Foam2Eigen::Eigen2field(
 
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<scalar, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
-    GeometricField<scalar, PatchField, GeoMesh>& field_in,
+    GeometricField<scalar, PatchField, GeoMesh> & field_in,
     Eigen::VectorXd& eigen_vector, bool correctBC)
 {
     GeometricField<scalar, PatchField, GeoMesh> field_out(field_in);
@@ -367,7 +584,7 @@ volScalarField Foam2Eigen::Eigen2field(
 
 template <>
 Field<scalar> Foam2Eigen::Eigen2field(
-    Field<scalar>& field, Eigen::MatrixXd& matrix, bool correctBC)
+    Field<scalar> & field, Eigen::MatrixXd& matrix, bool correctBC)
 {
     label sizeBC = field.size();
     M_Assert(matrix.cols() == 1,
@@ -396,7 +613,7 @@ Field<scalar> Foam2Eigen::Eigen2field(
 
 template <>
 Field<vector> Foam2Eigen::Eigen2field(
-    Field<vector>& field, Eigen::MatrixXd& matrix, bool correctBC)
+    Field<vector> & field, Eigen::MatrixXd& matrix, bool correctBC)
 {
     label sizeBC = field.size();
     M_Assert(matrix.cols() == 3,
@@ -417,9 +634,42 @@ Field<vector> Foam2Eigen::Eigen2field(
 
     for (auto i = 0; i < sizeBC; i++)
     {
-        field[i][0] = matrix(i, 0);
-        field[i][1] = matrix(i, 1);
-        field[i][2] = matrix(i, 2);
+        for (label j = 0; j < 3; j++)
+        {
+            field[i][j] = matrix(i, j);
+        }
+    }
+
+    return field;
+}
+
+template <>
+Field<tensor> Foam2Eigen::Eigen2field(
+    Field<tensor> & field, Eigen::MatrixXd& matrix, bool correctBC)
+{
+    label sizeBC = field.size();
+    M_Assert(matrix.cols() == 9,
+             "The number of columns of the Input members is not correct, it should be 1");
+
+    if (matrix.rows() == 1)
+    {
+        Eigen::MatrixXd new_matrix = matrix.replicate(sizeBC, 1);
+        matrix.conservativeResize(sizeBC, 9);
+        matrix = new_matrix;
+    }
+
+    std::string message = "The input Eigen::MatrixXd has size " + name(
+                              matrix.rows()) +
+                          ". It should have the same size of the Field, i.e. " +
+                          name(sizeBC);
+    M_Assert(matrix.rows() == sizeBC, message.c_str());
+
+    for (auto i = 0; i < sizeBC; i++)
+    {
+        for (label j = 0; j < 9; j++)
+        {
+            field[i][j] = matrix(i, j);
+        }
     }
 
     return field;
@@ -427,7 +677,7 @@ Field<vector> Foam2Eigen::Eigen2field(
 
 template <class Type, template <class> class PatchField, class GeoMesh>
 Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & fields,
     label Nfields)
 {
     label Nf;
@@ -456,10 +706,11 @@ Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(
 }
 
 template Eigen::MatrixXd
-Foam2Eigen::PtrList2Eigen<scalar, fvPatchField, volMesh>(PtrList<volScalarField>&
-        fields,
-        label Nfields);
-template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<surfaceScalarField>&
+Foam2Eigen::PtrList2Eigen<scalar, fvPatchField, volMesh>
+(PtrList<volScalarField> &
+ fields,
+ label Nfields);
+template Eigen::MatrixXd Foam2Eigen::PtrList2Eigen(PtrList<surfaceScalarField> &
         fields,
         label Nfields);
 template Eigen::MatrixXd
@@ -469,6 +720,13 @@ Foam2Eigen::PtrList2Eigen<vector, fvPatchField, volMesh>(PtrList<volVectorField>
 template Eigen::MatrixXd
 Foam2Eigen::PtrList2Eigen<vector, pointPatchField, pointMesh>(PtrList<pointVectorField>&
         fields, label Nfields);
+
+template Eigen::MatrixXd
+Foam2Eigen::PtrList2Eigen<tensor, fvPatchField, volMesh>
+(PtrList<volTensorField> &
+ fields,
+ label Nfields);
+
 
 template <>
 void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
@@ -493,6 +751,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
         A(lowerAddr[i], upperAddr[i]) = foam_matrix.upper()[i];
         A(upperAddr[i], lowerAddr[i]) = foam_matrix.lower()[i];
     }
+
     forAll(foam_matrix.psi().boundaryField(), I)
     {
         const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
@@ -537,6 +796,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
         A(upperAddr[i] + sizeA, lowerAddr[i] + sizeA) = foam_matrix.lower()[i];
         A(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2) = foam_matrix.lower()[i];
     }
+
     forAll(foam_matrix.psi().boundaryField(), I)
     {
         const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
@@ -555,7 +815,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
 
 template <>
 void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
-                                Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
+                                Eigen::SparseMatrix<double> & A, Eigen::VectorXd& b)
 {
     label sizeA = foam_matrix.diag().size();
     label nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
@@ -581,6 +841,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
         tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
         tripletList.push_back(Trip(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]));
     }
+
     forAll(foam_matrix.psi().boundaryField(), I)
     {
         const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
@@ -591,12 +852,13 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
             b(w, 0) += foam_matrix.boundaryCoeffs()[I][J];
         }
     }
+
     A.setFromTriplets(tripletList.begin(), tripletList.end());
 }
 
 template <>
 void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
-                                Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
+                                Eigen::SparseMatrix<double> & A, Eigen::VectorXd& b)
 {
     label sizeA = foam_matrix.diag().size();
     label nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
@@ -635,6 +897,7 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
         tripletList.push_back(Trip(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2,
                                    foam_matrix.lower()[i]));
     }
+
     forAll(foam_matrix.psi().boundaryField(), I)
     {
         const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
@@ -651,11 +914,12 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
             b(w + sizeA * 2) += foam_matrix.boundaryCoeffs()[I][J][2];
         }
     }
+
     A.setFromTriplets(tripletList.begin(), tripletList.end());
 }
 
 template <>
-void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar>& foam_matrix,
+void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar> & foam_matrix,
                                  Eigen::MatrixXd& A)
 {
     label sizeA = foam_matrix.diag().size();
@@ -674,6 +938,7 @@ void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar>& foam_matrix,
         A(lowerAddr[i], upperAddr[i]) = foam_matrix.upper()[i];
         A(upperAddr[i], lowerAddr[i]) = foam_matrix.lower()[i];
     }
+
     forAll(foam_matrix.psi().boundaryField(), I)
     {
         const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
@@ -686,8 +951,8 @@ void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar>& foam_matrix,
 }
 
 template <>
-void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar>& foam_matrix,
-                                 Eigen::SparseMatrix<double>& A)
+void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar> & foam_matrix,
+                                 Eigen::SparseMatrix<double> & A)
 {
     label sizeA = foam_matrix.diag().size();
     label nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
@@ -711,6 +976,7 @@ void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar>& foam_matrix,
         tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
         tripletList.push_back(Trip(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]));
     }
+
     forAll(foam_matrix.psi().boundaryField(), I)
     {
         const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
@@ -720,11 +986,12 @@ void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar>& foam_matrix,
             tripletList.push_back(Trip(w, w, foam_matrix.internalCoeffs()[I][J]));
         }
     }
+
     A.setFromTriplets(tripletList.begin(), tripletList.end());
 }
 
 template <>
-void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
+void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector> & foam_matrix,
                                  Eigen::MatrixXd& A)
 {
     label sizeA = foam_matrix.diag().size();
@@ -749,6 +1016,7 @@ void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
         A(upperAddr[i] + sizeA, lowerAddr[i] + sizeA) = foam_matrix.lower()[i];
         A(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2) = foam_matrix.lower()[i];
     }
+
     forAll(foam_matrix.psi().boundaryField(), I)
     {
         const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
@@ -764,8 +1032,8 @@ void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
 
 
 template <>
-void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
-                                 Eigen::SparseMatrix<double>& A)
+void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector> & foam_matrix,
+                                 Eigen::SparseMatrix<double> & A)
 {
     label sizeA = foam_matrix.diag().size();
     label nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
@@ -800,6 +1068,7 @@ void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
         tripletList.push_back(Trip(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2,
                                    foam_matrix.lower()[i]));
     }
+
     forAll(foam_matrix.psi().boundaryField(), I)
     {
         const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
@@ -813,11 +1082,12 @@ void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
                                        foam_matrix.internalCoeffs()[I][J][2]));
         }
     }
+
     A.setFromTriplets(tripletList.begin(), tripletList.end());
 }
 
 template <>
-void Foam2Eigen::fvMatrix2EigenV(fvMatrix<scalar>& foam_matrix,
+void Foam2Eigen::fvMatrix2EigenV(fvMatrix<scalar> & foam_matrix,
                                  Eigen::VectorXd& b)
 {
     label sizeA = foam_matrix.diag().size();
@@ -840,7 +1110,7 @@ void Foam2Eigen::fvMatrix2EigenV(fvMatrix<scalar>& foam_matrix,
 }
 
 template <>
-void Foam2Eigen::fvMatrix2EigenV(fvMatrix<vector>& foam_matrix,
+void Foam2Eigen::fvMatrix2EigenV(fvMatrix<vector> & foam_matrix,
                                  Eigen::VectorXd& b)
 {
     label sizeA = foam_matrix.diag().size();
@@ -868,8 +1138,8 @@ void Foam2Eigen::fvMatrix2EigenV(fvMatrix<vector>& foam_matrix,
 
 template <class Type, template <class> class PatchField, class GeoMesh>
 Eigen::VectorXd Foam2Eigen::projectField(
-    GeometricField<Type, PatchField, GeoMesh>& field,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    GeometricField<Type, PatchField, GeoMesh> & field,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes,
     label Nmodes)
 {
     Eigen::VectorXd fr;
@@ -893,8 +1163,8 @@ Eigen::VectorXd Foam2Eigen::projectField(
 
 template <class Type, template <class> class PatchField, class GeoMesh>
 std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(
-    fvMatrix<Type>& matrix,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, label Nmodes)
+    fvMatrix<Type> & matrix,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes, label Nmodes)
 {
     Eigen::SparseMatrix<double> A;
     Eigen::MatrixXd Ar;
@@ -927,7 +1197,7 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(
         }
     }
 
-    Ar = Eig_Modes.transpose() * A * Eig_Modes;
+    Ar = Eig_Modes.transpose() * A* Eig_Modes;
     br = Eig_Modes.transpose() * b;
     std::tuple<Eigen::MatrixXd, Eigen::VectorXd> tupla;
     tupla = std::make_tuple(Ar, br);
@@ -936,7 +1206,7 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(
 
 template <class Type, template <class> class PatchField, class GeoMesh>
 Eigen::MatrixXd Foam2Eigen::MassMatrix(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes, label Nmodes)
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes, label Nmodes)
 {
     Eigen::MatrixXd Mr;
     Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
@@ -971,7 +1241,7 @@ Eigen::MatrixXd Foam2Eigen::MassMatrix(
 
 template <class Type>
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-        Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<Type>>& MatrixList)
+Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<Type>> & MatrixList)
 {
     List<Eigen::SparseMatrix<double>> SM_list;
     List<Eigen::VectorXd> V_list;
@@ -994,9 +1264,9 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 }
 
 template std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<scalar>>& MatrixList);
+Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<scalar>> & MatrixList);
 template std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<vector>>& MatrixList);
+Foam2Eigen::LFvMatrix2LSM(PtrList<fvMatrix<vector>> & MatrixList);
 
 template <class type_matrix>
 Eigen::Matrix<type_matrix, Eigen::Dynamic, Eigen::Dynamic>
@@ -1047,23 +1317,24 @@ template List<double> Foam2Eigen::EigenMatrix2List(
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix);
 
 template <>
-Eigen::MatrixXd Foam2Eigen::field2Eigen(const List<vector>& field)
+Eigen::MatrixXd Foam2Eigen::field2Eigen(const List<vector> & field)
 {
     Eigen::MatrixXd out;
     out.resize(label(field.size() * 3), 1);
 
     for (label l = 0; l < field.size(); l++)
     {
-        out(l, 0) = field[l][0];
-        out(field.size() + l, 0) = field[l][1];
-        out(2 * field.size() + l, 0) = field[l][2];
+        for (label j = 0; j < 3; j++)
+        {
+            out(j* field.size() + l, 0) = field[l][j];
+        }
     }
 
     return out;
 }
 
 template <>
-Eigen::MatrixXd Foam2Eigen::field2Eigen(const List<scalar>& field)
+Eigen::MatrixXd Foam2Eigen::field2Eigen(const List<scalar> & field)
 {
     Eigen::MatrixXd out;
     out.resize(label(field.size()), 1);

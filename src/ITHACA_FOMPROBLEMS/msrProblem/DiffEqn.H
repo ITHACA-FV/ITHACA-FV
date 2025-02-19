@@ -15,7 +15,7 @@ tmp<fvScalarMatrix> tNEqn
     + lam7* prec7
     + lam8* prec8
 
-    );
+);
 
 fvScalarMatrix& NEqn = tNEqn.ref();
 NEqn.relax();

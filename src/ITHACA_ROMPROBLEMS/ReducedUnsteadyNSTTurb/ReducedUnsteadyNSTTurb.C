@@ -46,7 +46,7 @@ ReducedUnsteadyNSTTurb::ReducedUnsteadyNSTTurb(UnsteadyNSTTurb& FOMproblem)
 
 //problem(&FOMproblem)
 {
-    problem   = &FOMproblem;
+    problem   = & FOMproblem;
     N_BC      = problem->inletIndex.rows();
     N_BC_t    = problem->inletIndexT.rows();
     Nphi_u    = problem->B_matrix.rows();
@@ -119,13 +119,13 @@ int newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = problem ->B_total_matrix * a_tmp * nu;
+    Eigen::VectorXd M1 = problem ->B_total_matrix* a_tmp* nu;
     // Gradient of pressure
-    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
+    Eigen::VectorXd M2 = problem->K_matrix* b_tmp;
     // Mass Term
-    Eigen::VectorXd M5 = problem->M_matrix * a_dot;
+    Eigen::VectorXd M5 = problem->M_matrix* a_dot;
     // Pressure Term
-    Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
+    Eigen::VectorXd M3 = problem->P_matrix* a_tmp;
 
     //std::cerr << "I am here 5" << std::endl;
     for (int i = 0; i < Nphi_u; i++)
@@ -154,7 +154,7 @@ int newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyNSTTurb_sup::df(const Eigen::VectorXd& x,
                                    Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -172,9 +172,9 @@ int newton_unsteadyNSTTurb_sup_t::operator()(const Eigen::VectorXd& t,
     Eigen::MatrixXd qq(1, 1);
     Eigen::MatrixXd st(1, 1);
     // diffusive term temperature
-    Eigen::VectorXd M6 = problem->Y_matrix * c_tmp * nu / Pr;
+    Eigen::VectorXd M6 = problem->Y_matrix* c_tmp* nu / Pr;
     // Mass Term Temperature
-    Eigen::VectorXd M8 = problem->MT_matrix * c_dot;
+    Eigen::VectorXd M8 = problem->MT_matrix* c_dot;
 
     for (int i = 0; i < Nphi_t; i++)
     {
@@ -190,10 +190,11 @@ int newton_unsteadyNSTTurb_sup_t::operator()(const Eigen::VectorXd& t,
 
     return 0;
 }
+
 int newton_unsteadyNSTTurb_sup_t::df(const Eigen::VectorXd& t,
                                      Eigen::MatrixXd& fjact) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup_t> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup_t> numDiff( * this);
     numDiff.df(t, fjact);
     return 0;
 }
@@ -468,4 +469,5 @@ void ReducedUnsteadyNSTTurb::reconstructSupt(fileName folder, int printevery)
         counter++;
     }
 }
+
 // ************************************************************************* //

@@ -40,13 +40,15 @@ struct newton_usmsr_fd: public newton_argument<double>
 {
     public:
         newton_usmsr_fd() {}
+
         newton_usmsr_fd(int Nx, int Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows())
         {}
+
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
         int df(const Eigen::VectorXd& x, Eigen::MatrixXd& fjac) const;
 
@@ -66,9 +68,10 @@ struct newton_usmsr_n: public newton_argument<double>
 {
     public:
         newton_usmsr_n() {}
+
         newton_usmsr_n(int Nx, int Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_flux(problem.NFluxmodes),
             Nphi_prec1(problem.NPrecmodes(0)),
             Nphi_prec2(problem.NPrecmodes(1)),
@@ -83,6 +86,7 @@ struct newton_usmsr_n: public newton_argument<double>
             nsf_c(problem.NCmodes),
             a_c(problem.NCmodes)
         {}
+
         int operator()(const Eigen::VectorXd& n, Eigen::VectorXd& fvecn) const;
         int df(const Eigen::VectorXd& n, Eigen::MatrixXd& fjacn) const;
         int Nphi_flux;
@@ -138,9 +142,10 @@ struct newton_usmsr_t: public newton_argument<double>
 {
     public:
         newton_usmsr_t() {}
+
         newton_usmsr_t(int Nx, int Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_T(problem.NTmodes + problem.liftfieldT.size()),
             Nphi_dec1(problem.NDecmodes(0)),
             Nphi_dec2(problem.NDecmodes(1)),
@@ -151,6 +156,7 @@ struct newton_usmsr_t: public newton_argument<double>
             sp_c(problem.NCmodes),
             txs_c(problem.NCmodes)
         {}
+
         int operator()(const Eigen::VectorXd& t, Eigen::VectorXd& fvect) const;
         int df(const Eigen::VectorXd& t, Eigen::MatrixXd& fjact) const;
         int Nphi_T;

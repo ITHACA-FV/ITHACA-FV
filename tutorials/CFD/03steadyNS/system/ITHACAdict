@@ -36,6 +36,7 @@ tolerance 1e-5;
 exportPython 1;
 exportMatlab 1;
 exportTxt 1;
+exportNpy 1;
 
 bcMethod lift;
 

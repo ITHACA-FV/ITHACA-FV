@@ -2,23 +2,20 @@
 
 The problem consists of a parametrized POD-Galerkin ROM for a steady heat transfer phenomenon. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**.
 The problem equation is
-<center>
-<img src="https://render.githubusercontent.com/render/math?math=\nabla \cdot (k \nabla T) = S">
-</center>
 
-where *k* is the diffusivity, *T* is the temperature and *S* is the source term. The problem discretised and formalized in matrix equation reads:
-<center>
-<img src="https://render.githubusercontent.com/render/math?math=AT = S">
-</center>
+$$\nabla \cdot (k \nabla T) = S$$
 
-where *A* is the matrix of interpolation coefficients, *T*  is the vector of unknowns and *S* is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
+where $k$ is the diffusivity, $T$ is the temperature and $S$ is the source term. The problem discretised and formalized in matrix equation reads:
+
+$$AT = S$$
+
+where $A$ is the matrix of interpolation coefficients, $T$  is the vector of unknowns and $S$ is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
 
 ![drawing](../../../docs/images/drawing.png)
 
 Both the full order and the reduced order problem are solved exploiting the parametric affine decomposition of the differential operators:
-<center>
-<img src="https://render.githubusercontent.com/render/math?math=A = \sum_{i=1}^N \theta_i(\mu) A_i">
-</center>
+
+$$A = \sum_{i=1}^N \theta_i(\mu) A_i$$
 
 For the operations performed by each command check the comments in the source [**02thermalBlock.C**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C.html) file.
 
@@ -108,11 +105,10 @@ We need also to implement a method to set/define the source term that may be pro
         }
     }
 Define by:
-<center>
-<img src="https://render.githubusercontent.com/render/math?math=S = \sin(\frac{\pi}{L}\cdot x) + \sin(\frac{\pi}{L}\cdot y)">
-</center>
 
-where *L* is the dimension of the thermal block which is equal to 0.9.
+$$S = \sin(\frac{\pi}{L}\cdot x) + \sin(\frac{\pi}{L}\cdot y)$$
+
+where $L$ is the dimension of the thermal block which is equal to 0.9.
 
 ![hat](../../../docs/images/hat.jpg)
 

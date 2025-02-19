@@ -36,7 +36,7 @@
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 incrementalPOD<Type, PatchField, GeoMesh>::incrementalPOD(
-    GeometricField<Type, PatchField, GeoMesh>& snapshot,
+    GeometricField<Type, PatchField, GeoMesh> & snapshot,
     double _tol, word _PODnorm)
 {
     Info << "WARNING: the projection of the BC has not been implemented yet!" <<
@@ -50,7 +50,7 @@ incrementalPOD<Type, PatchField, GeoMesh>::incrementalPOD(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void incrementalPOD<Type, PatchField, GeoMesh>::initialize(
-    GeometricField<Type, PatchField, GeoMesh>& snapshot)
+    GeometricField<Type, PatchField, GeoMesh> & snapshot)
 {
     Info << "Initializing the incremental POD" << endl;
     M_Assert(tolleranceSVD > 0, "Set up the tollerance before initialization");
@@ -94,7 +94,7 @@ void incrementalPOD<Type, PatchField, GeoMesh>::initialize(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void incrementalPOD<Type, PatchField, GeoMesh>::addSnapshot(
-    GeometricField<Type, PatchField, GeoMesh>& snapshot)
+    GeometricField<Type, PatchField, GeoMesh> & snapshot)
 {
     Info << "********************************************************************"
          << endl;
@@ -111,7 +111,7 @@ void incrementalPOD<Type, PatchField, GeoMesh>::addSnapshot(
 
     Eigen::VectorXd redCoeff = project(snapshot);
     GeometricField<Type, PatchField, GeoMesh> projectSnap = projectSnapshot(
-                snapshot);
+            snapshot);
     GeometricField<Type, PatchField, GeoMesh> orthoSnap(snapshot - projectSnap);
     Eigen::VectorXd orthogonalSnap = Foam2Eigen::field2Eigen(orthoSnap);
 
@@ -160,7 +160,7 @@ void incrementalPOD<Type, PatchField, GeoMesh>::addSnapshot(
         Eigen::MatrixXd temp(this->EigenModes[0].rows(),
                              this->EigenModes[0].cols() + 1);
         temp << this->EigenModes[0], orthogonalSnap;
-        this->EigenModes[0] = temp * newModes;
+        this->EigenModes[0] = temp* newModes;
         singularValues = newSingVal;
         rank++;
     }
@@ -183,7 +183,7 @@ void incrementalPOD<Type, PatchField, GeoMesh>::addSnapshot(
     double EPS = 2.2204e-16;
     Info << "Orthogonality = " << orthogonalPar << endl;
 
-    if (orthogonalPar > std::min(tolleranceSVD, EPS * this->EigenModes[0].rows()))
+    if (orthogonalPar > std::min(tolleranceSVD, EPS* this->EigenModes[0].rows()))
     {
         Info << "Orthogonalization required" << endl;
 
@@ -213,15 +213,16 @@ void incrementalPOD<Type, PatchField, GeoMesh>::fillPtrList()
     for (label i = 0; i < rank; i++)
     {
         GeometricField<Type, PatchField, GeoMesh>  tmp(this->first().name(),
-                this->first());
+            this->first());
         Eigen::VectorXd vec = this->EigenModes[0].col(i);
         tmp = Foam2Eigen::Eigen2field(tmp, vec);
         this->set(i, tmp.clone());
     }
 }
+
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd incrementalPOD<Type, PatchField, GeoMesh>::project(
-    GeometricField<Type, PatchField, GeoMesh>& inputField,
+    GeometricField<Type, PatchField, GeoMesh> & inputField,
     label numberOfModes)
 {
     Eigen::VectorXd fieldEig = Foam2Eigen::field2Eigen(inputField);
@@ -261,7 +262,7 @@ Eigen::VectorXd incrementalPOD<Type, PatchField, GeoMesh>::project(
 template<class Type, template<class> class PatchField, class GeoMesh>
 GeometricField<Type, PatchField, GeoMesh>
 incrementalPOD<Type, PatchField, GeoMesh>::reconstruct(
-    GeometricField<Type, PatchField, GeoMesh>& inputField,
+    GeometricField<Type, PatchField, GeoMesh> & inputField,
     Eigen::MatrixXd Coeff,
     word Name)
 {
@@ -282,7 +283,7 @@ incrementalPOD<Type, PatchField, GeoMesh>::reconstruct(
 template<class Type, template<class> class PatchField, class GeoMesh>
 GeometricField<Type, PatchField, GeoMesh>
 incrementalPOD<Type, PatchField, GeoMesh>::projectSnapshot(
-    GeometricField<Type, PatchField, GeoMesh>& snapshot,
+    GeometricField<Type, PatchField, GeoMesh> & snapshot,
     label numberOfModes)
 {
     Eigen::MatrixXd Modes;
@@ -327,7 +328,7 @@ incrementalPOD<Type, PatchField, GeoMesh>::projectSnapshot(
 template<class Type, template<class> class PatchField, class GeoMesh>
 void incrementalPOD<Type, PatchField, GeoMesh>::projectSnapshots(
     PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & projSnapshots,
     label numberOfModes)
 {
     M_Assert(numberOfModes <= this->size(),

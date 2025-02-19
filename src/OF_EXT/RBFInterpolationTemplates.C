@@ -36,9 +36,9 @@ Author
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::RBFInterpolation::interpolate
-                          (
-                              const Field<Type>& ctrlField
-                          ) const
+(
+    const Field<Type> & ctrlField
+) const
 {
     // HJ and FB (05 Jan 2009)
     // Collect the values from ALL control points to all CPUs
@@ -57,10 +57,10 @@ Foam::tmp<Foam::Field<Type>> Foam::RBFInterpolation::interpolate
     }
 
     tmp<Field<Type>> tresult
-                  (
-                      new Field<Type>(dataPoints_.size(), pTraits<Type>::zero)
-                  );
-    Field<Type>& result = const_cast<Field<Type>&>(tresult());
+    (
+        new Field<Type>(dataPoints_.size(), pTraits<Type>::zero)
+    );
+    Field<Type> & result = const_cast<Field<Type>&>(tresult());
     // FB 21-12-2008
     // 1) Calculate alpha and beta coefficients using the Inverse
     // 2) Calculate displacements of internal nodes using RBF values,
@@ -140,9 +140,10 @@ Foam::tmp<Foam::Field<Type>> Foam::RBFInterpolation::interpolate
                 w = 1 - sqr(t) * (3 - 2 * t);
             }
 
-            result[flPoint] = w * result[flPoint];
+            result[flPoint] = w* result[flPoint];
         }
     }
+
     return tresult;
 }
 

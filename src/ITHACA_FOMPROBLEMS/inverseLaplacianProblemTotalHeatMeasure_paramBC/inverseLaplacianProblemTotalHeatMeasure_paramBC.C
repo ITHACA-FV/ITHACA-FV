@@ -154,7 +154,7 @@ void inverseLaplacianProblemTotalHeatMeasure_paramBC::parameterizedBCoffline(
         Info << "\nOffline part ENDED\n" << endl;
     }
 
-    Eigen::MatrixXd A = Theta.transpose() * Theta + gIntegralWeight * Phi;
+    Eigen::MatrixXd A = Theta.transpose() * Theta + gIntegralWeight* Phi;
     Eigen::JacobiSVD<Eigen::MatrixXd> svd(A,
                                           Eigen::ComputeThinU | Eigen::ComputeThinV);
     Eigen::MatrixXd singularValues = svd.singularValues();
@@ -178,8 +178,8 @@ inverseLaplacianProblemTotalHeatMeasure_paramBC::parameterizedBC(
     List<Eigen::MatrixXd> linSys;
     linSys.resize(2);
     Info << "debug: Theta size = " << Theta.rows() << ", " << Theta.cols() << endl;
-    linSys[0] = Theta.transpose() * Theta + gIntegralWeight * Phi;
-    linSys[1] = gIntegralWeight * gIntegral_meas * phi + Theta.transpose() *
+    linSys[0] = Theta.transpose() * Theta + gIntegralWeight* Phi;
+    linSys[1] = gIntegralWeight* gIntegral_meas* phi + Theta.transpose() *
                 (Tmeas + addSol);
     Eigen::VectorXd weigths;
     M_Assert(std::abs(gIntegral_meas) > 1e-16, "First set up gIntegral_meas");
