@@ -335,9 +335,8 @@ template Eigen::VectorXd getMassMatrixFV(
 template Eigen::VectorXd getMassMatrixFV(
     GeometricField<vector, fvPatchField, volMesh> & snapshot);
 template Eigen::VectorXd getMassMatrixFV(
-    GeometricField<vector, fvPatchField, volMesh>& snapshot);
-template Eigen::VectorXd getMassMatrixFV(
     GeometricField<vector, pointPatchField, pointMesh>& snapshot);
+template Eigen::VectorXd getMassMatrixFV(
     GeometricField<tensor, fvPatchField, volMesh> & snapshot);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
