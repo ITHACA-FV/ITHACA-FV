@@ -29,7 +29,7 @@ namespace ITHACAutilities
 {
 
 labelList getIndicesFromBox(const fvMesh& mesh, List<label> indices,
-                            Eigen::MatrixXd Box, List<vector>& points2Move)
+                            Eigen::MatrixXd Box, List<vector> & points2Move)
 {
     points2Move.resize(0);
     labelList boxIndices;
@@ -82,6 +82,7 @@ List<label> getIndices(const fvMesh& mesh, int index, int layers)
     {
         out2.append(out[uniqueIndex[i]]);
     }
+
     return out2;
 }
 
@@ -110,11 +111,12 @@ List<label> getIndices(const fvMesh& mesh, int index_row,
     {
         out2.append(out[uniqueIndex[i]]);
     }
+
     return out2;
 }
 
 void getPointsFromPatch(fvMesh& mesh, label ind,
-                        List<vector>& points, labelList& indices)
+                        List<vector> & points, labelList& indices)
 {
     pointField meshPoints(mesh.points());
     const polyPatch& patchFound = mesh.boundaryMesh()[ind];
@@ -210,13 +212,13 @@ vector displacePolabel(vector x0, vector x_low, vector x_up,
         t2 = t1;
     }
 
-    Info << abs((x_low + t0 * direction - x0)[0]) << endl;
-    Info << abs((x_low + t1 * direction - x0)[1]) << endl;
-    Info << abs((x_low + t2 * direction - x0)[2]) << endl;
-    M_Assert(abs(abs((x_low + t0 * direction - x0)[0]) + abs((
-                     x_low + t0 * direction - x0)[1]) + abs((x_low + t0 * direction - x0)[2])) <
+    Info << abs((x_low + t0* direction - x0)[0]) << endl;
+    Info << abs((x_low + t1* direction - x0)[1]) << endl;
+    Info << abs((x_low + t2* direction - x0)[2]) << endl;
+    M_Assert(abs(abs((x_low + t0* direction - x0)[0]) + abs((
+                     x_low + t0* direction - x0)[1]) + abs((x_low + t0* direction - x0)[2])) <
              1e-6, "The givent polabel is not on the segment");
-    vector def_polabel = x_low_def + t1 * direction_def;
+    vector def_polabel = x_low_def + t1* direction_def;
     Info << def_polabel << endl;
     return def_polabel;
 }
@@ -252,7 +254,7 @@ Field<vector> rotateMesh(fvMesh& mesh, double r1, double r2,
             }
             else if (angleVariationMethod == "Sinusoidal")
             {
-                double theta = alpha / 180 *  constant::mathematical::pi * std::sin(
+                double theta = alpha / 180 *  constant::mathematical::pi* std::sin(
                                    constant::mathematical::pi / 2 * (r2 - l) / (r2 - r1));
                 quaternion q(axis, theta);
                 pointRot[movingPointsIDs[i]] = q.transform(pointNow);
@@ -280,15 +282,15 @@ Eigen::MatrixXd rotationMatrix(vector AxisOfRotation,
     scalar ux = AxisOfRotation[0] / di;
     scalar uy = AxisOfRotation[1] / di;
     scalar uz = AxisOfRotation[2] / di;
-    R(0, 0) = Foam::cos(theta) + ux * ux * (1 - Foam::cos(theta));
-    R(1, 0) = uy * ux * (1 - Foam::cos(theta)) + uz * Foam::sin(theta);
-    R(2, 0) = uz * ux * (1 - Foam::cos(theta)) - uy * Foam::sin(theta);
-    R(0, 1) = ux * uz * (1 - Foam::cos(theta)) - uz * Foam::sin(theta);
-    R(1, 1) = Foam::cos(theta) + uy * uy * (1 - Foam::cos(theta));
-    R(2, 1) = ux * uy * (1 - Foam::cos(theta)) + ux * Foam::sin(theta);
-    R(0, 2) = ux * uz * (1 - Foam::cos(theta)) + uy * Foam::sin(theta);
-    R(1, 2) = uy * uz * (1 - Foam::cos(theta)) - ux * Foam::sin(theta);
-    R(2, 2) = Foam::cos(theta) + uz * uz * (1 - Foam::cos(theta));
+    R(0, 0) = Foam::cos(theta) + ux* ux * (1 - Foam::cos(theta));
+    R(1, 0) = uy* ux * (1 - Foam::cos(theta)) + uz* Foam::sin(theta);
+    R(2, 0) = uz* ux * (1 - Foam::cos(theta)) - uy* Foam::sin(theta);
+    R(0, 1) = ux* uz * (1 - Foam::cos(theta)) - uz* Foam::sin(theta);
+    R(1, 1) = Foam::cos(theta) + uy* uy * (1 - Foam::cos(theta));
+    R(2, 1) = ux* uy * (1 - Foam::cos(theta)) + ux* Foam::sin(theta);
+    R(0, 2) = ux* uz * (1 - Foam::cos(theta)) + uy* Foam::sin(theta);
+    R(1, 2) = uy* uz * (1 - Foam::cos(theta)) - ux* Foam::sin(theta);
+    R(2, 2) = Foam::cos(theta) + uz* uz * (1 - Foam::cos(theta));
     return R;
 }
 
@@ -310,11 +312,12 @@ Eigen::VectorXd boudaryFaceToCellDistance(
         label faceOwner = faceCells[faceI] ;
         cellFaceDistance(faceI) = mag(mesh.C()[faceOwner] - mesh.Cf()[faceID]);
     }
+
     return (cellFaceDistance);
 }
 
 List<label> getIndicesFromDisc(const fvMesh& mesh, double radius,
-                               vector origin, vector axis, List<double>& radii)
+                               vector origin, vector axis, List<double> & radii)
 {
     pointField meshPoints(mesh.points());
     List<label> indices(meshPoints.size());
@@ -325,7 +328,7 @@ List<label> getIndicesFromDisc(const fvMesh& mesh, double radius,
     {
         vector pointNow = meshPoints[i];
         vector r = pointNow - origin;
-        vector projComponent = (r & axis) / (pow(mag(axis), 2)) * axis;
+        vector projComponent = (r& axis) / (pow(mag(axis), 2)) * axis;
         vector d = r - projComponent;
         double l = Foam::sqrt(pow(d[0],
                                   2) + pow(d[1], 2) + pow(d[2], 2));
@@ -345,7 +348,7 @@ List<label> getIndicesFromDisc(const fvMesh& mesh, double radius,
 
 template<typename type_f>
 List<label> getIndicesFromBox(
-    GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
+    GeometricField<type_f, fvPatchField, volMesh> & field, Eigen::MatrixXd Box)
 {
     M_Assert(Box.rows() == 2
              && Box.cols() == 3,
@@ -372,13 +375,13 @@ List<label> getIndicesFromBox(
 }
 
 template List<label> getIndicesFromBox(
-    GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+    GeometricField<scalar, fvPatchField, volMesh> & field, Eigen::MatrixXd Box);
 template List<label> getIndicesFromBox(
-    GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+    GeometricField<vector, fvPatchField, volMesh> & field, Eigen::MatrixXd Box);
 
 template<typename type_f>
 fvMeshSubset* getSubMeshFromBox(
-    GeometricField<type_f, fvPatchField, volMesh>& field, Eigen::MatrixXd Box)
+    GeometricField<type_f, fvPatchField, volMesh> & field, Eigen::MatrixXd Box)
 {
     List<label> indices = getIndicesFromBox(field, Box);
     fvMeshSubset* sub;
@@ -393,9 +396,9 @@ fvMeshSubset* getSubMeshFromBox(
 }
 
 template fvMeshSubset* getSubMeshFromBox(
-    GeometricField<scalar, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+    GeometricField<scalar, fvPatchField, volMesh> & field, Eigen::MatrixXd Box);
 template fvMeshSubset* getSubMeshFromBox(
-    GeometricField<vector, fvPatchField, volMesh>& field, Eigen::MatrixXd Box);
+    GeometricField<vector, fvPatchField, volMesh> & field, Eigen::MatrixXd Box);
 
 volScalarField meshNonOrtho(fvMesh& mesh,
                             volScalarField& NonOrtho)
@@ -434,7 +437,7 @@ volScalarField meshNonOrtho(fvMesh& mesh,
     return NonOrtho;
 }
 
-List<vector> rotatePoints(const List<vector>& originalPoints,
+List<vector> rotatePoints(const List<vector> & originalPoints,
                           vector AxisOfRotation, double AngleOfRotation)
 {
     double theta = AngleOfRotation / 180 *  constant::mathematical::pi;

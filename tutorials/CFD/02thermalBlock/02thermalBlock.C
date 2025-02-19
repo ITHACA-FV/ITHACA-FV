@@ -52,6 +52,7 @@ class tutorial02: public laplacianProblem
             nu(_nu()),
             S(_S())
         {}
+
         //! [tutorial02]
         /// Temperature field
         volScalarField& T;
@@ -329,6 +330,7 @@ void online_stage(tutorial02& example, tutorial02& FOM_test)
     Eigen::MatrixXd error = ITHACAutilities::errorL2Rel(FOM_test.Tfield,
                             reduced.Trec);
 }
+
 //--------
 /// \dir 02thermalBlock Folder of the turorial 2
 /// \file

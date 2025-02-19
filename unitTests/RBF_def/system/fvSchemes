@@ -1,0 +1,73 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+|*---------------------------------------------------------------------------*|
+|  File created by CFD support s.r.o., Wed Jan 25 11:27:58 2017               |
+|                    http://www.cdfsupport.com                                |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     3.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         backward;
+}
+
+gradSchemes
+{
+    default         cellMDLimited Gauss linear 0.5;
+}
+
+divSchemes
+{
+    default         Gauss linear;
+/*    div(phi,U)      Gauss linear; //linearUpwind grad(U);*/
+/*    div((nuEff*dev(T(grad(U))))) Gauss linear;*/
+/*    div((nuEff*dev2(T(grad(U))))) Gauss linear;*/
+/*    div((nuEff*dev2(T(grad(Ua))))) Gauss linear;*/
+/*    div((interpolate(U)&S),U) Gauss linearUpwind grad(U);*/
+/*    div((interpolate(U)&S),Usup) Gauss linearUpwind grad(Usup);*/
+/*    div((interpolate(U)&S),Ulift0) Gauss linearUpwind grad(Ulift0);*/
+/*    div((interpolate(Usup)&S),U) Gauss linearUpwind grad(U);*/
+/*    div((interpolate(Usup)&S),Usup) Gauss linearUpwind grad(Usup);*/
+/*    div((interpolate(Usup)&S),Ulift0) Gauss linearUpwind grad(Ulift0);*/
+/*    div((interpolate(Ulift0)&S),U) Gauss linearUpwind grad(U);*/
+/*    div((interpolate(Ulift0)&S),Usup) Gauss linearUpwind grad(Usup);*/
+/*    div((interpolate(Ulift0)&S),Ulift0) Gauss linearUpwind grad(Ulift0);*/
+}
+
+laplacianSchemes
+{
+    default        Gauss linear limited 1.0;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         limited 1;
+}
+
+fluxRequired
+{
+    default         no;
+    p;
+    Phi;
+}
+
+
+
+// ************************************************************************* //
