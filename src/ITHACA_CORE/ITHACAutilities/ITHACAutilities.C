@@ -209,5 +209,74 @@ Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert, const word inversi
   }
 }
 
+template<typename T>
+void multField(T& f1, double alpha)
+{
+  int NBC = f1.boundaryField().size();
+  Eigen::VectorXd f1v = Foam2Eigen::field2Eigen(f1);
+  List<Eigen::VectorXd> f1BC = Foam2Eigen::field2EigenBC(f1);
+  for (label k = 0; k < f1v.size(); k++)
+  {
+    f1v(k) *= alpha;
+  }
+  for (label l = 0; l < NBC; l++)
+  {
+    for (label k = 0; k < f1BC[l].size(); k++)
+    {
+      f1BC[l](k) *= alpha;
+    }
+  }
+
+  f1 = Foam2Eigen::Eigen2field(f1, f1v);
+  for (int k = 0; k < f1BC.size(); k++)
+  {
+    assignBC(f1, k, f1BC[k]);
+  }
+}
+template void multField(volScalarField& f1, double alpha);
+template void multField(volVectorField& f1, double alpha);
+template void multField(volTensorField& f1, double alpha);
+
+template<typename T>
+void multField(T &f1, const Eigen::VectorXd alphaVec)
+{
+    Eigen::VectorXd f1v = Foam2Eigen::field2Eigen(f1);
+    List<Eigen::VectorXd> f1BC = Foam2Eigen::field2EigenBC(f1);
+    for (label k = 0; k < f1v.size(); k++)
+    {
+        f1v(k) *= (alphaVec[k]);
+    }
+    f1 = Foam2Eigen::Eigen2field(f1, f1v);
+    for (int k = 0; k < f1BC.size(); k++)
+    {
+        assignBC(f1, k, f1BC[k]);
+    }
+}
+template void multField(volScalarField& f1, const Eigen::VectorXd alphaVec);
+template void multField(volVectorField& f1, const Eigen::VectorXd alphaVec);
+template void multField(volTensorField& f1, const Eigen::VectorXd alphaVec);
+
+template<typename T>
+void multField(PtrList<T> &f1, const Eigen::VectorXd alphaVec)
+{
+  for(label ith_field = 0 ; ith_field < f1.size() ; ith_field++){
+    Eigen::VectorXd f1v = Foam2Eigen::field2Eigen(f1[ith_field]);
+    List<Eigen::VectorXd> f1BC = Foam2Eigen::field2EigenBC(f1[ith_field]);
+    for (label k = 0; k < f1v.size(); k++)
+    {
+        f1v(k) *= (alphaVec[k]);
+    }
+    f1[ith_field] = Foam2Eigen::Eigen2field(f1[ith_field], f1v);
+    for (int k = 0; k < f1BC.size(); k++)
+    {
+        assignBC(f1[ith_field], k, f1BC[k]);
+    }
+  }
+}
+template void multField(PtrList<volScalarField>& f1, const Eigen::VectorXd alphaVec);
+template void multField(PtrList<volVectorField>& f1, const Eigen::VectorXd alphaVec);
+template void multField(PtrList<volTensorField>& f1, const Eigen::VectorXd alphaVec);
+
+
 
 }

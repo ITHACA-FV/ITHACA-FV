@@ -147,5 +147,38 @@ Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
 Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert, const word inversionMethod);
 
 
+
+//------------------------------------------------------------------------------
+/// @brief      Multiplication between a field of type vol[Scalar|Vector|Tensor]Field
+///             and a double
+///
+/// @param      f1  field 
+/// @param      alpha double value
+///
+template<typename T>
+void multField(T& f1, double alpha);
+
+//------------------------------------------------------------------------------
+/// @brief      Multiplication between field of type vol[Scalar|Vector|Tensor]Field
+///             and a vector
+///
+/// @param      f1  field 
+/// @param      alphaVec vector filled with double
+///
+template<typename T>
+void multField(T &f1, const Eigen::VectorXd alphaVec);
+
+//------------------------------------------------------------------------------
+/// @brief      Multiplication between a list of field of type
+///             vol[Scalar|Vector|Tensor]Field
+///             
+///
+/// @param      f1 PtrList of field 
+/// @param      f2 vector filled with double
+///
+template<typename T>
+void multField(PtrList<T> &f1, const Eigen::VectorXd alphaVec);
+
+
 };
 #endif
