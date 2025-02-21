@@ -171,7 +171,7 @@ void multField(T &f1, const Eigen::VectorXd alphaVec);
 //------------------------------------------------------------------------------
 /// @brief      Multiplication between a list of field of type
 ///             vol[Scalar|Vector|Tensor]Field
-///             
+///
 ///
 /// @param      f1 PtrList of field 
 /// @param      f2 vector filled with double
@@ -179,6 +179,19 @@ void multField(T &f1, const Eigen::VectorXd alphaVec);
 template<typename T>
 void multField(PtrList<T> &f1, const Eigen::VectorXd alphaVec);
 
+
+//------------------------------------------------------------------------------
+/// @brief      Perform the following operation 
+///             f1 + f2 * alpha with f1 and f2 being of type
+///             vol[Scalar|Vector|Tensor]Field and alpha a double
+///
+///
+/// @param      f1 field 
+/// @param      f2 field
+/// @param      alpha double
+///
+template<typename T>
+void addFields(T& f1, const T& f2c, double alpha = 1.0);
 
 };
 #endif

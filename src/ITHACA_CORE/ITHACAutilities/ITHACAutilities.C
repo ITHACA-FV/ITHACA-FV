@@ -278,5 +278,36 @@ template void multField(PtrList<volVectorField>& f1, const Eigen::VectorXd alpha
 template void multField(PtrList<volTensorField>& f1, const Eigen::VectorXd alphaVec);
 
 
+template<typename T>
+void addFields(T& f1, const T& f2c, double alpha)
+{
+  T f2 = f2c;
+  int NBC = f1.boundaryField().size();
+  Eigen::VectorXd f1v = Foam2Eigen::field2Eigen(f1);
+  List<Eigen::VectorXd> f1BC = Foam2Eigen::field2EigenBC(f1);
+  Eigen::VectorXd f2v = Foam2Eigen::field2Eigen(f2);
+  List<Eigen::VectorXd> f2BC = Foam2Eigen::field2EigenBC(f2);
+  for (label k = 0; k < f1v.size(); k++)
+  {
+    f1v(k) += alpha * f2v(k);
+  }
+  for (label l = 0; l < NBC; l++)
+  {
+    for (label k = 0; k < f1BC[l].size(); k++)
+    {
+      f1BC[l](k) += alpha * f2BC[l](k);
+    }
+  }
+
+  f1 = Foam2Eigen::Eigen2field(f1, f1v);
+  for (int k = 0; k < f1BC.size(); k++)
+  {
+    assignBC(f1, k, f1BC[k]);
+  }
+}
+template void addFields(volScalarField& f1, const volScalarField& f2c, double alpha);
+template void addFields(volVectorField& f1, const volVectorField& f2c, double alpha);
+template void addFields(volTensorField& f1, const volTensorField& f2c, double alpha);
+
 
 }
