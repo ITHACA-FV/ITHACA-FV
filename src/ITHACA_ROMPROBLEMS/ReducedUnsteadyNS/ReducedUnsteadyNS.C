@@ -336,11 +336,23 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
 
     if (problem->bcMethod == "lift")
     {
-        vel_now = setOnlineVelocity(vel);
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, true);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
     }
     else if (problem->bcMethod == "penalty")
     {
         vel_now = vel;
+    }
+    else
+    {
+        M_Assert(false,
+                 "The BC method must be set to lift or penalty in ITHACAdict");
     }
 
     // Create and resize the solution vector
@@ -493,11 +505,23 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel, Eigen::MatrixXd neu
 
     if (problem->bcMethod == "lift")
     {
-        vel_now = setOnlineVelocity(vel);
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, true);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
     }
     else if (problem->bcMethod == "penalty")
     {
         vel_now = vel;
+    }
+    else
+    {
+        M_Assert(false,
+                 "The BC method must be set to lift or penalty in ITHACAdict");
     }
 
     // Create and resize the solution vector
@@ -663,11 +687,23 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
 
     if (problem->bcMethod == "lift")
     {
-        vel_now = setOnlineVelocity(vel);
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, true);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
     }
     else if (problem->bcMethod == "penalty")
     {
         vel_now = vel;
+    }
+    else
+    {
+        M_Assert(false,
+                 "The BC method must be set to lift or penalty in ITHACAdict");
     }
 
     // Create and resize the solution vector
@@ -822,11 +858,23 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel, Eigen::MatrixXd neu
 
     if (problem->bcMethod == "lift")
     {
-        vel_now = setOnlineVelocity(vel);
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, true);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
     }
     else if (problem->bcMethod == "penalty")
     {
         vel_now = vel;
+    }
+    else
+    {
+        M_Assert(false,
+                 "The BC method must be set to lift or penalty in ITHACAdict");
     }
 
     // Create and resize the solution vector
@@ -1288,6 +1336,15 @@ Eigen::MatrixXd reducedUnsteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
             vel_scal(k, i) = vel(k, i) / u_lf;
         }
     }
+
+    return vel_scal;
+}
+
+Eigen::MatrixXd reducedUnsteadyNS::setOnlineVelocity(Eigen::MatrixXd vel, bool nonUniform)
+{
+    assert(problem->inletIndex.rows() == vel.rows()
+           && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+    Eigen::MatrixXd vel_scal(vel);
 
     return vel_scal;
 }

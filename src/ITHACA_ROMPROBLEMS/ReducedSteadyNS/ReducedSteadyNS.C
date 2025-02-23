@@ -263,7 +263,7 @@ void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel)
     {
         if (problem->nonUniformbc)
         {
-            vel_now = setOnlineVelocity(vel, 1);
+            vel_now = setOnlineVelocity(vel, true);
         }
         else
         {
@@ -341,7 +341,7 @@ void reducedSteadyNS::solveOnline_PPE(Eigen::MatrixXd vel, Eigen::MatrixXd neuVe
     {
         if (problem->nonUniformbc)
         {
-            vel_now = setOnlineVelocity(vel, 1);
+            vel_now = setOnlineVelocity(vel, true);
         }
         else
         {
@@ -428,7 +428,7 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
     {
         if (problem->nonUniformbc)
         {
-            vel_now = setOnlineVelocity(vel, 1);
+            vel_now = setOnlineVelocity(vel, true);
         }
         else
         {
@@ -502,7 +502,7 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel, Eigen::MatrixXd neuVe
     {
         if (problem->nonUniformbc)
         {
-            vel_now = setOnlineVelocity(vel, 1);
+            vel_now = setOnlineVelocity(vel, true);
         }
         else
         {

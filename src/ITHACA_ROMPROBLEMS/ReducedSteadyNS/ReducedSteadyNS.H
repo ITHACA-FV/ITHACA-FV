@@ -306,6 +306,8 @@ class reducedSteadyNS: public reducedProblem
         ///
         /// @param[in]  vel   The velocity
         ///
+        /// @param[in]  nonUniform  The nonUniform flag
+        ///
         /// @return     The rescaled velocity vector (coeffcients)
         ///
         Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel, bool nonUniform);

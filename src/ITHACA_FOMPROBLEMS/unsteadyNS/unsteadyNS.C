@@ -101,6 +101,7 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
              "The neumann BC method must be set to penalty or none in ITHACAdict");    
     tauU = ITHACAdict->lookupOrDefault<scalar>("tauU", 1e-1);
     tauGradU = ITHACAdict->lookupOrDefault<scalar>("tauGradU", 1e-1);
+    nonUniformbc = ITHACAdict->lookupOrDefault<bool>("nonUniformbc", 0);
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

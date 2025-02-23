@@ -213,7 +213,14 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
 {
     if (problem->bcMethod == "lift")
     {
-        vel_now = setOnlineVelocity(vel);
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, true);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
     }
     else if (problem->bcMethod == "penalty")
     {
@@ -292,7 +299,14 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
 {
     if (problem->bcMethod == "lift")
     {
-        vel_now = setOnlineVelocity(vel);
+        if (problem->nonUniformbc)
+        {
+            vel_now = setOnlineVelocity(vel, true);
+        }
+        else
+        {
+            vel_now = setOnlineVelocity(vel);
+        }
     }
     else if (problem->bcMethod == "penalty")
     {
@@ -438,6 +452,15 @@ Eigen::MatrixXd ReducedSteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
                            problem->liftfield[k].boundaryField()[p]).component(l) / area;
         vel_scal(k, 0) = vel(k, 0) / u_lf;
     }
+
+    return vel_scal;
+}
+
+Eigen::MatrixXd ReducedSteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel, bool nonUniform)
+{
+    assert(problem->inletIndex.rows() == vel.rows()
+           && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
+    Eigen::MatrixXd vel_scal(vel);
 
     return vel_scal;
 }

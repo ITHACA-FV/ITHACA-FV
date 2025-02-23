@@ -86,7 +86,7 @@ steadyNS::steadyNS(int argc, char* argv[])
     neumannMethod = ITHACAdict->lookupOrDefault<word>("neumannMethod", "none");
     M_Assert(neumannMethod == "penalty" || neumannMethod == "none",
              "The neumann BC method must be set to penalty or none in ITHACAdict");
-    nonUniformbc = ITHACAdict->lookupOrDefault<bool>("nonUniformbc", "0");
+    nonUniformbc = ITHACAdict->lookupOrDefault<bool>("nonUniformbc", false);
     fluxMethod = ITHACAdict->lookupOrDefault<word>("fluxMethod", "inconsistent");
     M_Assert(fluxMethod == "inconsistent" || fluxMethod == "consistent",
              "The flux method must be set to inconsistent or consistent in ITHACAdict");    

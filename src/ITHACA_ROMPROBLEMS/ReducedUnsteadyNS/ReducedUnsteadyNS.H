@@ -272,6 +272,17 @@ class reducedUnsteadyNS: public reducedSteadyNS
         ///
         Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
 
+        ///
+        /// @brief      Sets the non-uniform online velocity.
+        ///
+        /// @param[in]  vel   The velocity
+        ///
+        /// @param[in]  nonUniform  The nonUniform flag
+        ///
+        /// @return     The rescaled velocity vector (coeffcients)
+        ///
+        Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel, bool nonUniform);
+
 };
 
 
