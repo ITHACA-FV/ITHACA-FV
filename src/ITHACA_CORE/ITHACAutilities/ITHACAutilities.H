@@ -265,5 +265,51 @@ void str_format_io( std::string const& s, unsigned int Nmax );
 
 
 
+double dot_product_POD(const volVectorField& v, const volVectorField& w,
+                        const word& hilbertSpacePOD,
+                        const double& weightBC=0., const word& patchBC="inlet",
+                        const double& weightH1 = 1.0);
+double dot_product_POD(const volScalarField& v, const volScalarField& w,
+                        const word& hilbertSpacePOD,
+                        const double& weightBC=0., const word& patchBC="inlet",
+                        const double& weightH1 = 1.0);
+double dot_product_POD(const volTensorField& v, const volTensorField& w,
+                        const word& hilbertSpacePOD,
+                        const double& weightBC=0., const word& patchBC="inlet",
+                        const double& weightH1 = 1.0);
+template<typename T>
+Eigen::MatrixXd dot_product_POD(PtrList<T>& v, PtrList<T>& w,
+                                const word& hilbertSpacePOD,
+                                const double& weightBC,
+                                const word& patchBC,
+                                const double& weightH1 = 1.0);
+double dot_product_L2(const volVectorField& v, const volVectorField& w);
+double dot_product_L2(const volScalarField& v, const volScalarField& w);
+double dot_product_L2(const volTensorField& v, const volTensorField& w);
+template<typename T>
+double dot_product_H1(const T& v, const T& w, const double& weightH1 = 1.0);
+template<typename T>
+double norm_POD(const T& v,
+                        const word& hilbertSpacePOD,
+                        const double& weightBC=0., const word& patchBC="inlet",
+                        const double& weightH1 = 1.0);
+template<typename T>
+double norm_L2(const T v);
+
+//New dot products to take into account the boundary conditions
+double dot_product_patch(const Eigen::VectorXd& f1BC_i,const Eigen::VectorXd& f2BC_i, const scalarField& AreaFace, const int& d);
+template<typename T>
+double dot_product_boundary(const T& v,const T& w, const word& patchBC);
+template<typename T>
+double dot_product_L2wBC(const T& v, const T& w, const double& weightBC, const word& patchBC="inlet");
+template<typename T>
+double norm_L2wBC(const T& v, const double& weightBC, const word& patchBC="inlet");
+
+// List<label> global2local(List<label>& points, fvMeshSubset& submesh);
+// List<int> getIndices(const fvMesh& mesh, int index, int layers);
+
+
+
+
 };
 #endif

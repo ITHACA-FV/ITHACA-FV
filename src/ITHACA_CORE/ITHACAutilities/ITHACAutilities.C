@@ -384,5 +384,283 @@ void str_format_io(std::string const& s, unsigned int nMax)
 }
 
 
+template<typename T>
+Eigen::MatrixXd dot_product_POD(PtrList<T>& v, PtrList<T>& w,
+                                const word& hilbertSpacePOD,
+                                const double& weightBC,
+                                const word& patchBC,
+                                const double& weightH1)
+{
+  Eigen::MatrixXd matrix_dot_product = Eigen::MatrixXd::Zero(v.size(),w.size());
+  if (hilbertSpacePOD == "L2")
+  {
+    matrix_dot_product = getMassMatrix(v,w);
+  }
+  else if (hilbertSpacePOD == "dL2"){
+    Eigen::VectorXd V = getMassMatrixFV(v[0]).array().pow(4.0/3.0);
+    V = V.array().inverse();
+    matrix_dot_product = getMassMatrix(v,w,V);
+  }
+  else
+  {
+    Info << "Error: hilbertSpacePOD " << hilbertSpacePOD << " is not valid." << endl;
+    Info << "NOT CODED YET : dot_product_POD is available for L2 only." << endl;
+    abort();
+  }
+  return matrix_dot_product;
+}
+// Specialization
+template Eigen::MatrixXd dot_product_POD(PtrList<volTensorField>& v, PtrList<volTensorField>& w,
+                                const word& hilbertSpacePOD,
+                                const double& weightBC,
+                                const word& patchBC,
+                                const double& weightH1);
+template Eigen::MatrixXd dot_product_POD(PtrList<volVectorField>& v, PtrList<volVectorField>& w,
+                                const word& hilbertSpacePOD,
+                                const double& weightBC,
+                                const word& patchBC,
+                                const double& weightH1);
+template Eigen::MatrixXd dot_product_POD(PtrList<volScalarField>& v, PtrList<volScalarField>& w,
+                                const word& hilbertSpacePOD,
+                                const double& weightBC,
+                                const word& patchBC,
+                                const double& weightH1);
+
+
+//Separation because dot product H1 can't be applied when using volTensorFields
+double dot_product_POD(const volScalarField& v, const volScalarField& w,
+                                const word& hilbertSpacePOD,
+                                const double& weightBC,
+                                const word& patchBC,
+                                const double& weightH1)
+{
+  double integral(0);
+  if (hilbertSpacePOD == "L2" || hilbertSpacePOD == "dL2")
+  {
+    integral = dot_product_L2(v,w);
+  }
+  else if (hilbertSpacePOD == "L2wBC")
+  {
+    integral = dot_product_L2wBC(v,w,weightBC, patchBC);
+  }
+  else if (hilbertSpacePOD == "H1")
+  {
+    integral = dot_product_H1(v,w);
+  }
+  else if (hilbertSpacePOD == "wH1")
+  {
+    integral = dot_product_H1(v,w,weightH1);
+  }
+  else
+  {
+    Info << "Error: hilbertSpacePOD " << hilbertSpacePOD << " is not valid." << endl;
+    Info << "dot_product_POD is available for L2, L2wBC, H1 and wH1 only." << endl;
+    abort();
+  }
+  return integral;
+}
+
+double dot_product_POD(const volVectorField& v, const volVectorField& w, const word& hilbertSpacePOD, const double& weightBC, const word& patchBC, const double& weightH1)
+{
+  double integral(0);
+  if (hilbertSpacePOD == "L2")
+  {
+    integral = dot_product_L2(v,w);
+  }
+  else if (hilbertSpacePOD == "L2wBC")
+  {
+    integral = dot_product_L2wBC(v,w,weightBC, patchBC);
+  }
+  else if (hilbertSpacePOD == "H1")
+  {
+    integral = dot_product_H1(v,w);
+  }
+  else if (hilbertSpacePOD == "wH1")
+  {
+    integral = dot_product_H1(v,w,weightH1);
+  }
+  else
+  {
+    Info << "Error: hilbertSpacePOD " << hilbertSpacePOD << " is not valid." << endl;
+    Info << "dot_product_POD is available for L2, L2wBC, H1 and wH1 only." << endl;
+    abort();
+  }
+  return integral;
+}
+
+double dot_product_POD(const volTensorField& v, const volTensorField& w,
+                                const word& hilbertSpacePOD,
+                                const double& weightBC,
+                                const word& patchBC,
+                                const double& weightH1)
+{
+  double integral(0);
+  if (hilbertSpacePOD == "L2")
+  {
+    integral = dot_product_L2(v,w);
+  }
+  else if (hilbertSpacePOD == "L2wBC")
+  {
+    integral = dot_product_L2wBC(v,w,weightBC, patchBC);
+  }
+  else if ((hilbertSpacePOD == "H1")||(hilbertSpacePOD == "wH1"))
+  {
+    Info << "Error : dot_product_POD cannot be computed between volTensorFields with the hilbertSpacePOD =" <<hilbertSpacePOD << " ." << endl;
+    abort();
+  }
+  else
+  {
+    Info << "Error: hilbertSpacePOD " << hilbertSpacePOD << " is not valid." << endl;
+    Info << "dot_product_POD is available for L2, L2wBC, H1 and wH1 only." << endl;
+    abort();
+  }
+  return integral;
+}
+
+template<typename T>
+double dot_product_H1(const T& v, const T& w, const double& weightH1)
+{
+  return ( dot_product_L2(v,w) + weightH1 * dot_product_L2(fvc::grad(v),fvc::grad(w)) );
+}
+// Specialization
+template double dot_product_H1(const volVectorField& v, const volVectorField& w, const double& weightH1);
+template double dot_product_H1(const volScalarField& v, const volScalarField& w, const double& weightH1);
+
+double dot_product_L2(const volVectorField& v, const volVectorField& w)
+{
+  return fvc::domainIntegrate(v & w).value();
+
+}
+
+double dot_product_L2(const volScalarField& v, const volScalarField& w)
+{
+  return fvc::domainIntegrate(v * w).value();
+}
+
+
+double dot_product_L2(const volTensorField& v, const volTensorField& w)
+{
+  return fvc::domainIntegrate(v && w).value();
+}
+
+//Dot product at a boundary patch
+double dot_product_patch(const Eigen::VectorXd& f1BC_i,const Eigen::VectorXd& f2BC_i, const scalarField& AreaFace, const int& d)
+{
+   double dot_prod_patch=0.;
+   double dx = 1.;
+   //Loop for the boundary cells
+   for (label k = 0; k < f1BC_i.size()/d; k++)
+   {
+     double productBC=0.;
+     //Loop for the coordinates separated in the Eigen::VectorXd
+     for (label i=0;i<d;i++)
+     {
+       productBC+=f1BC_i(k+i*f1BC_i.size()/d) * f2BC_i(k+i*f1BC_i.size()/d);
+     }
+     dot_prod_patch+=productBC* AreaFace[k] * dx;
+   }
+  return dot_prod_patch;
+}
+
+template<typename T>
+// Dot product at the boundary
+double dot_product_boundary(const T& v,const T& w, const word& patchBC)
+{
+  T f1 = v;
+  T f2 = w;
+  double dot_prod_boundary=0.;
+
+  int NBC = f1.boundaryField().size();
+  List<Eigen::VectorXd> f1BC = Foam2Eigen::field2EigenBC(f1);
+  List<Eigen::VectorXd> f2BC = Foam2Eigen::field2EigenBC(f2);
+
+  label ind = f1.mesh().boundaryMesh().findPatchID(patchBC);
+  //Dimension of the field to separate the coordinates after Eigen2Field
+  int d = dimensionField(f1);
+  //List of indexes of the considered boundary patches
+  List<label> l;
+
+  if (ind==-1)
+  {
+    for (label i=0;i<NBC;i++)
+    {
+      l.append(i);
+    }
+  }
+
+  else
+  {
+    l.append(ind);
+  }
+  //Loop for the boundary patches
+  for (label g = 0; g < l.size(); g++)
+  {
+    // Create a scalar field with area value
+    scalarField AreaFace = f1.mesh().magSf().boundaryField()[l[g]];
+    // Compute the dot product at each patch
+    dot_prod_boundary+=dot_product_patch(f1BC[l[g]],f2BC[l[g]],AreaFace,d);
+  }
+  return dot_prod_boundary;
+}
+template double dot_product_boundary(const volTensorField& v, const volTensorField& w, const word& patchBC);
+template double dot_product_boundary(const volVectorField& v, const volVectorField& w, const word& patchBC);
+template double dot_product_boundary(const volScalarField& v, const volScalarField& w, const word& patchBC);
+
+template<typename T>
+// Dot product L2wBC : uses dot_product_L2 at the interior and dot_product_boundary at the boundary with a weight weightBC
+double dot_product_L2wBC(const T& v, const T& w, const double& weightBC, const word& patchBC)
+{
+  double dot_prod;
+
+  //Compute the dot product at the boundary
+  double dp_boundary = dot_product_boundary(v,w,patchBC);
+
+  //Add the dot product at the boundary to the L2 one inside of the domain
+  dot_prod=dp_boundary*weightBC+dot_product_L2(v,w);
+  return dot_prod;
+}
+
+template double dot_product_L2wBC(const volTensorField& v, const volTensorField& w, const double& weightBC, const word& patchBC);
+template double dot_product_L2wBC(const volVectorField& v, const volVectorField& w, const double& weightBC, const word& patchBC);
+template double dot_product_L2wBC(const volScalarField& v, const volScalarField& w, const double& weightBC, const word& patchBC);
+
+template<typename T>
+double norm_L2wBC(const T& v, const double& weightBC, const word& patchBC)
+{
+  return std::sqrt(dot_product_L2wBC(v,v, weightBC, patchBC));
+}
+
+template double norm_L2wBC(const volTensorField& v, const double& weightBC, const word& patchBC);
+template double norm_L2wBC(const volVectorField& v, const double& weightBC, const word& patchBC);
+template double norm_L2wBC(const volScalarField& v, const double& weightBC, const word& patchBC);
+
+template<typename T>
+double norm_POD(const T& v, const word& hilbertSpacePOD, const double& weightBC, const word& patchBC, const double& weightH1)
+{
+  return std::sqrt(dot_product_POD(v,v, hilbertSpacePOD, weightBC, patchBC, weightH1));
+}
+// Specialization
+template double norm_POD(const volVectorField& v, const word& hilbertSpacePOD, const double& weightBC, const word& patchBC, const double& weightH1);
+template double norm_POD(const volScalarField& v, const word& hilbertSpacePOD, const double& weightBC, const word& patchBC, const double& weightH1);
+
+template<typename T>
+double norm_L2(const T v)
+{
+  return std::sqrt(dot_product_L2(v,v));
+}
+
+// Specialization
+template double norm_L2(const volTensorField& v);
+template double norm_L2(const volVectorField& v);
+template double norm_L2(const volScalarField& v);
+template double norm_L2(const volTensorField v);
+template double norm_L2(const volVectorField v);
+template double norm_L2(const volScalarField v);
+template double norm_L2(const tmp<volTensorField> v);
+template double norm_L2(const tmp<volVectorField> v);
+template double norm_L2(const tmp<volScalarField> v);
+
+
+
 
 }
