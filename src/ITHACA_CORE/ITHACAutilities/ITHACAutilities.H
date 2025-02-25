@@ -227,5 +227,43 @@ volTensorField tensorFieldProduct(const volScalarField& coef, const volTensorFie
 ///
 volTensorField tensorFieldProduct(const volTensorField& coef, const volTensorField& S);
 
+//------------------------------------------------------------------------------
+/// @brief      Return the dimension of a volTensorField
+///
+/// @param      v 
+int dimensionField(const volTensorField& v);
+
+//------------------------------------------------------------------------------
+/// @brief      Return the dimension of a volVectorField
+///
+/// @param      v 
+int dimensionField(const volVectorField& v);
+
+//------------------------------------------------------------------------------
+/// @brief      Return the dimension of a volScalarField
+///
+/// @param      v 
+int dimensionField(const volScalarField& v);
+
+
+
+//------------------------------------------------------------------------------
+/// @brief      Trim a string cf. 
+///             https://stackoverflow.com/questions/25829143/trim-whitespace-from-a-string
+///
+/// @param      String s
+std::string str_trim(std::string const& s);
+
+//------------------------------------------------------------------------------
+/// @brief      Format a string
+///
+/// @param      s string
+/// @param      Nmax max length of the string
+
+void str_format_io( std::string const& s, unsigned int Nmax );
+
+
+
+
 };
 #endif

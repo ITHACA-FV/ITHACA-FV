@@ -339,4 +339,50 @@ volTensorField tensorFieldProduct(const volTensorField& coef, const volTensorFie
   return (coef & S);
 }
 
+//Compute the dimensions :
+
+int dimensionField(const volTensorField& v)
+{
+  int d = 9;
+  return d;
+}
+
+int dimensionField(const volVectorField& v)
+{
+  int d = 3;
+  return d;
+}
+
+int dimensionField(const volScalarField& v)
+{
+  int d = 1;
+  return d;
+}
+
+
+std::string str_trim(std::string const& s)
+{
+  auto const first{ s.find_first_not_of(' ') };
+  if (first == std::string::npos) return {};
+  auto const last{ s.find_last_not_of(' ') };
+  return s.substr(first, (last - first + 1));
+}
+
+// io format function for files name
+void str_format_io(std::string const& s, unsigned int nMax)
+{
+  if ( nMax > s.length() )
+  {
+    for (unsigned int n=0; n<s.length(); n++) std::cout << s[n];
+    for (unsigned int n=s.length(); n<nMax; n++) std::cout << " ";
+  }
+  else
+  {
+    for (unsigned int n=0; n<nMax-3; n++) std::cout << s[n];
+    for (unsigned int n=nMax-3; n<nMax; n++) std::cout << ".";
+  }
+}
+
+
+
 }
