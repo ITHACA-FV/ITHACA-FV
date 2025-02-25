@@ -203,5 +203,29 @@ void addFields(T& f1, const T& f2c, double alpha = 1.0);
 template<typename T>
 void subtractFields(T& f1, const T& f2);
 
+//------------------------------------------------------------------------------
+/// @brief      Set a field of type vol[Scalar|Vector|Tensor]Field to 0
+///
+/// @param      f1 field to set to 0 
+///
+template<typename T>
+void setToZero(T& f1);
+
+//------------------------------------------------------------------------------
+/// @brief      Tensor field product between a volScalarField and a volTensorField
+///
+/// @param      coef field
+/// @param      f1 field 
+///
+volTensorField tensorFieldProduct(const volScalarField& coef, const volTensorField& S);
+
+//------------------------------------------------------------------------------
+/// @brief      Tensor field product between two volTensorFields
+///
+/// @param      coef field 
+/// @param      S field 
+///
+volTensorField tensorFieldProduct(const volTensorField& coef, const volTensorField& S);
+
 };
 #endif
