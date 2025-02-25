@@ -193,5 +193,15 @@ void multField(PtrList<T> &f1, const Eigen::VectorXd alphaVec);
 template<typename T>
 void addFields(T& f1, const T& f2c, double alpha = 1.0);
 
+//------------------------------------------------------------------------------
+/// @brief      Perform the substraction (f1 - f2) between two fields 
+///              of type vol[Scalar|Vector|Tensor]Field and alpha a double
+///
+/// @param      f1 field 
+/// @param      f2 field
+///
+template<typename T>
+void subtractFields(T& f1, const T& f2);
+
 };
 #endif

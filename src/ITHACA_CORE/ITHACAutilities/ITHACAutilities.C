@@ -287,6 +287,7 @@ void addFields(T& f1, const T& f2c, double alpha)
   List<Eigen::VectorXd> f1BC = Foam2Eigen::field2EigenBC(f1);
   Eigen::VectorXd f2v = Foam2Eigen::field2Eigen(f2);
   List<Eigen::VectorXd> f2BC = Foam2Eigen::field2EigenBC(f2);
+
   for (label k = 0; k < f1v.size(); k++)
   {
     f1v(k) += alpha * f2v(k);
@@ -308,6 +309,16 @@ void addFields(T& f1, const T& f2c, double alpha)
 template void addFields(volScalarField& f1, const volScalarField& f2c, double alpha);
 template void addFields(volVectorField& f1, const volVectorField& f2c, double alpha);
 template void addFields(volTensorField& f1, const volTensorField& f2c, double alpha);
+
+
+template<typename T>
+void subtractFields(T& f1, const T& f2)
+{
+  addFields(f1, f2, -1.0);
+}
+template void subtractFields(volScalarField& f1, const volScalarField& f2);
+template void subtractFields(volVectorField& f1, const volVectorField& f2);
+template void subtractFields(volTensorField& f1, const volTensorField& f2);
 
 
 }
