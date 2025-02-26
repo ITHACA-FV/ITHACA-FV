@@ -323,7 +323,7 @@ template void subtractFields(volTensorField& f1, const volTensorField& f2);
 template<typename T>
 void setToZero(T& f1)
 {
-  ITHACAutilities::multField(f1, 0.0);
+  multField(f1, 0.0);
 }
 template void setToZero(volScalarField& f1);
 template void setToZero(volVectorField& f1);
