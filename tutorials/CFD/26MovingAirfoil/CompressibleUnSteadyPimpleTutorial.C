@@ -28,17 +28,19 @@ Tutorial of compressible and unsteady flow around a moving airfoil
 #include "CompressibleUnSteadyRhoPimple.H"
 #include "ITHACAPOD.H"
 #include "ITHACAstream.H"
+#include "Foam2Eigen.H"
 #include "DEIM.H"
 //#include "ReducedProblem.H"
 #include <chrono>
+#include "HyperReducedCompressibleUnSteadyNS.H"
 
-
-class HROM : public DEIM<volVectorField>
+template<typename O>
+class HROM : public DEIM<O>
 {
     public:
-        using DEIM::DEIM;
-        PtrList<volVectorField> fields;
-        autoPtr<volVectorField> subField;
+        using DEIM<O>::DEIM;
+        PtrList<O> fields;
+        autoPtr<O> subField;
 
 };
 
@@ -62,7 +64,7 @@ public:
     /// Energy field
     volScalarField& E;
     /// Hyper-reduced object
-    autoPtr<HROM> DeimObject;
+    //autoPtr<HROM<O>> DeimObject;
     ///grid nodes field
     //pointVectorField& pd;
     /// Initial coordinates of the grid points
@@ -137,6 +139,18 @@ int main(int argc, char* argv[])
       ITHACAstream::read_fields(example.Emodes, example._E(), "./ITHACAoutput/POD/");
 
     }
+
+    HyperReducedCompressibleUnSteadyNS hyperreduced(example);
+    // Info << hyperreduced.Umodes.size() << endl;
+    // Info << hyperreduced.Pmodes.size() << endl;
+    // Info << hyperreduced.Emodes.size() << endl;
+
+    hyperreduced.startTime = example.startTime;
+    hyperreduced.finalTime = example.finalTime;
+    hyperreduced.timeStep = example.timeStep; 
+    hyperreduced.writeEvery = example.writeEvery;
+    /// Solving the hyper-reduced problem
+    hyperreduced.SolveHyperReducedSys(NmodesUproj,NmodesPproj,NmodesEproj);
     exit(0);
    // online.coeffL2 = ITHACAutilities::getCoeffs(example.Dfield, online.Dmodes, NmodesDproj, false);
    // if( (!ITHACAutilities::check_folder("./ITHACAoutput/Matrices/")) )
