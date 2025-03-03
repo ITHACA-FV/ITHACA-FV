@@ -88,6 +88,12 @@ SourceFiles
 namespace ITHACAstream
 {
 
+//default folders for text and npy files
+const word roadTxtFile = "./ITHACAoutput/Matrices/Txt";
+const word roadCnpyFile = "./ITHACAoutput/Matrices/Npy";
+const word roadPythonFile = "./ITHACAoutput/Matrices/Python";
+const word roadMatlabFile = "./ITHACAoutput/Matrices/Matlab";
+
 //--------------------------------------------------------------------------
 /// @brief      Export an Fv Matrix to folder together with its source term
 ///
@@ -114,7 +120,7 @@ void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
 ///
 template<typename T, int dim>
 void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix, word Name,
-                  word type = "python", word folder = "./Matrices");
+                  word type = "", word folder = "");
 
 //--------------------------------------------------------------------------
 /// Export the reduced matrices in numpy (type=python), matlab (type=matlab) and txt (type=eigen) format
@@ -128,7 +134,7 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix, word Name,
 /// @param[in] folder    Directory in which the file is saved.
 ///
 void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
-                  word type = "python", word folder = "./Matrices");
+                  word type = "", word folder = "");
 
 //--------------------------------------------------------------------------
 /// Export the reduced tensor in numpy (tipo=python), matlab (tipo=matlab) and txt (tipo=eigen) format
@@ -143,7 +149,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
 ///
 template<typename T>
 void exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
-                  word type = "python", word folder = "./Matrices");
+                  word type = "", word folder = "");
 
 
 //----------------------------------------------------------------------
@@ -483,6 +489,17 @@ template<typename T>
 void load(List<Eigen::SparseMatrix<T>>& MatrixList, word folder,
           word MatrixName);
 
+//--------------------------------------------------------------------------
+/// Export matrices 
+///
+/// @param[in]  Matrix, Vector, Tensor Matrix, vector, or tensor to export
+/// @param[in]  matrixRoad File name with path
+/// @param[in]  type export type, cnpy, python, matlab, text
+/// @param[in]  folder file path
+///
+void exportToFile(Eigen::MatrixXd Matrix,word matrixRoad,word type = "", word folder = "");
+void exportToFile(Eigen::VectorXd Vector,word matrixRoad, word type = "", word folder = "");
+void exportToFile(Eigen::Tensor<double,3>& Tensor,word tensorRoad, word type = "", word folder = "");
 };
 
 namespace Foam
