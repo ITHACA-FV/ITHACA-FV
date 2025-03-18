@@ -76,9 +76,9 @@ void inverseLaplacianProblem_paramBC::set_gBaseFunctions()
                 scalar faceZ = mesh.boundaryMesh()[hotSide_ind].faceCentres()[faceI].z();
                 scalar radius = Foam::sqrt((faceX - thermocoupleX) * (faceX - thermocoupleX) +
                                            (faceZ - thermocoupleZ) * (faceZ - thermocoupleZ));
-                gBaseFunctions[funcI][faceI] = Foam::exp(- (shapeParameter *
+                gBaseFunctions[funcI][faceI] = Foam::exp(- (shapeParameter*
                                                shapeParameter
-                                               * radius * radius));
+                                               * radius* radius));
             }
         }
     }
@@ -138,12 +138,13 @@ void inverseLaplacianProblem_paramBC::set_gBaseFunctionsPOD(label Nmodes)
             gBaseFuncEigen(faceI, funcI) = gBaseFunctions[funcI][faceI];
         }
     }
+
     Eigen::MatrixXd correlationMatrix = gBaseFuncEigen.transpose() *
                                         faceAreaVect.asDiagonal() * gBaseFuncEigen;
     Eigen::JacobiSVD<Eigen::MatrixXd> svd(correlationMatrix,
                                           Eigen::ComputeThinU | Eigen::ComputeThinV);
     gPODmodes = svd.matrixU().leftCols(Nmodes);
-    Eigen::MatrixXd gBaseFuncEigen_new = gBaseFuncEigen * gPODmodes;
+    Eigen::MatrixXd gBaseFuncEigen_new = gBaseFuncEigen* gPODmodes;
     Info << "gBaseFuncEigen_new size = " << gBaseFuncEigen_new.cols() << ", " <<
          gBaseFuncEigen_new.rows() << endl;
     gBaseFunctions.resize(Nmodes);
@@ -169,6 +170,7 @@ void inverseLaplacianProblem_paramBC::set_gParametrized(word _baseFuncType,
     {
         gWeights[weigthI] = 0; //-10000;
     }
+
     Info << "gWeights = " << gWeights << endl;
     forAll (T.boundaryField()[hotSide_ind], faceI)
     {
@@ -386,6 +388,7 @@ void inverseLaplacianProblem_paramBC::parameterizedBCpostProcess(
     {
         gWeights[weightI] = weigths(weightI);
     }
+
     update_gParametrized(gWeights);
     reconstructT();
     volScalarField& T = _T();
@@ -421,6 +424,7 @@ void inverseLaplacianProblem_paramBC::solveAdditional()
             ITHACAutilities::assignBC(Tad, patchI, homogeneousBC);
         }
     }
+
 #if defined(OFVER) && (OFVER == 6)
 
     while (simple.loop(runTime))
@@ -456,6 +460,7 @@ void inverseLaplacianProblem_paramBC::reconstructT()
     {
         Trec += gWeights[baseI] * (Tbasis[baseI] + Tad_base[0]);
     }
+
     Trec += - Tad_base[0];
     volScalarField& T = _T();
     T = Trec;

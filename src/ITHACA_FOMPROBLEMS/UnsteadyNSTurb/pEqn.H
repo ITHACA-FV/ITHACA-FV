@@ -25,12 +25,12 @@
 // Solve pressure equation
 volScalarField rAU(1.0 / UEqn.A());
 
-volVectorField HbyA(constrainHbyA(rAU * UEqn.H(), U, p));
+volVectorField HbyA(constrainHbyA(rAU* UEqn.H(), U, p));
 surfaceScalarField phiHbyA
 (
     "phiHbyA",
     fvc::flux(HbyA)
-  + MRF.zeroFilter(fvc::interpolate(rAU)*fvc::ddtCorr(U, phi, _Uf))
+    + MRF.zeroFilter(fvc::interpolate(rAU) * fvc::ddtCorr(U, phi, _Uf))
 );
 
 MRF.makeRelative(phiHbyA);

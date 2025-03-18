@@ -42,7 +42,7 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS()
 
 reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
     :
-    problem(&FOMproblem)
+    problem( & FOMproblem)
 {
     // Create a new Umodes set where the first ones are the lift functions
     for (int i = 0; i < problem->inletIndex.rows(); i++)
@@ -118,7 +118,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
         problem->para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
     float normalizedResidualLim =
         problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim",
-                1e-5);
+            1e-5);
     maxIterOn = problem->para->ITHACAdict->lookupOrDefault<int>("maxIterOn",
                 1000);
     scalar residual_jump(1 + residualJumpLim);
@@ -179,11 +179,11 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
         (
             fvm::div(phi, U)
             - fvm::laplacian(nueff, U)
-            - fvc::div(nueff * dev2(T(fvc::grad(U))))
+            - fvc::div(nueff* dev2(T(fvc::grad(U))))
         );
         UEqn.relax();
         List<Eigen::MatrixXd> RedLinSysU = ULmodes.project(UEqn, UprojN);
-        RedLinSysU[1] = RedLinSysU[1] - projGradModP * b;
+        RedLinSysU[1] = RedLinSysU[1] - projGradModP* b;
         a = reducedProblem::solveLinearSys(RedLinSysU, a, uresidual, vel_now);
         ULmodes.reconstruct(U, a, "U");
         volScalarField rAU(1.0 / UEqn.A());

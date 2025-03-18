@@ -36,8 +36,10 @@ ITHACAparameters::ITHACAparameters(fvMesh& mesh, Time& localTime)
     exportPython = ITHACAdict->lookupOrDefault<bool>("exportPython", 0);
     exportMatlab = ITHACAdict->lookupOrDefault<bool>("exportMatlab", 0);
     exportTxt = ITHACAdict->lookupOrDefault<bool>("exportTxt", 0);
+    exportNpy = ITHACAdict->lookupOrDefault<bool>("exportNpy", 0);
     debug = ITHACAdict->lookupOrDefault<bool>("debug", 0);
     warnings = ITHACAdict->lookupOrDefault<bool>("warnings", 0);
+    correctBC = ITHACAdict->lookupOrDefault<bool>("correctBC", 1);
 }
 
 ITHACAparameters* ITHACAparameters::getInstance(fvMesh& mesh,

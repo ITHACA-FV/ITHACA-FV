@@ -245,7 +245,7 @@ class DEIMLaplacian: public laplacianProblem
                 Eigen::MatrixXd A = EigenFunctions::MVproduct(ReducedMatricesA, thetaonA);
                 Eigen::VectorXd B = EigenFunctions::MVproduct(ReducedVectorsB, thetaonB);
                 Eigen::VectorXd x = A.fullPivLu().solve(B);
-                Eigen::VectorXd full = ModesTEig * x;
+                Eigen::VectorXd full = ModesTEig* x;
                 t2 = std::chrono::high_resolution_clock::now();
                 time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
                 time_rom += time_span.count();

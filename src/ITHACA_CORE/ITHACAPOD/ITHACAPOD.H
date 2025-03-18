@@ -83,8 +83,8 @@ namespace ITHACAPOD
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getModes(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes,
     word fieldName, bool podex, bool supex = 0, bool sup = 0,
     label nmodes = 0, bool correctBC = true);
 
@@ -110,8 +110,8 @@ void getModes(
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getModesSVD(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>&
-    snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> &
+    snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes,
     word fieldName, bool podex, bool supex = 0, bool sup = 0,
     label nmodes = 0, bool correctBC = true);
 
@@ -135,8 +135,8 @@ void getModesSVD(
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getNestedSnapshotMatrix(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes,
     word fieldName, label Npar,
     label NnestedOut);
 
@@ -163,8 +163,8 @@ void getNestedSnapshotMatrix(
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void getWeightedModes(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes,
     word fieldName, bool podex, bool supex = 0, bool sup = 0,
     label nmodes = 0, bool correctBC = true);
 
@@ -212,8 +212,8 @@ Eigen::MatrixXd corMatrix(Field_type& snapshots);
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportBases(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& bases,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & bases,
     word fieldName,
     bool sup = 0);
 
@@ -254,8 +254,8 @@ void exportcumEigenvalues(scalarField cumEigenvalues,  fileName name,
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 PtrList<GeometricField<Type, PatchField, GeoMesh>> DEIMmodes(
-            PtrList<GeometricField<Type, PatchField, GeoMesh>>& SnapShotsMatrix,
-            label nmodes, word FunctionName, word FieldName);
+    PtrList<GeometricField<Type, PatchField, GeoMesh>> & SnapShotsMatrix,
+    label nmodes, word FunctionName, word FieldName);
 
 //------------------------------------------------------------------------------
 /// @brief      Get the DEIM modes for a generic non-parametrized matrix coming
@@ -274,8 +274,8 @@ PtrList<GeometricField<Type, PatchField, GeoMesh>> DEIMmodes(
 ///
 template<typename type_matrix>
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-        DEIMmodes(PtrList<type_matrix>& MatrixList, label nmodesA, label nmodesB,
-                  word MatrixName = "Matrix");
+DEIMmodes(PtrList<type_matrix> & MatrixList, label nmodesA, label nmodesB,
+          word MatrixName = "Matrix");
 
 //------------------------------------------------------------------------------
 /// @brief      Get the DEIM modes for a generic non a parametrized matrix
@@ -294,8 +294,8 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 ///             and the list of modes for the source term
 ///
 std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
-        DEIMmodes(List<Eigen::SparseMatrix<double>>& A, List<Eigen::VectorXd>& b,
-                  label nmodesA, label nmodesB, word MatrixName = "Matrix");
+DEIMmodes(List<Eigen::SparseMatrix<double>> & A, List<Eigen::VectorXd> & b,
+          label nmodesA, label nmodesB, word MatrixName = "Matrix");
 
 
 //------------------------------------------------------------------------------
@@ -319,9 +319,9 @@ std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
 /// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
-              PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
-              PtrList<volScalarField>& Volumes, word fieldName, bool podex, bool supex = 0,
+void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>> & snapshots,
+              PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes,
+              PtrList<volScalarField> & Volumes, word fieldName, bool podex, bool supex = 0,
               bool sup = 0,
               label nmodes = 0);
 
@@ -349,10 +349,78 @@ void getModes(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
 /// @tparam     Field_type_2  Type of the other fields
 ///
 template<class Field_type, class Field_type_2>
-void getModes(PtrList<Field_type>& snapshots, PtrList<Field_type>& modes,
-              PtrList<Field_type_2>& fields2, word fieldName, bool podex, bool supex = 0,
+void getModes(PtrList<Field_type> & snapshots, PtrList<Field_type> & modes,
+              PtrList<Field_type_2> & fields2, word fieldName, bool podex, bool supex = 0,
               bool sup = 0,
               label nmodes = 0);
+
+//------------------------------------------------------------------------------
+/// @brief      Gets the modes in a memory-efficient manner
+///
+/// @param[in]  templateField  The template field
+/// @param[in]  snapshotsPath  The path to the snapshots
+/// @param[out] modes         The modes
+/// @param[in]  fieldName      The field name
+/// @param[in]  podex          If 1, the functions read the stored mode. If 0, the
+///                            function computes the modes and stores them.
+/// @param[in]  supex         If 1, the functions read the stored supremizer mode.
+///                            If 0, the function computes and stores them.
+/// @param[in]  sup            If 1, it computes the supremizer modes.
+/// @param[in]  nmodes         Number of modes to be stored. If 0, the maximum
+///                            number of modes will computed.
+/// @param[in]  correctBC      If true, correct the boundary conditions.
+///
+/// @tparam     Type           The type of the field
+/// @tparam     PatchField     The patch field type
+/// @tparam     GeoMesh        The mesh type
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void getModesMemoryEfficient(
+    GeometricField<Type, PatchField, GeoMesh>& templateField,
+    word snapshotsPath,
+    PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes,
+    word fieldName,
+    bool podex = false,
+    bool supex = false,
+    bool sup = false,
+    label nmodes = 0,
+    bool correctBC = true,
+    autoPtr<GeometricField<Type, PatchField, GeoMesh>> meanField = NULL);
+
+//------------------------------------------------------------------------------
+/// @brief      Gets the mean field in a memory-efficient manner
+template<class Type, template<class> class PatchField, class GeoMesh>
+void getMeanMemoryEfficient(
+    GeometricField<Type, PatchField, GeoMesh>& templateField,
+    word snapshotsPath,
+    autoPtr<GeometricField<Type, PatchField, GeoMesh>>& meanField,
+    bool meanex = false);
+
+//------------------------------------------------------------------------------
+/// @brief      Helper function to compute inner product value for different field types
+///
+/// @param[in]  field1  First field
+/// @param[in]  field2  Second field
+///
+/// @return     Inner product value as scalar
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+scalar computeInnerProduct(
+    const GeometricField<Type, PatchField, GeoMesh>& field1,
+    const GeometricField<Type, PatchField, GeoMesh>& field2);
+
+//------------------------------------------------------------------------------
+/// @brief      Helper function to compute Frobenius norm inner product
+///
+/// @param[in]  field1  First field
+/// @param[in]  field2  Second field
+///
+/// @return     Inner product value as scalar
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+scalar computeFrobeniusInnerProduct(
+    const GeometricField<Type, PatchField, GeoMesh>& field1,
+    const GeometricField<Type, PatchField, GeoMesh>& field2);
 
 };
 

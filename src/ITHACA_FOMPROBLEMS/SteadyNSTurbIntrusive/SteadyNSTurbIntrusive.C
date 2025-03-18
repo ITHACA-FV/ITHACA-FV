@@ -36,6 +36,7 @@ License
 
 // Constructor
 SteadyNSTurbIntrusive::SteadyNSTurbIntrusive() {}
+
 SteadyNSTurbIntrusive::SteadyNSTurbIntrusive(int argc, char* argv[])
 {
     _args = autoPtr<argList>
