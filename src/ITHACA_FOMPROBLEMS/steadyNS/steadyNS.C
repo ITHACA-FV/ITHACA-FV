@@ -1594,7 +1594,7 @@ List<Eigen::MatrixXd> steadyNS::boundary_vector_diffusion(label NUmodes,
     label BCsize = inletIndex.rows();
     label RDsize = NUmodes + NSUPmodes;
     List <Eigen::MatrixXd> RD_matrix(BCsize);
-    Eigen::MatrixXd A;
+    Eigen::SparseMatrix<double> A;
     Eigen::VectorXd b;
 
     for (label i = 0; i < BCsize; i++)
@@ -1640,7 +1640,7 @@ List<Eigen::MatrixXd> steadyNS::boundary_vector_convection(label NUmodes,
     label BCsize = inletIndex.rows();
     label RCsize = NUmodes + NSUPmodes;
     List <Eigen::MatrixXd> RC_matrix(BCsize);
-    Eigen::MatrixXd A;
+    Eigen::SparseMatrix<double> A;
     Eigen::VectorXd b;
 
     for (label i = 0; i < BCsize; i++)
