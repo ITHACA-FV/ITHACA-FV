@@ -59,7 +59,7 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen" || type == "cnpy" || type == "", message.c_str()
+             || type == "eigen" || type == "cnpy", message.c_str()
             );
     word est;
     mkDir(folder);    
@@ -93,7 +93,7 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         str << "]])" << endl;
     }
 
-    if (type == "matlab")
+    else if (type == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -115,7 +115,7 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         str << "];" << endl;
     }
 
-    if (type == "eigen")
+    else if (type == "eigen")
     {
         const static Eigen::IOFormat CSVFormat(6, false, ", ", "\n");
         std::ofstream ofs;
@@ -146,7 +146,7 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         ofs.close();
     }
     
-    if (type == "cnpy")
+    else if (type == "cnpy")
     {
         cnpy::save(matrix,folder + "/"+ Name + ".npy");
     }
@@ -182,7 +182,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen" || type =="cnpy" || type == "", message.c_str()
+             || type == "eigen" || type =="cnpy", message.c_str()
             );
     mkDir(folder);
     word est;
@@ -273,7 +273,7 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen" || type == "cnpy" || type == "", message.c_str()
+             || type == "eigen" || type == "cnpy", message.c_str()
             );
     word est;
     mkDir(folder);
@@ -322,7 +322,7 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
         }
     }
     // Matlab case
-    if (type == "matlab")
+    else if (type == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -352,7 +352,7 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
         }
     }
     //Eigen case
-    if (type == "eigen")
+    else if (type == "eigen")
     {
         for (int i = 0; i < tensor.dimension(0); i++)
         {
@@ -362,7 +362,7 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
         }
     }
     //Cnpy case
-    if (type == "cnpy")
+    else if (type == "cnpy")
     {
         cnpy::save(tensor, folder + "/" + Name + ".npy");
     }
