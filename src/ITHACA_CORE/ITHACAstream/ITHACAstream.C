@@ -1179,17 +1179,22 @@ void exportToFile(Eigen::MatrixXd& Matrix,word matrixRoad, word type, word folde
 
     //allows to handle both folder/ and folder
     if (folder.back()!='/') folder += "/";
+    //adds subfolder and calls proper export function
     if (type == "python"){
         exportMatrix(Matrix, matrixRoad, "python", folder + "Python");
     }
-    if (type == "matlab"){
+    else if (type == "matlab"){
         exportMatrix(Matrix, matrixRoad, "matlab", folder + "Matlab");
     }
-    if (type == "eigen" || type == ""){
+    else if (type == "eigen"){
         exportMatrix(Matrix, matrixRoad, "eigen", folder + "Txt");
     }
-    if (type == "cnpy" || type == ""){
+    else if (type == "cnpy"){
         exportMatrix(Matrix, matrixRoad, "cnpy", folder + "Npy");
+    }
+    else 
+    {
+        Info << "Unknow type for export: " << type << "path " << matrixRoad << endl;
     }
 }
 
@@ -1203,35 +1208,45 @@ void exportToFile(Eigen::Tensor<double,3>& Tensor,word tensorRoad,word type,word
 {
     //allows to handle both folder/ and folder
     if (folder.back()!='/') folder += "/";
+    //adds subfolder and calls proper export function
     if (type == "python"){
         exportTensor(Tensor, tensorRoad, "python", folder + "Python");
     }
-    if (type == "matlab"){
+    else if (type == "matlab"){
         exportTensor(Tensor, tensorRoad, "matlab", folder + "Matlab");
     }
-    if (type == "eigen" || type == ""){
+    else if (type == "eigen"){
         exportTensor(Tensor, tensorRoad, "eigen", folder + "Txt");
     }
-    if (type == "cnpy" || type == ""){
+    else if (type == "cnpy"){
         exportTensor(Tensor, tensorRoad, "cnpy", folder + "Npy");
     } 
+    else 
+    {
+        Info << "Unknow type for export: " << type << "path " << tensorRoad << endl;
+    }
 }
 
 void exportToFile(List <Eigen::MatrixXd>& Matrix,word matrixRoad, word type, word folder)
 {
     //allows to handle both folder/ and folder
     if (folder.back()!='/') folder += "/";
+    //adds subfolder and call proper export function
     if (type == "python"){
         exportMatrix(Matrix, matrixRoad, "python", folder + "Python");
     }
-    if (type == "matlab"){
+    else if (type == "matlab"){
         exportMatrix(Matrix, matrixRoad, "matlab", folder + "Matlab");
     }
-    if (type == "eigen" || type == ""){
+    else if (type == "eigen"){
         exportMatrix(Matrix, matrixRoad, "eigen", folder + "Txt");
     }
-    if (type == "cnpy" || type == ""){
+    else if (type == "cnpy"){
         exportMatrix(Matrix, matrixRoad, "cnpy", folder + "Npy");
+    }
+    else 
+    {
+        Info << "Unknow type for export: " << type << "path " << matrixRoad << endl;
     }
 }
 
