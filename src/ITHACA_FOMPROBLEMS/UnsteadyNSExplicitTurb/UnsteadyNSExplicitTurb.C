@@ -109,6 +109,8 @@ void UnsteadyNSExplicitTurb::truthSolve(List<scalar> mu_now, fileName folder)
     ITHACAstream::exportSolution(U, name(counter), folder);
     ITHACAstream::exportSolution(p, name(counter), folder);
     ITHACAstream::exportSolution(phi, name(counter), folder);
+    volScalarField _nut(turbulence->nut());
+    ITHACAstream::exportSolution(_nut, name(counter), folder);
     std::ofstream of(folder + name(counter) + "/" +
                      runTime.timeName());
     Ufield.append(U.clone());
@@ -147,6 +149,8 @@ void UnsteadyNSExplicitTurb::truthSolve(List<scalar> mu_now, fileName folder)
             ITHACAstream::exportSolution(U, name(counter), folder);
             ITHACAstream::exportSolution(p, name(counter), folder);
             ITHACAstream::exportSolution(phi, name(counter), folder);
+            volScalarField _nut(turbulence->nut());
+            ITHACAstream::exportSolution(_nut, name(counter), folder);
             std::ofstream of(folder + name(counter) + "/" +
                              runTime.timeName());
             Ufield.append(U.clone());
