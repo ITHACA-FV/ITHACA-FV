@@ -148,9 +148,9 @@ void inverseLaplacianProblemTotalHeatMeasure_CG::computeSearchStep()
 {
     fvMesh& mesh = _mesh();
     double Pintegral = ITHACAutilities::integralOnPatch(mesh, P, "hotSide");
-    beta = Tdiff.dot(Tsens) - gIntegralWeight* Pintegral *
+    beta = Tdiff.dot(Tsens) - gIntegralWeight * Pintegral *
            (gIntegral - gIntegral_meas);
-    double betaDiv = Tsens.dot(Tsens) - gIntegralWeight* Pintegral* Pintegral;
+    double betaDiv = Tsens.dot(Tsens) - gIntegralWeight * Pintegral * Pintegral;
     beta = beta / betaDiv;
     Info << "beta = " << beta << endl;
 }

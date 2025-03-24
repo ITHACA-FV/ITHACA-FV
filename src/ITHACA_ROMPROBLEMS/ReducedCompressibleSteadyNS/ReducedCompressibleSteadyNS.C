@@ -78,22 +78,25 @@ void ReducedCompressibleSteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
 }
 
 
-void ReducedCompressibleSteadyNS::projectReducedOperators(int NmodesUproj, int NmodesPproj, int NmodesEproj)
+void ReducedCompressibleSteadyNS::projectReducedOperators(int NmodesUproj,
+        int NmodesPproj, int NmodesEproj)
 {
     PtrList<volVectorField> gradModP;
+
     for (label i = 0; i < NmodesPproj; i++)
     {
         gradModP.append(fvc::grad(problem->Pmodes[i]));
     }
+
     projGradModP = problem->Umodes.project(gradModP, NmodesUproj);
 }
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void ReducedCompressibleSteadyNS::solveOnlineCompressible(scalar mu_now, int NmodesUproj, int NmodesPproj, int NmodesEproj)
+void ReducedCompressibleSteadyNS::solveOnlineCompressible(scalar mu_now,
+        int NmodesUproj, int NmodesPproj, int NmodesEproj)
 {
     counter++;
-    
     // Residuals initialization
     scalar residualNorm(1);
     scalar residualJump(1);
@@ -138,68 +141,75 @@ void ReducedCompressibleSteadyNS::solveOnlineCompressible(scalar mu_now, int Nmo
     {
         csolve++;
         Info << "csolve:" << csolve << endl;
-
-        #if OFVER == 6
+#if OFVER == 6
         problem->_simple().loop(runTime);
-        #else
+#else
         problem->_simple().loop();
-        #endif
-
+#endif
         uResidualOld = uResidual;
         eResidualOld = eResidual;
         pResidualOld = pResidual;
         //Momentum equation phase
         List<Eigen::MatrixXd> RedLinSysU;
-
         //problem->getUmatrix(U);
         fvVectorMatrix UEqnR
         (
-        	fvm::div(phi, U) 
-        	- fvc::div((rho * problem->turbulence->nuEff()) * dev2(T(fvc::grad(U)))) 
-        	- fvm::laplacian(rho * problem->turbulence->nuEff(), U) 
-        	==
-        	fvOptions(rho, U)
+            fvm::div(phi, U)
+            - fvc::div((rho * problem->turbulence->nuEff()) * dev2(T(fvc::grad(U))))
+            - fvm::laplacian(rho * problem->turbulence->nuEff(), U)
+            ==
+            fvOptions(rho, U)
         );
         UEqnR.relax();
-    	fvOptions.constrain(UEqnR);
-        std::cout << "################################  line 165  ##############################" << std::endl;
-
+        fvOptions.constrain(UEqnR);
+        std::cout <<
+        "################################  line 165  ##############################" <<
+                  std::endl;
         //RedLinSysU = ULmodes.project(problem->Ueqn_global(), NmodesUproj);
         RedLinSysU = problem->Umodes.project(UEqnR, NmodesUproj);
-        std::cout << "################################  line 169  ##############################" << std::endl;
+        std::cout <<
+        "################################  line 169  ##############################" <<
+                  std::endl;
         Eigen::MatrixXd projGradP = projGradModP * p;
-        std::cout << "################################  line 171  ##############################" << std::endl;
+        std::cout <<
+        "################################  line 171  ##############################" <<
+                  std::endl;
         RedLinSysU[1] = RedLinSysU[1] - projGradP;
         //u = reducedProblem::solveLinearSys(RedLinSysU, u, uResidual, vel_now, "bdcSvd");
         u = reducedProblem::solveLinearSys(RedLinSysU, u, uResidual);
-        std::cout << "################################  line 174  ##############################" << std::endl;
+        std::cout <<
+        "################################  line 174  ##############################" <<
+                  std::endl;
         problem->Umodes.reconstruct(U, u, "U");
-        std::cout << "################################  line 175  ##############################" << std::endl;
+        std::cout <<
+        "################################  line 175  ##############################" <<
+                  std::endl;
         //solve(problem->Ueqn_global() == -problem->getGradP(P)); //For debug purposes only, second part only useful when using uEqn_global==-getGradP
         //solve(UEqnR == -problem->getGradP(P)); //For debug purposes only, second part only useful when using uEqn_global==-getGradP
         fvOptions.correct(U);
-        
         //Energy equation phase
         //problem->getEmatrix(U, P);
         fvScalarMatrix EEqnR
         (
-        	fvm::div(phi, E)
-        	+ fvc::div(phi, volScalarField("Ekp", 0.5 * magSqr(U) + P / rho))
-        	- fvm::laplacian(problem->turbulence->alphaEff(), E)
-        	==
-        	fvOptions(rho, E)
+            fvm::div(phi, E)
+            + fvc::div(phi, volScalarField("Ekp", 0.5 * magSqr(U) + P / rho))
+            - fvm::laplacian(problem->turbulence->alphaEff(), E)
+            ==
+            fvOptions(rho, E)
         );
         EEqnR.relax();
-    	fvOptions.constrain(EEqnR);
-
+        fvOptions.constrain(EEqnR);
         // List<Eigen::MatrixXd> RedLinSysE = problem->Emodes.project(
         //                                        problem->Eeqn_global(), NmodesEproj);
         List<Eigen::MatrixXd> RedLinSysE = problem->Emodes.project(EEqnR, NmodesEproj);
-        std::cout << "################################  line 196  ##############################" << std::endl;
-
+        std::cout <<
+        "################################  line 196  ##############################" <<
+                  std::endl;
         e = reducedProblem::solveLinearSys(RedLinSysE, e, eResidual);
         problem->Emodes.reconstruct(E, e, "e");
-        std::cout << "################################  line 198  ##############################" << std::endl;
+        std::cout <<
+        "################################  line 198  ##############################" <<
+                  std::endl;
         //problem->Eeqn_global().solve(); //For debug purposes only
         //EEqnR.solve(); //For debug purposes only
         fvOptions.correct(E);
@@ -209,36 +219,35 @@ void ReducedCompressibleSteadyNS::solveOnlineCompressible(scalar mu_now, int Nmo
         //                   problem->getRhorAUf(problem->Ueqn_global()));// Update the pressure BCs to ensure flux consistency
         // surfaceScalarField phiHbyACalculated = problem->getPhiHbyA(problem->Ueqn_global(), U, P);
         constrainPressure(P, rho, U, problem->getPhiHbyA(UEqnR, U, P),
-                          problem->getRhorAUf(UEqnR));// Update the pressure BCs to ensure flux consistency
+                          problem->getRhorAUf(
+                              UEqnR));// Update the pressure BCs to ensure flux consistency
         surfaceScalarField phiHbyACalculated = problem->getPhiHbyA(UEqnR, U, P);
         closedVolume = adjustPhi(phiHbyACalculated, U, P);
-
         List<Eigen::MatrixXd> RedLinSysP;
 
         while (problem->_simple().correctNonOrthogonal())
         {
             // problem->getPmatrix(problem->Ueqn_global(), U, P);
-            volScalarField rAU(1.0 / UEqnR.A()); // Inverse of the diagonal part of the U equation matrix
-            volVectorField HbyA(constrainHbyA(rAU * UEqnR.H(), U, P)); // H is the extra diagonal part summed to the r.h.s. of the U equation
+            volScalarField rAU(1.0 /
+                               UEqnR.A()); // Inverse of the diagonal part of the U equation matrix
+            volVectorField HbyA(constrainHbyA(rAU * UEqnR.H(), U,
+                                              P)); // H is the extra diagonal part summed to the r.h.s. of the U equation
             surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(rho)*fvc::flux(HbyA));
             surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho * rAU));
-        	fvScalarMatrix PEqnR
-        	(
-        		fvc::div(phiHbyA)
-        		-fvm::laplacian(rhorAUf,P)
-        		==
+            fvScalarMatrix PEqnR
+            (
+                fvc::div(phiHbyA)
+                - fvm::laplacian(rhorAUf, P)
+                ==
                 fvOptions(psi, P, rho.name())
-        	);
-
-        	PEqnR.setReference
-		    (
-		        problem->_pressureControl().refCell(),
-		        problem->_pressureControl().refValue()
-		    );
-
+            );
+            PEqnR.setReference
+            (
+                problem->_pressureControl().refCell(),
+                problem->_pressureControl().refValue()
+            );
             // RedLinSysP = problem->Pmodes.project(problem->Peqn_global(), NmodesPproj);
             RedLinSysP = problem->Pmodes.project(PEqnR, NmodesPproj);
-
             p = reducedProblem::solveLinearSys(RedLinSysP, p, pResidual);
             problem->Pmodes.reconstruct(P, p, "p");
             //problem->Peqn_global().solve(); //For debug purposes only
@@ -247,7 +256,8 @@ void ReducedCompressibleSteadyNS::solveOnlineCompressible(scalar mu_now, int Nmo
             if (problem->_simple().finalNonOrthogonalIter())
             {
                 // phi = problem->getPhiHbyA(problem->Ueqn_global(), U, P) + problem->Peqn_global().flux();
-            	phi = problem->getPhiHbyA(UEqnR, U, P) + PEqnR.flux(); //Are you sure you still can use it?????????????????????????????????
+                phi = problem->getPhiHbyA(UEqnR, U,
+                                          P) + PEqnR.flux(); //Are you sure you still can use it?????????????????????????????????
             }
         }
 
@@ -255,7 +265,6 @@ void ReducedCompressibleSteadyNS::solveOnlineCompressible(scalar mu_now, int Nmo
         P.relax();// Explicitly relax pressure for momentum corrector
         //U = problem->HbyA() - (1.0 / problem->Ueqn_global().A()) * problem->getGradP(P);
         U = problem->HbyA() - (1.0 / UEqnR.A()) * problem->getGradP(P);
-
         U.correctBoundaryConditions();
         fvOptions.correct(U);
         bool pLimited = problem->_pressureControl().limit(P);
@@ -274,9 +283,12 @@ void ReducedCompressibleSteadyNS::solveOnlineCompressible(scalar mu_now, int Nmo
 
         rho = thermo.rho(); // Here rho is calculated as p*psi = p/(R*T)
         rho.relax();
-        std::cout << "Ures = " << (uResidual.cwiseAbs()).sum() / (RedLinSysU[1].cwiseAbs()).sum() << std::endl;
-        std::cout << "Eres = " << (eResidual.cwiseAbs()).sum() / (RedLinSysE[1].cwiseAbs()).sum() << std::endl;
-        std::cout << "Pres = " << (pResidual.cwiseAbs()).sum() / (RedLinSysP[1].cwiseAbs()).sum() << std::endl;
+        std::cout << "Ures = " << (uResidual.cwiseAbs()).sum() /
+                  (RedLinSysU[1].cwiseAbs()).sum() << std::endl;
+        std::cout << "Eres = " << (eResidual.cwiseAbs()).sum() /
+                  (RedLinSysE[1].cwiseAbs()).sum() << std::endl;
+        std::cout << "Pres = " << (pResidual.cwiseAbs()).sum() /
+                  (RedLinSysP[1].cwiseAbs()).sum() << std::endl;
         // std::cout << "U = " << u << std::endl;
         // std::cout << "E = " << e << std::endl;
         // std::cout << "P = " << p << std::endl;
@@ -284,13 +296,17 @@ void ReducedCompressibleSteadyNS::solveOnlineCompressible(scalar mu_now, int Nmo
                                (RedLinSysU[1].cwiseAbs()).sum(),
                                (pResidual.cwiseAbs()).sum() / (RedLinSysP[1].cwiseAbs()).sum()),
                            (eResidual.cwiseAbs()).sum() / (RedLinSysE[1].cwiseAbs()).sum());
-        residualJump = max(max(((uResidual - uResidualOld).cwiseAbs()).sum() / (RedLinSysU[1].cwiseAbs()).sum(),
-                               ((pResidual - pResidualOld).cwiseAbs()).sum() / (RedLinSysP[1].cwiseAbs()).sum()),
-                           ((eResidual - eResidualOld).cwiseAbs()).sum() / (RedLinSysE[1].cwiseAbs()).sum());
+        residualJump = max(max(((uResidual - uResidualOld).cwiseAbs()).sum() /
+                               (RedLinSysU[1].cwiseAbs()).sum(),
+                               ((pResidual - pResidualOld).cwiseAbs()).sum() /
+                               (RedLinSysP[1].cwiseAbs()).sum()),
+                           ((eResidual - eResidualOld).cwiseAbs()).sum() /
+                           (RedLinSysE[1].cwiseAbs()).sum());
         std::cout << residualNorm << std::endl;
         std::cout << residualJump << std::endl;
         problem->turbulence->correct();
     }
+
     label k = 1;
     ITHACAstream::exportSolution(U, name(counter), "./ITHACAoutput/Online/");
     ITHACAstream::exportSolution(P, name(counter), "./ITHACAoutput/Online/");

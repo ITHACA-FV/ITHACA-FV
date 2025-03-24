@@ -31,7 +31,7 @@ License
 #include "DEIM.H"
 // Template function constructor
 template<typename T>
-DEIM<T>::DEIM (PtrList<T> & s, label MaxModes, word FunctionName,
+DEIM<T>::DEIM (PtrList<T>& s, label MaxModes, word FunctionName,
                word FieldName)
     :
     SnapShotsMatrix(s),
@@ -40,7 +40,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModes, word FunctionName,
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     Folder = "ITHACAoutput/DEIM/" + FunctionName;
-    magicPoints = autoPtr<IOList<label>>
+    magicPoints = autoPtr<IOList<label >>
                   (
                       new IOList<label>
                       (
@@ -55,7 +55,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModes, word FunctionName,
                           )
                       )
                   );
-    xyz = autoPtr<IOList<label>>
+    xyz = autoPtr<IOList<label >>
           (
               new IOList<label>
               (
@@ -83,7 +83,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModes, word FunctionName,
         MatrixModes = Foam2Eigen::PtrList2Eigen(modes);
         Ncells = modes[0].size();
         label ind_max, c1, xyz_in;
-        double max = MatrixModes.cwiseAbs().col(0).maxCoeff( & ind_max, & c1);
+        double max = MatrixModes.cwiseAbs().col(0).maxCoeff(& ind_max, & c1);
         check3DIndices(ind_max, xyz_in);
         rho(0) = max;
         magicPoints().append(ind_max);
@@ -97,8 +97,8 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModes, word FunctionName,
             A = P.transpose() * U;
             b = P.transpose() * MatrixModes.col(i);
             c = A.fullPivLu().solve(b);
-            r = MatrixModes.col(i) - U* c;
-            max = r.cwiseAbs().maxCoeff( & ind_max, & c1);
+            r = MatrixModes.col(i) - U * c;
+            max = r.cwiseAbs().maxCoeff(& ind_max, & c1);
             P.conservativeResize(MatrixModes.rows(), i + 1);
             P.insert(ind_max, i) = 1;
             U.conservativeResize(MatrixModes.rows(), i + 1);
@@ -124,7 +124,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModes, word FunctionName,
 
 // constructor for matrix DEIM
 template<typename T>
-DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
+DEIM<T>::DEIM (PtrList<T>& s, label MaxModesA, label MaxModesB,
                word MatrixName)
     :
     SnapShotsMatrix(s),
@@ -138,7 +138,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     FolderM = "ITHACAoutput/DEIM/" + MatrixName;
-    magicPointsArow = autoPtr<IOList<label>>
+    magicPointsArow = autoPtr<IOList<label >>
                       (
                           new IOList<label>
                           (
@@ -153,7 +153,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
                               )
                           )
                       );
-    magicPointsAcol = autoPtr<IOList<label>>
+    magicPointsAcol = autoPtr<IOList<label >>
                       (
                           new IOList<label>
                           (
@@ -168,7 +168,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
                               )
                           )
                       );
-    magicPointsB = autoPtr<IOList<label>>
+    magicPointsB = autoPtr<IOList<label >>
                    (
                        new IOList<label>
                        (
@@ -183,7 +183,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
                            )
                        )
                    );
-    xyz_Arow = autoPtr<IOList<label>>
+    xyz_Arow = autoPtr<IOList<label >>
                (
                    new IOList<label>
                    (
@@ -198,7 +198,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
                        )
                    )
                );
-    xyz_Acol = autoPtr<IOList<label>>
+    xyz_Acol = autoPtr<IOList<label >>
                (
                    new IOList<label>
                    (
@@ -213,7 +213,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
                        )
                    )
                );
-    xyz_B = autoPtr<IOList<label>>
+    xyz_B = autoPtr<IOList<label >>
             (
                 new IOList<label>
                 (
@@ -291,7 +291,7 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
         Eigen::VectorXd rB;
         Eigen::VectorXd rhoB(1);
         label ind_rowB, xyz_rowB, c1;
-        double maxB = std::get<1>(Matrix_Modes)[0].cwiseAbs().maxCoeff( & ind_rowB,
+        double maxB = std::get<1>(Matrix_Modes)[0].cwiseAbs().maxCoeff(& ind_rowB,
                       & c1);
         label ind_rowBOF = ind_rowB;
         check3DIndices(ind_rowBOF, xyz_rowB);
@@ -307,8 +307,8 @@ DEIM<T>::DEIM (PtrList<T> & s, label MaxModesA, label MaxModesB,
             AB = PB.transpose() * UB;
             bB = PB.transpose() * std::get<1>(Matrix_Modes)[i];
             cB = AB.fullPivLu().solve(bB);
-            rB = std::get<1>(Matrix_Modes)[i] - UB* cB;
-            maxB = rB.cwiseAbs().maxCoeff( & ind_rowB, & c1);
+            rB = std::get<1>(Matrix_Modes)[i] - UB * cB;
+            maxB = rB.cwiseAbs().maxCoeff(& ind_rowB, & c1);
             ind_rowBOF = ind_rowB;
             check3DIndices(ind_rowBOF, xyz_rowB);
             xyz_B().append(xyz_rowB);
@@ -360,7 +360,7 @@ S DEIM<T>::generateSubmesh(label layers, const fvMesh& mesh, S field,
                            label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
-    totalMagicPoints = autoPtr<IOList<labelList>>
+    totalMagicPoints = autoPtr<IOList<labelList >>
                        (
                            new IOList<labelList>
                            (
@@ -375,7 +375,7 @@ S DEIM<T>::generateSubmesh(label layers, const fvMesh& mesh, S field,
                                )
                            )
                        );
-    uniqueMagicPoints = autoPtr<IOList<label>>
+    uniqueMagicPoints = autoPtr<IOList<label >>
                         (
                             new IOList<label>
                             (
@@ -418,7 +418,6 @@ S DEIM<T>::generateSubmesh(label layers, const fvMesh& mesh, S field,
 
         uniqueMagicPoints() = ITHACAutilities::combineList(totalMagicPoints());
     }
-
 #if OPENFOAM >= 1812
     submesh->setCellSubset(uniqueMagicPoints());
 #else
@@ -441,7 +440,6 @@ S DEIM<T>::generateSubmesh(label layers, const fvMesh& mesh, S field,
         ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + FunctionName
                                     );
     }
-
     totalMagicPoints().write();
     uniqueMagicPoints().write();
     return f;
@@ -453,7 +451,7 @@ S DEIM<T>::generateSubmeshMatrix(label layers, const fvMesh& mesh, S field,
                                  label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
-    totalMagicPointsA = autoPtr<IOList<labelList>>
+    totalMagicPointsA = autoPtr<IOList<labelList >>
                         (
                             new IOList<labelList>
                             (
@@ -468,7 +466,7 @@ S DEIM<T>::generateSubmeshMatrix(label layers, const fvMesh& mesh, S field,
                                 )
                             )
                         );
-    uniqueMagicPointsA = autoPtr<IOList<label>>
+    uniqueMagicPointsA = autoPtr<IOList<label >>
                          (
                              new IOList<label>
                              (
@@ -507,7 +505,6 @@ S DEIM<T>::generateSubmeshMatrix(label layers, const fvMesh& mesh, S field,
                        layers));
         totalMagicPointsA().append(indices);
     }
-
     uniqueMagicPointsA() = ITHACAutilities::combineList(totalMagicPointsA());
 #if OPENFOAM >= 1812
     submeshA->setCellSubset(uniqueMagicPointsA());
@@ -535,7 +532,6 @@ S DEIM<T>::generateSubmeshMatrix(label layers, const fvMesh& mesh, S field,
         totalMagicPointsA().write();
         uniqueMagicPointsA().write();
     }
-
     runSubMeshA = true;
     return f;
 }
@@ -546,7 +542,7 @@ S DEIM<T>::generateSubmeshVector(label layers, const fvMesh& mesh, S field,
                                  label secondTime)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
-    totalMagicPointsB = autoPtr<IOList<labelList>>
+    totalMagicPointsB = autoPtr<IOList<labelList >>
                         (
                             new IOList<labelList>
                             (
@@ -561,7 +557,7 @@ S DEIM<T>::generateSubmeshVector(label layers, const fvMesh& mesh, S field,
                                 )
                             )
                         );
-    uniqueMagicPointsB = autoPtr<IOList<label>>
+    uniqueMagicPointsB = autoPtr<IOList<label >>
                          (
                              new IOList<label>
                              (
@@ -603,7 +599,6 @@ S DEIM<T>::generateSubmeshVector(label layers, const fvMesh& mesh, S field,
             ITHACAutilities::assignONE(Indici, indices);
         }
     }
-
     uniqueMagicPointsB() = ITHACAutilities::combineList(totalMagicPointsB());
     std::cout.setstate(std::ios_base::failbit);
 #if OPENFOAM >= 1812
@@ -630,14 +625,13 @@ S DEIM<T>::generateSubmeshVector(label layers, const fvMesh& mesh, S field,
         totalMagicPointsB().write();
         uniqueMagicPointsB().write();
     }
-
     runSubMeshB = true;
     return f;
 }
 
 
 template<typename T>
-List<label> DEIM<T>::global2local(List<label> & points,
+List<label> DEIM<T>::global2local(List<label>& points,
                                   fvMeshSubset& submesh)
 {
     List<label> localPoints;
@@ -769,7 +763,7 @@ void DEIM<T>::setMagicPoints(labelList& newMagicPoints, labelList& newxyz)
     system(command);
     magicPoints.reset
     (
-        autoPtr<IOList<label>>
+        autoPtr<IOList<label >>
         (
             new IOList<label>
             (
@@ -790,10 +784,9 @@ void DEIM<T>::setMagicPoints(labelList& newMagicPoints, labelList& newxyz)
     {
         magicPoints().append(newMagicPoints[i]);
     }
-
     xyz.reset
     (
-        autoPtr<IOList<label>>
+        autoPtr<IOList<label >>
         (
             new IOList<label>
             (
@@ -814,21 +807,20 @@ void DEIM<T>::setMagicPoints(labelList& newMagicPoints, labelList& newxyz)
     {
         xyz().append(newxyz[i]);
     }
-
     magicPoints().write();
     xyz().write();
 }
 
 // Specialization of the constructor
-template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix> & s,
+template DEIM<fvScalarMatrix>::DEIM (PtrList<fvScalarMatrix>& s,
                                      label MaxModesA,
                                      label MaxModesB, word MatrixName);
-template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix> & s,
+template DEIM<fvVectorMatrix>::DEIM (PtrList<fvVectorMatrix>& s,
                                      label MaxModesA,
                                      label MaxModesB, word MatrixName);
-template DEIM<volScalarField>::DEIM(PtrList<volScalarField> & s, label MaxModes,
+template DEIM<volScalarField>::DEIM(PtrList<volScalarField>& s, label MaxModes,
                                     word FunctionName, word FieldName);
-template DEIM<volVectorField>::DEIM(PtrList<volVectorField> & s, label MaxModes,
+template DEIM<volVectorField>::DEIM(PtrList<volVectorField>& s, label MaxModes,
                                     word FunctionName, word FieldName);
 
 // Specialization for generateSubField

@@ -54,15 +54,15 @@ int main(int argc, char* argv[])
     int stateSize = A.rows();
     int obsSize = H.rows();
     std::cout <<
-              "In this tutorial we have a dynamical system in the form:\ndx/dt = A * x" <<
+    "In this tutorial we have a dynamical system in the form:\ndx/dt = A * x" <<
               std::endl;
     std::cout << "with A = \n" << A << std::endl;
     std::cout << "We observe the state x by mean of the observation matrix \nH = \n"
               << H << std::endl;
     std::cout <<
-              "The objective is to reconstruct the vector state knowing H and x0 = \n" <<
+    "The objective is to reconstruct the vector state knowing H and x0 = \n" <<
               x0.transpose() <<
-              "\nbut having a wrong A" << std::endl;
+    "\nbut having a wrong A" << std::endl;
     std::cout << "A_wrong =\n" << Aw << std::endl;
     int Ntimes = 201;
     int sampleDeltaStep = 10;
@@ -79,10 +79,10 @@ int main(int argc, char* argv[])
 
     for (int timeI = 0; timeI < Ntimes - 1; timeI++)
     {
-        Eigen::VectorXd xNew = (A* deltaTime + Eigen::MatrixXd::Identity(A.rows(),
+        Eigen::VectorXd xNew = (A * deltaTime + Eigen::MatrixXd::Identity(A.rows(),
                                 A.cols()))  * xOld;
         xOld = xNew;
-        Eigen::VectorXd dNew = H* xNew;
+        Eigen::VectorXd dNew = H * xNew;
         X.col(timeI + 1) = xNew;
         sampleFlag--;
 
@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
         //Forecast step
         for (int i = 0; i < Nseeds; i++)
         {
-            forwardSamples.col(i) = (A* deltaTime + Eigen::MatrixXd::Identity(A.rows(),
+            forwardSamples.col(i) = (A * deltaTime + Eigen::MatrixXd::Identity(A.rows(),
                                      A.cols())) * priorSamples.col(i) + modelErrorDensity->Sample();
         }
 
@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
             Eigen::VectorXd meas = obs.col(sampleI);
             //Kalman filter
             posteriorSamples = ITHACAmuq::muq2ithaca::EnsembleKalmanFilter(forwardSamples,
-                               meas, meas_cov, H* forwardSamples);
+                               meas, meas_cov, H * forwardSamples);
             sampleI++;
         }
         else

@@ -119,8 +119,8 @@ void msrProblem::truthSolve(List<scalar> mu_now)
     volScalarField& logT = _logT();
     volScalarField& alphat = _alphat();
     volScalarField& difft = _difft();
-    volScalarField powerDens = ((1 - decbetaTot) * flux* SP +
-                                (decLam1* dec1 + decLam2* dec2 + decLam3* dec3)).ref();
+    volScalarField powerDens = ((1 - decbetaTot) * flux * SP +
+                                (decLam1 * dec1 + decLam2 * dec2 + decLam3 * dec3)).ref();
     powerDens.rename("powerDens");
 #include "NLmsrProblem.H"
     counter++;
@@ -338,7 +338,7 @@ void msrProblem::liftSolve()
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("Phi", dimLength* dimVelocity, 0),
+            dimensionedScalar("Phi", dimLength * dimVelocity, 0),
             p.boundaryField().types()
         );
         label PhiRefCell = 0;
@@ -398,7 +398,7 @@ void msrProblem::projectPPE(fileName folder, label NU, label NP, label NF,
     if (NPrec.size() != 8 || NDec.size() != 3)
     {
         std::cout <<
-                  "The model assumes 8 groups of precursors and 3 of decay heat, check NDrec and NDec dimensions..."
+        "The model assumes 8 groups of precursors and 3 of decay heat, check NDrec and NDec dimensions..."
                   << std::endl;
         exit(0);
     }
@@ -914,8 +914,8 @@ Eigen::MatrixXd msrProblem::pressure_BC3(label NUmodes, label NPmodes)
         for (label j = 0; j < P3_BC2size; j++)
         {
             surfaceVectorField BC3 = fvc::interpolate(fvc::curl(Together[j])).ref();
-            surfaceVectorField BC4 = (n^ fvc::interpolate(fvc::grad(Pmodes[i]))).ref();
-            surfaceScalarField BC5 = ((BC3& BC4) * mesh.magSf()).ref();
+            surfaceVectorField BC4 = (n ^ fvc::interpolate(fvc::grad(Pmodes[i]))).ref();
+            surfaceScalarField BC5 = ((BC3 & BC4) * mesh.magSf()).ref();
             double s = 0;
 
             for (label k = 0; k < BC5.boundaryField().size(); k++)
@@ -1813,7 +1813,7 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_v[i]->addSample(mu_samples.row(j), Ncoeff_v(i, j));
         }
 
-        rbfsplines_v[i] = new SPLINTER::RBFSpline( * SAMPLES_v[i],
+        rbfsplines_v[i] = new SPLINTER::RBFSpline(* SAMPLES_v[i],
             SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
@@ -1834,7 +1834,7 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_D[i]->addSample(mu_samples.row(j), Ncoeff_D(i, j));
         }
 
-        rbfsplines_D[i] = new SPLINTER::RBFSpline( * SAMPLES_D[i],
+        rbfsplines_D[i] = new SPLINTER::RBFSpline(* SAMPLES_D[i],
             SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
@@ -1856,7 +1856,7 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_NSF[i]->addSample(mu_samples.row(j), Ncoeff_NSF(i, j));
         }
 
-        rbfsplines_NSF[i] = new SPLINTER::RBFSpline( * SAMPLES_NSF[i],
+        rbfsplines_NSF[i] = new SPLINTER::RBFSpline(* SAMPLES_NSF[i],
             SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
@@ -1877,7 +1877,7 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_A[i]->addSample(mu_samples.row(j), Ncoeff_A(i, j));
         }
 
-        rbfsplines_A[i] = new SPLINTER::RBFSpline( * SAMPLES_A[i],
+        rbfsplines_A[i] = new SPLINTER::RBFSpline(* SAMPLES_A[i],
             SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
@@ -1899,7 +1899,7 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_SP[i]->addSample(mu_samples.row(j), Ncoeff_SP(i, j));
         }
 
-        rbfsplines_SP[i] = new SPLINTER::RBFSpline( * SAMPLES_SP[i],
+        rbfsplines_SP[i] = new SPLINTER::RBFSpline(* SAMPLES_SP[i],
             SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
@@ -1921,7 +1921,7 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_TXS[i]->addSample(mu_samples.row(j), Ncoeff_TXS(i, j));
         }
 
-        rbfsplines_TXS[i] = new SPLINTER::RBFSpline( * SAMPLES_TXS[i],
+        rbfsplines_TXS[i] = new SPLINTER::RBFSpline(* SAMPLES_TXS[i],
             SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 }
@@ -1999,7 +1999,7 @@ void msrProblem::liftSolveT()
             fvScalarMatrix TEqn
             (
                 fvm::div(phi, Tlift) == fvm::laplacian(turbulence->nu() / Pr + alphat, Tlift)
-                + sp * (1 - dbtot) / (cp* rho) * source
+                + sp * (1 - dbtot) / (cp * rho) * source
             );
             TEqn.solve();
             Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
@@ -2066,8 +2066,8 @@ void msrProblem::restart()
     U = U0;
     phi = phi0;
     turbulence.reset(
-                  (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
-              );
+        (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
+    );
     flux = flux0;
     prec1 = prec10;
     prec2 = prec20;

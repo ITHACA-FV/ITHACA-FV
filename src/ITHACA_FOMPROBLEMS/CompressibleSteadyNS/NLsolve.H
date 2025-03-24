@@ -40,7 +40,7 @@ scalar presidual = 1;
 ITHACAparameters* para = ITHACAparameters::getInstance();
 middleStep = para->ITHACAdict->lookupOrDefault<int>("middleStep", 20);
 label csolve = 0;
-/// Counter to check if the middleStep has been reached or 
+/// Counter to check if the middleStep has been reached or
 /// not (for turbulent case only)
 label saver = 0;
 label folderN = 0;
@@ -104,7 +104,6 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
     surfaceScalarField phiHbyACalculated = getPhiHbyA(Ueqn_global(), U, p);
     closedVolume = adjustPhi(phiHbyACalculated, U, p);
 
-
     while (simple.correctNonOrthogonal())
     {
         getPmatrix(Ueqn_global(), U, p);
@@ -145,30 +144,29 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
     Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
          << "  ClockTime = "   << runTime.elapsedClockTime() << " s"
          << nl << endl;
-
     saver++;
     std::cout << "saver ================== \t" << saver << std::endl;
-    if (middleExport && saver==middleStep)
-    {
-      saver = 0;
-      folderN++;
-      ITHACAstream::exportSolution(U, name(folderN), folder + name(counter));
-      ITHACAstream::exportSolution(p, name(folderN), folder + name(counter));
-      ITHACAstream::exportSolution(E, name(folderN), folder + name(counter));
-      auto nut = _mesh().lookupObject<volScalarField>("nut");
-      ITHACAstream::exportSolution(nut, name(folderN), folder + name(counter));
-      Ufield.append(U.clone());
-      Pfield.append(p.clone());
-      Efield.append(E.clone());
-      nutFields.append(nut.clone());
 
-      res_U << uresidual << std::endl;
-      res_P << presidual << std::endl;
-      res_E << eresidual << std::endl;
+    if (middleExport && saver == middleStep)
+    {
+        saver = 0;
+        folderN++;
+        ITHACAstream::exportSolution(U, name(folderN), folder + name(counter));
+        ITHACAstream::exportSolution(p, name(folderN), folder + name(counter));
+        ITHACAstream::exportSolution(E, name(folderN), folder + name(counter));
+        auto nut = _mesh().lookupObject<volScalarField>("nut");
+        ITHACAstream::exportSolution(nut, name(folderN), folder + name(counter));
+        Ufield.append(U.clone());
+        Pfield.append(p.clone());
+        Efield.append(E.clone());
+        nutFields.append(nut.clone());
+        res_U << uresidual << std::endl;
+        res_P << presidual << std::endl;
+        res_E << eresidual << std::endl;
     }
 }
 
-snaps_os << folderN+1 << std::endl;
+snaps_os << folderN + 1 << std::endl;
 //snaps_os << folderN  << std::endl;
 iters << csolve << std::endl;
 res_os << residual << std::endl;
@@ -183,20 +181,21 @@ cpuTimes.close();
 
 if (middleExport)
 {
-  ITHACAstream::exportSolution(U, name(folderN+1), folder + name(counter));
-  ITHACAstream::exportSolution(p, name(folderN+1), folder + name(counter));
-  ITHACAstream::exportSolution(E, name(folderN+1), folder + name(counter));
-  auto nut = _mesh().lookupObject<volScalarField>("nut");
-  ITHACAstream::exportSolution(nut, name(folderN+1), folder + name(counter));
+    ITHACAstream::exportSolution(U, name(folderN + 1), folder + name(counter));
+    ITHACAstream::exportSolution(p, name(folderN + 1), folder + name(counter));
+    ITHACAstream::exportSolution(E, name(folderN + 1), folder + name(counter));
+    auto nut = _mesh().lookupObject<volScalarField>("nut");
+    ITHACAstream::exportSolution(nut, name(folderN + 1), folder + name(counter));
 }
 else
 {
-  ITHACAstream::exportSolution(U, name(counter), folder);
-  ITHACAstream::exportSolution(p, name(counter), folder);
-  ITHACAstream::exportSolution(E, name(counter), folder);
-  auto nut = _mesh().lookupObject<volScalarField>("nut");
-  ITHACAstream::exportSolution(nut, name(counter), folder);
+    ITHACAstream::exportSolution(U, name(counter), folder);
+    ITHACAstream::exportSolution(p, name(counter), folder);
+    ITHACAstream::exportSolution(E, name(counter), folder);
+    auto nut = _mesh().lookupObject<volScalarField>("nut");
+    ITHACAstream::exportSolution(nut, name(counter), folder);
 }
+
 Ufield.append(U.clone());
 Pfield.append(p.clone());
 Efield.append(E.clone());

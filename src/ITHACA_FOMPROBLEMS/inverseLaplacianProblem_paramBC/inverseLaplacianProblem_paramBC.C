@@ -76,9 +76,9 @@ void inverseLaplacianProblem_paramBC::set_gBaseFunctions()
                 scalar faceZ = mesh.boundaryMesh()[hotSide_ind].faceCentres()[faceI].z();
                 scalar radius = Foam::sqrt((faceX - thermocoupleX) * (faceX - thermocoupleX) +
                                            (faceZ - thermocoupleZ) * (faceZ - thermocoupleZ));
-                gBaseFunctions[funcI][faceI] = Foam::exp(- (shapeParameter*
+                gBaseFunctions[funcI][faceI] = Foam::exp(- (shapeParameter *
                                                shapeParameter
-                                               * radius* radius));
+                                               * radius * radius));
             }
         }
     }
@@ -144,7 +144,7 @@ void inverseLaplacianProblem_paramBC::set_gBaseFunctionsPOD(label Nmodes)
     Eigen::JacobiSVD<Eigen::MatrixXd> svd(correlationMatrix,
                                           Eigen::ComputeThinU | Eigen::ComputeThinV);
     gPODmodes = svd.matrixU().leftCols(Nmodes);
-    Eigen::MatrixXd gBaseFuncEigen_new = gBaseFuncEigen* gPODmodes;
+    Eigen::MatrixXd gBaseFuncEigen_new = gBaseFuncEigen * gPODmodes;
     Info << "gBaseFuncEigen_new size = " << gBaseFuncEigen_new.cols() << ", " <<
          gBaseFuncEigen_new.rows() << endl;
     gBaseFunctions.resize(Nmodes);
@@ -215,14 +215,14 @@ void inverseLaplacianProblem_paramBC::parameterizedBCoffline(bool force)
                 metaData.basisType >> metaData.shapeParameter;
             fin.close();
             std::cout << "\nOffline FOUND with parameter:\n" <<
-                      "Number of thermocouples = " << metaData.numberTC <<
-                      "\nNumber of basis functions = " << metaData.numberBasis <<
-                      "\nType of basis functions = " << metaData.basisType <<
-                      "\nRBF shape parameters = " << metaData.shapeParameter <<
-                      "\n\nShould I recompute it? [y/n]" << std::endl;
+                         "Number of thermocouples = " << metaData.numberTC <<
+                         "\nNumber of basis functions = " << metaData.numberBasis <<
+                         "\nType of basis functions = " << metaData.basisType <<
+                         "\nRBF shape parameters = " << metaData.shapeParameter <<
+                         "\n\nShould I recompute it? [y/n]" << std::endl;
             std::cin >> recomputeOffline;
         }
-        while ( !cin.fail() && recomputeOffline != 'y' && recomputeOffline != 'n' );
+        while (!cin.fail() && recomputeOffline != 'y' && recomputeOffline != 'n' );
     }
 
     if (recomputeOffline == 'y')
