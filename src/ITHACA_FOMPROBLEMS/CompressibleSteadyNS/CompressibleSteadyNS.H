@@ -99,10 +99,12 @@ class CompressibleSteadyNS: public SteadyNSTurb
         fvScalarMatrix getDiffTerm();
 
         // Pressure equation terms
-        fvScalarMatrix getPmatrix(fvVectorMatrix& Ueqn, volVectorField& U, volScalarField& p);
+        fvScalarMatrix getPmatrix(fvVectorMatrix& Ueqn, volVectorField& U,
+                                  volScalarField& p);
         surfaceScalarField getPhiHbyA(fvVectorMatrix& Ueqn, volVectorField& U,
                                       volScalarField& p);
-        volScalarField getDivPhiHbyA(fvVectorMatrix& Ueqn, volVectorField& U, volScalarField& p);
+        volScalarField getDivPhiHbyA(fvVectorMatrix& Ueqn, volVectorField& U,
+                                     volScalarField& p);
         surfaceScalarField getRhorAUf(fvVectorMatrix& Ueqn);
         fvScalarMatrix getPoissonTerm(fvVectorMatrix& Ueqn, volScalarField& p);
 
@@ -115,13 +117,13 @@ class CompressibleSteadyNS: public SteadyNSTurb
 
         //--------------------------------------------------------------------------
         /// set all variables back to the values into the 0 folder
-        /// 
+        ///
         void restart();
 
         autoPtr<fluidThermo> pThermo;
 
         autoPtr<volScalarField> _rho;
-        
+
         autoPtr<volScalarField> _p;
 
         autoPtr<pressureControl> _pressureControl;

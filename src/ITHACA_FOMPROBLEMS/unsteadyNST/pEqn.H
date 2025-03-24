@@ -58,6 +58,6 @@ while (piso.correctNonOrthogonal())
 
 #include "continuityErrs.H"
 
-U = HbyA - rAU* fvc::grad(p);
+U = HbyA - rAU * fvc::grad(p);
 U.correctBoundaryConditions();
 //fvOptions.correct(U);

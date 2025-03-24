@@ -43,7 +43,7 @@ struct newton_usmsr_fd: public newton_argument<double>
 
         newton_usmsr_fd(int Nx, int Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows())
@@ -71,7 +71,7 @@ struct newton_usmsr_n: public newton_argument<double>
 
         newton_usmsr_n(int Nx, int Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_flux(problem.NFluxmodes),
             Nphi_prec1(problem.NPrecmodes(0)),
             Nphi_prec2(problem.NPrecmodes(1)),
@@ -145,7 +145,7 @@ struct newton_usmsr_t: public newton_argument<double>
 
         newton_usmsr_t(int Nx, int Ny, usmsrProblem& problem):
             newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_T(problem.NTmodes + problem.liftfieldT.size()),
             Nphi_dec1(problem.NDecmodes(0)),
             Nphi_dec2(problem.NDecmodes(1)),

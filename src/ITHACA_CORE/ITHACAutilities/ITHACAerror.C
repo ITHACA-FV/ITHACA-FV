@@ -38,23 +38,23 @@ namespace ITHACAutilities
 {
 
 template<>
-double L2Norm(GeometricField<scalar, fvPatchField, volMesh> & field)
+double L2Norm(GeometricField<scalar, fvPatchField, volMesh>& field)
 {
     double a;
-    a = Foam::sqrt(fvc::domainIntegrate(field* field).value());
+    a = Foam::sqrt(fvc::domainIntegrate(field * field).value());
     return a;
 }
 
 template<>
-double L2Norm(GeometricField<vector, fvPatchField, volMesh> & field)
+double L2Norm(GeometricField<vector, fvPatchField, volMesh>& field)
 {
     double a;
-    a = Foam::sqrt(fvc::domainIntegrate(field& field).value());
+    a = Foam::sqrt(fvc::domainIntegrate(field & field).value());
     return a;
 }
 
 template<>
-double LinfNorm(GeometricField<scalar, fvPatchField, volMesh> & field)
+double LinfNorm(GeometricField<scalar, fvPatchField, volMesh>& field)
 {
     double a;
     a = Foam::max(Foam::sqrt(field.internalField() *
@@ -63,7 +63,7 @@ double LinfNorm(GeometricField<scalar, fvPatchField, volMesh> & field)
 }
 
 template<>
-double LinfNorm(GeometricField<vector, fvPatchField, volMesh> & field)
+double LinfNorm(GeometricField<vector, fvPatchField, volMesh>& field)
 {
     double a;
     Info << "LinfNorm(GeometricField<vector, fvPatchField, volMesh>& field) is still to be implemented"
@@ -75,41 +75,40 @@ double LinfNorm(GeometricField<vector, fvPatchField, volMesh> & field)
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-double errorFrobRel(GeometricField<Type, PatchField, GeoMesh> & field1,
-                    GeometricField<Type, PatchField, GeoMesh> & field2, List<label>* labels)
+double errorFrobRel(GeometricField<Type, PatchField, GeoMesh>& field1,
+                    GeometricField<Type, PatchField, GeoMesh>& field2, List<label>* labels)
 {
     double err;
-    autoPtr<GeometricField<Type, PatchField, GeoMesh>> errField;
-    autoPtr<GeometricField<Type, PatchField, GeoMesh>> field1_S;
-    autoPtr<GeometricField<Type, PatchField, GeoMesh>> field2_S;
+    autoPtr<GeometricField<Type, PatchField, GeoMesh >> errField;
+    autoPtr<GeometricField<Type, PatchField, GeoMesh >> field1_S;
+    autoPtr<GeometricField<Type, PatchField, GeoMesh >> field2_S;
     autoPtr<fvMeshSubset> submesh;
 
     if (labels != NULL)
     {
         submesh = autoPtr<fvMeshSubset>(new fvMeshSubset(field1.mesh()));
 #if OPENFOAM >= 1812
-        submesh->setCellSubset( * labels);
+        submesh->setCellSubset(* labels);
 #else
-        submesh->setLargeCellSubset( * labels);
+        submesh->setLargeCellSubset(* labels);
 #endif
         GeometricField<Type, PatchField, GeoMesh> field1tmp(submesh->interpolate(
                     field1));
         GeometricField<Type, PatchField, GeoMesh> field2tmp(submesh->interpolate(
                     field2));
-        field1_S = autoPtr<GeometricField<Type, PatchField, GeoMesh>>
+        field1_S = autoPtr<GeometricField<Type, PatchField, GeoMesh >>
                    (new GeometricField<Type, PatchField, GeoMesh>(field1tmp.clone()));
-        field2_S = autoPtr<GeometricField<Type, PatchField, GeoMesh>>
+        field2_S = autoPtr<GeometricField<Type, PatchField, GeoMesh >>
                    (new GeometricField<Type, PatchField, GeoMesh>(field2tmp.clone()));
     }
     else
     {
-        field1_S = autoPtr<GeometricField<Type, PatchField, GeoMesh>>
+        field1_S = autoPtr<GeometricField<Type, PatchField, GeoMesh >>
                    (new GeometricField<Type, PatchField, GeoMesh>(field1));
-        field2_S = autoPtr<GeometricField<Type, PatchField, GeoMesh>>
+        field2_S = autoPtr<GeometricField<Type, PatchField, GeoMesh >>
                    (new GeometricField<Type, PatchField, GeoMesh>(field2));
     }
-
-    errField = autoPtr<GeometricField<Type, PatchField, GeoMesh>>
+    errField = autoPtr<GeometricField<Type, PatchField, GeoMesh >>
                (new GeometricField<Type, PatchField, GeoMesh>(field1_S() - field2_S()));
 
     if (frobNorm(field1) <= 1e-6)
@@ -120,61 +119,59 @@ double errorFrobRel(GeometricField<Type, PatchField, GeoMesh> & field1,
     {
         err = frobNorm(errField()) / frobNorm(field1_S());
     }
-
     return err;
 }
 
 
-template double errorFrobRel(GeometricField<scalar, fvPatchField, volMesh> &
+template double errorFrobRel(GeometricField<scalar, fvPatchField, volMesh>&
                              field1,
-                             GeometricField<scalar, fvPatchField, volMesh> & field2, List<label>* labels);
-template double errorFrobRel(GeometricField<vector, fvPatchField, volMesh> &
+                             GeometricField<scalar, fvPatchField, volMesh>& field2, List<label>* labels);
+template double errorFrobRel(GeometricField<vector, fvPatchField, volMesh>&
                              field1,
-                             GeometricField<vector, fvPatchField, volMesh> & field2, List<label>* labels);
+                             GeometricField<vector, fvPatchField, volMesh>& field2, List<label>* labels);
 
 template double errorFrobRel(GeometricField<scalar, fvsPatchField, surfaceMesh>
                              &
                              field1,
-                             GeometricField<scalar, fvsPatchField, surfaceMesh> & field2,
+                             GeometricField<scalar, fvsPatchField, surfaceMesh>& field2,
                              List<label>* labels);
 
 
 template<typename T>
-double errorLinfRel(GeometricField<T, fvPatchField, volMesh> & field1,
-                    GeometricField<T, fvPatchField, volMesh> & field2, List<label>* labels)
+double errorLinfRel(GeometricField<T, fvPatchField, volMesh>& field1,
+                    GeometricField<T, fvPatchField, volMesh>& field2, List<label>* labels)
 {
     double err;
-    autoPtr<GeometricField<T, fvPatchField, volMesh>> errField;
-    autoPtr<GeometricField<T, fvPatchField, volMesh>> field1_S;
-    autoPtr<GeometricField<T, fvPatchField, volMesh>> field2_S;
+    autoPtr<GeometricField<T, fvPatchField, volMesh >> errField;
+    autoPtr<GeometricField<T, fvPatchField, volMesh >> field1_S;
+    autoPtr<GeometricField<T, fvPatchField, volMesh >> field2_S;
     autoPtr<fvMeshSubset> submesh;
 
     if (labels != NULL)
     {
         submesh = autoPtr<fvMeshSubset>(new fvMeshSubset(field1.mesh()));
 #if OPENFOAM >= 1812
-        submesh->setCellSubset( * labels);
+        submesh->setCellSubset(* labels);
 #else
-        submesh->setLargeCellSubset( * labels);
+        submesh->setLargeCellSubset(* labels);
 #endif
         GeometricField<T, fvPatchField, volMesh> field1tmp(submesh->interpolate(
                     field1));
         GeometricField<T, fvPatchField, volMesh> field2tmp(submesh->interpolate(
                     field2));
-        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field1tmp.clone()));
-        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field2tmp.clone()));
     }
     else
     {
-        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field1));
-        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field2));
     }
-
-    errField = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+    errField = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                (new GeometricField<T, fvPatchField, volMesh>(field1_S() - field2_S()));
 
     if (LinfNorm(field1_S()) <= 1e-6)
@@ -185,21 +182,20 @@ double errorLinfRel(GeometricField<T, fvPatchField, volMesh> & field1,
     {
         err = LinfNorm(errField()) / LinfNorm(field1_S());
     }
-
     return err;
 }
 
 
-template double errorLinfRel(GeometricField<scalar, fvPatchField, volMesh> &
+template double errorLinfRel(GeometricField<scalar, fvPatchField, volMesh>&
                              field1,
-                             GeometricField<scalar, fvPatchField, volMesh> & field2, List<label>* labels);
-template double errorLinfRel(GeometricField<vector, fvPatchField, volMesh> &
+                             GeometricField<scalar, fvPatchField, volMesh>& field2, List<label>* labels);
+template double errorLinfRel(GeometricField<vector, fvPatchField, volMesh>&
                              field1,
-                             GeometricField<vector, fvPatchField, volMesh> & field2, List<label>* labels);
+                             GeometricField<vector, fvPatchField, volMesh>& field2, List<label>* labels);
 
 template<>
-double errorL2Abs(GeometricField<vector, fvPatchField, volMesh> & field1,
-                  GeometricField<vector, fvPatchField, volMesh> & field2, volScalarField& Volumes)
+double errorL2Abs(GeometricField<vector, fvPatchField, volMesh>& field1,
+                  GeometricField<vector, fvPatchField, volMesh>& field2, volScalarField& Volumes)
 
 {
     volScalarField diffFields2 = (((field1 - field2) & (field1 - field2)) *
@@ -209,8 +205,8 @@ double errorL2Abs(GeometricField<vector, fvPatchField, volMesh> & field1,
 }
 
 template<>
-double errorL2Abs(GeometricField<scalar, fvPatchField, volMesh> & field1,
-                  GeometricField<scalar, fvPatchField, volMesh> & field2, volScalarField& Volumes)
+double errorL2Abs(GeometricField<scalar, fvPatchField, volMesh>& field1,
+                  GeometricField<scalar, fvPatchField, volMesh>& field2, volScalarField& Volumes)
 
 {
     volScalarField diffFields2 = (((field1 - field2) * (field1 - field2)) *
@@ -220,57 +216,56 @@ double errorL2Abs(GeometricField<scalar, fvPatchField, volMesh> & field1,
 }
 
 template<typename T>
-double errorL2Abs(GeometricField<T, fvPatchField, volMesh> & field1,
-                  GeometricField<T, fvPatchField, volMesh> & field2, List<label>* labels)
+double errorL2Abs(GeometricField<T, fvPatchField, volMesh>& field1,
+                  GeometricField<T, fvPatchField, volMesh>& field2, List<label>* labels)
 {
-    autoPtr<GeometricField<T, fvPatchField, volMesh>> errField;
-    autoPtr<GeometricField<T, fvPatchField, volMesh>> field1_S;
-    autoPtr<GeometricField<T, fvPatchField, volMesh>> field2_S;
+    autoPtr<GeometricField<T, fvPatchField, volMesh >> errField;
+    autoPtr<GeometricField<T, fvPatchField, volMesh >> field1_S;
+    autoPtr<GeometricField<T, fvPatchField, volMesh >> field2_S;
     autoPtr<fvMeshSubset> submesh;
 
     if (labels != NULL)
     {
         submesh = autoPtr<fvMeshSubset>(new fvMeshSubset(field1.mesh()));
 #if OPENFOAM >= 1812
-        submesh->setCellSubset( * labels);
+        submesh->setCellSubset(* labels);
 #else
-        submesh->setLargeCellSubset( * labels);
+        submesh->setLargeCellSubset(* labels);
 #endif
         GeometricField<T, fvPatchField, volMesh> field1tmp(submesh->interpolate(
                     field1));
         GeometricField<T, fvPatchField, volMesh> field2tmp(submesh->interpolate(
                     field2));
-        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field1tmp.clone()));
-        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field2tmp.clone()));
     }
     else
     {
-        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field1));
-        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field2));
     }
-
-    errField = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+    errField = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                (new GeometricField<T, fvPatchField, volMesh>(field1_S() - field2_S()));
     double err = L2Norm(errField());
     return err;
 }
 
-template double errorL2Abs(GeometricField<scalar, fvPatchField, volMesh> &
+template double errorL2Abs(GeometricField<scalar, fvPatchField, volMesh>&
                            field1,
-                           GeometricField<scalar, fvPatchField, volMesh> & field2, List<label>* labels);
-template double errorL2Abs(GeometricField<vector, fvPatchField, volMesh> &
+                           GeometricField<scalar, fvPatchField, volMesh>& field2, List<label>* labels);
+template double errorL2Abs(GeometricField<vector, fvPatchField, volMesh>&
                            field1,
-                           GeometricField<vector, fvPatchField, volMesh> & field2, List<label>* labels);
+                           GeometricField<vector, fvPatchField, volMesh>& field2, List<label>* labels);
 
 
 template<class T, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh>> &
+Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh >> &
                              fields1,
-                             PtrList<GeometricField<T, PatchField, GeoMesh>> & fields2, List<label>* labels)
+                             PtrList<GeometricField<T, PatchField, GeoMesh >>& fields2, List<label>* labels)
 {
     Eigen::VectorXd err;
 
@@ -292,24 +287,24 @@ Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh>> &
 }
 
 template Eigen::MatrixXd errorFrobRel(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>> & fields1,
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>> & fields2,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >>& fields2,
     List<label>* labels);
 template Eigen::MatrixXd errorFrobRel(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>> & fields1,
-    PtrList<GeometricField<vector, fvPatchField, volMesh>> & fields2,
+    PtrList<GeometricField<vector, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<vector, fvPatchField, volMesh >>& fields2,
     List<label>* labels);
 template Eigen::MatrixXd errorFrobRel(
-    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>> & fields1,
-    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>> & fields2,
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh >> & fields1,
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh >>& fields2,
     List<label>* labels);
 
 
 template<typename T>
 Eigen::MatrixXd errorL2Abs(
-    PtrList<GeometricField<T, fvPatchField, volMesh>> & fields1,
-    PtrList<GeometricField<T, fvPatchField, volMesh>> & fields2,
-    PtrList<volScalarField> & Volumes)
+    PtrList<GeometricField<T, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<T, fvPatchField, volMesh >>& fields2,
+    PtrList<volScalarField>& Volumes)
 {
     M_Assert(fields1.size() == fields2.size(),
              "The two fields do not have the same size, code will abort");
@@ -328,18 +323,18 @@ Eigen::MatrixXd errorL2Abs(
 }
 
 template Eigen::MatrixXd errorL2Abs(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>> & fields1,
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>> & fields2,
-    PtrList<volScalarField> & Volumes);
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >>& fields2,
+    PtrList<volScalarField>& Volumes);
 template Eigen::MatrixXd errorL2Abs(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>> & fields1,
-    PtrList<GeometricField<vector, fvPatchField, volMesh>> & fields2,
-    PtrList<volScalarField> & Volumes);
+    PtrList<GeometricField<vector, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<vector, fvPatchField, volMesh >>& fields2,
+    PtrList<volScalarField>& Volumes);
 
 template<typename T>
-Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh>> &
+Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh >> &
                            fields1,
-                           PtrList<GeometricField<T, fvPatchField, volMesh>> & fields2,
+                           PtrList<GeometricField<T, fvPatchField, volMesh >>& fields2,
                            List<label>* labels)
 {
     Eigen::VectorXd err;
@@ -362,50 +357,49 @@ Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh>> &
 }
 
 template Eigen::MatrixXd errorL2Abs(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>> & fields1,
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>> & fields2,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >>& fields2,
     List<label>* labels);
 template Eigen::MatrixXd errorL2Abs(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>> & fields1,
-    PtrList<GeometricField<vector, fvPatchField, volMesh>> & fields2,
+    PtrList<GeometricField<vector, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<vector, fvPatchField, volMesh >>& fields2,
     List<label>* labels);
 
 template<typename T>
-double errorL2Rel(GeometricField<T, fvPatchField, volMesh> & field1,
-                  GeometricField<T, fvPatchField, volMesh> & field2, List<label>* labels)
+double errorL2Rel(GeometricField<T, fvPatchField, volMesh>& field1,
+                  GeometricField<T, fvPatchField, volMesh>& field2, List<label>* labels)
 {
     double err;
-    autoPtr<GeometricField<T, fvPatchField, volMesh>> errField;
-    autoPtr<GeometricField<T, fvPatchField, volMesh>> field1_S;
-    autoPtr<GeometricField<T, fvPatchField, volMesh>> field2_S;
+    autoPtr<GeometricField<T, fvPatchField, volMesh >> errField;
+    autoPtr<GeometricField<T, fvPatchField, volMesh >> field1_S;
+    autoPtr<GeometricField<T, fvPatchField, volMesh >> field2_S;
     autoPtr<fvMeshSubset> submesh;
 
     if (labels != NULL)
     {
         submesh = autoPtr<fvMeshSubset>(new fvMeshSubset(field1.mesh()));
 #if OPENFOAM >= 1812
-        submesh->setCellSubset( * labels);
+        submesh->setCellSubset(* labels);
 #else
-        submesh->setLargeCellSubset( * labels);
+        submesh->setLargeCellSubset(* labels);
 #endif
         GeometricField<T, fvPatchField, volMesh> field1tmp(submesh->interpolate(
                     field1));
         GeometricField<T, fvPatchField, volMesh> field2tmp(submesh->interpolate(
                     field2));
-        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field1tmp.clone()));
-        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field2tmp.clone()));
     }
     else
     {
-        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field1_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field1));
-        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+        field2_S = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                    (new GeometricField<T, fvPatchField, volMesh>(field2));
     }
-
-    errField = autoPtr<GeometricField<T, fvPatchField, volMesh>>
+    errField = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                (new GeometricField<T, fvPatchField, volMesh>(field1_S() - field2_S()));
 
     if (L2Norm(field1) <= 1e-6)
@@ -417,20 +411,19 @@ double errorL2Rel(GeometricField<T, fvPatchField, volMesh> & field1,
         err = L2Norm(errField()) / L2Norm(
                   field1_S());
     }
-
     return err;
 }
 
-template double errorL2Rel(GeometricField<scalar, fvPatchField, volMesh> &
+template double errorL2Rel(GeometricField<scalar, fvPatchField, volMesh>&
                            field1,
-                           GeometricField<scalar, fvPatchField, volMesh> & field2, List<label>* labels);
-template double errorL2Rel(GeometricField<vector, fvPatchField, volMesh> &
+                           GeometricField<scalar, fvPatchField, volMesh>& field2, List<label>* labels);
+template double errorL2Rel(GeometricField<vector, fvPatchField, volMesh>&
                            field1,
-                           GeometricField<vector, fvPatchField, volMesh> & field2, List<label>* labels);
+                           GeometricField<vector, fvPatchField, volMesh>& field2, List<label>* labels);
 
 template<typename T>
-Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh>> &
-                           fields1, PtrList<GeometricField<T, fvPatchField, volMesh>> & fields2,
+Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh >> &
+                           fields1, PtrList<GeometricField<T, fvPatchField, volMesh >>& fields2,
                            List<label>* labels)
 {
     Eigen::VectorXd err;
@@ -453,16 +446,16 @@ Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh>> &
 }
 
 template Eigen::MatrixXd errorL2Rel(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>> & fields1,
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>> & fields2,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >>& fields2,
     List<label>* labels);
 template Eigen::MatrixXd errorL2Rel(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>> & fields1,
-    PtrList<GeometricField<vector, fvPatchField, volMesh>> & fields2,
+    PtrList<GeometricField<vector, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<vector, fvPatchField, volMesh >>& fields2,
     List<label>* labels);
 
 template<>
-double H1Seminorm(GeometricField<scalar, fvPatchField, volMesh> & field)
+double H1Seminorm(GeometricField<scalar, fvPatchField, volMesh>& field)
 {
     double a;
     a = Foam::sqrt(fvc::domainIntegrate(fvc::grad(field) & fvc::grad(
@@ -471,7 +464,7 @@ double H1Seminorm(GeometricField<scalar, fvPatchField, volMesh> & field)
 }
 
 template<>
-double H1Seminorm(GeometricField<vector, fvPatchField, volMesh> & field)
+double H1Seminorm(GeometricField<vector, fvPatchField, volMesh>& field)
 {
     double a;
     a = Foam::sqrt(fvc::domainIntegrate(fvc::grad(field)
@@ -481,7 +474,7 @@ double H1Seminorm(GeometricField<vector, fvPatchField, volMesh> & field)
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-double frobNorm(GeometricField<Type, PatchField, GeoMesh> & field)
+double frobNorm(GeometricField<Type, PatchField, GeoMesh>& field)
 {
     double norm(0);
     Eigen::VectorXd vF = Foam2Eigen::field2Eigen(field);
@@ -489,8 +482,8 @@ double frobNorm(GeometricField<Type, PatchField, GeoMesh> & field)
     return norm;
 }
 
-template double frobNorm(GeometricField<scalar, fvPatchField, volMesh> & field);
-template double frobNorm(GeometricField<vector, fvPatchField, volMesh> & field);
+template double frobNorm(GeometricField<scalar, fvPatchField, volMesh>& field);
+template double frobNorm(GeometricField<vector, fvPatchField, volMesh>& field);
 
 double L2normOnPatch(fvMesh& mesh, volScalarField& field,
                      word patch)
@@ -506,14 +499,14 @@ double L2normOnPatch(fvMesh& mesh, volScalarField& field,
         //id of the owner cell having the face
         label faceOwner = faceCells[faceI] ;
         scalar faceArea = mesh.magSf().boundaryField()[patchID][faceI];
-        L2 += faceArea* field[faceOwner] * field[faceOwner];
+        L2 += faceArea * field[faceOwner] * field[faceOwner];
     }
 
     return Foam::sqrt(L2);
 }
 
-double L2productOnPatch(fvMesh& mesh, List<scalar> & field1,
-                        List<scalar> & field2, word patch)
+double L2productOnPatch(fvMesh& mesh, List<scalar>& field1,
+                        List<scalar>& field2, word patch)
 {
     M_Assert(field1.size() == field2.size(),
              "The two fields do not have the same size, code will abort");
@@ -526,7 +519,7 @@ double L2productOnPatch(fvMesh& mesh, List<scalar> & field1,
     forAll(cPatch, faceI)
     {
         scalar faceArea = mesh.magSf().boundaryField()[patchID][faceI];
-        L2 += faceArea* field1[faceI] * field2[faceI];
+        L2 += faceArea * field1[faceI] * field2[faceI];
     }
 
     return L2;
@@ -572,7 +565,7 @@ double integralOnPatch(fvMesh& mesh, volScalarField& field,
         //id of the owner cell having the face
         label faceOwner = faceCells[faceI] ;
         scalar faceArea = mesh.magSf().boundaryField()[patchID][faceI];
-        integral += faceArea* field[faceOwner];
+        integral += faceArea * field[faceOwner];
     }
 
     return integral;
@@ -597,7 +590,7 @@ double integralOnPatch(fvMesh& mesh, List<scalar> field,
         //id of the owner cell having the face
         label faceOwner = faceCells[faceI] ;
         scalar faceArea = mesh.magSf().boundaryField()[patchID][faceI];
-        integral += faceArea* field[faceI];
+        integral += faceArea * field[faceI];
     }
 
     return integral;

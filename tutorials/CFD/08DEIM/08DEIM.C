@@ -49,8 +49,8 @@ class DEIM_function : public HyperReduction<PtrList<volScalarField> & >
 
             for (auto i = 0; i < S.size(); i++)
             {
-                S[i] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
-                                                2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+                S[i] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 1,
+                                               2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
             }
 
             return S;
@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
     par_new(0, 0) = 0;
     par_new(1, 0) = 0;
     // Online evaluation of the non linear function
-    Eigen::VectorXd aprfield = c.MatrixOnline* c.onlineCoeffs(par_new);
+    Eigen::VectorXd aprfield = c.MatrixOnline * c.onlineCoeffs(par_new);
     // Transform to an OpenFOAM field and export
     volScalarField S2("S_online", Foam2Eigen::Eigen2field(S, aprfield));
     ITHACAstream::exportSolution(S2, name(1), "./ITHACAoutput/Online/");

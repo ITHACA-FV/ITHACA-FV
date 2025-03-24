@@ -20,7 +20,7 @@ BSplineBasis1D::BSplineBasis1D()
 {
 }
 
-BSplineBasis1D::BSplineBasis1D(const std::vector<double> & knots,
+BSplineBasis1D::BSplineBasis1D(const std::vector<double>& knots,
                                unsigned int degree)
     : degree(degree),
       knots(knots),
@@ -54,7 +54,7 @@ SparseVector BSplineBasis1D::eval(double x) const
 
         if (fabs(val) > 1e-12)
         {
-            values.insert( * it) = val;
+            values.insert(* it) = val;
         }
     }
 
@@ -98,17 +98,17 @@ SparseVector BSplineBasis1D::evalDerivative(double x, int r) const
     for (int i = 1; i <= p - r; i++)
     {
         SparseMatrix R = buildBasisMatrix(x, knotIndex, i);
-        B = B* R;
+        B = B * R;
     }
 
     for (int i = p - r + 1; i <= p; i++)
     {
         SparseMatrix DR = buildBasisMatrix(x, knotIndex, i, true);
-        B = B* DR;
+        B = B * DR;
     }
 
     double factorial = std::tgamma(p + 1) / std::tgamma(p - r + 1);
-    B = B* factorial;
+    B = B * factorial;
 
     if (B.cols() != p + 1)
     {
@@ -237,7 +237,7 @@ double BSplineBasis1D::deBoorCox(double x, int i, int k) const
         s2 = deBoorCoxCoeff(x, knots.at(i + 1), knots.at(i + k + 1));
         r1 = deBoorCox(x, i,   k - 1);
         r2 = deBoorCox(x, i + 1, k - 1);
-        return s1* r1 + (1 - s2) * r2;
+        return s1 * r1 + (1 - s2) * r2;
     }
 }
 
@@ -346,7 +346,7 @@ SparseMatrix BSplineBasis1D::refineKnotsLocally(double x)
     auto lower = std::prev(upper);
 
     // Do not insert if upper and lower bounding knot are close
-    if (assertNear( * upper, * lower))
+    if (assertNear(* upper, * lower))
     {
         unsigned int n = getNumBasisFunctions();
         DenseMatrix A = DenseMatrix::Identity(n, n);
@@ -358,10 +358,10 @@ SparseMatrix BSplineBasis1D::refineKnotsLocally(double x)
 
     // Adjust x if it is on or close to a knot
     if (knotMultiplicity(x) > 0
-            || assertNear( * upper, x, 1e-6, 1e-6)
-            || assertNear( * lower, x, 1e-6, 1e-6))
+            || assertNear(* upper, x, 1e-6, 1e-6)
+            || assertNear(* lower, x, 1e-6, 1e-6))
     {
-        insertVal = ( * upper + * lower) / 2.0;
+        insertVal = (* upper + * lower) / 2.0;
     }
 
     // Insert new knot
@@ -394,7 +394,7 @@ SparseMatrix BSplineBasis1D::decomposeToBezierForm()
     while (knoti != refinedKnots.end())
     {
         // Insert new knots
-        int mult = degree + 1 - knotMultiplicity( * knoti);
+        int mult = degree + 1 - knotMultiplicity(* knoti);
 
         if (mult > 0)
         {
@@ -455,7 +455,7 @@ SparseMatrix BSplineBasis1D::buildKnotInsertionMatrix(const std::vector<double>
         for (unsigned int j = 1; j <= degree; j++)
         {
             SparseMatrix Ri = buildBasisMatrix(knotsAug.at(i + j), u, j);
-            R = R* Ri;
+            R = R * Ri;
         }
 
         // Size check
@@ -627,7 +627,7 @@ unsigned int BSplineBasis1D::indexLongestInterval() const
     return indexLongestInterval(knots);
 }
 
-unsigned int BSplineBasis1D::indexLongestInterval(const std::vector<double> &
+unsigned int BSplineBasis1D::indexLongestInterval(const std::vector<double>&
         vec) const
 {
     double longest = 0;

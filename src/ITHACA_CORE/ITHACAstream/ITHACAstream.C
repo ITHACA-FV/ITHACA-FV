@@ -41,7 +41,7 @@ namespace ITHACAstream
 {
 
 template<typename Type>
-void exportFvMatrix(fvMatrix<Type> & Matrix, word folder,
+void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
                     word MatrixName)
 {
     Eigen::SparseMatrix<double> A;
@@ -170,7 +170,7 @@ template void exportMatrix(Eigen::Matrix < float, -1,
                            1 > & matrix, word Name, word type,
                            word folder);
 
-void exportMatrix(List <Eigen::MatrixXd> & matrix, word Name,
+void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
                   word type, word folder)
 {
     std::string message = "The extension \"" +  type +
@@ -187,7 +187,7 @@ void exportMatrix(List <Eigen::MatrixXd> & matrix, word Name,
         est = ".py";
         OFstream str(folder + "/" + Name + "_mat" + est);
         str << Name <<  "=np.zeros([" << matrix.size() << "," << matrix[0].rows() <<
-            "," << matrix[0].cols() << "])\n";
+                        "," << matrix[0].cols() << "])\n";
 
         for (int i = 0; i < matrix.size(); i++)
         {
@@ -281,8 +281,8 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
             Eigen::SliceFromTensor(
                 tensor, 0,
                 0).rows() <<
-            "," << Eigen::SliceFromTensor(tensor, 0,
-                                          0).cols() << "])\n";
+        "," << Eigen::SliceFromTensor(tensor, 0,
+                                     0).cols() << "])\n";
 
         for (int i = 0; i < tensor.dimension(0); i++)
         {
@@ -418,7 +418,7 @@ Eigen::MatrixXd readMatrix(word filename)
 
         while (! stream.eof())
         {
-            stream >> buff[cols* rows + temp_cols++];
+            stream >> buff[cols * rows + temp_cols++];
         }
 
         if (temp_cols == 0)
@@ -443,7 +443,7 @@ Eigen::MatrixXd readMatrix(word filename)
     {
         for (int j = 0; j < cols; j++)
         {
-            result(i, j) = buff[ cols* i + j ];
+            result(i, j) = buff[ cols * i + j ];
         }
     }
 
@@ -464,69 +464,67 @@ GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
         if (index >= runTime2.times().size() - 2)
         {
             FatalError
-                << "Error: Index " << index << " is out of range. "
-                << "Maximum available index is " << runTime2.times().size() - 3
-                << exit(FatalError);
+                    << "Error: Index " << index << " is out of range. "
+                    << "Maximum available index is " << runTime2.times().size() - 3
+                    << exit(FatalError);
         }
 
         return GeometricField<Type, PatchField, GeoMesh>
-        (
-            IOobject
-            (
-                field.name(),
-                casename + runTime2.times()[index + 2].name(),
-                field.mesh(),
-                IOobject::MUST_READ
-            ),
-            field.mesh()
-        );
+               (
+                   IOobject
+                   (
+                       field.name(),
+                       casename + runTime2.times()[index + 2].name(),
+                       field.mesh(),
+                       IOobject::MUST_READ
+                   ),
+                   field.mesh()
+               );
     }
     else
     {
         word timename(field.mesh().time().rootPath() + "/" +
-                     field.mesh().time().caseName());
+                      field.mesh().time().caseName());
         timename = timename.substr(0, timename.find_last_of("\\/"));
         timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
-
         int last_s = numberOfFiles(casename,
-                                 "processor" + name(Pstream::myProcNo()) + "/");
+                                   "processor" + name(Pstream::myProcNo()) + "/");
+
         if (index >= last_s - 1)
         {
             FatalError
-                << "Error: Index " << index << " is out of range. "
-                << "Maximum available index is " << last_s - 2
-                << exit(FatalError);
+                    << "Error: Index " << index << " is out of range. "
+                    << "Maximum available index is " << last_s - 2
+                    << exit(FatalError);
         }
 
         return GeometricField<Type, PatchField, GeoMesh>
-        (
-            IOobject
-            (
-                field.name(),
-                timename + "/" + name(index + 1),
-                field.mesh(),
-                IOobject::MUST_READ
-            ),
-            field.mesh()
-        );
+               (
+                   IOobject
+                   (
+                       field.name(),
+                       timename + "/" + name(index + 1),
+                       field.mesh(),
+                       IOobject::MUST_READ
+                   ),
+                   field.mesh()
+               );
     }
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_fields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> & Lfield, word Name,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield, word Name,
     fileName casename, int first_snap, int n_snap)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     fvMesh& mesh = para->mesh;
-
     if (!Pstream::parRun())
     {
         Info << "######### Reading the Data for " << Name << " #########" << endl;
         fileName rootpath(".");
         int last_s;
         Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
-
         if (first_snap >= runTime2.times().size())
         {
             Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
@@ -542,7 +540,6 @@ void read_fields(
         {
             last_s = min(runTime2.times().size(), n_snap + 2);
         }
-
         for (int i = 2 + first_snap; i < last_s + first_snap; i++)
         {
             GeometricField<Type, PatchField, GeoMesh> tmp_field(
@@ -558,7 +555,6 @@ void read_fields(
             Lfield.append(tmp_field.clone());
             printProgress(double(i + 1) / (last_s + first_snap));
         }
-
         std::cout << std::endl;
     }
     else
@@ -609,8 +605,8 @@ void read_fields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_fields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> & Lfield,
-    GeometricField<Type, PatchField, GeoMesh> & field,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename, int first_snap, int n_snap)
 {
     if (!Pstream::parRun())
@@ -703,8 +699,8 @@ void read_fields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readMiddleFields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> & Lfield,
-    GeometricField<Type, PatchField, GeoMesh> & field, fileName casename)
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    GeometricField<Type, PatchField, GeoMesh>& field, fileName casename)
 {
     int par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
@@ -719,8 +715,8 @@ void readMiddleFields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readConvergedFields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> & Lfield,
-    GeometricField<Type, PatchField, GeoMesh> & field,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename)
 {
     int par = 1;
@@ -755,8 +751,8 @@ void readConvergedFields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_last_fields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> & Lfield,
-    const GeometricField<Type, PatchField, GeoMesh> & field,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    const GeometricField<Type, PatchField, GeoMesh>& field,
     const fileName casename)
 {
     if (!Pstream::parRun())
@@ -780,7 +776,7 @@ void read_last_fields(
         );
 #else
         auto tfld =
-            autoPtr<GeometricField<Type, PatchField, GeoMesh>>::New
+            autoPtr<GeometricField<Type, PatchField, GeoMesh >>::New
             (
                 IOobject
                 (
@@ -795,6 +791,7 @@ void read_last_fields(
 #endif
         std::cout << std::endl;
     }
+
     else
     {
         Info << "######### Reading the Data for " << field.name() << " #########" <<
@@ -819,17 +816,17 @@ void read_last_fields(
         );
 #else
         auto tfld =
-            autoPtr<GeometricField<Type, PatchField, GeoMesh>>::New
+        autoPtr<GeometricField<Type, PatchField, GeoMesh >>::New
+        (
+            IOobject
             (
-                IOobject
-                (
-                    field.name(),
-                    timename + "/" + name(last_s - 1),
-                    field.mesh(),
-                    IOobject::MUST_READ
-                ),
-                field.mesh()
-            );
+                field.name(),
+                timename + "/" + name(last_s - 1),
+                field.mesh(),
+                IOobject::MUST_READ
+            ),
+            field.mesh()
+        );
         Lfield.append(std::move(tfld));
 #endif
         Info << endl;
@@ -838,8 +835,8 @@ void read_last_fields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readLastFields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> & Lfield,
-    const GeometricField<Type, PatchField, GeoMesh> & field,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    const GeometricField<Type, PatchField, GeoMesh>& field,
     const fileName casename)
 {
     int par = 1;
@@ -875,13 +872,12 @@ int numberOfFiles(word folder, word MatrixName, word ext)
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportFields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> & field,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & field,
     word folder, word fieldname)
 {
     ITHACAutilities::createSymLink(folder);
     Info << "######### Exporting the Data for " << fieldname << " #########" <<
          endl;
-
     for (int j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
@@ -892,20 +888,20 @@ void exportFields(
 }
 
 template void exportFields(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>> & field,
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >>& field,
     word folder, word fieldname);
 template void exportFields(
-    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh>> & field,
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh >> & field,
     word folder, word fieldname);
 template void exportFields(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>> & field,
+    PtrList<GeometricField<vector, fvPatchField, volMesh >>& field,
     word folder, word fieldname);
 template void exportFields(
-    PtrList<GeometricField<tensor, fvPatchField, volMesh>> & field,
+    PtrList<GeometricField<tensor, fvPatchField, volMesh >> & field,
     word folder, word fieldname);
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-void exportSolution(GeometricField<Type, PatchField, GeoMesh> & s,
+template<class Type, template<class> class PatchField, class GeoMesh >
+void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
                     fileName subfolder, fileName folder,
                     word fieldName)
 {
@@ -934,24 +930,24 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh> & s,
 }
 
 template void exportSolution(
-    GeometricField<scalar, fvPatchField, volMesh> & s,
+    GeometricField<scalar, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
 template void exportSolution(
-    GeometricField<vector, fvPatchField, volMesh> & s,
+    GeometricField<vector, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
 template void exportSolution(
-    GeometricField<tensor, fvPatchField, volMesh> & s,
+    GeometricField<tensor, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
 template void exportSolution(
-    GeometricField<scalar, fvsPatchField, surfaceMesh> & s,
+    GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void exportSolution(GeometricField<Type, PatchField, GeoMesh> & s,
+void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
                     fileName subfolder, fileName folder)
 {
     if (!Pstream::parRun())
@@ -976,26 +972,26 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh> & s,
 }
 
 template void exportSolution(
-    GeometricField<scalar, fvPatchField, volMesh> & s,
+    GeometricField<scalar, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder);
 template void exportSolution(
-    GeometricField<vector, fvPatchField, volMesh> & s,
+    GeometricField<vector, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder);
 template void exportSolution(
-    GeometricField<tensor, fvPatchField, volMesh> & s,
+    GeometricField<tensor, fvPatchField, volMesh>& s,
     fileName subfolder, fileName folder);
 template void exportSolution(
-    GeometricField<scalar, fvsPatchField, surfaceMesh> & s,
+    GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
     fileName subfolder, fileName folder);
 
 template void exportSolution(
-    GeometricField<scalar, pointPatchField, pointMesh> & s,
+    GeometricField<scalar, pointPatchField, pointMesh>& s,
     fileName subfolder, fileName folder);
 template void exportSolution(
-    GeometricField<vector, pointPatchField, pointMesh> & s,
+    GeometricField<vector, pointPatchField, pointMesh>& s,
     fileName subfolder, fileName folder);
 template void exportSolution(
-    GeometricField<tensor, pointPatchField, pointMesh> & s,
+    GeometricField<tensor, pointPatchField, pointMesh>& s,
     fileName subfolder, fileName folder);
 
 void writePoints(pointField points, fileName folder,
@@ -1027,7 +1023,7 @@ void writePoints(pointField points, fileName folder,
 void printProgress(double percentage)
 {
     int val = static_cast<int>(percentage * 100);
-    int lpad = static_cast<int> (percentage* PBWIDTH);
+    int lpad = static_cast<int> (percentage * PBWIDTH);
     int rpad = PBWIDTH - lpad;
 
     if (Pstream::master())
@@ -1038,11 +1034,10 @@ void printProgress(double percentage)
 }
 
 template<typename T>
-void save(const List<Eigen::SparseMatrix<T>> & MatrixList, word folder,
+void save(const List<Eigen::SparseMatrix<T >> & MatrixList, word folder,
           word MatrixName)
 {
     mkDir(folder);
-
     for (int i = 0; i < MatrixList.size(); i++)
     {
         word fileName = folder + "/" + MatrixName + name(i) + ".npz";
@@ -1051,7 +1046,7 @@ void save(const List<Eigen::SparseMatrix<T>> & MatrixList, word folder,
 }
 
 template<typename T>
-void load(List<Eigen::SparseMatrix<T>> & MatrixList, word folder,
+void load(List<Eigen::SparseMatrix<T >> & MatrixList, word folder,
           word MatrixName)
 {
     int number_of_files = numberOfFiles(folder, MatrixName, ".npz");
@@ -1068,71 +1063,71 @@ void load(List<Eigen::SparseMatrix<T>> & MatrixList, word folder,
     }
 }
 
-template void read_fields(PtrList<volScalarField> & Lfield,
+template void read_fields(PtrList<volScalarField>& Lfield,
                           word Name,
                           fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<volVectorField> & Lfield,
+template void read_fields(PtrList<volVectorField>& Lfield,
                           word Name,
                           fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<volTensorField> & Lfield,
+template void read_fields(PtrList<volTensorField>& Lfield,
                           word Name,
                           fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<surfaceScalarField> & Lfield,
+template void read_fields(PtrList<surfaceScalarField>& Lfield,
                           word Name,
                           fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<surfaceVectorField> & Lfield,
+template void read_fields(PtrList<surfaceVectorField>& Lfield,
                           word Name,
                           fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<volScalarField> & Lfield,
+template void read_fields(PtrList<volScalarField>& Lfield,
                           volScalarField& field, fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<volVectorField> & Lfield,
+template void read_fields(PtrList<volVectorField>& Lfield,
                           volVectorField& field, fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<volTensorField> & Lfield,
+template void read_fields(PtrList<volTensorField>& Lfield,
                           volTensorField& field, fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<surfaceScalarField> & Lfield,
+template void read_fields(PtrList<surfaceScalarField>& Lfield,
                           surfaceScalarField& field, fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<surfaceVectorField> & Lfield,
+template void read_fields(PtrList<surfaceVectorField>& Lfield,
                           surfaceVectorField& field, fileName casename, int first_snap, int n_snap);
-template void readMiddleFields(PtrList<volScalarField> & Lfield,
+template void readMiddleFields(PtrList<volScalarField>& Lfield,
                                volScalarField& field, fileName casename);
-template void readMiddleFields(PtrList<volVectorField> & Lfield,
+template void readMiddleFields(PtrList<volVectorField>& Lfield,
                                volVectorField& field, fileName casename);
-template void readMiddleFields(PtrList<volTensorField> & Lfield,
+template void readMiddleFields(PtrList<volTensorField>& Lfield,
                                volTensorField& field, fileName casename);
-template void readMiddleFields(PtrList<surfaceScalarField> &
+template void readMiddleFields(PtrList<surfaceScalarField>&
                                Lfield, surfaceScalarField& field, fileName casename);
-template void readMiddleFields(PtrList<surfaceVectorField> &
+template void readMiddleFields(PtrList<surfaceVectorField>&
                                Lfield, surfaceVectorField& field, fileName casename);
-template void readConvergedFields(PtrList<volScalarField> & Lfield,
+template void readConvergedFields(PtrList<volScalarField>& Lfield,
                                   volScalarField& field, fileName casename);
-template void readConvergedFields(PtrList<volVectorField> & Lfield,
+template void readConvergedFields(PtrList<volVectorField>& Lfield,
                                   volVectorField& field, fileName casename);
-template void readConvergedFields(PtrList<volTensorField> & Lfield,
+template void readConvergedFields(PtrList<volTensorField>& Lfield,
                                   volTensorField& field, fileName casename);
-template void readConvergedFields(PtrList<surfaceScalarField> &
+template void readConvergedFields(PtrList<surfaceScalarField>&
                                   Lfield, surfaceScalarField& field, fileName casename);
-template void readConvergedFields(PtrList<surfaceVectorField> &
+template void readConvergedFields(PtrList<surfaceVectorField>&
                                   Lfield, surfaceVectorField& field, fileName casename);
 
-template void read_last_fields(PtrList<volScalarField> & Lfield,
+template void read_last_fields(PtrList<volScalarField>& Lfield,
                                const volScalarField& field, const fileName casename);
-template void read_last_fields(PtrList<volVectorField> & Lfield,
+template void read_last_fields(PtrList<volVectorField>& Lfield,
                                const volVectorField& field, const fileName casename);
-template void read_last_fields(PtrList<volTensorField> & Lfield,
+template void read_last_fields(PtrList<volTensorField>& Lfield,
                                const volTensorField& field, const fileName casename);
-template void read_last_fields(PtrList<surfaceScalarField> & Lfield,
+template void read_last_fields(PtrList<surfaceScalarField>& Lfield,
                                const surfaceScalarField& field, const fileName casename);
-template void read_last_fields(PtrList<surfaceVectorField> & Lfield,
+template void read_last_fields(PtrList<surfaceVectorField>& Lfield,
                                const surfaceVectorField& field, const fileName casename);
-template void readLastFields(PtrList<volScalarField> & Lfield,
+template void readLastFields(PtrList<volScalarField>& Lfield,
                              const volScalarField& field, const fileName casename);
-template void readLastFields(PtrList<volVectorField> & Lfield,
+template void readLastFields(PtrList<volVectorField>& Lfield,
                              const volVectorField& field, const fileName casename);
-template void readLastFields(PtrList<volTensorField> & Lfield,
+template void readLastFields(PtrList<volTensorField>& Lfield,
                              const volTensorField& field, const fileName casename);
-template void readLastFields(PtrList<surfaceScalarField> &
+template void readLastFields(PtrList<surfaceScalarField>&
                              Lfield, const surfaceScalarField& field, const fileName casename);
-template void readLastFields(PtrList<surfaceVectorField> &
+template void readLastFields(PtrList<surfaceVectorField>&
                              Lfield, const surfaceVectorField& field, const fileName casename);
 
 template<typename T>
@@ -1148,17 +1143,17 @@ void exportList(T& list, word folder, word filename)
     }
 }
 
-template void exportList(Field<scalar> & list, word folder,
+template void exportList(Field<scalar>& list, word folder,
                          word filename);
-template void exportList(Field<vector> & list, word folder,
+template void exportList(Field<vector>& list, word folder,
                          word filename);
-template void exportList(Field<tensor> & list, word folder,
+template void exportList(Field<tensor>& list, word folder,
                          word filename);
 
-template void save(const List<Eigen::SparseMatrix<double>> & MatrixList,
+template void save(const List<Eigen::SparseMatrix<double >> & MatrixList,
                    word folder, word MatrixName);
 
-template void load(List<Eigen::SparseMatrix<double>> & MatrixList, word folder,
+template void load(List<Eigen::SparseMatrix<double >>& MatrixList, word folder,
                    word MatrixName);
 
 

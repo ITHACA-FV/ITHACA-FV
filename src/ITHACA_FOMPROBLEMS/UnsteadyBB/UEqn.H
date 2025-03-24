@@ -49,7 +49,7 @@ if (pimple.momentumPredictor())
         fvc::reconstruct
         (
             (
-                - ghf* fvc::snGrad(rhok)
+                - ghf * fvc::snGrad(rhok)
                 - fvc::snGrad(p_rgh)
             ) * mesh.magSf()
         )

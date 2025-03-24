@@ -40,7 +40,7 @@ ReducedSteadyNSTurbIntrusive::ReducedSteadyNSTurbIntrusive()
 ReducedSteadyNSTurbIntrusive::ReducedSteadyNSTurbIntrusive(
     SteadyNSTurbIntrusive& fomProblem)
     :
-    problem( & fomProblem)
+    problem(& fomProblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->bMatrix.rows();
@@ -62,9 +62,9 @@ int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix* aTmp* nu;
+    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
     // Gradient of pressure
-    Eigen::VectorXd m2 = problem->kMatrix* aTmp;
+    Eigen::VectorXd m2 = problem->kMatrix * aTmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -86,7 +86,7 @@ int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
 
         if (problem->bcMethod == "penalty")
         {
-            fvec(i) += ((penaltyU* tauU)(i, 0));
+            fvec(i) += ((penaltyU * tauU)(i, 0));
         }
     }
 
@@ -104,7 +104,7 @@ int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
 int newtonSteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
                                     Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonSteadyNSTurbIntrusive> numDiff( * this);
+    Eigen::NumericalDiff<newtonSteadyNSTurbIntrusive> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }

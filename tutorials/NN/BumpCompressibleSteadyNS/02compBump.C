@@ -52,7 +52,6 @@ class CompressibleSteadyNN : public CompressibleSteadyNS
             ITHACAparameters* para = ITHACAparameters::getInstance();
             NUmodes = para->ITHACAdict->lookupOrDefault<label>("NmodesUproj", 10);
             NNutModes = para->ITHACAdict->lookupOrDefault<label>("NmodesNutProj", 10);
-
             Net->push_back(torch::nn::Linear(NUmodes, 128));
             Net->push_back(torch::nn::ReLU());
             Net->push_back(torch::nn::Linear(128, 64));
@@ -62,29 +61,29 @@ class CompressibleSteadyNN : public CompressibleSteadyNS
                                                torch::optim::AdamOptions(2e-2));
         };
 
-    label NUmodes;
-    label NNutModes;
+        label NUmodes;
+        label NNutModes;
 
-    ////////////////////////////////////
-    // Eddy viscosity initialization //
-    //////////////////////////////////
-    
-    Eigen::MatrixXd bias_inp;
-    Eigen::MatrixXd scale_inp;
-    Eigen::MatrixXd bias_out;
-    Eigen::MatrixXd scale_out;
+        ////////////////////////////////////
+        // Eddy viscosity initialization //
+        //////////////////////////////////
 
-    Eigen::MatrixXd coeffL2Nut;
-    Eigen::MatrixXd coeffL2U;
+        Eigen::MatrixXd bias_inp;
+        Eigen::MatrixXd scale_inp;
+        Eigen::MatrixXd bias_out;
+        Eigen::MatrixXd scale_out;
 
-    torch::Tensor coeffL2U_tensor;
-    torch::Tensor coeffL2Nut_tensor;
+        Eigen::MatrixXd coeffL2Nut;
+        Eigen::MatrixXd coeffL2U;
 
-    torch::nn::Sequential Net;
-    torch::optim::Optimizer* optimizer;
-    torch::jit::script::Module netTorchscript;
+        torch::Tensor coeffL2U_tensor;
+        torch::Tensor coeffL2Nut_tensor;
 
-    void loadNet(word filename)
+        torch::nn::Sequential Net;
+        torch::optim::Optimizer* optimizer;
+        torch::jit::script::Module netTorchscript;
+
+        void loadNet(word filename)
         {
             std::string Msg = filename +
                               " is not existing, please run the training stage of the net with the correct number of modes for U and Nut";
@@ -223,226 +222,227 @@ class ReducedCompressibleSteadyNN : public ReducedCompressibleSteadyNS
         /// Full problem.
         CompressibleSteadyNN* problem;
 
-    void projectReducedOperators(int NmodesUproj, int NmodesPproj, int NmodesEproj)
-    {
-        PtrList<volVectorField> gradModP;
-        for (label i = 0; i < NmodesPproj; i++)
+        void projectReducedOperators(int NmodesUproj, int NmodesPproj, int NmodesEproj)
         {
-            gradModP.append(fvc::grad(problem->Pmodes[i]));
-        }
-        projGradModP = problem->Umodes.project(gradModP, NmodesUproj); // Modes without lifting
-    }
+            PtrList<volVectorField> gradModP;
 
-    void solveOnlineCompressible(int NmodesUproj, int NmodesPproj, int NmodesEproj, int NmodesNutProj, Eigen::MatrixXd mu_now,
-                                word Folder = "./ITHACAoutput/Online/")
-    {
-        counter++;
-
-        // Residuals initialization
-        scalar residualNorm(1);
-        scalar residualJump(1);
-        Eigen::MatrixXd uResidualOld = Eigen::MatrixXd::Zero(1, NmodesUproj);
-        Eigen::MatrixXd eResidualOld = Eigen::MatrixXd::Zero(1, NmodesEproj);
-        Eigen::MatrixXd pResidualOld = Eigen::MatrixXd::Zero(1, NmodesPproj);
-        Eigen::VectorXd uResidual(Eigen::Map<Eigen::VectorXd>(uResidualOld.data(),
-                                  NmodesUproj));
-        Eigen::VectorXd eResidual(Eigen::Map<Eigen::VectorXd>(eResidualOld.data(),
-                                  NmodesEproj));
-        Eigen::VectorXd pResidual(Eigen::Map<Eigen::VectorXd>(pResidualOld.data(),
-                                  NmodesPproj));
-        // Parameters definition
-        ITHACAparameters* para = ITHACAparameters::getInstance();
-        float residualJumpLim =
-            para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
-        float normalizedResidualLim =
-            para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim", 1e-5);
-        int maxIter =
-            para->ITHACAdict->lookupOrDefault<float>("maxIter", 2000);
-        bool closedVolume = false;
-        label csolve = 0;
-
-        // Full variables initialization
-        fluidThermo& thermo = problem->pThermo();
-        volVectorField& U = problem->_U();
-        volScalarField& P = problem->_p();
-        volScalarField& E = problem->pThermo->he();
-        volScalarField& nut = const_cast<volScalarField&>
-                      (problem->_mesh().lookupObject<volScalarField>("nut"));
-        volScalarField& rho = problem->_rho();
-        volScalarField& psi = problem->_psi();
-        surfaceScalarField& phi = problem->_phi();
-        Time& runTime = problem->_runTime();
-        fvMesh& mesh = problem->_mesh();
-        fv::options& fvOptions = problem->_fvOptions();
-        scalar cumulativeContErr = problem->cumulativeContErr;
-        // Reduced variables initialization
-        Eigen::MatrixXd u = Eigen::MatrixXd::Zero(NmodesUproj, 1);
-        Eigen::MatrixXd e = Eigen::MatrixXd::Zero(NmodesEproj, 1);
-        Eigen::MatrixXd p = Eigen::MatrixXd::Zero(NmodesPproj, 1);
-        Eigen::MatrixXd nutCoeff = ITHACAutilities::getCoeffs(nut, problem->nutModes, NmodesNutProj, true);
-
-        //vector Uinlet(170,0,0); // Vector for the inlet boundary condition
-        label idInl = problem->_mesh().boundaryMesh().findPatchID("inlet"); // ID of the inlet patch
-        vector Uinlet(problem->_U().boundaryFieldRef()[idInl][0][0],0,0);
-        P.storePrevIter();
-
-        while ((residualJump > residualJumpLim
-                || residualNorm > normalizedResidualLim) && csolve < maxIter)
-        {
-            csolve++;
-            Info << "csolve:" << csolve << endl;
-
-            #if OFVER == 6
-            problem->_simple().loop(runTime);
-            #else
-            problem->_simple().loop();
-            #endif
-
-            uResidualOld = uResidual;
-            eResidualOld = eResidual;
-            pResidualOld = pResidual;
-
-            //Momentum equation phase
-            List<Eigen::MatrixXd> RedLinSysU;
-
-            ITHACAutilities::assignBC(U, idInl, Uinlet);
-            fvVectorMatrix UEqnR
-            (
-                fvm::div(phi, U) 
-                - fvc::div((rho * problem->turbulence->nuEff()) * dev2(T(fvc::grad(U)))) 
-                - fvm::laplacian(rho * problem->turbulence->nuEff(), U) 
-                ==
-                fvOptions(rho, U)
-            );
-            UEqnR.relax();
-            fvOptions.constrain(UEqnR);
-
-            RedLinSysU = problem->Umodes.project(UEqnR, NmodesUproj); // Modes without lifting
-            Eigen::MatrixXd projGradP = projGradModP * p;
-            RedLinSysU[1] = RedLinSysU[1] - projGradP;
-
-            u = reducedProblem::solveLinearSys(RedLinSysU, u, uResidual);//, "fullPivLu");//"bdcSvd");
-            problem->Umodes.reconstruct(U, u, "U");
-            ITHACAutilities::assignBC(U, idInl, Uinlet);
-            //solve(UEqnR == -problem->getGradP(P)); //For debug purposes only, second part only useful when using uEqn_global==-getGradP
-            fvOptions.correct(U);
-            
-            //Energy equation phase
-            fvScalarMatrix EEqnR
-            (
-                fvm::div(phi, E)
-                + fvc::div(phi, volScalarField("Ekp", 0.5 * magSqr(U) + P / rho))
-                - fvm::laplacian(problem->turbulence->alphaEff(), E)
-                ==
-                fvOptions(rho, E)
-            );
-
-            EEqnR.relax();
-            fvOptions.constrain(EEqnR);
-            List<Eigen::MatrixXd> RedLinSysE = problem->Emodes.project(EEqnR, NmodesEproj);
-
-            e = reducedProblem::solveLinearSys(RedLinSysE, e, eResidual);
-            problem->Emodes.reconstruct(E, e, "e");
-            //EEqnR.solve(); //For debug purposes only
-            fvOptions.correct(E);
-            thermo.correct(); // Here are calculated both temperature and density based on P,U and he.
-            // Pressure equation phase
-            constrainPressure(P, rho, U, problem->getPhiHbyA(UEqnR, U, P),
-                              problem->getRhorAUf(UEqnR));// Update the pressure BCs to ensure flux consistency
-            surfaceScalarField phiHbyACalculated = problem->getPhiHbyA(UEqnR, U, P);
-            closedVolume = adjustPhi(phiHbyACalculated, U, P);
-
-            List<Eigen::MatrixXd> RedLinSysP;
-            while (problem->_simple().correctNonOrthogonal())
+            for (label i = 0; i < NmodesPproj; i++)
             {
-                volScalarField rAU(1.0 / UEqnR.A()); // Inverse of the diagonal part of the U equation matrix
-                volVectorField HbyA(constrainHbyA(rAU * UEqnR.H(), U, P)); // H is the extra diagonal part summed to the r.h.s. of the U equation
-                surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(rho)*fvc::flux(HbyA));
-                surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho * rAU));
-                fvScalarMatrix PEqnR
+                gradModP.append(fvc::grad(problem->Pmodes[i]));
+            }
+
+            projGradModP = problem->Umodes.project(gradModP,
+                                                   NmodesUproj); // Modes without lifting
+        }
+
+        void solveOnlineCompressible(int NmodesUproj, int NmodesPproj, int NmodesEproj,
+                                     int NmodesNutProj, Eigen::MatrixXd mu_now,
+                                     word Folder = "./ITHACAoutput/Online/")
+        {
+            counter++;
+            // Residuals initialization
+            scalar residualNorm(1);
+            scalar residualJump(1);
+            Eigen::MatrixXd uResidualOld = Eigen::MatrixXd::Zero(1, NmodesUproj);
+            Eigen::MatrixXd eResidualOld = Eigen::MatrixXd::Zero(1, NmodesEproj);
+            Eigen::MatrixXd pResidualOld = Eigen::MatrixXd::Zero(1, NmodesPproj);
+            Eigen::VectorXd uResidual(Eigen::Map<Eigen::VectorXd>(uResidualOld.data(),
+                                      NmodesUproj));
+            Eigen::VectorXd eResidual(Eigen::Map<Eigen::VectorXd>(eResidualOld.data(),
+                                      NmodesEproj));
+            Eigen::VectorXd pResidual(Eigen::Map<Eigen::VectorXd>(pResidualOld.data(),
+                                      NmodesPproj));
+            // Parameters definition
+            ITHACAparameters* para = ITHACAparameters::getInstance();
+            float residualJumpLim =
+                para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
+            float normalizedResidualLim =
+                para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim", 1e-5);
+            int maxIter =
+                para->ITHACAdict->lookupOrDefault<float>("maxIter", 2000);
+            bool closedVolume = false;
+            label csolve = 0;
+            // Full variables initialization
+            fluidThermo& thermo = problem->pThermo();
+            volVectorField& U = problem->_U();
+            volScalarField& P = problem->_p();
+            volScalarField& E = problem->pThermo->he();
+            volScalarField& nut = const_cast<volScalarField&>
+                                  (problem->_mesh().lookupObject<volScalarField>("nut"));
+            volScalarField& rho = problem->_rho();
+            volScalarField& psi = problem->_psi();
+            surfaceScalarField& phi = problem->_phi();
+            Time& runTime = problem->_runTime();
+            fvMesh& mesh = problem->_mesh();
+            fv::options& fvOptions = problem->_fvOptions();
+            scalar cumulativeContErr = problem->cumulativeContErr;
+            // Reduced variables initialization
+            Eigen::MatrixXd u = Eigen::MatrixXd::Zero(NmodesUproj, 1);
+            Eigen::MatrixXd e = Eigen::MatrixXd::Zero(NmodesEproj, 1);
+            Eigen::MatrixXd p = Eigen::MatrixXd::Zero(NmodesPproj, 1);
+            Eigen::MatrixXd nutCoeff = ITHACAutilities::getCoeffs(nut, problem->nutModes,
+                                       NmodesNutProj, true);
+            //vector Uinlet(170,0,0); // Vector for the inlet boundary condition
+            label idInl =
+                problem->_mesh().boundaryMesh().findPatchID("inlet"); // ID of the inlet patch
+            vector Uinlet(problem->_U().boundaryFieldRef()[idInl][0][0], 0, 0);
+            P.storePrevIter();
+
+            while ((residualJump > residualJumpLim
+                    || residualNorm > normalizedResidualLim) && csolve < maxIter)
+            {
+                csolve++;
+                Info << "csolve:" << csolve << endl;
+#if OFVER == 6
+                problem->_simple().loop(runTime);
+#else
+                problem->_simple().loop();
+#endif
+                uResidualOld = uResidual;
+                eResidualOld = eResidual;
+                pResidualOld = pResidual;
+                //Momentum equation phase
+                List<Eigen::MatrixXd> RedLinSysU;
+                ITHACAutilities::assignBC(U, idInl, Uinlet);
+                fvVectorMatrix UEqnR
                 (
-                    fvc::div(phiHbyA)
-                    -fvm::laplacian(rhorAUf,P)
+                    fvm::div(phi, U)
+                    - fvc::div((rho * problem->turbulence->nuEff()) * dev2(T(fvc::grad(U))))
+                    - fvm::laplacian(rho * problem->turbulence->nuEff(), U)
                     ==
-                    fvOptions(psi, P, rho.name())
+                    fvOptions(rho, U)
                 );
-                PEqnR.setReference
+                UEqnR.relax();
+                fvOptions.constrain(UEqnR);
+                RedLinSysU = problem->Umodes.project(UEqnR,
+                                                     NmodesUproj); // Modes without lifting
+                Eigen::MatrixXd projGradP = projGradModP * p;
+                RedLinSysU[1] = RedLinSysU[1] - projGradP;
+                u = reducedProblem::solveLinearSys(RedLinSysU, u,
+                                                   uResidual);//, "fullPivLu");//"bdcSvd");
+                problem->Umodes.reconstruct(U, u, "U");
+                ITHACAutilities::assignBC(U, idInl, Uinlet);
+                //solve(UEqnR == -problem->getGradP(P)); //For debug purposes only, second part only useful when using uEqn_global==-getGradP
+                fvOptions.correct(U);
+                //Energy equation phase
+                fvScalarMatrix EEqnR
                 (
-                    problem->_pressureControl().refCell(),
-                    problem->_pressureControl().refValue()
+                    fvm::div(phi, E)
+                    + fvc::div(phi, volScalarField("Ekp", 0.5 * magSqr(U) + P / rho))
+                    - fvm::laplacian(problem->turbulence->alphaEff(), E)
+                    ==
+                    fvOptions(rho, E)
                 );
+                EEqnR.relax();
+                fvOptions.constrain(EEqnR);
+                List<Eigen::MatrixXd> RedLinSysE = problem->Emodes.project(EEqnR, NmodesEproj);
+                e = reducedProblem::solveLinearSys(RedLinSysE, e, eResidual);
+                problem->Emodes.reconstruct(E, e, "e");
+                //EEqnR.solve(); //For debug purposes only
+                fvOptions.correct(E);
+                thermo.correct(); // Here are calculated both temperature and density based on P,U and he.
+                // Pressure equation phase
+                constrainPressure(P, rho, U, problem->getPhiHbyA(UEqnR, U, P),
+                                  problem->getRhorAUf(
+                                      UEqnR));// Update the pressure BCs to ensure flux consistency
+                surfaceScalarField phiHbyACalculated = problem->getPhiHbyA(UEqnR, U, P);
+                closedVolume = adjustPhi(phiHbyACalculated, U, P);
+                List<Eigen::MatrixXd> RedLinSysP;
 
-                RedLinSysP = problem->Pmodes.project(PEqnR, NmodesPproj);
-
-                p = reducedProblem::solveLinearSys(RedLinSysP, p, pResidual);
-                problem->Pmodes.reconstruct(P, p, "p");
-
-                if (problem->_simple().finalNonOrthogonalIter())
+                while (problem->_simple().correctNonOrthogonal())
                 {
-                    phi = problem->getPhiHbyA(UEqnR, U, P) + PEqnR.flux();
+                    volScalarField rAU(1.0 /
+                                       UEqnR.A()); // Inverse of the diagonal part of the U equation matrix
+                    volVectorField HbyA(constrainHbyA(rAU * UEqnR.H(), U,
+                                                      P)); // H is the extra diagonal part summed to the r.h.s. of the U equation
+                    surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(rho)*fvc::flux(HbyA));
+                    surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho * rAU));
+                    fvScalarMatrix PEqnR
+                    (
+                        fvc::div(phiHbyA)
+                        - fvm::laplacian(rhorAUf, P)
+                        ==
+                        fvOptions(psi, P, rho.name())
+                    );
+                    PEqnR.setReference
+                    (
+                        problem->_pressureControl().refCell(),
+                        problem->_pressureControl().refValue()
+                    );
+                    RedLinSysP = problem->Pmodes.project(PEqnR, NmodesPproj);
+                    p = reducedProblem::solveLinearSys(RedLinSysP, p, pResidual);
+                    problem->Pmodes.reconstruct(P, p, "p");
+
+                    if (problem->_simple().finalNonOrthogonalIter())
+                    {
+                        phi = problem->getPhiHbyA(UEqnR, U, P) + PEqnR.flux();
+                    }
                 }
+
+#include "continuityErrs.H"
+                P.relax();// Explicitly relax pressure for momentum corrector
+                U = problem->HbyA() - (1.0 / UEqnR.A()) * problem->getGradP(P);
+                U.correctBoundaryConditions();
+                fvOptions.correct(U);
+                bool pLimited = problem->_pressureControl().limit(P);
+
+                // For closed-volume cases adjust the pressure and density levels to obey overall mass continuity
+                if (closedVolume)
+                {
+                    P += (problem->_initialMass() - fvc::domainIntegrate(psi * P))
+                         / fvc::domainIntegrate(psi);
+                }
+
+                if (pLimited || closedVolume)
+                {
+                    P.correctBoundaryConditions();
+                }
+
+                rho = thermo.rho(); // Here rho is calculated as p*psi = p/(R*T)
+                rho.relax();
+                std::cout << "Ures = " << (uResidual.cwiseAbs()).sum() /
+                          (RedLinSysU[1].cwiseAbs()).sum() << std::endl;
+                std::cout << "Eres = " << (eResidual.cwiseAbs()).sum() /
+                          (RedLinSysE[1].cwiseAbs()).sum() << std::endl;
+                std::cout << "Pres = " << (pResidual.cwiseAbs()).sum() /
+                          (RedLinSysP[1].cwiseAbs()).sum() << std::endl;
+                residualNorm = max(max((uResidual.cwiseAbs()).sum() /
+                                       (RedLinSysU[1].cwiseAbs()).sum(),
+                                       (pResidual.cwiseAbs()).sum() / (RedLinSysP[1].cwiseAbs()).sum()),
+                                   (eResidual.cwiseAbs()).sum() / (RedLinSysE[1].cwiseAbs()).sum());
+                residualJump = max(max(((uResidual - uResidualOld).cwiseAbs()).sum() /
+                                       (RedLinSysU[1].cwiseAbs()).sum(),
+                                       ((pResidual - pResidualOld).cwiseAbs()).sum() /
+                                       (RedLinSysP[1].cwiseAbs()).sum()),
+                                   ((eResidual - eResidualOld).cwiseAbs()).sum() /
+                                   (RedLinSysE[1].cwiseAbs()).sum());
+                //problem->turbulence->correct(); // Resolution of the full turbulence (debug purposes only)
             }
 
-    #include "continuityErrs.H"
-            P.relax();// Explicitly relax pressure for momentum corrector
-            U = problem->HbyA() - (1.0 / UEqnR.A()) * problem->getGradP(P);
-
-            U.correctBoundaryConditions();
-            fvOptions.correct(U);
-            bool pLimited = problem->_pressureControl().limit(P);
-
-            // For closed-volume cases adjust the pressure and density levels to obey overall mass continuity
-            if (closedVolume)
-            {
-                P += (problem->_initialMass() - fvc::domainIntegrate(psi * P))
-                     / fvc::domainIntegrate(psi);
-            }
-
-            if (pLimited || closedVolume)
-            {
-                P.correctBoundaryConditions();
-            }
-
-            rho = thermo.rho(); // Here rho is calculated as p*psi = p/(R*T)
-            rho.relax();
-            std::cout << "Ures = " << (uResidual.cwiseAbs()).sum() / (RedLinSysU[1].cwiseAbs()).sum() << std::endl;
-            std::cout << "Eres = " << (eResidual.cwiseAbs()).sum() / (RedLinSysE[1].cwiseAbs()).sum() << std::endl;
-            std::cout << "Pres = " << (pResidual.cwiseAbs()).sum() / (RedLinSysP[1].cwiseAbs()).sum() << std::endl;
-            residualNorm = max(max((uResidual.cwiseAbs()).sum() /
-                                   (RedLinSysU[1].cwiseAbs()).sum(),
-                                   (pResidual.cwiseAbs()).sum() / (RedLinSysP[1].cwiseAbs()).sum()),
-                               (eResidual.cwiseAbs()).sum() / (RedLinSysE[1].cwiseAbs()).sum());
-            residualJump = max(max(((uResidual - uResidualOld).cwiseAbs()).sum() / (RedLinSysU[1].cwiseAbs()).sum(),
-                                   ((pResidual - pResidualOld).cwiseAbs()).sum() / (RedLinSysP[1].cwiseAbs()).sum()),
-                               ((eResidual - eResidualOld).cwiseAbs()).sum() / (RedLinSysE[1].cwiseAbs()).sum());
-
-            //problem->turbulence->correct(); // Resolution of the full turbulence (debug purposes only)
-            
+            nutCoeff = problem->evalNet(u, mu_now);
+            problem->nutModes.reconstruct(nut, nutCoeff, "nut");
+            label k = 1;
+            // U.rename("Ur");
+            // P.rename("Pr");
+            // E.rename("Er");
+            // nut.rename("nutR");
+            ITHACAstream::exportSolution(U, name(counter), Folder);
+            ITHACAstream::exportSolution(P, name(counter), Folder);
+            ITHACAstream::exportSolution(E, name(counter), Folder);
+            ITHACAstream::exportSolution(nut, name(counter), Folder);
         }
-        nutCoeff = problem->evalNet(u, mu_now);
-        problem->nutModes.reconstruct(nut, nutCoeff, "nut");
-        label k = 1;
-        // U.rename("Ur");
-        // P.rename("Pr");
-        // E.rename("Er");
-        // nut.rename("nutR");        
-        ITHACAstream::exportSolution(U, name(counter), Folder);
-        ITHACAstream::exportSolution(P, name(counter), Folder);
-        ITHACAstream::exportSolution(E, name(counter), Folder);
-        ITHACAstream::exportSolution(nut, name(counter), Folder);
-    }
 
 };
 
 class tutorial02 : public CompressibleSteadyNN
 {
-public:
-    /// Constructor
-    explicit tutorial02(int argc, char* argv[])
-        :
-        CompressibleSteadyNN(argc, argv)
-    {
-        dyndict = new IOdictionary
+    public:
+        /// Constructor
+        explicit tutorial02(int argc, char* argv[])
+            :
+            CompressibleSteadyNN(argc, argv)
+        {
+            dyndict = new IOdictionary
             (
                 IOobject
                 (
@@ -453,158 +453,161 @@ public:
                     IOobject::NO_WRITE
                 )
             );
-        ITHACAutilities::getPointsFromPatch(_mesh(), 0, top0, top0_ind);
-        ITHACAutilities::getPointsFromPatch(_mesh(), 1, bot0, bot0_ind);
-        // std::cout << _mesh().points().size() << std::endl;
-        ms = new RBFMotionSolver(_mesh(), *dyndict);
-        vectorField motion(ms->movingPoints().size(), vector::zero);
-        movingIDs = ms->movingIDs();
-        x0 = ms->movingPoints();
-        curX = x0;
-        point0 = ms->curPoints();
+            ITHACAutilities::getPointsFromPatch(_mesh(), 0, top0, top0_ind);
+            ITHACAutilities::getPointsFromPatch(_mesh(), 1, bot0, bot0_ind);
+            // std::cout << _mesh().points().size() << std::endl;
+            ms = new RBFMotionSolver(_mesh(), *dyndict);
+            vectorField motion(ms->movingPoints().size(), vector::zero);
+            movingIDs = ms->movingIDs();
+            x0 = ms->movingPoints();
+            curX = x0;
+            point0 = ms->curPoints();
+            /// Export intermediate steps
+            middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
+        }
 
-        /// Export intermediate steps
-        middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
-    }
-
-    List<vector> top0;
-    List<vector> bot0;
-    labelList top0_ind;
-    labelList bot0_ind;
-    IOdictionary* dyndict;
-    RBFMotionSolver* ms;
-    labelList movingIDs;
-    List<vector> x0;
-    List<vector> curX;
-    vectorField point0;
-    vectorField point;
-    ITHACAparameters* para = ITHACAparameters::getInstance();
+        List<vector> top0;
+        List<vector> bot0;
+        labelList top0_ind;
+        labelList bot0_ind;
+        IOdictionary* dyndict;
+        RBFMotionSolver* ms;
+        labelList movingIDs;
+        List<vector> x0;
+        List<vector> curX;
+        vectorField point0;
+        vectorField point;
+        ITHACAparameters* para = ITHACAparameters::getInstance();
 
 
-    double f1(double chord, double x)
-    {
-        double res = chord * (std::pow((x)/chord,0.5)*(1-(x)/chord))/(std::exp(15*(x)/chord));
-        return res;
-    }
+        double f1(double chord, double x)
+        {
+            double res = chord * (std::pow((x) / chord,
+                                           0.5) * (1 - (x) / chord)) / (std::exp(15 * (x) / chord));
+            return res;
+        }
 
-    List<vector> moveBasis(const List<vector>& originalPoints, double par)
-    {
+        List<vector> moveBasis(const List<vector>& originalPoints, double par)
+        {
             List<vector> movedPoints(originalPoints);
-            for(int i = 0; i<originalPoints.size(); i++)
+
+            for (int i = 0; i < originalPoints.size(); i++)
             {
-                movedPoints[i][2]+= par*f1(1,movedPoints[i][0]);
-            }       
+                movedPoints[i][2] += par * f1(1, movedPoints[i][0]);
+            }
 
             return movedPoints;
-    }
-
-    void updateMesh(double parTop = 0, double parBot = 0)
-    {
-        _mesh().movePoints(point0);
-        if(parTop!=0 || parBot!=0)
-        {
-            // std::cout << parTop << std::endl;
-            List<vector> top0_cur = moveBasis(top0, parTop);
-            List<vector> bot0_cur = moveBasis(bot0, parBot);
-            ITHACAutilities::setIndices2Value(top0_ind, top0_cur, movingIDs, curX);
-            ITHACAutilities::setIndices2Value(bot0_ind, bot0_cur, movingIDs, curX);
-            ms->setMotion(curX - x0);
-            point = ms->curPoints();
-            _mesh().movePoints(point);
         }
-    }
 
-    /// Perform an Offline solve
-    void offlineSolve(word folder = "./ITHACAoutput/Offline/")
-    {
-        /// Velocity field
-        volVectorField& U = _U();
-        /// Pressure field
-        volScalarField& p = _p();
-        /// Energy field
-        volScalarField& E = _E();
-
-        // If the offline solution is already performed but POD modes are not present, then read the fields
-        if (offline && !ITHACAutilities::check_folder("./ITHACAoutput/POD/1"))
+        void updateMesh(double parTop = 0, double parBot = 0)
         {
-            ITHACAstream::readMiddleFields(Ufield, U, folder);
-            ITHACAstream::readMiddleFields(Efield, E, folder);
-            ITHACAstream::readMiddleFields(Pfield, p, folder);
-            /// Eddy viscosity field
-            auto nut = _mesh().lookupObject<volScalarField>("nut");
-            ITHACAstream::readMiddleFields(nutFields, nut, folder);
-            mu_samples = ITHACAstream::readMatrix("./parsOff_mat.txt");
-        }
-        // If offline stage ha snot been performed, then perform it
-        else if (!offline)
-        {
-            double UIFinit = para->ITHACAdict->lookupOrDefault<double>("UIFinit", 170);
-            Vector<double> Uinl(UIFinit, 0, 0);
+            _mesh().movePoints(point0);
 
-            for (label i = 0; i < mu.rows(); i++)
+            if (parTop != 0 || parBot != 0)
             {
-                updateMesh(mu(i,0),mu(i,1));
-                ITHACAstream::writePoints(_mesh().points(), folder, name(i + 1) + "/polyMesh/");
-                assignIF(_U(), Uinl);
-                truthSolve(folder);
+                // std::cout << parTop << std::endl;
+                List<vector> top0_cur = moveBasis(top0, parTop);
+                List<vector> bot0_cur = moveBasis(bot0, parBot);
+                ITHACAutilities::setIndices2Value(top0_ind, top0_cur, movingIDs, curX);
+                ITHACAutilities::setIndices2Value(bot0_ind, bot0_cur, movingIDs, curX);
+                ms->setMotion(curX - x0);
+                point = ms->curPoints();
+                _mesh().movePoints(point);
+            }
+        }
 
-                label j=1;
-                word polyMesh2beLinked = folder + name(i+1) + "/" + "polyMesh/";
-                while (ITHACAutilities::check_folder(folder + name(i+1) + "/" + name(j)))
+        /// Perform an Offline solve
+        void offlineSolve(word folder = "./ITHACAoutput/Offline/")
+        {
+            /// Velocity field
+            volVectorField& U = _U();
+            /// Pressure field
+            volScalarField& p = _p();
+            /// Energy field
+            volScalarField& E = _E();
+
+            // If the offline solution is already performed but POD modes are not present, then read the fields
+            if (offline && !ITHACAutilities::check_folder("./ITHACAoutput/POD/1"))
+            {
+                ITHACAstream::readMiddleFields(Ufield, U, folder);
+                ITHACAstream::readMiddleFields(Efield, E, folder);
+                ITHACAstream::readMiddleFields(Pfield, p, folder);
+                /// Eddy viscosity field
+                auto nut = _mesh().lookupObject<volScalarField>("nut");
+                ITHACAstream::readMiddleFields(nutFields, nut, folder);
+                mu_samples = ITHACAstream::readMatrix("./parsOff_mat.txt");
+            }
+            // If offline stage ha snot been performed, then perform it
+            else if (!offline)
+            {
+                double UIFinit = para->ITHACAdict->lookupOrDefault<double>("UIFinit", 170);
+                Vector<double> Uinl(UIFinit, 0, 0);
+
+                for (label i = 0; i < mu.rows(); i++)
                 {
-                    word folderContLink = folder + name(i+1) + "/" + name(j) + "/";
-                    system("ln -s  $(readlink -f " + polyMesh2beLinked + ") " + folderContLink + " >/dev/null 2>&1");
-                    j++;
+                    updateMesh(mu(i, 0), mu(i, 1));
+                    ITHACAstream::writePoints(_mesh().points(), folder, name(i + 1) + "/polyMesh/");
+                    assignIF(_U(), Uinl);
+                    truthSolve(folder);
+                    label j = 1;
+                    word polyMesh2beLinked = folder + name(i + 1) + "/" + "polyMesh/";
 
+                    while (ITHACAutilities::check_folder(folder + name(i + 1) + "/" + name(j)))
+                    {
+                        word folderContLink = folder + name(i + 1) + "/" + name(j) + "/";
+                        system("ln -s  $(readlink -f " + polyMesh2beLinked + ") " + folderContLink +
+                               " >/dev/null 2>&1");
+                        j++;
+                    }
                 }
             }
         }
-    }
 };
 
 int main(int argc, char* argv[])
 {
-    // Construct the tutorial object  
+    // Construct the tutorial object
     tutorial02 example(argc, argv);
-
     ITHACAparameters* para = ITHACAparameters::getInstance();
-
     std::ifstream exFileOff("./parsOff_mat.txt");
+
     if (exFileOff)
     {
         example.mu  = ITHACAstream::readMatrix("./parsOff_mat.txt");
     }
-
     else
     {
-    	int OffNum = para->ITHACAdict->lookupOrDefault<int>("OffNum", 100);
-    	double BumpAmp = para->ITHACAdict->lookupOrDefault<double>("BumpAmp", 0.1);
+        int OffNum = para->ITHACAdict->lookupOrDefault<int>("OffNum", 100);
+        double BumpAmp = para->ITHACAdict->lookupOrDefault<double>("BumpAmp", 0.1);
         example.mu.resize(OffNum, 2);
-        Eigen::MatrixXd parTop = ITHACAutilities::rand(example.mu.rows(), 1, 0, BumpAmp);
-    	Eigen::MatrixXd parBot = ITHACAutilities::rand(example.mu.rows(), 1, -BumpAmp, 0);
+        Eigen::MatrixXd parTop = ITHACAutilities::rand(example.mu.rows(), 1, 0,
+                                 BumpAmp);
+        Eigen::MatrixXd parBot = ITHACAutilities::rand(example.mu.rows(), 1, -BumpAmp,
+                                 0);
         example.mu.leftCols(1) = parTop;
         example.mu.rightCols(1) = parBot;
-        ITHACAstream::exportMatrix(example.mu , "parsOff", "eigen", "./");
+        ITHACAstream::exportMatrix(example.mu, "parsOff", "eigen", "./");
     }
 
     Eigen::MatrixXd parsOn;
     std::ifstream exFileOn("./parsOn_mat.txt");
+
     if (exFileOn)
     {
         parsOn  = ITHACAstream::readMatrix("./parsOn_mat.txt");
     }
-
     else
     {
-    	int OnNum = para->ITHACAdict->lookupOrDefault<int>("OnNum", 20);
-    	double BumpAmp = para->ITHACAdict->lookupOrDefault<double>("BumpAmp", 0.1);
+        int OnNum = para->ITHACAdict->lookupOrDefault<int>("OnNum", 20);
+        double BumpAmp = para->ITHACAdict->lookupOrDefault<double>("BumpAmp", 0.1);
         parsOn.resize(OnNum, 2);
         Eigen::MatrixXd parTopOn = ITHACAutilities::rand(OnNum, 1, 0, BumpAmp);
-    	Eigen::MatrixXd parBotOn = ITHACAutilities::rand(OnNum, 1, -BumpAmp, 0);
+        Eigen::MatrixXd parBotOn = ITHACAutilities::rand(OnNum, 1, -BumpAmp, 0);
         parsOn.leftCols(1) = parTopOn;
         parsOn.rightCols(1) = parBotOn;
-        ITHACAstream::exportMatrix(parsOn , "parsOn", "eigen", "./");
+        ITHACAstream::exportMatrix(parsOn, "parsOn", "eigen", "./");
     }
+
     // Read some parameters from file
     int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
     int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
@@ -614,26 +617,26 @@ int main(int argc, char* argv[])
     int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
     int NmodesEproj = para->ITHACAdict->lookupOrDefault<int>("NmodesEproj", 10);
     int NmodesNutProj = para->ITHACAdict->lookupOrDefault<int>("NmodesNutProj", 10);
-
     example.updateMesh();
-
     //Perform the offline solve
     example.offlineSolve();
-    
     // Move the mesh to the original geometry to get the modes into a mid mesh
     example.updateMesh();
-
     // Perform POD on velocity and pressure
-    ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(), example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0,
                         NmodesUout);
-    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(), example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+                        example.podex, 0, 0,
                         NmodesPout);
-    ITHACAPOD::getModes(example.Efield, example.Emodes, example._E().name(), example.podex, 0, 0,
+    ITHACAPOD::getModes(example.Efield, example.Emodes, example._E().name(),
+                        example.podex, 0, 0,
                         NmodesEout);
-    ITHACAPOD::getModes(example.nutFields, example.nutModes, "nut", example.podex, 0, 0,
+    ITHACAPOD::getModes(example.nutFields, example.nutModes, "nut", example.podex,
+                        0, 0,
                         NmodesNutOut);
 
-    if(!ITHACAutilities::check_folder("./ITHACAoutput/checkOff"))
+    if (!ITHACAutilities::check_folder("./ITHACAoutput/checkOff"))
     {
         example.updateMesh();
         tutorial02 checkOff(argc, argv);
@@ -664,7 +667,6 @@ int main(int argc, char* argv[])
     //Before loading the net, it has to be created through the python script
     example.loadNet("ITHACAoutput/NN/Net_" + name(example.NUmodes) + "_" + name(
                         example.NNutModes) + ".pt");
-
     // Create the reduced object
     ReducedCompressibleSteadyNN reduced(example);
 
@@ -672,19 +674,23 @@ int main(int argc, char* argv[])
     for (label k = 0; k < parsOn.rows(); k++)
     {
         example.updateMesh();
-        example.updateMesh(parsOn(k,0), parsOn(k,1));
-        ITHACAstream::writePoints(example._mesh().points(), "./ITHACAoutput/Online_"+name(NmodesUproj)+"_"+name(NmodesNutProj)+"/", name(k + 1) + "/polyMesh/");
+        example.updateMesh(parsOn(k, 0), parsOn(k, 1));
+        ITHACAstream::writePoints(example._mesh().points(),
+                                  "./ITHACAoutput/Online_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/",
+                                  name(k + 1) + "/polyMesh/");
         //std::cout << example.inletIndex.rows() << std::endl;
         //reduced.setOnlineVelocity(vel);
-        reduced.projectReducedOperators(NmodesUproj, NmodesPproj, NmodesEproj); 
+        reduced.projectReducedOperators(NmodesUproj, NmodesPproj, NmodesEproj);
         example.restart();
         example.turbulence->validate(); ///////////////////////////////////////////////// Is it needed to validate the nut field?
         Eigen::MatrixXd mu_now = parsOn.row(k);
         mu_now.transposeInPlace();
-        reduced.solveOnlineCompressible(NmodesUproj, NmodesPproj, NmodesEproj, NmodesNutProj, mu_now, "./ITHACAoutput/Online_"+name(NmodesUproj)+"_"+name(NmodesNutProj)+"/");
+        reduced.solveOnlineCompressible(NmodesUproj, NmodesPproj, NmodesEproj,
+                                        NmodesNutProj, mu_now, "./ITHACAoutput/Online_" + name(NmodesUproj) + "_" +
+                                        name(NmodesNutProj) + "/");
     }
 
-    if(ITHACAutilities::check_folder("./ITHACAoutput/checkOff"))
+    if (ITHACAutilities::check_folder("./ITHACAoutput/checkOff"))
     {
         PtrList<volVectorField> UfieldCheck;
         PtrList<volScalarField> PfieldCheck;
@@ -692,8 +698,6 @@ int main(int argc, char* argv[])
         PtrList<volScalarField> nutFieldsCheck;
         ITHACAstream::readMiddleFields(UfieldCheck, example._U(),
                                        "./ITHACAoutput/checkOff/");
-
-
         ITHACAstream::readMiddleFields(PfieldCheck, example._p(),
                                        "./ITHACAoutput/checkOff/");
         ITHACAstream::readMiddleFields(EfieldCheck, example._E(),
@@ -701,27 +705,33 @@ int main(int argc, char* argv[])
         auto nutCheck = example._mesh().lookupObject<volScalarField>("nut");
         ITHACAstream::readMiddleFields(nutFieldsCheck, nutCheck,
                                        "./ITHACAoutput/checkOff/");
-
         // Info << "UfieldCheck.size" << UfieldCheck.size() << endl;
         // Info << "PfieldCheck.size" << PfieldCheck.size() << endl;
         // Info << "EfieldCheck.size" << EfieldCheck.size() << endl;
         // Info << "nutFieldsCheck.size" << nutFieldsCheck.size() << endl;
         // exit(0);
-        Eigen::MatrixXd snapsCheck = ITHACAstream::readMatrix("./ITHACAoutput/checkOff/snaps");
+        Eigen::MatrixXd snapsCheck =
+            ITHACAstream::readMatrix("./ITHACAoutput/checkOff/snaps");
         label fieldNum = 0;
-        for(label k=0; k<snapsCheck.rows(); k++)
+
+        for (label k = 0; k < snapsCheck.rows(); k++)
         {
-            fieldNum = fieldNum+snapsCheck(k,0);
-            ITHACAstream::exportSolution(UfieldCheck[fieldNum-1], name(k+1), "./ITHACAoutput/checkOffSingle/");
-            ITHACAstream::exportSolution(PfieldCheck[fieldNum-1], name(k+1), "./ITHACAoutput/checkOffSingle/");
-            ITHACAstream::exportSolution(EfieldCheck[fieldNum-1], name(k+1), "./ITHACAoutput/checkOffSingle/");
-            ITHACAstream::exportSolution(nutFieldsCheck[fieldNum-1], name(k+1), "./ITHACAoutput/checkOffSingle/");
-            ITHACAutilities::createSymLink("./ITHACAoutput/checkOff/"+name(k+1)+"/polyMesh", "./ITHACAoutput/checkOffSingle/"+name(k+1)+"/");
+            fieldNum = fieldNum + snapsCheck(k, 0);
+            ITHACAstream::exportSolution(UfieldCheck[fieldNum - 1], name(k + 1),
+                                         "./ITHACAoutput/checkOffSingle/");
+            ITHACAstream::exportSolution(PfieldCheck[fieldNum - 1], name(k + 1),
+                                         "./ITHACAoutput/checkOffSingle/");
+            ITHACAstream::exportSolution(EfieldCheck[fieldNum - 1], name(k + 1),
+                                         "./ITHACAoutput/checkOffSingle/");
+            ITHACAstream::exportSolution(nutFieldsCheck[fieldNum - 1], name(k + 1),
+                                         "./ITHACAoutput/checkOffSingle/");
+            ITHACAutilities::createSymLink("./ITHACAoutput/checkOff/" + name(
+                                               k + 1) + "/polyMesh", "./ITHACAoutput/checkOffSingle/" + name(k + 1) + "/");
         }
+
         ITHACAutilities::createSymLink("./0", "./ITHACAoutput/checkOffSingle/");
         ITHACAutilities::createSymLink("./system", "./ITHACAoutput/checkOffSingle/");
         ITHACAutilities::createSymLink("./constant", "./ITHACAoutput/checkOffSingle/");
-    
         PtrList<volVectorField> onlineU;
         PtrList<volScalarField> onlineP;
         PtrList<volScalarField> onlineE;
@@ -730,69 +740,91 @@ int main(int argc, char* argv[])
         PtrList<volScalarField> offlineP;
         PtrList<volScalarField> offlineE;
         PtrList<volScalarField> offlineNut;
-
-        ITHACAstream::read_fields(onlineU,example._U(),"./ITHACAoutput/Online_"+name(NmodesUproj)+"_"+name(NmodesNutProj)+"/");
-        ITHACAstream::read_fields(onlineP,example._p(),"./ITHACAoutput/Online_"+name(NmodesUproj)+"_"+name(NmodesNutProj)+"/");
-        ITHACAstream::read_fields(onlineE,example._E(),"./ITHACAoutput/Online_"+name(NmodesUproj)+"_"+name(NmodesNutProj)+"/");
+        ITHACAstream::read_fields(onlineU, example._U(),
+                                  "./ITHACAoutput/Online_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
+        ITHACAstream::read_fields(onlineP, example._p(),
+                                  "./ITHACAoutput/Online_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
+        ITHACAstream::read_fields(onlineE, example._E(),
+                                  "./ITHACAoutput/Online_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
         auto nut = example._mesh().lookupObject<volScalarField>("nut");
-        ITHACAstream::read_fields(onlineNut,nut,"./ITHACAoutput/Online_"+name(NmodesUproj)+"_"+name(NmodesNutProj)+"/");
-        ITHACAstream::read_fields(offlineU,example._U(),"./ITHACAoutput/checkOffSingle/");
-        ITHACAstream::read_fields(offlineP,example._p(),"./ITHACAoutput/checkOffSingle/");
-        ITHACAstream::read_fields(offlineE,example._E(),"./ITHACAoutput/checkOffSingle/");
-        ITHACAstream::read_fields(offlineNut,nut,"./ITHACAoutput/checkOffSingle/");
+        ITHACAstream::read_fields(onlineNut, nut,
+                                  "./ITHACAoutput/Online_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
+        ITHACAstream::read_fields(offlineU, example._U(),
+                                  "./ITHACAoutput/checkOffSingle/");
+        ITHACAstream::read_fields(offlineP, example._p(),
+                                  "./ITHACAoutput/checkOffSingle/");
+        ITHACAstream::read_fields(offlineE, example._E(),
+                                  "./ITHACAoutput/checkOffSingle/");
+        ITHACAstream::read_fields(offlineNut, nut, "./ITHACAoutput/checkOffSingle/");
         Eigen::MatrixXd errorU = ITHACAutilities::errorL2Rel(offlineU,
-                            onlineU);
+                                 onlineU);
         Eigen::MatrixXd errorP = ITHACAutilities::errorL2Rel(offlineP,
-                            onlineP);
+                                 onlineP);
         Eigen::MatrixXd errorE = ITHACAutilities::errorL2Rel(offlineE,
-                            onlineE);
+                                 onlineE);
         Eigen::MatrixXd errorNut = ITHACAutilities::errorL2Rel(offlineNut,
-                            onlineNut);
-        
+                                   onlineNut);
         ///
-        ITHACAstream::exportMatrix(errorU,"errorU" + name(NmodesUproj) + "_" + name(NmodesNutProj),     "python", "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
-        ITHACAstream::exportMatrix(errorP,"errorP" + name(NmodesUproj) + "_" + name(NmodesNutProj),     "python", "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
-        ITHACAstream::exportMatrix(errorE,"errorE" + name(NmodesUproj) + "_" + name(NmodesNutProj),     "python", "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
-        ITHACAstream::exportMatrix(errorNut,"errorNut" + name(NmodesUproj) + "_" + name(NmodesNutProj), "python", "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
+        ITHACAstream::exportMatrix(errorU,
+                                   "errorU" + name(NmodesUproj) + "_" + name(NmodesNutProj),     "python",
+                                   "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(
+                                       NmodesNutProj) + "/");
+        ITHACAstream::exportMatrix(errorP,
+                                   "errorP" + name(NmodesUproj) + "_" + name(NmodesNutProj),     "python",
+                                   "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(
+                                       NmodesNutProj) + "/");
+        ITHACAstream::exportMatrix(errorE,
+                                   "errorE" + name(NmodesUproj) + "_" + name(NmodesNutProj),     "python",
+                                   "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(
+                                       NmodesNutProj) + "/");
+        ITHACAstream::exportMatrix(errorNut,
+                                   "errorNut" + name(NmodesUproj) + "_" + name(NmodesNutProj), "python",
+                                   "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(
+                                       NmodesNutProj) + "/");
 
-        for(label j=0; j<parsOn.rows(); j++)
+        for (label j = 0; j < parsOn.rows(); j++)
         {
-        	volVectorField Ue = offlineU[j] - onlineU[j];
+            volVectorField Ue = offlineU[j] - onlineU[j];
             //auto offU2Eigen = Foam2Eigen::field2Eigen(offlineU[j]);
             auto u = ITHACAutilities::L2Norm(Ue);
-            Ue /=u;
+            Ue /= u;
             //////////
-        	volScalarField Pe = offlineP[j] - onlineP[j];
+            volScalarField Pe = offlineP[j] - onlineP[j];
             auto p = ITHACAutilities::L2Norm(Pe);
-            Pe /=p;
+            Pe /= p;
             ////////
-        	volScalarField Ee = offlineE[j] - onlineE[j];
+            volScalarField Ee = offlineE[j] - onlineE[j];
             auto e = ITHACAutilities::L2Norm(Ee);
-
             Ee /= e;
-
             volScalarField Nute = offlineNut[j] - onlineNut[j];
             auto n = ITHACAutilities::L2Norm(Nute);
-            Nute /=n;
-
-        	Ue.rename("Ue");
-        	Pe.rename("Pe");
-        	Ee.rename("Ee");
+            Nute /= n;
+            Ue.rename("Ue");
+            Pe.rename("Pe");
+            Ee.rename("Ee");
             Nute.rename("Nute");
-            ITHACAstream::exportSolution(Ue,   name(j+1), "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
-            ITHACAstream::exportSolution(Pe,   name(j+1), "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
-            ITHACAstream::exportSolution(Ee,   name(j+1), "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
-            ITHACAstream::exportSolution(Nute, name(j+1), "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/");
-
-        	// ITHACAstream::exportSolution(Ue, name(j+1), "./ITHACAoutput/checkOffSingle/");
-	    	// ITHACAstream::exportSolution(Pe, name(j+1), "./ITHACAoutput/checkOffSingle/");
-	    	// ITHACAstream::exportSolution(Ee, name(j+1), "./ITHACAoutput/checkOffSingle/");
+            ITHACAstream::exportSolution(Ue,   name(j + 1),
+                                         "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(
+                                             NmodesNutProj) + "/");
+            ITHACAstream::exportSolution(Pe,   name(j + 1),
+                                         "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(
+                                             NmodesNutProj) + "/");
+            ITHACAstream::exportSolution(Ee,   name(j + 1),
+                                         "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(
+                                             NmodesNutProj) + "/");
+            ITHACAstream::exportSolution(Nute, name(j + 1),
+                                         "./ITHACAoutput/ErrorFields_" + name(NmodesUproj) + "_" + name(
+                                             NmodesNutProj) + "/");
+            // ITHACAstream::exportSolution(Ue, name(j+1), "./ITHACAoutput/checkOffSingle/");
+            // ITHACAstream::exportSolution(Pe, name(j+1), "./ITHACAoutput/checkOffSingle/");
+            // ITHACAstream::exportSolution(Ee, name(j+1), "./ITHACAoutput/checkOffSingle/");
             // ITHACAstream::exportSolution(Nute, name(j+1), "./ITHACAoutput/checkOffSingle/");
         }
     }
     else
     {
-        std::cerr << "checkOff folder is missing, error analysis cannot be performed." << std::endl;
+        std::cerr << "checkOff folder is missing, error analysis cannot be performed."
+                  << std::endl;
     }
 
     exit(0);
