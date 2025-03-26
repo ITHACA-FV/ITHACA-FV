@@ -88,6 +88,8 @@ SourceFiles
 namespace ITHACAstream
 {
 
+const word defaultFolder = "./ITHACAoutput/Matrices";
+
 //--------------------------------------------------------------------------
 /// @brief      Export an Fv Matrix to folder together with its source term
 ///
@@ -522,7 +524,31 @@ void load(List<Eigen::SparseMatrix<T >> & MatrixList, word folder,
           word MatrixName);
 
 //--------------------------------------------------------------------------
-/// Function to read a single field by index from a folder
+/// Export To File 
+///
+/// @param[in]  Matrix, Vector, Tensor Matrix, vector, or tensor to export
+/// @param[in]  matrixRoad File name with path
+/// @param[in]  type optional export type cnpy, python, matlab, text, default cnpy
+/// @param[in]  folder optional file path
+///
+void exportToFile(Eigen::MatrixXd& Matrix,word matrixRoad,word type = "cnpy", word folder = defaultFolder);
+void exportToFile(Eigen::VectorXd& Vector,word matrixRoad, word type = "cnpy", word folder = defaultFolder);
+void exportToFile(Eigen::Tensor<double,3>& Tensor,word tensorRoad, word type = "cnpy", word folder = defaultFolder);
+void exportToFile(List <Eigen::MatrixXd>& Matrix,word matrixRoad,word type = "cnpy", word folder = defaultFolder);
+
+//--------------------------------------------------------------------------
+/// Import matrix from npy file 
+///
+/// @param[out]  Matrix imported matrix
+/// @param[in]  matrixName file name (without extension)
+/// @param[in]  folder optional file path
+///
+/// @return     true if file was found, false otherwise
+///
+template<typename T>
+bool importNpy(T &data, word objectName, word folder=defaultFolder);
+
+  /// Function to read a single field by index from a folder
 ///
 /// @param[in]  field      The field template to use for reading
 /// @param[in]  casename   The folder where the field is stored

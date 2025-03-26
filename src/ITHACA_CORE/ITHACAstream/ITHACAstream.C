@@ -59,10 +59,10 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen", message.c_str()
+             || type == "eigen" || type == "cnpy", message.c_str()
             );
-    mkDir(folder);
     word est;
+    mkDir(folder);    
 
     if (type == "python")
     {
@@ -93,7 +93,7 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         str << "]])" << endl;
     }
 
-    if (type == "matlab")
+    else if (type == "matlab")
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
@@ -115,13 +115,14 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         str << "];" << endl;
     }
 
-    if (type == "eigen")
+    else if (type == "eigen")
     {
         const static Eigen::IOFormat CSVFormat(6, false, ", ", "\n");
         std::ofstream ofs;
         ofs.precision(20);
-        ofs.open (folder + "/" + Name + "_mat.txt");
 
+        ofs.open (folder + "/" + Name + "_mat.txt");
+        
         for (int i = 0; i < matrix.rows(); i++)
         {
             for (int j = 0; j < matrix.cols(); j++)
@@ -143,6 +144,11 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         }
 
         ofs.close();
+    }
+    
+    else if (type == "cnpy")
+    {
+        cnpy::save(matrix,folder + "/"+ Name + ".npy");
     }
 }
 
@@ -176,7 +182,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen", message.c_str()
+             || type == "eigen" || type =="cnpy", message.c_str()
             );
     mkDir(folder);
     word est;
@@ -221,7 +227,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
     {
         est = ".m";
         OFstream str(folder + "/" + Name + "_mat" + est);
-
+        
         for (int i = 0; i < matrix.size(); i++)
         {
             str << Name << "(" << i + 1 << ",:,:)=[";
@@ -242,12 +248,12 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
             str << "];" << endl;
         }
     }
-    else if (type == "eigen")
+    else if (type == "eigen" || type == "cnpy")
     {
         for (int i = 0; i < matrix.size(); i++)
         {
             word Namei = Name + name(i);
-            exportMatrix(matrix[i], Namei, "eigen", folder);
+            exportMatrix(matrix[i], Namei, type, folder);
         }
     }
 }
@@ -267,11 +273,12 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen", message.c_str()
+             || type == "eigen" || type == "cnpy", message.c_str()
             );
-    mkDir(folder);
     word est;
+    mkDir(folder);
 
+    //by default (empty type) both the eigen (txt) and cnpy tensors are exported
     // Python Case
     if (type == "python")
     {
@@ -344,6 +351,7 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
             str << "];" << endl;
         }
     }
+    //Eigen case
     else if (type == "eigen")
     {
         for (int i = 0; i < tensor.dimension(0); i++)
@@ -352,6 +360,11 @@ void exportTensor(Eigen::Tensor<T, 3> tensor, word Name,
             word Namei = Name + name(i);
             exportMatrix(matrixAux, Namei, "eigen", folder);
         }
+    }
+    //Cnpy case
+    else if (type == "cnpy")
+    {
+        cnpy::save(tensor, folder + "/" + Name + ".npy");
     }
 }
 
@@ -1156,6 +1169,101 @@ template void save(const List<Eigen::SparseMatrix<double >> & MatrixList,
 template void load(List<Eigen::SparseMatrix<double >>& MatrixList, word folder,
                    word MatrixName);
 
+void exportToFile(Eigen::MatrixXd& Matrix,word matrixRoad, word type, word folder)
+{
+
+    //allows to handle both folder/ and folder
+    if (folder.back()!='/') folder += "/";
+    //adds subfolder and calls proper export function
+    if (type == "python"){
+        exportMatrix(Matrix, matrixRoad, "python", folder + "Python");
+    }
+    else if (type == "matlab"){
+        exportMatrix(Matrix, matrixRoad, "matlab", folder + "Matlab");
+    }
+    else if (type == "eigen"){
+        exportMatrix(Matrix, matrixRoad, "eigen", folder + "Txt");
+    }
+    else if (type == "cnpy"){
+        exportMatrix(Matrix, matrixRoad, "cnpy", folder + "Npy");
+    }
+    else 
+    {
+        Info << "Unknow type for export: " << type << "path " << matrixRoad << endl;
+    }
+}
+
+void exportToFile(Eigen::VectorXd& Vector,word matrixRoad,word type,word folder)
+{
+    Eigen::MatrixXd matrix = Vector;
+    exportToFile(matrix, matrixRoad, type, folder);
+}
+
+void exportToFile(Eigen::Tensor<double,3>& Tensor,word tensorRoad,word type,word folder)
+{
+    //allows to handle both folder/ and folder
+    if (folder.back()!='/') folder += "/";
+    //adds subfolder and calls proper export function
+    if (type == "python"){
+        exportTensor(Tensor, tensorRoad, "python", folder + "Python");
+    }
+    else if (type == "matlab"){
+        exportTensor(Tensor, tensorRoad, "matlab", folder + "Matlab");
+    }
+    else if (type == "eigen"){
+        exportTensor(Tensor, tensorRoad, "eigen", folder + "Txt");
+    }
+    else if (type == "cnpy"){
+        exportTensor(Tensor, tensorRoad, "cnpy", folder + "Npy");
+    } 
+    else 
+    {
+        Info << "Unknow type for export: " << type << "path " << tensorRoad << endl;
+    }
+}
+
+void exportToFile(List <Eigen::MatrixXd>& Matrix,word matrixRoad, word type, word folder)
+{
+    //allows to handle both folder/ and folder
+    if (folder.back()!='/') folder += "/";
+    //adds subfolder and call proper export function
+    if (type == "python"){
+        exportMatrix(Matrix, matrixRoad, "python", folder + "Python");
+    }
+    else if (type == "matlab"){
+        exportMatrix(Matrix, matrixRoad, "matlab", folder + "Matlab");
+    }
+    else if (type == "eigen"){
+        exportMatrix(Matrix, matrixRoad, "eigen", folder + "Txt");
+    }
+    else if (type == "cnpy"){
+        exportMatrix(Matrix, matrixRoad, "cnpy", folder + "Npy");
+    }
+    else 
+    {
+        Info << "Unknow type for export: " << type << "path " << matrixRoad << endl;
+    }
+}
+
+template<typename T>
+bool importNpy(T &data, word objectName, word folder)
+{
+    //allows to handle both folder/ and folder
+    if (folder.back()!='/') folder +='/';
+    if (ITHACAutilities::check_file(folder + "Npy/" + objectName+ ".npy"))
+    {
+        cnpy::load(data,folder + "Npy/"+ objectName + ".npy");
+        return true;
+    }
+    else
+    {
+        return false;    
+    }
+}
+
+template bool importNpy<Eigen::MatrixXd>(Eigen::MatrixXd&, word, word);
+template bool importNpy<Eigen::VectorXd>(Eigen::VectorXd&, word, word);
+template bool importNpy<Eigen::Tensor<double, 3 >>(Eigen::Tensor<double, 3>&, word, word);
 
 template GeometricField<scalar, fvPatchField, volMesh>
 readFieldByIndex(
