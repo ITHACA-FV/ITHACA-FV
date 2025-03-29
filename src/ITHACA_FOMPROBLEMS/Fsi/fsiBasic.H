@@ -50,11 +50,13 @@ SourceFiles
 #include "ITHACAutilities.H"
 #include "ITHACAPOD.H"
 #include "forces.H"
-#include "IOmanip.H"
-#include "IOstreams.H"
-#include "objectRegistry.H"
-#include "localEulerDdtScheme.H"
-#include "reductionProblem.H"
+//#include "IOmanip.H"
+#include "steadyNS.H"
+#include "UnsteadyProblem.H"
+//#include "IOstreams.H"
+//#include "objectRegistry.H"
+//#include "localEulerDdtScheme.H"
+//#include "reductionProblem.H"
 #include <iostream>
 
 
@@ -68,7 +70,7 @@ SourceFiles
 /** In this class are implemented the methods for the offline solve of a unsteady NS problem
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the fsiBasic class */
-class fsiBasic: public unsteadyNS
+class fsiBasic:  public steadyNS, public UnsteadyProblem
 {
     public:
         // Constructors

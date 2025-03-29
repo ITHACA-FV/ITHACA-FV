@@ -33,7 +33,7 @@ SourceFiles
 fsiBasic::fsiBasic() {}
 /// Construct from zero
 fsiBasic::fsiBasic(int argc, char* argv[])
-:unsteadyNS(argc, argv)
+:UnsteadyProblem()
 {
         // to create argument list
         _args = autoPtr<argList>
@@ -62,7 +62,9 @@ fsiBasic::fsiBasic(int argc, char* argv[])
                            mesh
                        )
                    );
-
+        //pimpleControl& pimple = _pimple();
+#include "createFields.H" 
+#include "initContinuityErrs.H"
         ITHACAdict = new IOdictionary
         (
             IOobject
@@ -74,11 +76,12 @@ fsiBasic::fsiBasic(int argc, char* argv[])
                 IOobject::NO_WRITE
             )
         );
-#include "createFields.H" 
-        para = ITHACAparameters::getInstance(mesh, runTime); 
+        ITHACAparameters* para = ITHACAparameters::getInstance(mesh,_runTime());
+        //para = ITHACAparameters::getInstance(mesh, runTime); 
+        offline = ITHACAutilities::check_off();
+        podex = ITHACAutilities::check_pod();
+        setTimes(runTime);
         point0 = mesh.points();  
-
-
         Info << offline << endl;
     /// Number of velocity modes to be calculated
         NUmodesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesUout", 15);
@@ -145,9 +148,9 @@ void fsiBasic::truthSolve(List<scalar> mu_now, fileName folder)
                 // Do any mesh changes
                 //mesh.controlledUpdate();
                 // The following line remplace the above controlledUpdate() method
-                sDRBMS().solve();
+                // sDRBMS().solve();
 
-                mesh.movePoints(sDRBMS().curPoints());
+                // mesh.movePoints(sDRBMS().curPoints());
                 // std::cerr << "################"<< "Before six dof motion solver" << "#############"<< std::endl;
                 if (mesh.changing())
                 {
