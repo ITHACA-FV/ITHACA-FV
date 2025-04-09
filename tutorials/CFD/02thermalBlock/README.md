@@ -17,7 +17,7 @@ Both the full order and the reduced order problem are solved exploiting the para
 
 $$A = \sum_{i=1}^N \theta_i(\mu) A_i$$
 
-For the operations performed by each command check the comments in the source [**02thermalBlock.C**](https://mathlab.github.io/ITHACA-FV/02thermalBlock_8C.html) file.
+For the operations performed by each command check the comments in the source [**02thermalBlock.C**](https://ithaca-fv.github.io/ITHACA-FV/02thermalBlock_8C-example.html) file.
 
 ## The necessary header files
 
