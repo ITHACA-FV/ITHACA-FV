@@ -870,6 +870,18 @@ void HyperReduction<SnapshotsLists...>::computeLS(Eigen::MatrixXd& J,
                                         nodePoints->size());
     }
 
+    // Condition number at final iteration
+    if (nodePoints->size() == n_nodes)
+    {
+        Eigen::VectorXd cond(vectorial_dim);
+        for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+        {
+            Eigen::JacobiSVD<Eigen::MatrixXd> svd(J.middleRows(ith_field*(n_modes + 1), n_modes + 1));
+            cond(ith_field) = svd.singularValues()(0) / svd.singularValues()(svd.singularValues().size() - 1);
+        }
+        std::cout << "Condition number(s) of LS for quadWeights at final iteration = " << cond.transpose() << std::endl;
+    }
+
     b = b / b.lpNorm<2>();
 }
 
