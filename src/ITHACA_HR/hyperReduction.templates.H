@@ -104,7 +104,7 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
 
     Info << "Number of boundary cells: " << n_boundary_cells << endl;
 
-    volumes = ITHACAutilities::getMassMatrixFV(std::get<0>(snapshotsListTuple)[0]);
+    volumes = ITHACAutilities::getMassMatrixFV(std::get<0>(snapshotsListTuple)[0]).head(n_cells);
 }
 
 
@@ -714,10 +714,9 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
             Eigen::MatrixXd block = snapshotsModes.block(ith_field* n_cells, 0, n_cells,
                                     n_modes).transpose();
             q.segment(ith_field*(n_modes + 1), n_modes) = block.rowwise().sum();
-            q(ith_field*(n_modes + 1) + n_modes) = volume;
+            q(ith_field*(n_modes + 1) + n_modes) = volume / volumes.norm();
             Jwhole.middleRows(ith_field*(n_modes + 1), n_modes) = block;
-            Jwhole.row(ith_field*(n_modes + 1) + n_modes) = Eigen::VectorXd::Constant(
-                      n_cells, 1);
+            Jwhole.row(ith_field*(n_modes + 1) + n_modes) = (volumes.array() / volumes.norm()).matrix();
             Eigen::VectorXd mean = block.rowwise().mean();
             block.colwise() -= mean;
             Eigen::VectorXd Anorm = block.colwise().lpNorm<2>();
