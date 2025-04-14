@@ -701,6 +701,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
     {
 
         bool normalizedArgmaxForCubaturePointsSelection = 1;
+        bool cellVolumesInCubatureWeights = 0;  // Else in the modes. Gives an equivalent system, but changes the condition number.
 
         assert(n_modes > 0);
         // assert(n_nodes >= n_modes);
@@ -718,6 +719,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
         // matrices for greedy selection of the nodes
         Eigen::MatrixXd A(vectorial_dim* n_modes, n_cells);
         Eigen::VectorXd b = Eigen::VectorXd::Constant(vectorial_dim* n_modes, 1);
+        Eigen::VectorXd cellVolumes = volumes;
         double volume = volumes.array().sum();
 
         for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
@@ -726,10 +728,21 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
                                     n_modes).transpose();
             q.segment(ith_field*n_modes_modif, n_modes) = block.rowwise().sum();
             Jwhole.middleRows(ith_field*n_modes_modif, n_modes) = block;
+
+            if (cellVolumesInCubatureWeights)
+            {
+                block.array().rowwise() /= volumes.transpose().array();
+                Eigen::MatrixXd invNormModes = block.rowwise().norm().array().cwiseInverse().matrix().asDiagonal();
+                block = invNormModes * block;
+                Jwhole.middleRows(ith_field*n_modes_modif, n_modes) = block;
+                q.segment(ith_field*n_modes_modif, n_modes) = invNormModes * q.segment(ith_field*n_modes_modif, n_modes);
+                cellVolumes = Eigen::VectorXd::Constant(n_cells,1);
+            }
+
             if (predictVolume)
             {
-                q(ith_field*n_modes_modif + n_modes) = volume / volumes.norm();
-                Jwhole.row(ith_field*n_modes_modif + n_modes) = (volumes.array() / volumes.norm()).matrix();   
+                q(ith_field*n_modes_modif + n_modes) = volume / cellVolumes.norm();
+                Jwhole.row(ith_field*n_modes_modif + n_modes) = (cellVolumes.array() / cellVolumes.norm()).matrix();
             }
 
             if (normalizedArgmaxForCubaturePointsSelection)
@@ -778,6 +791,18 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
                             n_cells).asDiagonal()).colwise().sum()).maxCoeff( & r1, & ind_max);
                 updateNodes(P, ind_max, mp_not_mask);
                 computeLS(J, Jwhole, b, q);
+            }
+        }
+
+        if (cellVolumesInCubatureWeights)
+        {
+            for (label i=0; i<nodePoints->size(); i++)
+            {
+                for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+                {
+                    quadratureWeights(ith_field * nodePoints->size() + i) = 
+                            quadratureWeights(ith_field * nodePoints->size() + i)/(volumes(nodePoints()[i]));
+                }
             }
         }
 
