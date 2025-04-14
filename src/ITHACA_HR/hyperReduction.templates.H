@@ -103,6 +103,8 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
     }
 
     Info << "Number of boundary cells: " << n_boundary_cells << endl;
+
+    volumes = ITHACAutilities::getMassMatrixFV(std::get<0>(snapshotsListTuple)[0]);
 }
 
 
@@ -113,13 +115,15 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
         unsigned int vectorialDim,
         label n_cells,
         Eigen::VectorXi initialSeeds,
-        word problemName)
+        word problemName,
+        Eigen::VectorXd volumes)
     : n_modes{n_modes},
       n_nodes{n_nodes},
       vectorial_dim{vectorialDim},
       n_cells{n_cells},
       initialSeeds{initialSeeds},
-      problemName{problemName}
+      problemName{problemName},
+      volumes{volumes}
 {
     Info << "Init HyperReduction class with vectorial dim: " << vectorial_dim <<
          endl;
@@ -681,7 +685,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
     folderMethod = folderMethodName;
     Info << "FolderMethod : " << folderMethod << endl;
     mkDir(folderMethod);
-    n_nodes = n_modes + 1;
+    // n_nodes = n_modes + 1;
     normalizingWeights = weights;
     Info << "####### Begin ECP #######" << endl;
     Info << "####### Modes=" <<  n_modes
@@ -695,7 +699,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
     if (offlineStage)
     {
         assert(n_modes > 0);
-        assert(n_nodes >= n_modes);
+        // assert(n_nodes >= n_modes);
         // matrices for quadratureWeights evaluation
         Eigen::MatrixXd J;//shape: (vectorial_dim * (n_modes + 1), nodePoints->size())
         Eigen::MatrixXd Jwhole(vectorial_dim * (n_modes + 1), n_cells);
@@ -703,8 +707,6 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
         // matrices for greedy selection of the nodes
         Eigen::MatrixXd A(vectorial_dim* n_modes, n_cells);
         Eigen::VectorXd b = Eigen::VectorXd::Constant(vectorial_dim* n_modes, 1);
-        Eigen::VectorXd volumes = ITHACAutilities::getMassMatrixFV(std::get<0>
-                                  (snapshotsListTuple)[0]);
         double volume = volumes.array().sum();
 
         for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
@@ -765,6 +767,8 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
         cnpy::save(normalizingWeights, folderMethod + "/normalizingWeights.npy");
         cnpy::save(nodes, folderMethod + "/mp.npy");
         cnpy::save(wPU, folderMethod + "/wPU.npy");
+        P.makeCompressed();
+        cnpy::save(P, folderMethod + "/projectionMatrix.npz");
         nodePoints().write();
     }
     else
@@ -775,6 +779,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
         cnpy::load(normalizingWeights, folderMethod + "/normalizingWeights.npy");
         cnpy::load(nodes, folderMethod + "/mp.npy");
         cnpy::load(wPU, folderMethod + "/wPU.npy");
+        cnpy::load(P, folderMethod + "/projectionMatrix.npz");
     }
 }
 

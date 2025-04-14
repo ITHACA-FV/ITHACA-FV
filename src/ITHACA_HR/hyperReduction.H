@@ -90,13 +90,15 @@ class HyperReduction
         /// @param[in]  n_cells           Number of cells
         /// @param[in]  initialSeeds      Initial nodes
         /// @param[in]  problemName       Name of the function to be hyper-reduced
+        /// @param[in]  volumes           Volume of each cell (optional, used in offlineECP)
         ///
         HyperReduction(label n_modes,
                        label n_nodes,
                        unsigned int vectorial_dim,
                        label n_cells,
                        Eigen::VectorXi initialSeeds,
-                       word problemName);
+                       word problemName,
+                       Eigen::VectorXd volumes = Eigen::VectorXd::Constant(1,0.0));
 
         // ITHACA parameters dict
         ITHACAparameters* para;
@@ -139,6 +141,9 @@ class HyperReduction
 
         /// Int Number of Cells;
         label n_cells;
+
+        /// Volume of each cell
+        Eigen::VectorXd volumes;
 
         /// Int Number of Cells in submeshes;
         label n_cellsSubfields;
