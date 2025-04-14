@@ -235,7 +235,7 @@ class HyperReduction
         }
 
         void offlineECP(Eigen::MatrixXd& snapshotsModes,
-                        Eigen::VectorXd& normalizingWeights, word folderMethodName);
+                        Eigen::VectorXd& normalizingWeights, word folderMethodName, bool predictVolume = 1);
 
         //----------------------------------------------------------------------
         /// @brief      TODO

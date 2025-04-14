@@ -680,12 +680,13 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(
 
 template <typename... SnapshotsLists>
 void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
-        snapshotsModes, Eigen::VectorXd& weights, word folderMethodName)
+        snapshotsModes, Eigen::VectorXd& weights, word folderMethodName, bool predictVolume)
 {
     folderMethod = folderMethodName;
     Info << "FolderMethod : " << folderMethod << endl;
     mkDir(folderMethod);
     // n_nodes = n_modes + 1;
+    label n_modes_modif = n_modes + predictVolume;
     normalizingWeights = weights;
     Info << "####### Begin ECP #######" << endl;
     Info << "####### Modes=" <<  n_modes
@@ -700,10 +701,17 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
     {
         assert(n_modes > 0);
         // assert(n_nodes >= n_modes);
+
+        if (predictVolume && !(volumes.size() == n_cells))
+        {
+            Info << "Cell's volumes must be filled if predicting volume in ECP" << endl;
+            abort();
+        }  
+
         // matrices for quadratureWeights evaluation
-        Eigen::MatrixXd J;//shape: (vectorial_dim * (n_modes + 1), nodePoints->size())
-        Eigen::MatrixXd Jwhole(vectorial_dim * (n_modes + 1), n_cells);
-        Eigen::VectorXd q(vectorial_dim * (n_modes + 1));
+        Eigen::MatrixXd J;//shape: (vectorial_dim * n_modes_modif, nodePoints->size())
+        Eigen::MatrixXd Jwhole(vectorial_dim * n_modes_modif, n_cells);
+        Eigen::VectorXd q(vectorial_dim * n_modes_modif);
         // matrices for greedy selection of the nodes
         Eigen::MatrixXd A(vectorial_dim* n_modes, n_cells);
         Eigen::VectorXd b = Eigen::VectorXd::Constant(vectorial_dim* n_modes, 1);
@@ -713,10 +721,14 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
         {
             Eigen::MatrixXd block = snapshotsModes.block(ith_field* n_cells, 0, n_cells,
                                     n_modes).transpose();
-            q.segment(ith_field*(n_modes + 1), n_modes) = block.rowwise().sum();
-            q(ith_field*(n_modes + 1) + n_modes) = volume / volumes.norm();
-            Jwhole.middleRows(ith_field*(n_modes + 1), n_modes) = block;
-            Jwhole.row(ith_field*(n_modes + 1) + n_modes) = (volumes.array() / volumes.norm()).matrix();
+            q.segment(ith_field*n_modes_modif, n_modes) = block.rowwise().sum();
+            Jwhole.middleRows(ith_field*n_modes_modif, n_modes) = block;
+            if (predictVolume)
+            {
+                q(ith_field*n_modes_modif + n_modes) = volume / volumes.norm();
+                Jwhole.row(ith_field*n_modes_modif + n_modes) = (volumes.array() / volumes.norm()).matrix();   
+            }
+
             Eigen::VectorXd mean = block.rowwise().mean();
             block.colwise() -= mean;
             Eigen::VectorXd Anorm = block.colwise().lpNorm<2>();
@@ -858,18 +870,19 @@ void HyperReduction<SnapshotsLists...>::computeLS(Eigen::MatrixXd& J,
         Eigen::MatrixXd& Jwhole, Eigen::VectorXd& b, Eigen::VectorXd& q)
 {
     // TODO fix with only positive weights (NNLS)
-    J.resize(vectorial_dim * (n_modes + 1), nodePoints->size());
+    label n_modes_modif = Jwhole.rows()/vectorial_dim;
+    J.resize(vectorial_dim * n_modes_modif, nodePoints->size());
     J = Jwhole(Eigen::indexing::all, nodes);
     quadratureWeights.resize(nodePoints->size() * vectorial_dim);
 
     for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
     {
         quadratureWeights.segment(ith_field* nodePoints->size(),
-                                  nodePoints->size()) = J.middleRows(ith_field*(n_modes + 1),
-                                      n_modes + 1).colPivHouseholderQr().solve(q.segment(ith_field*(n_modes + 1),
-                                          n_modes + 1));
-        b.segment(ith_field* n_modes, n_modes) = q.segment(ith_field*(n_modes + 1),
-            n_modes) - J.middleRows(ith_field*(n_modes + 1),
+                                  nodePoints->size()) = J.middleRows(ith_field*n_modes_modif,
+                                      n_modes_modif).colPivHouseholderQr().solve(q.segment(ith_field*n_modes_modif,
+                                          n_modes_modif));
+        b.segment(ith_field* n_modes, n_modes) = q.segment(ith_field*n_modes_modif,
+            n_modes) - J.middleRows(ith_field*n_modes_modif,
                                     n_modes) * quadratureWeights.segment(ith_field* nodePoints->size(),
                                         nodePoints->size());
     }
@@ -880,7 +893,7 @@ void HyperReduction<SnapshotsLists...>::computeLS(Eigen::MatrixXd& J,
         Eigen::VectorXd cond(vectorial_dim);
         for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
         {
-            Eigen::JacobiSVD<Eigen::MatrixXd> svd(J.middleRows(ith_field*(n_modes + 1), n_modes + 1));
+            Eigen::JacobiSVD<Eigen::MatrixXd> svd(J.middleRows(ith_field*n_modes_modif, n_modes_modif));
             cond(ith_field) = svd.singularValues()(0) / svd.singularValues()(svd.singularValues().size() - 1);
         }
         std::cout << "Condition number(s) of LS for quadWeights at final iteration = " << cond.transpose() << std::endl;
