@@ -699,6 +699,9 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
 
     if (offlineStage)
     {
+
+        bool normalizedArgmaxForCubaturePointsSelection = 1;
+
         assert(n_modes > 0);
         // assert(n_nodes >= n_modes);
 
@@ -729,16 +732,24 @@ void HyperReduction<SnapshotsLists...>::offlineECP(Eigen::MatrixXd&
                 Jwhole.row(ith_field*n_modes_modif + n_modes) = (volumes.array() / volumes.norm()).matrix();   
             }
 
-            Eigen::VectorXd mean = block.rowwise().mean();
-            block.colwise() -= mean;
-            Eigen::VectorXd Anorm = block.colwise().lpNorm<2>();
-
-            if (Anorm.minCoeff() > 0)
+            if (normalizedArgmaxForCubaturePointsSelection)
             {
-                block.array().rowwise() /= Anorm.transpose().array();
-            }
+                Eigen::VectorXd mean = block.rowwise().mean();
+                block.colwise() -= mean;
+                Eigen::VectorXd Anorm = block.colwise().lpNorm<2>();
 
-            A.middleRows(ith_field* n_modes, n_modes) = block;
+                if (Anorm.minCoeff() > 0)
+                {
+                    block.array().rowwise() /= Anorm.transpose().array();
+                }
+
+                A.middleRows(ith_field* n_modes, n_modes) = block;
+            }
+            else
+            {
+                A.middleRows(ith_field* n_modes, n_modes) = Jwhole.middleRows(ith_field* n_modes, n_modes);
+            }
+            
         }
 
         Eigen::VectorXd mp_not_mask = Eigen::VectorXd::Constant(n_cells* vectorial_dim,
