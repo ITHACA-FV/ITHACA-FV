@@ -86,6 +86,7 @@ SteadyNSTurb::SteadyNSTurb(int argc, char* argv[])
     M_Assert(bcMethod == "lift" || bcMethod == "penalty",
              "The BC method must be set to lift or penalty in ITHACAdict");
     viscCoeff = ITHACAdict->lookupOrDefault<word>("viscCoeff", "RBF");
+    rbfParams = ITHACAdict->lookupOrDefault<word>("rbfParams", "vel");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -524,6 +525,30 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         else
         {
             gTensor = divMomentum(NUmodes, NPmodes);
+        }
+
+        word cth1PPE_str = "ct1PPE_" + name(liftfield.size()) + "_" + name(
+            NUmodes) + "_" + name(NSUPmodes) + "_" + name(NPmodes) + "_" + name(
+            nNutModes) + "_t";
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + cth1PPE_str))
+        {
+            ITHACAstream::ReadDenseTensor(ct1PPETensor, "./ITHACAoutput/Matrices/", cth1PPE_str);
+        }
+        else
+        {
+            ct1PPETensor = turbulencePPETensor1(NUmodes, NSUPmodes, NPmodes, nNutModes);
+        }
+
+        word cth2PPE_str = "ct2PPE_" + name(liftfield.size()) + "_" + name(
+                    NUmodes) + "_" + name(NSUPmodes) + "_" + name(NPmodes) + "_" + name(
+                    nNutModes) + "_t";
+        if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + cth2PPE_str))
+        {
+            ITHACAstream::ReadDenseTensor(ct2PPETensor, "./ITHACAoutput/Matrices/", cth2PPE_str);
+        }
+        else
+        {
+            ct2PPETensor = turbulencePPETensor2(NUmodes, NSUPmodes, NPmodes, nNutModes);
         }
 
         if (bcMethod == "penalty")
@@ -978,6 +1003,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                                           weightName);
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
+            Info<< "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
         else
@@ -991,6 +1017,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+            Info<< "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsSUP/", weightName);
             ITHACAstream::exportMatrix(rbfSplines[i]->weights,
