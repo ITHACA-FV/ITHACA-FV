@@ -121,6 +121,9 @@ class SteadyNSTurb: public steadyNS
         /// The way to compute the eddy viscosity snapshots
         word viscCoeff;
 
+        /// The params to interpolate the eddy viscosity
+        word rbfParams;
+
         /// Number of viscoisty modes used for the projection
         label nNutModes;
 
