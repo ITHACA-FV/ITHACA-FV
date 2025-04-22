@@ -69,9 +69,9 @@ volScalarField& rho = _rho();
 volScalarField rho0(rho);
 
 _rho0 = autoPtr<volScalarField>
-      (
-          new volScalarField(rho0)
-      );
+        (
+            new volScalarField(rho0)
+        );
 
 _E = autoPtr<volScalarField>
      (

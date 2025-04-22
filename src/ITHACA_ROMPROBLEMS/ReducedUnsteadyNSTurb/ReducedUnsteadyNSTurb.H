@@ -54,7 +54,7 @@ struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
 
         newtonUnsteadyNSTurbSUP(int Nx, int Ny,
                                 UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
@@ -89,7 +89,7 @@ struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
 
         newtonUnsteadyNSTurbPPE(int Nx, int Ny,
                                 UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
@@ -122,7 +122,7 @@ struct newtonUnsteadyNSTurbSUPAve: public newton_argument<double>
 
         newtonUnsteadyNSTurbSUPAve(int Nx, int Ny,
                                    UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
@@ -157,7 +157,7 @@ struct newtonUnsteadyNSTurbPPEAve: public newton_argument<double>
 
         newtonUnsteadyNSTurbPPEAve(int Nx, int Ny,
                                    UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),

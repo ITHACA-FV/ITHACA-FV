@@ -36,7 +36,7 @@ fvScalarMatrix TEqn
     ==
     - fvm::div(phi, T)
     + fvm::laplacian(turbulence->nu() / Pr + alphat, T)
-    + (v / CpRef) * (decLam1* dec1 + decLam2* dec2 + decLam3* dec3)
+    + (v / CpRef) * (decLam1 * dec1 + decLam2 * dec2 + decLam3* dec3)
     + (1 - decbetaTot) * (TXS) / (CpRef) * flux
 
 );

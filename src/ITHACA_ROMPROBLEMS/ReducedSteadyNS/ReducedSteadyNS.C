@@ -43,7 +43,7 @@ reducedSteadyNS::reducedSteadyNS()
 
 reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
     :
-    problem( & FOMproblem)
+    problem(& FOMproblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
@@ -87,11 +87,11 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = problem->B_matrix* a_tmp* nu;
+    Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
     // Gradient of pressure
-    Eigen::VectorXd M2 = problem->K_matrix* b_tmp;
+    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
     // Pressure Term
-    Eigen::VectorXd M3 = problem->P_matrix* a_tmp;
+    Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
     // Penalty term
@@ -155,7 +155,7 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
 int newton_steadyNS::df(const Eigen::VectorXd& x,
                         Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_steadyNS> numDiff( * this);
+    Eigen::NumericalDiff<newton_steadyNS> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }

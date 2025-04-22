@@ -55,7 +55,7 @@ struct newtonSteadyNSTurbIntrusive: public newton_argument<double>
 
         newtonSteadyNSTurbIntrusive(int Nx, int Ny,
                                     SteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_u(problem.nModesOnline),
             N_BC(problem.inletIndex.rows())
         {}

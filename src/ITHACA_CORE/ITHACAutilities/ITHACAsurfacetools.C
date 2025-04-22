@@ -73,7 +73,7 @@ template List<label> surfaceIndexExt(volTensorField& field,
 
 template<typename T, typename V>
 void surfaceValuesInt(T& field, const label patchInt, const label patchExt,
-                      List<V> & result)
+                      List<V>& result)
 {
     List<label> indexes = surfaceIndexInt(field, patchInt, patchExt);
 
@@ -84,25 +84,25 @@ void surfaceValuesInt(T& field, const label patchInt, const label patchExt,
 }
 
 template void surfaceValuesInt(volScalarField& field, const label patchInt,
-                               const label patchExt, List<scalar> & result);
+                               const label patchExt, List<scalar>& result);
 template void surfaceValuesInt(volVectorField& field, const label patchInt,
-                               const label patchExt, List<Foam::Vector<scalar>> & result);
+                               const label patchExt, List<Foam::Vector<scalar >> & result);
 template void surfaceValuesInt(volTensorField& field, const label patchInt,
-                               const label patchExt, List<Foam::Tensor<scalar>> & result);
+                               const label patchExt, List<Foam::Tensor<scalar >>& result);
 
 template<typename T, typename V>
 void surfaceValuesExt(T& field, const label patchInt, const label patchExt,
-                      List<V> & result)
+                      List<V>& result)
 {
     surfaceValuesInt(field, patchExt, patchInt, result);
 }
 
 template void surfaceValuesExt(volScalarField& field, const label patchInt,
-                               const label patchExt, List<scalar> & result);
+                               const label patchExt, List<scalar>& result);
 template void surfaceValuesExt(volVectorField& field, const label patchInt,
-                               const label patchExt, List<Foam::Vector<scalar>> & result);
+                               const label patchExt, List<Foam::Vector<scalar >> & result);
 template void surfaceValuesExt(volTensorField& field, const label patchInt,
-                               const label patchExt, List<Foam::Tensor<scalar>> & result);
+                               const label patchExt, List<Foam::Tensor<scalar >>& result);
 
 template<typename T>
 Foam::Vector<scalar> surfaceFindMirrorPoint(T& field, const label patchInt,
@@ -155,7 +155,7 @@ template label surfaceFindClosest(volTensorField& field, const label patchInt,
 
 template<typename T, typename V>
 void surfaceAverage(T& field, const label patchInt, const label patchExt,
-                    List<V> & result)
+                    List<V>& result)
 {
     List<label> indexesInt = surfaceIndexInt(field, patchInt, patchExt);
     result.resize(0);
@@ -170,15 +170,15 @@ void surfaceAverage(T& field, const label patchInt, const label patchExt,
 }
 
 template void surfaceAverage(volScalarField& field, const label patchInt,
-                             const label patchExt, List<scalar> & result);
+                             const label patchExt, List<scalar>& result);
 template void surfaceAverage(volVectorField& field, const label patchInt,
-                             const label patchExt, List<Foam::Vector<scalar>> & result);
+                             const label patchExt, List<Foam::Vector<scalar >> & result);
 template void surfaceAverage(volTensorField& field, const label patchInt,
-                             const label patchExt, List<Foam::Tensor<scalar>> & result);
+                             const label patchExt, List<Foam::Tensor<scalar >>& result);
 
 template<typename T, typename V>
 void surfaceJump(T& field, const label patchInt, const label patchExt,
-                 List<V> & result)
+                 List<V>& result)
 {
     List<label> indexesInt = surfaceIndexInt(field, patchInt, patchExt);
     result.resize(0);
@@ -193,11 +193,11 @@ void surfaceJump(T& field, const label patchInt, const label patchExt,
 }
 
 template void surfaceJump(volScalarField& field, const label patchInt,
-                          const label patchExt, List<scalar> & result);
+                          const label patchExt, List<scalar>& result);
 template void surfaceJump(volVectorField& field, const label patchInt,
-                          const label patchExt, List<Foam::Vector<scalar>> & result);
+                          const label patchExt, List<Foam::Vector<scalar >> & result);
 template void surfaceJump(volTensorField& field, const label patchInt,
-                          const label patchExt, List<Foam::Tensor<scalar>> & result);
+                          const label patchExt, List<Foam::Tensor<scalar >>& result);
 } // End namespace ITHACAsurfacetools
 } // End namespace ITHACAutilities
 

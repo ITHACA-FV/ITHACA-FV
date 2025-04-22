@@ -195,7 +195,7 @@ class reductionProblem
         /// @param[in]  BC_ind  The BC index.
         /// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
         ///
-        void assignBC(volVectorField& s, label BC_ind, Vector<double> & value);
+        void assignBC(volVectorField& s, label BC_ind, Vector<double>& value);
 
         //--------------------------------------------------------------------------
         /// Assign Boundary Condition to a volScalarField
@@ -215,8 +215,8 @@ class reductionProblem
         /// @param[in]  Nmodes        The number of modes you want to use.
         /// @param[in]  coeff_matrix  The matrix of coefficients.
         ///
-        void reconstructFromMatrix(PtrList<volVectorField> & rec_field2,
-                                   PtrList<volVectorField> & modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
+        void reconstructFromMatrix(PtrList<volVectorField>& rec_field2,
+                                   PtrList<volVectorField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
         //--------------------------------------------------------------------------
         /// Exact reconstruction using a certain number of modes for vector list of
@@ -228,8 +228,8 @@ class reductionProblem
         /// @param[in]  coeff_matrix  The matrix of coefficients.
         ///
         /// Exact reconstruction using a certain number of modes for scalar list of fields
-        void reconstructFromMatrix(PtrList<volScalarField> & rec_field2,
-                                   PtrList<volScalarField> & modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
+        void reconstructFromMatrix(PtrList<volScalarField>& rec_field2,
+                                   PtrList<volScalarField>& modes, label Nmodes, Eigen::MatrixXd coeff_matrix);
 
         //--------------------------------------------------------------------------
         /// Assign internal field condition
@@ -316,7 +316,7 @@ class reductionProblem
         /// @return     Vector of objects to the RBF splines corresponding to each mode
         ///
         std::vector<SPLINTER::RBFSpline> getCoeffManifoldRBF(PtrList<volVectorField>
-                snapshots, PtrList<volVectorField> & modes, word rbfBasis = "GAUSSIAN");
+                snapshots, PtrList<volVectorField>& modes, word rbfBasis = "GAUSSIAN");
 
         //--------------------------------------------------------------------------
         /// @brief      Constructs the parameters-coefficients manifold for scalar fields, based on RBF-spline model
@@ -328,7 +328,7 @@ class reductionProblem
         /// @return     Vector of objects to the RBF splines corresponding to each mode
         ///
         std::vector<SPLINTER::RBFSpline> getCoeffManifoldRBF(PtrList<volScalarField>
-                snapshots, PtrList<volScalarField> & modes, word rbfBasis = "GAUSSIAN");
+                snapshots, PtrList<volScalarField>& modes, word rbfBasis = "GAUSSIAN");
 
         //--------------------------------------------------------------------------
         /// @brief      Constructs the parameters-coefficients manifold for vector fields, based on the B-spline model
@@ -340,7 +340,7 @@ class reductionProblem
         ///
         // std::vector<SPLINTER::BSpline*> getCoeffManifoldSPL(PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes, label splDeg=3);
         std::vector<SPLINTER::BSpline> getCoeffManifoldSPL(PtrList<volVectorField>
-                snapshots, PtrList<volVectorField> & modes, label splDeg = 3);
+                snapshots, PtrList<volVectorField>& modes, label splDeg = 3);
 
         //--------------------------------------------------------------------------
         /// @brief      Constructs the parameters-coefficients manifold for scalar fields, based on the B-spline model
@@ -351,7 +351,7 @@ class reductionProblem
         /// @return     Vector of objects to the B-splines corresponding to each mode
         ///
         std::vector<SPLINTER::BSpline> getCoeffManifoldSPL(PtrList<volScalarField>
-                snapshots, PtrList<volScalarField> & modes, label splDeg = 3);
+                snapshots, PtrList<volScalarField>& modes, label splDeg = 3);
 
 };
 

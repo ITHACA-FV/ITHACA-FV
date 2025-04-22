@@ -226,7 +226,7 @@ void UnsteadyNSTTurb::liftSolveT()
         scalar dt = mesh.time().deltaTValue();
         forAll(Tlift, i)
         {
-            Tlift[i] = (totalTime* Tlift[i] + dt* Tlift[i] ) / (totalTime + dt);
+            Tlift[i] = (totalTime * Tlift[i] + dt * Tlift[i] ) / (totalTime + dt);
         }
 
         Tlift.write();
@@ -542,8 +542,8 @@ void UnsteadyNSTTurb::projectSUP(fileName folder, label NU, label NP,
             SAMPLES[i]->addSample(mu.row(j), Ncoeff(i, j));
         }
 
-        rbfsplines[i] = new SPLINTER::RBFSpline( * SAMPLES[i],
-            SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+        rbfsplines[i] = new SPLINTER::RBFSpline(* SAMPLES[i],
+                                                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
         std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
     }
 }

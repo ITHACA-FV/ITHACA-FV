@@ -124,7 +124,7 @@ volScalarField inverseLaplacianProblem_CG::assignAdjointBCandSource()
         }
     }
 
-    return (f* sourceDim).ref();
+    return (f * sourceDim).ref();
 }
 
 void inverseLaplacianProblem_CG::assignSensitivityBC()
@@ -406,7 +406,7 @@ void inverseLaplacianProblem_CG::searchDirection()
         Info << "gamma = " << gamma << endl;
     }
 
-    P = gradJ + gamma* P;  //Updating P
+    P = gradJ + gamma * P; //Updating P
     gamma_den = gammaNum;
     //reduce(gamma_den, sumOp<double>());
 }
@@ -415,7 +415,7 @@ void inverseLaplacianProblem_CG::computeSearchStep()
 {
     if (interpolation)
     {
-        List<scalar> temp = interpolationPlane.Tdiff*
+        List<scalar> temp = interpolationPlane.Tdiff *
                             interpolationPlane.Tsens;
         beta = 0.0;
         forAll(interpolationPlane.cellVol, cellI)
@@ -424,7 +424,7 @@ void inverseLaplacianProblem_CG::computeSearchStep()
         }
 
         //reduce(beta, sumOp<double>());
-        temp = interpolationPlane.Tsens* interpolationPlane.Tsens;
+        temp = interpolationPlane.Tsens * interpolationPlane.Tsens;
         scalar betaDiv = 0.0;
         forAll(interpolationPlane.cellVol, cellI)
         {
@@ -449,7 +449,7 @@ void inverseLaplacianProblem_CG::computeSearchStep()
 
 void inverseLaplacianProblem_CG::updateHeatFlux()
 {
-    g = g - beta* P;
+    g = g - beta * P;
 }
 
 
@@ -460,7 +460,7 @@ int inverseLaplacianProblem_CG::conjugateGradientConvergenceCheck()
     if (interpolation)
     {
         List<scalar> sqTdiff;
-        sqTdiff = interpolationPlane.Tdiff* interpolationPlane.Tdiff;
+        sqTdiff = interpolationPlane.Tdiff * interpolationPlane.Tdiff;
         J = 0.0;
         forAll(sqTdiff, cellI)
         {

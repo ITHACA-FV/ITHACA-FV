@@ -49,11 +49,11 @@ List<label> surfaceIndexExt(T& field, const label patchInt,
 
 template<typename T, typename V>
 void surfaceValuesInt(T& field, const label patchInt, const label patchExt,
-                      List<V> & result);
+                      List<V>& result);
 
 template<typename T, typename V>
 void surfaceValuesExt(T& field, const label patchInt, const label patchExt,
-                      List<V> & result);
+                      List<V>& result);
 
 template<typename T>
 Foam::Vector<scalar> surfaceFindMirrorPoint(T& field, const label patchInt,
@@ -65,11 +65,11 @@ label surfaceFindClosest(T& field, const label patchInt, const label patchExt,
 
 template<typename T, typename V>
 void surfaceAverage(T& field, const label patchInt, const label patchExt,
-                    List<V> & result);
+                    List<V>& result);
 
 template<typename T, typename V>
 void surfaceJump(T& field, const label patchInt, const label patchExt,
-                 List<V> & result);
+                 List<V>& result);
 
 }; // End namespace ITHACAsurfacetools
 } // End namespace ITHACAutilities

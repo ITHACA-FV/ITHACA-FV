@@ -108,10 +108,10 @@ bool isTurbulent()
 }
 
 template<typename T>
-List<T> combineList(List<List<T>> & doubleList)
+List<T> combineList(List<List<T >> & doubleList)
 {
-    List<T> a = ListListOps::combine<List<T>>(doubleList,
-                accessOp<List<T>>());
+    List<T> a = ListListOps::combine<List<T >> (doubleList,
+                accessOp<List<T >> ());
 #if OPENFOAM >= 1812
     inplaceUniqueSort(a);
 #else
@@ -123,14 +123,13 @@ List<T> combineList(List<List<T>> & doubleList)
     {
         b[i] = a[order[i]];
     }
-
     a.resize(order.size());
     a = b;
 #endif
     return a;
 }
 
-template List<label> combineList(List<List<label>> & doubleList);
+template List<label> combineList(List<List<label >> & doubleList);
 
 
 // Using the Eigen library, using the SVD decomposition method to solve the
@@ -160,7 +159,7 @@ Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd& origin, const float er)
         }
     }
 
-    return V* S* U.transpose();
+    return V * S * U.transpose();
 }
 
 
