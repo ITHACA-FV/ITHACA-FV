@@ -144,13 +144,13 @@ class HyperReduction
         label n_cellsSubfields;
 
         /// Nodes in the case of the a nonlinear function
-        autoPtr<IOList<label>> nodePoints;
+        autoPtr<IOList<label >> nodePoints;
 
         /// List of label lists of the nodes and corresponding surrounding nodes
-        autoPtr<IOList<labelList>> totalNodePoints;
+        autoPtr<IOList<labelList >> totalNodePoints;
 
         /// List of the unique indices of the nodes that define the submesh
-        autoPtr<IOList<label>> uniqueNodePoints;
+        autoPtr<IOList<label >> uniqueNodePoints;
 
         /// Folder for the HR problem
         word folderProblem;
@@ -270,7 +270,7 @@ class HyperReduction
         /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
         /// @param[in]  sList  The list of snapshots
         ///
-        void updateNodes(Eigen::SparseMatrix<double> & P, label& ind_max,
+        void updateNodes(Eigen::SparseMatrix<double>& P, label& ind_max,
                          Eigen::VectorXd& mp_not_mask);
 
         //----------------------------------------------------------------------
@@ -291,8 +291,8 @@ class HyperReduction
         ///
         template <typename SnapshotsList>
         void stackSnapshotsBoundary(SnapshotsList sList,
-                                    List<Eigen::MatrixXd> & snapshotsMatrixBoundary,
-                                    List<Eigen::VectorXd> & fieldWeightsBoundary);
+                                    List<Eigen::MatrixXd>& snapshotsMatrixBoundary,
+                                    List<Eigen::VectorXd>& fieldWeightsBoundary);
 
         //----------------------------------------------------------------------
         /// @brief      TODO
@@ -357,7 +357,7 @@ class HyperReduction
         /// @param[in]  Projector  projector into interpolation nodes
         /// @param[in]  Modes      matrix to restrict and invert
         ///
-        void evaluatePinv(Eigen::SparseMatrix<double> & Projector,
+        void evaluatePinv(Eigen::SparseMatrix<double>& Projector,
                           Eigen::MatrixXd& Modes, Eigen::VectorXd& fieldWeights);
 
         //----------------------------------------------------------------------
@@ -366,7 +366,7 @@ class HyperReduction
         /// @param[in]  Projector  projector into interpolation nodes
         /// @param[in]  Modes      matrix to restrict and invert
         ///
-        void evaluateWPU(Eigen::SparseMatrix<double> & Projector,
+        void evaluateWPU(Eigen::SparseMatrix<double>& Projector,
                          Eigen::MatrixXd& Modes, Eigen::VectorXd& fieldWeights,
                          Eigen::VectorXd& quadratureWeights);
 
@@ -386,7 +386,7 @@ class HyperReduction
         ///
         /// @return     The local indices
         ///
-        List<label> global2local(List<label> & points, fvMeshSubset& submesh);
+        List<label> global2local(List<label>& points, fvMeshSubset& submesh);
 
         /// @brief      TODO
         ///
@@ -457,7 +457,7 @@ class HyperReduction
         void eigen2fields(Eigen::VectorXd& eFields, FieldsArgs&&... oFields)
         {
             unsigned int cumulativeSize{0}, ith_field{0};
-            ([ & ](auto& oFieldsArg)
+            ([ & ](auto & oFieldsArg)
             {
                 double ith_fieldSize = fieldDims[ith_field] * oFieldsArg.size();
                 Eigen::VectorXd vec = eFields.segment(cumulativeSize, ith_fieldSize);
@@ -474,7 +474,7 @@ class HyperReduction
         /// @tparam     SnapshotsList  PtrList of volScalarField or volVectorField
         /// @param[in]  sList  The list of snapshots
         ///
-        void initReshapeMat(Eigen::SparseMatrix<double> & reshapeMat);
+        void initReshapeMat(Eigen::SparseMatrix<double>& reshapeMat);
 
         /// @brief      TODO
         ///
@@ -496,8 +496,8 @@ class HyperReduction
         /// @param[in]  sList  The list of snapshots
         ///
         void getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights,
-                           List<Eigen::MatrixXd> & snapMatrixBoundary,
-                           List<Eigen::VectorXd> & fieldWeightsBoundary);
+                           List<Eigen::MatrixXd>& snapMatrixBoundary,
+                           List<Eigen::VectorXd>& fieldWeightsBoundary);
 };
 
 #endif

@@ -150,14 +150,14 @@ void DataTable::gridCompleteGuard() const
 void DataTable::save(const std::string& fileName) const
 {
     Serializer s;
-    s.serialize( * this);
+    s.serialize(* this);
     s.saveToFile(fileName);
 }
 
 void DataTable::load(const std::string& fileName)
 {
     Serializer s(fileName);
-    s.deserialize( * this);
+    s.deserialize(* this);
 }
 
 /*
@@ -177,11 +177,11 @@ std::multiset<DataPoint>::const_iterator DataTable::cend() const
  * Get table of samples x-values,
  * i.e. table[i][j] is the value of variable i at sample j
  */
-std::vector< std::vector<double>> DataTable::getTableX() const
+std::vector< std::vector<double >> DataTable::getTableX() const
 {
     gridCompleteGuard();
     // Initialize table
-    std::vector<std::vector<double>> table;
+    std::vector<std::vector<double >> table;
 
     for (unsigned int i = 0; i < numVariables; i++)
     {
@@ -231,12 +231,12 @@ DataTable operator+(const DataTable& lhs, const DataTable& rhs)
 
     for (auto it = lhs.cbegin(); it != lhs.cend(); it++)
     {
-        result.addSample( * it);
+        result.addSample(* it);
     }
 
     for (auto it = rhs.cbegin(); it != rhs.cend(); it++)
     {
-        result.addSample( * it);
+        result.addSample(* it);
     }
 
     return result;
@@ -255,9 +255,9 @@ DataTable operator-(const DataTable& lhs, const DataTable& rhs)
     // Add all samples from lhs that are not in rhs
     for (auto it = lhs.cbegin(); it != lhs.cend(); it++)
     {
-        if (rhsSamples.count( * it) == 0)
+        if (rhsSamples.count(* it) == 0)
         {
-            result.addSample( * it);
+            result.addSample(* it);
         }
     }
 

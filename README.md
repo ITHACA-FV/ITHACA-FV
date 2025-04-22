@@ -19,13 +19,13 @@
 </p>
 
 ### 0. Introduction
-**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2212**](https://www.openfoam.com/news/main-news/openfoam-v2212/) but it can be easily adapted also to other versions of OpenFOAM.
+**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2412**](https://www.openfoam.com/news/main-news/openfoam-v2412/) but it can be easily adapted also to other versions of OpenFOAM.
 
 **ITHACA-FV** can also be used as a basis for more advanced projects that would like to assess the capability of reduced order models in their existing **OpenFOAM**-based software, thanks to the availability of several reduced order methods and algorithms.
 
 Linear and non-linear algebra operations which are not already implemented in OpenFOAM are performed with the external library [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page). The source code of Eigen 3.3.7 is provided together with ITHACA-FV and is located in the [src/thirdyparty/Eigen](./src/thirdparty/Eigen) folder.  For the EigenValue decomposition it is also possible to rely on the [**Spectra-0.7.0**](https://spectralib.org/) library and the source code is provided in the [src/thirdyparty/spectra](./src//thirdparty/spectra) folder. Numerical optimization can be performed using the external library [**OptimLib**](https://www.kthohr.com/optimlib.html) and the header based source code is provided in the [src/thirdyparty/OptimLib](./src/thirdparty/OptimLib) folder.
 
-**ITHACA-FV** has been tested on ubuntu 16.04, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 2106, OpenFOAM 2212, OpenFOAM 2306, and OpenFOAM 2312.
+**ITHACA-FV** has been tested on ubuntu 16.04, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 2106, OpenFOAM 2212, OpenFOAM 2306, OpenFOAM 2312, OpenFOAM 2406, and OpenFOAM 2412.
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
@@ -33,6 +33,8 @@ Linear and non-linear algebra operations which are not already implemented in Op
 *   [**OpenFOAM 2212**](https://www.openfoam.com/news/main-news/openfoam-v2212) or 
 *   [**OpenFOAM 2306**](https://www.openfoam.com/news/main-news/openfoam-v2306) or
 *   [**OpenFOAM 2312**](https://www.openfoam.com/news/main-news/openfoam-v2312) or
+*   [**OpenFOAM 2406**](https://www.openfoam.com/news/main-news/openfoam-v2406) or
+*   [**OpenFOAM 2412**](https://www.openfoam.com/news/main-news/openfoam-v2412) or
 
 
 ### 2. Installation and usage

@@ -216,12 +216,12 @@ class IHTP01inverseLaplacian_paramBC: public inverseLaplacianProblem_paramBC
                     scalar tcZ = thermocouplesPos[TCi].z();
                     double radius = Foam::sqrt((tcX - centerX) * (tcX - centerX) +
                                                (tcZ - centerZ) * (tcZ - centerZ));
-                    Phi(TCi, baseI) = Foam::exp(- (shapeParameter*
+                    Phi(TCi, baseI) = Foam::exp(- (shapeParameter *
                                                    shapeParameter
-                                                   * radius* radius));
+                                                   * radius * radius));
                 }
 
-                coeff(baseI) = k * (b* thermocouplesPos[baseI].x() + c);
+                coeff(baseI) = k * (b * thermocouplesPos[baseI].x() + c);
             }
 
             return Phi.fullPivLu().solve(coeff);

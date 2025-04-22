@@ -53,7 +53,7 @@ struct newton_unsteadyBB_sup: public newton_argument<double>
 
         newton_unsteadyBB_sup(int Nx, int Ny,
                               UnsteadyBB& problem): newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
             N_BC_t(problem.inletIndexT.rows()),
@@ -86,7 +86,7 @@ struct newton_unsteadyBB_PPE: public newton_argument<double>
 
         newton_unsteadyBB_PPE(int Nx, int Ny,
                               UnsteadyBB& problem): newton_argument<double>(Nx, Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
             N_BC_t(problem.inletIndexT.rows()),

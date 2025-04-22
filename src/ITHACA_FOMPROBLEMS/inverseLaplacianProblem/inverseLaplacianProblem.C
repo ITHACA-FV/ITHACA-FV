@@ -264,7 +264,7 @@ Eigen::VectorXd inverseLaplacianProblem::fieldValueAtThermocouples(
     fvMesh& mesh = _mesh();
     dictionary interpolationDict =
         mesh.solutionDict().subDict("interpolationSchemes");
-    autoPtr<Foam::interpolation<scalar>> fieldInterp =
+    autoPtr<Foam::interpolation<scalar >> fieldInterp =
         Foam::interpolation<scalar>::New(interpolationDict, field);
     Eigen::VectorXd fieldInt;
     fieldInt.resize(thermocouplesPos.size());
@@ -291,12 +291,12 @@ Foam::vector inverseLaplacianProblem::cellDim(const faceList& ff,
 {
     forAll (pLabels, pointi)
     pLocal[pointi] = pp[pLabels[pointi]];
-    double  xDim = Foam::max(pLocal& Foam::vector(1, 0, 0))
-                   - Foam::min(pLocal& Foam::vector(1, 0, 0));
-    double  yDim = Foam::max(pLocal& Foam::vector(0, 1, 0))
-                   - Foam::min(pLocal& Foam::vector(0, 1, 0));
-    double  zDim = Foam::max(pLocal& Foam::vector(0, 0, 1))
-                   - Foam::min(pLocal& Foam::vector(0, 0, 1));
+    double  xDim = Foam::max(pLocal & Foam::vector(1, 0, 0))
+                   - Foam::min(pLocal & Foam::vector(1, 0, 0));
+    double  yDim = Foam::max(pLocal & Foam::vector(0, 1, 0))
+                   - Foam::min(pLocal & Foam::vector(0, 1, 0));
+    double  zDim = Foam::max(pLocal & Foam::vector(0, 0, 1))
+                   - Foam::min(pLocal & Foam::vector(0, 0, 1));
     Foam::vector dim (xDim, yDim, zDim);
     return dim;
 }

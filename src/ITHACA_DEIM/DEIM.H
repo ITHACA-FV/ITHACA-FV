@@ -49,7 +49,7 @@ class DEIM
         /// @param[in]  FunctionName     The function name, used to save the results
         /// @param[in]  FieldName        The field name
         ///
-        DEIM (PtrList<T> & SnapShotsMatrix, label MaxModes, word FunctionName,
+        DEIM (PtrList<T>& SnapShotsMatrix, label MaxModes, word FunctionName,
               word FieldName);
 
         //----------------------------------------------------------------------
@@ -60,7 +60,7 @@ class DEIM
         /// @param[in]  MaxModesB        The maximum number of modes for the source term b
         /// @param[in]  MatrixName       The matrix name, used to save the results
         ///
-        DEIM (PtrList<T> & SnapShotsMatrix, label MaxModesA, label MaxModesB,
+        DEIM (PtrList<T>& SnapShotsMatrix, label MaxModesA, label MaxModesB,
               word MatrixName);
 
         /// The snapshots matrix containing the nonlinear function or operator
@@ -70,7 +70,7 @@ class DEIM
         PtrList<T> modes;
 
         /// Matrix Modes
-        std::tuple<List<Eigen::SparseMatrix<double>>, List<Eigen::VectorXd>>
+        std::tuple<List<Eigen::SparseMatrix<double >>, List<Eigen::VectorXd >>
         Matrix_Modes;
 
         /// The maximum number of modes to be considered
@@ -106,38 +106,38 @@ class DEIM
         /// Online Matrices
         ///@{
         Eigen::MatrixXd MatrixOnline;
-        List<Eigen::SparseMatrix<double>> MatrixOnlineA;
+        List<Eigen::SparseMatrix<double >> MatrixOnlineA;
         Eigen::MatrixXd MatrixOnlineB;
         ///@}
 
         /// The U matrix of the DEIM method
         ///@{
         Eigen::MatrixXd U;
-        List<Eigen::SparseMatrix<double>> UA;
+        List<Eigen::SparseMatrix<double >> UA;
         Eigen::MatrixXd UB;
         ///@}
 
         /// Magic points in the case of the a nonlinear function
-        autoPtr<IOList<label>> magicPoints;
+        autoPtr<IOList<label >> magicPoints;
         /// Magic points in the case of the a matrix function (rows indices)
-        autoPtr<IOList<label>> magicPointsArow;
+        autoPtr<IOList<label >> magicPointsArow;
         /// Magic points in the case of the a matrix function (cols indices)
-        autoPtr<IOList<label>> magicPointsAcol;
+        autoPtr<IOList<label >> magicPointsAcol;
         /// Magic points in the case of the a matrix function, right hand side
-        autoPtr<IOList<label>> magicPointsB;
+        autoPtr<IOList<label >> magicPointsB;
 
         /// Magic points and indices of the surrounding layers
         ///@{
-        autoPtr<IOList<labelList>> totalMagicPoints;
-        autoPtr<IOList<labelList>> totalMagicPointsA;
-        autoPtr<IOList<labelList>> totalMagicPointsB;
+        autoPtr<IOList<labelList >> totalMagicPoints;
+        autoPtr<IOList<labelList >> totalMagicPointsA;
+        autoPtr<IOList<labelList >> totalMagicPointsB;
         ///@}
 
         /// List of unique indices that define the submesh
         ///@{
-        autoPtr<IOList<label>> uniqueMagicPoints;
-        autoPtr<IOList<label>> uniqueMagicPointsA;
-        autoPtr<IOList<label>> uniqueMagicPointsB;
+        autoPtr<IOList<label >> uniqueMagicPoints;
+        autoPtr<IOList<label >> uniqueMagicPointsA;
+        autoPtr<IOList<label >> uniqueMagicPointsB;
         ///@}
 
         /// Folder for nonlinear functions
@@ -148,10 +148,10 @@ class DEIM
         /// Definition of the x, y, z coordinate of the identified element in the matrix or source term
         /// 0 for x, 1 for y, 2 for z
         ///@{
-        autoPtr<IOList<label>> xyz;
-        autoPtr<IOList<label>> xyz_Arow;
-        autoPtr<IOList<label>> xyz_Acol;
-        autoPtr<IOList<label>> xyz_B;
+        autoPtr<IOList<label >> xyz;
+        autoPtr<IOList<label >> xyz_Arow;
+        autoPtr<IOList<label >> xyz_Acol;
+        autoPtr<IOList<label >> xyz_B;
         ///@}
 
         /// Indices of the local magic points in the subMesh
@@ -165,7 +165,7 @@ class DEIM
         /// The P matrix of the DEIM method
         ///@{
         Eigen::SparseMatrix<double> P;
-        List<Eigen::SparseMatrix<double>> PA;
+        List<Eigen::SparseMatrix<double >> PA;
         Eigen::SparseMatrix<double> PB;
         ///@}
 
@@ -279,7 +279,7 @@ class DEIM
         ///
         /// @return     The local indices
         ///
-        List<label> global2local(List<label> & points,
+        List<label> global2local(List<label>& points,
                                  fvMeshSubset& submesh);
 
         //----------------------------------------------------------------------
