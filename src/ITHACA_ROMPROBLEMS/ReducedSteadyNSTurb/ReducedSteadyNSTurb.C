@@ -260,10 +260,30 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     }
     else if (problem->viscCoeff == "RBF")
     {
-        for (int i = 0; i < nphiNut; i++)
+        // for (int i = 0; i < nphiNut; i++)
+        // {
+        //     newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
+        //     rbfCoeff = newtonObjectPPE.gNut;
+        // }
+
+        if (problem->rbfParams == "params")
+        {            
+            for (int i = 0; i < nphiNut; i++)
+            {                
+                label caseIdx = count_online_solve-1;
+                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(problem->mu.row(caseIdx));
+                std::cout << "The rbfparameter is: " << problem->mu.row(caseIdx) << endl;
+                rbfCoeff = newtonObjectSUP.gNut;
+            }
+        }
+        else
         {
-            newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-            rbfCoeff = newtonObjectSUP.gNut;
+            std::cout << "The rbfparameter is: " << vel_now << endl;
+            for (int i = 0; i < nphiNut; i++)
+            {
+                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
+                rbfCoeff = newtonObjectSUP.gNut;
+            }
         }
     }
     else
@@ -346,10 +366,30 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
     }
     else if (problem->viscCoeff == "RBF")
     {
-        for (int i = 0; i < nphiNut; i++)
+        // for (int i = 0; i < nphiNut; i++)
+        // {
+        //     newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
+        //     rbfCoeff = newtonObjectPPE.gNut;
+        // }
+
+        if (problem->rbfParams == "params")
+        {            
+            for (int i = 0; i < nphiNut; i++)
+            {
+                label caseIdx = count_online_solve-1;
+                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(problem->mu.row(caseIdx));
+                std::cout << "The rbfparameter is: " << problem->mu.row(caseIdx) << endl;
+                rbfCoeff = newtonObjectSUP.gNut;
+            }
+        }
+        else
         {
-            newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-            rbfCoeff = newtonObjectPPE.gNut;
+            std::cout << "The rbfparameter is: " << vel_now << endl;
+            for (int i = 0; i < nphiNut; i++)
+            {
+                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
+                rbfCoeff = newtonObjectSUP.gNut;
+            }
         }
     }
     else
