@@ -108,7 +108,7 @@ void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
 /// @param[in] matrix    Eigen::MatrixXd that you want to export.
 /// @param[in] Name      Name of saved file.
 /// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
-/// @param[in] folder    Directory in which the fali is saved.
+/// @param[in] folder    Directory in which the file is saved.
 ///
 /// @tparam    T         The matrix can be of integers, double or float
 ///
@@ -136,7 +136,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
 /// @param[in]  tensor  The tensor that you want to export.
 /// @param[in]  Name    Name of saved file.
 /// @param[in]  type    Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
-/// @param[in]  folder  Directory in which the fali is saved.
+/// @param[in]  folder  Directory in which the file is saved.
 /// @param[in]  folder  folder string to identify the folder where you want to save the file.
 ///
 /// @tparam     T       The tensor can be of integers, double or float
