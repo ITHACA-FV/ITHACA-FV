@@ -24,21 +24,8 @@
 \*---------------------------------------------------------------------------*/
 Info << "Reading field p\n" << endl;
 
-Info << "Create mesh for time = "
-     << runTime.timeName() << nl << endl;
 
-_mesh = autoPtr<fvMesh>
-        (
-            new fvMesh
-            (
-                IOobject
-                (
-                    fvMesh::defaultRegion,
-                    runTime.timeName(),
-                    runTime,
-                    IOobject::MUST_READ
-                )
-            )
-        );
-
-Foam::fvMesh& mesh = _mesh();
+Foam::Info << "Create time\n" << Foam::endl;
+_runTime = autoPtr<Foam::Time>( new Foam::Time( Foam::Time::controlDictName,
+                                args ) );
+Foam::Time& runTime = _runTime();

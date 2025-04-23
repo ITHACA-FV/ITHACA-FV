@@ -22,23 +22,61 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
-Info << "Reading field p\n" << endl;
+{
+    volScalarField rAU(1.0 / UEqn.A());
+    volVectorField HbyA(constrainHbyA(rAU * UEqn.H(), U, p));
+    surfaceScalarField phiHbyA("phiHbyA", fvc::flux(HbyA));
+    MRF.makeRelative(phiHbyA);
+    adjustPhi(phiHbyA, U, p);
 
-Info << "Create mesh for time = "
-     << runTime.timeName() << nl << endl;
+    tmp<volScalarField> rAtU(rAU);
 
-_mesh = autoPtr<fvMesh>
+    if (simple.consistent())
+    {
+        rAtU = 1.0 / (1.0 / rAU - UEqn.H1());
+        phiHbyA +=
+        fvc::interpolate(rAtU() - rAU) * fvc::snGrad(p) * mesh.magSf();
+        HbyA -= (rAU - rAtU()) * fvc::grad(p);
+    }
+
+    tUEqn.clear();
+
+    // Update the pressure BCs to ensure flux consistency
+    constrainPressure(p, U, phiHbyA, rAtU(), MRF);
+    label i = 0;
+    // Non-orthogonal pressure corrector loop
+    while (simple.correctNonOrthogonal())
+    {
+        fvScalarMatrix pEqn
         (
-            new fvMesh
-            (
-                IOobject
-                (
-                    fvMesh::defaultRegion,
-                    runTime.timeName(),
-                    runTime,
-                    IOobject::MUST_READ
-                )
-            )
+            fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
         );
+        pEqn.setReference(pRefCell, pRefValue);
 
-Foam::fvMesh& mesh = _mesh();
+        if (i == 0)
+        {
+            presidual = pEqn.solve().initialResidual();
+        }
+        else
+        {
+            pEqn.solve().initialResidual();
+        }
+
+        if (simple.finalNonOrthogonalIter())
+        {
+            phi = phiHbyA - pEqn.flux();
+        }
+
+        i++;
+    }
+
+#include "continuityErrs.H"
+
+    // Explicitly relax pressure for momentum corrector
+    p.relax();
+
+    // Momentum corrector
+    U = HbyA - rAtU() * fvc::grad(p);
+    U.correctBoundaryConditions();
+    fvOptions.correct(U);
+}

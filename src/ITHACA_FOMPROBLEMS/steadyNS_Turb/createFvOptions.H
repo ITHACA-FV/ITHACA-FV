@@ -22,23 +22,6 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
-Info << "Reading field p\n" << endl;
 
-Info << "Create mesh for time = "
-     << runTime.timeName() << nl << endl;
+_fvOptions = autoPtr<fv::options>(new fv::options(mesh));
 
-_mesh = autoPtr<fvMesh>
-        (
-            new fvMesh
-            (
-                IOobject
-                (
-                    fvMesh::defaultRegion,
-                    runTime.timeName(),
-                    runTime,
-                    IOobject::MUST_READ
-                )
-            )
-        );
-
-Foam::fvMesh& mesh = _mesh();

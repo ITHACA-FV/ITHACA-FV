@@ -116,6 +116,7 @@ void UnsteadyNSExplicitTurb::truthSolve(List<scalar> mu_now, fileName folder)
     Ufield.append(U.clone());
     Pfield.append(p.clone());
     Phifield.append(phi.clone());
+    nutFields.append(_nut.clone());
     counter++;
     nextWrite += writeEvery;
 
@@ -156,14 +157,341 @@ void UnsteadyNSExplicitTurb::truthSolve(List<scalar> mu_now, fileName folder)
             Ufield.append(U.clone());
             Pfield.append(p.clone());
             Phifield.append(phi.clone());
+            nutFields.append(_nut.clone());
             counter++;
             nextWrite += writeEvery;
         }
     }
 }
 
+//////////////   AGGIUNTA DELLA TURBOLENZA (NUT)   //////////////
+
+
+// Eigen::Tensor<double, 3> UnsteadyNSExplicitTurb::diffusive_term_consistent_turb(label NUmodes,
+//     label NPmodes,
+//     label Nnutmodes,
+//     label NSUPmodes)
+// {
+//     label DFsize = NUmodes + NSUPmodes + Nnutmodes + liftfield.size();
+//     Eigen::Tensor<double, 3> DF_tensor;
+//     DF_tensor.resize(Nnutmodes, DFsize, NUmodes);
+//     surfaceScalarField phi_tmp("Phi_tmp", _phi());
+
+//     for (label i = 0; i < Nnutmodes; i++)
+//     {
+//         for (label j = 0; j < DFsize; j++)
+//         {
+//             for (label k = 0; k < NUmodes; k++)
+//             {
+//                 phi_tmp = dt_dummy * nu_dummy() * fvc::flux(fvc::laplacian(
+//                 nutModes[i] , L_U_SUPmodes[k]));
+
+//                 volVectorField CoeffB = fvc::reconstruct(phi_tmp).ref();
+//                 volVectorField CoeffA = fvc::reconstruct(L_PHImodes[j]).ref();
+
+//                 DF_tensor(i, j, k) = fvc::domainIntegrate(CoeffA & CoeffB).value();
+//             }
+//         }
+//     }
+
+//     if (Pstream::parRun())
+//     {
+//         reduce(DF_tensor, sumOp<Eigen::Tensor<double, 3 >> ());
+//     }
+
+//     if (Pstream::master())
+//     {
+//         ITHACAstream::SaveDenseTensor(DF_tensor, "./ITHACAoutput/Matrices/",
+//                                   "DF_tensor_" + name(NUmodes) + "_" + name(
+//                                       NSUPmodes) + "_" + name(Nnutmodes));
+//         // Salvataggio della matrice in formato pyhton
+//         cnpy::save(DF_tensor, "./ITHACAoutput/Matrices/DF_tensor_" + name(
+//         NUmodes) + "_" + name(NSUPmodes) + "_" + name(Nnutmodes) + ".npy");
+//     }
+
+//     return DF_tensor;
+
+// }
 
 
 
+// Eigen::Tensor<double, 3> UnsteadyNSExplicitTurb::diffusive_term_turb(label NUmodes,
+//     label NPmodes,
+//     label Nnutmodes,
+//     label NSUPmodes)
+// {
+//     label Bsize = NUmodes + NSUPmodes + Nnutmodes + liftfield.size();
+//     Eigen::Tensor<double, 3> B_tensor;
+//     B_tensor.resize(Bsize, Bsize, Bsize);
+//     // Eigen::MatrixXd B_matrix;
+//     // B_matrix.resize(Bsize, Bsize);
+
+//     // Project everything
+//     for (label i = 0; i < Bsize; i++)
+//     {
+//         for (label j = 0; j < Bsize; j++)
+//         {
+//             for (label k = 0; k < Bsize; k++)
+//             {
+//                 B_tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::laplacian(
+//                     nutModes[j], L_U_SUPmodes[k])).value();
+//             }
+//         }
+//     }
+
+//     if (Pstream::parRun())
+//     {
+//         reduce(B_tensor, sumOp<Eigen::Tensor<double, 3 >> ());
+//     }
+
+//     if (Pstream::master())
+//     {
+//         ITHACAstream::SaveDenseTensor(B_tensor, "./ITHACAoutput/Matrices/",
+//                                   "B_tensor_" + name(liftfield.size()) + "_" + name(
+//                                     NUmodes) + "_" + name(NSUPmodes) + "_" + name(
+//                                     Nnutmodes));
+//         // Salvataggio della matrice in formato python 
+//         cnpy::save(B_tensor, "./ITHACAoutput/Matrices/B_tensor_" + name(
+//         liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+//         NSUPmodes) + "_" + name(Nnutmodes) + ".npy");
+//     }
+
+//     return B_tensor;
+
+// }
+
+
+
+// Eigen::Tensor<double, 3> UnsteadyNSExplicitTurb::diffusive_term_sym_turb(label NUmodes,
+//     label NPmodes,
+//     label Nnutmodes,
+//     label NSUPmodes)
+// {
+//     label Bsize = NUmodes + NSUPmodes + Nnutmodes + liftfield.size();
+//     Eigen::Tensor<double, 3> B_tensor;
+//     B_tensor.resize(Bsize, Bsize, Bsize);
+//     // Eigen::MatrixXd B_matrix;
+//     // B_matrix.resize(Bsize, Bsize);
+
+//     // Project everything
+//     for (label i = 0; i < Bsize; i++)
+//     {
+//         for (label j = 0; j < Bsize; j++)
+//         {
+//             for (label k = 0; k < Bsize; k++)
+//             {
+//                 B_tensor(i, j, k) = - fvc::domainIntegrate(fvc::grad(L_U_SUPmodes[i])
+//                             && fvc::grad(L_U_SUPmodes[k]) && nutModes[j]).value();
+//             }
+//         }
+//     }
+
+//     if (Pstream::parRun())
+//     {
+//          reduce(B_tensor, sumOp<Eigen::Tensor<double, 3 >> ());
+//     }
+
+//     if (Pstream::master())
+//     {
+//          ITHACAstream::SaveDenseTensor(B_tensor, "./ITHACAoutput/Matrices/",
+//                                   "B_tensor_" + name(liftfield.size()) + "_" + name(
+//                                     NUmodes) + "_" + name(NSUPmodes) + "_" + name(
+//                                     Nnutmodes));
+//         // Salvataggio della matrice in formato python
+//          cnpy::save(B_tensor, "./ITHACAoutput/Matrices/B_tensor_" + name(
+//             liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+//              NSUPmodes)+ "_" + name(Nnutmodes) + ".npy");
+//     }
+
+//     return B_tensor;
+// }
+
+
+
+// Eigen::Tensor<double, 3> UnsteadyNSExplicitTurb::diffusive_term_flux_method_turb(label NUmodes,
+//     label NPmodes,
+//     label Nnutmodes,
+//     label NSUPmodes)
+// {
+//     label BPsize1 = NPmodes;
+//     label BPsize2 = NUmodes + NSUPmodes + Nnutmodes + liftfield.size();
+//     Eigen::Tensor<double, 3> BP_tensor;
+//     BP_tensor.resize(BPsize1, BPsize2, BPsize2);
+//     // Eigen::MatrixXd BP_matrix(BPsize1, BPsize2);
+//     volVectorField L_U_SUPmodesaux(L_U_SUPmodes[0]);
+
+//     for (label i = 0; i < BPsize1; i++)
+//     {
+//         for (label j = 0; j < BPsize2; j++)
+//         {
+//             for (label k = 0; k < BPsize2; k++)
+//             {
+//                 L_U_SUPmodesaux = dt_dummy * fvc::laplacian(
+//                                 nu_dummy() * nutModes[j], L_U_SUPmodes[k]);
+//                 BP_tensor(i, j, k) = fvc::domainIntegrate(Pmodes[i] *
+//                                 fvc::div(L_U_SUPmodesaux)).value();
+//             }
+//         }
+//     }
+
+//     if (Pstream::parRun())
+//     {
+//         reduce(BP_tensor, sumOp<Eigen::Tensor<double, 3 >> ());
+//     }
+
+//     if (Pstream::master())
+//     {
+//         ITHACAstream::SaveDenseTensor(BP_tensor, "./ITHACAoutput/Matrices/",
+//                                     "BP_tensor_" + name(NUmodes) + "_" + name(
+//                                     NPmodes) + "_" + name(Nnutmodes));
+//         // Salvataggio della matrice in formato python
+//         cnpy::save(BP_tensor, "./ITHACAoutput/Matrices/BP_tensor_" + name(NUmodes) + "_" + name(
+//                                     NPmodes) + "_" + name(Nnutmodes) + ".npy");
+//     }
+
+//     return BP_tensor;
+// }
+
+
+
+// List<Eigen::Tensor<double, 3>> UnsteadyNSExplicitTurb::boundary_vector_diffusion_turb(
+//     label NUmodes,
+//     label NPmodes,
+//     label Nnutmodes,
+//     label NSUPmodes)
+// {
+//     Eigen::VectorXd ModeVector;
+//     label BCsize = inletIndex.rows();
+//     label RDsize = NUmodes + NSUPmodes + Nnutmodes;
+//     List<Eigen::Tensor<double, 3>> RD_tensors(BCsize);
+//     Eigen::SparseMatrix<double> A;
+//     Eigen::VectorXd b;
+//     surfaceScalarField phi_tmp("Phi_tmp", _phi());
+
+//     for (label i = 0; i < BCsize; i++)
+//     {
+//         label BCind = inletIndex(i, 0);
+//         Vector<double> v(0, 0, 0);
+//         v[inletIndex(i, 1)] = 1;
+//         volVectorField Upara(Uinl());
+//         assignBC(Upara, BCind, v);
+
+//         fvVectorMatrix UEqn
+//         (
+//             -fvm::laplacian(nu_dummy(), Upara)
+//         );
+
+//         Foam2Eigen::fvMatrix2Eigen(UEqn, A, b);
+//         Eigen::Tensor<double, 3> RD_tensor(RDsize, RDsize, 1);
+//         RD_tensors[i] = RD_tensor;
+
+//         for (label j = 0; j < RDsize; j++)
+//         {
+//             phi_tmp = fvc::flux(fvc::laplacian(nutModes[j], Upara)); 
+
+//             for (label k = 0; k < RDsize; k++)
+//             {
+//                 ModeVector = Foam2Eigen::field2Eigen(L_U_SUPmodes[k]);   
+//                 RD_tensor(j,k,0) = ModeVector.dot(b.col(0));
+//             }
+
+//         }
+
+//         if (Pstream::parRun())
+//         {
+//             reduce(RD_tensors[i], sumOp<Eigen::Tensor<double, 3>>());
+//         }
+
+//         if (Pstream::master())
+//         {
+//             ITHACAstream::SaveDenseTensor(RD_tensor, "./ITHACAoutput/Matrices/RD/",
+//                                       "RD_tensor" + name(i) + "_" + name(
+//                                         NUmodes) + "_" + name(NSUPmodes) + "_" + name(Nnutmodes));
+
+//             // Salvataggio della matrice in formato python e Conversione del tensore in un array C-style per salvarlo con cnpyy
+//             std::vector<double> tensor_data(RDsize * RDsize);
+//             for (label j = 0; j < RDsize; j++) 
+//             {
+//                 for (label k = 0; k < RDsize; k++) 
+//                 {
+//                     tensor_data[j * RDsize + k] = RD_tensors[i](j, k, 0);
+//                 }
+//             }
+
+//             cnpy::npy_save("./ITHACAoutput/Matrices/RD/RD_tensor" + name(i) + "_" + name(
+//                 NUmodes) + "_" + name(NSUPmodes) + "_" + name(Nnutmodes) + ".npy", 
+//             tensor_data.data(), {static_cast<size_t>(RDsize), static_cast<size_t>(RDsize)}, "w");
+//             // cnpy::save(RD_tensor[i], "./ITHACAoutput/Matrices/RD/RD" + name(i) + "_" + name(NUmodes) + "_" + name(NSUPmodes) + ".npy");
+//         }
+//     }
+
+//     return RD_tensors;
+// }
+
+
+
+// List<Eigen::Tensor<double, 3>> UnsteadyNSExplicitTurb::boundary_vector_diffusion_consistent_turb(
+//     label NUmodes,
+//     label NPmodes,
+//     label Nnutmodes,
+//     label NSUPmodes)
+// {
+//     label BCsize = inletIndex.rows();
+//     label SDsize = NUmodes + NSUPmodes + Nnutmodes;
+//     List<Eigen::Tensor<double, 3>> SD_tensors(SDsize);
+//     surfaceScalarField phi_tmp("Phi_tmp", _phi());
+
+//     for (label i = 0; i < BCsize; i++)
+//     {
+//         label BCind = inletIndex(i, 0);
+//         Vector<double> v(0, 0, 0);
+//         v[inletIndex(i, 1)] = 1;
+//         volVectorField Upara(Uinl());
+//         assignBC(Upara, BCind, v);
+//         Eigen::Tensor<double, 3> SD_tensor(SDsize, SDsize, 1);
+//         SD_tensors[i] = SD_tensor;
+
+//         // Project everything
+//         for (label j = 0; j < SDsize; j++)
+//         {
+//             for (label k = 0; k < SDsize; k++)
+//             {
+//                 phi_tmp = dt_dummy * fvc::flux(fvc::laplacian(nu_dummy() * nutModes[j], Upara));
+
+//                 volVectorField CoeffB = fvc::reconstruct(L_PHImodes[k]).ref();
+//                 volVectorField CoeffA = fvc::reconstruct(phi_tmp).ref();
+
+//                 SD_tensor(i,j,k) = fvc::domainIntegrate(CoeffA & CoeffB).value();
+//             }
+//         }
+
+//         ITHACAstream::SaveDenseTensor(SD_tensor, "./ITHACAoutput/Matrices/SD/",
+//                                       "SD_tensor" + name(i) + "_" + name(NUmodes) + "_" + name(
+//                                         NSUPmodes) + "_" + name(Nnutmodes));
+//         // salvataggio della matrice in formato pyhton 
+//         std::vector<double> tensor_data(SDsize * SDsize);
+//         for (label j = 0; j < SDsize; j++) 
+//         {
+//             for (label k = 0; k < SDsize; k++) 
+//             {
+//                 tensor_data[j * SDsize + k] = SD_tensors[i](j, k, 0);
+//             }
+//         }
+//         cnpy::npy_save("./ITHACAoutput/Matrices/SD/SD_tensor" + name(i) + "_" + name(NUmodes) + "_" + name(
+//                                       NSUPmodes) + "_" + name(Nnutmodes) + ".npy", 
+//         tensor_data.data(), {static_cast<size_t>(SDsize), static_cast<size_t>(SDsize)}, "w");
+//         // cnpy::save(SD_tensor[i], "./ITHACAoutput/Matrices/SD/SD" + name(i) + "_" + name(NUmodes) + "_" + name(NSUPmodes)+".npy");
+
+//         if (Pstream::parRun())
+//         {
+//             reduce(SD_tensors[i], sumOp<Eigen::Tensor<double, 3>>());
+//         }
+
+//     }
+
+//     return SD_tensors;
+// }
+
+////////////////////////////////////////////
 
 

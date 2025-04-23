@@ -68,6 +68,19 @@ class UnsteadyNSExplicitTurb: public UnsteadyNSExplicit
         /// Construct with argc and argv
         UnsteadyNSExplicitTurb(int argc, char* argv[]);
 
+        // Member Functions
+        /// List of POD modes for eddy viscosity
+        volScalarModes nutModes;
+
+        /// List of snapshots for the solution for eddy viscosity
+        PtrList<volScalarField> nutFields;
+
+        /// Number of viscoisty modes used for the projection
+        label Nnutmodes;
+
+        /// Eddy viscosity field
+        autoPtr<volScalarField> _nut;
+
         // Functions
 
         //--------------------------------------------------------------------------
@@ -79,6 +92,36 @@ class UnsteadyNSExplicitTurb: public UnsteadyNSExplicit
         void truthSolve(List<scalar> mu_now,
                         fileName folder = "./ITHACAoutput/Offline/");
 
+        // Eigen::Tensor<double, 3> diffusive_term_consistent_turb(label NUmodes,
+        //                     label NPmodes,
+        //                     label Nnutmodes,
+        //                     label NSUPmodes);
+
+        // Eigen::Tensor<double, 3> diffusive_term_turb(label NUmodes,
+        //                     label NPmodes,
+        //                     label Nnutmodes,
+        //                     label NSUPmodes);
+
+        // Eigen::Tensor<double, 3> diffusive_term_sym_turb(label NUmodes,
+        //                     label NPmodes,
+        //                     label Nnutmodes,
+        //                     label NSUPmodes);
+        
+        // Eigen::Tensor<double, 3> diffusive_term_flux_method_turb(label NUmodes,
+        //                     label NPmodes,
+        //                     label Nnutmodes,
+        //                     label NSUPmodes);
+
+        // List<Eigen::Tensor<double, 3>> boundary_vector_diffusion_turb(label NUmodes,
+        //                         label NPmodes,
+        //                         label Nnutmodes,
+        //                         label NSUPmodes);
+
+        // List<Eigen::Tensor<double, 3>> boundary_vector_diffusion_consistent_turb(
+        //                             label NUmodes,
+        //                             label NPmodes,
+        //                             label Nnutmodes,
+        //                             label NSUPmodes);
 
 };
 

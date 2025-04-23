@@ -166,6 +166,10 @@ class UnsteadyNSTurb: public unsteadyNS
         /// Pressure reference value
         scalar _pRefValue;
 
+        // label NNutModesOut;
+
+        // label NNutModes;
+
         //--------------------------------------------------------------------------
         /// @brief      bt added matrix for the turbulence treatement
         ///

@@ -124,6 +124,22 @@ _phi = autoPtr<surfaceScalarField>
        );
 surfaceScalarField& phi = _phi();
 
+_nut = autoPtr<volScalarField>
+       (
+           new volScalarField
+           (
+               IOobject
+               (
+                   "nut",
+                   runTime.timeName(),
+                   mesh,
+                   IOobject::MUST_READ,
+                   IOobject::AUTO_WRITE
+               ),
+               mesh
+           )
+       );
+
 surfaceScalarField phi0(phi);
 
 _phi0 = autoPtr<surfaceScalarField>

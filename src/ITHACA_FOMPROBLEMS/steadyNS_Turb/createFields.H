@@ -22,23 +22,77 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
+
 Info << "Reading field p\n" << endl;
+Info << runTime.timeName() << endl;
+_p = autoPtr<volScalarField>
+     (
+         new volScalarField
+         (
+             IOobject
+             (
+                 "p",
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::MUST_READ,
+                 IOobject::AUTO_WRITE
+             ),
+             mesh
+         )
+     );
+volScalarField& p = _p();
 
-Info << "Create mesh for time = "
-     << runTime.timeName() << nl << endl;
+volScalarField p0(p);
 
-_mesh = autoPtr<fvMesh>
-        (
-            new fvMesh
-            (
-                IOobject
-                (
-                    fvMesh::defaultRegion,
-                    runTime.timeName(),
-                    runTime,
-                    IOobject::MUST_READ
-                )
-            )
-        );
+_p0 = autoPtr<volScalarField>
+      (
+          new volScalarField(p0)
+      );
 
-Foam::fvMesh& mesh = _mesh();
+Info << "Reading field U\n" << endl;
+_U = autoPtr<volVectorField>
+     (
+         new volVectorField
+         (
+             IOobject
+             (
+                 "U",
+                 runTime.timeName(),
+                 mesh,
+                 IOobject::MUST_READ,
+                 IOobject::AUTO_WRITE
+             ),
+             mesh
+         )
+     );
+volVectorField& U = _U();
+
+volVectorField U0(U);
+
+_U0 = autoPtr<volVectorField>
+      (
+          new volVectorField(U0)
+      );
+
+#include "createPhi.H"
+
+
+pRefCell = 0;
+pRefValue = 0.0;
+setRefCell(p, simple.dict(), pRefCell, pRefValue);
+
+_laminarTransport = autoPtr<singlePhaseTransportModel>
+                    (
+                        new singlePhaseTransportModel( U, phi )
+                    );
+singlePhaseTransportModel& laminarTransport = _laminarTransport();
+
+turbulence = autoPtr<incompressible::turbulenceModel>
+             (
+                 incompressible::turbulenceModel::New(U, phi, laminarTransport)
+             );
+
+_MRF = autoPtr<IOMRFZoneList>
+       (
+           new IOMRFZoneList(mesh)
+       );

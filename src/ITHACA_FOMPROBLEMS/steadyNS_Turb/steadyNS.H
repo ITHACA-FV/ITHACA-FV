@@ -138,7 +138,7 @@ class steadyNS: public reductionProblem
 
         /// Number of nut modes to be calculated
         label NNutModesOut;
-        
+
         /// Number of velocity modes used for the projection
         label NUmodes;
 

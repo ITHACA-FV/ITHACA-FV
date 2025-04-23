@@ -22,23 +22,26 @@
   You should have received a copy of the GNU Lesser General Public License
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
-Info << "Reading field p\n" << endl;
+// Momentum predictor
 
-Info << "Create mesh for time = "
-     << runTime.timeName() << nl << endl;
+MRF.correctBoundaryVelocity(U);
 
-_mesh = autoPtr<fvMesh>
-        (
-            new fvMesh
-            (
-                IOobject
-                (
-                    fvMesh::defaultRegion,
-                    runTime.timeName(),
-                    runTime,
-                    IOobject::MUST_READ
-                )
-            )
-        );
+tmp<fvVectorMatrix> tUEqn
+(
+    fvm::div(phi, U)
+    + MRF.DDt(U)
+    + turbulence->divDevReff(U)
+    ==
+    fvOptions(U)
+);
+fvVectorMatrix& UEqn = tUEqn.ref();
 
-Foam::fvMesh& mesh = _mesh();
+UEqn.relax();
+
+fvOptions.constrain(UEqn);
+
+if (simple.momentumPredictor())
+{
+    uresidual_v = solve(UEqn == -fvc::grad(p)).initialResidual();
+    fvOptions.correct(U);
+}
