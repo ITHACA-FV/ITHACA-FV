@@ -268,17 +268,17 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
 
         if (problem->rbfParams == "params")
         {            
+            label caseIdx = count_online_solve-1;
+            std::cout << "The rbfparameter is: " << onlineMu.row(caseIdx) << std::endl;
             for (int i = 0; i < nphiNut; i++)
             {                
-                label caseIdx = count_online_solve-1;
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(problem->mu.row(caseIdx));
-                std::cout << "The rbfparameter is: " << problem->mu.row(caseIdx) << endl;
+                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
                 rbfCoeff = newtonObjectSUP.gNut;
             }
         }
         else
         {
-            std::cout << "The rbfparameter is: " << vel_now << endl;
+            std::cout << "The rbfparameter is: " << vel_now << std::endl;
             for (int i = 0; i < nphiNut; i++)
             {
                 newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
@@ -374,17 +374,17 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
 
         if (problem->rbfParams == "params")
         {            
+            label caseIdx = count_online_solve-1;
+            std::cout << "The rbfparameter is: " << onlineMu.row(caseIdx) << std::endl;
             for (int i = 0; i < nphiNut; i++)
             {
-                label caseIdx = count_online_solve-1;
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(problem->mu.row(caseIdx));
-                std::cout << "The rbfparameter is: " << problem->mu.row(caseIdx) << endl;
+                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
                 rbfCoeff = newtonObjectSUP.gNut;
             }
         }
         else
         {
-            std::cout << "The rbfparameter is: " << vel_now << endl;
+            std::cout << "The rbfparameter is: " << vel_now << std::endl;
             for (int i = 0; i < nphiNut; i++)
             {
                 newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(vel_now);

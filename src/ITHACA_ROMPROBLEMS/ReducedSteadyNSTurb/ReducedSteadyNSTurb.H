@@ -133,6 +133,8 @@ class ReducedSteadyNSTurb: public reducedSteadyNS
 
         ~ReducedSteadyNSTurb() {};
 
+        /// Online parameter vector
+        Eigen::MatrixXd onlineMu;
 
         /// List of snapshots for the solution for eddy viscosity
         PtrList<volScalarField> nutFields;

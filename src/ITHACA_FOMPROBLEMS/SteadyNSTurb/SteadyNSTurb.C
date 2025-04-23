@@ -717,6 +717,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                                           weightName);
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
+            std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
         else
@@ -732,6 +733,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsPPE/", weightName);
+            std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
     }
@@ -1003,7 +1005,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                                           weightName);
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
-            Info<< "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
+            std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
         else
@@ -1017,7 +1019,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
-            Info<< "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
+            std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsSUP/", weightName);
             ITHACAstream::exportMatrix(rbfSplines[i]->weights,
