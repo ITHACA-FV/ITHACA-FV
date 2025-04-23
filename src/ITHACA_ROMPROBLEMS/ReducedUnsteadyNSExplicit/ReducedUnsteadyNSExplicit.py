@@ -97,16 +97,6 @@ class ReducedUnsteadyNSExplicit:
                 cf = a_o.T @ Cf_tensor[l, :, :] @ a_o
                 RHS[l] = (1 / dt) * M2[l] - cf + M1[l]
 
-            print("########## TERZO SAVE, RIGA 116 ##########")
-            print("a_o_in_C", a_o)
-            print("b_in_C", b)
-            print("x_in_C", x)
-            print("presidual_in_C", presidual)
-            print("RHS_in_C", RHS)
-            print("M1_in_C", M1)
-            print("M2_in_C", M2)
-            print("cf", cf)
-
             LinSysDiv = []
             LinSysConv = []
             LinSysDiff = []
@@ -162,16 +152,16 @@ class ReducedUnsteadyNSExplicit:
                  b.flatten()             
             ))
 
-            print("########## SESTO SAVE, RIGA 207 ##########")
-            print("a_o_in_C", a_o)
-            print("b_in_C", b)
-            print("x_in_C", x)
-            print("presidual_in_C", presidual)
-            print("RHS_in_C", RHS)
-            print("M1_in_C", M1)
-            print("M2_in_C", M2)
-            print("c_in_C", cc)
-            print("a_n_in_C", a_n)
+            # print("########## SESTO SAVE, RIGA 207 ##########")
+            # print("a_o_in_C", a_o)
+            # print("b_in_C", b)
+            # print("x_in_C", x)
+            # print("presidual_in_C", presidual)
+            # print("RHS_in_C", RHS)
+            # print("M1_in_C", M1)
+            # print("M2_in_C", M2)
+            # print("c_in_C", cc)
+            # print("a_n_in_C", a_n)
 
             a_o = a_n.copy()
 
@@ -271,16 +261,6 @@ class ReducedUnsteadyNSExplicit:
                 cf = c_o.T @ Cf_tensor[l, :, :] @ a_o
                 RHS[l] = (1 / dt) * M2[l] - cf + M1[l]
 
-            print("########## TERZO SAVE, RIGA 116 ##########")
-            print("a_o_con_C", a_o)
-            print("c_o_con_C", c_o)
-            # print("b_con_C", b)
-            # print("x_con_C", x)
-            # print("presidual_con_C", presidual)
-            # print("RHS_con_C", RHS)
-            # print("M1_con_C", M1)
-            # print("M2_con_C", M2)
-            # print("cf_con", cf)
 
             LinSysDiv = []
             LinSysConv = []
@@ -318,14 +298,10 @@ class ReducedUnsteadyNSExplicit:
             # Pressure gradient term
             M3 = K_matrix @ b
 
-            print("##########a_o_con_C", a_o)
-
             boundaryTerm = np.zeros((int(self.Nphi_u), int(self.N_BC)))
 
             for l in range(int(self.N_BC)):
                 boundaryTerm[:, l] = vel * (RD_matrix[:, l] * nu + vel * RC_matrix[:, l])
-            
-            print("#########a_o_con_C", a_o)
             
             for k in range(int(self.Nphi_u)):
                 cc = c_o.T @ C_tensor[k, :, :] @ a_o
@@ -333,21 +309,6 @@ class ReducedUnsteadyNSExplicit:
 
                 for l in range(int(self.N_BC)):
                     a_n[k] += boundaryTerm[k, l] * dt
-      
-            print("########## SESTO SAVE, RIGA 207 ##########")
-            print("a_o_con_C", a_o)
-            print("c_o_con_C", c_o)
-            # print("a_o_con_C", a_o.shape)
-            print("b_con_C", b)
-            print("x_con_C", x)
-            print("presidual_con_C", presidual)
-            print("RHS_con_C", RHS)
-            # print("M1_con_C", M1)
-            # print("M2_con_C", M2)
-            # print("M5_con_C", M5)
-            # print("M3_con_C", M3)
-            print("cc_con_C", cc)
-            print("a_n_con_C", a_n)
 
             # Flux Equation
 
@@ -360,37 +321,16 @@ class ReducedUnsteadyNSExplicit:
             # Convective term
             M9 = np.zeros((int(self.Nphi_u)))
 
-            # print("c_o_con_C", c_o)
-            # print("c_o_con_C", c_o.shape)
-
             for k in range(int(self.Nphi_u)):
-                M9 += dt * (Ci_tensor[k,:,:] @ a_o).flatten() * c_o[k] 
-                # M9 += dt * (Ci_tensor[k,:,:] @ a_o) * c_o[k]
+                M9 += dt * (Ci_tensor[k,:,:] @ a_o).flatten() * c_o[k]
 
             boundaryTermFlux = np.zeros((int(self.Nphi_u)))
 
             for l in range(int(self.N_BC)):
                 boundaryTermFlux += vel * (SD_matrix[:, l] * nu + vel * SC_matrix[:, l])
-
-            # print("W_matrix", W_matrix.shape)
-            # print("boundaryTermFlux", boundaryTermFlux.shape)
-            # print("M6", M6.shape)
-            # print("M7", M7.shape)
-            # print("M8", M8.shape)
-            # print("M9", M9.shape)
-
-            # print("W_matrix", W_matrix)
-            print("boundaryTermFlux", boundaryTermFlux)
-            print("M6", M6)
-            print("M7", M7)
-            print("M8", M8)
-            print("M9", M9)
             
             c_n = np.linalg.solve(W_matrix, M6 - M9 + dt * (-M8 + 
                   M7 + boundaryTermFlux))
-
-            print("c_n", c_n)
-            print("c_n.shape", c_n.shape)
 
             tmp_sol[0] = time 
             tmp_sol[1 : 1 + int(self.Nphi_u)] = a_n.flatten()
@@ -398,30 +338,17 @@ class ReducedUnsteadyNSExplicit:
             tmp_sol[-int(self.Nphi_u):] = c_n.flatten()
             self.online_solution[i] = tmp_sol
 
-            print("########## SETTIMO SAVE, RIGA 207 ##########")
-            print("a_o_con_C", a_o)
-            print("b_con_C", b)
-            print("x_con_C", x)
-            print("presidual_con_C", presidual)
-            print("RHS_con_C", RHS)
-            # print("M1_con_C", M1)
-            # print("M2_con_C", M2)
-            # print("M3_con_C", M3)
-            # print("M5_con_C", M5)
-            # print("M6_con_C", M6)
-            # print("M7_con_C", M7)
-            # print("M8_con_C", M8)
-            # print("M9_con_C", M9)
-            print("c_con_C", cc)
-            print("c_n", c_n)
-            # print("c_n_vec", c_n_vec)
-            # print("a_n_con_C", a_n)
+            # print("########## SETTIMO SAVE, RIGA 207 ##########")
+            # print("a_o_con_C", a_o)
+            # print("b_con_C", b)
+            # print("x_con_C", x)
+            # print("presidual_con_C", presidual)
+            # print("RHS_con_C", RHS)
+            # print("c_con_C", cc)
+            # print("c_n", c_n)
 
             a_o = a_n.copy()
             c_o = c_n
-
-            print("a_o_con_C", a_o)
-            print("c_o", c_o)
 
 
 def reconstruct(self, export_fields, folder):

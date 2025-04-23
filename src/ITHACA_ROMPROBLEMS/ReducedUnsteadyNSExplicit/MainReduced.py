@@ -29,7 +29,6 @@ for i, arr in enumerate(solver.online_solution):
 if all(s == shapes[0] for s in shapes):
     # online_solution_array = np.array(cleaned_solution)
     # np.save("online_solution_" + str(flux_method) + ".npy", online_solution_array)
-
     online_solution_array = np.array([arr for arr in solver.online_solution if arr is not None])
     np.save("online_solution_" + str(flux_method) + ".npy", online_solution_array)
 else:

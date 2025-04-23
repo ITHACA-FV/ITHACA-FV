@@ -146,16 +146,6 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
 
             }
 
-            std::cout << "########## TERZO SAVE, RIGA 167 ##########" << std::endl;
-            std::cout << "a_o_in_C" << a_o << std::endl;
-            std::cout << "b_in_C" << b << std::endl;
-            std::cout << "x_in_C" << x << std::endl;
-            std::cout << "presidual_in_C" << presidual << std::endl;
-            std::cout << "RHS_in_C" << RHS << std::endl;
-            std::cout << "M1_in_C" << M1 << std::endl;
-            std::cout << "M2_in_C" << M2 << std::endl;
-
-
             // Boundary Term (divergence + diffusion + convection)
             List<Eigen::MatrixXd> RedLinSysP = problem->LinSysDiv;
             RedLinSysP[1] = RHS;
@@ -207,18 +197,6 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
             tmp_sol.col(0).segment(1, Nphi_u) = a_n;
             tmp_sol.col(0).tail(b.rows()) = b;
             online_solution[i] = tmp_sol;
-
-            std::cout << "########## SESTO SAVE, RIGA 234 ##########" << std::endl;
-            std::cout << "a_o_in_C" << a_o << std::endl;
-            std::cout << "b_in_C" << b << std::endl;
-            std::cout << "x_in_C" << x << std::endl;
-            std::cout << "presidual_in_C" << presidual << std::endl;
-            std::cout << "RHS_in_C" << RHS << std::endl;
-            std::cout << "M1_in_C" << M1 << std::endl;
-            std::cout << "M2_in_C" << M2 << std::endl;
-            std::cout << "cc_in_C" << cc << std::endl;
-            std::cout << "a_n_in_C" << a_n << std::endl;
-
 
             a_o = a_n;
         }
@@ -302,15 +280,6 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
                 RHS(l) = (1 / dt) * M2(l, 0) - cf(0, 0) + M1(l, 0);
             }
 
-            // std::cout << "########## TERZO SAVE, RIGA 167 ##########" << std::endl;
-            // std::cout << "a_o_con_C" << a_o << std::endl;
-            // std::cout << "b_con_C" << b << std::endl;
-            // std::cout << "x_con_C" << x << std::endl;
-            // std::cout << "presidual_con_C" << presidual << std::endl;
-            // std::cout << "RHS_con_C" << RHS << std::endl;
-            // std::cout << "M1_con_C" << M1 << std::endl;
-            // std::cout << "M2_con_C" << M2 << std::endl;
-
             // Boundary Term (divergence + diffusion + convection)
             List<Eigen::MatrixXd> RedLinSysP = problem->LinSysDiv;
             RedLinSysP[1] = RHS;
@@ -346,9 +315,6 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
 
             }
 
-            // std::cout << "c_o_con_C" << c_o << std::endl;
-
-
             for (label k = 0; k < Nphi_u; k++)
             {
                 cc = c_o.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
@@ -361,20 +327,6 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
                 }
 
             }
-
-            std::cout << "########## SESTO SAVE, RIGA 234 ##########" << std::endl;
-            std::cout << "a_o_con_C" << a_o << std::endl;
-            std::cout << "b_con_C" << b << std::endl;
-            std::cout << "x_con_C" << x << std::endl;
-            std::cout << "presidual_con_C" << presidual << std::endl;
-            std::cout << "RHS_con_C" << RHS << std::endl;
-            // std::cout << "M1_con_C" << M1 << std::endl;
-            // std::cout << "M2_con_C" << M2 << std::endl;
-            // std::cout << "M5_con_C" << M5 << std::endl;
-            // std::cout << "M3_con_C" << M3 << std::endl;
-            std::cout << "cc_con_C" << cc << std::endl;
-            std::cout << "a_n_in_C" << a_n << std::endl;
-
 
             // Flux Equation
 
@@ -408,16 +360,8 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
                                                   vel(l, 0) * problem->SC_matrix[l]));
             }
 
-            std::cout << "boundaryTermFlux" << boundaryTermFlux << std::endl;
-            std::cout << "M6_con_C" << M6 << std::endl;
-            std::cout << "M7_con_C" << M7 << std::endl;
-            std::cout << "M8_con_C" << M8 << std::endl;
-            std::cout << "M9_con_C" << M9 << std::endl;
-
             c_n = problem->W_matrix.colPivHouseholderQr().solve(M6 - M9 + dt * (-M8 + M7
                   + boundaryTermFlux));
-
-            std::cout << "c_n_con_C" << c_n << std::endl;
 
             tmp_sol(0) = time;
             tmp_sol.col(0).segment(1, Nphi_u) = a_n;
@@ -425,30 +369,30 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
             tmp_sol.col(0).tail(Nphi_u) = c_n;
             online_solution[i] = tmp_sol;
 
-            std::cout << "########## SETTIMO SAVE, RIGA 234 ##########" << std::endl;
-            std::cout << "a_o_con_C" << a_o << std::endl;
-            std::cout << "b_con_C" << b << std::endl;
-            std::cout << "x_con_C" << x << std::endl;
-            std::cout << "presidual_con_C" << presidual << std::endl;
-            std::cout << "RHS_con_C" << RHS << std::endl;
-            // std::cout << "M1_con_C" << M1 << std::endl;
-            // std::cout << "M2_con_C" << M2 << std::endl;
-            // std::cout << "M3_con_C" << M3 << std::endl;
-            // std::cout << "M5_con_C" << M5 << std::endl;
-            // std::cout << "M6_con_C" << M6 << std::endl;
-            // std::cout << "M7_con_C" << M7 << std::endl;
-            // std::cout << "M8_con_C" << M8 << std::endl;
-            // std::cout << "M9_con_C" << M9 << std::endl;
-            std::cout << "cc_con_C" << cc << std::endl;
-            std::cout << "c_n_con_C" << c_n << std::endl;
-            // std::cout << "a_n_con_C" << a_n << std::endl;
-            // std::cout << "tmp_sol" << tmp_sol << std::endl;
+            // std::cout << "########## SETTIMO SAVE, RIGA 234 ##########" << std::endl;
+            // std::cout << "a_o_con_C" << a_o << std::endl;
+            // std::cout << "b_con_C" << b << std::endl;
+            // std::cout << "x_con_C" << x << std::endl;
+            // std::cout << "presidual_con_C" << presidual << std::endl;
+            // std::cout << "RHS_con_C" << RHS << std::endl;
+            // std::cout << "cc_con_C" << cc << std::endl;
+            // std::cout << "c_n_con_C" << c_n << std::endl;
 
             a_o = a_n;
             c_o = c_n;
 
-            std::cout << "a_o_con_C" << a_o << std::endl;
-            std::cout << "c_o_con_C" << c_o << std::endl;
+            // int rows = online_solution[0].rows();
+            // int cols = online_solution.size();
+
+            // Eigen::MatrixXd full_solution(rows, cols);
+
+            // for (int i = 0; i < cols; ++i) 
+            // {
+            //     full_solution.col(i) = online_solution[i];
+            // }
+
+            // // Salva in formato .npy compatibile con Python
+            // cnpy::save("/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/online_solution_consistent_C.npy", full_solution);
 
         }
     }
@@ -489,7 +433,6 @@ void ReducedUnsteadyNSExplicit::reconstruct(bool exportFields, fileName folder)
             currentUCoeff = online_solution[i].block(1, 0, Nphi_u, 1);
             currentPCoeff = online_solution[i].block(1 + Nphi_u, 0, Nphi_p, 1);
 
-            ////////////////////////////////////
             std::ofstream outU("coeffs_u.csv", std::ios::app);
             std::ofstream outP("coeffs_p.csv", std::ios::app);
             
@@ -506,7 +449,6 @@ void ReducedUnsteadyNSExplicit::reconstruct(bool exportFields, fileName folder)
                  outP << "," << currentPCoeff(k, 0);
             outP << "\n";
             outP.close();
-            /////////////////////////////////////
 
             CoeffU.append(currentUCoeff);
             CoeffP.append(currentPCoeff);
