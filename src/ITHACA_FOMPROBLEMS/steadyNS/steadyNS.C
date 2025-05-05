@@ -972,11 +972,6 @@ Eigen::MatrixXd steadyNS::diffusive_term(label NUmodes, label NPmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(B_matrix, sumOp<Eigen::MatrixXd>());
-    }
-
     if (Pstream::master())
     {
         ITHACAstream::SaveDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/",
@@ -1003,11 +998,6 @@ Eigen::MatrixXd steadyNS::diffusive_term_sym(label NUmodes, label NPmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(B_matrix, sumOp<Eigen::MatrixXd>());
-    }
-
     if (Pstream::master())
     {
         ITHACAstream::SaveDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/",
@@ -1032,11 +1022,6 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term(label NUmodes, label NPmodes,
             K_matrix(i, j) = fvc::domainIntegrate(L_U_SUPmodes[i] & fvc::grad(
                     Pmodes[j])).value();
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(K_matrix, sumOp<Eigen::MatrixXd>());
     }
 
     if (Pstream::master())
@@ -1071,11 +1056,6 @@ List <Eigen::MatrixXd> steadyNS::convective_term(label NUmodes, label NPmodes,
                                         linearInterpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf(),
                                         L_U_SUPmodes[k])).value();
             }
-        }
-
-        if (Pstream::parRun())
-        {
-            reduce(C_matrix[i], sumOp<Eigen::MatrixXd>());
         }
     }
 
@@ -1119,11 +1099,6 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_tens(label NUmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(C_tensor, sumOp<Eigen::Tensor<double, 3 >> ());
-    }
-
     if (Pstream::master())
     {
         // Export the tensor
@@ -1151,11 +1126,6 @@ Eigen::MatrixXd steadyNS::mass_term(label NUmodes, label NPmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(M_matrix, sumOp<Eigen::MatrixXd>());
-    }
-
     if (Pstream::master())
     {
         ITHACAstream::SaveDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/",
@@ -1181,11 +1151,6 @@ Eigen::MatrixXd steadyNS::divergence_term(label NUmodes, label NPmodes,
             P_matrix(i, j) = fvc::domainIntegrate(Pmodes[i] * fvc::div (
                     L_U_SUPmodes[j])).value();
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(P_matrix, sumOp<Eigen::MatrixXd>());
     }
 
     if (Pstream::master())
@@ -1222,11 +1187,6 @@ List <Eigen::MatrixXd> steadyNS::div_momentum(label NUmodes, label NPmodes)
                                         L_U_SUPmodes[k]))).value();
             }
         }
-
-        if (Pstream::parRun())
-        {
-            reduce(G_matrix[i], sumOp<Eigen::MatrixXd>());
-        }
     }
 
     if (Pstream::master())
@@ -1258,11 +1218,6 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
                         L_U_SUPmodes[k]))).value();
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(gTensor, sumOp<Eigen::Tensor<double, 3 >> ());
     }
 
     if (Pstream::master())
@@ -1327,11 +1282,6 @@ Eigen::MatrixXd steadyNS::laplacian_pressure(label NPmodes)
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(D_matrix, sumOp<Eigen::MatrixXd>());
-    }
-
     if (Pstream::master())
     {
         ITHACAstream::SaveDenseMatrix(D_matrix, "./ITHACAoutput/Matrices/",
@@ -1362,11 +1312,6 @@ Eigen::MatrixXd steadyNS::pressure_BC1(label NUmodes, label NPmodes)
 
             BC1_matrix(i, j) = s;
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(BC1_matrix, sumOp<Eigen::MatrixXd>());
     }
 
     if (Pstream::master())
@@ -1411,11 +1356,6 @@ List <Eigen::MatrixXd> steadyNS::pressure_BC2(label NUmodes, label NPmodes)
                 BC2_matrix[i](j, k) = s;
             }
         }
-
-        if (Pstream::parRun())
-        {
-            reduce(BC2_matrix[i], sumOp<Eigen::MatrixXd>());
-        }
     }
 
     return BC2_matrix;
@@ -1448,11 +1388,6 @@ Eigen::Tensor<double, 3> steadyNS::pressureBC2(label NUmodes, label NPmodes)
                 bc2Tensor(i, j, k) = s;
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(bc2Tensor, sumOp<Eigen::Tensor<double, 3 >> ());
     }
 
     if (Pstream::master())
@@ -1490,11 +1425,6 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(BC3_matrix, sumOp<Eigen::MatrixXd>());
-    }
-
     if (Pstream::master())
     {
         ITHACAstream::SaveDenseMatrix(BC3_matrix, "./ITHACAoutput/Matrices/",
@@ -1529,11 +1459,6 @@ Eigen::MatrixXd steadyNS::pressure_BC4(label NUmodes, label NPmodes)
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(BC4_matrix, sumOp<Eigen::MatrixXd>());
-    }
-
     if (Pstream::master())
     {
         ITHACAstream::SaveDenseMatrix(BC4_matrix, "./ITHACAoutput/Matrices/",
@@ -1563,11 +1488,6 @@ List<Eigen::MatrixXd> steadyNS::bcVelocityVec(label NUmodes,
         {
             bcVelVec[k](i, 0) = gSum(L_U_SUPmodes[i].boundaryField()[BCind].component(
                                          BCcomp));
-        }
-
-        if (Pstream::parRun())
-        {
-            reduce(bcVelVec[k], sumOp<Eigen::MatrixXd>());
         }
     }
 
@@ -1606,11 +1526,6 @@ List<Eigen::MatrixXd> steadyNS::bcVelocityMat(label NUmodes,
                                          L_U_SUPmodes[j].boundaryField()[BCind].component(BCcomp));
             }
         }
-
-        if (Pstream::parRun())
-        {
-            reduce(bcVelMat[k], sumOp<Eigen::MatrixXd>());
-        }
     }
 
     if (Pstream::master())
@@ -1645,11 +1560,6 @@ List<Eigen::MatrixXd> steadyNS::bcGradVelocityVec(label NUmodes,
         {
             bcGradVelVec[k](i, 0) = gSum(L_U_SUPmodes[i].boundaryField()[BCind].component(
                                          BCcomp));
-        }
-
-        if (Pstream::parRun())
-        {
-            reduce(bcGradVelVec[k], sumOp<Eigen::MatrixXd>());
         }
     }
 
@@ -1700,11 +1610,6 @@ List<Eigen::MatrixXd> steadyNS::bcGradVelocityMat(label NUmodes,
                     L_U_SUPmodes[i].boundaryField()[BCind].component(BCcomp));
             }
         }
-
-        if (Pstream::parRun())
-        {
-            reduce(bcGradVelMat[k], sumOp<Eigen::MatrixXd>());
-        }
     }
 
     if (Pstream::master())
@@ -1733,11 +1638,6 @@ Eigen::MatrixXd steadyNS::diffusive_term_flux_method(label NUmodes,
             BP_matrix(i, j) = fvc::domainIntegrate(Pmodes[i] *
                                                    fvc::div(L_U_SUPmodesaux)).value();
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(BP_matrix, sumOp<Eigen::MatrixXd>());
     }
 
     if (Pstream::master())
@@ -1875,11 +1775,6 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_flux_tens(label NUmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(Cf_tensor, sumOp<Eigen::Tensor<double, 3 >> ());
-    }
-
     if (Pstream::master())
     {
         ITHACAstream::SaveDenseTensor(Cf_tensor, "./ITHACAoutput/Matrices/",
@@ -2012,11 +1907,6 @@ Eigen::MatrixXd steadyNS::mass_matrix_oldtime_consistent(label NUmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(I_matrix, sumOp<Eigen::MatrixXd>());
-    }
-
     if (Pstream::master())
     {
         ITHACAstream::SaveDenseMatrix(I_matrix, "./ITHACAoutput/Matrices/",
@@ -2048,11 +1938,6 @@ Eigen::MatrixXd steadyNS::diffusive_term_consistent(label NUmodes,
         }
     }
 
-    if (Pstream::parRun())
-    {
-        reduce(DF_matrix, sumOp<Eigen::MatrixXd>());
-    }
-
     if (Pstream::master())
     {
         ITHACAstream::SaveDenseMatrix(DF_matrix, "./ITHACAoutput/Matrices/",
@@ -2080,11 +1965,6 @@ Eigen::MatrixXd steadyNS::pressure_gradient_term_consistent(label NUmodes,
             volVectorField CoeffB = fvc::reconstruct(L_PHImodes[i]).ref();
             KF_matrix(i, j) = fvc::domainIntegrate(CoeffA &   CoeffB).value();
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(KF_matrix, sumOp<Eigen::MatrixXd>());
     }
 
     if (Pstream::master())
@@ -2119,11 +1999,6 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_consistent_tens(
                 Ci_tensor(i, j, k) = fvc::domainIntegrate(CoeffB &   CoeffA).value();
             }
         }
-    }
-
-    if (Pstream::parRun())
-    {
-        reduce(Ci_tensor, sumOp<Eigen::Tensor<double, 3 >> ());
     }
 
     if (Pstream::master())
@@ -2165,11 +2040,6 @@ List <Eigen::MatrixXd> steadyNS::boundary_vector_diffusion_consistent(
 
         ITHACAstream::SaveDenseMatrix(SD_matrix[i], "./ITHACAoutput/Matrices/SD/",
                                       "SD" + name(i) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
-
-        if (Pstream::parRun())
-        {
-            reduce(SD_matrix[i], sumOp<Eigen::MatrixXd>());
-        }
     }
 
     return SD_matrix;
