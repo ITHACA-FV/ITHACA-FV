@@ -686,15 +686,18 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
     // Get the coeffs for interpolation (the orthonormal one is used because basis are orthogonal)
     coeffL2 = ITHACAutilities::getCoeffs(nutFields,
                                          nutModes, nNutModes);
-    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
-                               "./ITHACAoutput/Matrices/");
-    // Export the matrix
-    ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
-                                  "coeffL2_nut_" + name(nNutModes));
+    if (Pstream::master())
+    {
+        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
+            "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
+                    "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
+                    "./ITHACAoutput/Matrices/");
+        // Export the matrix
+        ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
+                    "coeffL2_nut_" + name(nNutModes));
+    }    
     samples.resize(nNutModes);
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
@@ -731,8 +734,11 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
 
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
-            ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
+            if (Pstream::master())
+            {
+                ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsPPE/", weightName);
+            }
             std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
@@ -974,15 +980,18 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     // Get the coeffs for interpolation (the orthonormal one is used because basis are orthogonal)
     coeffL2 = ITHACAutilities::getCoeffs(nutFields,
                                          nutModes, nNutModes);
-    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
-                               "./ITHACAoutput/Matrices/");
-    // Export the matrix
-    ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
-                                  "coeffL2_nut_" + name(nNutModes));
+    if (Pstream::master())
+    {
+        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
+            "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
+                    "./ITHACAoutput/Matrices/");
+        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
+                    "./ITHACAoutput/Matrices/");
+        // Export the matrix
+        ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
+                    "coeffL2_nut_" + name(nNutModes));
+    }
     samples.resize(nNutModes);
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
@@ -1020,12 +1029,15 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
-            ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
-                                          "./ITHACAoutput/weightsSUP/", weightName);
-            ITHACAstream::exportMatrix(rbfSplines[i]->weights,
-                                       "wRBF_" + name(i), "eigen",
-                                       "./ITHACAoutput/weightsSUP/"
-                                      );
+            if (Pstream::master())
+            {
+                ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
+                    "./ITHACAoutput/weightsSUP/", weightName);
+                ITHACAstream::exportMatrix(rbfSplines[i]->weights,
+                                "wRBF_" + name(i), "eigen",
+                                "./ITHACAoutput/weightsSUP/"
+                                );
+            }
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
     }
