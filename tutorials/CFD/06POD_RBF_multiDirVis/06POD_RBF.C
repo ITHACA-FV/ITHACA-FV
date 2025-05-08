@@ -75,7 +75,8 @@ class tutorial06 : public SteadyNSTurb
             List<scalar> mu_now(3);
             label BCind = 2;
 
-            Eigen::MatrixXd dirVelZ = ITHACAstream::readMatrix(word ("./dirVelZ"));
+            vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
+            vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
 
             // if the offline solution is already performed read the fields
             if (offline)
@@ -98,9 +99,8 @@ class tutorial06 : public SteadyNSTurb
                         
                         forAll(Uinl, faceI)
                         {
-                            scalar Ux_tmp = mu(i, 1) 
-                                        + mu(i, 2)*dirVelZ(faceI, 0);
-                            Uinl[faceI] = vector(0, 0, Ux_tmp);
+                            Uinl[faceI] = mu(i, 1)*lift_1[faceI]
+                                            + mu(i, 2)*lift_2[faceI];
                         }
                         ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
@@ -127,9 +127,8 @@ class tutorial06 : public SteadyNSTurb
                     
                     forAll(Uinl, faceI)
                     {
-                        scalar Ux_tmp = mu(i, 1) 
-                                    + mu(i, 2)*dirVelZ(faceI, 0);
-                        Uinl[faceI] = vector(0, 0, Ux_tmp);
+                        Uinl[faceI] = mu(i, 1)*lift_1[faceI]
+                                        + mu(i, 2)*lift_2[faceI];
                     }
                     ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
@@ -150,7 +149,8 @@ class tutorial06 : public SteadyNSTurb
             List<scalar> mu_now(3);
             label BCind = 2;
 
-            Eigen::MatrixXd dirVelZ = ITHACAstream::readMatrix(word ("./dirVelZ"));
+            vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
+            vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
 
             for (label i = 0; i < par.rows(); i++)
             {
@@ -163,9 +163,8 @@ class tutorial06 : public SteadyNSTurb
                 
                 forAll(Uinl, faceI)
                 {
-                    scalar Ux_tmp = mu(i, 1) 
-                                + mu(i, 2)*dirVelZ(faceI, 0);
-                    Uinl[faceI] = vector(0, 0, Ux_tmp);
+                    Uinl[faceI] = mu(i, 1)*lift_1[faceI]
+                                    + mu(i, 2)*lift_2[faceI];
                 }
                 ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
@@ -188,7 +187,8 @@ class tutorial06 : public SteadyNSTurb
             fileName filePath = folder + "1/U";
             IFstream exFileOff(filePath);   
 
-            Eigen::MatrixXd dirVelZ = ITHACAstream::readMatrix(word ("./dirVelZ"));
+            vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
+            vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
             
             // if the offline solution is already performed read the fields
             if (exFileOff.good())
@@ -211,9 +211,8 @@ class tutorial06 : public SteadyNSTurb
                         
                         forAll(Uinl, faceI)
                         {
-                            scalar Ux_tmp = mu(i, 1) 
-                                        + mu(i, 2)*dirVelZ(faceI, 0);
-                            Uinl[faceI] = vector(0, 0, Ux_tmp);
+                            Uinl[faceI] = mu(i, 1)*lift_1[faceI]
+                                            + mu(i, 2)*lift_2[faceI];
                         }
                         ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
@@ -240,9 +239,8 @@ class tutorial06 : public SteadyNSTurb
                     
                     forAll(Uinl, faceI)
                     {
-                        scalar Ux_tmp = mu(i, 1) 
-                                    + mu(i, 2)*dirVelZ(faceI, 0);
-                        Uinl[faceI] = vector(0, 0, Ux_tmp);
+                        Uinl[faceI] = mu(i, 1)*lift_1[faceI]
+                                        + mu(i, 2)*lift_2[faceI];
                     }
                     ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
@@ -303,10 +301,10 @@ int main(int argc, char* argv[])
     int NmodesProject = para->ITHACAdict->lookupOrDefault<int>("NmodesProject", 5);
     word stabilization = para->ITHACAdict->lookupOrDefault<word>("Stabilization",
                          "supremizer");
-    // Perform The Offline Solve;
-    example.offlineSolve();
     // Read the lift functions
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
+    // Perform The Offline Solve;
+    example.offlineSolve();    
     // Create the homogeneous set of snapshots for the velocity field
     // ITHACAutilities::normalizeFields(example.liftfield);
     // Homogenize the snapshots
