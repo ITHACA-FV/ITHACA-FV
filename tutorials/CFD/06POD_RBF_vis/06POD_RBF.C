@@ -136,10 +136,12 @@ class tutorial06 : public SteadyNSTurb
             label BCind = 1;
 
             fileName filePath = folder + "1/U";
-            IFstream exFileOff(filePath);   
+            IFstream exFileOff(filePath);
+            filePath = folder + "processor0/1/U";
+            IFstream exFileOff2(filePath);
             
             // if the offline solution is already performed read the fields
-            if (exFileOff.good())
+            if (exFileOff.good() || exFileOff2.good())
             {
                 ITHACAstream::read_fields(Ufield, U, folder);
                 ITHACAstream::read_fields(Pfield, p, folder);
@@ -243,7 +245,7 @@ int main(int argc, char* argv[])
     {
         example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     }
-    
+
     IFstream exUomfield1(fileName ("./ITHACAoutput/Offline/1/Uofield"));
     IFstream exUomfield2(fileName ("./ITHACAoutput/Offline/processor0/1/Uofield"));
     if (!exUomfield1.good() && !exUomfield2.good())
