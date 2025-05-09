@@ -326,8 +326,9 @@ int main(int argc, char* argv[])
         example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     }
     
-    IFstream exUomfield(fileName ("./ITHACAoutput/Offline/1/Uofield"));   
-    if (!exUomfield.good())
+    IFstream exUomfield1(fileName ("./ITHACAoutput/Offline/1/Uofield"));
+    IFstream exUomfield2(fileName ("./ITHACAoutput/Offline/processor0/1/Uofield"));
+    if (!exUomfield1.good() && !exUomfield2.good())
     {
         // Export the homogeneous velocity snapshots
         ITHACAstream::exportFields(example.Uomfield, "./ITHACAoutput/Offline",
