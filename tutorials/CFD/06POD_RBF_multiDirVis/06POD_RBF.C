@@ -288,9 +288,11 @@ int main(int argc, char* argv[])
     example.mu = ITHACAstream::readMatrix(par_offline);
 
     // Set the inlet boundaries where we have parameterized boundary conditions
-    example.inletIndex.resize(1, 2);
-    example.inletIndex(0, 0) = 2;
-    example.inletIndex(0, 1) = 2;
+    // The first column is the index of the inlet patch and the second column is the direction,
+    // x,y,z of the inlet velocity
+    example.inletIndex.resize(example.mu.cols()-1, 2);
+    example.inletIndex.setConstant(0);
+
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
     // Read parameters from ITHACAdict file
@@ -368,9 +370,15 @@ int main(int argc, char* argv[])
     // We create the matrix rbfCoeff which will store the values of the interpolation results for the eddy viscosity field
     Eigen::MatrixXd rbfCoeff;
     rbfCoeff.resize(NmodesNUT, par_online.rows());
+    pod_rbf.onlineMu = par_online;
+    label nuNum = par_online.cols()-1;
+    Eigen::MatrixXd velNow(nuNum, 1);
 
-    Eigen::MatrixXd velNow(1, 1);
-    velNow(0, 0) = 1.0;
+    Info<< endl
+        << "##################################################################\n"
+        << "Performing the online solve for the new values of inlet velocities\n"
+        << "##################################################################"
+        << endl;
 
     // Perform an online solve for the new values of inlet velocities
     for (label k = 0; k < par_online.rows(); k++)
@@ -381,6 +389,13 @@ int main(int argc, char* argv[])
 
         // Set value of the reduced viscosity and the penalty factor
         pod_rbf.nu = par_online(k, 0);
+
+        for(label n=0; n < nuNum; n++)
+        {
+            velNow(n, 0) = example.mu(k, n+1);
+        } 
+        Info << "Inlet Ux = " << velNow << " nu = " << pod_rbf.nu
+             << endl;
 
         if (stabilization == "supremizer")
         {
