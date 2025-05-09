@@ -91,6 +91,10 @@ SteadyNSTurb::SteadyNSTurb(int argc, char* argv[])
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();
+    neumannMethod = ITHACAdict->lookupOrDefault<word>("neumannMethod", "none");
+    M_Assert(neumannMethod == "penalty" || neumannMethod == "none",
+             "The neumann BC method must be set to penalty or none in ITHACAdict");
+    nonUniformbc = ITHACAdict->lookupOrDefault<bool>("nonUniformbc", false);
 }
 
 
