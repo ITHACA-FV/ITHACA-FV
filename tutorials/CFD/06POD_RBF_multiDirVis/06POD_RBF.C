@@ -316,13 +316,16 @@ int main(int argc, char* argv[])
     // Homogenize the snapshots
     if (example.nonUniformbc)
     {
-        // The shape of mu is different from the old code, so transpose it
-        Eigen::MatrixXd muTranspose = example.mu.transpose();
-        // set all value of mu to 1
-        for (label i = 0; i < muTranspose.cols(); i++)
+        Eigen::MatrixXd tmpmu(example.mu.rows(), example.mu.cols()-1);
+        for (label i = 0; i < example.mu.rows(); i++)
         {
-            muTranspose(0, i) = 1.0;
+            for (label j = 0; j < example.mu.cols()-1; j++)
+            {
+                tmpmu(i, j) = example.mu(i, j+1);
+            }
         }
+        // The shape of mu is different from the old code, so transpose it
+        Eigen::MatrixXd muTranspose = tmpmu.transpose();
         example.computeLift(example.Ufield, example.liftfield, example.Uomfield, muTranspose);
     }
     else
