@@ -46,7 +46,7 @@ reducedUnsteadyNST::reducedUnsteadyNST()
 reducedUnsteadyNST::reducedUnsteadyNST(unsteadyNST& FOMproblem)
 //problem(&FOMproblem)
 {
-    problem   = &FOMproblem;
+    problem   = & FOMproblem;
     N_BC      = problem->inletIndex.rows();
     N_BC_t    = problem->inletIndexT.rows();
     Nphi_u    = problem->B_matrix.rows();
@@ -150,7 +150,7 @@ int newton_unsteadyNST_sup::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyNST_sup::df(const Eigen::VectorXd& x,
                                Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNST_sup> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNST_sup> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -182,10 +182,11 @@ int newton_unsteadyNST_sup_t::operator()(const Eigen::VectorXd& t,
 
     return 0;
 }
+
 int newton_unsteadyNST_sup_t::df(const Eigen::VectorXd& t,
                                  Eigen::MatrixXd& fjact) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNST_sup_t> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNST_sup_t> numDiff(* this);
     numDiff.df(t, fjact);
     return 0;
 }

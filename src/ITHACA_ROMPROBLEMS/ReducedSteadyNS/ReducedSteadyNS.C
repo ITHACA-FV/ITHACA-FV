@@ -43,7 +43,7 @@ reducedSteadyNS::reducedSteadyNS()
 
 reducedSteadyNS::reducedSteadyNS(steadyNS& FOMproblem)
     :
-    problem(&FOMproblem)
+    problem(& FOMproblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
@@ -98,7 +98,7 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * a_tmp;
+             i) * a_tmp;
         fvec(i) = M1(i) - cc(0, 0) - M2(i);
 
         if (problem->bcMethod == "penalty")
@@ -128,7 +128,7 @@ int newton_steadyNS::operator()(const Eigen::VectorXd& x,
 int newton_steadyNS::df(const Eigen::VectorXd& x,
                         Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_steadyNS> numDiff(*this);
+    Eigen::NumericalDiff<newton_steadyNS> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }

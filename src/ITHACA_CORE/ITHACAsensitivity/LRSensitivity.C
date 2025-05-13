@@ -119,7 +119,7 @@ void LRSensitivity::getBetas()
     else
     {
         std::cout <<
-                  "Statistics about inputs or output are not computed yet, nothing to do ..." <<
+        "Statistics about inputs or output are not computed yet, nothing to do ..." <<
                   std::endl;
     }
 }
@@ -150,7 +150,7 @@ void LRSensitivity::assessQuality()
     else
     {
         std::cout <<
-                  "Linear regression coefficients are not computed yet, nothing to do ..." <<
+        "Linear regression coefficients are not computed yet, nothing to do ..." <<
                   std::endl;
     }
 }

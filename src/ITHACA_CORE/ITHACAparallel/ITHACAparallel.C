@@ -76,7 +76,7 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
     reduce(N_IF_glob, sumOp<label>());
     // BF construction
     Gsize_BF = autoPtr<labelList>(new labelList (N_BF, label(0)));
-    IndFaceLocal = autoPtr< List<labelList>> (new List<labelList> (N_BF,
+    IndFaceLocal = autoPtr< List<labelList >> (new List<labelList> (N_BF,
                    labelList(label(0), label(0))));
 
     for (label i = 0; i < N_BF; i++)
@@ -90,7 +90,6 @@ ITHACAparallel::ITHACAparallel(fvMesh& mesh, Time& localTime)
             IndFaceLocal()[i][k] = indicesF()[mesh.boundaryMesh()[i].start() + k];
         }
     }
-
     Start = autoPtr<labelList> (new labelList(N_BF, 0));
 
     for (label i = 0; i < N_BF; i++)
@@ -130,10 +129,10 @@ void ITHACAparallel::resumeMPI()
 }
 
 template<>
-List<List <scalar>> ITHACAparallel::combineFields(
-                     GeometricField<scalar, fvPatchField, volMesh>& field)
+List<List <scalar >> ITHACAparallel::combineFields(
+    GeometricField<scalar, fvPatchField, volMesh>& field)
 {
-    List<List< scalar>> GlobField(field.boundaryFieldRef().size() + 1);
+    List<List< scalar >> GlobField(field.boundaryFieldRef().size() + 1);
     GlobField[0].resize(N_IF_glob);
 
     // Assemble internalField
@@ -142,7 +141,7 @@ List<List <scalar>> ITHACAparallel::combineFields(
         GlobField[0][indices()[i]] = field[i];
     }
 
-    reduce(GlobField[0], sumOp<List<scalar>>());
+    reduce(GlobField[0], sumOp<List<scalar >> ());
 
     // Assemble BoundariField
     for (label i = 0; i < N_BF; i++)
@@ -151,7 +150,6 @@ List<List <scalar>> ITHACAparallel::combineFields(
         Field<scalar> zero(Gsize_BF()[i], 0.0);
         GlobField[i + 1] = zero;
     }
-
     for (label i = 0; i < N_BF; i++)
     {
         for (label k = 0; k < field.boundaryFieldRef()[i].size(); k++)
@@ -165,17 +163,16 @@ List<List <scalar>> ITHACAparallel::combineFields(
             }
         }
 
-        reduce(GlobField[i + 1], sumOp<List<scalar>>());
+        reduce(GlobField[i + 1], sumOp<List<scalar >> ());
     }
-
     return GlobField;
 }
 
 template<>
-List<List <vector>> ITHACAparallel::combineFields(
-                     GeometricField<vector, fvPatchField, volMesh>& field)
+List<List <vector >> ITHACAparallel::combineFields(
+    GeometricField<vector, fvPatchField, volMesh>& field)
 {
-    List<List< vector>> GlobField(field.boundaryFieldRef().size() + 1);
+    List<List< vector >> GlobField(field.boundaryFieldRef().size() + 1);
     GlobField[0].resize(N_IF_glob);
     GlobField[0] = GlobField[0] * 0;
 
@@ -185,7 +182,7 @@ List<List <vector>> ITHACAparallel::combineFields(
         GlobField[0][indices()[i]] = field[i];
     }
 
-    reduce(GlobField[0], sumOp<List<vector>>());
+    reduce(GlobField[0], sumOp<List<vector >> ());
 
     // Assemble BoundariField
     for (label i = 0; i < N_BF; i++)
@@ -194,7 +191,6 @@ List<List <vector>> ITHACAparallel::combineFields(
         List<vector> zero(Gsize_BF()[i], vector(0.0, 0.0, 0.0));
         GlobField[i + 1] = zero;
     }
-
     for (label i = 0; i < N_BF; i++)
     {
         for (label k = 0; k < field.boundaryFieldRef()[i].size(); k++)
@@ -208,8 +204,7 @@ List<List <vector>> ITHACAparallel::combineFields(
             }
         }
 
-        reduce(GlobField[i + 1], sumOp<List<vector>>());
+        reduce(GlobField[i + 1], sumOp<List<vector >> ());
     }
-
     return GlobField;
 }

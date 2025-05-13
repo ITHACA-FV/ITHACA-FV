@@ -50,11 +50,11 @@ SparseVector BSplineBasis1D::eval(double x) const
     // Evaluate nonzero basis functions
     for (auto it = indexSupported.begin(); it != indexSupported.end(); ++it)
     {
-        double val = deBoorCox(x, *it, degree);
+        double val = deBoorCox(x, * it, degree);
 
         if (fabs(val) > 1e-12)
         {
-            values.insert(*it) = val;
+            values.insert(* it) = val;
         }
     }
 
@@ -346,7 +346,7 @@ SparseMatrix BSplineBasis1D::refineKnotsLocally(double x)
     auto lower = std::prev(upper);
 
     // Do not insert if upper and lower bounding knot are close
-    if (assertNear(*upper, *lower))
+    if (assertNear(* upper, * lower))
     {
         unsigned int n = getNumBasisFunctions();
         DenseMatrix A = DenseMatrix::Identity(n, n);
@@ -358,10 +358,10 @@ SparseMatrix BSplineBasis1D::refineKnotsLocally(double x)
 
     // Adjust x if it is on or close to a knot
     if (knotMultiplicity(x) > 0
-            || assertNear(*upper, x, 1e-6, 1e-6)
-            || assertNear(*lower, x, 1e-6, 1e-6))
+            || assertNear(* upper, x, 1e-6, 1e-6)
+            || assertNear(* lower, x, 1e-6, 1e-6))
     {
-        insertVal = (*upper + *lower) / 2.0;
+        insertVal = (* upper + * lower) / 2.0;
     }
 
     // Insert new knot
@@ -394,16 +394,16 @@ SparseMatrix BSplineBasis1D::decomposeToBezierForm()
     while (knoti != refinedKnots.end())
     {
         // Insert new knots
-        int mult = degree + 1 - knotMultiplicity(*knoti);
+        int mult = degree + 1 - knotMultiplicity(* knoti);
 
         if (mult > 0)
         {
-            std::vector<double> newKnots(mult, *knoti);
+            std::vector<double> newKnots(mult, * knoti);
             refinedKnots.insert(knoti, newKnots.begin(), newKnots.end());
         }
 
         // Advance to next knot
-        knoti = std::upper_bound(refinedKnots.begin(), refinedKnots.end(), *knoti);
+        knoti = std::upper_bound(refinedKnots.begin(), refinedKnots.end(), * knoti);
     }
 
     if (!isKnotVectorRegular(refinedKnots, degree))
@@ -423,7 +423,8 @@ SparseMatrix BSplineBasis1D::decomposeToBezierForm()
     return A;
 }
 
-SparseMatrix BSplineBasis1D::buildKnotInsertionMatrix(const std::vector<double>&
+SparseMatrix BSplineBasis1D::buildKnotInsertionMatrix(const std::vector<double>
+        &
         refinedKnots) const
 {
     if (!isKnotVectorRegular(refinedKnots, degree))
@@ -503,7 +504,7 @@ int BSplineBasis1D::indexHalfopenInterval(double x) const
 
     // Find first knot that is larger than x
     std::vector<double>::const_iterator it = std::upper_bound(knots.begin(),
-            knots.end(), x);
+        knots.end(), x);
     // Return index
     int index = it - knots.begin();
     return index - 1;
@@ -557,7 +558,7 @@ SparseMatrix BSplineBasis1D::reduceSupport(double lb, double ub)
 
     DenseMatrix Ad = DenseMatrix::Zero(numOld, numNew);
     Ad.block(index_lower, 0, numNew, numNew) = DenseMatrix::Identity(numNew,
-            numNew);
+        numNew);
     SparseMatrix A = Ad.sparseView();
     // Update knots
     knots = si;

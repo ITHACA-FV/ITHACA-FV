@@ -38,6 +38,7 @@
 
 // Constructors
 laplacianProblem::laplacianProblem() {}
+
 laplacianProblem::laplacianProblem(int argc, char* argv[])
 {
     _args = autoPtr<argList>
@@ -65,7 +66,7 @@ void laplacianProblem::truthSolve(List<scalar> mu_now, word folder)
 {
     volScalarField& T = _T();
     volScalarField& S = _S();
-    fvScalarMatrix lhs(theta[0]*operator_list[0]);
+    fvScalarMatrix lhs(theta[0] * operator_list[0]);
 
     for (label i = 1; i < operator_list.size(); i++)
     {
@@ -97,6 +98,7 @@ void laplacianProblem::truthSolve(List<scalar> mu_now, word folder)
                                    folder);
     }
 }
+
 // Perform the projection onto the POD modes
 void laplacianProblem::project(label Nmodes)
 {

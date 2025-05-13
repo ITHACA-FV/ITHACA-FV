@@ -42,7 +42,7 @@ reducedSimpleSteadyNS::reducedSimpleSteadyNS()
 
 reducedSimpleSteadyNS::reducedSimpleSteadyNS(SteadyNSSimple& FOMproblem)
     :
-    problem(&FOMproblem)
+    problem(& FOMproblem)
 {
     // Create a new Umodes set where the first ones are the lift functions
     for (int i = 0; i < problem->inletIndex.rows(); i++)
@@ -118,7 +118,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
         problem->para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
     float normalizedResidualLim =
         problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim",
-                1e-5);
+            1e-5);
     maxIterOn = problem->para->ITHACAdict->lookupOrDefault<int>("maxIterOn",
                 1000);
     scalar residual_jump(1 + residualJumpLim);
@@ -242,7 +242,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
     }
 
     std::cout << "Solution " << counter << " converged in " << iter <<
-              " iterations." << std::endl;
+                 " iterations." << std::endl;
     std::cout << "Final normalized residual for velocity: " << U_norm_res <<
               std::endl;
     std::cout << "Final normalized residual for pressure: " << P_norm_res <<

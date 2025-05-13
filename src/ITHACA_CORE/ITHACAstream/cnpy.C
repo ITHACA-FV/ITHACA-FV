@@ -15,7 +15,7 @@
 char cnpy::BigEndianTest()
 {
     int x = 1;
-    return (((char*)&x)[0]) ? '<' : '>';
+    return (((char*) & x)[0]) ? '<' : '>';
 }
 
 char cnpy::map_type(const std::type_info& t)
@@ -111,14 +111,14 @@ char cnpy::map_type(const std::type_info& t)
 }
 
 template<> std::vector<char>& cnpy::operator+=(std::vector<char>& lhs,
-        const std::string rhs)
+    const std::string rhs)
 {
     lhs.insert(lhs.end(), rhs.begin(), rhs.end());
     return lhs;
 }
 
 template<> std::vector<char>& cnpy::operator+=(std::vector<char>& lhs,
-        const char* rhs)
+    const char* rhs)
 {
     //write in little endian
     size_t len = strlen(rhs);
@@ -136,9 +136,9 @@ void cnpy::parse_npy_header(unsigned char* buffer, size_t& word_size,
                             std::vector<size_t>& shape, bool& fortran_order, std::string& number_type)
 {
     //std::string magic_string(buffer,6);
-    uint8_t major_version = *reinterpret_cast<uint8_t*>(buffer + 6);
-    uint8_t minor_version = *reinterpret_cast<uint8_t*>(buffer + 7);
-    uint16_t header_len = *reinterpret_cast<uint16_t*>(buffer + 8);
+    uint8_t major_version = * reinterpret_cast<uint8_t*>(buffer + 6);
+    uint8_t minor_version = * reinterpret_cast<uint8_t*>(buffer + 7);
+    uint16_t header_len = * reinterpret_cast<uint16_t*>(buffer + 8);
     std::string header(reinterpret_cast<char*>(buffer + 9), header_len);
     size_t loc1, loc2;
     //fortran order
@@ -242,7 +242,7 @@ void cnpy::parse_zip_footer(FILE* fp, uint16_t& nrecs,
 {
     std::vector<char> footer(22);
     fseek(fp, -22, SEEK_END);
-    size_t res = fread(&footer[0], sizeof(char), 22, fp);
+    size_t res = fread(& footer[0], sizeof(char), 22, fp);
 
     if (res != 22)
     {
@@ -250,13 +250,13 @@ void cnpy::parse_zip_footer(FILE* fp, uint16_t& nrecs,
     }
 
     uint16_t disk_no, disk_start, nrecs_on_disk, comment_len;
-    disk_no = *(uint16_t*) &footer[4];
-    disk_start = *(uint16_t*) &footer[6];
-    nrecs_on_disk = *(uint16_t*) &footer[8];
-    nrecs = *(uint16_t*) &footer[10];
-    global_header_size = *(uint32_t*) &footer[12];
-    global_header_offset = *(uint32_t*) &footer[16];
-    comment_len = *(uint16_t*) &footer[20];
+    disk_no = * (uint16_t*) & footer[4];
+    disk_start = * (uint16_t*) & footer[6];
+    nrecs_on_disk = * (uint16_t*) & footer[8];
+    nrecs = * (uint16_t*) & footer[10];
+    global_header_size = * (uint32_t*) & footer[12];
+    global_header_offset = * (uint32_t*) & footer[16];
+    comment_len = * (uint16_t*) & footer[20];
     assert(disk_no == 0);
     assert(disk_start == 0);
     assert(nrecs_on_disk == nrecs);
@@ -292,7 +292,7 @@ cnpy::NpyArray load_the_npz_array(FILE* fp, uint32_t compr_bytes,
 {
     std::vector<unsigned char> buffer_compr(compr_bytes);
     std::vector<unsigned char> buffer_uncompr(uncompr_bytes);
-    size_t nread = fread(&buffer_compr[0], 1, compr_bytes, fp);
+    size_t nread = fread(& buffer_compr[0], 1, compr_bytes, fp);
 
     if (nread != compr_bytes)
     {
@@ -306,22 +306,22 @@ cnpy::NpyArray load_the_npz_array(FILE* fp, uint32_t compr_bytes,
     d_stream.opaque = Z_NULL;
     d_stream.avail_in = 0;
     d_stream.next_in = Z_NULL;
-    err = inflateInit2(&d_stream, -MAX_WBITS);
+    err = inflateInit2(& d_stream, -MAX_WBITS);
     d_stream.avail_in = compr_bytes;
-    d_stream.next_in = &buffer_compr[0];
+    d_stream.next_in = & buffer_compr[0];
     d_stream.avail_out = uncompr_bytes;
-    d_stream.next_out = &buffer_uncompr[0];
-    err = inflate(&d_stream, Z_FINISH);
-    err = inflateEnd(&d_stream);
+    d_stream.next_out = & buffer_uncompr[0];
+    err = inflate(& d_stream, Z_FINISH);
+    err = inflateEnd(& d_stream);
     std::vector<size_t> shape;
     size_t word_size;
     bool fortran_order;
     std::string number_type;
-    cnpy::parse_npy_header(&buffer_uncompr[0], word_size, shape, fortran_order,
+    cnpy::parse_npy_header(& buffer_uncompr[0], word_size, shape, fortran_order,
                            number_type);
     cnpy::NpyArray array(shape, word_size, fortran_order, number_type);
     size_t offset = uncompr_bytes - array.num_bytes();
-    memcpy(array.data<unsigned char>(), &buffer_uncompr[0] + offset,
+    memcpy(array.data<unsigned char>(), & buffer_uncompr[0] + offset,
            array.num_bytes());
     return array;
 }
@@ -340,7 +340,7 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
     while (1)
     {
         std::vector<char> local_header(30);
-        size_t headerres = fread(&local_header[0], sizeof(char), 30, fp);
+        size_t headerres = fread(& local_header[0], sizeof(char), 30, fp);
 
         if (headerres != 30)
         {
@@ -354,9 +354,9 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
         }
 
         //read in the variable name
-        uint16_t name_len = *(uint16_t*) &local_header[26];
+        uint16_t name_len = * (uint16_t*) & local_header[26];
         std::string varname(name_len, ' ');
-        size_t vname_res = fread(&varname[0], sizeof(char), name_len, fp);
+        size_t vname_res = fread(& varname[0], sizeof(char), name_len, fp);
 
         if (vname_res != name_len)
         {
@@ -366,12 +366,12 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
         //erase the lagging .npy
         varname.erase(varname.end() - 4, varname.end());
         //read in the extra field
-        uint16_t extra_field_len = *(uint16_t*) &local_header[28];
+        uint16_t extra_field_len = * (uint16_t*) & local_header[28];
 
         if (extra_field_len > 0)
         {
             std::vector<char> buff(extra_field_len);
-            size_t efield_res = fread(&buff[0], sizeof(char), extra_field_len, fp);
+            size_t efield_res = fread(& buff[0], sizeof(char), extra_field_len, fp);
 
             if (efield_res != extra_field_len)
             {
@@ -379,9 +379,9 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
             }
         }
 
-        uint16_t compr_method = *reinterpret_cast<uint16_t*>(&local_header[0] + 8);
-        uint32_t compr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 18);
-        uint32_t uncompr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 22);
+        uint16_t compr_method = * reinterpret_cast<uint16_t*>(& local_header[0] + 8);
+        uint32_t compr_bytes = * reinterpret_cast<uint32_t*>(& local_header[0] + 18);
+        uint32_t uncompr_bytes = * reinterpret_cast<uint32_t*>(& local_header[0] + 22);
 
         if (compr_method == 0)
         {
@@ -409,7 +409,7 @@ cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
     while (1)
     {
         std::vector<char> local_header(30);
-        size_t header_res = fread(&local_header[0], sizeof(char), 30, fp);
+        size_t header_res = fread(& local_header[0], sizeof(char), 30, fp);
 
         if (header_res != 30)
         {
@@ -423,9 +423,9 @@ cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
         }
 
         //read in the variable name
-        uint16_t name_len = *(uint16_t*) &local_header[26];
+        uint16_t name_len = * (uint16_t*) & local_header[26];
         std::string vname(name_len, ' ');
-        size_t vname_res = fread(&vname[0], sizeof(char), name_len, fp);
+        size_t vname_res = fread(& vname[0], sizeof(char), name_len, fp);
 
         if (vname_res != name_len)
         {
@@ -434,11 +434,11 @@ cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
 
         vname.erase(vname.end() - 4, vname.end()); //erase the lagging .npy
         //read in the extra field
-        uint16_t extra_field_len = *(uint16_t*) &local_header[28];
+        uint16_t extra_field_len = * (uint16_t*) & local_header[28];
         fseek(fp, extra_field_len, SEEK_CUR); //skip past the extra field
-        uint16_t compr_method = *reinterpret_cast<uint16_t*>(&local_header[0] + 8);
-        uint32_t compr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 18);
-        uint32_t uncompr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 22);
+        uint16_t compr_method = * reinterpret_cast<uint16_t*>(& local_header[0] + 8);
+        uint32_t compr_bytes = * reinterpret_cast<uint32_t*>(& local_header[0] + 18);
+        uint32_t uncompr_bytes = * reinterpret_cast<uint32_t*>(& local_header[0] + 22);
 
         if (vname == varname)
         {
@@ -450,7 +450,7 @@ cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
         else
         {
             //skip past the data
-            uint32_t size = *(uint32_t*) &local_header[22];
+            uint32_t size = * (uint32_t*) & local_header[22];
             fseek(fp, size, SEEK_CUR);
         }
     }
@@ -514,7 +514,7 @@ void cnpy::save(const Eigen::Tensor<typeNumber, 3>&
         {
             for (int k = 0; k < dim[2]; ++k)
             {
-                matvec[i * dim[2]*dim[1] + j * dim[2] + k] = tens(i, j, k);
+                matvec[i * dim[2] * dim[1] + j * dim[2] + k] = tens(i, j, k);
             }
         }
     }
@@ -580,7 +580,7 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
                 for (size_t k = 0; k < arr.shape[2]; ++k)
                 {
                     tens(i, j, k) = data[arr.shape[1] * arr.shape[2] * i + j *
-                                                      arr.shape[2] + k];
+                                         arr.shape[2] + k];
                 }
             }
         }
@@ -594,7 +594,7 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
                 for (size_t k = 0; k < arr.shape[2]; ++k)
                 {
                     tens(i, j, k) = (typeNumber) data[arr.shape[0] * arr.shape[1] * k + j *
-                                                                   arr.shape[0] + i];
+                                                      arr.shape[0] + i];
                 }
             }
         }
@@ -655,7 +655,7 @@ void cnpy::save(const Eigen::SparseMatrix<T>& mat, const std::string fname)
     shape[1] = mat.cols();
     cnpy::npz_save(fname, "shape", shape, shape3, "a");
     char myVar2 = 'abc';
-    cnpy::npz_save(fname, "format", &myVar2, shape4, "a");
+    cnpy::npz_save(fname, "format", & myVar2, shape4, "a");
 }
 
 template void cnpy::save(const Eigen::MatrixXi& mat, const std::string fname);

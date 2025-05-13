@@ -115,7 +115,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
 
         for (auto it2 = samples.cbegin(); it2 != samples.cend(); ++it2, ++j)
         {
-            double val = fn->eval(dist(*it1, *it2));
+            double val = fn->eval(dist(* it1, * it2));
 
             if (val != 0)
             {

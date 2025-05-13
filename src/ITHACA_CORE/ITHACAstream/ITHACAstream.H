@@ -108,7 +108,7 @@ void exportFvMatrix(fvMatrix<Type>& Matrix, word folder,
 /// @param[in] matrix    Eigen::MatrixXd that you want to export.
 /// @param[in] Name      Name of saved file.
 /// @param[in] type      Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
-/// @param[in] folder    Directory in which the fali is saved.
+/// @param[in] folder    Directory in which the file is saved.
 ///
 /// @tparam    T         The matrix can be of integers, double or float
 ///
@@ -136,7 +136,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
 /// @param[in]  tensor  The tensor that you want to export.
 /// @param[in]  Name    Name of saved file.
 /// @param[in]  type    Format of the file: numpy (type="python"), matlab (type="matlab"), txt (type="eigen").
-/// @param[in]  folder  Directory in which the fali is saved.
+/// @param[in]  folder  Directory in which the file is saved.
 /// @param[in]  folder  folder string to identify the folder where you want to save the file.
 ///
 /// @tparam     T       The tensor can be of integers, double or float
@@ -163,7 +163,7 @@ void exportTensor(Eigen::Tensor<T, 3 > tensor, word Name,
 /// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
                  Lfield, word Name,
                  fileName casename, int first_snap = 0, int n_snap = 0);
 
@@ -185,8 +185,8 @@ void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
 /// @tparam     PatchField  fvPatchField or fvsPatchField.
 /// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
-template<class Type, template<class> class PatchField, class GeoMesh>
-void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+template<class Type, template<class> class PatchField, class GeoMesh >
+void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
                  Lfield,
                  GeometricField<Type, PatchField, GeoMesh>& field,
                  fileName casename, int first_snap = 0, int n_snap = 0);
@@ -205,7 +205,7 @@ void read_fields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
 /// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-void readMiddleFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+void readMiddleFields(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
                       Lfield,
                       GeometricField<Type, PatchField, GeoMesh>& field,
                       fileName casename);
@@ -225,9 +225,47 @@ void readMiddleFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readConvergedFields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& Lfield,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename);
+
+//----------------------------------------------------------------------
+/// Function to read a list of fields from the name of the field including only the last snapshot
+///
+/// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
+///                         to store the field.
+/// @param[in]  field       The field used as template to read other
+///                         fields.
+/// @param[in]  casename    The folder where the field is stored.
+
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void read_last_fields(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
+                      Lfield,
+                      const GeometricField<Type, PatchField, GeoMesh>& field,
+                      const fileName casename);
+
+//----------------------------------------------------------------------
+/// Funtion to read a list of volVectorField from name of the field including only the last snapshots
+///
+/// @param[in]  Lfield      a PtrList of OpenFOAM fields where you want
+///                         to store the field.
+/// @param[in]  field       The field used as template to read other
+///                         fields.
+/// @param[in]  casename    The folder where the field is stored.
+///
+/// @tparam     Type        vector or scalar.
+/// @tparam     PatchField  fvPatchField or fvsPatchField.
+/// @tparam     GeoMesh     volMesh or surfaceMesh.
+///
+template<class Type, template<class> class PatchField, class GeoMesh>
+void readLastFields(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
+                    Lfield,
+                    const GeometricField<Type, PatchField, GeoMesh>& field,
+                    const fileName casename);
 
 //--------------------------------------------------------------------------
 /// Function to export a scalar of vector field
@@ -241,7 +279,7 @@ void readConvergedFields(
 /// @tparam     GeoMesh     volMesh or surfaceMesh.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-void exportFields(PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+void exportFields(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
                   field,
                   word folder, word fieldname);
 
@@ -419,7 +457,7 @@ void SaveSparseMatrixList(List<MatrixType>& MatrixList, word folder,
 /// @tparam     IND         number of matrix cols
 ///
 template <typename T, int Nrows, typename IND>
-void ReadSparseMatrixList(List<Eigen::SparseMatrix<T, Nrows, IND>>& m,
+void ReadSparseMatrixList(List<Eigen::SparseMatrix<T, Nrows, IND >> & m,
                           word folder, word MatrixName);
 
 //--------------------------------------------------------------------------
@@ -476,12 +514,32 @@ void writePoints(pointField points, fileName folder, fileName subfolder);
 void printProgress(double percentage);
 
 template<typename T>
-void save(const List<Eigen::SparseMatrix<T>>& MatrixList, word folder,
+void save(const List<Eigen::SparseMatrix<T >> & MatrixList, word folder,
           word MatrixName);
 
 template<typename T>
-void load(List<Eigen::SparseMatrix<T>>& MatrixList, word folder,
+void load(List<Eigen::SparseMatrix<T >> & MatrixList, word folder,
           word MatrixName);
+
+//--------------------------------------------------------------------------
+/// Function to read a single field by index from a folder
+///
+/// @param[in]  field      The field template to use for reading
+/// @param[in]  casename   The folder where the field is stored
+/// @param[in]  index      The index of the field to read
+///
+/// @return     The read field
+///
+/// @tparam     Type        vector or scalar
+/// @tparam     PatchField  fvPatchField or fvsPatchField
+/// @tparam     GeoMesh     volMesh or surfaceMesh
+///
+template<class Type, template<class> class PatchField, class GeoMesh >
+GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
+    const GeometricField<Type, PatchField, GeoMesh>& field,
+    fileName casename,
+    label index
+);
 
 };
 
@@ -566,11 +624,11 @@ void ITHACAstream::SaveSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m,
         nnzs = m.nonZeros() ;
         outS = m.outerSize();
         innS = m.innerSize();
-        writeFile.write(reinterpret_cast<const char*> (&rows), sizeof(IND));
-        writeFile.write(reinterpret_cast<const char*> (&cols), sizeof(IND));
-        writeFile.write(reinterpret_cast<const char*> (&nnzs), sizeof(IND));
-        writeFile.write(reinterpret_cast<const char*> (&outS), sizeof(IND));
-        writeFile.write(reinterpret_cast<const char*> (&innS), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*> (& rows), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*> (& cols), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*> (& nnzs), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*> (& outS), sizeof(IND));
+        writeFile.write(reinterpret_cast<const char*> (& innS), sizeof(IND));
         writeFile.write(reinterpret_cast<const char*>(m.valuePtr()),
                         sizeof(T  ) * m.nonZeros());
         writeFile.write(reinterpret_cast<const char*>(m.outerIndexPtr()),
@@ -591,17 +649,17 @@ void ITHACAstream::ReadSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m,
     if (!readFile.good())
     {
         std::cout << folder + MatrixName <<
-                  " file does not exist, try to rerun the Offline Stage!" << std::endl;
+        " file does not exist, try to rerun the Offline Stage!" << std::endl;
         exit(EXIT_FAILURE);
     }
     else if (readFile.is_open())
     {
         IND rows, cols, nnz, inSz, outSz;
-        readFile.read(reinterpret_cast<char*>(&rows ), sizeof(IND));
-        readFile.read(reinterpret_cast<char*>(&cols ), sizeof(IND));
-        readFile.read(reinterpret_cast<char*>(&nnz  ), sizeof(IND));
-        readFile.read(reinterpret_cast<char*>(&inSz ), sizeof(IND));
-        readFile.read(reinterpret_cast<char*>(&outSz), sizeof(IND));
+        readFile.read(reinterpret_cast<char*>(& rows ), sizeof(IND));
+        readFile.read(reinterpret_cast<char*>(& cols ), sizeof(IND));
+        readFile.read(reinterpret_cast<char*>(& nnz  ), sizeof(IND));
+        readFile.read(reinterpret_cast<char*>(& inSz ), sizeof(IND));
+        readFile.read(reinterpret_cast<char*>(& outSz), sizeof(IND));
         m.resize(rows, cols);
         m.makeCompressed();
         m.resizeNonZeros(nnz);
@@ -621,8 +679,10 @@ void ITHACAstream::SaveDenseMatrix(MatrixType& Matrix, word folder,
     std::ofstream out(folder + MatrixName,
                       std::ios::out | std::ios::binary | std::ios::trunc);
     typename MatrixType::Index rows = Matrix.rows(), cols = Matrix.cols();
-    out.write(reinterpret_cast<char*> (&rows), sizeof(typename MatrixType::Index));
-    out.write(reinterpret_cast<char*> (&cols), sizeof(typename MatrixType::Index));
+    out.write(reinterpret_cast<char*> (& rows),
+              sizeof(typename MatrixType::Index));
+    out.write(reinterpret_cast<char*> (& cols),
+              sizeof(typename MatrixType::Index));
     out.write(reinterpret_cast<char*> (Matrix.data()),
               rows * cols * sizeof(typename MatrixType::Scalar) );
     out.close();
@@ -638,14 +698,14 @@ void ITHACAstream::ReadDenseMatrix(MatrixType& Matrix, word folder,
     if (!in.good())
     {
         std::cout << folder + MatrixName <<
-                  " file does not exist, try to rerun the Offline Stage!" << std::endl;
+        " file does not exist, try to rerun the Offline Stage!" << std::endl;
         exit(EXIT_FAILURE);
     }
     else if (in.is_open())
     {
         typename MatrixType::Index rows = 0, cols = 0;
-        in.read(reinterpret_cast<char*> (&rows), sizeof(typename MatrixType::Index));
-        in.read(reinterpret_cast<char*> (&cols), sizeof(typename MatrixType::Index));
+        in.read(reinterpret_cast<char*> (& rows), sizeof(typename MatrixType::Index));
+        in.read(reinterpret_cast<char*> (& cols), sizeof(typename MatrixType::Index));
         Matrix.resize(rows, cols);
         in.read( reinterpret_cast<char*>(Matrix.data()),
                  rows * cols * sizeof(typename MatrixType::Scalar) );
@@ -668,7 +728,7 @@ void ITHACAstream::SaveDenseTensor(TensorType& Tensor, word folder,
         tot *= dim[k];
     }
 
-    out.write(reinterpret_cast<char*> (&dim),
+    out.write(reinterpret_cast<char*> (& dim),
               sizeof(typename TensorType::Dimensions));
     out.write(reinterpret_cast<char*> (Tensor.data()),
               tot * sizeof(typename TensorType::Scalar) );
@@ -682,7 +742,7 @@ void ITHACAstream::ReadDenseTensor(TensorType& Tensor, word folder,
     std::ifstream in;
     in.open(folder + MatrixName, std::ios::in | std::ios::binary);
     typename TensorType::Dimensions dim;
-    in.read(reinterpret_cast<char*> (&dim),
+    in.read(reinterpret_cast<char*> (& dim),
             sizeof(typename TensorType::Dimensions));
     auto dims = Tensor.dimensions();
     M_Assert(dims.size() == dim.size(),
@@ -722,7 +782,7 @@ void ITHACAstream::SaveDenseMatrixList(List<MatrixType>& MatrixList,
 
 template <typename T, int whatever, typename IND>
 void ITHACAstream::ReadSparseMatrixList(
-    List<Eigen::SparseMatrix<T, whatever, IND>>& m, word folder, word MatrixName)
+    List<Eigen::SparseMatrix<T, whatever, IND >> & m, word folder, word MatrixName)
 {
     int number_of_files = numberOfFiles(folder, MatrixName);
     std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;

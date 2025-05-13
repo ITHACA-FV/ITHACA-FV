@@ -1,0 +1,69 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh      dynamicMotionSolverFvMesh;
+
+motionSolverLibs ("libRBFMotionSolver.so");
+motionSolver    RBFMotionSolver;
+movingPatches (cylinder1);
+staticPatches (inlet outlet sides);
+coarseningRatio 5;
+
+includeStaticPatches   true;
+frozenInterpolation    true;
+
+interpolation
+{
+    RBF W2;
+    focalPoint (0 0 0);
+    innerRadius 0.0;//5.0
+    outerRadius 10;
+    polynomials true;
+
+    W2Coeffs
+    {
+        radius     5;
+    }
+    TPSCoeffs
+    {
+        radius     4;
+    }
+    GaussCoeffs
+    {
+        radius     1;
+    }
+    IMQBCoeffs
+    {
+        radius     0.1;
+    }
+}

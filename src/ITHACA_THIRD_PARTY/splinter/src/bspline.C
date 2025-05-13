@@ -30,7 +30,7 @@ BSpline::BSpline(unsigned int numVariables)
 /*
  * Constructors for multivariate B-spline using explicit data
  */
-BSpline::BSpline(std::vector<std::vector<double>> knotVectors,
+BSpline::BSpline(std::vector<std::vector<double >> knotVectors,
                  std::vector<unsigned int> basisDegrees)
     : Function(knotVectors.size()),
       basis(BSplineBasis(knotVectors, basisDegrees)),
@@ -43,14 +43,14 @@ BSpline::BSpline(std::vector<std::vector<double>> knotVectors,
 }
 
 BSpline::BSpline(std::vector<double> coefficients,
-                 std::vector<std::vector<double>> knotVectors,
+                 std::vector<std::vector<double >> knotVectors,
                  std::vector<unsigned int> basisDegrees)
     : BSpline(vectorToDenseVector(coefficients), knotVectors, basisDegrees)
 {
 }
 
 BSpline::BSpline(DenseVector coefficients,
-                 std::vector<std::vector<double>> knotVectors,
+                 std::vector<std::vector<double >> knotVectors,
                  std::vector<unsigned int> basisDegrees)
     : Function(knotVectors.size()),
       basis(BSplineBasis(knotVectors, basisDegrees)),
@@ -170,7 +170,7 @@ std::vector<unsigned int> BSpline::getNumBasisFunctionsPerVariable() const
     return ret;
 }
 
-std::vector< std::vector<double>> BSpline::getKnotVectors() const
+std::vector< std::vector<double >> BSpline::getKnotVectors() const
 {
     return basis.getKnotVectors();
 }
@@ -455,14 +455,14 @@ bool BSpline::removeUnsupportedBasisFunctions(std::vector<double>& lb,
 void BSpline::save(const std::string& fileName) const
 {
     Serializer s;
-    s.serialize(*this);
+    s.serialize(* this);
     s.saveToFile(fileName);
 }
 
 void BSpline::load(const std::string& fileName)
 {
     Serializer s(fileName);
-    s.deserialize(*this);
+    s.deserialize(* this);
 }
 
 std::string BSpline::getDescription() const

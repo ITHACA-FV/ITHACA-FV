@@ -65,6 +65,7 @@ void inverseLaplacianProblem_CG::set_valueFraction()
         valueFractionAdj[faceI] =  1 / (1 + (1 / k / H / faceDist));
         homogeneousBCcoldSide[faceI] =  0;
     }
+
     refGrad = homogeneousBCcoldSide;
 }
 
@@ -89,6 +90,7 @@ void inverseLaplacianProblem_CG::assignAdjointBC()
             ITHACAutilities::assignBC(lambda, patchI, homogeneousBC);
         }
     }
+
     ITHACAutilities::assignIF(lambda, homogeneousBC);
 }
 
@@ -110,7 +112,7 @@ volScalarField inverseLaplacianProblem_CG::assignAdjointBCandSource()
         forAll(interpolationPlane.cellID, cellI)
         {
             f.ref()[interpolationPlane.cellID [cellI]] =
-                interpolationPlane.Tdiff[cellI] * k;
+                 interpolationPlane.Tdiff[cellI] * k;
         }
     }
     else
@@ -385,6 +387,7 @@ void inverseLaplacianProblem_CG::computeGradJ()
         gradJ_L2norm += gradJ[faceI] * gradJ[faceI]  *
                         mesh.magSf().boundaryField()[hotSide_ind][faceI];
     }
+
     gradJ_L2norm = Foam::sqrt(gradJ_L2norm);
     Info << "gradJ L2norm = " << gradJ_L2norm << endl;
 }
@@ -419,6 +422,7 @@ void inverseLaplacianProblem_CG::computeSearchStep()
         {
             beta += interpolationPlane.cellVol [cellI] * temp [cellI];
         }
+
         //reduce(beta, sumOp<double>());
         temp = interpolationPlane.Tsens * interpolationPlane.Tsens;
         scalar betaDiv = 0.0;
@@ -426,6 +430,7 @@ void inverseLaplacianProblem_CG::computeSearchStep()
         {
             betaDiv += interpolationPlane.cellVol [cellI] * temp [cellI];
         }
+
         //reduce(betaDiv, sumOp<double>());
         beta = beta / betaDiv;
         temp.clear();
@@ -461,6 +466,7 @@ int inverseLaplacianProblem_CG::conjugateGradientConvergenceCheck()
         {
             J += 0.5 * sqTdiff[cellI] * interpolationPlane.cellVol[cellI];
         }
+
         sqTdiff.clear();
     }
     else
@@ -526,6 +532,7 @@ void inverseLaplacianProblem_CG::writeFields(label folderNumber,
         label faceOwner = faceCells[faceI] ;
         gVolField[faceOwner] = g[faceI];
     }
+
     ITHACAstream::exportSolution(T, std::to_string(folderNumber + 1), folder,
                                  "T");
     ITHACAstream::exportSolution(lambda, std::to_string(folderNumber + 1), folder,
@@ -564,10 +571,10 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation()
                     labelList pLabels(mesh.cells()[thermocouplesCellID [i]].labels(mesh.faces()));
                     pointField pLocal(pLabels.size(), Foam::vector::zero);
                     interpolationPlane.thermocoupleCellDim = cellDim (mesh.faces(),
-                            mesh.points(),
-                            mesh.cells()[thermocouplesCellID [i]],
-                            pLabels,
-                            pLocal);
+                        mesh.points(),
+                        mesh.cells()[thermocouplesCellID [i]],
+                        pLabels,
+                        pLocal);
                     flag = 0;
                 }
 
@@ -591,6 +598,7 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation()
                 interpolationPlane.thermocoupleZ [thermocoupleI] = 0;
             }
         }
+
         //reduce(interpolationPlane.thermocoupleX, sumOp<List<scalar>>());
         //reduce(interpolationPlane.thermocoupleZ, sumOp<List<scalar>>());
     }
@@ -601,6 +609,7 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation()
         x(1) = interpolationPlane.thermocoupleZ[thermocoupleI];
         thermocouplesSamples.addSample(x, Tmeas(thermocoupleI));
     }
+
     std::cout << Tmeas << std::endl;
     RBFSpline rbfspline(thermocouplesSamples, RadialBasisFunctionType::GAUSSIAN);
     auto inPlaneCellID = 0;
@@ -642,6 +651,7 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation()
             }
         }
     }
+
     interpolationPlaneDefined = 1;
 }
 
@@ -674,10 +684,10 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation(
                     labelList pLabels(mesh.cells()[thermocouplesCellID [i]].labels(mesh.faces()));
                     pointField pLocal(pLabels.size(), Foam::vector::zero);
                     interpolationPlane.thermocoupleCellDim = cellDim (mesh.faces(),
-                            mesh.points(),
-                            mesh.cells()[thermocouplesCellID [i]],
-                            pLabels,
-                            pLocal);
+                        mesh.points(),
+                        mesh.cells()[thermocouplesCellID [i]],
+                        pLabels,
+                        pLocal);
                     flag = 0;
                 }
 
@@ -701,6 +711,7 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation(
                 interpolationPlane.thermocoupleZ [thermocoupleI] = 0;
             }
         }
+
         //reduce(interpolationPlane.thermocoupleX, sumOp<List<scalar>>());
         //reduce(interpolationPlane.thermocoupleZ, sumOp<List<scalar>>());
     }
@@ -711,6 +722,7 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation(
         x(1) = interpolationPlane.thermocoupleZ[thermocoupleI];
         thermocouplesSamples.addSample(x, Tmeas(thermocoupleI));
     }
+
     std::cout << Tmeas << std::endl;
     RBFSpline rbfspline(thermocouplesSamples, RadialBasisFunctionType::GAUSSIAN);
     auto inPlaneCellID = 0;
@@ -752,6 +764,7 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation(
             }
         }
     }
+
     interpolationPlaneDefined = 1;
 }
 
@@ -766,6 +779,7 @@ void inverseLaplacianProblem_CG::differenceBetweenDirectAndMeasure()
             interpolationPlane.Tdirect[cellI] =
                 T.internalField()[interpolationPlane.cellID [cellI]];
         }
+
         interpolationPlane.Tdiff = interpolationPlane.Tdirect -
                                    interpolationPlane.Tmeas;
     }

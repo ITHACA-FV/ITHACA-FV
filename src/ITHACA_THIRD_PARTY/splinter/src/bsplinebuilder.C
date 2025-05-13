@@ -127,7 +127,7 @@ DenseVector BSpline::Builder::computeCoefficients(const BSpline& bspline) const
     {
 #ifndef NDEBUG
         std::cout <<
-                  "BSpline::Builder::computeBSplineCoefficients: Computing B-spline control points using sparse solver."
+        "BSpline::Builder::computeBSplineCoefficients: Computing B-spline control points using sparse solver."
                   << std::endl;
 #endif // NDEBUG
         SparseLU<> s;
@@ -139,7 +139,7 @@ DenseVector BSpline::Builder::computeCoefficients(const BSpline& bspline) const
     {
 #ifndef NDEBUG
         std::cout <<
-                  "BSpline::Builder::computeBSplineCoefficients: Computing B-spline control points using dense solver."
+        "BSpline::Builder::computeBSplineCoefficients: Computing B-spline control points using dense solver."
                   << std::endl;
 #endif // NDEBUG
         DenseMatrix Ad = A.toDense();
@@ -321,15 +321,15 @@ SparseMatrix BSpline::Builder::getSecondOrderFiniteDifferenceMatrix(
 }
 
 // Compute all knot vectors from sample data
-std::vector<std::vector<double>> BSpline::Builder::computeKnotVectors() const
+std::vector<std::vector<double >> BSpline::Builder::computeKnotVectors() const
 {
     if (_data.getNumVariables() != _degrees.size())
     {
         throw Exception("BSpline::Builder::computeKnotVectors: Inconsistent sizes on input vectors.");
     }
 
-    std::vector<std::vector<double>> grid = _data.getTableX();
-    std::vector<std::vector<double>> knotVectors;
+    std::vector<std::vector<double >> grid = _data.getTableX();
+    std::vector<std::vector<double >> knotVectors;
 
     for (unsigned int i = 0; i < _data.getNumVariables(); ++i)
     {

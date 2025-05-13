@@ -36,6 +36,7 @@ License
 
 // Constructor
 SteadyNSTurb::SteadyNSTurb() {}
+
 SteadyNSTurb::SteadyNSTurb(int argc, char* argv[])
 {
     _args = autoPtr<argList>
@@ -689,7 +690,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
 
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsPPE/",
                                           weightName);
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
@@ -702,7 +703,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
 
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsPPE/", weightName);
@@ -975,7 +976,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsSUP/",
                                           weightName);
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
@@ -988,7 +989,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
 
-            rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsSUP/", weightName);

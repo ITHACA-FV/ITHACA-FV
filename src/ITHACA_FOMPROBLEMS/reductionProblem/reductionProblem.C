@@ -137,13 +137,14 @@ void reductionProblem::assignBC(volScalarField& s, label BC_ind, double& value)
         }
 
         freestreamFvPatchField<scalar>& Tpatch =
-            refCast<freestreamFvPatchField<scalar>>(s.boundaryFieldRef()[BC_ind]);
+            refCast<freestreamFvPatchField<scalar >> (s.boundaryFieldRef()[BC_ind]);
         scalarField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
             gradTpatch[faceI] = value;
         }
     }
+
     else if (s.boundaryField()[BC_ind].type() == "calculated")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -151,6 +152,7 @@ void reductionProblem::assignBC(volScalarField& s, label BC_ind, double& value)
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
+
     else if (s.boundaryField()[BC_ind].type() == "empty")
     {
     }
@@ -180,7 +182,7 @@ void reductionProblem::assignBC(volVectorField& s, label BC_ind,
         }
 
         freestreamFvPatchField<vector>& Tpatch =
-            refCast<freestreamFvPatchField<vector>>(s.boundaryFieldRef()[BC_ind]);
+            refCast<freestreamFvPatchField<vector >> (s.boundaryFieldRef()[BC_ind]);
         vectorField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
@@ -200,7 +202,7 @@ void reductionProblem::reconstructFromMatrix(PtrList<volVectorField>&
         {
             if ( i == 0)
             {
-                rec_field2.append(coeff_matrix(i, k)*modes[i]);
+                rec_field2.append(coeff_matrix(i, k) * modes[i]);
             }
             else
             {
@@ -222,7 +224,7 @@ void reductionProblem::reconstructFromMatrix(PtrList<volScalarField>&
         {
             if ( i == 0)
             {
-                rec_field2.append(coeff_matrix(i, k)*modes[i]);
+                rec_field2.append(coeff_matrix(i, k) * modes[i]);
             }
             else
             {
@@ -249,6 +251,7 @@ void reductionProblem::writeMu(List<scalar> mu_now)
     {
         ofs << mu_now[i] << ' ';
     }
+
     ofs << "\n";
     ofs.close();
 }
@@ -341,7 +344,7 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
         else
         {
             std::cout <<
-                      "Unknown string for rbfBasis. Valid types are 'GAUSSIAN', 'THIN_PLATE', 'MULTI_QUADRIC', 'INVERSE_QUADRIC', 'INVERSE_MULTI_QUADRIC'"
+            "Unknown string for rbfBasis. Valid types are 'GAUSSIAN', 'THIN_PLATE', 'MULTI_QUADRIC', 'INVERSE_QUADRIC', 'INVERSE_MULTI_QUADRIC'"
                       << std::endl;
             exit(0);
         }
@@ -425,7 +428,7 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
         else
         {
             std::cout <<
-                      "Unknown string for rbfBasis. Valid types are 'GAUSSIAN', 'THIN_PLATE', 'MULTI_QUADRIC', 'INVERSE_QUADRIC', 'INVERSE_MULTI_QUADRIC'"
+            "Unknown string for rbfBasis. Valid types are 'GAUSSIAN', 'THIN_PLATE', 'MULTI_QUADRIC', 'INVERSE_QUADRIC', 'INVERSE_MULTI_QUADRIC'"
                       << std::endl;
             exit(0);
         }
@@ -436,7 +439,8 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
 
 
 std::vector<SPLINTER::BSpline> reductionProblem::getCoeffManifoldSPL(
-    PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes, label splDeg)
+    PtrList<volVectorField> snapshots, PtrList<volVectorField>& modes,
+    label splDeg)
 {
     Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
     M_Assert(mu_samples.rows() == coeff.cols() * mu.rows(),
@@ -490,7 +494,8 @@ std::vector<SPLINTER::BSpline> reductionProblem::getCoeffManifoldSPL(
 
 
 std::vector<SPLINTER::BSpline> reductionProblem::getCoeffManifoldSPL(
-    PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes, label splDeg)
+    PtrList<volScalarField> snapshots, PtrList<volScalarField>& modes,
+    label splDeg)
 {
     Eigen::MatrixXd coeff = ITHACAutilities::getCoeffs(snapshots, modes);
     M_Assert(mu_samples.rows() == coeff.cols() * mu.rows(),

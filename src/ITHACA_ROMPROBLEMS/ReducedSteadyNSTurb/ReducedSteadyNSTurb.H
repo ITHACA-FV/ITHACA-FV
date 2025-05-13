@@ -52,9 +52,10 @@ struct newtonSteadyNSTurbSUP: public newton_argument<double>
 {
     public:
         newtonSteadyNSTurbSUP() {}
+
         newtonSteadyNSTurbSUP(int Nx, int Ny,
                               SteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),
@@ -81,9 +82,10 @@ struct newtonSteadyNSTurbPPE: public newton_argument<double>
 {
     public:
         newtonSteadyNSTurbPPE() {}
+
         newtonSteadyNSTurbPPE(int Nx, int Ny,
                               SteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size()),
             nphiNut(problem.nNutModes),
             Nphi_p(problem.NPmodes),

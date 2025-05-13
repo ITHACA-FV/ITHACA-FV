@@ -36,10 +36,10 @@ DenseVector vectorToDenseVector(const std::vector<double>& vec)
     return denseVec;
 }
 
-std::vector<std::vector<double>> denseMatrixToVectorVector(
-                                  const DenseMatrix& mat)
+std::vector<std::vector<double >> denseMatrixToVectorVector(
+    const DenseMatrix& mat)
 {
-    std::vector<std::vector<double>> vec(mat.rows());
+    std::vector<std::vector<double >> vec(mat.rows());
 
     for (size_t i = 0; i < (size_t) mat.rows(); ++i)
     {
@@ -48,11 +48,10 @@ std::vector<std::vector<double>> denseMatrixToVectorVector(
             vec.at(i).push_back(mat(i, j));
         }
     }
-
     return vec;
 }
 
-DenseMatrix vectorVectorToDenseMatrix(const std::vector<std::vector<double>>&
+DenseMatrix vectorVectorToDenseMatrix(const std::vector<std::vector<double >> &
                                       vec)
 {
     size_t numRows = vec.size();

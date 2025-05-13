@@ -152,7 +152,7 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
                      "Using a Petrov-Galerkin projection you have to provide also the system matrix");
             Eigen::SparseMatrix<double> Ae;
             Eigen::VectorXd be;
-            Foam2Eigen::fvMatrix2Eigen(*Af, Ae, be);
+            Foam2Eigen::fvMatrix2Eigen(* Af, Ae, be);
             projField = (Ae * EigenModes[0]).transpose() * vol.asDiagonal() * fieldEig;
         }
     }
@@ -181,7 +181,7 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
                      "Using a Petrov-Galerkin projection you have to provide also the system matrix");
             Eigen::SparseMatrix<double> Ae;
             Eigen::VectorXd be;
-            Foam2Eigen::fvMatrix2Eigen(*Af, Ae, be);
+            Foam2Eigen::fvMatrix2Eigen(* Af, Ae, be);
             projField = (Ae * ((EigenModes[0]).leftCols(numberOfModes))).transpose() *
                         vol.asDiagonal() * fieldEig;
         }
@@ -204,7 +204,7 @@ Modes<Type, PatchField, GeoMesh>::projectSnapshot(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> &
     fields,
     label numberOfModes, word projType, fvMatrix<Type>* Af)
 {
@@ -236,7 +236,7 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
                      "Using a Petrov-Galerkin projection you have to provide also the system matrix");
             Eigen::SparseMatrix<double> Ae;
             Eigen::VectorXd be;
-            Foam2Eigen::fvMatrix2Eigen(*Af, Ae, be);
+            Foam2Eigen::fvMatrix2Eigen(* Af, Ae, be);
             projField = (Ae * EigenModes[0]).transpose() * vol.asDiagonal() * fieldEig;
         }
     }
@@ -262,7 +262,7 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
                      "Using a Petrov-Galerkin projection you have to provide also the system matrix");
             Eigen::SparseMatrix<double> Ae;
             Eigen::VectorXd be;
-            Foam2Eigen::fvMatrix2Eigen(*Af, Ae, be);
+            Foam2Eigen::fvMatrix2Eigen(* Af, Ae, be);
             projField = (Ae * ((EigenModes[0]).leftCols(numberOfModes))).transpose() *
                         vol.asDiagonal() * fieldEig;
         }
@@ -270,6 +270,7 @@ Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
 
     return projField;
 }
+
 template<class Type, template<class> class PatchField, class GeoMesh>
 GeometricField<Type, PatchField, GeoMesh>
 Modes<Type, PatchField, GeoMesh>::reconstruct(
@@ -307,16 +308,16 @@ Modes<Type, PatchField, GeoMesh>::reconstruct(
 
     return inputField;
 }
-template<class Type, template<class> class PatchField, class GeoMesh>
-PtrList<GeometricField<Type, PatchField, GeoMesh>>
-        Modes<Type, PatchField, GeoMesh>::reconstruct(
-            GeometricField<Type, PatchField, GeoMesh>& inputField,
-            List < Eigen::MatrixXd> Coeff,
-            word Name)
-{
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> inputFields;
-    inputFields.resize(0);
 
+template<class Type, template<class> class PatchField, class GeoMesh>
+PtrList<GeometricField<Type, PatchField, GeoMesh >>
+Modes<Type, PatchField, GeoMesh>::reconstruct(
+    GeometricField<Type, PatchField, GeoMesh>& inputField,
+    List < Eigen::MatrixXd> Coeff,
+    word Name)
+{
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> inputFields;
+    inputFields.resize(0);
     for (label i = 0; i < Coeff.size(); i++)
     {
         inputField = reconstruct(inputField, Coeff[i], Name);
@@ -327,10 +328,10 @@ PtrList<GeometricField<Type, PatchField, GeoMesh>>
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, template<class> class PatchField, class GeoMesh >
 void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
     PtrList<volScalarField> Volumes,
     label numberOfModes,
     word innerProduct)
@@ -349,7 +350,7 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
     projSnapshots.resize(snapshots.size());
     label dim = std::nearbyint(EigenModes[0].rows() /
                                Volumes[0].size()); //Checking if volumes and modes have the same size that means check if the problem is vector or scalar
-    Eigen::MatrixXd totVolumes(Volumes[0].size()*dim, Volumes.size());
+    Eigen::MatrixXd totVolumes(Volumes[0].size() * dim, Volumes.size());
 
     for (label i = 0; i < Volumes.size(); i++)
     {
@@ -393,10 +394,11 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
         projSnapshots.set(i, Fr.clone());
     }
 }
+
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
     PtrList<volScalarField> Volumes, word innerProduct)
 {
     label numberOfModes = 0;
@@ -406,8 +408,8 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
     label numberOfModes,
     word innerProduct)
 {
@@ -463,10 +465,11 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
         projSnapshots.set(i, Fr.clone());
     }
 }
+
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
-    PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> snapshots,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
     word innerProduct)
 {
     label numberOfModes = 0;
@@ -475,13 +478,12 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Modes<Type, PatchField, GeoMesh>::operator=(const
-        PtrList<GeometricField<Type, PatchField, GeoMesh>>& modes)
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & modes)
 {
     this->resize(modes.size());
-
     for (label i = 0; i < modes.size(); i++)
     {
-        (*this).set(i, modes[i].clone());
+        (* this).set(i, modes[i].clone());
     }
 }
 

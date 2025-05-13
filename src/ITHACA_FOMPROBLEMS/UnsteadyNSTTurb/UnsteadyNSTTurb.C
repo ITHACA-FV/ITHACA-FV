@@ -112,10 +112,12 @@ void UnsteadyNSTTurb::truthSolve(List<scalar> mu_now)
 #include "pEqn.H"
             }
         }
+
         {
 #include "TEqn.H"
             //TEqn.solve();
         }
+
         volScalarField _nut(turbulence->nut());
         laminarTransport.correct();
         turbulence->correct();
@@ -226,6 +228,7 @@ void UnsteadyNSTTurb::liftSolveT()
         {
             Tlift[i] = (totalTime * Tlift[i] + dt * Tlift[i] ) / (totalTime + dt);
         }
+
         Tlift.write();
         liftfieldT.append(Tlift.clone());
     }
@@ -539,7 +542,7 @@ void UnsteadyNSTTurb::projectSUP(fileName folder, label NU, label NP,
             SAMPLES[i]->addSample(mu.row(j), Ncoeff(i, j));
         }
 
-        rbfsplines[i] = new SPLINTER::RBFSpline(*SAMPLES[i],
+        rbfsplines[i] = new SPLINTER::RBFSpline(* SAMPLES[i],
                                                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
         std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
     }

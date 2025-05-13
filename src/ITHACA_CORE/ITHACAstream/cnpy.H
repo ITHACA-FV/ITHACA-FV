@@ -42,7 +42,7 @@ struct NpyArray
             num_vals *= shape[i];
         }
 
-        data_holder = std::shared_ptr<std::vector<char>>(
+        data_holder = std::shared_ptr<std::vector<char >> (
                           new std::vector<char>(num_vals * word_size));
     }
 
@@ -51,13 +51,13 @@ struct NpyArray
     template<typename T>
     T* data()
     {
-        return reinterpret_cast<T*>(&(*data_holder)[0]);
+        return reinterpret_cast<T*>(& (* data_holder)[0]);
     }
 
     template<typename T>
     const T* data() const
     {
-        return reinterpret_cast<T*>(&(*data_holder)[0]);
+        return reinterpret_cast<T*>(& (* data_holder)[0]);
     }
 
     template<typename T>
@@ -152,7 +152,7 @@ struct NpyArray
         return data_holder->size();
     }
 
-    std::shared_ptr<std::vector<char>> data_holder;
+    std::shared_ptr<std::vector<char >> data_holder;
     std::vector<size_t> shape;
     size_t word_size;
     bool fortran_order;
@@ -177,12 +177,12 @@ NpyArray npz_load(std::string fname, std::string varname);
 NpyArray npy_load(std::string fname);
 
 template<typename T> std::vector<char>& operator+=(std::vector<char>& lhs,
-        const T rhs)
+    const T rhs)
 {
     //write in little endian
     for (size_t byte = 0; byte < sizeof(T); byte++)
     {
-        char val = *((char*)&rhs + byte);
+        char val = * ((char*) & rhs + byte);
         lhs.push_back(val);
     }
 
@@ -190,9 +190,9 @@ template<typename T> std::vector<char>& operator+=(std::vector<char>& lhs,
 }
 
 template<> std::vector<char>& operator+=(std::vector<char>& lhs,
-        const std::string rhs);
+    const std::string rhs);
 template<> std::vector<char>& operator+=(std::vector<char>& lhs,
-        const char* rhs);
+    const char* rhs);
 
 
 template<typename T> void npy_save(std::string fname, const T* data,
@@ -219,14 +219,14 @@ template<typename T> void npy_save(std::string fname, const T* data,
         if (word_size != sizeof(T))
         {
             std::cout << "libnpy error: " << fname << " has word size " << word_size <<
-                      " but npy_save appending data sized " << sizeof(T) << "\n";
+                         " but npy_save appending data sized " << sizeof(T) << "\n";
             assert( word_size == sizeof(T) );
         }
 
         if (true_data_shape.size() != shape.size())
         {
             std::cout <<
-                      "libnpy error: npy_save attempting to append misdimensioned data to " << fname
+            "libnpy error: npy_save attempting to append misdimensioned data to " << fname
                       << "\n";
             assert(true_data_shape.size() != shape.size());
         }
@@ -253,7 +253,7 @@ template<typename T> void npy_save(std::string fname, const T* data,
     size_t nels = std::accumulate(shape.begin(), shape.end(), 1,
                                   std::multiplies<size_t>());
     fseek(fp, 0, SEEK_SET);
-    fwrite(&header[0], sizeof(char), header.size(), fp);
+    fwrite(& header[0], sizeof(char), header.size(), fp);
     fseek(fp, 0, SEEK_END);
     fwrite(data, sizeof(T), nels, fp);
     fclose(fp);
@@ -285,7 +285,7 @@ template<typename T> void npz_save(std::string zipname, std::string fname,
         parse_zip_footer(fp, nrecs, global_header_size, global_header_offset);
         fseek(fp, global_header_offset, SEEK_SET);
         global_header.resize(global_header_size);
-        size_t res = fread(&global_header[0], sizeof(char), global_header_size, fp);
+        size_t res = fread(& global_header[0], sizeof(char), global_header_size, fp);
 
         if (res != global_header_size)
         {
@@ -304,7 +304,7 @@ template<typename T> void npz_save(std::string zipname, std::string fname,
                                   std::multiplies<size_t>());
     size_t nbytes = nels * sizeof(T) + npy_header.size();
     //get the CRC of the data to be added
-    uint32_t crc = crc32(0L, (uint8_t*)&npy_header[0], npy_header.size());
+    uint32_t crc = crc32(0L, (uint8_t*) & npy_header[0], npy_header.size());
     crc = crc32(crc, (uint8_t*)data, nels * sizeof(T));
     //build the local header
     std::vector<char> local_header;
@@ -347,11 +347,11 @@ template<typename T> void npz_save(std::string zipname, std::string fname,
                           local_header.size()); //offset of start of global headers, since global header now starts after newly written array
     footer += (uint16_t) 0; //zip file comment length
     //write everything
-    fwrite(&local_header[0], sizeof(char), local_header.size(), fp);
-    fwrite(&npy_header[0], sizeof(char), npy_header.size(), fp);
+    fwrite(& local_header[0], sizeof(char), local_header.size(), fp);
+    fwrite(& npy_header[0], sizeof(char), npy_header.size(), fp);
     fwrite(data, sizeof(T), nels, fp);
-    fwrite(&global_header[0], sizeof(char), global_header.size(), fp);
-    fwrite(&footer[0], sizeof(char), footer.size(), fp);
+    fwrite(& global_header[0], sizeof(char), global_header.size(), fp);
+    fwrite(& footer[0], sizeof(char), footer.size(), fp);
     fclose(fp);
 }
 
@@ -360,7 +360,7 @@ template<typename T> void npy_save(std::string fname, const std::vector<T> data,
 {
     std::vector<size_t> shape;
     shape.push_back(data.size());
-    npy_save(fname, &data[0], shape, mode);
+    npy_save(fname, & data[0], shape, mode);
 }
 
 template<typename T> void npz_save(std::string zipname, std::string fname,
@@ -368,7 +368,7 @@ template<typename T> void npz_save(std::string zipname, std::string fname,
 {
     std::vector<size_t> shape;
     shape.push_back(data.size());
-    npz_save(zipname, fname, &data[0], shape, mode);
+    npz_save(zipname, fname, & data[0], shape, mode);
 }
 
 template<typename T> std::vector<char> create_npy_header(
