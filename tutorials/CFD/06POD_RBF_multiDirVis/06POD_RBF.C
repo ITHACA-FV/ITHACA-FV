@@ -297,6 +297,11 @@ int main(int argc, char* argv[])
     example.inletIndex.resize(example.mu.cols()-1, 2);
     example.inletIndex.setConstant(0);
 
+    // create a list to store the time of different steps
+    List<scalar> timeList;
+    // The list for name of the steps
+    List<word> nameList;
+
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
     // Read parameters from ITHACAdict file
@@ -311,6 +316,9 @@ int main(int argc, char* argv[])
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // Perform The Offline Solve;
     example.offlineSolve();    
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("OfflineSolve");
+
     // Create the homogeneous set of snapshots for the velocity field
     // ITHACAutilities::normalizeFields(example.liftfield);
     // Homogenize the snapshots
@@ -341,6 +349,8 @@ int main(int argc, char* argv[])
         ITHACAstream::exportFields(example.Uomfield, "./ITHACAoutput/Offline",
             "Uofield");
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("HomogenizeUofield");
     
     // Perform a POD decomposition for the velocity, the pressure and the eddy viscosity
     ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
@@ -352,12 +362,16 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.nutFields, example.nutModes, example._nut().name(),
                         example.podex,
                         example.supex, 0, NmodesProject);
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("POD");
 
     // Solve the supremizer problem based on the pressure modes
     if (stabilization == "supremizer")
     {
         example.solvesupremizer("modes");
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("SolveSupremizer");
 
     // Compute the reduced order matrices
     // Get reduced matrices
@@ -371,6 +385,8 @@ int main(int argc, char* argv[])
         example.projectPPE("./Matrices", NmodesU, NmodesP, NmodesSUP,
                            NmodesNUT);
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("Project");
 
     // Create an object of the turbulent class
     ReducedSteadyNSTurb pod_rbf(
@@ -400,7 +416,7 @@ int main(int argc, char* argv[])
 
         for(label n=0; n < nuNum; n++)
         {
-            velNow(n, 0) = example.mu(k, n+1);
+            velNow(n, 0) = pod_rbf.onlineMu(k, n+1);
         } 
         Info << "Inlet Ux = " << velNow << " nu = " << pod_rbf.nu
              << endl;
@@ -421,6 +437,8 @@ int main(int argc, char* argv[])
         pod_rbf.online_solution.append(tmp_sol);
 
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("OnlineSolve");
 
     // Save the matrix of interpolated eddy viscosity coefficients
     ITHACAstream::exportMatrix(rbfCoeff, "rbfCoeff", "python",
@@ -465,7 +483,16 @@ int main(int argc, char* argv[])
                                     name(k+1),
                                     "./ITHACAoutput/Online/");
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("done");
 
+    Info<< "The elapsed time for the different steps is:\n"
+        << "-----------------------------------------------------\n";
+    for (label i = 0; i < timeList.size(); i++)
+    {
+        Info<< nameList[i] << " = " << timeList[i] << endl;
+    }
+    Info<< "-----------------------------------------------------\n";
 
     // // --------------------------------------------------------------------
     // // Perform an online solve for the new values of inlet velocities
@@ -595,7 +622,7 @@ int main(int argc, char* argv[])
     // ITHACAstream::exportMatrix(errL2Nut, "errL2Nut", "matlab",
     //                            "./ITHACAoutput/ErrorsL2/");
 
-    exit(0);
+    return 0;
 }
 
 //--------
