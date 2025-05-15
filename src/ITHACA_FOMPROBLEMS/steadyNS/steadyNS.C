@@ -297,6 +297,123 @@ void steadyNS::solvesupremizer(word type)
     }
 }
 
+// Method to solve the supremizer problem
+void steadyNS::solvesupremizerConsistent(word type)
+{
+    M_Assert(type == "modes"
+             || type == "snapshots",
+                     "You must specify the variable type with either snapshots or modes");
+    PtrList<volScalarField> P_sup;
+
+    if (type == "snapshots")
+    {
+        P_sup = Pfield;
+    }
+    else
+    {
+        P_sup = Pmodes;
+    }
+
+    if (supex == 1)
+    {
+        volVectorField U = _U();
+        volVectorField Usup
+        (
+            IOobject
+            (
+                "Usup",
+                U.time().timeName(),
+                U.mesh(),
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+            U
+        );
+
+        if (type == "snapshots")
+        {
+            ITHACAstream::read_fields(supfield, Usup, "./ITHACAoutput/supfield/");
+        }
+        else
+        {
+            ITHACAstream::read_fields(supmodes, Usup, "./ITHACAoutput/supremizer/");
+        }
+    }
+    else
+    {
+        volVectorField U = _U();
+        volVectorField Usup
+        (
+            IOobject
+            (
+                "Usup",
+                U.time().timeName(),
+                U.mesh(),
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+            U
+        );
+        dimensionedScalar nu_fake
+        (
+            "nu_fake",
+            dimensionSet(0, 2, -1, 0, 0, 0, 0),
+            scalar(1)
+        );
+        Vector<double> v(0, 0, 0);
+
+        for (label i = 0; i < Usup.boundaryField().size(); i++)
+        {
+            if (Usup.boundaryField()[i].type() == "fixedValue")
+            {
+                assignBC(Usup, i, v);
+            }
+            else if (Usup.boundaryField()[i].type() == "fixedGradient")
+            {
+                ITHACAutilities::assignBC(Usup, i, v);
+            }
+            assignIF(Usup, v);
+        }
+
+        if (type == "snapshots")
+        {
+            for (label i = 0; i < P_sup.size(); i++)
+            {
+                fvVectorMatrix u_sup_eqn
+                (
+                    - fvm::laplacian(nu_fake, Usup)
+                );
+                solve
+                (
+                    u_sup_eqn == fvc::grad(P_sup[i])
+                );
+                supfield.append(Usup.clone());
+                ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supfield/");
+            }
+
+            ITHACAutilities::createSymLink("./ITHACAoutput/supfield");
+        }
+        else
+        {
+            for (label i = 0; i < P_sup.size(); i++)
+            {
+                fvVectorMatrix u_sup_eqn
+                (
+                    - fvm::laplacian(nu_fake, Usup)
+                );
+                solve
+                (
+                    u_sup_eqn == fvc::grad(P_sup[i])
+                );
+                supmodes.append(Usup.clone());
+                ITHACAstream::exportSolution(Usup, name(i + 1), "./ITHACAoutput/supremizer/");
+            }
+
+            ITHACAutilities::createSymLink("./ITHACAoutput/supremizer");
+        }
+    }
+}
+
 // Method to compute the lifting function
 void steadyNS::liftSolve()
 {

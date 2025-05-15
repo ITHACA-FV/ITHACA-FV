@@ -72,11 +72,8 @@ class tutorial06 : public SteadyNSTurb
         void offlineSolve()
         {
             Vector<double> inl(0, 0, 0);
-            List<scalar> mu_now(3);
-            label BCind = 2;
-
-            vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
-            vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
+            List<scalar> mu_now(1);
+            label BCind = 1;
 
             // if the offline solution is already performed read the fields
             if (offline)
@@ -90,25 +87,11 @@ class tutorial06 : public SteadyNSTurb
                 {                    
                     for (label i = Ufield.size(); i < mu.rows(); i++)
                     {
-                        List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-
-                        forAll(mu_now, j)
-                        {
-                            mu_now[j] = mu(i, j);
-                        }
-                        
-                        forAll(Uinl, faceI)
-                        {
-                            Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                            + mu(i, 2)*lift_2[faceI];
-                        }
-                        ITHACAutilities::assignBC(_U(), BCind, Uinl);
-
+                        mu_now[0] = mu(i, 0);
                         change_viscosity(mu(i, 0));
                         counter = Ufield.size() + 1;
-                        std::cout << "The paras of Offline case No. " << counter 
-                                << " is changed to " << mu.row(i) << endl;
-
+                        Info<< "The viscosity of Offline case No. " << counter 
+                            << " is changed to " << mu(i, 0) << endl;
                         truthSolve("./ITHACAoutput/Offline/");
                         restart();
                     }
@@ -118,24 +101,10 @@ class tutorial06 : public SteadyNSTurb
             {
                 for (label i = 0; i < mu.rows(); i++)
                 {
-                    List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-
-                    forAll(mu_now, j)
-                    {
-                        mu_now[j] = mu(i, j);
-                    }
-                    
-                    forAll(Uinl, faceI)
-                    {
-                        Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                        + mu(i, 2)*lift_2[faceI];
-                    }
-                    ITHACAutilities::assignBC(_U(), BCind, Uinl);
-
+                    mu_now[0] = mu(i, 0);
                     change_viscosity(mu(i, 0));
-                    std::cout << "The paras of Offline case No. " << counter 
-                            << " is changed to " << mu.row(i) << endl;
-
+                    Info<< "The viscosity of Offline case No. " << counter 
+                        << " is changed to " << mu(i, 0) << endl;
                     truthSolve("./ITHACAoutput/Offline/");
                     restart();
                 }
@@ -146,32 +115,14 @@ class tutorial06 : public SteadyNSTurb
         void offlineSolve(Eigen::MatrixXd par, fileName folder)
         {
             Vector<double> inl(0, 0, 0);
-            List<scalar> mu_now(3);
-            label BCind = 2;
-
-            vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
-            vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
+            List<scalar> mu_now(1);
 
             for (label i = 0; i < par.rows(); i++)
             {
-                List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-
-                forAll(mu_now, j)
-                {
-                    mu_now[j] = mu(i, j);
-                }
-                
-                forAll(Uinl, faceI)
-                {
-                    Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                    + mu(i, 2)*lift_2[faceI];
-                }
-                ITHACAutilities::assignBC(_U(), BCind, Uinl);
-
+                mu_now[0] = mu(i, 0);
                 change_viscosity(mu(i, 0));
-                std::cout << "The paras of Offline case No. " << counter 
-                        << " is changed to " << mu.row(i) << endl;
-
+                Info<< "The viscosity of Offline case No. " << counter 
+                    << " is changed to " << mu(i, 0) << endl;
                 truthSolve(folder);
                 restart();
             }
@@ -181,16 +132,11 @@ class tutorial06 : public SteadyNSTurb
         void onlineSolve(fileName folder)
         {
             Vector<double> inl(0, 0, 0);
-            List<scalar> mu_now(3);
-            label BCind = 2;
-
-            // Read the lift functions
-            ITHACAstream::read_fields(liftfield, U, "./lift/");
-            vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
-            vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
+            List<scalar> mu_now(1);
+            label BCind = 1;
 
             fileName filePath = folder + "1/U";
-            IFstream exFileOff(filePath); 
+            IFstream exFileOff(filePath);
             filePath = folder + "processor0/1/U";
             IFstream exFileOff2(filePath);
             
@@ -206,25 +152,11 @@ class tutorial06 : public SteadyNSTurb
                 {                    
                     for (label i = Ufield.size(); i < mu.rows(); i++)
                     {
-                        List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-
-                        forAll(mu_now, j)
-                        {
-                            mu_now[j] = mu(i, j);
-                        }
-                        
-                        forAll(Uinl, faceI)
-                        {
-                            Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                            + mu(i, 2)*lift_2[faceI];
-                        }
-                        ITHACAutilities::assignBC(_U(), BCind, Uinl);
-
+                        mu_now[0] = mu(i, 0);
                         change_viscosity(mu(i, 0));
                         counter = Ufield.size() + 1;
-                        std::cout << "The paras of Offline case No. " << counter 
-                                << " is changed to " << mu.row(i) << endl;
-
+                        Info<< "The viscosity of Online case No. " << counter 
+                            << " is changed to " << mu(i, 0) << endl;
                         truthSolve(folder);
                         restart();
                     }
@@ -234,24 +166,10 @@ class tutorial06 : public SteadyNSTurb
             {
                 for (label i = 0; i < mu.rows(); i++)
                 {
-                    List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-
-                    forAll(mu_now, j)
-                    {
-                        mu_now[j] = mu(i, j);
-                    }
-                    
-                    forAll(Uinl, faceI)
-                    {
-                        Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                        + mu(i, 2)*lift_2[faceI];
-                    }
-                    ITHACAutilities::assignBC(_U(), BCind, Uinl);
-
-                    change_viscosity(mu(i, 0));
-                    std::cout << "The paras of Offline case No. " << counter 
-                            << " is changed to " << mu.row(i) << endl;
-
+                    mu_now[0] = mu(i, 0);
+                    change_viscosity(mu(i, 0));                    
+                    Info<< "The viscosity of Online case No. " << counter 
+                        << " is changed to " << mu(i, 0) << endl;
                     truthSolve(folder);
                     restart();
                 }
@@ -292,16 +210,9 @@ int main(int argc, char* argv[])
     example.mu = ITHACAstream::readMatrix(par_offline);
 
     // Set the inlet boundaries where we have parameterized boundary conditions
-    // The first column is the index of the inlet patch and the second column is the direction,
-    // x,y,z of the inlet velocity
-    example.inletIndex.resize(example.mu.cols()-1, 2);
-    example.inletIndex.setConstant(0);
-
-    // create a list to store the time of different steps
-    List<scalar> timeList;
-    // The list for name of the steps
-    List<word> nameList;
-
+    example.inletIndex.resize(1, 2);
+    example.inletIndex(0, 0) = 2;
+    example.inletIndex(0, 1) = 2;
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
     // Read parameters from ITHACAdict file
@@ -312,35 +223,31 @@ int main(int argc, char* argv[])
     int NmodesProject = para->ITHACAdict->lookupOrDefault<int>("NmodesProject", 5);
     word stabilization = para->ITHACAdict->lookupOrDefault<word>("Stabilization",
                          "supremizer");
+    bool supremizerConsistent = para->ITHACAdict->lookupOrDefault<bool>("supremizerConsistent",
+                        "false");
+    // Perform The Offline Solve;
+    example.offlineSolve();
     // Read the lift functions
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
-    // Perform The Offline Solve;
-    example.offlineSolve();    
-    timeList.append(example._runTime().elapsedCpuTime());
-    nameList.append("OfflineSolve");
-
     // Create the homogeneous set of snapshots for the velocity field
     // ITHACAutilities::normalizeFields(example.liftfield);
     // Homogenize the snapshots
     if (example.nonUniformbc)
     {
-        Eigen::MatrixXd tmpmu(example.mu.rows(), example.mu.cols()-1);
-        for (label i = 0; i < example.mu.rows(); i++)
-        {
-            for (label j = 0; j < example.mu.cols()-1; j++)
-            {
-                tmpmu(i, j) = example.mu(i, j+1);
-            }
-        }
         // The shape of mu is different from the old code, so transpose it
-        Eigen::MatrixXd muTranspose = tmpmu.transpose();
+        Eigen::MatrixXd muTranspose = example.mu.transpose();
+        // set all value of mu to 1
+        for (label i = 0; i < muTranspose.cols(); i++)
+        {
+            muTranspose(0, i) = 1.0;
+        }
         example.computeLift(example.Ufield, example.liftfield, example.Uomfield, muTranspose);
     }
     else
     {
         example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
     }
-    
+
     IFstream exUomfield1(fileName ("./ITHACAoutput/Offline/1/Uofield"));
     IFstream exUomfield2(fileName ("./ITHACAoutput/Offline/processor0/1/Uofield"));
     if (!exUomfield1.good() && !exUomfield2.good())
@@ -349,8 +256,6 @@ int main(int argc, char* argv[])
         ITHACAstream::exportFields(example.Uomfield, "./ITHACAoutput/Offline",
             "Uofield");
     }
-    timeList.append(example._runTime().elapsedCpuTime());
-    nameList.append("HomogenizeUofield");
     
     // Perform a POD decomposition for the velocity, the pressure and the eddy viscosity
     ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
@@ -362,16 +267,19 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.nutFields, example.nutModes, example._nut().name(),
                         example.podex,
                         example.supex, 0, NmodesProject);
-    timeList.append(example._runTime().elapsedCpuTime());
-    nameList.append("POD");
 
     // Solve the supremizer problem based on the pressure modes
     if (stabilization == "supremizer")
     {
-        example.solvesupremizer("modes");
+        if (supremizerConsistent)
+        {
+            example.solvesupremizerConsistent("modes");
+        }
+        else
+        {
+            example.solvesupremizer("modes");
+        }        
     }
-    timeList.append(example._runTime().elapsedCpuTime());
-    nameList.append("SolveSupremizer");
 
     // Compute the reduced order matrices
     // Get reduced matrices
@@ -385,8 +293,6 @@ int main(int argc, char* argv[])
         example.projectPPE("./Matrices", NmodesU, NmodesP, NmodesSUP,
                            NmodesNUT);
     }
-    timeList.append(example._runTime().elapsedCpuTime());
-    nameList.append("Project");
 
     // Create an object of the turbulent class
     ReducedSteadyNSTurb pod_rbf(
@@ -395,14 +301,9 @@ int main(int argc, char* argv[])
     Eigen::MatrixXd rbfCoeff;
     rbfCoeff.resize(NmodesNUT, par_online.rows());
     pod_rbf.onlineMu = par_online;
-    label nuNum = par_online.cols()-1;
-    Eigen::MatrixXd velNow(nuNum, 1);
 
-    Info<< endl
-        << "##################################################################\n"
-        << "Performing the online solve for the new values of inlet velocities\n"
-        << "##################################################################"
-        << endl;
+    Eigen::MatrixXd velNow(1, 1);
+    velNow(0, 0) = 1.0;
 
     // Perform an online solve for the new values of inlet velocities
     for (label k = 0; k < par_online.rows(); k++)
@@ -413,13 +314,6 @@ int main(int argc, char* argv[])
 
         // Set value of the reduced viscosity and the penalty factor
         pod_rbf.nu = par_online(k, 0);
-
-        for(label n=0; n < nuNum; n++)
-        {
-            velNow(n, 0) = pod_rbf.onlineMu(k, n+1);
-        } 
-        Info << "Inlet Ux = " << velNow << " nu = " << pod_rbf.nu
-             << endl;
 
         if (stabilization == "supremizer")
         {
@@ -437,8 +331,6 @@ int main(int argc, char* argv[])
         pod_rbf.online_solution.append(tmp_sol);
 
     }
-    timeList.append(example._runTime().elapsedCpuTime());
-    nameList.append("OnlineSolve");
 
     // Save the matrix of interpolated eddy viscosity coefficients
     ITHACAstream::exportMatrix(rbfCoeff, "rbfCoeff", "python",
@@ -483,16 +375,7 @@ int main(int argc, char* argv[])
                                     name(k+1),
                                     "./ITHACAoutput/Online/");
     }
-    timeList.append(example._runTime().elapsedCpuTime());
-    nameList.append("done");
 
-    Info<< "The elapsed time for the different steps is:\n"
-        << "-----------------------------------------------------\n";
-    for (label i = 0; i < timeList.size(); i++)
-    {
-        Info<< nameList[i] << " = " << timeList[i] << endl;
-    }
-    Info<< "-----------------------------------------------------\n";
 
     // // --------------------------------------------------------------------
     // // Perform an online solve for the new values of inlet velocities
@@ -622,7 +505,7 @@ int main(int argc, char* argv[])
     // ITHACAstream::exportMatrix(errL2Nut, "errL2Nut", "matlab",
     //                            "./ITHACAoutput/ErrorsL2/");
 
-    return 0;
+    exit(0);
 }
 
 //--------

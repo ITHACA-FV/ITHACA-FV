@@ -374,6 +374,14 @@ class steadyNS: public reductionProblem
         ///
         void solvesupremizer(word type = "snapshots");
 
+        ///
+        /// solve the supremizer either with the use of the pressure snaphots or the pressure modes
+        /// with boundary conditions the same as velocity
+        ///
+        /// @param[in]  type  The type of the supremizer approach, either done on the pressure snapshots or on pressure modes.
+        ///
+        void solvesupremizerConsistent(word type = "snapshots");
+
         /// Perform a lift solve
         void liftSolve();
 
