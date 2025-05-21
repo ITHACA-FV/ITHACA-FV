@@ -624,7 +624,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
         }
         else
         {
-            C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+            C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
         }
 
         word G_str = "G_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
@@ -654,7 +654,7 @@ void steadyNS::projectPPE(fileName folder, label NU, label NP, label NSUP)
     else
     {
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-        C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+        C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
         M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         D_matrix = laplacian_pressure(NPmodes);
@@ -823,7 +823,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
         }
         else
         {
-            C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+            C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
         }
 
         if (bcMethod == "penalty")
@@ -841,7 +841,7 @@ void steadyNS::projectSUP(fileName folder, label NU, label NP, label NSUP)
     else
     {
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-        C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+        C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
         M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
@@ -999,7 +999,7 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP,
         }
         else
         {
-            C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+            C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
         }
 
         word Cf_str = "Cf_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
@@ -1046,7 +1046,7 @@ void steadyNS::discretizeThenProject(fileName folder, label NU, label NP,
     else
     {
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-        C_tensor = convective_term_tens(NUmodes, NPmodes, NSUPmodes);
+        C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
         BP_matrix = diffusive_term_flux_method(NUmodes, NPmodes, NSUPmodes);
@@ -1215,6 +1215,70 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_tens(label NUmodes,
             }
         }
     }
+
+    if (Pstream::master())
+    {
+        // Export the tensor
+        ITHACAstream::SaveDenseTensor(C_tensor, "./ITHACAoutput/Matrices/",
+                                      "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_t");
+    }
+
+    return C_tensor;
+}
+
+Eigen::Tensor<double, 3> steadyNS::convective_term_tens_cache(label NUmodes,
+        label NPmodes,
+        label NSUPmodes)
+{
+    label Csize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> C_tensor;
+    C_tensor.resize(Csize, Csize, Csize);
+
+    PtrList<autoPtr<volVectorField>> divCache(Csize*Csize);
+    for (label j = 0; j < Csize; ++j)
+    {
+        if (fluxMethod == "consistent")
+        {
+            for (label k = 0; k < Csize; ++k)
+            {
+                autoPtr<volVectorField> divFieldPtr
+                (
+                    new volVectorField
+                    (
+                        fvc::div(L_PHImodes[j], L_U_SUPmodes[k])
+                    )
+                );
+                divCache.set(j*Csize + k, new autoPtr<volVectorField>(divFieldPtr));
+            }
+        }
+        else
+        {
+            surfaceScalarField SfUj = linearInterpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf();
+            for (label k = 0; k < Csize; ++k)
+            {
+                autoPtr<volVectorField> divFieldPtr
+                (
+                    new volVectorField
+                    (
+                        fvc::div(SfUj, L_U_SUPmodes[k])
+                    )
+                );
+                divCache.set(j*Csize + k, new autoPtr<volVectorField>(divFieldPtr));
+            }
+        }
+    }
+
+    for (label i = 0; i < Csize; i++)
+    {
+        for (label j = 0; j < Csize; j++)
+        {
+            for (label k = 0; k < Csize; k++)
+            {
+                C_tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & divCache[j*Csize+k]()).value();
+            }
+        }
+    }        
 
     if (Pstream::master())
     {

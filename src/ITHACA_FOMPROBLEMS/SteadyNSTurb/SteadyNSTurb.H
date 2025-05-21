@@ -200,6 +200,18 @@ class SteadyNSTurb: public steadyNS
                 label NSUPmodes, label nNutModes);
 
         //--------------------------------------------------------------------------
+        /// @brief      ct1 tensor for the turbulence treatement
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct1 tensor for the turbulence treatement
+        ///
+        Eigen::Tensor<double, 3 > turbulenceTensor1_cache(label NUmodes,
+                label NSUPmodes, label nNutModes);
+
+        //--------------------------------------------------------------------------
         /// @brief      Method to compute one of the turbulence eddy viscosity tensors
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
@@ -221,6 +233,18 @@ class SteadyNSTurb: public steadyNS
         /// @return     ct2 tensor for the turbulence treatement
         ///
         Eigen::Tensor<double, 3 > turbulenceTensor2(label NUmodes,
+                label NSUPmodes, label nNutModes);
+        
+        //--------------------------------------------------------------------------
+        /// @brief      Method to compute one of the turbulence eddy viscosity tensors
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct2 tensor for the turbulence treatement
+        ///
+        Eigen::Tensor<double, 3 > turbulenceTensor2_cache(label NUmodes,
                 label NSUPmodes, label nNutModes);
 
         //--------------------------------------------------------------------------

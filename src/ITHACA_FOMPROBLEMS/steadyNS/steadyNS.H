@@ -848,6 +848,19 @@ class steadyNS: public reductionProblem
                 label NPmodes,
                 label NSUPmodes);
 
+        //--------------------------------------------------------------------------
+        /// @brief      Export convective term as a tensor
+        ///
+        /// @param[in]  NUmodes    The N of velocity modes
+        /// @param[in]  NPmodes    The N of pressure modes
+        /// @param[in]  NSUPmodes  The N of supremizer modes
+        ///
+        /// @return     tensor_C
+        ///
+        Eigen::Tensor<double, 3 > convective_term_tens_cache(label NUmodes,
+                label NPmodes,
+                label NSUPmodes);
+
         /// set U and P back to the values into the 0 folder
         void restart();
 
