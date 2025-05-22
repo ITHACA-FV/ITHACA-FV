@@ -199,6 +199,7 @@ class HyperReduction
 
         /// Quadrature weights. Ordered in the same order of matrix P.
         Eigen::VectorXd quadratureWeights;
+        List<Eigen::VectorXd> quadratureWeightsSubspaces;
 
         /// Submesh of the HyperReduction method
         autoPtr<fvMeshSubset> submesh;
@@ -235,7 +236,21 @@ class HyperReduction
         }
 
         void offlineECP(Eigen::MatrixXd& snapshotsModes,
-                        Eigen::VectorXd& normalizingWeights, word folderMethodName, bool predictVolume = 1);
+                        Eigen::VectorXd& normalizingWeights, word folderMethodName, bool predictVolume = 1)
+        {
+            List<Eigen::MatrixXd> listSnapshotsModes(1);
+            listSnapshotsModes[0] = snapshotsModes.leftCols(n_modes);
+            offlineECP(listSnapshotsModes, normalizingWeights, folderMethodName, predictVolume);
+        }
+
+        //----------------------------------------------------------------------
+        /// @brief      Methods implemented: close to 'SAW-ECM' from "J.R.Bravo, J.A.Hernández, S.Ares de Parga, R.Rossi. "A subspace-adaptive weights cubature method with application to the local hyperreduction of parameterized finite element models". (2024). TODO implement non-negative LS.
+        ///                                  and also close to the above method when vectorial_dim > 1
+        ///                                  Snapshots are grouped into subspaces. HR nodes are shared by all subspaces. HR weights can differ.
+        ///
+        void offlineECP(List<Eigen::MatrixXd>& listSnapshotsModes,
+                        Eigen::VectorXd& weights, word folderMethodName, bool predictVolume = 1);
+
 
         //----------------------------------------------------------------------
         /// @brief      TODO
