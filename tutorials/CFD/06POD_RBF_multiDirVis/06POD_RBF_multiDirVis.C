@@ -314,6 +314,11 @@ int main(int argc, char* argv[])
                          "supremizer");
     bool supremizerConsistent = para->ITHACAdict->lookupOrDefault<bool>("supremizerConsistent",
                         "false");
+    bool exportrecField = para->ITHACAdict->lookupOrDefault<bool>("exportrecField",
+                            "false");
+    bool exportErrorField = para->ITHACAdict->lookupOrDefault<bool>("exportErrorField",
+                            "false");
+
     // Read the lift functions
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     // Perform The Offline Solve;
@@ -463,7 +468,7 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/red_coeff");
     pod_rbf.rbfCoeffMat = rbfCoeff;
     // Reconstruct and export the solution
-    pod_rbf.reconstruct(true, "./ITHACAoutput/Online/");
+    pod_rbf.reconstruct(exportrecField, "./ITHACAoutput/Online/");
 
     tutorial06 onlineExample(argc, argv);
     onlineExample.mu = par_online;
@@ -481,25 +486,37 @@ int main(int argc, char* argv[])
 
     // Export errorfields
     // Perform an online solve for the new values of inlet velocities
-    for (label k = 0; k < onlineExample.mu.rows(); k++)
+    if (exportErrorField)
     {
-        volVectorField Uerror("Uerror", onlineExample.Ufield[k] - pod_rbf.uRecFields[k]);
-        volScalarField perror("perror", onlineExample.Pfield[k] - pod_rbf.pRecFields[k]);
-        ITHACAstream::exportSolution(Uerror,
-                                    name(k+1),
-                                    "./ITHACAoutput/Online/");
-        ITHACAstream::exportSolution(perror,
-                                    name(k+1),
-                                    "./ITHACAoutput/Online/");
+        // Export the error fields
+        for (label k = 0; k < onlineExample.mu.rows(); k++)
+        {
+            volVectorField Uerror("Uerror", onlineExample.Ufield[k] - pod_rbf.uRecFields[k]);
+            volScalarField perror("perror", onlineExample.Pfield[k] - pod_rbf.pRecFields[k]);
+            ITHACAstream::exportSolution(Uerror,
+                                        name(k+1),
+                                        "./ITHACAoutput/Online/");
+            ITHACAstream::exportSolution(perror,
+                                        name(k+1),
+                                        "./ITHACAoutput/Online/");
+        }
     }
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("done");
 
+    List<scalar> globalTimeList(timeList.size(), 0.0);
+    forAll(timeList, i)
+    {
+        scalar localVal = timeList[i];
+        reduce(localVal, maxOp<scalar>());
+        globalTimeList[i] = localVal;
+    }
+
     Info<< "The elapsed time for the different steps is:\n"
         << "-----------------------------------------------------\n";
-    for (label i = 0; i < timeList.size(); i++)
+    for (label i = 0; i < globalTimeList.size(); i++)
     {
-        Info<< nameList[i] << " = " << timeList[i] << endl;
+        Info<< nameList[i] << " = " << globalTimeList[i] << endl;
     }
     Info<< "-----------------------------------------------------\n";
 
