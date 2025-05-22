@@ -213,6 +213,12 @@ int main(int argc, char* argv[])
     example.inletIndex.resize(1, 2);
     example.inletIndex(0, 0) = 2;
     example.inletIndex(0, 1) = 2;
+
+    // create a list to store the time of different steps
+    List<scalar> timeList;
+    // The list for name of the steps
+    List<word> nameList;
+
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
                              example._runTime());
     // Read parameters from ITHACAdict file
@@ -229,6 +235,9 @@ int main(int argc, char* argv[])
     example.offlineSolve();
     // Read the lift functions
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("OfflineSolve");
+
     // Create the homogeneous set of snapshots for the velocity field
     // ITHACAutilities::normalizeFields(example.liftfield);
     // Homogenize the snapshots
@@ -256,6 +265,8 @@ int main(int argc, char* argv[])
         ITHACAstream::exportFields(example.Uomfield, "./ITHACAoutput/Offline",
             "Uofield");
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("HomogenizeUofield");
     
     // Perform a POD decomposition for the velocity, the pressure and the eddy viscosity
     ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
@@ -267,6 +278,8 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.nutFields, example.nutModes, example._nut().name(),
                         example.podex,
                         example.supex, 0, NmodesProject);
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("POD");
 
     // Solve the supremizer problem based on the pressure modes
     if (stabilization == "supremizer")
@@ -280,6 +293,8 @@ int main(int argc, char* argv[])
             example.solvesupremizer("modes");
         }        
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("SolveSupremizer");
 
     // Compute the reduced order matrices
     // Get reduced matrices
@@ -293,6 +308,8 @@ int main(int argc, char* argv[])
         example.projectPPE("./Matrices", NmodesU, NmodesP, NmodesSUP,
                            NmodesNUT);
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("Project");
 
     // Create an object of the turbulent class
     ReducedSteadyNSTurb pod_rbf(
@@ -331,6 +348,8 @@ int main(int argc, char* argv[])
         pod_rbf.online_solution.append(tmp_sol);
 
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("OnlineSolve");
 
     // Save the matrix of interpolated eddy viscosity coefficients
     ITHACAstream::exportMatrix(rbfCoeff, "rbfCoeff", "python",
@@ -347,6 +366,15 @@ int main(int argc, char* argv[])
     pod_rbf.rbfCoeffMat = rbfCoeff;
     // Reconstruct and export the solution
     pod_rbf.reconstruct(true, "./ITHACAoutput/Online/");
+
+    // example.Ufield.~PtrList ();
+    // example.Pfield.~PtrList ();
+    // example.nutFields.~PtrList ();
+    // example.liftfield.~PtrList ();
+    // example.Umodes.~PtrList ();
+    // example.Pmodes.~PtrList ();
+    // example.nutModes.~PtrList ();
+    // example.Uomfield.~PtrList ();
 
     tutorial06 onlineExample(argc, argv);
     onlineExample.mu = par_online;
@@ -375,135 +403,16 @@ int main(int argc, char* argv[])
                                     name(k+1),
                                     "./ITHACAoutput/Online/");
     }
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("done");
 
-
-    // // --------------------------------------------------------------------
-    // // Perform an online solve for the new values of inlet velocities
-    // // Compute the error of the online solutions
-    // // --------------------------------------------------------------------
-    // tutorial06 onlineExample(argc, argv);
-    // // Run truthsolve for online parameters
-    // onlineExample.mu = ITHACAstream::readMatrix(par_new);
-    // onlineExample.offlineSolve(onlineExample.mu, "./ITHACAoutput/Online/");
-
-    // // Write error of online solutions
-    // Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(onlineExample.Ufield,
-    //                                                         pod_rbf.uRecFields);
-    // Eigen::MatrixXd errL2P = ITHACAutilities::errorL2Rel(onlineExample.Pfield,
-    //                                                         pod_rbf.pRecFields);
-    // ITHACAstream::exportMatrix(errL2U, "errL2U", "python",
-    //                             "./ITHACAoutput/Online/ErrorsL2/");
-    // ITHACAstream::exportMatrix(errL2P, "errL2P", "python",
-    //                             "./ITHACAoutput/Online/ErrorsL2/");
-
-    // // Export errorfields
-    // // Perform an online solve for the new values of inlet velocities
-    // for (label k = 0; k < example.mu.cols(); k++)
-    // {
-    //     volVectorField Uerror("Uerror", onlineExample.Ufield[k] - pod_rbf.uRecFields[k]);
-    //     volScalarField perror("perror", onlineExample.Pfield[k] - pod_rbf.pRecFields[k]);
-    //     ITHACAstream::exportSolution(Uerror,
-    //                                 name(k+1),
-    //                                 "./ITHACAoutput/Online/");
-    //     ITHACAstream::exportSolution(perror,
-    //                                 name(k+1),
-    //                                 "./ITHACAoutput/Online/");
-    // }
-
-    // // create a prtlst object to store the online fields
-    // PtrList<volVectorField> onlineVelocityFields;
-    // PtrList<volScalarField> onlinePressureFields;
-
-    // // Export errorfields
-    // // Perform an online solve for the new values of inlet velocities
-    // for (label k = 0; k < par_online.cols(); k++)
-    // {
-    //     onlineVelocityFields.append(example.Ufield[k+15].clone());
-    //     onlinePressureFields.append(example.Pfield[k+15].clone());
-
-    //     // volVectorField Uerror("Uerror", example.Ufield[k+15] - pod_rbf.uRecFields[k]);
-    //     // volScalarField perror("perror", example.Pfield[k+15] - pod_rbf.pRecFields[k]);
-
-    //     // ITHACAstream::exportSolution(Uerror,
-    //     //         name(k+1),
-    //     //         "./ITHACAoutput/Online/");
-    //     // ITHACAstream::exportSolution(perror,
-    //     //         name(k+1),
-    //     //         "./ITHACAoutput/Online/");
-    // }
-
-    // // Write error of online solutions
-    // Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(onlineVelocityFields,
-    //     pod_rbf.uRecFields);
-    // Eigen::MatrixXd errL2P = ITHACAutilities::errorL2Rel(onlinePressureFields,
-    //     pod_rbf.pRecFields);
-
-    // ITHACAstream::exportMatrix(errL2U, "errL2U", "python",
-    //         "./ITHACAoutput/Online/ErrorsL2/");
-    // ITHACAstream::exportMatrix(errL2P, "errL2P", "python",
-    //         "./ITHACAoutput/Online/ErrorsL2/");
-
-    // // Create an object of the laminar class
-    // reducedSteadyNS pod_normal(
-    //     example);
-    // // Set value of the reduced viscosity and the penalty factor
-    // pod_normal.nu = 1e-3;
-    // pod_normal.tauU.resize(2, 1);
-
-    // // Perform an online solve for the new values of inlet velocities
-    // for (label k = 0; k < par_online.rows(); k++)
-    // {
-    //     Eigen::MatrixXd vel_now(2, 1);
-    //     vel_now(0, 0) = par_online(k, 0);
-    //     vel_now(1, 0) = par_online(k, 1);
-    //     pod_normal.tauU(0, 0) = 0;
-    //     pod_normal.tauU(1, 0) = 0;
-    //     pod_normal.solveOnline_sup(vel_now);
-    //     Eigen::MatrixXd tmp_sol(pod_normal.y.rows() + 1, 1);
-    //     tmp_sol(0) = k + 1;
-    //     tmp_sol.col(0).tail(pod_normal.y.rows()) = pod_normal.y;
-    //     pod_normal.online_solution.append(tmp_sol);
-    // }
-
-    // // Save the online solution
-    // ITHACAstream::exportMatrix(pod_normal.online_solution, "red_coeffnew", "python",
-    //                            "./ITHACAoutput/red_coeffnew");
-    // ITHACAstream::exportMatrix(pod_normal.online_solution, "red_coeffnew", "matlab",
-    //                            "./ITHACAoutput/red_coeffnew");
-    // ITHACAstream::exportMatrix(pod_normal.online_solution, "red_coeffnew", "eigen",
-    //                            "./ITHACAoutput/red_coeffnew");
-    // // Reconstruct and export the solution
-    // pod_normal.reconstruct(true, "./ITHACAoutput/Lam_Rec/");
-    // // Solve the full order problem for the online velocity values for the purpose of comparison
-    // // if (ITHACAutilities::check_folder("./ITHACAoutput/Offline_check") == false)
-    // // {
-    // //     example.offlineSolve(par_online, "./ITHACAoutput/Offline_check/");
-    // //     ITHACAutilities::createSymLink("./ITHACAoutput/Offline_check");
-    // // }
-    // Eigen::MatrixXd errFrobU = ITHACAutilities::errorFrobRel(example.Ufield,
-    //                            pod_rbf.uRecFields);
-    // Eigen::MatrixXd errFrobP =  ITHACAutilities::errorFrobRel(example.Pfield,
-    //                             pod_rbf.pRecFields);
-    // Eigen::MatrixXd errFrobNut =  ITHACAutilities::errorFrobRel(example.nutFields,
-    //                               pod_rbf.nutRecFields);
-    // ITHACAstream::exportMatrix(errFrobU, "errFrobU", "matlab",
-    //                            "./ITHACAoutput/ErrorsFrob/");
-    // ITHACAstream::exportMatrix(errFrobP, "errFrobP", "matlab",
-    //                            "./ITHACAoutput/ErrorsFrob/");
-    // ITHACAstream::exportMatrix(errFrobNut, "errFrobNut", "matlab",
-    //                            "./ITHACAoutput/ErrorsFrob/");
-    // Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(example.Ufield,
-    //                          pod_rbf.uRecFields);
-    // Eigen::MatrixXd errL2P =  ITHACAutilities::errorL2Rel(example.Pfield,
-    //                           pod_rbf.pRecFields);
-    // Eigen::MatrixXd errL2Nut =  ITHACAutilities::errorL2Rel(example.nutFields,
-    //                             pod_rbf.nutRecFields);
-    // ITHACAstream::exportMatrix(errL2U, "errL2U", "matlab",
-    //                            "./ITHACAoutput/ErrorsL2/");
-    // ITHACAstream::exportMatrix(errL2P, "errL2P", "matlab",
-    //                            "./ITHACAoutput/ErrorsL2/");
-    // ITHACAstream::exportMatrix(errL2Nut, "errL2Nut", "matlab",
-    //                            "./ITHACAoutput/ErrorsL2/");
+    Info<< "The elapsed time for the different steps is:\n"
+        << "-----------------------------------------------------\n";
+    for (label i = 0; i < timeList.size(); i++)
+    {
+        Info<< nameList[i] << " = " << timeList[i] << endl;
+    }
+    Info<< "-----------------------------------------------------\n";
 
     exit(0);
 }
