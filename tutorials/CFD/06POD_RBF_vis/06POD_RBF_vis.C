@@ -230,11 +230,11 @@ int main(int argc, char* argv[])
     word stabilization = para->ITHACAdict->lookupOrDefault<word>("Stabilization",
                          "supremizer");
     bool supremizerConsistent = para->ITHACAdict->lookupOrDefault<bool>("supremizerConsistent",
-                        "false");
+                        false);
     bool exportrecField = para->ITHACAdict->lookupOrDefault<bool>("exportrecField",
-                            "false");
+                            false);
     bool exportErrorField = para->ITHACAdict->lookupOrDefault<bool>("exportErrorField",
-                            "false");
+                            false);
     // Perform The Offline Solve;
     example.offlineSolve();
     // Read the lift functions

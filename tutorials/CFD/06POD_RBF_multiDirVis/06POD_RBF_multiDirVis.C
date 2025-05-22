@@ -313,11 +313,11 @@ int main(int argc, char* argv[])
     word stabilization = para->ITHACAdict->lookupOrDefault<word>("Stabilization",
                          "supremizer");
     bool supremizerConsistent = para->ITHACAdict->lookupOrDefault<bool>("supremizerConsistent",
-                        "false");
+                        false);
     bool exportrecField = para->ITHACAdict->lookupOrDefault<bool>("exportrecField",
-                            "false");
+                            false);
     bool exportErrorField = para->ITHACAdict->lookupOrDefault<bool>("exportErrorField",
-                            "false");
+                            false);
 
     // Read the lift functions
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
