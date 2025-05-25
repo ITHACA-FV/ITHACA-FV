@@ -469,6 +469,8 @@ int main(int argc, char* argv[])
     pod_rbf.rbfCoeffMat = rbfCoeff;
     // Reconstruct and export the solution
     pod_rbf.reconstruct(exportrecField, "./ITHACAoutput/Online/");
+    timeList.append(example._runTime().elapsedCpuTime());
+    nameList.append("Reconstruct");
 
     tutorial06 onlineExample(argc, argv);
     onlineExample.mu = par_online;
