@@ -372,6 +372,10 @@ int main(int argc, char* argv[])
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("POD");
 
+    example.Ufield.clear();
+    example.Phifield.clear();
+    example.Uomfield.clear();
+
     // Solve the supremizer problem based on the pressure modes
     if (stabilization == "supremizer")
     {
@@ -386,6 +390,8 @@ int main(int argc, char* argv[])
     }
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("SolveSupremizer");
+
+    example.Pfield.clear();
 
     // Compute the reduced order matrices
     // Get reduced matrices
@@ -472,14 +478,22 @@ int main(int argc, char* argv[])
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("Reconstruct");
 
-    tutorial06 onlineExample(argc, argv);
-    onlineExample.mu = par_online;
-    onlineExample.onlineSolve("./ITHACAoutput/Online/");
+    example.Umodes.clear();
+    example.Pmodes.clear();
+    example.nutModes.clear();
+    example.supmodes.clear();
+    example.liftfield.clear();
+    example.nutFields.clear();
+    example.L_U_SUPmodes.clear();
+    example.L_PHImodes.clear();
+
+    example.mu = par_online;
+    example.onlineSolve("./ITHACAoutput/Online/");
 
     // Write error of online solutions
-    Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(onlineExample.Ufield,
+    Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(example.Ufield,
                                                             pod_rbf.uRecFields);
-    Eigen::MatrixXd errL2P = ITHACAutilities::errorL2Rel(onlineExample.Pfield,
+    Eigen::MatrixXd errL2P = ITHACAutilities::errorL2Rel(example.Pfield,
                                                             pod_rbf.pRecFields);
     ITHACAstream::exportMatrix(errL2U, "errL2U", "python",
                                 "./ITHACAoutput/Online/ErrorsL2/");
@@ -491,10 +505,10 @@ int main(int argc, char* argv[])
     if (exportErrorField)
     {
         // Export the error fields
-        for (label k = 0; k < onlineExample.mu.rows(); k++)
+        for (label k = 0; k < example.mu.rows(); k++)
         {
-            volVectorField Uerror("Uerror", onlineExample.Ufield[k] - pod_rbf.uRecFields[k]);
-            volScalarField perror("perror", onlineExample.Pfield[k] - pod_rbf.pRecFields[k]);
+            volVectorField Uerror("Uerror", example.Ufield[k] - pod_rbf.uRecFields[k]);
+            volScalarField perror("perror", example.Pfield[k] - pod_rbf.pRecFields[k]);
             ITHACAstream::exportSolution(Uerror,
                                         name(k+1),
                                         "./ITHACAoutput/Online/");

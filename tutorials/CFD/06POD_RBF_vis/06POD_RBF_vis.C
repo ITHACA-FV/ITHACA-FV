@@ -282,6 +282,10 @@ int main(int argc, char* argv[])
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("POD");
 
+    example.Ufield.clear();
+    example.Phifield.clear();
+    example.Uomfield.clear();
+
     // Solve the supremizer problem based on the pressure modes
     if (stabilization == "supremizer")
     {
@@ -296,6 +300,8 @@ int main(int argc, char* argv[])
     }
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("SolveSupremizer");
+
+    example.Pfield.clear();
 
     // Compute the reduced order matrices
     // Get reduced matrices
@@ -370,14 +376,14 @@ int main(int argc, char* argv[])
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("Reconstruct");
 
-    example.Ufield.clear();
-    example.Pfield.clear();
-    example.nutFields.clear();
-    example.liftfield.clear();
     example.Umodes.clear();
     example.Pmodes.clear();
     example.nutModes.clear();
-    example.Uomfield.clear();
+    example.supmodes.clear();
+    example.liftfield.clear();
+    example.nutFields.clear();
+    example.L_U_SUPmodes.clear();
+    example.L_PHImodes.clear();
 
     example.mu = par_online;
     example.onlineSolve("./ITHACAoutput/Online/");
