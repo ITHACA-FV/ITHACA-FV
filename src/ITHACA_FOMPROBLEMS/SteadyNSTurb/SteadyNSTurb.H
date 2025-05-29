@@ -202,7 +202,7 @@ class SteadyNSTurb: public steadyNS
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
         /// @param[in]  nNutModes  The number of eddy viscosity modes.
-        ///Add commentMore actions
+        ///
         /// @return     ct1 tensor for the turbulence treatement
         ///
         Eigen::Tensor<double, 3 > turbulenceTensor1_cache(label NUmodes,
@@ -232,7 +232,7 @@ class SteadyNSTurb: public steadyNS
         Eigen::Tensor<double, 3 > turbulenceTensor2(label NUmodes,
                 label NSUPmodes, label nNutModes);
 
-        //--------------------------------------------------------------------------Add commentMore actions
+        //--------------------------------------------------------------------------
         /// @brief      Method to compute one of the turbulence eddy viscosity tensors using the cached procedure
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
