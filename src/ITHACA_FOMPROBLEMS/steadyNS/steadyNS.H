@@ -513,6 +513,18 @@ class steadyNS: public reductionProblem
         Eigen::Tensor<double, 3 > divMomentum(label NUmodes, label NPmodes);
 
         //--------------------------------------------------------------------------
+        /// Divergence of convective term (PPE approach) using the cached procedure
+        ///
+        /// @brief      Divergence of convective term (PPE approach)
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        ///
+        /// @return     reduced third order tensor for the conv. term which is used for the PPE approach
+        ///
+        Eigen::Tensor<double, 3 > divMomentum_cache(label NUmodes, label NPmodes);
+
+        //--------------------------------------------------------------------------
         /// Laplacian of pressure term (PPE approach)
         ///
         /// @param[in]  NPmodes    The number of pressure modes.

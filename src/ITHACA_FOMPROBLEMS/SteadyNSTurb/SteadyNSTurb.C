@@ -389,6 +389,50 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1(label NUmodes,
     return ct1PPETensor;
 }
 
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
+        label NSUPmodes, label NPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct1PPETensor;
+    ct1PPETensor.resize(NPmodes, nNutModes, cSize);
+
+    PtrList<autoPtr<volVectorField>> lapCache(cSize*cSize);
+    for (label j = 0; j < nNutModes; j++)
+    {
+        for (label k = 0; k < cSize; k++)
+        {
+            autoPtr<volVectorField> lapFieldPtr
+            (
+                new volVectorField
+                (
+                    fvc::laplacian(nutModes[j], L_U_SUPmodes[k])
+                )
+            );
+            lapCache.set(j*cSize + k, new autoPtr<volVectorField>(lapFieldPtr));
+        }
+    }
+
+    for (label i = 0; i < NPmodes; i++)
+    {
+        for (label j = 0; j < nNutModes; j++)
+        {
+            for (label k = 0; k < cSize; k++)
+            {
+                ct1PPETensor(i, j, k) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & lapCache[j*cSize+k]()).value();
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct1PPETensor, "./ITHACAoutput/Matrices/",
+                                      "ct1PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
+    }
+    return ct1PPETensor;
+}
+
 Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2(label NUmodes,
         label NSUPmodes, label NPmodes, label nNutModes)
 {
@@ -417,6 +461,50 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2(label NUmodes,
     ITHACAstream::SaveDenseTensor(ct2PPETensor, "./ITHACAoutput/Matrices/",
                                   "ct2PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                       NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
+    return ct2PPETensor;
+}
+
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
+        label NSUPmodes, label NPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct2PPETensor;
+    ct2PPETensor.resize(NPmodes, nNutModes, cSize);
+
+    PtrList<autoPtr<volVectorField>> divCache(cSize*cSize);
+    for (label j = 0; j < nNutModes; j++)
+    {
+        for (label k = 0; k < cSize; k++)
+        {
+            autoPtr<volVectorField> lapFieldPtr
+            (
+                new volVectorField
+                (
+                    fvc::div(nutModes[j] * dev2((fvc::grad(L_U_SUPmodes[k]))().T()))
+                )
+            );
+            divCache.set(j*cSize + k, new autoPtr<volVectorField>(lapFieldPtr));
+        }
+    }
+
+    for (label i = 0; i < NPmodes; i++)
+    {
+        for (label j = 0; j < nNutModes; j++)
+        {
+            for (label k = 0; k < cSize; k++)
+            {
+                ct2PPETensor(i, j, k) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & divCache[j*cSize+k]()).value();
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct2PPETensor, "./ITHACAoutput/Matrices/",
+                                      "ct2PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
+    }
     return ct2PPETensor;
 }
 
