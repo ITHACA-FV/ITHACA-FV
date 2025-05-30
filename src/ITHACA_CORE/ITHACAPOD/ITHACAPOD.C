@@ -138,10 +138,10 @@ void getModes(
             _corMatrix = ITHACAutilities::getMassMatrix(snapshots, 0, false);
         }
 
-        if (Pstream::parRun())
-        {
-            reduce(_corMatrix, sumOp<Eigen::MatrixXd>());
-        }
+        // if (Pstream::parRun())
+        // {
+        //     reduce(_corMatrix, sumOp<Eigen::MatrixXd>());
+        // }
 
         Eigen::VectorXd eigenValueseig;
         Eigen::MatrixXd eigenVectoreig;
