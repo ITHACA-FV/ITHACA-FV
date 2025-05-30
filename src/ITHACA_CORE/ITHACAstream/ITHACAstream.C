@@ -474,7 +474,7 @@ GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
                    IOobject
                    (
                        field.name(),
-                       casename + runTime2.times()[index + 2].name(),
+                       casename + "/" + runTime2.times()[index + 2].name(),
                        field.mesh(),
                        IOobject::MUST_READ
                    ),
@@ -486,9 +486,9 @@ GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
         word timename(field.mesh().time().rootPath() + "/" +
                       field.mesh().time().caseName());
         timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
+        timename = timename + "/" + casename + "/" + "processor" + name(Pstream::myProcNo());
         int last_s = numberOfFiles(casename,
-                                   "processor" + name(Pstream::myProcNo()) + "/");
+                                   "processor" + name(Pstream::myProcNo()));
 
         if (index >= last_s - 1)
         {
@@ -546,7 +546,7 @@ void read_fields(
                 IOobject
                 (
                     Name,
-                    casename + runTime2.times()[i].name(),
+                    casename + "/" + runTime2.times()[i].name(),
                     mesh,
                     IOobject::MUST_READ
                 ),
@@ -564,7 +564,7 @@ void read_fields(
         word timename(mesh.time().rootPath() + "/" +
                       mesh.time().caseName() );
         timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
+        timename = timename + "/" + casename + "/" + "processor" + name(Pstream::myProcNo());
         int last_s = numberOfFiles(casename,
                                    "processor" + name(Pstream::myProcNo()) + "/");
 
@@ -639,7 +639,7 @@ void read_fields(
                 IOobject
                 (
                     field.name(),
-                    casename + runTime2.times()[i].name(),
+                    casename + "/" + runTime2.times()[i].name(),
                     field.mesh(),
                     IOobject::MUST_READ
                 ),
@@ -658,7 +658,7 @@ void read_fields(
         word timename(field.mesh().time().rootPath() + "/" +
                       field.mesh().time().caseName() );
         timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
+        timename = timename + "/" + casename + "/" + "processor" + name(Pstream::myProcNo());
         int last_s = numberOfFiles(casename,
                                    "processor" + name(Pstream::myProcNo()) + "/");
 
@@ -703,12 +703,12 @@ void readMiddleFields(
     GeometricField<Type, PatchField, GeoMesh>& field, fileName casename)
 {
     int par = 1;
-    M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
+    M_Assert(ITHACAutilities::check_folder(casename + "/" + name(par)) != 0,
              "No parameter dependent solutions stored into Offline folder");
 
-    while (ITHACAutilities::check_folder(casename + name(par)))
+    while (ITHACAutilities::check_folder(casename + "/" + name(par)))
     {
-        read_fields(Lfield, field, casename + name(par) + "/");
+        read_fields(Lfield, field, casename + "/" + name(par));
         par++;
     }
 }
@@ -720,16 +720,16 @@ void readConvergedFields(
     fileName casename)
 {
     int par = 1;
-    M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
+    M_Assert(ITHACAutilities::check_folder(casename + "/" + name(par)) != 0,
              "No parameter dependent solutions stored into Offline folder");
     std::cout << "######### Reading the Data for " << field.name() << " #########"
               << std::endl;
 
-    while (ITHACAutilities::check_folder(casename + name(par)))
+    while (ITHACAutilities::check_folder(casename + "/" + name(par)))
     {
         int last = 1;
 
-        while (ITHACAutilities::check_folder(casename + name(par) + "/" + name(last)))
+        while (ITHACAutilities::check_folder(casename + "/" + name(par) + "/" + name(last)))
         {
             last++;
         }
@@ -738,7 +738,7 @@ void readConvergedFields(
             IOobject
             (
                 field.name(),
-                casename + name(par) + "/" + name(last - 1),
+                casename + "/" + name(par) + "/" + name(last - 1),
                 field.mesh(),
                 IOobject::MUST_READ
             ),
@@ -768,7 +768,7 @@ void read_last_fields(
             IOobject
             (
                 field.name(),
-                casename + runTime2.times()[last_s - 1].name(),
+                casename + "/" + runTime2.times()[last_s - 1].name(),
                 field.mesh(),
                 IOobject::MUST_READ
             ),
@@ -781,7 +781,7 @@ void read_last_fields(
                 IOobject
                 (
                     field.name(),
-                    casename + runTime2.times()[last_s - 1].name(),
+                    casename + "/" + runTime2.times()[last_s - 1].name(),
                     field.mesh(),
                     IOobject::MUST_READ
                 ),
@@ -799,9 +799,9 @@ void read_last_fields(
         word timename(field.mesh().time().rootPath() + "/" +
                       field.mesh().time().caseName() );
         timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
+        timename = timename + "/" + casename + "/" + "processor" + name(Pstream::myProcNo());
         int last_s = numberOfFiles(casename,
-                                   "processor" + name(Pstream::myProcNo()) + "/");
+                                   "processor" + name(Pstream::myProcNo()));
 #if defined(OFVER) && (OFVER >= 2212)
         Lfield.emplace_back
         (
@@ -840,12 +840,12 @@ void readLastFields(
     const fileName casename)
 {
     int par = 1;
-    M_Assert(ITHACAutilities::check_folder(casename + name(par)) != 0,
+    M_Assert(ITHACAutilities::check_folder(casename + "/" + name(par)) != 0,
              "No parameter dependent solutions stored into Offline folder");
 
-    while (ITHACAutilities::check_folder(casename + name(par)))
+    while (ITHACAutilities::check_folder(casename + "/" + name(par)))
     {
-        read_last_fields(Lfield, field, casename + name(par) + "/");
+        read_last_fields(Lfield, field, casename + "/" + name(par));
         par++;
     }
 }
@@ -1134,7 +1134,7 @@ template<typename T>
 void exportList(T& list, word folder, word filename)
 {
     mkDir(folder);
-    word fieldname = folder + filename;
+    word fieldname = folder + "/" + filename;
     OFstream os(fieldname);
 
     for (int i = 0; i < list.size(); i++)
