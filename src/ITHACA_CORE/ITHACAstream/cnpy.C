@@ -525,16 +525,14 @@ void cnpy::save(const Eigen::Tensor<typeNumber, 3>&
 template<class typeNumber, int dim>
 Eigen::Matrix<typeNumber, Eigen::Dynamic, dim> cnpy::load(
     Eigen::Matrix<typeNumber, Eigen::Dynamic, dim>& mat,
-    const std::string fname, std::string order)
+    const std::string fname)
 {
-    M_Assert(order == "rowMajor" ||
-             order == "colMajor", "Order can be only rowMajor or colMajor");
     NpyArray arr = npy_load(fname);
     assert(arr.shape.size() == 2);
     mat.resize(arr.shape[0], arr.shape[1]);
     std::vector<typeNumber> data = arr.as_vec<typeNumber>();
 
-    if (order == "rowMajor")
+    if (!arr.fortran_order)
     {
         for (size_t i = 0; i < arr.shape[0]; ++i)
         {
@@ -544,13 +542,13 @@ Eigen::Matrix<typeNumber, Eigen::Dynamic, dim> cnpy::load(
             }
         }
     }
-    else if (order == "colMajor")
+    else
     {
         for (size_t i = 0; i < arr.shape[0]; ++i)
         {
             for (size_t j = 0; j < arr.shape[1]; ++j)
             {
-                data[arr.shape[0] * j + i];
+                mat(i, j) = data[arr.shape[0] * j + i];
             }
         }
     }
@@ -561,17 +559,15 @@ Eigen::Matrix<typeNumber, Eigen::Dynamic, dim> cnpy::load(
 
 template<typename typeNumber>
 Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
-                                        const std::string fname, std::string order)
+                                        const std::string fname)
 {
-    M_Assert(order == "rowMajor" ||
-             order == "colMajor", "Order can be only rowMajor or colMajor");
     NpyArray arr = npy_load(fname);
     assert(arr.shape.size() == 3);
     tens.resize(static_cast<long>(arr.shape[0]), static_cast<long>(arr.shape[1]),
                 static_cast<long>(arr.shape[2]));
     std::vector<typeNumber> data = arr.as_vec<typeNumber>();
 
-    if (order == "rowMajor")
+    if (!arr.fortran_order)
     {
         for (size_t i = 0; i < arr.shape[0]; ++i)
         {
@@ -585,7 +581,7 @@ Eigen::Tensor<typeNumber, 3> cnpy::load(Eigen::Tensor<typeNumber, 3>& tens,
             }
         }
     }
-    else if (order == "colMajor")
+    else
     {
         for (size_t i = 0; i < arr.shape[0]; ++i)
         {
@@ -660,28 +656,28 @@ void cnpy::save(const Eigen::SparseMatrix<T>& mat, const std::string fname)
 
 template void cnpy::save(const Eigen::MatrixXi& mat, const std::string fname);
 template Eigen::MatrixXi cnpy::load(Eigen::MatrixXi& mat,
-                                    const std::string fname, std::string order);
+                                    const std::string fname);
 template void cnpy::save(const Eigen::MatrixXd& mat, const std::string fname);
 template Eigen::MatrixXd cnpy::load(Eigen::MatrixXd& mat,
-                                    const std::string fname, std::string order);
+                                    const std::string fname);
 template void cnpy::save(const Eigen::MatrixXf& mat, const std::string fname);
 template Eigen::MatrixXf cnpy::load(Eigen::MatrixXf& mat,
-                                    const std::string fname, std::string order);
+                                    const std::string fname);
 template void cnpy::save(const Eigen::MatrixXcd& mat, const std::string fname);
 template Eigen::MatrixXcd cnpy::load(Eigen::MatrixXcd& mat,
-                                     const std::string fname, std::string order);
+                                     const std::string fname);
 template void cnpy::save(const Eigen::VectorXi& mat, const std::string fname);
 template Eigen::VectorXi cnpy::load(Eigen::VectorXi& mat,
-                                    const std::string fname, std::string order);
+                                    const std::string fname);
 template void cnpy::save(const Eigen::VectorXd& mat, const std::string fname);
 template Eigen::VectorXd cnpy::load(Eigen::VectorXd& mat,
-                                    const std::string fname, std::string order);
+                                    const std::string fname);
 template void cnpy::save(const Eigen::VectorXf& mat, const std::string fname);
 template Eigen::VectorXf cnpy::load(Eigen::VectorXf& mat,
-                                    const std::string fname, std::string order);
+                                    const std::string fname);
 template void cnpy::save(const Eigen::VectorXcd& mat, const std::string fname);
 template Eigen::VectorXcd cnpy::load(Eigen::VectorXcd& mat,
-                                     const std::string fname, std::string order);
+                                     const std::string fname);
 template void cnpy::save(const Eigen::SparseMatrix<double>& mat,
                          const std::string fname);
 template Eigen::SparseMatrix<double> cnpy::load(Eigen::SparseMatrix<double>&
@@ -690,18 +686,18 @@ template Eigen::SparseMatrix<double> cnpy::load(Eigen::SparseMatrix<double>&
 template void cnpy::save(const Eigen::Tensor<int, 3>& mat,
                          const std::string fname);
 template Eigen::Tensor<int, 3> cnpy::load(Eigen::Tensor<int, 3>& tens,
-        const std::string fname, std::string order);
+        const std::string fname);
 template void cnpy::save(const Eigen::Tensor<double, 3>& mat,
                          const std::string fname);
 template Eigen::Tensor<double, 3> cnpy::load(Eigen::Tensor<double, 3>& tens,
-        const std::string fname, std::string order);
+        const std::string fname);
 template void cnpy::save(const Eigen::Tensor<float, 3>& mat,
                          const std::string fname);
 template Eigen::Tensor<float, 3> cnpy::load(Eigen::Tensor<float, 3>& tens,
-        const std::string fname, std::string order);
+        const std::string fname);
 template void cnpy::save(const Eigen::Tensor<std::complex<double>, 3>& mat,
                          const std::string fname);
 template Eigen::Tensor<std::complex<double>, 3> cnpy::load(
     Eigen::Tensor<std::complex<double>, 3>& tens,
-    const std::string fname, std::string order);
+    const std::string fname);
 #pragma GCC diagnostic pop
