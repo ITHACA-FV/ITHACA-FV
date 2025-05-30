@@ -1035,6 +1035,70 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_tens(label NUmodes,
     return C_tensor;
 }
 
+Eigen::Tensor<double, 3> steadyNS::convective_term_tens_cache(label NUmodes,
+        label NPmodes,
+        label NSUPmodes)
+{
+    label Csize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> C_tensor;
+    C_tensor.resize(Csize, Csize, Csize);
+
+    PtrList<autoPtr<volVectorField>> divCache(Csize*Csize);
+    for (label j = 0; j < Csize; ++j)
+    {
+        if (fluxMethod == "consistent")
+        {
+            for (label k = 0; k < Csize; ++k)
+            {
+                autoPtr<volVectorField> divFieldPtr
+                (
+                    new volVectorField
+                    (
+                        fvc::div(L_PHImodes[j], L_U_SUPmodes[k])
+                    )
+                );
+                divCache.set(j*Csize + k, new autoPtr<volVectorField>(divFieldPtr));
+            }
+        }
+        else
+        {
+            surfaceScalarField SfUj = linearInterpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf();
+            for (label k = 0; k < Csize; ++k)
+            {
+                autoPtr<volVectorField> divFieldPtr
+                (
+                    new volVectorField
+                    (
+                        fvc::div(SfUj, L_U_SUPmodes[k])
+                    )
+                );
+                divCache.set(j*Csize + k, new autoPtr<volVectorField>(divFieldPtr));
+            }
+        }
+    }
+
+    for (label i = 0; i < Csize; i++)
+    {
+        for (label j = 0; j < Csize; j++)
+        {
+            for (label k = 0; k < Csize; k++)
+            {
+                C_tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & divCache[j*Csize+k]()).value();
+            }
+        }
+    }        
+
+    if (Pstream::master())
+    {
+        // Export the tensor
+        ITHACAstream::SaveDenseTensor(C_tensor, "./ITHACAoutput/Matrices/",
+                                      "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_t");
+    }
+
+    return C_tensor;
+}
+
 Eigen::MatrixXd steadyNS::mass_term(label NUmodes, label NPmodes,
                                     label NSUPmodes)
 {
@@ -1141,6 +1205,52 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
                 gTensor(i, j, k) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & (fvc::div(
                         fvc::interpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf(),
                         L_U_SUPmodes[k]))).value();
+            }
+        }
+    }
+
+    if (Pstream::master())
+    {
+        // Export the tensor
+        ITHACAstream::SaveDenseTensor(gTensor, "./ITHACAoutput/Matrices/",
+                                      "G_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_t");
+    }
+
+    return gTensor;
+}
+
+Eigen::Tensor<double, 3> steadyNS::divMomentum_cache(label NUmodes, label NPmodes)
+{
+    label g1Size = NPmodes + liftfieldP.size();
+    label g2Size = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> gTensor;
+    gTensor.resize(g1Size, g2Size, g2Size);
+
+    PtrList<autoPtr<volVectorField>> divCache(g2Size*g2Size);
+    for (label j = 0; j < g2Size; ++j)
+    {
+        surfaceScalarField SfUj = linearInterpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf();
+        for (label k = 0; k < g2Size; ++k)
+        {
+            autoPtr<volVectorField> divFieldPtr
+            (
+                new volVectorField
+                (
+                    fvc::div(SfUj, L_U_SUPmodes[k])
+                )
+            );
+            divCache.set(j*g2Size + k, new autoPtr<volVectorField>(divFieldPtr));
+        }
+    }
+
+    for (label i = 0; i < g1Size; i++)
+    {
+        for (label j = 0; j < g2Size; j++)
+        {
+            for (label k = 0; k < g2Size; k++)
+            {
+                gTensor(i, j, k) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & divCache[j*g2Size+k]()).value();
             }
         }
     }
