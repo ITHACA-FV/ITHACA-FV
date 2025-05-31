@@ -712,7 +712,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            ct1PPETensor = turbulencePPETensor1(NUmodes, NSUPmodes, NPmodes, nNutModes);
+            ct1PPETensor = turbulencePPETensor1_cache(NUmodes, NSUPmodes, NPmodes, nNutModes);
         }
 
         word cth2PPE_str = "ct2PPE_" + name(liftfield.size()) + "_" + name(
@@ -724,7 +724,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            ct2PPETensor = turbulencePPETensor2(NUmodes, NSUPmodes, NPmodes, nNutModes);
+            ct2PPETensor = turbulencePPETensor2_cache(NUmodes, NSUPmodes, NPmodes, nNutModes);
         }
 
         if (bcMethod == "penalty")
@@ -772,8 +772,8 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         // BC4_matrix = pressure_BC4(NUmodes, NPmodes);
         ct1Tensor = turbulenceTensor1_cache(NUmodes, NSUPmodes, nNutModes);
         ct2Tensor = turbulenceTensor2_cache(NUmodes, NSUPmodes, nNutModes);
-        ct1PPETensor = turbulencePPETensor1(NUmodes, NSUPmodes, NPmodes, nNutModes);
-        ct2PPETensor = turbulencePPETensor2(NUmodes, NSUPmodes, NPmodes, nNutModes);
+        ct1PPETensor = turbulencePPETensor1_cache(NUmodes, NSUPmodes, NPmodes, nNutModes);
+        ct2PPETensor = turbulencePPETensor2_cache(NUmodes, NSUPmodes, NPmodes, nNutModes);
 
         if (bcMethod == "penalty")
         {
