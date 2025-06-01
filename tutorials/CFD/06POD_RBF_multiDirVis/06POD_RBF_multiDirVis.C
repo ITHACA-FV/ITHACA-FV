@@ -465,6 +465,8 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(rbfCoeff, "rbfCoeff", "matlab",
                                "./ITHACAoutput/Matrices/");
+    ITHACAstream::exportMatrix(rbfCoeff, "rbfCoeff", "eigen",
+                               "./ITHACAoutput/Matrices/");
     // Save the online solution
     ITHACAstream::exportMatrix(pod_rbf.online_solution, "red_coeff", "python",
                                "./ITHACAoutput/red_coeff");
