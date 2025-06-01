@@ -21,5 +21,6 @@ inverseLaplacianProblem_paramBC/inverseLaplacianProblem_paramBC.C
 Fsi/fsiBasic.C
 CompressibleSteadyNS/CompressibleSteadyNS.C
 CompressibleUnSteadyNSRhoPimple/CompressibleUnSteadyRhoPimple.C
+ScalarTransport/ScalarTransport.C
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_FOMPROBLEMS
