@@ -51,6 +51,10 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
         fn = std::shared_ptr<RadialBasisFunction>(new Gaussian());
         fn->e = e;
     }
+    else if (type == RadialBasisFunctionType::LINEAR)
+    {
+        fn = std::shared_ptr<RadialBasisFunction>(new Linear());
+    }
     else
     {
         fn = std::shared_ptr<RadialBasisFunction>(new ThinPlateSpline());
@@ -87,6 +91,10 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
     {
         fn = std::shared_ptr<RadialBasisFunction>(new Gaussian());
         fn->e = e;
+    }
+    else if (type == RadialBasisFunctionType::LINEAR)
+    {
+        fn = std::shared_ptr<RadialBasisFunction>(new Linear());
     }
     else
     {

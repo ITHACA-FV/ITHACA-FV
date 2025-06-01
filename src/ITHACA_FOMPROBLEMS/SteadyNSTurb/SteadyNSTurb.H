@@ -124,6 +124,12 @@ class SteadyNSTurb: public steadyNS
         /// The params to interpolate the eddy viscosity
         word rbfParams;
 
+        /// The name of RBF interpolation kernel
+        word rbfKernel;
+
+        /// The type of RBF interpolation kernel
+        SPLINTER::RadialBasisFunctionType rbfType;
+
         /// Number of viscoisty modes used for the projection
         label nNutModes;
 
@@ -138,6 +144,12 @@ class SteadyNSTurb: public steadyNS
         /// the Parameters folder.
         ///
         void truthSolve(List<scalar> mu_now);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Select the rbfkernel for the eddy viscosity
+        /// @param[in]  rbfKernel  The name of the RBF kernel to be used for the eddy viscosity
+        ///
+        void getRBFType(const word& viscCoeff, const word& rbfKernel);
 
         //--------------------------------------------------------------------------
         /// Project using a PPE approach
