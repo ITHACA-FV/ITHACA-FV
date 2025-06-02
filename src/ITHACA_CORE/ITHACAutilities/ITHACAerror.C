@@ -402,15 +402,8 @@ double errorL2Rel(GeometricField<T, fvPatchField, volMesh>& field1,
     errField = autoPtr<GeometricField<T, fvPatchField, volMesh >>
                (new GeometricField<T, fvPatchField, volMesh>(field1_S() - field2_S()));
 
-    if (L2Norm(field1) <= 1e-6)
-    {
-        err = 0;
-    }
-    else
-    {
-        err = L2Norm(errField()) / L2Norm(
+    err = L2Norm(errField()) / L2Norm(
                   field1_S());
-    }
     return err;
 }
 
