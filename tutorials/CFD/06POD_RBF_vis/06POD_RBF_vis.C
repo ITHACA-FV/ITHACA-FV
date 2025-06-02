@@ -282,6 +282,16 @@ int main(int argc, char* argv[])
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("POD");
 
+    // Get coefficients for U, p and nut modes
+    Eigen::MatrixXd coeffL2_U = ITHACAutilities::getCoeffs(example.Uomfield,
+                                         example.Umodes, NmodesU);
+    Eigen::MatrixXd coeffL2_P = ITHACAutilities::getCoeffs(example.Pfield,
+                                         example.Pmodes, NmodesP);
+    ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "eigen",
+                    "./ITHACAoutput/Matrices/");
+    ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "eigen",
+                    "./ITHACAoutput/Matrices/");
+
     example.Ufield.clear();
     example.Phifield.clear();
     example.Uomfield.clear();
@@ -359,19 +369,12 @@ int main(int argc, char* argv[])
     nameList.append("OnlineSolve");
 
     // Save the matrix of interpolated eddy viscosity coefficients
-    ITHACAstream::exportMatrix(rbfCoeff, "rbfCoeff", "python",
-                               "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(rbfCoeff, "rbfCoeff", "matlab",
-                               "./ITHACAoutput/Matrices/");
     ITHACAstream::exportMatrix(rbfCoeff, "rbfCoeff", "eigen",
-                               "./ITHACAoutput/Matrices/");
+                            "./ITHACAoutput/Matrices/");
     // Save the online solution
-    ITHACAstream::exportMatrix(pod_rbf.online_solution, "red_coeff", "python",
-                               "./ITHACAoutput/red_coeff");
-    ITHACAstream::exportMatrix(pod_rbf.online_solution, "red_coeff", "matlab",
-                               "./ITHACAoutput/red_coeff");
     ITHACAstream::exportMatrix(pod_rbf.online_solution, "red_coeff", "eigen",
-                               "./ITHACAoutput/red_coeff");
+                            "./ITHACAoutput/red_coeff");
+
     pod_rbf.rbfCoeffMat = rbfCoeff;
     // Reconstruct and export the solution
     pod_rbf.reconstruct(exportrecField, "./ITHACAoutput/Online/");
@@ -395,22 +398,33 @@ int main(int argc, char* argv[])
                                                             pod_rbf.uRecFields);
     Eigen::MatrixXd errL2P = ITHACAutilities::errorL2Rel(example.Pfield,
                                                             pod_rbf.pRecFields);
-    ITHACAstream::exportMatrix(errL2U, "errL2U", "python",
+    Eigen::MatrixXd errL2NUT = ITHACAutilities::errorL2Rel(
+        example.nutFields, pod_rbf.nutRecFields);
+    ITHACAstream::exportMatrix(errL2U, "errL2U", "eigen",
                                 "./ITHACAoutput/Online/ErrorsL2/");
-    ITHACAstream::exportMatrix(errL2P, "errL2P", "python",
+    ITHACAstream::exportMatrix(errL2P, "errL2P", "eigen",
                                 "./ITHACAoutput/Online/ErrorsL2/");
-
+    ITHACAstream::exportMatrix(errL2NUT, "errL2NUT", "eigen",
+                                "./ITHACAoutput/Online/ErrorsL2/");
+        
+    // Export errorfields
+    // Perform an online solve for the new values of inlet velocities
     if (exportErrorField)
     {
-        // Export errorfields
+        // Export the error fields
         for (label k = 0; k < example.mu.rows(); k++)
         {
             volVectorField Uerror("Uerror", example.Ufield[k] - pod_rbf.uRecFields[k]);
             volScalarField perror("perror", example.Pfield[k] - pod_rbf.pRecFields[k]);
+            volScalarField nuterror("nuterror",
+                                        example.nutFields[k] - pod_rbf.nutRecFields[k]);
             ITHACAstream::exportSolution(Uerror,
                                         name(k+1),
                                         "./ITHACAoutput/Online/");
             ITHACAstream::exportSolution(perror,
+                                        name(k+1),
+                                        "./ITHACAoutput/Online/");
+            ITHACAstream::exportSolution(nuterror,
                                         name(k+1),
                                         "./ITHACAoutput/Online/");
         }
