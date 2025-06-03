@@ -22,7 +22,7 @@ License
     You should have received a copy of the GNU Lesser General Public License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 Description
-    Hyper-reduction for scalar Transport
+    Hyper-reduction for scalar Transport Problem
 SourceFiles
     Tutorial24.C
 \*---------------------------------------------------------------------------*/
@@ -38,6 +38,8 @@ SourceFiles
 #include <Eigen/Dense>
 #include <cmath>
 #include <omp.h> // Include OpenMP for parallelization
+#include <vector>
+#include <algorithm>
 
  
 class EmpLagranInter : public DEIM<volScalarField>
@@ -94,9 +96,6 @@ class tutorial24 : public ScalarTransport
 
 };
 
-
-    
-
 class EliBurgers: public reductionProblem
 {
 public:
@@ -107,8 +106,7 @@ public:
     scalar startTime;
     scalar writeEvery;
     PtrList<volScalarField> Tfield;
-    //volVectorModes Lagrangian;
-    List<Eigen::VectorXd> OnlineCoeffs;
+    //volVectorModes Lagrangian
     double time_rom;
     EliBurgers(){}
     explicit EliBurgers(tutorial24& FoamProblem) : problem(&FoamProblem)
@@ -123,7 +121,8 @@ public:
     ~EliBurgers(){}
 
 
-    void OnlineBurgers(int NmodesUproj,word folder = "./ITHACAoutput/Online/")
+    
+   void OnlineBurgers(int NmodesUproj,word folder = "./ITHACAoutput/Online/")
     {
         //Time& runTime = problem->_runTime();
         fvMesh& mesh = problem->_mesh();
@@ -136,22 +135,16 @@ public:
         ////
         nextWrite = startTime;
         nextWrite += writeEvery;
-        
-        Eigen::SparseMatrix<double> S;
+      
+        Eigen::SparseMatrix<double, Eigen::RowMajor> S;
         Eigen::VectorXd se;
-
-        int n = T.size();
-        int s = problem->EliObject->P.cols();
-        Eigen::MatrixXd B;
-        B.setZero(s,NmodesUproj);
-        Eigen::VectorXd b;
-        b.setZero(s);
+        const auto& Modes = problem->EliObject->U.transpose();
 
         List<label> uniqueMagicPoints = problem->EliObject->magicPoints();
-        //Eigen::VectorXd volumes = ITHACAutilities::getMassMatrixFV(T);
         while (simple.loop() )
         {
             Info << "Time = " << problem->_runTime().timeName() << endl;
+            //Info << "dt = " << problem->_runTime().value() << endl;
 
             while (simple.correctNonOrthogonal())
             {
@@ -162,85 +155,77 @@ public:
                     +fvm::div(phi,T)
                     -fvm::laplacian(problem->_nu(),T)
                 );
+                SEqn.relax();
+                problem->_fvOptions().constrain(SEqn);
                 /// Field Conversion
-                Foam2Eigen::fvMatrix2Eigen(SEqn, S, se);
-                Eigen::VectorXd tempB(NmodesUproj);
-                /// #pragma omp parallel for
-                auto t1 = std::chrono::high_resolution_clock::now();
-                //#pragma omp parallel for
-                for (int k = 0; k < uniqueMagicPoints.size(); ++k)
-                {
-                    int magicPoint = uniqueMagicPoints[k];
-                    Eigen::SparseVector<double> vec = S.row(magicPoint);
-
-                    // Temporary storage for B(k, i)
-                    tempB.setZero();
-                    //for (Eigen::SparseVector<double>::InnerIterator it(vec); it; ++it)
-                    for (Eigen::SparseMatrix<double>::InnerIterator it(S,magicPoint); it; ++it)
-                    {
-                        tempB += it.value() * problem->EliObject->U.row(it.index());
-                    }
-
-                    // Apply scaling by volume
-                    double volume = T.mesh().V()[magicPoint];
-                    B.row(k) = tempB * volume;
-                    b(k) = volume * se(magicPoint);
-                }
-                // for (int k=0; k < uniqueMagicPoints.size(); ++k)
-                // {
-                //     Eigen::SparseVector<double> vec = S.row(uniqueMagicPoints[k]);
-                //     for (Eigen::SparseVector<double>::InnerIterator it(vec); it; ++it)
-                //     {
-                //         Eigen::RowVectorXd tempB = Eigen::RowVectorXd::Zero(NmodesUproj);
-                //         for (Eigen::SparseVector<double>::InnerIterator it(vec); it; ++it)
-                //         {
-                //             tempB += it.value() * problem->EliObject->U.row(it.index());
-                //         }
-                //         // for (int i = 0; i < NmodesUproj; ++i)
-                //         // {
-                //         //   /// Use OpenMP atomic if B is shared
-                //         //   #pragma omp atomic
-                //         //   B(k, i) += it.value()*problem->EliObject->U(it.index(), i);
-                //         // }
-                //     }
-                //     B.row(k) *=T.mesh().V()[uniqueMagicPoints[k]];
-                //     //B.row(k) *=volumes(uniqueMagicPoints[k]);
-                //     //b(k) = volumes(uniqueMagicPoints[k]) * se(uniqueMagicPoints[k]);
-                //     b(k) = T.mesh().V()[uniqueMagicPoints[k]]*se(uniqueMagicPoints[k]);
-                // } 
-                /// Projections: much costly
-                //Eigen::VectorXd a = problem->EliObject->P*se;
-                //Eigen::MatrixXd A = problem->EliObject->P*S*problem->EliObject->U;
-                auto t2 = std::chrono::high_resolution_clock::now();
-                auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
-                time_rom +=time_span.count();
-                //auto t1 = std::chrono::high_resolution_clock::now();
-                /// solve the reduced problem
-                //Eigen::VectorXd c = B.colPivHouseholderQr().solve(b);
-                Eigen::VectorXd c = B.householderQr().solve(b);
-                //Eigen::VectorXd c = B.ldlt().solve(b);
-                // auto t2 = std::chrono::high_resolution_clock::now();
+                //fvMatrix2Eigen(SEqn, S, se);
+                Foam2Eigen::fvMat2Eigen(SEqn, S, se);
+                S.makeCompressed();
+                std::tuple<Eigen::MatrixXd,Eigen::VectorXd> HRSys = HyperReducedSys(S,se,uniqueMagicPoints,Modes);
+                /// HR system
+                Eigen::VectorXd b = std::get<1>(HRSys);
+                Eigen::MatrixXd B = std::get<0>(HRSys);
+                //double cond = B.jacobiSvd().singularValues()(0) /
+                 //B.jacobiSvd().singularValues().tail(1)(0);
+           //std::cout << "cond number = " << cond << std::endl;
+                //Eigen::VectorXd c = (B.transpose()*B).inverse()*B.transpose()*b; // LS problem using minimization
+                Eigen::VectorXd c = B.partialPivLu().solve(b);
+                //Eigen::VectorXd c = B.completeOrthogonalDecomposition().solve(b);
+                //Eigen::VectorXd c = B.colPivHouseholderQr().solve(b); //.
+                //Eigen::VectorXd c=B.householderQr().solve(b);
+                //Eigen::VectorXd c=B.llt().solve(b);
+                /// Reconstruct the temperature
                 Eigen::VectorXd z = problem->EliObject->U*c;
-                /// Field Conversion
                 ///Solution 2: Copy Eigen Data Using Iterators
-                //auto t1 = std::chrono::high_resolution_clock::now();
                 std::copy(z.data(), z.data() + z.size(), T.ref().begin());
                 //T = Foam2Eigen::Eigen2field(problem->_T(), z );
                 T.correctBoundaryConditions();
+                
             }
+
+            problem->_runTime().printExecutionTime(Info);
 
             if (checkWrite(problem->_runTime()))
             {
                 //ITHACAstream::exportSolution(T, name(counter), folder);
                 counter++;
                 Tfield.append(T.clone());
-                //OnlineCoeffs.append(a);
                 nextWrite += writeEvery;
             }
         }
 
     }
-   
+    std::tuple<Eigen::MatrixXd, Eigen::VectorXd> HyperReducedSys(
+        const Eigen::SparseMatrix<double, Eigen::RowMajor>& S,
+        const Eigen::VectorXd& se, 
+        const List<label>& uniqueMagicPoints, 
+        const Eigen::MatrixXd& Modes)
+    {
+
+        //fvMesh& mesh = problem->_mesh();
+        int s = uniqueMagicPoints.size();
+        int m = Modes.rows(); // number of modes
+        Eigen::MatrixXd B(s,m);
+        Eigen::VectorXd b(s);
+        Eigen::VectorXd tempB(m);
+      
+        for (int k = 0; k < uniqueMagicPoints.size(); ++k)
+        {
+            int magicPoint = uniqueMagicPoints[k];
+            tempB.setZero();
+            for ( Eigen::SparseMatrix<double, Eigen::RowMajor>::InnerIterator it(S, magicPoint); it; ++it )
+            {
+                tempB += it.value() * Modes.col(it.index());
+            }
+            // Apply scaling by volume
+            double volume = 1.0/problem->_mesh().V()[magicPoint];
+            B.row(k) = tempB * volume;
+            b(k) = volume * se(magicPoint);
+        }
+       return std::make_tuple(B, b);
+
+    }
+    
     bool checkWrite(Time& timeObject)
     {
         scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
@@ -264,9 +249,7 @@ int main(int argc, char* argv[])
 {
     // Create the train object of the tutorial02 type
     tutorial24 train(argc, argv);
-    //tutorial23 test(argc, argv);
-    //std::clock_t startOff;
-    //double durationOff;
+    //tutorial23 test(argc, argv)
 
     // Read some parameters from file
     ITHACAparameters* para = ITHACAparameters::getInstance(train._mesh(),train._runTime());
@@ -277,82 +260,21 @@ int main(int argc, char* argv[])
     auto t3 = std::chrono::high_resolution_clock::now();
     train.offlineSolve();
     auto t4 = std::chrono::high_resolution_clock::now();
-    //durationOff = (std::clock() - startOff);
     auto time_span_off = std::chrono::duration_cast<std::chrono::duration<double>>(t4 - t3);
     // std::cout << "time_rom=  " << reduced.time_rom << std::endl;
     std::cout << "The Offline  phase  duration =" << time_span_off.count()<< std::endl;
+    //ITHACAPOD::getModes(train.Tfield, train.Tmodes, train._T().name(),
+    //                    train.podex, 0, 0, NmodesUproj);
     /// Construct the DEIM indices.
     train.ELI(NmodesUproj);
+    
+    // train.EliObject->P =  field2submesh;
+    //List<label> test = {0,2791,10742,6295,7616,11418};//{0,10792,10824,10727,4,5,6,7,8,9}
+    //Info << "test = "<< test <<endl;
+    //train.EliObject->magicPoints() = {0,163,6338, 6238};// Deim_Lebesgue
+    //Info << "magicPoints() = "<< train.EliObject->magicPoints() <<endl;
 
-    List<label>bCells;
-    forAll(train._U().boundaryField(), patchI)
-    {
-        const fvPatch &pp = train._U().boundaryField()[patchI].patch();
-        forAll(pp, faceI)
-        {
-            label cellI = pp.faceCells()[faceI];
-            bCells.append(cellI);
-        }
-    }
-    /// Sorting and remove duplicates
-    inplaceUniqueSort(bCells);
-
-    //Info << bCells << endl;
-    for (int i = 0; i <train.EliObject->magicPoints().size() ; ++i)
-    {
-        //std::cout << train.EliObject->magicPoints()[i] << std::endl;
-        bCells.append(train.EliObject->magicPoints()[i]);
-    }
-    /// Sorting and remove duplicates
-    inplaceUniqueSort(bCells);
-    //train.EliObject->uniqueMagicPoints() = bCells;
-
-    //Info << bCells << endl;
     //exit(0);
-
-    // int dim  = 1;
-    // label nCells = train._mesh().nCells();
-    // /// Mask field to submesh
-    // Eigen::SparseMatrix<double> field2submesh;
-    // label M  = train.EliObject->uniqueMagicPoints().size();
-    // field2submesh.resize(nCells*dim, M*dim);
-
-    // for (unsigned int ith_subCell{0}; ith_subCell < M; ith_subCell++)
-    // {
-    //     for (unsigned int i= 0; i < dim; i++)
-    //     {
-    //       field2submesh.insert(train.EliObject->uniqueMagicPoints()[ith_subCell] + nCells*i, ith_subCell + i*M) = 1;
-    //     }
-    // }
-    // field2submesh.makeCompressed();
-    // //Eigen::SparseMatrix<double>  field2submesh = train.EliObject->P;
-    // /// Get the volumes of cells.
-    // Eigen::VectorXd volumes = ITHACAutilities::getMassMatrixFV(train._T() );
-    //     //Eigen::MatrixXd diag =  volumes.asDiagonal();
-    // Eigen::SparseMatrix<double> diag(train._T().size(),train._T().size());
-   
-    // for (int i = 0; i < train._T().size(); ++i)
-    // {
-    //     diag.insert(i,i) = volumes(i); 
-    //     //diag.coeffRef(i,i) = volumes(i); 
-    // }
-    // diag.makeCompressed();  
-    // //train.EliObject->MatrixOnline  = train.EliObject->U*((field2submesh.transpose()*train.EliObject->U).inverse());
-    // //auto P = problem->EliObject->P.transpose()*diag;
-    // //train.EliObject->P = field2submesh.transpose()*diag;
-    // train.EliObject->P = field2submesh.transpose()*diag;
-    /// Important matrices
-    // Eigen::MatrixXd X = train.EliObject->U; 
-    // Eigen::MatrixXd V = (X.transpose()*field2submesh*field2submesh.transpose()*X).inverse()*X.transpose()*field2submesh; // Ok
-    // /// Define the full matrix to the full field
-    // Eigen::MatrixXd Y = X*V; 
-    // train.EliObject->MatrixOnline = Y; 
- 
-    //exit(0);
-    // Eigen::VectorXd x(8);  x << 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8;
-    // Eigen::Array4i ind_vec(0,2,4,5);
-    // Eigen::Array4d result = ind_vec.unaryExpr(x);
-
     train.restart();
     EliBurgers reduced(train);
     auto t1 = std::chrono::high_resolution_clock::now();
@@ -369,39 +291,10 @@ int main(int argc, char* argv[])
     {
         ITHACAstream::exportSolution(reduced.Tfield[i], name(i+1), "./ITHACAoutput/Online");
     }
-    //ITHACAstream::exportFields(reduced.Tfield[i], "./ITHACAoutput/Online", train._T().name());
+   
+    Eigen::MatrixXd errL2T = ITHACAutilities::errorL2Abs(train.Tfield, reduced.Tfield);
+    std::cout << "#####################" << std::endl;
+    Eigen::MatrixXd errL2RelT = ITHACAutilities::errorL2Rel(train.Tfield, reduced.Tfield);
     exit(0);
 }
 
-//SEqn.relax();
-//problem->_fvOptions().constrain(SEqn);
-//C.diagonal()(= SEqn.diag().data());
-/// Eigen Mapping
-//Eigen::Map<Eigen::MatrixXd> test(SEqn.source().data(), SEqn.source().size(), 1);//OKKK
-//Eigen::Map<Eigen::MatrixXd> output(field.ref().data(), field.size(), 1);
-//std::move(output);
-
-// int p = 2;
-// int q = 5;
-// int r = 4;
-// Eigen::VectorXf v2(5);
-// Eigen::VectorXf v(3);
-// Eigen::VectorXf v1(3);
-// v2 << 100, 0.2, 30, 41, 55;
-// v << 1, 4, 7;
-// v1 << 2, 5, 8;
-
-// //Eigen::VectorXf vNew = Eigen::VectorXf::Zero(30);
-// Eigen::VectorXf vNew = Eigen::VectorXf::Zero(9);
-// int l = 0;
-// int j = 2;
-// int step = 3;
-// //vNew(Eigen::seq(p-1, p+q*r-1, q)) = v2;
-// vNew(Eigen::seq(l, l+1+j*step-1, step)) = v;
-// vNew(Eigen::seq(l+1, l+2+j*step-1, step)) = v1;
-
-// std::cout << vNew.transpose() << std::endl;
-// exit(0);
-/// Matrix Conversion:
-// Assuming foamMatrix.data() gives access to row/column indices and values
-//Eigen::Map<Eigen::SparseMatrix<double>> eigenMatrix(SEqn.ref().data(), T.size(), T.size());
