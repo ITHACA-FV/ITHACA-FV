@@ -813,6 +813,137 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
     }
 }
 
+
+template <typename SparseMatType, typename VecType>
+void Foam2Eigen::fvMat2Eigen(fvMatrix<scalar> foam_matrix,
+                                SparseMatType& A,
+                                VecType& b)
+{
+    //using Trip = Eigen::Triplet<typename SparseMatType::Scalar>;
+    label sizeA = foam_matrix.diag().size();
+    label nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
+                foam_matrix.lower().size();
+    A.resize(sizeA, sizeA);
+    b.resize(sizeA);
+    A.reserve(nel);
+    typedef Eigen::Triplet<double> Trip;
+    std::vector<Trip> tripletList;
+    tripletList.reserve(nel);
+
+    for (label i = 0; i < sizeA; ++i)
+    {
+        tripletList.emplace_back(i, i, foam_matrix.diag()[i]);
+        b(i) = foam_matrix.source()[i];
+    }
+
+    const lduAddressing& addr = foam_matrix.lduAddr();
+    const labelList& lowerAddr = addr.lowerAddr();
+    const labelList& upperAddr = addr.upperAddr();
+    forAll(lowerAddr, i)
+    {
+        tripletList.emplace_back(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]);
+        tripletList.emplace_back(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]);
+    }
+
+    forAll(foam_matrix.psi().boundaryField(), I)
+    {
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
+        forAll(ptch, J)
+        {
+            label w = ptch.faceCells()[J];
+            tripletList.emplace_back(w, w, foam_matrix.internalCoeffs()[I][J]);
+            b(w) += foam_matrix.boundaryCoeffs()[I][J];
+        }
+    }
+
+    A.setFromTriplets(tripletList.begin(), tripletList.end());
+}
+
+// Explicit instantiations
+template void Foam2Eigen::fvMat2Eigen<Eigen::SparseMatrix<double, Eigen::RowMajor>, Eigen::VectorXd>(
+    fvMatrix<scalar> foam_matrix,
+    Eigen::SparseMatrix<double, Eigen::RowMajor>& A,
+    Eigen::VectorXd& b);
+template void Foam2Eigen::fvMat2Eigen<Eigen::SparseMatrix<double, Eigen::ColMajor>, Eigen::VectorXd>(
+    fvMatrix<scalar> foam_matrix,
+    Eigen::SparseMatrix<double, Eigen::ColMajor>& A,
+    Eigen::VectorXd& b);    
+ 
+                                     
+template<typename SparseMatType, typename VecType>
+void Foam2Eigen::fvMat2Eigen(fvMatrix<vector> foam_matrix,
+                            SparseMatType& A,
+                            VecType& b)
+{
+    label sizeA = foam_matrix.diag().size();
+    label nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
+                foam_matrix.lower().size();
+    A.resize(sizeA * 3, sizeA * 3);
+    A.reserve(nel * 3);
+    b.resize(sizeA * 3);
+    typedef Eigen::Triplet<double> Trip;
+    std::vector<Trip> tripletList;
+    tripletList.reserve(nel * 3);
+
+    for (auto i = 0; i < sizeA; i++)
+    {
+        tripletList.push_back(Trip(i, i, foam_matrix.diag()[i]));
+        tripletList.push_back(Trip(sizeA + i, sizeA + i, foam_matrix.diag()[i]));
+        tripletList.push_back(Trip(2 * sizeA + i, 2 * sizeA + i,
+                                   foam_matrix.diag()[i]));
+        b(i) = foam_matrix.source()[i][0];
+        b(sizeA + i) = foam_matrix.source()[i][1];
+        b(2 * sizeA + i) = foam_matrix.source()[i][2];
+    }
+
+    const lduAddressing& addr = foam_matrix.lduAddr();
+    const labelList& lowerAddr = addr.lowerAddr();
+    const labelList& upperAddr = addr.upperAddr();
+    forAll(lowerAddr, i)
+    {
+        tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
+        tripletList.push_back(Trip(lowerAddr[i] + sizeA, upperAddr[i] + sizeA,
+                                   foam_matrix.upper()[i]));
+        tripletList.push_back(Trip(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2,
+                                   foam_matrix.upper()[i]));
+        tripletList.push_back(Trip(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]));
+        tripletList.push_back(Trip(upperAddr[i] + sizeA, lowerAddr[i] + sizeA,
+                                   foam_matrix.lower()[i]));
+        tripletList.push_back(Trip(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2,
+                                   foam_matrix.lower()[i]));
+    }
+
+    forAll(foam_matrix.psi().boundaryField(), I)
+    {
+        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
+        forAll(ptch, J)
+        {
+            label w = ptch.faceCells()[J];
+            tripletList.push_back(Trip(w, w, foam_matrix.internalCoeffs()[I][J][0]));
+            tripletList.push_back(Trip(w + sizeA, w + sizeA,
+                                       foam_matrix.internalCoeffs()[I][J][1]));
+            tripletList.push_back(Trip(w + sizeA * 2, w + sizeA * 2,
+                                       foam_matrix.internalCoeffs()[I][J][2]));
+            b(w) += foam_matrix.boundaryCoeffs()[I][J][0];
+            b(w + sizeA) += foam_matrix.boundaryCoeffs()[I][J][1];
+            b(w + sizeA * 2) += foam_matrix.boundaryCoeffs()[I][J][2];
+        }
+    }
+
+    A.setFromTriplets(tripletList.begin(), tripletList.end());
+}
+
+template void Foam2Eigen::fvMat2Eigen<Eigen::SparseMatrix<double, Eigen::RowMajor>, Eigen::VectorXd>(
+    fvMatrix<vector> foam_matrix,
+    Eigen::SparseMatrix<double, Eigen::RowMajor>& A,
+    Eigen::VectorXd& b);
+
+template void Foam2Eigen::fvMat2Eigen<Eigen::SparseMatrix<double, Eigen::ColMajor>, Eigen::VectorXd>(
+    fvMatrix<vector> foam_matrix,
+    Eigen::SparseMatrix<double, Eigen::ColMajor>& A,
+    Eigen::VectorXd& b);
+                                    
+/////////////////////////////////////////////////////////////////////////////////////////////
 template <>
 void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
                                 Eigen::SparseMatrix<double> & A, Eigen::VectorXd& b)
