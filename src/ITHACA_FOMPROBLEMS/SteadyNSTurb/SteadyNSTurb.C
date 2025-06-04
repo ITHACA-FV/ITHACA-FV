@@ -251,6 +251,41 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor1_cache(label NUmodes,
     return ct1Tensor;
 }
 
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor1_cache_mem(label NUmodes,
+        label NSUPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct1Tensor(cSize, nNutModes, cSize);
+
+    for (label j = 0; j < nNutModes; ++j)
+    {
+        // Cache only one row (j fixed)
+        List<tmp<volVectorField>> lapRow(cSize);
+        for (label k = 0; k < cSize; ++k)
+        {
+            lapRow[k] = fvc::laplacian(nutModes[j], L_U_SUPmodes[k]);
+        }
+
+        for (label i = 0; i < cSize; ++i)
+        {
+            for (label k = 0; k < cSize; ++k)
+            {
+                const volVectorField& lapField = lapRow[k]();
+                ct1Tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & lapField).value();
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct1Tensor, "./ITHACAoutput/Matrices/",
+                                      "ct1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(nNutModes) + "_t");
+    }
+    return ct1Tensor;
+}
+
 List < Eigen::MatrixXd > SteadyNSTurb::turbulenceTerm2(label NUmodes,
         label NSUPmodes, label nNutModes)
 {
@@ -358,6 +393,41 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2_cache(label NUmodes,
     return ct2Tensor;
 }
 
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2_cache_mem(label NUmodes,
+        label NSUPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct2Tensor(cSize, nNutModes, cSize);
+
+    for (label j = 0; j < nNutModes; ++j)
+    {
+        // Cache only one j-row
+        List<tmp<volVectorField>> divRow(cSize);
+        for (label k = 0; k < cSize; ++k)
+        {
+            divRow[k] = fvc::div(nutModes[j] * dev((fvc::grad(L_U_SUPmodes[k]))().T()));
+        }
+
+        for (label i = 0; i < cSize; ++i)
+        {
+            for (label k = 0; k < cSize; ++k)
+            {
+                const volVectorField& divRowField = divRow[k]();
+                ct2Tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & divRowField).value();
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct2Tensor, "./ITHACAoutput/Matrices/",
+                                      "ct2_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(nNutModes) + "_t");
+    }
+    return ct2Tensor;
+}
+
 Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1(label NUmodes,
         label NSUPmodes, label NPmodes, label nNutModes)
 {
@@ -434,6 +504,48 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
     return ct1PPETensor;
 }
 
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache_mem(label NUmodes,
+        label NSUPmodes, label NPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct1PPETensor(NPmodes, nNutModes, cSize);
+
+    List<tmp<volVectorField>> PmodesGrad(NPmodes);
+    for (label i = 0; i < NPmodes; ++i)
+    {
+        PmodesGrad[i] = fvc::grad(Pmodes[i]);
+    }
+
+    for (label j = 0; j < nNutModes; ++j)
+    {
+        // Cache one row (j fixed)
+        List<tmp<volVectorField>> lapRow(cSize);
+        for (label k = 0; k < cSize; ++k)
+        {
+            lapRow[k] = fvc::laplacian(nutModes[j], L_U_SUPmodes[k]);
+        }
+
+        for (label i = 0; i < NPmodes; ++i)
+        {
+            const volVectorField& gradPi = PmodesGrad[i]();
+            for (label k = 0; k < cSize; ++k)
+            {
+                const volVectorField& lapRowField = lapRow[k]();
+                ct1PPETensor(i, j, k) = fvc::domainIntegrate(gradPi & lapRowField).value();
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct1PPETensor, "./ITHACAoutput/Matrices/",
+                                      "ct1PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
+    }
+    return ct1PPETensor;
+}
+
 Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2(label NUmodes,
         label NSUPmodes, label NPmodes, label nNutModes)
 {
@@ -495,6 +607,48 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
             for (label k = 0; k < cSize; k++)
             {
                 ct2PPETensor(i, j, k) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & divCache[j*cSize+k]()).value();
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct2PPETensor, "./ITHACAoutput/Matrices/",
+                                      "ct2PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
+    }
+    return ct2PPETensor;
+}
+
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache_mem(label NUmodes,
+        label NSUPmodes, label NPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct2PPETensor(NPmodes, nNutModes, cSize);
+
+    List<tmp<volVectorField>> PmodesGrad(NPmodes);
+    for (label i = 0; i < NPmodes; ++i)
+    {
+        PmodesGrad[i] = fvc::grad(Pmodes[i]);
+    }
+
+    for (label j = 0; j < nNutModes; ++j)
+    {
+        // Cache one row of div fields for this nutMode[j]
+        List<tmp<volVectorField>> divLow(cSize);
+        for (label k = 0; k < cSize; ++k)
+        {
+            divLow[k] = fvc::div(nutModes[j] * dev2((fvc::grad(L_U_SUPmodes[k]))().T()));
+        }
+
+        for (label i = 0; i < NPmodes; ++i)
+        {
+            const volVectorField& gradPi = PmodesGrad[i]();
+            for (label k = 0; k < cSize; ++k)
+            {
+                const volVectorField& divLowField = divLow[k]();
+                ct2PPETensor(i, j, k) = fvc::domainIntegrate(gradPi & divLowField).value();
             }
         }
     }
@@ -707,7 +861,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
+            C_tensor = convective_term_tens_cache_mem(NUmodes, NPmodes, NSUPmodes);
         }
 
         word ct1Str = "ct1_" + name(liftfield.size()) + "_" + name(
@@ -720,7 +874,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            ct1Tensor = turbulenceTensor1_cache(NUmodes, NSUPmodes, nNutModes);
+            ct1Tensor = turbulenceTensor1_cache_mem(NUmodes, NSUPmodes, nNutModes);
         }
 
         word ct2Str = "ct2_" + name(liftfield.size()) + "_" + name(
@@ -733,7 +887,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            ct2Tensor = turbulenceTensor2_cache(NUmodes, NSUPmodes, nNutModes);
+            ct2Tensor = turbulenceTensor2_cache_mem(NUmodes, NSUPmodes, nNutModes);
         }
 
         word G_str = "G_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
@@ -757,7 +911,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            ct1PPETensor = turbulencePPETensor1_cache(NUmodes, NSUPmodes, NPmodes, nNutModes);
+            ct1PPETensor = turbulencePPETensor1_cache_mem(NUmodes, NSUPmodes, NPmodes, nNutModes);
         }
 
         word cth2PPE_str = "ct2PPE_" + name(liftfield.size()) + "_" + name(
@@ -769,7 +923,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            ct2PPETensor = turbulencePPETensor2_cache(NUmodes, NSUPmodes, NPmodes, nNutModes);
+            ct2PPETensor = turbulencePPETensor2_cache_mem(NUmodes, NSUPmodes, NPmodes, nNutModes);
         }
 
         if (bcMethod == "penalty")
@@ -807,7 +961,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         }
 
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-        C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
+        C_tensor = convective_term_tens_cache_mem(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
         D_matrix = laplacian_pressure(NPmodes);
@@ -815,10 +969,10 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         btMatrix = btTurbulence(NUmodes, NSUPmodes);
         BC3_matrix = pressure_BC3(NUmodes, NPmodes);
         // BC4_matrix = pressure_BC4(NUmodes, NPmodes);
-        ct1Tensor = turbulenceTensor1_cache(NUmodes, NSUPmodes, nNutModes);
-        ct2Tensor = turbulenceTensor2_cache(NUmodes, NSUPmodes, nNutModes);
-        ct1PPETensor = turbulencePPETensor1_cache(NUmodes, NSUPmodes, NPmodes, nNutModes);
-        ct2PPETensor = turbulencePPETensor2_cache(NUmodes, NSUPmodes, NPmodes, nNutModes);
+        ct1Tensor = turbulenceTensor1_cache_mem(NUmodes, NSUPmodes, nNutModes);
+        ct2Tensor = turbulenceTensor2_cache_mem(NUmodes, NSUPmodes, nNutModes);
+        ct1PPETensor = turbulencePPETensor1_cache_mem(NUmodes, NSUPmodes, NPmodes, nNutModes);
+        ct2PPETensor = turbulencePPETensor2_cache_mem(NUmodes, NSUPmodes, NPmodes, nNutModes);
 
         if (bcMethod == "penalty")
         {
@@ -1068,7 +1222,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
+            C_tensor = convective_term_tens_cache_mem(NUmodes, NPmodes, NSUPmodes);
         }
 
         word ct1Str = "ct1_" + name(liftfield.size()) + "_" + name(
@@ -1081,7 +1235,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            ct1Tensor = turbulenceTensor1_cache(NUmodes, NSUPmodes, nNutModes);
+            ct1Tensor = turbulenceTensor1_cache_mem(NUmodes, NSUPmodes, nNutModes);
         }
 
         word ct2Str = "ct2_" + name(liftfield.size()) + "_" + name(
@@ -1094,7 +1248,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         }
         else
         {
-            ct2Tensor = turbulenceTensor2_cache(NUmodes, NSUPmodes, nNutModes);
+            ct2Tensor = turbulenceTensor2_cache_mem(NUmodes, NSUPmodes, nNutModes);
         }
 
         if (bcMethod == "penalty")
@@ -1132,13 +1286,13 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         }
 
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
-        C_tensor = convective_term_tens_cache(NUmodes, NPmodes, NSUPmodes);
+        C_tensor = convective_term_tens_cache_mem(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
         P_matrix = divergence_term(NUmodes, NPmodes, NSUPmodes);
         M_matrix = mass_term(NUmodes, NPmodes, NSUPmodes);
         btMatrix = btTurbulence(NUmodes, NSUPmodes);
-        ct1Tensor = turbulenceTensor1_cache(NUmodes, NSUPmodes, nNutModes);
-        ct2Tensor = turbulenceTensor2_cache(NUmodes, NSUPmodes, nNutModes);
+        ct1Tensor = turbulenceTensor1_cache_mem(NUmodes, NSUPmodes, nNutModes);
+        ct2Tensor = turbulenceTensor2_cache_mem(NUmodes, NSUPmodes, nNutModes);
 
         if (bcMethod == "penalty")
         {
