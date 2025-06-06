@@ -1,0 +1,516 @@
+/*---------------------------------------------------------------------------*\
+     ██╗████████╗██╗  ██╗ █████╗  ██████╗ █████╗       ███████╗██╗   ██╗
+     ██║╚══██╔══╝██║  ██║██╔══██╗██╔════╝██╔══██╗      ██╔════╝██║   ██║
+     ██║   ██║   ███████║███████║██║     ███████║█████╗█████╗  ██║   ██║
+     ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
+     ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
+     ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
+
+ * In real Time Highly Advanced Computational Applications for Finite Volumes
+ * Copyright (C) 2020 by the ITHACA-FV authors
+-------------------------------------------------------------------------------
+
+License
+    This file is part of ITHACA-FV
+
+    ITHACA-FV is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ITHACA-FV is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+/// \file
+/// Source file of the ReducedUnsteadyNSExplicit class
+
+
+#include "ReducedUnsteadyNSExplicitTurb.H"
+
+
+// * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
+
+// Constructor initialization
+ReducedUnsteadyNSExplicitTurb::ReducedUnsteadyNSExplicitTurb()
+{
+}
+
+ReducedUnsteadyNSExplicitTurb::ReducedUnsteadyNSExplicitTurb(UnsteadyNSExplicitTurb&
+        FOMproblem)
+    :
+    problem(& FOMproblem)
+{
+    N_BC = problem->inletIndex.rows();
+    Nphi_u = problem->B_matrix.rows();
+    Nphi_p = problem->K_matrix.cols();
+    nphiNut = problem->cTotalTensor.dimension(1);
+    // Nphi_nut = problem->cTotalTensor.dimension(1);
+    
+    std::vector<int> N_BC_vec = {N_BC};
+    // cnpy::npy_save("/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/N_BC.npy", 
+    //                N_BC_vec.data(), 
+    //                {1}, "w");
+
+    std::vector<int> Nphi_p_vec = {Nphi_p};
+    // cnpy::npy_save("/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/Nphi_p.npy", 
+    //                Nphi_p_vec.data(), 
+    //                {1}, "w");
+
+    std::vector<int> Nphi_u_vec = {Nphi_u};
+    // cnpy::npy_save("/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/Nphi_u.npy", 
+    //                Nphi_u_vec.data(), 
+    //                {1}, "w");
+
+    // std::vector<int> Nphi_nut_vec = {Nphi_nut};
+    std::vector<int> Nphi_nut_vec = {nphiNut};
+
+
+}
+
+// * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * //
+
+void ReducedUnsteadyNSExplicitTurb::solveOnline(Eigen::MatrixXd vel,
+        label startSnap)
+{
+    if (problem->fluxMethod == "inconsistent")
+    {
+        // Create and resize the solution vectors
+        Eigen::VectorXd a_o = Eigen::VectorXd::Zero(Nphi_u);
+        Eigen::VectorXd a_n = a_o;
+        Eigen::MatrixXd b = Eigen::VectorXd::Zero(Nphi_p);
+        Eigen::MatrixXd x = Eigen::VectorXd::Zero(Nphi_p);
+        Eigen::VectorXd presidual = Eigen::VectorXd::Zero(Nphi_p);
+        Eigen::VectorXd RHS  = Eigen::VectorXd::Zero(Nphi_p);
+
+        // cnpy::save(x, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/x_inc.npy");
+        // cnpy::save(presidual, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/presidual_inc.npy");
+        // cnpy::save(RHS, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/RHS_inc.npy");
+
+        // Counting variable
+        int counter = 0;
+        // Set the initial time
+        time = tstart;
+
+        // Determine number of time steps
+        while (time < finalTime - 0.5 * dt)
+        {
+            time = time + dt;
+            counter ++;
+        }
+
+        // Set the initial time
+        time = tstart;
+        // Initial conditions / guesses
+        a_o = ITHACAutilities::getCoeffs(problem->Ufield[0],
+                                         problem->Umodes);
+        b   = ITHACAutilities::getCoeffs(problem->Pfield[0],
+                                         problem->Pmodes);
+        nut0  = ITHACAutilities::getCoeffs(problem->nutFields[0],
+                                         problem->nNutModes);
+        nut_coeffs  = ITHACAutilities::getCoeffs(problem->nutFields,
+                                            problem->nNutModes);                     
+
+        // cnpy::save(a_o, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/a_o_inc.npy");
+        // cnpy::save(b, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/b_inc.npy");
+
+
+        // Set size of online solution
+        online_solution.resize(counter + 1);
+        // Create vector to store temporal solution and save initial condition as first solution
+        Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + nphiNut + 1, 1);
+        tmp_sol(0) = time;
+        tmp_sol.col(0).segment(1,Nphi_u) = a_o;
+        tmp_sol.col(0).segment(1, Nphi_p) = b;
+        tmp_sol.col(0).tail(nut0.rows()) = nut0;
+        online_solution[0] = tmp_sol;
+
+        for (label i = 1; i < online_solution.size(); i++)
+        {
+            time = time + dt;
+            std::cout << " ################## time =   " << time <<
+                      " ##################" << std::endl;
+
+            // Pressure Poisson Equation
+            // Diffusion Term
+            Eigen::VectorXd M1 = problem->BP_matrix * a_o * nu ;
+
+            // Convection Term
+            Eigen::MatrixXd cf(1, 1);
+
+            // Divergence term
+            Eigen::MatrixXd M2 = problem->P_matrix * a_o;
+            
+            for (label l = 0; l < Nphi_p; l++)
+            {
+                cf = a_o.transpose() * Eigen::SliceFromTensor(problem->Cf_tensor, 0,
+                     l) * a_o - nut_coeffs.col(i).transpose() *
+                     Eigen::SliceFromTensor(problem->cTotalTensor, 0, l) * a_o;
+                RHS(l) = (1 / dt) * M2(l, 0) - cf(0, 0) + M1(l, 0);
+
+            }
+
+            // Boundary Term (divergence + diffusion + convection)
+            List<Eigen::MatrixXd> RedLinSysP = problem->LinSysDiv;
+            RedLinSysP[1] = RHS;
+
+            for (label i = 0; i < N_BC; i++)
+            {
+                RedLinSysP[1] += vel(i, 0) * ((1 / dt) * problem->LinSysDiv[i + 1] +
+                                              nu * problem->LinSysDiff[i + 1] +
+                                              vel(i, 0) * problem->LinSysConv[i + 1]);
+            }
+
+            b = reducedProblem::solveLinearSys(RedLinSysP, x, presidual);            
+            
+            // Momentum Equation
+
+            // Convective term
+            Eigen::MatrixXd cc(1, 1);
+
+            // Diffusion Term
+            Eigen::VectorXd M5 = problem->B_matrix * a_o * nu;
+
+            // Pressure Gradient Term
+            Eigen::VectorXd M3 = problem->K_matrix * b;
+
+            // Boundary Term Diffusion + Convection
+            Eigen::MatrixXd boundaryTerm = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+            // cnpy::save(boundaryTerm, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/boundaryTerm_inc.npy");
+
+            for (label l = 0; l < N_BC; l++)
+            {
+                boundaryTerm.col(l) = (vel(l, 0) * (problem->RD_matrix[l] * nu +
+                                                    vel(l, 0) * problem->RC_matrix[l]));
+            }
+
+            for (label l = 0; l < Nphi_u; l++)
+            {
+                cc = a_o.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
+                     l) * a_o - nut_coeffs.col(i).transpose() *
+                     Eigen::SliceFromTensor(problem->cTotalTensor, 0, l) * a_o;
+                a_n(l) = a_o(l) + (M5(l) - cc(0, 0) - M3(l)) * dt;
+
+                for (label j = 0; j < N_BC; j++)
+                {
+                    a_n(l) += boundaryTerm(l, j) * dt;
+                }
+
+            }
+
+            tmp_sol(0) = time;
+            tmp_sol.col(0).segment(1, Nphi_u) = a_n;
+            tmp_sol.col(0).segment(Nphi_u + 1, Nphi_p) = b;
+            tmp_sol.col(0).tail(nut_coeffs.col(i)) = nut_coeffs.col(i);
+            online_solution[i] = tmp_sol;
+
+            a_o = a_n;
+        }
+    }
+    else if (problem->fluxMethod == "consistent")
+    {
+        // Create and resize the solution vectors
+        Eigen::VectorXd a_o = Eigen::VectorXd::Zero(Nphi_u);
+        Eigen::VectorXd a_n = a_o;
+        Eigen::MatrixXd b = Eigen::VectorXd::Zero(Nphi_p);
+        Eigen::VectorXd c_o = Eigen::VectorXd::Zero(Nphi_u);
+        Eigen::VectorXd c_n = Eigen::VectorXd::Zero(Nphi_u);
+        Eigen::MatrixXd x = Eigen::VectorXd::Zero(Nphi_p);
+        Eigen::VectorXd presidual = Eigen::VectorXd::Zero(Nphi_p);
+        Eigen::VectorXd RHS  = Eigen::VectorXd::Zero(Nphi_p);
+
+        // cnpy::save(x, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/x_con.npy");
+        // cnpy::save(presidual, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/presidual_con.npy");
+        // cnpy::save(RHS, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/RHS_con.npy");
+
+        // Counting variable
+        int counter = 0;
+
+        // Set the initial time
+        time = tstart;
+
+        // Determine number of time steps
+        while (time < finalTime - 0.5 * dt)
+        {
+            time = time + dt;
+            counter ++;
+        }
+
+        // Set the initial time
+        time = tstart;
+        // Initial conditions / guesses
+        a_o = ITHACAutilities::getCoeffs(problem->Ufield[0],
+                                         problem->Umodes);
+        b   = ITHACAutilities::getCoeffs(problem->Pfield[0],
+                                         problem->Pmodes);
+        c_o = ITHACAutilities::getCoeffs(problem->Phifield[0],
+                                         problem->Phimodes, 0, false);
+        nut0  = ITHACAutilities::getCoeffs(problem->nutFields[0],
+                                         problem->nNutModes);         
+        nut_coeffs  = ITHACAutilities::getCoeffs(problem->nutFields,
+                                            problem->nNutModes);                    
+
+        // cnpy::save(a_o, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/a_o_con.npy");;    
+        // cnpy::save(b, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/b_con.npy");    
+        // cnpy::save(c_o, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/c_o_con.npy");
+
+        // Set size of online solution
+        online_solution.resize(counter + 1);
+        // Create vector to store temporal solution and save initial condition as first solution
+        Eigen::MatrixXd tmp_sol(Nphi_u + Nphi_p + nphiNut + Nphi_u + 1, 1);
+        tmp_sol(0) = time;
+        tmp_sol.col(0).segment(1, Nphi_u) = a_o;
+        tmp_sol.col(0).segment(Nphi_u + 1, Nphi_p) = b;
+        tmp_sol.col(0).segment(Nphi_u + Nphi_p + 1, nphiNut) = nut0;
+        tmp_sol.col(0).tail(Nphi_u) = c_o;
+        online_solution[0] = tmp_sol;
+
+        for (label i = 1; i < online_solution.size(); i++)
+        {
+            time = time + dt;
+            std::cout << " ################## time =   " << time <<
+                      " ##################" << std::endl;
+            Eigen::VectorXd presidual = Eigen::VectorXd::Zero(Nphi_p);
+
+            // Pressure Poisson Equation
+            // Diffusion Term
+            Eigen::VectorXd M1 = problem->BP_matrix * a_o * nu ;
+            //// cnpy::save(M1, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/M1_con.npy");
+
+            // Convection Term
+            Eigen::MatrixXd cf(1, 1);
+
+            // Divergence term
+            Eigen::MatrixXd M2 = problem->P_matrix * a_o;
+            //// cnpy::save(M2, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/M2_con.npy");
+
+            for (label l = 0; l < Nphi_p; l++)
+            {
+                cf = c_o.transpose() * Eigen::SliceFromTensor(problem->Cf_tensor, 0,
+                     l) * a_o;
+                RHS(l) = (1 / dt) * M2(l, 0) - cf(0, 0) + M1(l, 0);
+            }
+
+            // Boundary Term (divergence + diffusion + convection)
+            List<Eigen::MatrixXd> RedLinSysP = problem->LinSysDiv;
+            RedLinSysP[1] = RHS;
+
+            for (label l = 0; l < N_BC; l++)
+            {
+                RedLinSysP[1] += vel(l, 0) * ((1 / dt) * problem->LinSysDiv[l + 1] +
+                                              nu * problem->LinSysDiff[l + 1] +
+                                              vel(l, 0) * problem->LinSysConv[l + 1]);
+            }
+
+            b = reducedProblem::solveLinearSys(RedLinSysP, x, presidual);
+
+            // Momentum Equation
+            // Convective term
+            Eigen::MatrixXd cc(1, 1);
+
+            // Diffusion Term
+            Eigen::VectorXd M5 = problem->B_matrix * a_o * nu ;
+            //// cnpy::save(M5, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/M5_con.npy");
+
+            // Pressure Gradient Term
+            Eigen::VectorXd M3 = problem->K_matrix * b;
+            //// cnpy::save(M3, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/M3_con.npy");
+
+            // Boundary Term Diffusion + Convection
+            Eigen::MatrixXd boundaryTerm = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+
+            for (label l = 0; l < N_BC; l++)
+            {
+                boundaryTerm.col(l) = (vel(l, 0) * (problem->RD_matrix[l] * nu +
+                                                    vel(l, 0) * problem->RC_matrix[l]));
+
+            }
+
+            for (label k = 0; k < Nphi_u; k++)
+            {
+                cc = c_o.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
+                     k) * a_o - nut_coeffs.col(i).transpose() *
+                     Eigen::SliceFromTensor(problem->cTotalTensor, 0, k) * a_o;
+                a_n(k) = a_o(k) + (M5(k) - cc(0, 0) - M3(k)) * dt;
+
+                for (label l = 0; l < N_BC; l++)
+                {
+                    a_n(k) += boundaryTerm(k, l) * dt;
+                }
+
+            }
+
+            // Flux Equation
+
+            // Mass Term
+            Eigen::MatrixXd M6 = problem->I_matrix * a_o;
+            //// cnpy::save(M6, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/M6_con.npy");
+
+            // Diffusion Term
+            Eigen::MatrixXd M7 = problem->DF_matrix * a_o * nu;
+            //// cnpy::save(M7, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/M7_con.npy");
+
+            // Pressure Gradient Term
+            Eigen::MatrixXd M8 = problem->KF_matrix * b.col(0);
+            //// cnpy::save(M8, "/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/file_python/M8_con.npy");
+
+            // Convective Term
+            Eigen::MatrixXd M9 = Eigen::VectorXd::Zero(Nphi_u);
+
+            for (label k = 0; k < Nphi_u; k++)
+            {
+                M9 += dt * Eigen::SliceFromTensor(problem->Ci_tensor, 0,
+                                                  k) * a_o * c_o(k);
+            }
+
+            // Boundary Term Diffusion + Convection
+            Eigen::VectorXd boundaryTermFlux = Eigen::VectorXd::Zero(Nphi_u);
+
+            for (label l = 0; l < N_BC; l++)
+            {
+                boundaryTermFlux += (vel(l, 0) * (problem->SD_matrix[l] * nu +
+                                                  vel(l, 0) * problem->SC_matrix[l]));
+            }
+
+            c_n = problem->W_matrix.colPivHouseholderQr().solve(M6 - M9 + dt * (-M8 + M7
+                  + boundaryTermFlux));
+
+            tmp_sol(0) = time;
+            tmp_sol.col(0).segment(1, Nphi_u) = a_n;
+            tmp_sol.col(0).segment(Nphi_u + 1, Nphi_p) = b;
+            tmp_sol.col(0).segment(Nphi_u + Nphi_p + 1, nphiNut) = nut_coeffs.col(i);
+            tmp_sol.col(0).tail(Nphi_u) = c_n;
+            online_solution[i] = tmp_sol;
+
+            // std::cout << "########## SETTIMO SAVE, RIGA 234 ##########" << std::endl;
+            // std::cout << "a_o_con_C" << a_o << std::endl;
+            // std::cout << "b_con_C" << b << std::endl;
+            // std::cout << "x_con_C" << x << std::endl;
+            // std::cout << "presidual_con_C" << presidual << std::endl;
+            // std::cout << "RHS_con_C" << RHS << std::endl;
+            // std::cout << "cc_con_C" << cc << std::endl;
+            // std::cout << "c_n_con_C" << c_n << std::endl;
+
+            a_o = a_n;
+            c_o = c_n;
+
+            // int rows = online_solution[0].rows();
+            // int cols = online_solution.size();
+
+            // Eigen::MatrixXd full_solution(rows, cols);
+
+            // for (int i = 0; i < cols; ++i) 
+            // {
+            //     full_solution.col(i) = online_solution[i];
+            // }
+
+            // // Salva in formato .npy compatibile con Python
+            // cnpy::save("/home/nrooho/ITHACA-FV/src/ITHACA_ROMPROBLEMS/ReducedUnsteadyNSExplicit/online_solution_consistent_C.npy", full_solution);
+
+        }
+    }
+    else
+    {
+        std::cout <<
+        "Only the inconsistent flux method and consistent flux method are implemented."
+                  << std::endl;
+        exit(0);
+    }
+}
+
+
+void ReducedUnsteadyNSExplicitTurb::reconstruct(bool exportFields, fileName folder)
+{
+    if (exportFields)
+    {
+        mkDir(folder);
+        ITHACAutilities::createSymLink(folder);
+    }
+
+    int counter = 0;
+    int nextwrite = 0;
+    List < Eigen::MatrixXd> CoeffU;
+    List < Eigen::MatrixXd> CoeffP;
+    List < Eigen::MatrixXd> CoeffNut;
+    List <double> tValues;
+    CoeffU.resize(0);
+    CoeffP.resize(0);
+    CoeffNut.resize(0);
+    tValues.resize(0);
+    int exportEveryIndex = round(exportEvery / storeEvery);
+
+    for (label i = 0; i < online_solution.size(); i++)
+    {
+        if (counter == nextwrite)
+        {
+            Eigen::MatrixXd currentUCoeff;
+            Eigen::MatrixXd currentPCoeff;
+            Eigen::MatrixXd currentNutCoeff;
+            currentUCoeff = online_solution[i].block(1, 0, Nphi_u, 1);
+            currentPCoeff = online_solution[i].block(1 + Nphi_u, 0, Nphi_p, 1);
+            currentNutCoeff = online_solution[i].block(1 + Nphi_u + Nphi_p, 0, nphiNut, 1);
+
+            std::ofstream outU("coeffs_u.csv", std::ios::app);
+            std::ofstream outP("coeffs_p.csv", std::ios::app);
+            std::ofstream outNut("coeffs_nut.csv", std::ios::app);
+            
+            double timeNow = online_solution[i](0, 0);
+
+            outU << timeNow;
+            for (int k = 0; k < currentUCoeff.rows(); ++k)
+                outU << "," << currentUCoeff(k, 0);
+            outU << "\n";
+            outU.close();
+
+            outP << timeNow;
+            for (int k = 0; k < currentPCoeff.rows(); ++k)
+                 outP << "," << currentPCoeff(k, 0);
+            outP << "\n";
+            outP.close();
+
+            outNut << timeNow;
+            for (int k = 0; k < currentNutCoeff.rows(); ++k)
+                outNut << "," << currentNutCoeff(k, 0);
+            outNut << "\n";
+            outNut.close();
+
+            CoeffU.append(currentUCoeff);
+            CoeffP.append(currentPCoeff);
+            CoeffNut.append(currentNutCoeff);
+            nextwrite += exportEveryIndex;
+            // double timeNow = online_solution[i](0, 0);
+            tValues.append(timeNow);
+        }
+
+        counter++;
+    }
+
+    volVectorField uRec("uRec", problem->Umodes[0]);
+    volScalarField pRec("pRec", problem->Pmodes[0]);
+    volScalarField nutRec("nutRec", problem->nutModes[0]);
+    uRecFields = problem->Umodes.reconstruct(uRec, CoeffU, "uRec");
+    pRecFields = problem->Pmodes.reconstruct(pRec, CoeffP, "pRec");
+    nutRecFields = problem->nutModes.reconstruct(nutRec, CoeffNut, "nutRec");
+
+
+
+    
+    if (exportFields)
+    {
+        ITHACAstream::exportFields(uRecFields, folder,
+                                   "uRec");
+        ITHACAstream::exportFields(pRecFields, folder,
+                                   "pRec");
+        ITHACAstream::exportFields(nutRecFields, folder, 
+                                   "nutRec");
+    }
+}
+
+
+//************************************************************************* //

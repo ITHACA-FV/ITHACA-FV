@@ -43,6 +43,7 @@ SourceFiles
 #include "ReducedUnsteadyNS.H"
 #include "UnsteadyNSExplicit.H"
 #include "unsteadyNS.H"
+#include "SteadyNSTurb.H"
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
@@ -53,7 +54,7 @@ SourceFiles
 
 /// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem.
 /** This class must be used together with the steadyNS class */
-class ReducedUnsteadyNSExplicit: public reducedUnsteadyNS
+class ReducedUnsteadyNSExplicit: public reducedUnsteadyNS, SteadyNSTurb
 {
     private:
 
