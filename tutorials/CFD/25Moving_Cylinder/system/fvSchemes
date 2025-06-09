@@ -20,24 +20,27 @@ FoamFile
 
 ddtSchemes
 {
-    default  Euler;
+    default        Euler;
     // backward;
 }
 
 gradSchemes
 {
-    default         cellLimited Gauss linear 0.5;
-    grad(U)         cellLimited Gauss linear 0.5;
+    default         cellLimited Gauss linear 1;
+    grad(U)         cellLimited Gauss linear 1;
     //grad(p)         Gauss linear 0.333;
+    grad(p)         Gauss linear; // Avoid limiting pressure gradients
 }
 
 divSchemes
 {
     default           Gauss linear;
     //default         none;
-    //div(phi,U)      bounded Gauss linearUpwind grad(U);
-    //div(phi,U)        Gauss vanLeerV; //grad(U);//phi
-    div(phi,U)       Gauss upwind;
+    //div(phi,U)      Gauss upwind grad(U);
+    div(phi,U)      Gauss upwind;
+    //div(phi,U)        Gauss linearUpwind grad(U);  // 2nd-order, less dissipative
+    //div(phi,U)      Gauss QUICK; // 3rd-order, higher accuracy (unstable for high Co)
+    //div(phi,U)      Gauss linear;
     //div((nuEff*dev(T(grad(U))))) Gauss linear;
 
 
@@ -46,24 +49,27 @@ divSchemes
 laplacianSchemes
 {
     default        Gauss linear limited 0.5;
+    //default        Gauss linear corrected;
 }
 
 interpolationSchemes
 {
-    default         linear;
+    //default        upwind phi;
+    default        linear;
 }
 
 snGradSchemes
 {
     default         limited 0.5;
+    //default         limited 1.0;
 }
-
+/*
 fluxRequired
 {
     default         no;
     p;
-    Phi;
-}
+    //Phi;
+}*/
 
 
 
