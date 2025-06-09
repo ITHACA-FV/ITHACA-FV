@@ -82,7 +82,9 @@ class ReducedFsi: public reducedSimpleSteadyNS
         PtrList<pointVectorField> Dfield;
         PtrList<volScalarField> Pfield;
         PtrList<volVectorField> Ufield;
+        PtrList<pointField> ListOfpoints;
         label counter = problem->counter;
+        //std::ofstream Errors;
 
         // Functions
       
@@ -99,10 +101,11 @@ class ReducedFsi: public reducedSimpleSteadyNS
         ///
         /// @param[in]  Folder The folder where we want to esport solutions (default is "./ITHACAoutput/Online/")
         ///
-       void solveOnline_Pimple(scalar mu_now, int NmodesUproj, 
-                                           int NmodesPproj, 
-                                           int NmodesDproj, 
-                                           fileName folder = "./ITHACAoutput/Online/");
+       void solveOnline_Pimple(scalar mu_now, 
+                               int NmodesUproj, 
+                               int NmodesPproj, 
+                               int NmodesDproj, 
+                               fileName folder = "./ITHACAoutput/Online/");
         /// method to set all fields back to values in 0 folder
         void restart();
         /// Method to save snapshots at a given time

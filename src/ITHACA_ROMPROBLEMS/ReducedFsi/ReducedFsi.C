@@ -105,10 +105,11 @@ void ReducedFsi::PODI(Eigen::MatrixXd coeffL2,Eigen::MatrixXd muu,label NPdModes
 
 
 
-void ReducedFsi::solveOnline_Pimple(scalar mu_now, int NmodesUproj, 
-                                           int NmodesPproj, 
-                                           int NmodesDproj, 
-                                           fileName folder)
+void ReducedFsi::solveOnline_Pimple(scalar mu_now, 
+                                    int NmodesUproj, 
+                                    int NmodesPproj, 
+                                    int NmodesDproj, 
+                                    fileName folder)
 {
         Eigen::MatrixXd a = Eigen::VectorXd::Zero(NmodesUproj);
         Eigen::MatrixXd b = Eigen::VectorXd::Zero(NmodesPproj);
@@ -135,9 +136,9 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
         label pRefCell = 0;
         scalar pRefValue = 0.0;
 
-        bool  correctPhi = problem->correctPhi;
-        bool  checkMeshCourantNo = problem->checkMeshCourantNo;
-        bool  moveMeshOuterCorrectors = problem->moveMeshOuterCorrectors;
+        bool    correctPhi = problem->correctPhi;
+        bool    checkMeshCourantNo = problem->checkMeshCourantNo;
+        bool    moveMeshOuterCorrectors = problem->moveMeshOuterCorrectors;
         scalar  cumulativeContErr = problem->cumulativeContErr;
 
 #include "createUfIfPresent.H"
@@ -158,7 +159,11 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
         Eigen::MatrixXd muEval;
         muEval.resize(1, 1);
         // PIMPLE algorithm starts here
-        Info<< "\nStarting time loop\n" << endl;
+        //Info<< "\nStarting time loop\n" << endl;
+        std::ofstream res_p, res_u;
+        res_u.open("./res_u", std::ios_base::app);
+        res_p.open("./res_p", std::ios_base::app);
+        //Errors << "Time, res_u, res_p" << endl;
         while (runTime.run())
         {
 
@@ -166,6 +171,8 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
             runTime++;
             //p.storePrevIter();
             Info << "Time = " << runTime.timeName() << nl << endl;
+            res_u << runTime.timeName() << std::endl;
+            res_p << runTime.timeName() << std::endl;
 
             while (pimple.loop())
             {
@@ -184,7 +191,6 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                             // Calculate absolute flux
                             // from the mapped surface velocity
                             phi = mesh.Sf() & Uf();
-//#include "correctPhi.H"
                             // Make the flux relative to the mesh motion
                             fvc::makeRelative(phi, U);
                         }
@@ -197,20 +203,20 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                 }
 
                 // Solve the Momentum equation
-                MRF.correctBoundaryVelocity(U);
+                //MRF.correctBoundaryVelocity(U);
                 fvVectorMatrix UEqn
                 (
                     fvm::ddt(U) 
                     + fvm::div(phi, U)
                     //+ MRF.DDt(U)
                     + turbulence->divDevReff(U)
-                    ==
-                    fvOptions(U)
+                    == fvOptions(U)
                 );
                 //fvVectorMatrix& UEqn = tUEqn.ref();
 
                 UEqn.relax();
-                //fvOptions.constrain(UEqn);
+                fvOptions.constrain(UEqn);
+                
                 List<Eigen::MatrixXd> RedLinSysU;
                 if (pimple.momentumPredictor())
                 {
@@ -220,9 +226,34 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                     Eigen::MatrixXd projGrad = Umodes.project(gradpfull, NmodesUproj);
                     RedLinSysU[1] = RedLinSysU[1] + projGrad;
                     //a = RedLinSysU[0].householderQr().solve(RedLinSysU[1]);
-                    //a = RedLinSysU[0].colPivHouseholderQr().solve(RedLinSysU[1]);
-                    a = RedLinSysU[0].ldlt().solve(RedLinSysU[1]);
+                    a = RedLinSysU[0].colPivHouseholderQr().solve(RedLinSysU[1]);
+                    //a = RedLinSysU[0].ldlt().solve(RedLinSysU[1]);
+                    //Eigen::ConjugateGradient<Eigen::MatrixXd> cg;
+                    //cg.setTolerance(1e-6);       // Tighter than default (1e-2)
+                    //cg.setMaxIterations(300);    // Prevent excessive iterations
+                    //cg.compute(RedLinSysU[0]);
+                    //Eigen::JacobiSVD<Eigen::MatrixXd> svd(RedLinSysU[0]);
+                    /*Eigen::JacobiSVD<Eigen::MatrixXd> svd(
+                    RedLinSysU[0], 
+                    Eigen::ComputeThinU | Eigen::ComputeThinV);
+                    svd.setThreshold(1e-6);  // Truncate small singular values
+                    if (svd.rank() < NmodesUproj) 
+                    {
+                        Warning << "Rank-deficient matrix! Rank = " << svd.rank() << endl;
+                    }
+                    a = svd.solve(RedLinSysU[1]);*/
+              //Eigen::MatrixXd A_reg = RedLinSysU[0] + 1e-6 *                Eigen::MatrixXd::Identity(NmodesUproj, NmodesUproj);
+              //a = A_reg.ldlt().solve(RedLinSysU[1]);
+                    //Eigen::MatrixXd aNew = cg.solve(RedLinSysU[1]);
+             std::cout << "res_u = " << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
+             res_u << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
+                    /*
+                    if (cg.info() != Eigen::Success) 
+                    {
+                        Warning << "ROM velocity solve failed. Using previous coefficients." << endl;
+                    }*/
                     Umodes.reconstruct(U, a, "U");
+                    U.correctBoundaryConditions();
                     fvOptions.correct(U);
                 }
 
@@ -250,13 +281,21 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
 
                         pEqn.setReference(pRefCell, pRefValue);
                         //pEqn.solve(mesh.solver(p.select(pimple.finalInnerIter()))); //p
-                        RedLinSysP = Pmodes.project(pEqn, NmodesPproj, "G" );
-                            /// Solve for the reduced coefficient for pressure
+                        RedLinSysP = Pmodes.project(pEqn, NmodesPproj,"G");
+                        /// Solve for the reduced coefficient for pressure
                         //b = RedLinSysP[0].householderQr().solve(RedLinSysP[1]);
                         //b = RedLinSysP[0].colPivHouseholderQr().solve(RedLinSysP[1]);
                         b = RedLinSysP[0].ldlt().solve(RedLinSysP[1]);
-
+                        // Solve pressure ROM system (with iterative solver)
+                        /*
+                        Eigen::ConjugateGradient<Eigen::MatrixXd> cgP;
+                        cgP.setTolerance(1e-6);
+                        cgP.compute(RedLinSysP[0]);
+                        Eigen::MatrixXd bNew = cgP.solve(RedLinSysP[1]);*/
+           std::cout << "res_p = " << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
+           res_p << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
                         Pmodes.reconstruct(p, b, "p");
+                        p.correctBoundaryConditions();
 
                         if (pimple.finalNonOrthogonalIter())
                         {
@@ -268,7 +307,7 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                     //b = bOld + mesh.fieldRelaxationFactor("p") * (b - bOld);
                     //Pmodes.reconstruct(p, b, "p");
                     U = HbyA - rAtU * fvc::grad(p); //p
-                    //U.correctBoundaryConditions();
+                    U.correctBoundaryConditions();
                     fvOptions.correct(U);
                     // Correct Uf if the mesh is moving
                     fvc::correctUf(Uf, U, phi);
@@ -286,11 +325,8 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                 CoeffU.append(a);
                 romforcey.append(romforces.forceEff().y());
                 romforcex.append(romforces.forceEff().x());
-
-                ITHACAstream::exportSolution(U, name(counter), folder);
-                ITHACAstream::exportSolution(p, name(counter), folder);
-                ITHACAstream::exportSolution(pointDisplacement, name(counter), folder);
-                ITHACAstream::writePoints(mesh.points(), folder, name(counter) + "/polyMesh/");
+             
+                ListOfpoints.append(mesh.points());
                 std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
                 UredFields.append(U.clone());
 		        PredFields.append(p.clone());
@@ -300,6 +336,8 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
             }
 
         } // end of the runTime.run() loop
+        res_u.close();
+        res_p.close();
 
     } // end of the method Solve
 

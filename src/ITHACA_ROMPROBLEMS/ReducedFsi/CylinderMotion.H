@@ -48,14 +48,15 @@ for (int i = 0; i < NmodesDproj; i++)
     //New value of the parameter
     //pdCoeff(i, 0) = problem->rbfSplines[i]->eval(muEval);
     pdCoeff(i, 0) = problem->rbfSplines[i]->eval(muEval);
-    // RedPdCoeff.append(pdCoeff(0, 0));
 }
 // Reconstruction of the pointdisplacement
 Dmodes.reconstruct(pointDisplacement, pdCoeff, "pointDisplacement");
-// update the new pointDisplacement                 
+/// Correct again the boundary fields
+pointDisplacement.correctBoundaryConditions();
+/// update the new pointDisplacement                 
 problem->sDRBMS().pointDisplacement().primitiveFieldRef() 
 = pointDisplacement.primitiveFieldRef();                  
-// Displacement has changed. Update boundary conditions // 
+/// Displacement has changed. Update boundary conditions // 
 pointConstraints::New
 (
    pointDisplacement.mesh()
