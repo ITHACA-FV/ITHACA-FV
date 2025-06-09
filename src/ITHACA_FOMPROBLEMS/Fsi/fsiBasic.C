@@ -148,9 +148,8 @@ void fsiBasic::truthSolve(List<scalar> mu_now, fileName folder)
                 // Do any mesh changes
                 //mesh.controlledUpdate();
                 // The following line remplace the above controlledUpdate() method
-                // sDRBMS().solve();
-
-                // mesh.movePoints(sDRBMS().curPoints());
+                sDRBMS().solve();
+                mesh.movePoints(sDRBMS().curPoints());
                 // std::cerr << "################"<< "Before six dof motion solver" << "#############"<< std::endl;
                 if (mesh.changing())
                 {

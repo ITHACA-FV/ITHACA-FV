@@ -30,15 +30,15 @@ SourceFiles
 
 // Solve the Momentum equation
 
-MRF.correctBoundaryVelocity(U);
+//MRF.correctBoundaryVelocity(U);
 
 tmp<fvVectorMatrix> tUEqn
 (
-    fvm::ddt(U) + fvm::div(phi, U)
-  + MRF.DDt(U)
+    fvm::ddt(U) 
+    + fvc::div(phi,U)
+  //+ MRF.DDt(U)
   + turbulence->divDevReff(U)
- ==
-    fvOptions(U)
+    ==  fvOptions(U)
 );
 fvVectorMatrix& UEqn = tUEqn.ref();
 
