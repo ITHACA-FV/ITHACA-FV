@@ -1124,42 +1124,6 @@ Eigen::MatrixXd steadyNS::diffusive_term_sym(label NUmodes, label NPmodes,
     return B_matrix;
 }
 
-Eigen::MatrixXd steadyNS::diffusive_term_sym_cache(label NUmodes, label NPmodes,
-        label NSUPmodes)
-{
-    label Bsize = NUmodes + NSUPmodes + liftfield.size();
-    Eigen::MatrixXd B_matrix;
-    B_matrix.resize(Bsize, Bsize);
-
-    // Use PtrList for storing volTensorField pointers
-    PtrList<volTensorField> grads(Bsize);
-
-    for (label i = 0; i < Bsize; ++i)
-    {
-        grads.set(i, new volTensorField(fvc::grad(L_U_SUPmodes[i])())); // Explicit evaluation
-    }
-
-    // Compute only upper triangle and mirror
-    for (label i = 0; i < Bsize; ++i)
-    {
-        for (label j = i; j < Bsize; ++j)
-        {
-            scalar val = fvc::domainIntegrate(grads[i] && grads[j]).value();
-
-            B_matrix(i, j) = val;
-            B_matrix(j, i) = val;
-        }
-    }
-
-    if (Pstream::master())
-    {
-        ITHACAstream::SaveDenseMatrix(B_matrix, "./ITHACAoutput/Matrices/",
-                                      "B_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
-    }
-
-    return B_matrix;
-}
-
 Eigen::MatrixXd steadyNS::pressure_gradient_term(label NUmodes, label NPmodes,
         label NSUPmodes)
 {
