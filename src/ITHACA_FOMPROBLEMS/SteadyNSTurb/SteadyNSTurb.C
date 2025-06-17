@@ -698,7 +698,7 @@ void SteadyNSTurb::getRBFType(const word& viscCoeff, const word& rbfKernel)
         {
             rbfType = SPLINTER::RadialBasisFunctionType::THIN_PLATE_SPLINE;
         }
-        else if (rbfKernel == "multiquadric")
+        else if (rbfKernel == "multiQuadric")
         {
             rbfType = SPLINTER::RadialBasisFunctionType::MULTIQUADRIC;
         }
@@ -716,7 +716,7 @@ void SteadyNSTurb::getRBFType(const word& viscCoeff, const word& rbfKernel)
         }
         else
         {
-            Info<< "Available RBF kernels are: linear, thinPlate, multiquadric, "
+            Info<< "Available RBF kernels are: linear, thinPlate, multiQuadric, "
                 << "inverseQuadric, inverseMultiQuadric, gaussian." << endl;
             Info<< "Current rbfKernel is: " << rbfKernel << endl;
             FatalError << "Unknown RBF kernel type: " << rbfKernel << endl;
