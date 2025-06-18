@@ -144,66 +144,6 @@ void SteadyNSTurbNeu::truthSolve(List<scalar> mu_now)
     }
 }
 
-Eigen::MatrixXd SteadyNSTurbNeu::diffusive_term_sym(label NUmodes, label NSUPmodes)
-{
-    label Bsize = NUmodes + NSUPmodes + liftfield.size();
-    Eigen::MatrixXd B_matrix_sym;
-    B_matrix_sym.resize(Bsize, Bsize);
-
-    // Use PtrList for storing volTensorField pointers
-    PtrList<volTensorField> grads(Bsize);
-
-    for (label i = 0; i < Bsize; ++i)
-    {
-        grads.set(i, new volTensorField(fvc::grad(L_U_SUPmodes[i])())); // Explicit evaluation
-    }
-
-    // Compute only upper triangle and mirror
-    for (label i = 0; i < Bsize; ++i)
-    {
-        for (label j = i; j < Bsize; ++j)
-        {
-            scalar val = fvc::domainIntegrate(grads[i] && grads[j]).value();
-
-            B_matrix_sym(i, j) = val;
-            B_matrix_sym(j, i) = val;
-        }
-    }
-
-    if (Pstream::master())
-    {
-        ITHACAstream::SaveDenseMatrix(B_matrix_sym, "./ITHACAoutput/Matrices/",
-                                      "B_sym_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
-    }
-
-    return B_matrix_sym;
-}
-
-Eigen::MatrixXd SteadyNSTurbNeu::bc_diffusive_term_sym(label NUmodes, label NSUPmodes)
-{
-    label Bsize = NUmodes + NSUPmodes + liftfield.size();
-    Eigen::MatrixXd bc_B_matrix_sym;
-    bc_B_matrix_sym.resize(Bsize, 1);
-
-    const vectorField NeumannField (NeumannValues);
-    const scalarField& magSf = _mesh().boundary()[NeumannIndex].magSf();
-
-    for (label i = 0; i < Bsize; ++i)
-    {
-        const vectorField& U_mode = L_U_SUPmodes[i].boundaryField()[NeumannIndex];
-        scalar var = gSum(U_mode & NeumannField * magSf);
-        bc_B_matrix_sym(i, 0) = var;
-    }
-
-    if (Pstream::master())
-    {
-        ITHACAstream::SaveDenseMatrix(bc_B_matrix_sym, "./ITHACAoutput/Matrices/",
-                                      "bc_B_sym_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
-    }
-
-    return bc_B_matrix_sym;
-}
-
 List < Eigen::MatrixXd > SteadyNSTurbNeu::turbulenceTerm1(label NUmodes,
         label NSUPmodes, label nNutModes)
 {
@@ -288,44 +228,6 @@ Eigen::Tensor<double, 3> SteadyNSTurbNeu::turbulenceTensor1_cache_mem(label NUmo
             {
                 const volVectorField& lapField = lapRow[k]();
                 ct1Tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & lapField).value();
-            }
-        }
-    }
-
-    // Export the tensor
-    if (Pstream::master())
-    {
-        ITHACAstream::SaveDenseTensor(ct1Tensor, "./ITHACAoutput/Matrices/",
-                                      "ct1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
-                                          NSUPmodes) + "_" + name(nNutModes) + "_t");
-    }
-    return ct1Tensor;
-}
-
-Eigen::Tensor<double, 3> SteadyNSTurbNeu::turbulenceTensor1_sym(label NUmodes,
-        label NSUPmodes, label nNutModes)
-{
-    label cSize = NUmodes + NSUPmodes + liftfield.size();
-    Eigen::Tensor<double, 3> ct1Tensor(cSize, nNutModes, cSize);
-
-    // Use PtrList for storing volTensorField pointers
-    PtrList<volTensorField> grads(cSize);
-
-    for (label i = 0; i < cSize; ++i)
-    {
-        grads.set(i, new volTensorField(fvc::grad(L_U_SUPmodes[i])())); // Explicit evaluation
-    }
-
-    for (label i = 0; i < cSize; ++i)
-    {
-        for (label j = 0; j < nNutModes; ++j)
-        {
-            for (label k = i; k < cSize; ++k)
-            {
-                // Compute only upper triangle and mirror
-                scalar val = fvc::domainIntegrate(grads[i] && (nutModes[j] * grads[k])).value();
-                ct1Tensor(i, j, k) = val;
-                ct1Tensor(k, j, i) = val; // Symmetric part
             }
         }
     }
@@ -436,6 +338,104 @@ Eigen::Tensor<double, 3> SteadyNSTurbNeu::turbulenceTensor2_cache_mem(label NUmo
                                           NSUPmodes) + "_" + name(nNutModes) + "_t");
     }
     return ct2Tensor;
+}
+
+Eigen::MatrixXd SteadyNSTurbNeu::diffusive_term_sym(label NUmodes, label NSUPmodes)
+{
+    label Bsize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::MatrixXd B_matrix_sym;
+    B_matrix_sym.resize(Bsize, Bsize);
+
+    // Use PtrList for storing volTensorField pointers
+    PtrList<volTensorField> grads(Bsize);
+
+    for (label i = 0; i < Bsize; ++i)
+    {
+        grads.set(i, new volTensorField(fvc::grad(L_U_SUPmodes[i])())); // Explicit evaluation
+    }
+
+    // Compute only upper triangle and mirror
+    for (label i = 0; i < Bsize; ++i)
+    {
+        for (label j = i; j < Bsize; ++j)
+        {
+            scalar val = fvc::domainIntegrate(grads[i] && grads[j]).value();
+
+            B_matrix_sym(i, j) = val;
+            B_matrix_sym(j, i) = val;
+        }
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(B_matrix_sym, "./ITHACAoutput/Matrices/",
+                                      "B_sym_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+    }
+
+    return B_matrix_sym;
+}
+
+Eigen::MatrixXd SteadyNSTurbNeu::bc_diffusive_term_sym(label NUmodes, label NSUPmodes)
+{
+    label Bsize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::MatrixXd bc_B_matrix_sym;
+    bc_B_matrix_sym.resize(Bsize, 1);
+
+    const vectorField NeumannField (NeumannValues);
+    const scalarField& magSf = _mesh().boundary()[NeumannIndex].magSf();
+
+    for (label i = 0; i < Bsize; ++i)
+    {
+        const vectorField& U_mode = L_U_SUPmodes[i].boundaryField()[NeumannIndex];
+        scalar var = gSum(U_mode & NeumannField * magSf);
+        bc_B_matrix_sym(i, 0) = var;
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseMatrix(bc_B_matrix_sym, "./ITHACAoutput/Matrices/",
+                                      "bc_B_sym_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
+    }
+
+    return bc_B_matrix_sym;
+}
+
+Eigen::Tensor<double, 3> SteadyNSTurbNeu::turbulenceTensor1_sym(label NUmodes,
+        label NSUPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct1Tensor(cSize, nNutModes, cSize);
+
+    // Use PtrList for storing volTensorField pointers
+    PtrList<volTensorField> grads(cSize);
+
+    for (label i = 0; i < cSize; ++i)
+    {
+        grads.set(i, new volTensorField(fvc::grad(L_U_SUPmodes[i])())); // Explicit evaluation
+    }
+
+    for (label i = 0; i < cSize; ++i)
+    {
+        for (label j = 0; j < nNutModes; ++j)
+        {
+            for (label k = i; k < cSize; ++k)
+            {
+                // Compute only upper triangle and mirror
+                scalar val = fvc::domainIntegrate(grads[i] && (nutModes[j] * grads[k])).value();
+                ct1Tensor(i, j, k) = val;
+                ct1Tensor(k, j, i) = val; // Symmetric part
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct1Tensor, "./ITHACAoutput/Matrices/",
+                                      "ct1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(nNutModes) + "_t");
+    }
+    return ct1Tensor;
 }
 
 Eigen::Tensor<double, 3> SteadyNSTurbNeu::turbulenceTensor2_sym(label NUmodes,
