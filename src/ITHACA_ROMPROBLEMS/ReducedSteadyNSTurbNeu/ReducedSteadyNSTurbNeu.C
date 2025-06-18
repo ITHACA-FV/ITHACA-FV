@@ -28,16 +28,16 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ReducedSteadyNSTurb.H"
+#include "ReducedSteadyNSTurbNeu.H"
 
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 
 // Constructor
-ReducedSteadyNSTurb::ReducedSteadyNSTurb()
+ReducedSteadyNSTurbNeu::ReducedSteadyNSTurbNeu()
 {
 }
 
-ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
+ReducedSteadyNSTurbNeu::ReducedSteadyNSTurbNeu(SteadyNSTurbNeu& fomProblem)
     :
     problem(& fomProblem)
 {
@@ -61,13 +61,11 @@ ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
         Umodes.append((problem->supmodes[k]).clone());
     }
 
-    newtonObjectSUP = newtonSteadyNSTurbSUP(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
-                                            fomProblem);
-    newtonObjectPPE = newtonSteadyNSTurbPPE(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
+    newtonObjectSUP = newtonSteadyNSTurbNeuSUP(Nphi_u + Nphi_p, Nphi_u + Nphi_p,
                                             fomProblem);
 }
 
-int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
+int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
                                       Eigen::VectorXd& fvec) const
 {
     Eigen::VectorXd aTmp(Nphi_u);
@@ -125,91 +123,17 @@ int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
     return 0;
 }
 
-int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
-                                      Eigen::VectorXd& fvec) const
-{
-    Eigen::VectorXd aTmp(Nphi_u);
-    Eigen::VectorXd bTmp(Nphi_p);
-    aTmp = x.head(Nphi_u);
-    bTmp = x.tail(Nphi_p);
-    // Convective term
-    Eigen::MatrixXd cc(1, 1);
-    Eigen::MatrixXd gg(1, 1);
-    Eigen::MatrixXd bb(1, 1);
-    // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
-    // Gradient of pressure
-    Eigen::VectorXd m2 = problem->K_matrix * bTmp;
-    // Pressure Term
-    Eigen::VectorXd m3 = problem->D_matrix * bTmp;
-    // BC PPE
-    Eigen::VectorXd m7 = problem->BC3_matrix * aTmp * nu;
-    // Penalty term
-    Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
-
-    // Term for penalty method
-    if (problem->bcMethod == "penalty")
-    {
-        for (int l = 0; l < N_BC; l++)
-        {
-            penaltyU.col(l) = bc(l) * problem->bcVelVec[l] - problem->bcVelMat[l] *
-                              aTmp;
-        }
-    }
-
-    for (int i = 0; i < Nphi_u; i++)
-    {
-        cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-             i) * aTmp - gNut.transpose() *
-             Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
-        fvec(i) = m1(i) - cc(0, 0) - m2(i);
-
-        if (problem->bcMethod == "penalty")
-        {
-            fvec(i) += ((penaltyU * tauU)(i, 0));
-        }
-    }
-
-    for (int j = 0; j < Nphi_p; j++)
-    {
-        int k = j + Nphi_u;
-        gg = aTmp.transpose() * Eigen::SliceFromTensor(problem->gTensor, 0,
-             j) * aTmp;
-        //fvec(k) = m3(j, 0) - gg(0, 0) - m6(j, 0) + bb(0, 0);
-        fvec(k) = m3(j, 0) + gg(0, 0) - m7(j, 0);
-    }
-
-    if (problem->bcMethod == "lift")
-    {
-        for (int j = 0; j < N_BC; j++)
-        {
-            fvec(j) = x(j) - bc(j);
-        }
-    }
-
-    return 0;
-}
-
-
-int newtonSteadyNSTurbSUP::df(const Eigen::VectorXd& x,
+int newtonSteadyNSTurbNeuSUP::df(const Eigen::VectorXd& x,
                               Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonSteadyNSTurbSUP> numDiff(* this);
-    numDiff.df(x, fjac);
-    return 0;
-}
-
-int newtonSteadyNSTurbPPE::df(const Eigen::VectorXd& x,
-                              Eigen::MatrixXd& fjac) const
-{
-    Eigen::NumericalDiff<newtonSteadyNSTurbPPE> numDiff(* this);
+    Eigen::NumericalDiff<newtonSteadyNSTurbNeuSUP> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
+void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel)
 {
     if (problem->bcMethod == "lift")
     {
@@ -242,7 +166,7 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     Color::Modifier red(Color::FG_RED);
     Color::Modifier green(Color::FG_GREEN);
     Color::Modifier def(Color::FG_DEFAULT);
-    Eigen::HybridNonLinearSolver<newtonSteadyNSTurbSUP> hnls(newtonObjectSUP);
+    Eigen::HybridNonLinearSolver<newtonSteadyNSTurbNeuSUP> hnls(newtonObjectSUP);
     newtonObjectSUP.bc.resize(N_BC);
     newtonObjectSUP.tauU = tauU;
 
@@ -315,113 +239,7 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     count_online_solve += 1;
 }
 
-void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
-{
-    if (problem->bcMethod == "lift")
-    {
-        if (problem->nonUniformbc)
-        {
-            vel_now = setOnlineVelocity(vel, true);
-        }
-        else
-        {
-            vel_now = setOnlineVelocity(vel);
-        }
-    }
-    else if (problem->bcMethod == "penalty")
-    {
-        vel_now = vel;
-    }
-
-    y.resize(Nphi_u + Nphi_p, 1);
-    y.setZero();
-
-    // Change initial condition for the lifting function
-    if (problem->bcMethod == "lift")
-    {
-        for (int j = 0; j < N_BC; j++)
-        {
-            y(j) = vel_now(j, 0);
-        }
-    }
-
-    Color::Modifier red(Color::FG_RED);
-    Color::Modifier green(Color::FG_GREEN);
-    Color::Modifier def(Color::FG_DEFAULT);
-    Eigen::HybridNonLinearSolver<newtonSteadyNSTurbPPE> hnls(newtonObjectPPE);
-    newtonObjectPPE.bc.resize(N_BC);
-    newtonObjectPPE.tauU = tauU;
-
-    for (int j = 0; j < N_BC; j++)
-    {
-        newtonObjectPPE.bc(j) = vel_now(j, 0);
-    }
-
-    if (problem->viscCoeff == "L2")
-    {
-        for (int i = 0; i < nphiNut; i++)
-        {
-            newtonObjectPPE.gNut = problem->nutCoeff;
-        }
-    }
-    else if (problem->viscCoeff == "RBF")
-    {
-        // for (int i = 0; i < nphiNut; i++)
-        // {
-        //     newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-        //     rbfCoeff = newtonObjectPPE.gNut;
-        // }
-
-        if (problem->rbfParams == "params")
-        {            
-            label caseIdx = count_online_solve-1;
-            std::cout << "The rbfparameter is: " << onlineMu.row(caseIdx) << std::endl;
-            for (int i = 0; i < nphiNut; i++)
-            {
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
-                rbfCoeff = newtonObjectSUP.gNut;
-            }
-        }
-        else
-        {
-            std::cout << "The rbfparameter is: " << vel_now << std::endl;
-            for (int i = 0; i < nphiNut; i++)
-            {
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-                rbfCoeff = newtonObjectSUP.gNut;
-            }
-        }
-    }
-    else
-    {
-        Info << "The way to compute the eddy viscosity coefficients has to be either L2 or RBF"
-             << endl;
-        exit(0);
-    }
-
-    newtonObjectPPE.nu = nu;
-    hnls.solve(y);
-    Eigen::VectorXd res(y);
-    newtonObjectPPE.operator()(y, res);
-    std::cout << "################## Online solve N° " << count_online_solve <<
-              " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << vel_now << std::endl;
-
-    if (res.norm() < 1e-5)
-    {
-        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
-    }
-    else
-    {
-        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
-    }
-
-    count_online_solve += 1;
-}
-
-void ReducedSteadyNSTurb::reconstruct(bool exportFields, fileName folder,
+void ReducedSteadyNSTurbNeu::reconstruct(bool exportFields, fileName folder,
                                       int printevery)
 {
     if (exportFields)
@@ -476,7 +294,7 @@ void ReducedSteadyNSTurb::reconstruct(bool exportFields, fileName folder,
     }
 }
 
-Eigen::MatrixXd ReducedSteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
+Eigen::MatrixXd ReducedSteadyNSTurbNeu::setOnlineVelocity(Eigen::MatrixXd vel)
 {
     assert(problem->inletIndex.rows() == vel.rows()
            && "Imposed boundary conditions dimensions do not match given values matrix dimensions");
@@ -496,7 +314,7 @@ Eigen::MatrixXd ReducedSteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel)
     return vel_scal;
 }
 
-Eigen::MatrixXd ReducedSteadyNSTurb::setOnlineVelocity(Eigen::MatrixXd vel, bool nonUniform)
+Eigen::MatrixXd ReducedSteadyNSTurbNeu::setOnlineVelocity(Eigen::MatrixXd vel, bool nonUniform)
 {
     assert(problem->inletIndex.rows() == vel.rows()
            && "Imposed boundary conditions dimensions do not match given values matrix dimensions");

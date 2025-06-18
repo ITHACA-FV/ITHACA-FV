@@ -30,12 +30,12 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 
 /// \file
-/// Header file of the SteadyNSTurb class.
+/// Header file of the SteadyNSTurbNeu class.
 /// \dir
 /// Directory containing the header and source files for the SteadyNSTurb class.
 
-#ifndef SteadyNSTurb_H
-#define SteadyNSTurb_H
+#ifndef SteadyNSTurbNeu_H
+#define SteadyNSTurbNeu_H
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
