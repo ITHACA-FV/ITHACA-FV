@@ -75,13 +75,15 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
+    Eigen::VectorXd m1 = - problem->B_matrix_sym * aTmp * nu;
     // Gradient of pressure
     Eigen::VectorXd m2 = problem->K_matrix * bTmp;
     // Pressure Term
     Eigen::VectorXd m3 = problem->P_matrix * aTmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+    // Neumann boundary term
+    Eigen::MatrixXd neuBC(1, 1);
 
     // Term for penalty method
     if (problem->bcMethod == "penalty")
@@ -98,7 +100,9 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
              i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
-        fvec(i) = m1(i) - cc(0, 0) - m2(i);
+        neuBC = problem->bc_diffusive_term_sym(i, 0) * nu
+                + problem->bc_ctMatrix.row(i) * gNut;
+        fvec(i) = m1(i) - cc(0, 0) - m2(i) + neuBC(0, 0);
 
         if (problem->bcMethod == "penalty")
         {

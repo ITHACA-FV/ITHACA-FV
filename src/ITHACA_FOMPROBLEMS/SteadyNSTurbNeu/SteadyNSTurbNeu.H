@@ -119,7 +119,7 @@ class SteadyNSTurbNeu: public steadyNS
         Eigen::Tensor<double, 3> ctTensor_BC;
 
         /// Neumann boundary condition of the turbulent viscosity term
-        Eigen::MatrixXd bc_ctTensor;
+        Eigen::MatrixXd bc_ctMatrix;
 
         /// Total B Matrix
         Eigen::MatrixXd bTotalMatrix;
