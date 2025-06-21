@@ -1017,6 +1017,10 @@ template void exportSolution(
     GeometricField<scalar, fvsPatchField, surfaceMesh> & s,
     fileName subfolder, fileName folder,
     word fieldName);
+template void exportSolution(
+    GeometricField<vector, fvsPatchField, surfaceMesh> & s,
+    fileName subfolder, fileName folder,
+    word fieldName);
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportSolution(GeometricField<Type, PatchField, GeoMesh> & s,
@@ -1054,6 +1058,10 @@ template void exportSolution(
     fileName subfolder, fileName folder);
 template void exportSolution(
     GeometricField<scalar, fvsPatchField, surfaceMesh> & s,
+    fileName subfolder, fileName folder);
+
+template void exportSolution(
+    GeometricField<vector, fvsPatchField, surfaceMesh> & s,
     fileName subfolder, fileName folder);
 
 template void exportSolution(
@@ -1167,6 +1175,8 @@ template void read_fields(PtrList<surfaceVectorField> & Lfield,
                           surfaceVectorField& field, fileName casename, int first_snap, int n_snap);
 template void readMiddleFields(PtrList<volScalarField> & Lfield,
                                volScalarField& field, fileName casename);
+template void readMiddleFields(PtrList<pointVectorField> & Lfield,
+                               pointVectorField& field, fileName casename);
 template void readMiddleFields(PtrList<volVectorField> & Lfield,
                                volVectorField& field, fileName casename);
 template void readMiddleFields(PtrList<volTensorField> & Lfield,
@@ -1186,8 +1196,14 @@ template void readConvergedFields(PtrList<surfaceScalarField> &
 template void readConvergedFields(PtrList<surfaceVectorField> &
                                   Lfield, surfaceVectorField& field, fileName casename);
 
+// template void readConvergedFields(PtrList<pointVectorField> &
+//                                   Lfield, pointVectorField& field, fileName casename);
+
 template void read_last_fields(PtrList<volScalarField> & Lfield,
                                const volScalarField& field, const fileName casename);
+
+// template void read_last_fields(PtrList<pointVectorField> & Lfield,
+//                                const pointVectorField& field, const fileName casename);
 template void read_last_fields(PtrList<volVectorField> & Lfield,
                                const volVectorField& field, const fileName casename);
 template void read_last_fields(PtrList<volTensorField> & Lfield,
@@ -1206,6 +1222,8 @@ template void readLastFields(PtrList<surfaceScalarField> &
                              Lfield, const surfaceScalarField& field, const fileName casename);
 template void readLastFields(PtrList<surfaceVectorField> &
                              Lfield, const surfaceVectorField& field, const fileName casename);
+// template void readLastFields(PtrList<pointVectorField> &
+//                              Lfield, const pointVectorField& field, const fileName casename);
 
 template<typename T>
 void exportList(T& list, word folder, word filename)
