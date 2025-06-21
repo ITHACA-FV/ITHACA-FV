@@ -56,6 +56,8 @@ class ReducedFsi: public reducedSimpleSteadyNS
         volScalarModes Pmodes;
         volVectorModes Umodes;
         pointVectorModes Dmodes;
+        /// PtrList to save the meshes
+        PtrList<dynamicFvMesh> OnlineMeshes;
        
         ///////// time control variables
         scalar startTime = 0.0;
