@@ -76,12 +76,59 @@ fsiBasic::fsiBasic(int argc, char* argv[])
                 IOobject::NO_WRITE
             )
         );
+        
+        oMesh.reset
+        (
+            new IOobject
+            (
+                "OriginalMesh",
+                "./ITHACAoutput",
+                runTime,
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            )
+        );
+        /// Create a deep copy
         ITHACAparameters* para = ITHACAparameters::getInstance(mesh,_runTime());
         //para = ITHACAparameters::getInstance(mesh, runTime); 
         offline = ITHACAutilities::check_off();
         podex = ITHACAutilities::check_pod();
-        setTimes(runTime);
-        point0 = mesh.points();  
+        //setTimes(runTime);
+        /*
+        point0 = mesh.points().clone();  
+        faces0 =  mesh.faces().clone();
+        celllist0 = mesh.cells().clone();
+        ///
+        //const polyBoundaryMesh& boundary = mesh.boundaryMesh();
+        /// Construct the initial mesh
+        Mesh0(
+                oMesh,
+                std::move(point0),
+                std::move(faces0),
+                std::move(celllist0),
+                true  // syncPar
+        );
+        
+        PtrList<polyPatch> patches(meshPtr->boundaryMesh().size());
+        forAll(meshPtr->boundaryMesh(), patchI)
+        {
+            patches.set
+            (
+                patchI,
+                meshPtr->boundaryMesh()[patchI].clone
+                (
+                    Mesh0->boundaryMesh(),
+                    patchI,
+                    meshPtr->boundaryMesh()[patchI].size(),
+                    meshPtr->boundaryMesh()[patchI].start()
+                )
+            );
+        }
+        
+        Mesh0->addFvPatches(patches);
+        // Now meshCopyPtr is fully independent
+        Mesh0->write();
+        */
         Info << offline << endl;
     /// Number of velocity modes to be calculated
         NUmodesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesUout", 15);
@@ -95,34 +142,39 @@ fsiBasic::fsiBasic(int argc, char* argv[])
         NPmodes = para->ITHACAdict->lookupOrDefault<label>("NmodesPproj", 10);
         /// Number of nut modes used for the projection
         NNutModes = para->ITHACAdict->lookupOrDefault<label>("NmodesNutProj", 0);
+        //folderN = 0;
               
 }
 
-void fsiBasic::truthSolve(List<scalar> mu_now, fileName folder)
+void fsiBasic::truthSolve(label folderN, fileName folder)
 {
 
     Time& runTime = _runTime();
-    surfaceScalarField& phi = _phi();
     dynamicFvMesh& mesh = meshPtr();
+    //Foam::dynamicFvMesh& mesh0 =  Mesh0();
+     // Create a new independent copy (if dynamicFvMesh supports copying)
+    //autoPtr<dynamicFvMesh> mesh2Ptr(meshPtr->clone());  // Requires clone() method
+    //dynamicFvMesh& mesh = mesh2Ptr();  // Now 'mesh' is independent of 'meshPtr'
     fv::options& fvOptions = _fvOptions();
     pimpleControl& pimple = _pimple();
     volScalarField& p = _p();
     volVectorField& U = _U();
+    surfaceScalarField& phi = _phi();
     IOMRFZoneList& MRF = _MRF();
     //surfaceVectorField& Uf = _Uf();
     singlePhaseTransportModel& laminarTransport = _laminarTransport();
     instantList Times = runTime.times();
     runTime.setEndTime(finalTime);
-
     // Perform a TruthSolve
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime; // timeStep initialization
-
-    dictionary dictCoeffs(dyndict->findDict("sixDoFRigidBodyMotionCoeffs"));
+    //const fvMesh& toMeshInit = meshPtr();
+    //meshToMesh0::order mapOrder = meshToMesh0::INTERPOLATE;
+    dictionary dictCoeffs(dyndict().findDict("sixDoFRigidBodyMotionCoeffs"));
     Foam::functionObjects::forces fomforces("fomforces", mesh, dictCoeffs);
    
-
+    surfaceVectorField N = mesh.Sf()/mesh.magSf();
     turbulence->validate();
 #include "createUfIfPresent.H"
 
@@ -150,11 +202,12 @@ void fsiBasic::truthSolve(List<scalar> mu_now, fileName folder)
                 // The following line remplace the above controlledUpdate() method
                 sDRBMS().solve();
                 mesh.movePoints(sDRBMS().curPoints());
-                // std::cerr << "################"<< "Before six dof motion solver" << "#############"<< std::endl;
+                //meshToMesh0 mapper(mesh, meshPtr());
+        //Info << mapper.toMesh().points()[1000] << endl;
+                //Info << mapper.fromMesh().points()[1000] << endl;
                 if (mesh.changing())
                 {
-                    MRF.update();
-
+                    //MRF.update();
                     if (correctPhi)
                     {
                         // Calculate absolute flux
@@ -187,64 +240,115 @@ void fsiBasic::truthSolve(List<scalar> mu_now, fileName folder)
                 turbulence->correct();
             }
         }
-        //std::cout << "/////////////" << runTime.deltaTValue() << "////////////" << std::endl;
         scalar alffa = sDRBMS().motion().omega().z() / runTime.deltaTValue();
+        // Face area normal vectors
+        //surfaceVectorField Sf = mesh.Sf();
+        // Face areas
+        //surfaceScalarField magSf = mesh.magSf();
+        // Face normals
+        //N = mesh.Sf()/mesh.magSf();
+        //N.rename("Uf");
+        
+        //Foam::meshToMesh0 mapper
+        //(
+        //    U.mesh(),  // Source mesh (current/moved)
+        //    mesh0     // Target mesh (original)
+        //);
+        // Interpolate from curr_U on current mesh to old_U on original mesh
+    //tmp<volVectorField> t_old_U = mapper.interpolate<Foam::vector, Foam::plusEqOp<Foam::vector>>(
+      //  U, Foam::meshToMesh0::order::INTERPOLATE, Foam::plusEqOp<Foam::vector>() );
+        // Access the result
+        //volVectorField& old_U = t_old_U.ref();
+        
+        //Info << "old_U =" << old_U <<
 
         if (checkWrite(runTime))
         {
-
+            //folderN++;
             fomforcex.append(fomforces.forceEff().x());
             fomforcey.append(fomforces.forceEff().y());
             centerofmassx.append(sDRBMS().motion().centreOfMass().x());
             centerofmassy.append(sDRBMS().motion().centreOfMass().y());
             centerofmassz.append(quaternion(sDRBMS().motion().orientation()).eulerAngles(quaternion::XYZ).z());
       
-            ITHACAstream::exportSolution(U, name(counter), folder);
-            ITHACAstream::exportSolution(p, name(counter), folder);
-            ITHACAstream::exportSolution(sDRBMS().pointDisplacement(), name(counter), folder);
-            ITHACAstream::writePoints(meshPtr().points(), folder, name(counter) + "/polyMesh/");
+            //ITHACAstream::exportSolution(N, name(counter), folder);
+            word localFolder = folder +  name(folderN+1);
+            //old_U.rename("old_U");
+            ITHACAstream::exportSolution(U, name(counter), localFolder );
+           
+            //ITHACAstream::exportSolution(N, name(counter), localFolder );
+            ITHACAstream::exportSolution(p, name(counter),  localFolder );
+            
+            ITHACAstream::exportSolution(sDRBMS().pointDisplacement(), 
+                                         name(counter), localFolder );
+                           
+            ITHACAstream::writePoints(mesh.points(), 
+            localFolder,  name(counter) + "/polyMesh/");
+            //word saveDir = name(counter) + "/polyMesh/";
+            //OFstream os(localFolder/saveDir/"points");  
+            // Write points
+            //OFstream os(localFolder/saveDir);
+            //List<vector> list(mesh.points());
+            //list.write(os);
+            //os << mesh.points();
+            // Copy files to save directory
+            //mesh.write();
+            //word saveDir = name(counter) + "/polyMesh/";
+           //cp(runTime.path()/runTime.timeName(), runTime.path()/saveDir);
 
-            std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
+            //std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
             Ufield.append(U.clone());
             Pfield.append(p.clone());
             Dfield.append(sDRBMS().pointDisplacement().clone());
+            NormalFields.append(N.clone());
+            // Check if this is the last time step
+            if (runTime.time().value() + runTime.deltaT().value() >= finalTime)
+            {
+                Info << "===== Storing final mesh =====" << endl;
+                meshes.append(meshPtr.ptr());  // Transfer ownership
+                // NOTE: meshPtr is now empty! Handle accordingly.
+            }
             
             counter++;
             nextWrite += writeEvery;
-
-            writeMu(mu_now);
-            // --- Fill in the mu_samples with parameters (time, mu) to be used for the PODI sample points
-            mu_samples.conservativeResize(mu_samples.rows() + 1, mu_now.size() + 1);
-            mu_samples(mu_samples.rows() - 1, 0) = atof(runTime.timeName().c_str());
-
-            for (label i = 0; i < mu_now.size(); i++)
-            {
-                mu_samples(mu_samples.rows() - 1, i + 1) = mu_now[i];
-            }
         }
 
     }
-    // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
-    if (mu.cols() == 0)
+    //exit(0);
+    //const pointField& points2 = mesh.points(); 
+    //Foam::meshToMesh0 mapper(U.mesh(), meshPtr());
+    //Foam::MapConsistentMesh(U.mesh(), meshPtr(), 
+    //meshToMesh0::order::MAP);
+    //Info<< nl
+     //    << "Consistently creating and mapping fields for time "
+     //    << mesh.time().timeIndex() << nl << endl;
+    /*
+    bool meshesDiffer = false;
+    const pointField& points1 = mesh0.points();  // e.g., original mesh
+    const pointField& points2 = mesh.points();  // e.g., moved mesh
+    forAll(points1, i)
     {
-        mu.resize(1, 1);
+        if (mesh0.V()[i] != mesh.V()[i])  // or a tolerance like 1e-10
+        {
+            meshesDiffer = true;
+            break;
+        }
     }
-
-    if (mu_samples.rows() == mu.cols())
-    {
-        ITHACAstream::exportMatrix(mu_samples, "mu_samples", "eigen",folder);
-    }
-
+    if (meshesDiffer)
+        Info << "Meshes differ in point locations." << endl;
+    else
+    Info << "Meshes are geometrically identical." << endl;
+    exit(0);*/
+    
+  /// Store the mesh (transfer ownership)
+  //meshes.append(meshPtr.ptr());
+  //meshes.append(meshPtr.release()); // Releases ownership from autoPtr to PtrList
 } 
 
 
-
-
 void fsiBasic::restart()
-{
-
+{ 
     turbulence.clear();
-    _fvOptions.clear();
     _laminarTransport.clear();
     _p.clear();
     _U.clear();
@@ -252,15 +356,26 @@ void fsiBasic::restart()
     _Uf.clear();
     _pointDisplacement.clear();
     sDRBMS.clear();
+     _fvOptions.clear();
+    _pimple.clear();
     argList& args = _args();
     Time& runTime = _runTime();
-    runTime.setTime(0, 1);
-    // meshPtr().resetMotion();
-    meshPtr().movePoints(point0);    
-    pointField& pointOld = const_cast<pointField&> (meshPtr().oldPoints());
-    pointOld = point0;
-    _pimple.clear();
+    instantList Times = runTime.times();
+    runTime.setTime(0,1);
+    //runTime.stopAt(runTime.stopAtControls::saEndTime);
+    //meshPtr().resetMotion();
+    //meshPtr().movePoints(point0); 
+    //pointField& pointOld = const_cast<pointField&> (meshPtr().oldPoints());
+    //pointOld = point0;
+    /// Recreating the mesh
+    Info << "ReCreating dynamic mesh for time = "
+         << runTime.timeName() << nl << endl;
+    meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+    //meshPtr.reset(newMesh);
+    // Take ownership from another autoPtr
+    //meshPtr.reset(newMesh.ptr()); // Transfers ownership
     Foam::dynamicFvMesh& mesh = meshPtr();
+    //exit(0);
     _pimple = autoPtr<pimpleControl>
                    (
                        new pimpleControl
@@ -268,7 +383,166 @@ void fsiBasic::restart()
                            mesh
                        )
                );
-    
+
 #include "createFields.H" 
+/// Reset the counter to zero
+    counter = 1;
+    /// clear list data members
 }
+
+void fsiBasic::change_viscosity(double mu)
+{
+    const volScalarField& nu =  _laminarTransport().nu();
+    volScalarField& mu_new = const_cast<volScalarField&>(nu);
+    this->assignIF(mu_new, mu);
+ 
+    for (label i = 0; i < mu_new.boundaryFieldRef().size(); i++)
+    {
+        this->assignBC(mu_new, i, mu);
+    }
+}
+
+void fsiBasic::change_stiffness(scalar& mu)
+{
+    dictionary& dictCoeffs = dyndict->subDict("sixDoFRigidBodyMotionCoeffs");
+    dictionary& restraints = dictCoeffs.subDict("restraints");
+    dictionary& spring = restraints.subDict("verticalSpring1");
+    scalar stiffness = spring.get<scalar>("stiffness");
+    Info << "==== stiffness ==== " << stiffness << endl;
+    // Set new stiffness value (e.g., 0.1)
+    spring.set("stiffness", mu);
+    stiffness = spring.get<scalar>("stiffness");
+    // Verify the change
+    //scalar newStiffness = spring.lookup<scalar>("stiffness");
+    //Info << "==== New stiffness ==== " << newStiffness << endl;
+    //scalar stiffness = spring.lookupOrDefault<scalar>("stiffness", 0.0);
+    Info << "==== New stiffness ==== " << stiffness << endl;
+    //dyndict->write();
+     dyndict->regIOobject::write();
+   
+}
+
+void fsiBasic::exportFoamFieldToNpy(const word& outputDir, 
+                           const word& fileName, 
+                           const List<scalar>& foamField)
+{
+    Eigen::VectorXd  eigenData = Foam2Eigen::field2Eigen(foamField);
+    cnpy::save(eigenData, outputDir + "/" + fileName + ".npy");
+}
+
+
+
+
+void fsiBasic::prepareFoamData(const word& outputPath)
+{
+    word fullPath = "./" + outputPath;
+
+    if (!ITHACAutilities::check_folder(fullPath))
+    {
+        mkDir(fullPath);
+
+        exportFoamFieldToNpy(fullPath, "fomforcex",     this->fomforcex);
+        exportFoamFieldToNpy(fullPath, "fomforcey",     this->fomforcey);
+        exportFoamFieldToNpy(fullPath, "CentreOfMassY", this->centerofmassy);
+    }
+}
+
+
+void fsiBasic::loadCentreOfMassY(const fileName& baseDir)
+{
+    fileNameList dirs = readDir(baseDir, fileName::DIRECTORY); 
+    Eigen::VectorXd vecOfCentreOfMasses;
+    // First, filter and sort the directories
+    wordList sortedDirs;
+    forAll(dirs, i)
+    {
+        if (dirs[i].find("DataFromFoam_") == 0)
+        {
+            sortedDirs.append(dirs[i]);
+        }
+    }
+
+    // Custom sorting function to sort numerically
+    std::sort(sortedDirs.begin(), sortedDirs.end(), 
+        [](const word& a, const word& b) {
+            int numA = std::stoi(a.substr(std::string("DataFromFoam_").length()));
+            int numB = std::stoi(b.substr(std::string("DataFromFoam_").length()));
+            return numA < numB;
+        });
+
+    // Now process in sorted order
+    forAll(sortedDirs, i)
+    {
+        fileName targetFile = baseDir/sortedDirs[i]/"CentreOfMassY.npy";
+        
+        if (exists(targetFile))
+        {
+            Info << "Found CentreOfMassY.npy in " << targetFile << endl;
+            
+            Eigen::MatrixXd CentreOfMassY;
+            cnpy::load(CentreOfMassY, targetFile);
+            Eigen::VectorXd currentVec = CentreOfMassY.col(0);
+           // std::cout << "CentreOfMassY dimensions: " 
+            //          << CentreOfMassY.rows() << " x " << CentreOfMassY.cols() << std::endl;
+            
+            vecOfCentreOfMasses.conservativeResize(vecOfCentreOfMasses.size() + currentVec.size());
+            vecOfCentreOfMasses.tail(currentVec.size()) = currentVec;
+            
+            Info << "Loaded: " << targetFile << endl;
+        }
+        else
+        {
+            Info << "CentreOfMassY.npy not found in " << targetFile << endl;
+        }
+    }
+    this->CylDispl = vecOfCentreOfMasses;
+   // std::cout << "=== vecOfCentereOfMasses size ===" << vecOfCentreOfMasses.size() << std::endl;
+}
+
+
+void fsiBasic::updateStiffnessAndRebuildSolver(scalar& newMu)
+{
+    dictionary& dictCoeffs = dyndict().subDict("sixDoFRigidBodyMotionCoeffs");
+    dictionary& restraints = dictCoeffs.subDict("restraints");
+    dictionary& spring = restraints.subDict("verticalSpring1");
+
+    scalar oldMu = spring.get<scalar>("damping");
+    Info << ">>> Replacing damping: " << oldMu << " -> " << newMu << endl;
+
+    spring.set("damping", newMu);
+
+    /// Optional: Write back to disk
+    dyndict().regIOobject::write(true);
+
+    /// Clear and recreate solver and dictionary
+    sDRBMS.clear();
+    dyndict.clear();
+
+    /// Recreate dictionary
+    dyndict = autoPtr<IOdictionary>
+    (
+        new IOdictionary
+        (
+            IOobject
+            (
+                "dynamicMeshDict",
+                meshPtr().time().constant(),
+                meshPtr(),
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE,
+                false
+            )
+        )
+    );
+
+    /// Recreate solver
+    sDRBMS = autoPtr<sixDoFRigidBodyMotionSolver>
+    (
+        new sixDoFRigidBodyMotionSolver(meshPtr(), dyndict())
+    );
+
+    Info << ">>> Motion solver rebuilt with new stiffness.\n";
+}
+
+
 

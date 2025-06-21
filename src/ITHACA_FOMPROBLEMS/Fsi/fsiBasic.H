@@ -50,6 +50,8 @@ SourceFiles
 #include "ITHACAutilities.H"
 #include "ITHACAPOD.H"
 #include "forces.H"
+//#include "MapConsistentVolFields.H"
+#include "meshToMesh0.H"
 //#include "IOmanip.H"
 #include "steadyNS.H"
 #include "UnsteadyProblem.H"
@@ -84,10 +86,16 @@ class fsiBasic:  public steadyNS, public UnsteadyProblem
         autoPtr<volScalarField> _p;
         // /// Dynamic mesh field
         autoPtr<Foam::dynamicFvMesh> meshPtr;
+        autoPtr<Foam::fvMesh> Mesh0;
+        // PtrList of dynamicMesh
+        PtrList<dynamicFvMesh> meshes;
         /// pimpleControl
         autoPtr<pimpleControl> _pimple;
         autoPtr<sixDoFRigidBodyMotionSolver> sDRBMS;
-        vectorField point0;
+        pointField point0;
+        faceList faces0;
+        cellList celllist0;
+        
         autoPtr<surfaceVectorField> _Uf;
         /// List of pointers used pointDisplacement modes
         PtrList<pointVectorField> DFields;
@@ -98,6 +106,9 @@ class fsiBasic:  public steadyNS, public UnsteadyProblem
         List<scalar> omegaz;
         /// List of pointers used to form the displacement snapshots matrix
         PtrList<pointVectorField> Dfield;
+        PtrList<volVectorField> Ufield;
+        /// List of surface normal vectors
+        PtrList<surfaceVectorField> NormalFields;
         /// List of POD modes for pointDisplacement
         pointVectorModes Dmodes;
         /// pointDisplacement field
@@ -122,7 +133,10 @@ class fsiBasic:  public steadyNS, public UnsteadyProblem
         bool  correctPhi;
         bool  checkMeshCourantNo;
         bool  moveMeshOuterCorrectors;
-        IOdictionary* dyndict;
+        //IOdictionary* dyndict;
+        autoPtr<IOdictionary> dyndict;
+        autoPtr<IOobject> oMesh;
+        //const DimensionedField<scalar, volMesh>* V0Ptr_;
 
         // Functions
         //--------------------------------------------------------------------------
@@ -131,13 +145,24 @@ class fsiBasic:  public steadyNS, public UnsteadyProblem
         /// to construct mu_interp matrix which is written out in a specified folder, also for par
         /// file in the Parameters folder.
         ///
-        void truthSolve(List<scalar> mu_now,
-                        fileName folder = "./ITHACAoutput/Offline/");
+        void truthSolve(label paramIndex,  fileName folder = "./ITHACAoutput/Offline/");
         /// method to set all fields back to values in 0 folder
         void restart();
         
         ///  Method to construct RBFI for pointDisplacement
         ///void PodIpointDispl(Eigen::MatrixXd muu,  label NPdModes);
+        void change_viscosity(double mu);
+        void change_stiffness(scalar& mu);
+        void updateStiffnessAndRebuildSolver(scalar& newMu);
+        /// Help function for the prepareFoamData routine
+        void exportFoamFieldToNpy(const word& outputDir, 
+                           const word& fileName, 
+                           const List<scalar>& foamField);
+                           
+        /// Prepare data such forces and centre of mass
+        void prepareFoamData(const word& outputPath);                   
+        /// to load all centre of mass for training RBF network
+        void loadCentreOfMassY(const fileName& baseDir = "ITHACAoutput");
 };        
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
