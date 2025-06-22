@@ -1,0 +1,104 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         steadyState;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    default         none;
+    div(phi,U)      bounded Gauss linearUpwind grad(U);
+    //div(phi,k)      bounded Gauss limitedLinear 1;
+    //div(phi,U)      bounded Gauss upwind;
+    //div(phi,k)      bounded Gauss upwind;
+    //div(phi,omega)  bounded Gauss upwind;
+    div(phi,k)      bounded Gauss limitedLinear 1;
+    div(phi,epsilon) bounded Gauss limitedLinear 1;
+    div(phi,nuTilda) bounded Gauss limitedLinear 1;
+    div(phi,omega)  bounded Gauss limitedLinear 1;
+    div(phi,v2)     bounded Gauss limitedLinear 1;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(nonlinearStress) Gauss linear;
+	div(U) Gauss linear;
+	div(Ulift1) Gauss linear;
+	div(Ulift0) Gauss linear;
+	div(Usup) Gauss linear;
+	div((interpolate(U)&S),U) bounded Gauss linearUpwind grad(U);
+	div((interpolate(U)&S),Usup) bounded Gauss linearUpwind grad(Usup);
+	div((interpolate(U)&S),Ulift0) bounded Gauss linearUpwind grad(Ulift0);
+	div((interpolate(U)&S),Ulift1) bounded Gauss linearUpwind grad(Ulift1);
+	div((interpolate(Usup)&S),U) bounded Gauss linearUpwind grad(U);
+	div((interpolate(Usup)&S),Usup) bounded Gauss linearUpwind grad(Usup);
+	div((interpolate(Usup)&S),Ulift0) bounded Gauss linearUpwind grad(Ulift0);
+	div((interpolate(Usup)&S),Ulift1) bounded Gauss linearUpwind grad(Ulift1);
+	div((interpolate(Ulift0)&S),U) bounded Gauss linearUpwind grad(U);
+	div((interpolate(Ulift0)&S),Usup) bounded Gauss linearUpwind grad(Usup);
+	div((interpolate(Ulift0)&S),Ulift0) bounded Gauss linearUpwind grad(Ulift0);
+	div((interpolate(Ulift0)&S),Ulift1) bounded Gauss linearUpwind grad(Ulift1);
+	div((interpolate(Ulift1)&S),U) bounded Gauss linearUpwind grad(U);
+	div((interpolate(Ulift1)&S),Usup) bounded Gauss linearUpwind grad(Usup);
+	div((interpolate(Ulift1)&S),Ulift0) bounded Gauss linearUpwind grad(Ulift0);
+	div((interpolate(Ulift1)&S),Ulift1) bounded Gauss linearUpwind grad(Ulift1);
+	div((nuEff*dev2(T(grad(U))))) Gauss linear;
+	div((nut*dev(grad(U).T()))) Gauss linear;
+	div((nuTilda*dev(grad(U).T()))) Gauss linear;
+	div(dev(T(grad(U)))) Gauss linear;
+	div(dev(T(grad(Ulift0)))) Gauss linear;
+	div(dev(T(grad(Ulift1)))) Gauss linear;
+	div((nut*dev(grad(Ulift0).T()))) Gauss linear;
+	div((nut*dev(grad(Ulift1).T()))) Gauss linear;
+	div(dev(T(grad(Usup)))) Gauss linear;
+	div((nut*dev(grad(Usup).T()))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
+
+fluxRequired
+{
+	default         no;
+	p;
+	Phi;
+}
+
+
+wallDist
+{
+    method meshWave;
+}
+
+
+// ************************************************************************* //
