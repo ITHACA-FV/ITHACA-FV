@@ -119,7 +119,7 @@ class SteadyNSTurbNeu: public steadyNS
         Eigen::Tensor<double, 3> ctTensor_BC;
 
         /// Neumann boundary condition of the turbulent viscosity term
-        Eigen::MatrixXd bc_ctMatrix;
+        Eigen::Tensor<double, 3> bc_ctTensor;
 
         /// Total B Matrix
         Eigen::MatrixXd bTotalMatrix;
@@ -149,11 +149,11 @@ class SteadyNSTurbNeu: public steadyNS
         autoPtr<volScalarField> _nut;
         autoPtr<volScalarField> _nuTilda;
 
-        /// Index of the Neumann boundary
-        label NeumannIndex;
+        /// Neumann boundary conditions
+        PtrList<vectorField> NeumannFields;
 
-        /// Values of the Neumann boundary
-        List <vector> NeumannValues;
+        /// Index of the Neumann boundary
+        Eigen::MatrixXi outletIndex;
 
         //--------------------------------------------------------------------------
         /// @brief      Perform a truthsolve
@@ -344,7 +344,7 @@ class SteadyNSTurbNeu: public steadyNS
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
         ///
-        Eigen::MatrixXd bc_turbulenceTensor(label NUmodes,
+        Eigen::Tensor<double, 3 > bc_turbulenceTensor(label NUmodes,
                 label NSUPmodes, label nNutModes);
 
         //--------------------------------------------------------------------------

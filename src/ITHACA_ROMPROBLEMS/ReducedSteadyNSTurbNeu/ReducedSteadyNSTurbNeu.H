@@ -75,39 +75,9 @@ struct newtonSteadyNSTurbNeuSUP: public newton_argument<double>
         scalar nu;
         Eigen::MatrixXd tauU;
         Eigen::VectorXd bc;
+        Eigen::VectorXd NeuBC;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
-
-struct newtonSteadyNSTurbNeuPPE: public newton_argument<double>
-{
-    public:
-        newtonSteadyNSTurbNeuPPE() {}
-
-        newtonSteadyNSTurbNeuPPE(int Nx, int Ny,
-                                  SteadyNSTurbNeu& problem): newton_argument<double>(Nx, Ny),
-            problem(& problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size()),
-            nphiNut(problem.nNutModes),
-            Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows()),
-            gNut(problem.nNutModes)
-        {}
-
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
-
-        SteadyNSTurbNeu* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
-        Eigen::VectorXd gNut;
-        scalar nu;
-        Eigen::MatrixXd tauU;
-        Eigen::VectorXd bc;
-        std::vector<SPLINTER::RBFSpline*> SPLINES;
-};
-
 
 /*---------------------------------------------------------------------------*\
                         Class reducedProblem Declaration
@@ -171,7 +141,7 @@ class ReducedSteadyNSTurbNeu: public reducedSteadyNS
         /// @param[in]  startSnap The first snapshot taken from the offline snahpshots
         /// and used to get the reduced initial condition.
         ///
-        void solveOnlineSUP(Eigen::MatrixXd velNow);
+        void solveOnlineSUP(Eigen::MatrixXd velNow, Eigen::VectorXd neuVal);
 
         // /// Method to perform an online solve using a PPE stabilisation method
         // ///

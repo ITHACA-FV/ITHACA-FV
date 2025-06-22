@@ -83,7 +83,8 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
     // Neumann boundary term
-    Eigen::MatrixXd neuBC(1, 1);
+    Eigen::MatrixXd neuTerm1(1, 1);
+    Eigen::MatrixXd neuTerm2(1, 1);    
 
     // Term for penalty method
     if (problem->bcMethod == "penalty")
@@ -100,9 +101,12 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
              i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
-        neuBC = problem->bc_diffusive_term_sym(i, 0) * nu
-                + problem->bc_ctMatrix.row(i) * gNut;
-        fvec(i) = m1(i) - cc(0, 0) - m2(i) + neuBC(0, 0);
+        neuTerm1(0, 0) = nu * problem->bc_B_matrix_sym.row(i) * NeuBC;
+        neuTerm2(0, 0) = gNut.transpose() * Eigen::SliceFromTensor(problem->bc_ctTensor, 0,
+                       i) * NeuBC;
+        // Info << "neuTerm1: " << neuTerm1(0, 0) << " neuTerm2: " << neuTerm2(0, 0)
+        //      << endl;
+        fvec(i) = m1(i) - cc(0, 0) - m2(i) + neuTerm1(0, 0) - neuTerm2(0, 0);
 
         if (problem->bcMethod == "penalty")
         {
@@ -137,8 +141,8 @@ int newtonSteadyNSTurbNeuSUP::df(const Eigen::VectorXd& x,
 
 // * * * * * * * * * * * * * * * Solve Functions  * * * * * * * * * * * * * //
 
-void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel)
-{
+void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel, Eigen::VectorXd neuVal)
+{    
     if (problem->bcMethod == "lift")
     {
         if (problem->nonUniformbc)
@@ -178,6 +182,8 @@ void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel)
     {
         newtonObjectSUP.bc(j) = vel_now(j, 0);
     }
+
+    newtonObjectSUP.NeuBC = neuVal;
 
     if (problem->viscCoeff == "L2")
     {
