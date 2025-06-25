@@ -105,8 +105,7 @@ void ReducedFsi::PODI(Eigen::MatrixXd coeffL2,Eigen::MatrixXd muu,label NPdModes
 
 
 
-void ReducedFsi::solveOnline_Pimple(scalar mu_now, 
-                                    int NmodesUproj, 
+void ReducedFsi::solveOnline_Pimple(int NmodesUproj, 
                                     int NmodesPproj, 
                                     int NmodesDproj, 
                                     fileName folder)
@@ -129,7 +128,9 @@ void ReducedFsi::solveOnline_Pimple(scalar mu_now,
                 phi, laminarTransport));
         instantList Times = runTime.times();
         runTime.setEndTime(finalTime);
+        
 PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj); 
+
         runTime.setTime(Times[1], 1);
         runTime.setDeltaT(timeStep);
         nextWrite = startTime;
@@ -151,8 +152,7 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
         // Eigen::VectorXd pdCoeff;
         // pdCoeff.resize(NmodesDproj);
         bool firstIter = false;
-        Eigen::MatrixXd pdCoeff;
-        pdCoeff.resize(NmodesDproj, 1);
+        Eigen::MatrixXd pdCoeff(NmodesDproj, 1);
         //- Current time index (used for updating)
         label curTimeIndex_ = -1;
         // pointField points0 = mesh.points();
@@ -169,9 +169,9 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
 
         // PIMPLE algorithm starts here
         //Info<< "\nStarting time loop\n" << endl;
-        std::ofstream res_p, res_u;
-        res_u.open("./res_u", std::ios_base::app);
-        res_p.open("./res_p", std::ios_base::app);
+        //std::ofstream res_p, res_u;
+        //res_u.open("./res_u", std::ios_base::app);
+        //res_p.open("./res_p", std::ios_base::app);
         //Errors << "Time, res_u, res_p" << endl;
         while (runTime.run())
         {
@@ -180,8 +180,8 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
             runTime++;
             //p.storePrevIter();
             Info << "Time = " << runTime.timeName() << nl << endl;
-            res_u << runTime.timeName() << std::endl;
-            res_p << runTime.timeName() << std::endl;
+            //res_u << runTime.timeName() << std::endl;
+            //res_p << runTime.timeName() << std::endl;
 
             while (pimple.loop())
             {
@@ -237,7 +237,7 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                     //a = RedLinSysU[0].householderQr().solve(RedLinSysU[1]);
                     //Eigen::MatrixXd I_u = 1e-8*Eigen::MatrixXd::Identity(NmodesUproj,NmodesUproj );
                     //a = (RedLinSysU[0] + I_u).ldlt().solve(RedLinSysU[1]);
-                    //a=RedLinSysU[0].ldlt().solve(RedLinSysU[1]);
+                    //a=RedLinSysU[0].llt().solve(RedLinSysU[1]);
                     a = RedLinSysU[0].colPivHouseholderQr().solve(RedLinSysU[1]);
                     //a = RedLinSysU[0].completeOrthogonalDecomposition().solve(RedLinSysU[1]);
                     //a=RedLinSysU[0].fullPivLu().solve(RedLinSysU[1]);
@@ -255,10 +255,10 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                         Warning << "Rank-deficient matrix! Rank = " << svd.rank() << endl;
                     }
                 P    a = svd.solve(RedLinSysU[1]);*/
-              //Eigen::MatrixXd A_reg = RedLinSysU[0] + 1e-6 *                Eigen::MatrixXd::Identity(NmodesUproj, NmodesUproj);
+              //Eigen::MatrixXd A_reg = RedLinSysU[0] + 1e-6 *Eigen::MatrixXd::Identity(NmodesUproj, NmodesUproj);
               //a = A_reg.ldlt().solve(RedLinSysU[1]);
                     //Eigen::MatrixXd aNew = cg.solve(RedLinSysU[1]);
-             //std::cout << "res_u = " << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
+                    std::cout << "res_u = " << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
              //res_u << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
                     /*
                     if (cg.info() != Eigen::Success) 
@@ -302,7 +302,8 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                         RedLinSysP = Pmodes.project(pEqn, NmodesPproj,"G");
                         /// Solve for the reduced coefficient for pressure
                         //b = RedLinSysP[0].householderQr().solve(RedLinSysP[1]);
-                        b = RedLinSysP[0].colPivHouseholderQr().solve(RedLinSysP[1]);
+                        //b = RedLinSysP[0].colPivHouseholderQr().solve(RedLinSysP[1]);
+                        b = RedLinSysP[0].ldlt().solve(RedLinSysP[1]);
                         //Eigen::VectorXd b_cal = (b + lambda_t * b_ref) / (1.0 + lambda_t);
                         //b_ref = b;
                         //b =RedLinSysP[0].fullPivLu().solve(RedLinSysP[1]);
@@ -315,7 +316,7 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                         cgP.setTolerance(1e-6);
                         cgP.compute(RedLinSysP[0]);
                         Eigen::MatrixXd bNew = cgP.solve(RedLinSysP[1]);*/
-           //std::cout << "res_p = " << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
+                        std::cout << "res_p = " << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
            //res_p << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
                         //Pmodes.reconstruct(p, b, "p");
                         Pmodes.reconstruct(p, b, "p");
@@ -361,7 +362,7 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                 }
              
                 ListOfpoints.append(mesh.points());
-                std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
+                //std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
                 UredFields.append(U.clone());
 		        PredFields.append(p.clone());
 		        Dfield.append(pointDisplacement.clone());
@@ -391,3 +392,17 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
             return false;
         }
     }
+    
+    void  ReducedFsi::prepareRomData(const word& outputPath)
+     {
+         word fullPath = "./" + outputPath;
+
+         if (!ITHACAutilities::check_folder(fullPath))
+            {
+             mkDir(fullPath);
+
+             problem->exportFoamFieldToNpy(fullPath, "romforcex",romforcex);
+             problem->exportFoamFieldToNpy(fullPath, "romforcey",romforcey);
+             problem->exportFoamFieldToNpy(fullPath, "CentreOfMassY",centerofmassy);
+         }
+  }

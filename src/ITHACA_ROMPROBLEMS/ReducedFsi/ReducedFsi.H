@@ -103,8 +103,7 @@ class ReducedFsi: public reducedSimpleSteadyNS
         ///
         /// @param[in]  Folder The folder where we want to esport solutions (default is "./ITHACAoutput/Online/")
         ///
-       void solveOnline_Pimple(scalar mu_now, 
-                               int NmodesUproj, 
+       void solveOnline_Pimple(int NmodesUproj, 
                                int NmodesPproj, 
                                int NmodesDproj, 
                                fileName folder = "./ITHACAoutput/Online/");
@@ -114,6 +113,8 @@ class ReducedFsi: public reducedSimpleSteadyNS
         bool checkWrite(Time& timeObject);
         ///  Method to construct PODI
        void PODI(Eigen::MatrixXd coeffL2,Eigen::MatrixXd muu,label NPdModes);
+       /// Routine to save forces and center of mass
+       void prepareRomData(const word& outputPath);
 };        
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
