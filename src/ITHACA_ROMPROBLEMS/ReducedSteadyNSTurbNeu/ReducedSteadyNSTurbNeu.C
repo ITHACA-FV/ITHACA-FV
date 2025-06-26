@@ -74,14 +74,20 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
     bTmp = x.tail(Nphi_p);
     // Convective term
     Eigen::MatrixXd cc(1, 1);
+    // Eddy Diffusion term
+    Eigen::MatrixXd ee(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = - problem->B_matrix_sym * aTmp * nu;
+    Eigen::VectorXd m1 = problem->B_matrix * aTmp * nu;
+    // Diffusion Term
+    Eigen::VectorXd m1_sym = problem->B_matrix_sym * aTmp * nu;
     // Gradient of pressure
     Eigen::VectorXd m2 = problem->K_matrix * bTmp;
     // Pressure Term
     Eigen::VectorXd m3 = problem->P_matrix * aTmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
+    // Penalty term
+    Eigen::MatrixXd penaltyGradU (Nphi_u, 1);
     // Neumann boundary term
     Eigen::MatrixXd neuTerm1(1, 1);
     Eigen::MatrixXd neuTerm2(1, 1);    
@@ -96,21 +102,30 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
         }
     }
 
+    // Term for penalty of the Neumann boundary condition
+    if (problem->neumannMethod == "penalty")
+    {
+        penaltyGradU = problem->bcGradVelVec[0] * NeuBC -
+                       problem->bcGradVelMat[0] * aTmp;
+    }
+
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-             i) * aTmp - gNut.transpose() *
-             Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
-        neuTerm1(0, 0) = nu * problem->bc_B_matrix_sym.row(i) * NeuBC;
-        neuTerm2(0, 0) = gNut.transpose() * Eigen::SliceFromTensor(problem->bc_ctTensor, 0,
-                       i) * NeuBC;
-        // Info << "neuTerm1: " << neuTerm1(0, 0) << " neuTerm2: " << neuTerm2(0, 0)
-        //      << endl;
-        fvec(i) = m1(i) - cc(0, 0) - m2(i) + neuTerm1(0, 0) - neuTerm2(0, 0);
+             i) * aTmp;
+        ee = gNut.transpose() * Eigen::SliceFromTensor(problem->cTotalTensor, 0, 
+             i) * aTmp;
+
+        fvec(i) = m1(i) - cc(0,0) + ee(0,0) - m2(i);
 
         if (problem->bcMethod == "penalty")
         {
             fvec(i) += ((penaltyU * tauU)(i, 0));
+        }
+
+        if (problem->neumannMethod == "penalty")
+        { 
+            fvec(i) += penaltyGradU (i, 0) * tauGradU(0, 0);
         }
     }
 
@@ -177,6 +192,7 @@ void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel, Eigen::VectorXd
     Eigen::HybridNonLinearSolver<newtonSteadyNSTurbNeuSUP> hnls(newtonObjectSUP);
     newtonObjectSUP.bc.resize(N_BC);
     newtonObjectSUP.tauU = tauU;
+    newtonObjectSUP.tauGradU = tauGradU;
 
     for (int j = 0; j < N_BC; j++)
     {
@@ -233,7 +249,6 @@ void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel, Eigen::VectorXd
     newtonObjectSUP.operator()(y, res);
     std::cout << "################## Online solve N° " << count_online_solve <<
               " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << vel_now << std::endl;
 
     if (res.norm() < 1e-5)
     {

@@ -76,6 +76,7 @@ struct newtonSteadyNSTurbNeuSUP: public newton_argument<double>
         Eigen::MatrixXd tauU;
         Eigen::VectorXd bc;
         Eigen::VectorXd NeuBC;
+        Eigen::MatrixXd tauGradU;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 

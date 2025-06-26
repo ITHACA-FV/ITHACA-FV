@@ -353,6 +353,8 @@ int main(int argc, char* argv[])
                             false);
     bool exportErrorField = para->ITHACAdict->lookupOrDefault<bool>("exportErrorField",
                             false);
+    scalar tauU = para->ITHACAdict->lookupOrDefault<scalar>("tauU", 0.1);
+    scalar tauGradU = para->ITHACAdict->lookupOrDefault<scalar>("tauGradU", 0.1);
 
     // Read the lift functions
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
@@ -483,8 +485,11 @@ int main(int argc, char* argv[])
     for (label k = 0; k < par_online.rows(); k++)
     {
         pod_rbf.tauU.resize(2, 1);
-        pod_rbf.tauU(0, 0) = 0;
-        pod_rbf.tauU(1, 0) = 0;
+        pod_rbf.tauU(0, 0) = tauU;
+        pod_rbf.tauU(1, 0) = tauU;
+        
+        pod_rbf.tauGradU.resize(1, 1);
+        pod_rbf.tauGradU(0, 0) = tauGradU;
 
         // Set value of the reduced viscosity and the penalty factor
         pod_rbf.nu = par_online(k, 0);

@@ -1858,7 +1858,7 @@ List<Eigen::MatrixXd> steadyNS::bcVelocityMat(label NUmodes,
 List<Eigen::MatrixXd> steadyNS::bcGradVelocityVec(label NUmodes,
         label NSUPmodes)
 {    
-    label BCsize = NUmodes + NSUPmodes + inletIndex.rows();
+    label BCsize = NUmodes + NSUPmodes + liftfield.size();
     List <Eigen::MatrixXd> bcGradVelVec(outletIndex.rows());
 
     M_Assert(outletIndex.rows() != 0,
@@ -1900,7 +1900,7 @@ volTensorField calculateGrad(volVectorField field)
 List<Eigen::MatrixXd> steadyNS::bcGradVelocityMat(label NUmodes,
         label NSUPmodes)
 {        
-    label BCsize = NUmodes + NSUPmodes + inletIndex.rows();
+    label BCsize = NUmodes + NSUPmodes + liftfield.size();
     List <Eigen::MatrixXd> bcGradVelMat(outletIndex.rows());
 
     M_Assert(outletIndex.rows() != 0,

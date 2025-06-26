@@ -95,25 +95,16 @@ class SteadyNSTurbNeu: public steadyNS
         Eigen::MatrixXd btMatrix;
 
         /// Turbulent viscosity tensor
-        List <Eigen::MatrixXd> ct2Matrix;
         Eigen::Tensor<double, 3 > ct2Tensor;
+        Eigen::Tensor<double, 3 > ct2Tensor_sym;
 
         /// Turbulent viscosity tensor
-        List <Eigen::MatrixXd> ct1Matrix;
         Eigen::Tensor<double, 3 > ct1Tensor;
-
-        /// Turbulent viscosity tensor in the PPE equation
-        Eigen::Tensor<double, 3 > ct1PPETensor;
-
-        /// Turbulent viscosity tensor in the PPE equation
-        Eigen::Tensor<double, 3 > ct2PPETensor;
+        Eigen::Tensor<double, 3 > ct1Tensor_sym;
 
         /// Total Turbulent tensor
         List <Eigen::MatrixXd> cTotalMatrix;
         Eigen::Tensor<double, 3 > cTotalTensor;
-
-        /// Turbulent total viscosity tensor in the PPE equation
-        Eigen::Tensor<double, 3 > cTotalPPETensor;
 
         /// Turbulent viscosity tensor at the Neumann boundaries
         Eigen::Tensor<double, 3> ctTensor_BC;
@@ -170,18 +161,6 @@ class SteadyNSTurbNeu: public steadyNS
         void getRBFType(const word& viscCoeff, const word& rbfKernel);
 
         //--------------------------------------------------------------------------
-        /// Project using a PPE approach
-        ///
-        /// @param[in]  folder     The folder name
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NPmodes    The number of pressure modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
-        ///
-        void projectPPE(fileName folder, label NUmodes, label NPmodes, label NSUPmodes,
-                        label nNutModes);
-
-        //--------------------------------------------------------------------------
         /// Project using a supremizer approach
         ///
         /// @param[in]  folder     The folder name
@@ -194,28 +173,6 @@ class SteadyNSTurbNeu: public steadyNS
                         label nNutModes);
 
         //--------------------------------------------------------------------------
-        /// Projection Methods Momentum Equation using the cached procedure
-        /// Symetric diffusive Term
-        ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        ///
-        /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
-        ///
-        Eigen::MatrixXd diffusive_term_sym(label NUmodes, label NSUPmodes);
-
-        //--------------------------------------------------------------------------
-        /// Projection Methods Momentum Equation using the cached procedure at Neumann boundaries
-        /// Symetric diffusive Term
-        ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        ///
-        /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
-        ///
-        Eigen::MatrixXd bc_diffusive_term_sym(label NUmodes, label NSUPmodes);
-
-        //--------------------------------------------------------------------------
         ///
         /// @brief      bt added matrix for the turbulence treatement
         ///
@@ -225,19 +182,6 @@ class SteadyNSTurbNeu: public steadyNS
         /// @return     bt matrix for turbulence treatment
         ///
         Eigen::MatrixXd btTurbulence(label NUmodes, label NSUPmodes);
-
-
-        //--------------------------------------------------------------------------
-        /// @brief      ct1 added matrix for the turbulence treatement
-        ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
-        ///
-        /// @return     ct1 matrix for turbulence treatment
-        ///
-        List < Eigen::MatrixXd > turbulenceTerm1(label NUmodes, label NSUPmodes,
-                label nNutModes);
 
         //--------------------------------------------------------------------------
         /// @brief      ct1 tensor for the turbulence treatement
@@ -263,29 +207,6 @@ class SteadyNSTurbNeu: public steadyNS
         Eigen::Tensor<double, 3 > turbulenceTensor1_cache_mem(label NUmodes,
                 label NSUPmodes, label nNutModes);
 
-        //--------------------------------------------------------------------------
-        /// @brief      ct1 tensor for the turbulence treatement of weak form
-        ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
-        ///
-        /// @return     ct1 tensor for the turbulence treatement
-        ///
-        Eigen::Tensor<double, 3 > turbulenceTensor1_sym(label NUmodes,
-                label NSUPmodes, label nNutModes);
-
-        //--------------------------------------------------------------------------
-        /// @brief      Method to compute one of the turbulence eddy viscosity tensors
-        ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
-        ///
-        /// @return     ct2 matrix for turbulence treatment
-        ///
-        List < Eigen::MatrixXd > turbulenceTerm2(label NUmodes, label NSUPmodes,
-                label nNutModes);
 
         //--------------------------------------------------------------------------
         /// @brief      Method to compute one of the turbulence eddy viscosity tensors
@@ -311,6 +232,40 @@ class SteadyNSTurbNeu: public steadyNS
         Eigen::Tensor<double, 3 > turbulenceTensor2_cache_mem(label NUmodes,
                 label NSUPmodes, label nNutModes);
 
+        //--------------------------------------------------------------------------
+        /// Projection Methods Momentum Equation using the cached procedure
+        /// Symetric diffusive Term
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
+        ///
+        Eigen::MatrixXd diffusive_term_sym(label NUmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Projection Methods Momentum Equation using the cached procedure at Neumann boundaries
+        /// Symetric diffusive Term
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
+        ///
+        Eigen::MatrixXd bc_diffusive_term_sym(label NUmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      ct1 tensor for the turbulence treatement of weak form
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        /// @param[in]  nNutModes  The number of eddy viscosity modes.
+        ///
+        /// @return     ct1 tensor for the turbulence treatement
+        ///
+        Eigen::Tensor<double, 3 > turbulenceTensor1_sym(label NUmodes,
+                label NSUPmodes, label nNutModes);
+        
         //--------------------------------------------------------------------------
         /// @brief      Method to compute one of the turbulence eddy viscosity tensors for the weak form
         ///
@@ -348,57 +303,26 @@ class SteadyNSTurbNeu: public steadyNS
                 label NSUPmodes, label nNutModes);
 
         //--------------------------------------------------------------------------
-        /// @brief      ct1PPE added tensor for the turbulence treatement in the PPE method
+        /// @brief      Method to compute the velocity boundary condition vector
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  NPmodes    The number of pressure modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
         ///
-        /// @return     ct1PPE tensor for the turbulence treatement in the PPE method
+        /// @return     List of Eigen::MatrixXd containing the gradient of the velocity at the boundaries
         ///
-        Eigen::Tensor<double, 3 > turbulencePPETensor1(label NUmodes,
-                label NSUPmodes, label NPmodes, label nNutModes);
-        
-        //--------------------------------------------------------------------------
-        /// @brief      ct1PPE added tensor for the turbulence treatement in the PPE method using the cached procedure and reduced memory usage
-        ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  NPmodes    The number of pressure modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
-        ///
-        /// @return     ct1PPE tensor for the turbulence treatement in the PPE method
-        ///
-        Eigen::Tensor<double, 3 > turbulencePPETensor1_cache_mem(label NUmodes,
-                label NSUPmodes, label NPmodes, label nNutModes);
+        List<Eigen::MatrixXd> bcGradVelocityVec(label NUmodes,
+                label NSUPmodes);
 
         //--------------------------------------------------------------------------
-        /// @brief      ct2PPE added tensor for the turbulence treatement in the PPE method
+        /// @brief      Method to compute the velocity boundary condition matrix
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
         /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  NPmodes    The number of pressure modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
         ///
-        /// @return     ct2PPE tensor for the turbulence treatement in the PPE method
+        /// @return     List of Eigen::MatrixXd containing the gradient of the velocity at the boundaries
         ///
-        Eigen::Tensor<double, 3 > turbulencePPETensor2(label NUmodes,
-                label NSUPmodes, label NPmodes, label nNutModes);
-
-        //--------------------------------------------------------------------------
-        /// @brief      ct2PPE added tensor for the turbulence treatement in the PPE method using the cached procedure and reduced memory usage
-        ///
-        /// @param[in]  NUmodes    The number of velocity modes.
-        /// @param[in]  NSUPmodes  The number of supremizer modes.
-        /// @param[in]  NPmodes    The number of pressure modes.
-        /// @param[in]  nNutModes  The number of eddy viscosity modes.
-        ///
-        /// @return     ct2PPE tensor for the turbulence treatement in the PPE method
-        ///
-        Eigen::Tensor<double, 3 > turbulencePPETensor2_cache_mem(label NUmodes,
-                label NSUPmodes, label NPmodes, label nNutModes);
-
+        List<Eigen::MatrixXd> bcGradVelocityMat(label NUmodes,
+                label NSUPmodes);
 };
 
 #endif
