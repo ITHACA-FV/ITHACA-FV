@@ -261,7 +261,7 @@ class HyperReduction
         /// @brief      TODO
         ///
         void computeLS(Eigen::MatrixXd& J, Eigen::MatrixXd& JWhole, Eigen::VectorXd& b,
-                       Eigen::VectorXd& q);
+                       Eigen::VectorXd& q, bool NNLS);
 
         //----------------------------------------------------------------------
         /// @brief      TODO
@@ -292,6 +292,8 @@ class HyperReduction
         ///
         void updateNodes(Eigen::SparseMatrix<double> & P, label& ind_max,
                          Eigen::VectorXd& mp_not_mask);
+
+        void updateNodesRemove(Eigen::SparseMatrix<double>& P, label& ind);
 
         //----------------------------------------------------------------------
         /// @brief      TODO

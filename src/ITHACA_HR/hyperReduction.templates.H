@@ -712,6 +712,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
 
         bool normalizedArgmaxForCubaturePointsSelection = 1;
         bool cellVolumesInCubatureWeights = 0;  // Else in the modes. Gives an equivalent system, but changes the condition number.
+        bool NNLS = n_subspaces == 1 && vectorial_dim == 1;  // Current NNLS algo does not work with several dimensions
 
         assert(n_totalModes > 0);
         // assert(n_nodes >= n_modes);
@@ -798,7 +799,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
             for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
             {
                 Eigen::VectorXd b_tmp(vectorial_dim*(n_subspaceModes[ith_subspace]));
-                computeLS(J, Jwhole[ith_subspace], b_tmp, q[ith_subspace]);
+                computeLS(J, Jwhole[ith_subspace], b_tmp, q[ith_subspace], NNLS);
                 b.segment(n_modesPrevious,vectorial_dim*(n_subspaceModes[ith_subspace])) = b_tmp;
                 quadratureWeightsSubspaces[ith_subspace] = quadratureWeights;
                 n_modesPrevious += vectorial_dim*n_subspaceModes[ith_subspace];
@@ -814,7 +815,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
             label ind_max, r1;
             double max;
 
-            for (unsigned int ith_node = 0; ith_node < na; ith_node++)
+            while (nodePoints->size() < n_nodes)
             {
                 max = ((b.transpose() * A* mp_not_mask.head(
                             n_cells).asDiagonal()).colwise().sum()).maxCoeff( & r1, & ind_max);
@@ -823,7 +824,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
                 for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
                 {
                     Eigen::VectorXd b_tmp(vectorial_dim*(n_subspaceModes[ith_subspace]));
-                    computeLS(J, Jwhole[ith_subspace], b_tmp, q[ith_subspace]);
+                    computeLS(J, Jwhole[ith_subspace], b_tmp, q[ith_subspace], NNLS);
                     b.segment(n_modesPrevious,vectorial_dim*(n_subspaceModes[ith_subspace])) = b_tmp;
                     quadratureWeightsSubspaces[ith_subspace] = quadratureWeights;
                     n_modesPrevious += vectorial_dim*n_subspaceModes[ith_subspace];
@@ -969,23 +970,99 @@ void HyperReduction<SnapshotsLists...>::updateNodes(Eigen::SparseMatrix<double>
     }
 }
 
+template <typename... SnapshotsLists>
+void HyperReduction<SnapshotsLists...>::updateNodesRemove(Eigen::SparseMatrix<double>& P, label& ind)
+{
+    IOList<label> nodePointsCopy(IOobject("nodePoints", para->runTime.time().constant(), "../" + folderMethod,
+                                                para->mesh, IOobject::READ_IF_PRESENT, IOobject::NO_WRITE));
+    nodes.conservativeResize(nodes.rows() - 1);
+    label n = 0;
+    label indInNodes;
+    for (int ith_node = 0; ith_node < nodePoints->size(); ith_node++)
+    {
+        if (nodePoints()[ith_node] != ind)
+        {
+            nodePointsCopy.append(nodePoints()[ith_node]);
+            nodes(n) = nodePoints()[ith_node];
+            n += 1;
+        }
+    }
+    nodePoints->transfer(nodePointsCopy);
+    
+    unsigned int last_col{0};
+    if (P.rows() == 0)
+    {
+        P.resize(n_cells* vectorial_dim, vectorial_dim);
+    }
+    else
+    {
+        last_col = P.cols();
+        P.resize(P.rows(), P.cols() - vectorial_dim);
+    }
+    int step = P.cols() / vectorial_dim - 1;
+
+    for (int ith_node = 0; ith_node <= step; ith_node++)
+    {
+        for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
+        {
+            P.insert(nodes[ith_node] + ith_field* n_cells,
+                     ith_node + ith_field*(step + 1)) = 1;
+        }
+    }
+    // Not updating mp_not_mask : we are not choosing again a node that we removed
+}
+
 template<typename... SnapshotsLists>
 void HyperReduction<SnapshotsLists...>::computeLS(Eigen::MatrixXd& J,
-        Eigen::MatrixXd& Jwhole, Eigen::VectorXd& b, Eigen::VectorXd& q)
+        Eigen::MatrixXd& Jwhole, Eigen::VectorXd& b, Eigen::VectorXd& q, bool NNLS)
 {
     // TODO fix with only positive weights (NNLS)
     label n_modes_modif = Jwhole.rows()/vectorial_dim;
     label n_modes = b.size()/vectorial_dim;
     J.resize(vectorial_dim * n_modes_modif, nodePoints->size());
     J = Jwhole(Eigen::indexing::all, nodes);
-    quadratureWeights.resize(nodePoints->size() * vectorial_dim);
 
     for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
     {
-        quadratureWeights.segment(ith_field* nodePoints->size(),
-                                  nodePoints->size()) = J.middleRows(ith_field*n_modes_modif,
-                                      n_modes_modif).colPivHouseholderQr().solve(q.segment(ith_field*n_modes_modif,
-                                          n_modes_modif));
+        Eigen::VectorXd newSolution = J.middleRows(ith_field*n_modes_modif, n_modes_modif)
+                                         .colPivHouseholderQr().solve(q.segment(ith_field*n_modes_modif,n_modes_modif));
+        Eigen::VectorXd currentSolution = Eigen::VectorXd::Constant(nodePoints->size(), 0.0);
+        currentSolution.segment(0, nodePoints->size()-1) = 
+            quadratureWeights.segment(ith_field* (nodePoints->size()-1),nodePoints->size()-1);
+
+        while (NNLS && newSolution.minCoeff() < 0)
+        {
+            double alpha = (newSolution.array() < 0.0).select((currentSolution.array()/(currentSolution - newSolution).array())
+                            ,1000).matrix().minCoeff();
+            currentSolution -= alpha*(currentSolution - newSolution);
+            Eigen::VectorXd solutionOnlyPositives;
+            Eigen::VectorXi nodesCopy = nodes;
+            for (unsigned int ith_node = 0; ith_node < currentSolution.size(); ith_node++)
+            {
+                if (currentSolution[ith_node] <= 0)
+                {
+                    updateNodesRemove(P, nodesCopy[ith_node]);
+                }
+                else
+                {
+                    solutionOnlyPositives.conservativeResize(solutionOnlyPositives.rows() + 1);
+                    solutionOnlyPositives(solutionOnlyPositives.rows() - 1) = currentSolution[ith_node];
+                }
+            }
+            if (nodePoints->size() == 0)
+            {
+                return;
+            }
+            J.resize(vectorial_dim * n_modes_modif, nodePoints->size());
+            J = Jwhole(Eigen::indexing::all, nodes);
+            newSolution.resize(nodePoints->size());
+            newSolution = J.middleRows(ith_field*n_modes_modif, n_modes_modif)
+                              .colPivHouseholderQr().solve(q.segment(ith_field*n_modes_modif,n_modes_modif));
+            currentSolution.resize(nodePoints->size());
+            currentSolution = solutionOnlyPositives;
+        }
+        quadratureWeights.resize(nodePoints->size() * vectorial_dim);
+        quadratureWeights.segment(ith_field* nodePoints->size(),nodePoints->size()) = newSolution;
         b.segment(ith_field* n_modes, n_modes) = q.segment(ith_field*n_modes_modif,
             n_modes) - J.middleRows(ith_field*n_modes_modif,
                                     n_modes) * quadratureWeights.segment(ith_field* nodePoints->size(),
