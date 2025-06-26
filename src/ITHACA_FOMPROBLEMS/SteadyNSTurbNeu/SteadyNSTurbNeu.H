@@ -105,6 +105,7 @@ class SteadyNSTurbNeu: public steadyNS
         /// Total Turbulent tensor
         List <Eigen::MatrixXd> cTotalMatrix;
         Eigen::Tensor<double, 3 > cTotalTensor;
+        Eigen::Tensor<double, 3 > cTotalTensor_sym;
 
         /// Turbulent viscosity tensor at the Neumann boundaries
         Eigen::Tensor<double, 3> ctTensor_BC;
