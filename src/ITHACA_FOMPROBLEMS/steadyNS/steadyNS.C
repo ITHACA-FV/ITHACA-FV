@@ -1035,6 +1035,52 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_tens(label NUmodes,
     return C_tensor;
 }
 
+Eigen::Tensor<double, 3> steadyNS::convective_term_tens_cache(label NUmodes,
+        label NPmodes,
+        label NSUPmodes)
+{
+    label Csize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> C_tensor(Csize, Csize, Csize);
+
+    for (label j = 0; j < Csize; ++j)
+    {
+        surfaceScalarField SfUj = linearInterpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf();
+
+        // Cache all div fields for fixed j, all k
+        List<tmp<volVectorField>> divRow(Csize);
+        for (label k = 0; k < Csize; ++k)
+        {
+            if (fluxMethod == "consistent")
+            {
+                divRow[k] = fvc::div(L_PHImodes[j], L_U_SUPmodes[k]);
+            }
+            else
+            {
+                divRow[k] = fvc::div(SfUj, L_U_SUPmodes[k]);
+            }
+        }
+
+        for (label i = 0; i < Csize; ++i)
+        {
+            for (label k = 0; k < Csize; ++k)
+            {
+                const volVectorField& divField = divRow[k]();
+                C_tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & divField).value();
+            }
+        }
+    }
+
+    if (Pstream::master())
+    {
+        // Export the tensor
+        ITHACAstream::SaveDenseTensor(C_tensor, "./ITHACAoutput/Matrices/",
+                                      "C_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_t");
+    }
+
+    return C_tensor;
+}
+
 Eigen::MatrixXd steadyNS::mass_term(label NUmodes, label NPmodes,
                                     label NSUPmodes)
 {
@@ -1141,6 +1187,51 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
                 gTensor(i, j, k) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & (fvc::div(
                         fvc::interpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf(),
                         L_U_SUPmodes[k]))).value();
+            }
+        }
+    }
+
+    if (Pstream::master())
+    {
+        // Export the tensor
+        ITHACAstream::SaveDenseTensor(gTensor, "./ITHACAoutput/Matrices/",
+                                      "G_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_t");
+    }
+
+    return gTensor;
+}
+
+Eigen::Tensor<double, 3> steadyNS::divMomentum_cache(label NUmodes, label NPmodes)
+{
+    label g1Size = NPmodes + liftfieldP.size();
+    label g2Size = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> gTensor (g1Size, g2Size, g2Size);
+
+    List<tmp<volVectorField>> PmodesGrad(g1Size);
+    for (label i = 0; i < g1Size; i++)
+    {
+        PmodesGrad[i] = fvc::grad(Pmodes[i]);
+    }
+
+    for (label j = 0; j < g2Size; j++)
+    {
+        surfaceScalarField interpUj = fvc::interpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf();
+
+        // Cache only one row (j fixed)
+        List<tmp<volVectorField>> divRow(g2Size);
+        for (label k = 0; k < g2Size; ++k)
+        {
+            divRow[k] = fvc::div(interpUj, L_U_SUPmodes[k]);
+        }
+
+        for (label i = 0; i < g1Size; i++)
+        {
+            const volVectorField& gradPi = PmodesGrad[i]();
+            for (label k = 0; k < g2Size; k++)
+            {
+                const volVectorField& divField = divRow[k]();
+                gTensor(i, j, k) = fvc::domainIntegrate(gradPi & divField).value();
             }
         }
     }
