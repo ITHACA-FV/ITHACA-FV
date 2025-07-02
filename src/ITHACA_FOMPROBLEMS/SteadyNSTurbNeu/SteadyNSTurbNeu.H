@@ -89,7 +89,8 @@ class SteadyNSTurbNeu: public steadyNS
         Eigen::MatrixXd B_matrix_sym;
 
         /// Neumann boundary condition of the diffusion term matrix
-        Eigen::MatrixXd bc_B_matrix_sym;
+        Eigen::MatrixXd bc1_B_matrix_sym;
+        Eigen::MatrixXd bc2_B_matrix_sym;
 
         /// Turbulent viscosity matrix
         Eigen::MatrixXd btMatrix;
@@ -253,7 +254,18 @@ class SteadyNSTurbNeu: public steadyNS
         ///
         /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
         ///
-        Eigen::MatrixXd bc_diffusive_term_sym(label NUmodes, label NSUPmodes);
+        Eigen::MatrixXd bc1_diffusive_term_sym(label NUmodes, label NSUPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Projection Methods Momentum Equation using the cached procedure at Dirichlet boundaries
+        /// Symetric diffusive Term
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
+        ///
+        Eigen::MatrixXd bc2_diffusive_term_sym(label NUmodes, label NSUPmodes);
 
         //--------------------------------------------------------------------------
         /// @brief      ct1 tensor for the turbulence treatement of weak form

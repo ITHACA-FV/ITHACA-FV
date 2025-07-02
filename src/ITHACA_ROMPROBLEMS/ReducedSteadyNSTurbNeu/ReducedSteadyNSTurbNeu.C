@@ -116,16 +116,31 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
         ee = gNut.transpose() * Eigen::SliceFromTensor(problem->cTotalTensor, 0, 
              i) * aTmp;
 
-        fvec(i) = m1(i) - cc(0,0) + ee(0,0) - m2(i);
-
         if (problem->bcMethod == "penalty")
         {
             fvec(i) += ((penaltyU * tauU)(i, 0));
         }
 
         if (problem->neumannMethod == "penalty")
-        { 
+        {
+            fvec(i) = m1(i) - cc(0,0) + ee(0,0) - m2(i);
             fvec(i) += penaltyGradU (i, 0) * tauGradU(0, 0);
+        }
+        else if (problem->neumannMethod == "NeuTerm")
+        {
+            neuTerm1 = problem->bc1_B_matrix_sym.row(i) * NeuBC * nu;
+            neuTerm2 = problem->bc2_B_matrix_sym.row(i) * aTmp * nu;
+            fvec(i) = - m1_sym(i) - cc(0,0) + ee(0,0) - m2(i) + neuTerm1(0, 0) + neuTerm2(0, 0);
+        }
+        else if (problem->neumannMethod == "none")
+        {
+            fvec(i) = m1(i) - cc(0,0) + ee(0,0) - m2(i);
+        }
+        else if (problem->neumannMethod == "test")
+        {
+            neuTerm1 = problem->bc1_B_matrix_sym.row(i) * NeuBC * nu;
+            neuTerm2 = problem->bc2_B_matrix_sym.row(i) * aTmp * nu;
+            fvec(i) = - m1_sym(i) - cc(0,0) + ee(0,0) - m2(i);
         }
     }
 

@@ -1110,7 +1110,7 @@ Eigen::MatrixXd steadyNS::diffusive_term_sym(label NUmodes, label NPmodes,
     {
         for (label j = 0; j < Bsize; j++)
         {
-            B_matrix(i, j) = - fvc::domainIntegrate(fvc::grad(L_U_SUPmodes[i])
+            B_matrix(i, j) = fvc::domainIntegrate(fvc::grad(L_U_SUPmodes[i])
                                                     && fvc::grad(L_U_SUPmodes[j])).value();
         }
     }
