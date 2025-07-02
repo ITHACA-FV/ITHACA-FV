@@ -282,3 +282,5 @@ reduced matrices on the whole domain
 The online stage is performed analogously
 
     mpirun -np 4 02thermalBlock -stage online -parallel
+
+Or the users can simple run the script `Allrun_parallel`.
