@@ -75,13 +75,21 @@ class tutorial06 : public SteadyNSTurbNeu
         void offlineSolve()
         {
             Vector<double> inl(0, 0, 0);
-            List<scalar> mu_now(3);
+            List<scalar> mu_now(mu.cols());
             label BCind = inletIndex(0, 0);
             label BCoutInd = outletIndex(0, 0);
 
-            vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
-            vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
-            vectorField NeuLift_1 (neuLiftField[0].boundaryField()[BCoutInd].snGrad());
+            List<vectorField> liftDir(liftfield.size());            
+            forAll(liftfield, idx)
+            {
+                liftDir[idx] = liftfield[idx].boundaryField()[BCind];
+            }
+
+            List<vectorField> liftNeu(neuLiftField.size());
+            forAll(neuLiftField, idx)
+            {
+                liftNeu[idx] = neuLiftField[idx].boundaryField()[BCoutInd].snGrad();
+            }
 
             // if the offline solution is already performed read the fields
             if (offline)
@@ -100,18 +108,17 @@ class tutorial06 : public SteadyNSTurbNeu
                             mu_now[j] = mu(i, j);
                         }
                         
-                        List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-                        forAll(Uinl, faceI)
+                        vectorField Uinl(_mesh().boundary()[BCind].size());
+                        for(label idx = 0; idx < liftfield.size(); idx++)
                         {
-                            Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                            + mu(i, 2)*lift_2[faceI];
+                            Uinl += mu(i, idx + 1)*liftDir[idx];
                         }
                         ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                        List<vector> Uout(U.mesh().Cf().boundaryField()[BCoutInd].size());
-                        forAll(Uout, faceI)
+                        vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                        for(label idx = 0; idx < neuLiftField.size(); idx++)
                         {
-                            Uout[faceI] = mu(i, 3)*NeuLift_1[faceI];
+                            Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
                         }
                         ITHACAutilities::assignBC(_U(), BCoutInd, Uout);
 
@@ -134,18 +141,17 @@ class tutorial06 : public SteadyNSTurbNeu
                         mu_now[j] = mu(i, j);
                     }
                     
-                    List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-                    forAll(Uinl, faceI)
+                    vectorField Uinl(_mesh().boundary()[BCind].size());
+                    for(label idx = 0; idx < liftfield.size(); idx++)
                     {
-                        Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                        + mu(i, 2)*lift_2[faceI];
+                        Uinl += mu(i, idx + 1)*liftDir[idx];
                     }
                     ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                    List<vector> Uout(U.mesh().Cf().boundaryField()[BCoutInd].size());
-                    forAll(Uout, faceI)
+                    vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                    for(label idx = 0; idx < neuLiftField.size(); idx++)
                     {
-                        Uout[faceI] = mu(i, 3)*NeuLift_1[faceI];
+                        Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
                     }
                     ITHACAutilities::assignBC(_U(), BCoutInd, Uout);
 
@@ -163,13 +169,21 @@ class tutorial06 : public SteadyNSTurbNeu
         void offlineSolve(Eigen::MatrixXd par, fileName folder)
         {
             Vector<double> inl(0, 0, 0);
-            List<scalar> mu_now(3);
+            List<scalar> mu_now(mu.cols());
             label BCind = inletIndex(0, 0);
             label BCoutInd = outletIndex(0, 0);
 
-            vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
-            vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
-            vectorField NeuLift_1 (neuLiftField[0].boundaryField()[BCoutInd].snGrad());
+            List<vectorField> liftDir(liftfield.size());            
+            forAll(liftfield, idx)
+            {
+                liftDir[idx] = liftfield[idx].boundaryField()[BCind];
+            }
+
+            List<vectorField> liftNeu(neuLiftField.size());
+            forAll(neuLiftField, idx)
+            {
+                liftNeu[idx] = neuLiftField[idx].boundaryField()[BCoutInd].snGrad();
+            }
 
             for (label i = 0; i < par.rows(); i++)
             {
@@ -178,18 +192,17 @@ class tutorial06 : public SteadyNSTurbNeu
                     mu_now[j] = mu(i, j);
                 }
                 
-                List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-                forAll(Uinl, faceI)
+                vectorField Uinl(_mesh().boundary()[BCind].size());
+                for(label idx = 0; idx < liftfield.size(); idx++)
                 {
-                    Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                    + mu(i, 2)*lift_2[faceI];
+                    Uinl += mu(i, idx + 1)*liftDir[idx];
                 }
                 ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                List<vector> Uout(U.mesh().Cf().boundaryField()[BCoutInd].size());
-                forAll(Uout, faceI)
+                vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                for(label idx = 0; idx < neuLiftField.size(); idx++)
                 {
-                    Uout[faceI] = mu(i, 3)*NeuLift_1[faceI];
+                    Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
                 }
                 ITHACAutilities::assignBC(_U(), BCoutInd, Uout);
 
@@ -206,17 +219,21 @@ class tutorial06 : public SteadyNSTurbNeu
         void onlineSolve(fileName folder)
         {
             Vector<double> inl(0, 0, 0);
-            List<scalar> mu_now(3);
+            List<scalar> mu_now(mu.cols());
             label BCind = inletIndex(0, 0);
             label BCoutInd = outletIndex(0, 0);
 
-            // Read the lift functions
-            ITHACAstream::read_fields(liftfield, U, "./lift/");
-            vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
-            vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
+            List<vectorField> liftDir(liftfield.size());
+            forAll(liftfield, idx)
+            {
+                liftDir[idx] = liftfield[idx].boundaryField()[BCind];
+            }
 
-            ITHACAstream::read_fields(neuLiftField, U, "./NeuLift/");
-            vectorField NeuLift_1 (neuLiftField[0].boundaryField()[BCoutInd].snGrad());
+            List<vectorField> liftNeu(neuLiftField.size());
+            forAll(neuLiftField, idx)
+            {
+                liftNeu[idx] = neuLiftField[idx].boundaryField()[BCoutInd].snGrad();
+            }
 
             fileName filePath = folder + "1/U";
             IFstream exFileOff(filePath); 
@@ -240,18 +257,17 @@ class tutorial06 : public SteadyNSTurbNeu
                             mu_now[j] = mu(i, j);
                         }
                         
-                        List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-                        forAll(Uinl, faceI)
+                        vectorField Uinl(_mesh().boundary()[BCind].size());
+                        for(label idx = 0; idx < liftfield.size(); idx++)
                         {
-                            Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                            + mu(i, 2)*lift_2[faceI];
+                            Uinl += mu(i, idx + 1)*liftDir[idx];
                         }
                         ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                        List<vector> Uout(U.mesh().Cf().boundaryField()[BCoutInd].size());
-                        forAll(Uout, faceI)
+                        vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                        for(label idx = 0; idx < neuLiftField.size(); idx++)
                         {
-                            Uout[faceI] = mu(i, 3)*NeuLift_1[faceI];
+                            Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
                         }
                         ITHACAutilities::assignBC(_U(), BCoutInd, Uout);
 
@@ -274,18 +290,17 @@ class tutorial06 : public SteadyNSTurbNeu
                         mu_now[j] = mu(i, j);
                     }
                     
-                    List<vector> Uinl(U.mesh().Cf().boundaryField()[BCind].size());
-                    forAll(Uinl, faceI)
+                    vectorField Uinl(_mesh().boundary()[BCind].size());
+                    for(label idx = 0; idx < liftfield.size(); idx++)
                     {
-                        Uinl[faceI] = mu(i, 1)*lift_1[faceI]
-                                        + mu(i, 2)*lift_2[faceI];
+                        Uinl += mu(i, idx + 1)*liftDir[idx];
                     }
                     ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                    List<vector> Uout(U.mesh().Cf().boundaryField()[BCoutInd].size());
-                    forAll(Uout, faceI)
+                    vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                    for(label idx = 0; idx < neuLiftField.size(); idx++)
                     {
-                        Uout[faceI] = mu(i, 3)*NeuLift_1[faceI];
+                        Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
                     }
                     ITHACAutilities::assignBC(_U(), BCoutInd, Uout);
 
@@ -361,7 +376,7 @@ int main(int argc, char* argv[])
     // Read the NeuLift functions
     ITHACAstream::read_fields(example.neuLiftField, example.U, "./NeuLift/");
     const label DirNum = example.liftfield.size();
-    const label NeuDirNum = example.neuLiftField.size();
+    const label NeuNum = example.neuLiftField.size();
 
     // Set the inlet boundaries where we have parameterized boundary conditions
     // The first column is the index of the inlet patch and the second column is the direction,
@@ -369,7 +384,7 @@ int main(int argc, char* argv[])
     example.inletIndex.resize(DirNum, 2);
     example.inletIndex.setConstant(0);
 
-    example.outletIndex.resize(1, 1);
+    example.outletIndex.resize(NeuNum, 1);
     example.outletIndex.setConstant(1);
 
     // Perform The Offline Solve;
@@ -451,7 +466,7 @@ int main(int argc, char* argv[])
 
     example.Pfield.clear();
 
-    example.NeumannFields.resize(NeuDirNum);
+    example.NeumannFields.resize(NeuNum);
     forAll (example.NeumannFields, i)
     {
         example.NeumannFields.set(i, new vectorField
@@ -473,7 +488,7 @@ int main(int argc, char* argv[])
     rbfCoeff.resize(NmodesNUT, par_online.rows());
     pod_rbf.onlineMu = par_online;
     Eigen::MatrixXd velNow(DirNum, 1);
-    Eigen::VectorXd neuVal(NeuDirNum);
+    Eigen::VectorXd neuVal(NeuNum);
 
     Info<< endl
         << "##################################################################\n"
@@ -484,12 +499,11 @@ int main(int argc, char* argv[])
     // Perform an online solve for the new values of inlet velocities
     for (label k = 0; k < par_online.rows(); k++)
     {
-        pod_rbf.tauU.resize(2, 1);
-        pod_rbf.tauU(0, 0) = tauU;
-        pod_rbf.tauU(1, 0) = tauU;
+        pod_rbf.tauU.resize(NeuNum, 1);
+        pod_rbf.tauU.setConstant(tauU);
         
-        pod_rbf.tauGradU.resize(1, 1);
-        pod_rbf.tauGradU(0, 0) = tauGradU;
+        pod_rbf.tauGradU.resize(NeuNum, 1);
+        pod_rbf.tauGradU.setConstant(tauGradU);
 
         // Set value of the reduced viscosity and the penalty factor
         pod_rbf.nu = par_online(k, 0);
@@ -499,7 +513,7 @@ int main(int argc, char* argv[])
             velNow(n, 0) = pod_rbf.onlineMu(k, n+1);
         } 
 
-        for (label n = 0; n < NeuDirNum; n++)
+        for (label n = 0; n < NeuNum; n++)
         {
             neuVal(n) = pod_rbf.onlineMu(k, n + DirNum+1);
         }
