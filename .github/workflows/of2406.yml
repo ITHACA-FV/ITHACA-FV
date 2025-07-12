@@ -1,4 +1,4 @@
-name: OF2106
+name: OF2406
 
 on:
   push:
@@ -14,9 +14,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: "OpenFOAM 2106"
+          - name: "OpenFOAM 2406"
             install: "cd ."
-            compile: ./.compileOF2106.sh
+            compile: ./.compileOF2406.sh
 
     steps:
     - name: Checkout
