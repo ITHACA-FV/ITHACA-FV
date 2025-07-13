@@ -406,8 +406,8 @@ int main(int argc, char* argv[])
             }
         }
         // The shape of mu is different from the old code, so transpose it
-        Eigen::MatrixXd muTranspose = tmpmu.transpose();
-        example.computeLift(example.Ufield, example.liftfield, example.Uomfield, muTranspose);
+        coeffL2_lift = tmpmu.transpose();
+        example.computeLift(example.Ufield, example.liftfield, example.Uomfield, coeffL2_lift);
     }
     else
     {
