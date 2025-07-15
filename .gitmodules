@@ -8,3 +8,6 @@
 [submodule "src/thirdparty/spectra"]
 	path = src/thirdparty/spectra
 	url = https://github.com/yixuan/spectra.git
+[submodule "src/thirdparty/OptimLib"]
+	path = src/thirdparty/OptimLib
+	url = https://github.com/kthohr/optim.git
