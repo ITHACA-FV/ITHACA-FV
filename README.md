@@ -14,9 +14,6 @@
 <img alt="Codacy Badge" src="https://app.codacy.com/project/badge/Grade/f51e1de0fd7c42a6a0be13889cbd4b0e">
 </a>
 </p>
-<p align="center">
-<a href="https://github.com/ithaca-fv/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="OF1812" src="https://github.com/ithaca-fv/ITHACA-FV/workflows/OF2212/badge.svg"></a>
-</p>
 
 ### 0. Introduction
 **ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2412**](https://www.openfoam.com/news/main-news/openfoam-v2412/) but it can be easily adapted also to other versions of OpenFOAM.
