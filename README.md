@@ -14,6 +14,7 @@
 <img alt="Codacy Badge" src="https://app.codacy.com/project/badge/Grade/f51e1de0fd7c42a6a0be13889cbd4b0e">
 </a>
 </p>
+<p align="center">
 </p>
 
 ### 0. Introduction
