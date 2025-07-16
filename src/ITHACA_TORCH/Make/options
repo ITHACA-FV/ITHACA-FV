@@ -20,7 +20,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_TORCH\Filters \
     -I$(TORCH_LIBRARIES)/include \
     -I$(TORCH_LIBRARIES)/include/torch/csrc/api/include \
-    -std=c++14 \
+    -std=c++17 \
     -Wno-old-style-cast \
     -Wno-non-virtual-dtor \
     -Wno-return-type \
