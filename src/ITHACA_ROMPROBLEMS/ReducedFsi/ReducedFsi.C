@@ -156,16 +156,15 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
         //- Current time index (used for updating)
         label curTimeIndex_ = -1;
         // pointField points0 = mesh.points();
-        Eigen::MatrixXd muEval;
-        muEval.resize(1, 1);
-        Eigen::VectorXd b_ref = Pmodes.project(p, NmodesPproj);
-        Eigen::VectorXd a_ref = Umodes.project(U, NmodesUproj);
+        Eigen::MatrixXd muEval(1, 1);
+        //Eigen::VectorXd b_ref = Pmodes.project(p, NmodesPproj);
+        //Eigen::VectorXd a_ref = Umodes.project(U, NmodesUproj);
         //std::cout << " ==== b_ref === " << b_ref << std::endl;
         //std::cout << " ==== a_ref === " << a_ref << std::endl;
         //exit(0);
-        double lambda0 = 1.0; // Initial weight
-        double lambda_t = 0.0;
-        double alpha = 0.125;
+        // double lambda0 = 1.0; // Initial weight
+        // double lambda_t = 0.0;
+        // double alpha = 0.125;
 
         // PIMPLE algorithm starts here
         //Info<< "\nStarting time loop\n" << endl;
@@ -235,8 +234,8 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                     Eigen::MatrixXd projGrad = Umodes.project(gradpfull, NmodesUproj);
                     RedLinSysU[1] = RedLinSysU[1] + projGrad;
                     //a = RedLinSysU[0].householderQr().solve(RedLinSysU[1]);
-                    //Eigen::MatrixXd I_u = 1e-8*Eigen::MatrixXd::Identity(NmodesUproj,NmodesUproj );
-                    //a = (RedLinSysU[0] + I_u).ldlt().solve(RedLinSysU[1]);
+                    //Eigen::MatrixXd I_u = 1e-6*Eigen::MatrixXd::Identity(NmodesUproj,NmodesUproj );
+                    //a = (RedLinSysU[0] - I_u).ldlt().solve(RedLinSysU[1]);
                     //a=RedLinSysU[0].llt().solve(RedLinSysU[1]);
                     a = RedLinSysU[0].colPivHouseholderQr().solve(RedLinSysU[1]);
                     //a = RedLinSysU[0].completeOrthogonalDecomposition().solve(RedLinSysU[1]);
@@ -258,8 +257,8 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
               //Eigen::MatrixXd A_reg = RedLinSysU[0] + 1e-6 *Eigen::MatrixXd::Identity(NmodesUproj, NmodesUproj);
               //a = A_reg.ldlt().solve(RedLinSysU[1]);
                     //Eigen::MatrixXd aNew = cg.solve(RedLinSysU[1]);
-                    std::cout << "res_u = " << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
-             //res_u << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
+                    //std::cout << "res_u = " << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
+                   //res_u << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
                     /*
                     if (cg.info() != Eigen::Success) 
                     {
@@ -269,7 +268,7 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                     //Eigen::VectorXd a_cal = (a + lambda_t * a_ref) / (1.0 + lambda_t);
                     //a_ref = a;
                     Umodes.reconstruct(U, a, "U");
-                    U.correctBoundaryConditions();
+                    //U.correctBoundaryConditions();
                     fvOptions.correct(U);
                     //volVectorField errorU = U -problem->Ufield[0];
                     //Info << "errorU= " << errorU.boundaryFieldRef() << endl;
@@ -302,13 +301,13 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                         RedLinSysP = Pmodes.project(pEqn, NmodesPproj,"G");
                         /// Solve for the reduced coefficient for pressure
                         //b = RedLinSysP[0].householderQr().solve(RedLinSysP[1]);
-                        //b = RedLinSysP[0].colPivHouseholderQr().solve(RedLinSysP[1]);
-                        b = RedLinSysP[0].ldlt().solve(RedLinSysP[1]);
+                        b = RedLinSysP[0].colPivHouseholderQr().solve(RedLinSysP[1]);
+                        //b = RedLinSysP[0].ldlt().solve(RedLinSysP[1]);
                         //Eigen::VectorXd b_cal = (b + lambda_t * b_ref) / (1.0 + lambda_t);
                         //b_ref = b;
                         //b =RedLinSysP[0].fullPivLu().solve(RedLinSysP[1]);
-                        //Eigen::MatrixXd I_p = 1e-8*Eigen::MatrixXd::Identity(NmodesPproj,NmodesPproj );
-                        //b = (RedLinSysP[0] + I_p).ldlt().solve(RedLinSysP[1]);
+                        //Eigen::MatrixXd I_p = 1e-6*Eigen::MatrixXd::Identity(NmodesPproj,NmodesPproj );
+                        //b = (RedLinSysP[0] - I_p).ldlt().solve(RedLinSysP[1]);
                         //b = RedLinSysP[0].ldlt().solve(RedLinSysP[1]);
                         // Solve pressure ROM system (with iterative solver)
                         /*
@@ -316,11 +315,10 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                         cgP.setTolerance(1e-6);
                         cgP.compute(RedLinSysP[0]);
                         Eigen::MatrixXd bNew = cgP.solve(RedLinSysP[1]);*/
-                        std::cout << "res_p = " << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
-           //res_p << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
-                        //Pmodes.reconstruct(p, b, "p");
+                        //std::cout << "res_p = " << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
+                        //res_p << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
                         Pmodes.reconstruct(p, b, "p");
-                        p.correctBoundaryConditions();
+                        //p.correctBoundaryConditions();
                         //volScalarField errorp = p -problem->Pfield[0] ;
                         //Info << "errorp= " << errorp.internalField() << endl;
                         //exit(0);

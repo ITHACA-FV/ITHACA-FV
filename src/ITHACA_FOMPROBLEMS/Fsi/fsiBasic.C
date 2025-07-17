@@ -77,60 +77,72 @@ fsiBasic::fsiBasic(int argc, char* argv[])
             )
         );
         
-        oMesh.reset
-        (
-            new IOobject
-            (
-                "OriginalMesh",
-                "./ITHACAoutput",
-                runTime,
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            )
-        );
+        // oMesh.reset
+        // (
+        //     new IOobject
+        //     (
+        //         "OriginalMesh",
+        //         runTime.timeName(),
+        //         runTime,
+        //         IOobject::NO_READ,
+        //         IOobject::AUTO_WRITE
+        //     )
+        // );
         /// Create a deep copy
         ITHACAparameters* para = ITHACAparameters::getInstance(mesh,_runTime());
         //para = ITHACAparameters::getInstance(mesh, runTime); 
         offline = ITHACAutilities::check_off();
         podex = ITHACAutilities::check_pod();
+       
         //setTimes(runTime);
-        /*
-        point0 = mesh.points().clone();  
-        faces0 =  mesh.faces().clone();
-        celllist0 = mesh.cells().clone();
-        ///
-        //const polyBoundaryMesh& boundary = mesh.boundaryMesh();
-        /// Construct the initial mesh
-        Mesh0(
-                oMesh,
-                std::move(point0),
-                std::move(faces0),
-                std::move(celllist0),
-                true  // syncPar
-        );
         
-        PtrList<polyPatch> patches(meshPtr->boundaryMesh().size());
-        forAll(meshPtr->boundaryMesh(), patchI)
-        {
-            patches.set
-            (
-                patchI,
-                meshPtr->boundaryMesh()[patchI].clone
-                (
-                    Mesh0->boundaryMesh(),
-                    patchI,
-                    meshPtr->boundaryMesh()[patchI].size(),
-                    meshPtr->boundaryMesh()[patchI].start()
-                )
-            );
-        }
+        // point0 = mesh.points().clone();  
+        // faces0 =  mesh.faces().clone();
+        // celllist0 = mesh.cells().clone();
+        // ///
+        // //const polyBoundaryMesh& boundary = mesh.boundaryMesh();
+        // /// Construct the initial mesh
+        // Mesh0.reset
+        // (new fvMesh
+        //     (
+        //       oMesh, 
+        //       std::move(point0), 
+        //       std::move(faces0), 
+        //       std::move(celllist0), 
+        //       true
+        //      )
+        // );
+        // /*
+        // Mesh0
+        // (
+        //     oMesh,
+        //     std::move(point0),
+        //     std::move(faces0),
+        //     std::move(celllist0),
+        //     true  // syncPar
+        // );*/
         
-        Mesh0->addFvPatches(patches);
-        // Now meshCopyPtr is fully independent
-        Mesh0->write();
-        */
+        // PtrList<polyPatch> patches(meshPtr->boundaryMesh().size());
+        // forAll(meshPtr->boundaryMesh(), patchI)
+        // {
+        //     patches.set
+        //     (
+        //         patchI,
+        //         meshPtr->boundaryMesh()[patchI].clone
+        //         (
+        //             Mesh0->boundaryMesh(),
+        //             patchI,
+        //             meshPtr->boundaryMesh()[patchI].size(),
+        //             meshPtr->boundaryMesh()[patchI].start()
+        //         )
+        //     );
+        // }
+        
+        // Mesh0->addFvPatches(patches);
+        // // Now meshCopyPtr is fully independent
+        // Mesh0->write();
         Info << offline << endl;
-    /// Number of velocity modes to be calculated
+        /// Number of velocity modes to be calculated
         NUmodesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesUout", 15);
         /// Number of pressure modes to be calculated
         NPmodesOut = para->ITHACAdict->lookupOrDefault<label>("NmodesPout", 15);
@@ -142,7 +154,6 @@ fsiBasic::fsiBasic(int argc, char* argv[])
         NPmodes = para->ITHACAdict->lookupOrDefault<label>("NmodesPproj", 10);
         /// Number of nut modes used for the projection
         NNutModes = para->ITHACAdict->lookupOrDefault<label>("NmodesNutProj", 0);
-        //folderN = 0;
               
 }
 
@@ -151,7 +162,7 @@ void fsiBasic::truthSolve(label folderN, fileName folder)
 
     Time& runTime = _runTime();
     dynamicFvMesh& mesh = meshPtr();
-    //Foam::dynamicFvMesh& mesh0 =  Mesh0();
+    //fvMesh& mesh0 =  Mesh0();
      // Create a new independent copy (if dynamicFvMesh supports copying)
     //autoPtr<dynamicFvMesh> mesh2Ptr(meshPtr->clone());  // Requires clone() method
     //dynamicFvMesh& mesh = mesh2Ptr();  // Now 'mesh' is independent of 'meshPtr'
@@ -171,6 +182,9 @@ void fsiBasic::truthSolve(label folderN, fileName folder)
     nextWrite = startTime; // timeStep initialization
     //const fvMesh& toMeshInit = meshPtr();
     //meshToMesh0::order mapOrder = meshToMesh0::INTERPOLATE;
+    //meshToMesh0::order mapOrder = meshToMesh0::CELL_VOLUME_WEIGHT;
+    //meshToMesh0::order mapOrder = meshToMesh0::CELL_POINT_INTERPOLATE;
+    meshToMesh0::order mapOrder = meshToMesh0::MAP;
     dictionary dictCoeffs(dyndict().findDict("sixDoFRigidBodyMotionCoeffs"));
     Foam::functionObjects::forces fomforces("fomforces", mesh, dictCoeffs);
    
@@ -249,14 +263,7 @@ void fsiBasic::truthSolve(label folderN, fileName folder)
         //N = mesh.Sf()/mesh.magSf();
         //N.rename("Uf");
         
-        //Foam::meshToMesh0 mapper
-        //(
-        //    U.mesh(),  // Source mesh (current/moved)
-        //    mesh0     // Target mesh (original)
-        //);
-        // Interpolate from curr_U on current mesh to old_U on original mesh
-    //tmp<volVectorField> t_old_U = mapper.interpolate<Foam::vector, Foam::plusEqOp<Foam::vector>>(
-      //  U, Foam::meshToMesh0::order::INTERPOLATE, Foam::plusEqOp<Foam::vector>() );
+           
         // Access the result
         //volVectorField& old_U = t_old_U.ref();
         
@@ -270,7 +277,41 @@ void fsiBasic::truthSolve(label folderN, fileName folder)
             centerofmassx.append(sDRBMS().motion().centreOfMass().x());
             centerofmassy.append(sDRBMS().motion().centreOfMass().y());
             centerofmassz.append(quaternion(sDRBMS().motion().orientation()).eulerAngles(quaternion::XYZ).z());
+           /*
+            Foam::meshToMesh0 mapper(mesh,mesh0);
+           /// Interpolate from U on current mesh to U_mapped on original mesh
+            //tmp<volVectorField> U_mapped(U);
+             //tmp<volScalarField> p_mapped(p);
+             volVectorField U_mapped
+            (
+                IOobject("U", runTime.timeName(), mesh0),
+                mesh0,
+                dimensionedVector("U", U.dimensions(), Zero)
+            );
+
+            volScalarField p_mapped
+            (
+                IOobject("p", runTime.timeName(), mesh0),
+                mesh0,
+                dimensionedScalar("p", p.dimensions(), Zero)
+            );
+           if (&mesh == &mesh0)
+            {
+                Info << "[mapFieldToMesh0] Meshes are identical. Copying field..." << endl;
+                U_mapped = U;
+                p_mapped = p;
+            }
+            else
+            {
+               U_mapped = mapper.interpolate<Foam::vector,                    Foam::plusEqOp<Foam::vector>>(U, mapOrder, Foam::plusEqOp<Foam::vector>() );
       
+           p_mapped = mapper.interpolate<scalar,Foam::plusEqOp<scalar>>(p, mapOrder, Foam::plusEqOp<scalar>() ); 
+            
+            }  
+            U_mapped.ref().rename("U");
+            p_mapped.ref().rename("p");
+            U_mapped.correctBoundaryConditions();
+            p_mapped.correctBoundaryConditions();*/
             //ITHACAstream::exportSolution(N, name(counter), folder);
             word localFolder = folder +  name(folderN+1);
             //old_U.rename("old_U");
@@ -297,11 +338,12 @@ void fsiBasic::truthSolve(label folderN, fileName folder)
            //cp(runTime.path()/runTime.timeName(), runTime.path()/saveDir);
 
             //std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
-            Ufield.append(U.clone());
-            Pfield.append(p.clone());
+            Ufield.append(U.clone() );
+            Pfield.append(p.clone() );
             Dfield.append(sDRBMS().pointDisplacement().clone());
             NormalFields.append(N.clone());
             // Check if this is the last time step
+            
             if (runTime.time().value() + runTime.deltaT().value() >= finalTime)
             {
                 Info << "===== Storing final mesh =====" << endl;
@@ -500,16 +542,16 @@ void fsiBasic::loadCentreOfMassY(const fileName& baseDir)
 }
 
 
-void fsiBasic::updateStiffnessAndRebuildSolver(scalar& newMu)
+void fsiBasic::updateStiffnessAndRebuildSolver(scalar& newMu, word param_name)
 {
     dictionary& dictCoeffs = dyndict().subDict("sixDoFRigidBodyMotionCoeffs");
     dictionary& restraints = dictCoeffs.subDict("restraints");
     dictionary& spring = restraints.subDict("verticalSpring1");
 
-    scalar oldMu = spring.get<scalar>("damping");
-    Info << ">>> Replacing damping: " << oldMu << " -> " << newMu << endl;
+    scalar oldMu = spring.get<scalar>(param_name);
+    //Info << ">>> Replacing damping: " << oldMu << " -> " << newMu << endl;
 
-    spring.set("damping", newMu);
+    spring.set(param_name, newMu);
 
     /// Optional: Write back to disk
     dyndict().regIOobject::write(true);
@@ -543,6 +585,41 @@ void fsiBasic::updateStiffnessAndRebuildSolver(scalar& newMu)
 
     Info << ">>> Motion solver rebuilt with new stiffness.\n";
 }
+/*
+template<class Type, class PatchField, class GeoMesh>
+void mapFieldToMesh0(const Foam::GeometricField<Type, PatchField, GeoMesh>& sourceField,
+const Foam::fvMesh& mesh0,
+Foam::GeometricField<Type, PatchField, GeoMesh>& mappedField)
+{
+    const Foam::fvMesh& fromMesh = sourceField.mesh();
+
+    if (&fromMesh == &mesh0)
+    {
+        Info << "[mapFieldToMesh0] Meshes are identical. Copying field..." << endl;
+        mappedField = sourceField;
+        return;
+    }
+
+    Info << "[mapFieldToMesh0] Interpolating field " << sourceField.name()
+         << " to mesh0..." << endl;
+
+    Foam::meshToMesh0 mapper(fromMesh, mesh0);
+
+    Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>> interpField =
+        mapper.interpolate<Type, Foam::plusEqOp<Type>>(
+            Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>>(sourceField),
+            Foam::meshToMesh0::order::LINEAR,
+            Foam::plusEqOp<Type>());
+
+    mappedField = interpField;
+}
+mapFieldToMesh0( const volScalarField& sourceField,
+                 const Foam::fvMesh& mesh0,
+                 volScalarField& mappedField);
+                 
+mapFieldToMesh0( const volVectorField& sourceField,
+                 const Foam::fvMesh& mesh0,
+                 volVectorField& mappedField); */                
 
 
 

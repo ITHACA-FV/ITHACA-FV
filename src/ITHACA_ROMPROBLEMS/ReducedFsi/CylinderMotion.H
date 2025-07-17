@@ -51,8 +51,9 @@ for (int i = 0; i < NmodesDproj; i++)
 }
 // Reconstruction of the pointdisplacement
 Dmodes.reconstruct(pointDisplacement, pdCoeff, "pointDisplacement");
+
 /// Correct again the boundary fields
-pointDisplacement.correctBoundaryConditions();
+//pointDisplacement.correctBoundaryConditions();
 /// update the new pointDisplacement                 
 problem->sDRBMS().pointDisplacement().primitiveFieldRef() 
 = pointDisplacement.primitiveFieldRef();                  

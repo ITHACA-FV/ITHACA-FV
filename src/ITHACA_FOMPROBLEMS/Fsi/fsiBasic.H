@@ -85,8 +85,8 @@ class fsiBasic:  public steadyNS, public UnsteadyProblem
 
         autoPtr<volScalarField> _p;
         // /// Dynamic mesh field
-        autoPtr<Foam::dynamicFvMesh> meshPtr;
-        autoPtr<Foam::fvMesh> Mesh0;
+        autoPtr<dynamicFvMesh> meshPtr;
+        autoPtr<fvMesh> Mesh0;
         // PtrList of dynamicMesh
         PtrList<dynamicFvMesh> meshes;
         /// pimpleControl
@@ -153,7 +153,7 @@ class fsiBasic:  public steadyNS, public UnsteadyProblem
         ///void PodIpointDispl(Eigen::MatrixXd muu,  label NPdModes);
         void change_viscosity(double mu);
         void change_stiffness(scalar& mu);
-        void updateStiffnessAndRebuildSolver(scalar& newMu);
+        void updateStiffnessAndRebuildSolver(scalar& newMu, word param_name="stiffness");
         /// Help function for the prepareFoamData routine
         void exportFoamFieldToNpy(const word& outputDir, 
                            const word& fileName, 
@@ -163,6 +163,15 @@ class fsiBasic:  public steadyNS, public UnsteadyProblem
         void prepareFoamData(const word& outputPath);                   
         /// to load all centre of mass for training RBF network
         void loadCentreOfMassY(const fileName& baseDir = "ITHACAoutput");
+        
+       /*
+        mapFieldToMesh0( const volScalarField& sourceField,
+                 const Foam::fvMesh& mesh0,
+                 volScalarField& mappedField);
+                 
+        mapFieldToMesh0( const volVectorField& sourceField,
+                 const Foam::fvMesh& mesh0,
+                 volVectorField& mappedField);*/
 };        
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
