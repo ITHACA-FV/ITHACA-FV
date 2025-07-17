@@ -54,7 +54,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/OF_EXT/lnInclude \
     -Wno-comment \
     -w \
-    -std=c++14
+    -std=c++17
 
 EXE_LIBS = \
     -lturbulenceModels \

@@ -44,7 +44,7 @@ reducedUnsteadyNS::reducedUnsteadyNS()
 
 reducedUnsteadyNS::reducedUnsteadyNS(unsteadyNS& FOMproblem)
     :
-    problem( & FOMproblem)
+    problem(& FOMproblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
@@ -104,13 +104,13 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = problem->B_matrix* a_tmp* nu;
+    Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
     // Gradient of pressure
-    Eigen::VectorXd M2 = problem->K_matrix* b_tmp;
+    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
     // Mass Term
-    Eigen::VectorXd M5 = problem->M_matrix* a_dot;
+    Eigen::VectorXd M5 = problem->M_matrix * a_dot;
     // Pressure Term
-    Eigen::VectorXd M3 = problem->P_matrix* a_tmp;
+    Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -161,7 +161,7 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyNS_sup::df(const Eigen::VectorXd& x,
                               Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNS_sup> numDiff( * this);
+    Eigen::NumericalDiff<newton_unsteadyNS_sup> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -193,17 +193,17 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
     Eigen::MatrixXd cc(1, 1);
     Eigen::MatrixXd gg(1, 1);
     // Mom Term
-    Eigen::VectorXd M1 = problem->B_matrix* a_tmp* nu;
+    Eigen::VectorXd M1 = problem->B_matrix * a_tmp * nu;
     // Gradient of pressure
-    Eigen::VectorXd M2 = problem->K_matrix* b_tmp;
+    Eigen::VectorXd M2 = problem->K_matrix * b_tmp;
     // Mass Term
-    Eigen::VectorXd M5 = problem->M_matrix* a_dot;
+    Eigen::VectorXd M5 = problem->M_matrix * a_dot;
     // Pressure Term
-    Eigen::VectorXd M3 = problem->D_matrix* b_tmp;
+    Eigen::VectorXd M3 = problem->D_matrix * b_tmp;
     // BC PPE
-    Eigen::VectorXd M7 = problem->BC3_matrix* a_tmp* nu;
+    Eigen::VectorXd M7 = problem->BC3_matrix * a_tmp * nu;
     // BC PPE time-dependents BCs
-    Eigen::VectorXd M8 = problem->BC4_matrix* a_dot;
+    Eigen::VectorXd M8 = problem->BC4_matrix * a_dot;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -261,7 +261,7 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyNS_PPE::df(const Eigen::VectorXd& x,
                               Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNS_PPE> numDiff( * this);
+    Eigen::NumericalDiff<newton_unsteadyNS_PPE> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }

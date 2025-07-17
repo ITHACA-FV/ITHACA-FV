@@ -205,7 +205,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
         /// Constructor
         explicit reducedSimpleSteadyNN(SteadyNSSimpleNN& FOMproblem)
             :
-            problem( & FOMproblem)
+            problem(& FOMproblem)
         {}
 
         /// Full problem.
@@ -314,7 +314,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
                 (
                     fvm::div(phi, U)
                     - fvm::laplacian(nueff, U)
-                    - fvc::div(nueff* dev2(T(fvc::grad(U))))
+                    - fvc::div(nueff * dev2(T(fvc::grad(U))))
                 );
                 UEqn.relax();
                 //solve(UEqn == - fvc::grad(P));
@@ -396,7 +396,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
             res_os_U.close();
             res_os_P.close();
             std::cout << "Solution " << counter << " converged in " << iter <<
-                      " iterations." << std::endl;
+                         " iterations." << std::endl;
             std::cout << "Final normalized residual for velocity: " << U_norm_res <<
                       std::endl;
             std::cout << "Final normalized residual for pressure: " << P_norm_res <<
@@ -500,7 +500,7 @@ class tutorial01cl : public SteadyNSSimpleNN
             }
         }
 
-        void linearMovePts(double angle, List<vector> & points2Move)
+        void linearMovePts(double angle, List<vector>& points2Move)
         {
             double sMax;
             scalarList x;
@@ -516,7 +516,7 @@ class tutorial01cl : public SteadyNSSimpleNN
             double xMax = max(x);
             double yMin = min(y);
             double yMax = max(y);
-            sMax = (yMax - yMin) * std::tan(M_PI* angle / 180);
+            sMax = (yMax - yMin) * std::tan(M_PI * angle / 180);
 
             for (label i = 0; i < points2Move.size(); i++)
             {

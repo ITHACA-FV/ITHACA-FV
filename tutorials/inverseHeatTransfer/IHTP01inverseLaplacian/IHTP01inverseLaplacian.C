@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
         auto cx = T_true.mesh().C()[i].component(vector::X);
         auto cy = T_true.mesh().C()[i].component(vector::Y);
         auto cz = T_true.mesh().C()[i].component(vector::Z);
-        T_true.ref()[i] = a* cx* cx + b* cx* cy + c* cy - a* cz* cz + c;
+        T_true.ref()[i] = a * cx * cx + b * cx * cy + c * cy - a * cz * cz + c;
     }
 
     // Perform true solution
@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
     {
         scalar faceX =
             mesh.boundaryMesh()[example_paramBC.hotSide_ind].faceCentres()[faceI].x();
-        example_paramBC.g[faceI] = example_paramBC.k * (b* faceX + c) ;
+        example_paramBC.g[faceI] = example_paramBC.k * (b * faceX + c) ;
     }
 
     example_paramBC.gTrue = example_paramBC.g;

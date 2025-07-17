@@ -14,8 +14,8 @@ forAll(Tf, faceI)
         mesh.boundaryMesh()[coldSide_ind].faceCentres()[faceI].y();
     scalar faceX =
         mesh.boundaryMesh()[coldSide_ind].faceCentres()[faceI].x();
-    Tf[faceI] = k / H * (b* faceX + c) + a* faceX* faceX +
-                b* faceX* faceY + c* faceY - a* faceZ* faceZ + c;
+    Tf[faceI] = k / H * (b * faceX + c) + a * faceX * faceX +
+                b * faceX * faceY + c * faceY - a * faceZ * faceZ + c;
 }
 
 // Setting BC at gammaEx1
@@ -26,7 +26,7 @@ forAll(heatFlux_gammaEx1, faceI)
 {
     scalar faceZ =
         mesh.boundaryMesh()[gammaEx1_ind].faceCentres()[faceI].z();
-    heatFlux_gammaEx1[faceI] = k * 2 * a* faceZ;
+    heatFlux_gammaEx1[faceI] = k * 2 * a * faceZ;
 }
 
 // Setting BC at gammaEx2
@@ -39,7 +39,7 @@ forAll(heatFlux_gammaEx2, faceI)
         mesh.boundaryMesh()[gammaEx2_ind].faceCentres()[faceI].x();
     scalar faceY =
         mesh.boundaryMesh()[gammaEx2_ind].faceCentres()[faceI].y();
-    heatFlux_gammaEx2[faceI] = - k * (2 * a* faceX + b* faceY);
+    heatFlux_gammaEx2[faceI] = - k * (2 * a * faceX + b * faceY);
 }
 
 // Setting BC at gammaEx3
@@ -59,7 +59,7 @@ forAll(heatFlux_gammaEx4, faceI)
 {
     scalar faceY =
         mesh.boundaryMesh()[gammaEx4_ind].faceCentres()[faceI].y();
-    heatFlux_gammaEx4[faceI] = k * (b* faceY);
+    heatFlux_gammaEx4[faceI] = k * (b * faceY);
 }
 
 set_valueFraction();
