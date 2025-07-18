@@ -31,6 +31,9 @@ EXE_LIBS = \
     -lincompressibleTransportModels \
     -lincompressibleTurbulenceModels \
     -lfiniteVolume \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lmeshTools \
     -lfvOptions \
     -lsampling \
