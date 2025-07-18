@@ -214,6 +214,7 @@ void fsiBasic::truthSolve(label folderN, fileName folder)
                #else
                    fomforces.calcForcesMoments();
                 #endif
+
                 // #if defined(OFVERSION) && (OFVERSION > 2106)Do any mesh changes
                 //mesh.controlledUpdate();
                 // The following line remplace the above controlledUpdate() method
