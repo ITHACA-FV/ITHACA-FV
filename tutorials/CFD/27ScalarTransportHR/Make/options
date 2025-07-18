@@ -32,7 +32,7 @@ EXE_INC = -O0 -fdefault-inline -ggdb3 -DFULLDEBUG \
     -I$(TORCH_LIBRARIES)/include/torch/csrc/api/include \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++14
+    -std=c++17
 
 EXE_LIBS = \
     -lturbulenceModels \
