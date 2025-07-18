@@ -359,7 +359,7 @@ PODI(problem->coeffL2,  problem->CylDispl,  NmodesDproj);
                     // NOTE: meshPtr is now empty! Handle accordingly.
                 }
              
-                ListOfpoints.append(mesh.points());
+                ListOfpoints.append(mesh.points().clone());
                 //std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
                 UredFields.append(U.clone());
 		        PredFields.append(p.clone());
