@@ -209,10 +209,10 @@ void fsiBasic::truthSolve(label folderN, fileName folder)
         {
             if (pimple.firstIter() || moveMeshOuterCorrectors)
             {
-               #if defined(OFVERSION) && (OFVERSION > 2106)
+               #if defined(DOPENFOAM) && (DOPENFOAM >= 2106)
                    fomforces.calcForcesMoments();
                #else
-                   fomforces.calcForcesMoments();
+                   fomforces.calcForcesMoment();
                 #endif
 
                 // #if defined(OFVERSION) && (OFVERSION > 2106)Do any mesh changes
