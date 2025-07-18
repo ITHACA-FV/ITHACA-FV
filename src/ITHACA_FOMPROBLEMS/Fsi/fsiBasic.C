@@ -209,9 +209,12 @@ void fsiBasic::truthSolve(label folderN, fileName folder)
         {
             if (pimple.firstIter() || moveMeshOuterCorrectors)
             {
-                fomforces.calcForcesMoment();
-
-                // Do any mesh changes
+               #if defined(OFVERSION) && (OFVERSION > 2106)
+                   fomforces.calcForcesMoments();
+               #else
+                   fomforces.calcForcesMoments();
+                #endif
+                // #if defined(OFVERSION) && (OFVERSION > 2106)Do any mesh changes
                 //mesh.controlledUpdate();
                 // The following line remplace the above controlledUpdate() method
                 sDRBMS().solve();
