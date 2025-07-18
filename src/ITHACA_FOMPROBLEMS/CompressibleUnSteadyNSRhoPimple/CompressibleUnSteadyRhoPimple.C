@@ -216,7 +216,7 @@ surfaceScalarField CompressibleUnSteadyRhoPimple::getPhiHbyA(fvVectorMatrix& Ueq
     HbyA.reset(new volVectorField(constrainHbyA(rAU * Ueqn.H(), U,
                                   p))); // H is the extra diagonal part summed to the r.h.s. of the U equation
     phiHbyA.reset(new surfaceScalarField("phiHbyA",
-                                         fvc::interpolate(rho)*fvc::flux(HbyA)));
+                                         fvc::interpolate(rho)*fvc::flux(HbyA.ref())));
     return phiHbyA;
 }
 
