@@ -11,6 +11,8 @@ ITHACAparallel/ITHACAparallel.C
 ITHACAutilities/ITHACAforces.C
 ITHACAutilities/ITHACAsurfacetools.C
 ITHACAPOD/ITHACAPOD.C
+ITHACAPOD/PODTemplate.C
+ITHACAPOD/PODParameters.C
 ITHACAPOD/incrementalPOD.C
 ITHACADMD/ITHACADMD.C
 Foam2Eigen/Foam2Eigen.C
