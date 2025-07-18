@@ -25,7 +25,7 @@ forcesDict.add("rho", dictCoeffs.getOrDefault<word>("rho", "rho"));
 forcesDict.add("CofR",sDRBM.centreOfRotation());
 
 //Foam::functionObjects::forces romforces("romforces", mesh, forcesDict);
-romforces.calcForcesMoment(); //calcForcesMoments()
+romforces.execute(); //calcForcesMoment(); //calcForcesMoments()
 //romforcex.append(romforces.forceEff().x());
 //romforcey.append(romforces.forceEff().y()); 
 // Solving the sixRigidMotion problem
