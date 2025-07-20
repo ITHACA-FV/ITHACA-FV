@@ -1,3 +1,0 @@
-HR_Burgers.C
-
-EXE = $(FOAM_USER_APPBIN)/HR_Burgers
