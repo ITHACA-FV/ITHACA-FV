@@ -166,6 +166,16 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
 ///
 void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
               List<double> valueList);
+//--------------------------------------------------------------------------
+/// Assign Boundary Condition to a pointVectorField
+///
+/// @param[in]  s       field where you want to assign the BC.
+/// @param[in]  BC_ind  The BC index.
+/// @param[in]  valueList   The value you want to assign (it must be a list of doubles).
+///
+
+void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
+              List<double> valueList);
 
 //--------------------------------------------------------------------------
 /// Assign Boundary Condition to a volVectorField
@@ -175,6 +185,16 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
 /// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
 ///
 void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
+              vector value);
+              
+//--------------------------------------------------------------------------
+/// Assign Boundary Condition to a pointVectorField
+///
+/// @param[in]  s       field where you want to assign the BC.
+/// @param[in]  BC_ind  The BC index.
+/// @param[in]  value   The value you want to assign (it must be an OpenFOAM vector).
+///
+void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
               vector value);
 
 //--------------------------------------------------------------------------
@@ -206,6 +226,16 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
 ///
 void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
               Eigen::MatrixXd valueVec);
+              
+//--------------------------------------------------------------------------
+/// Assign Boundary Condition to a pointVectorField
+///
+/// @param[in]  s       field where you want to assign the BC.
+/// @param[in]  BC_ind  The BC index.
+/// @param[in]  valueVec   The value you want to assign (it must be an Eigen MatrixXd).
+///
+void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
+              Eigen::MatrixXd valueVec); 
 
 //--------------------------------------------------------------------------
 /// Assign Boundary Condition to a volVectorField
@@ -215,6 +245,16 @@ void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
 /// @param[in]  valueList   The value you want to assign (it must be a list of vectors).
 ///
 void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
+              List<vector> valueList);
+              
+//--------------------------------------------------------------------------
+/// Assign Boundary Condition to a pointVectorField
+///
+/// @param[in]  s       field where you want to assign the BC.
+/// @param[in]  BC_ind  The BC index.
+/// @param[in]  valueList   The value you want to assign (it must be a list of doubles).
+///
+void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
               List<vector> valueList);
 
 //--------------------------------------------------------------------------

@@ -1,0 +1,126 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1912                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     rhoPimpleFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.18;
+
+deltaT          2e-5;
+
+writeControl    adjustable;
+
+writeInterval   0.01;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision   8;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    #includeFunc MachNo
+    #includeFunc residuals
+    forces1
+    {
+       type          forces;
+
+       libs          ("libforces.so");
+
+       writeControl  timeStep;
+       timeInterval  1;
+
+       log           yes;
+
+       patches       ("wall");
+       origin (0.25 0 0);
+       coordinateRotation
+        {
+            type            axesRotation;
+            e3              (0 0 1);
+            e1              (1 0 0);
+        }
+
+    }
+    
+    forceCoeffs1
+    {
+        // Mandatory entries
+        type            forceCoeffs;
+        libs            ("libforces.so");
+        patches         (<list of patch names>);
+
+
+        // Optional entries
+
+        // Field names
+        p               p;
+        U               U;
+        rho             rho;
+
+        patches       ("wall");
+        // Reference pressure [Pa]
+        pRef            1e5;
+        
+        rhoInf     1.169;
+
+        // Include porosity effects?
+        porosity        no;
+
+        // Store and write volume field representations of forces and moments
+        writeFields     no;
+
+        // Centre of rotation for moment calculations
+        CofR            (0.25 0 0);
+
+        // Lift direction
+        liftDir         (0 0 1);
+
+        // Drag direction
+        dragDir         (1 0 0);
+
+        // Pitch axis
+        pitchAxis       (0 1 0);
+
+        // Freestream velocity magnitude [m/s]
+        magUInf         260;
+
+        // Reference length [m]
+        lRef            1;
+
+        // Reference area [m2]
+        Aref            0.1;
+
+        
+    }
+
+}
+
+// ************************************************************************* //

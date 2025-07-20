@@ -1,0 +1,71 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      ITHACAdict;
+}
+
+// EigenValue solver, can be eigen or spectra
+EigenSolver eigen;
+
+// Number of modes to output and to use for projection
+NmodesUout 60;
+NmodesUproj 30;
+///
+NmodesPout 60;
+NmodesPproj 20;
+///
+NmodesEout 60;
+NmodesEproj 30;
+///
+NmodesNutOut 60;
+NmodesNutProj 30;
+
+// Output format to save market vectors.
+OutPrecision 20;
+OutType fixed;
+
+// Value to be assigned to x internal field for init cond
+UIFinit 170;
+
+// Number of geometries to be solved
+OffNum 50;
+OnNum 20;
+
+// Maximum coefficient for bump function amplitude
+BumpAmp 0.1;
+
+// Bool to decide if middle solutions are to be exported
+middleExport true;
+
+// Distance between exported middle snapshots
+middleStep 20;
+//middleStepInit 4;
+
+// Specific problem of a stationary case
+tolerance 5e-5;
+maxIter 1000;
+
+// Thresholds to stop the reduced SIMPLE algorithm
+residualJumpLim 1e-10;
+normalizedResidualLim 1e-10;
+
+// Export Reduced Matrices
+exportPython 1;
+exportMatlab 1;
+exportTxt 1;
+
+// Inlet boundary conditions velocities.
+//online_velocities vel.txt;
+
+
+

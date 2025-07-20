@@ -94,6 +94,7 @@ void getModes(
     bool correctBC)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
+    constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value || std::is_same<surfaceMesh, GeoMesh>::value;
     word PODkey = "POD_" + fieldName;
     word PODnorm = para->ITHACAdict->lookupOrDefault<word>(PODkey, "L2");
     M_Assert(PODnorm == "L2" ||
@@ -197,6 +198,15 @@ void getModes(
             {
                 normFact(i, 0) = std::sqrt((modesEig.col(i).transpose() * V.asDiagonal() *
                                             modesEig.col(i))(0, 0));
+                if constexpr(check_vol){
+                        normFact(i, 0) = std::sqrt((modesEig.col(i).transpose() * V.asDiagonal() *
+                                            modesEig.col(i))(0, 0));
+                }
+
+                else if constexpr(std::is_same<pointMesh, GeoMesh>::value){
+                         normFact(i, 0) = std::sqrt((modesEig.col(i).transpose() * modesEig.col(i))(0, 0));
+                }
+
                 if (Pstream::parRun())
                 {
                     normFact(i, 0) = (modesEig.col(i).transpose() * V.asDiagonal() *
@@ -310,6 +320,10 @@ template void getModes(
 
 template void getModes(
     PtrList<surfaceScalarField>& snapshots, PtrList<surfaceScalarField>& modes,
+    word fieldName, bool podex, bool supex, bool sup, label nmodes,
+    bool correctBC);
+template void getModes(
+    PtrList<pointVectorField>& snapshots, PtrList<pointVectorField>& modes,
     word fieldName, bool podex, bool supex, bool sup, label nmodes,
     bool correctBC);
 

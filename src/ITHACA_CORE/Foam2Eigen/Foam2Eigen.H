@@ -39,6 +39,8 @@
 
 #include "fvCFD.H"
 #include "IOmanip.H"
+#include "pointMesh.H"
+#include "pointPatchField.H"
 #include "ITHACAassert.H"
 #include "ITHACAutilities.H"
 #include <tuple>
@@ -46,6 +48,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #include <Eigen/Eigen>
+#include <type_traits>
 #pragma GCC diagnostic pop
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,6 +89,20 @@ class Foam2Eigen
         template <class type_foam_matrix, class type_A, class type_B>
         static void fvMatrix2Eigen(fvMatrix<type_foam_matrix> foam_matrix, type_A& A,
                                    type_B& b);
+        /*                          
+        template <typename ScalarType, typename SparseMatType, typename VecType>
+        static void fvMat2Eigen(fvMatrix<ScalarType> foam_matrix,
+                                SparseMatType& A,
+                                VecType& b);*/
+        template<typename SparseMatType, typename VecType>
+        static void fvMat2Eigen(Foam::fvMatrix<scalar> foam_matrix,
+                               SparseMatType& A,
+                               VecType& b);
+
+        template<typename SparseMatType, typename VecType>
+        static void fvMat2Eigen(Foam::fvMatrix<vector> foam_matrix,
+                               SparseMatType& A,
+                               VecType& b);
 
         //----------------------------------------------------------------------
         /// @brief      Convert a ldu OpenFOAM matrix into a Eigen Matrix A
