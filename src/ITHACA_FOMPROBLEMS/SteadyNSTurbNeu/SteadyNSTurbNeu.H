@@ -121,10 +121,16 @@ class SteadyNSTurbNeu: public steadyNS
         Eigen::MatrixXd coeffL2;
 
         /// The matrix of L2 projection coefficients for velocity modes
-        Eigen::MatrixXd coeffL2_vel;
+        Eigen::MatrixXd coeffL2_U;
+
+        /// The matrix of L2 projection coefficients for pressure modes
+        Eigen::MatrixXd coeffL2_P;
 
         /// The matrix of L2 projection coefficients for lifting functions
         Eigen::MatrixXd coeffL2_lift;
+
+        /// The matrix of L2 projection coefficients for velocity modes and lifting functions
+        Eigen::MatrixXd coeffL2_lift_U;
 
         /// The vector of L2 projection coefficients for the eddy viscosity snapshot
         Eigen::VectorXd nutCoeff;

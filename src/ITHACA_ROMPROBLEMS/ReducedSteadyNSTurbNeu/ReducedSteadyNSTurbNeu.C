@@ -109,6 +109,31 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
                        problem->bcGradVelMat[0] * aTmp;
     }
 
+    if (problem->viscCoeff == "L2")
+    {
+    }
+    else if (problem->viscCoeff == "RBF")
+    {
+        if (problem->rbfParams == "params")
+        {            
+        }
+        else if (problem->rbfParams == "vel")
+        {
+            for (int i = 0; i < nphiNut; i++)
+            {
+                // Eigen::MatrixXd coeffL2_tmp = aTmp.topRows(problem->liftfield.size() + problem->NUmodes);
+                Eigen::MatrixXd coeffL2_tmp = aTmp.middleRows(problem->liftfield.size(), problem->NUmodes);
+
+                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+            }
+        }
+        else
+        {
+            FatalError << "Unknown rbfParams type: " << problem->rbfParams << endl;
+            FatalError.exit();
+        }
+    }
+
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
@@ -135,12 +160,6 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
         else if (problem->neumannMethod == "none")
         {
             fvec(i) = m1(i) - cc(0,0) + ee(0,0) - m2(i);
-        }
-        else if (problem->neumannMethod == "test")
-        {
-            neuTerm1 = problem->bc1_B_matrix_sym.row(i) * NeuBC * nu;
-            neuTerm2 = problem->bc2_B_matrix_sym.row(i) * aTmp * nu;
-            fvec(i) = - m1_sym(i) - cc(0,0) + ee(0,0) - m2(i);
         }
     }
 
@@ -225,12 +244,6 @@ void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel, Eigen::VectorXd
     }
     else if (problem->viscCoeff == "RBF")
     {
-        // for (int i = 0; i < nphiNut; i++)
-        // {
-        //     newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-        //     rbfCoeff = newtonObjectPPE.gNut;
-        // }
-
         if (problem->rbfParams == "params")
         {            
             label caseIdx = count_online_solve-1;
@@ -238,17 +251,8 @@ void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel, Eigen::VectorXd
             for (int i = 0; i < nphiNut; i++)
             {                
                 newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
-                rbfCoeff = newtonObjectSUP.gNut;
             }
-        }
-        else
-        {
-            std::cout << "The rbfparameter is: " << vel_now << std::endl;
-            for (int i = 0; i < nphiNut; i++)
-            {
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-                rbfCoeff = newtonObjectSUP.gNut;
-            }
+            rbfCoeff = newtonObjectSUP.gNut;
         }
     }
     else
@@ -277,6 +281,11 @@ void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel, Eigen::VectorXd
     }
 
     count_online_solve += 1;
+
+    if (problem->rbfParams == "vel")
+    {
+        rbfCoeff = newtonObjectSUP.gNut;
+    }
 }
 
 void ReducedSteadyNSTurbNeu::reconstruct(bool exportFields, fileName folder,

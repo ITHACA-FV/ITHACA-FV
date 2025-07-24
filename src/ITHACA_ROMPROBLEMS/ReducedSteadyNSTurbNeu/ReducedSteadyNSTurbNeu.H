@@ -71,7 +71,7 @@ struct newtonSteadyNSTurbNeuSUP: public newton_argument<double>
         int nphiNut;
         int Nphi_p;
         int N_BC;
-        Eigen::VectorXd gNut;
+        mutable Eigen::VectorXd gNut;
         scalar nu;
         Eigen::MatrixXd tauU;
         Eigen::VectorXd bc;

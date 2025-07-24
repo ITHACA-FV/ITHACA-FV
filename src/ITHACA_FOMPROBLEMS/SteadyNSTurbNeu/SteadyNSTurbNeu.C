@@ -1056,15 +1056,29 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
     // Get the coeffs for interpolation (the orthonormal one is used because basis are orthogonal)
     coeffL2 = ITHACAutilities::getCoeffs(nutFields,
                                          nutModes, nNutModes);
+    
+    // Get coefficients for U and p modes
+    coeffL2_U = ITHACAutilities::getCoeffs(Uomfield,
+                                         Umodes, NUmodes);
+    coeffL2_P = ITHACAutilities::getCoeffs(Pfield,
+                                         Pmodes, NPmodes);
+
     if (rbfParams == "vel")
     {
-        coeffL2_vel = ITHACAutilities::getCoeffs(Uomfield, Umodes, NUmodes);
+        // check if the cols of the three matrices: coeffL2, coeffL2_U and coeffL2_lift, are the same,
+        // if not, fatal error
+        if (coeffL2.cols() != coeffL2_U.cols() || coeffL2.cols() != coeffL2_lift.cols())
+        {
+            FatalErrorInFunction
+                << "Non-equal matrix dimensions for coeffL2, coeffL2_U and coeffL2_lift."
+                << abort(FatalError);
+        }
+
         if (bcMethod == "lift")
         {
-            Eigen::MatrixXd coeffL2_tmp (NUmodes + liftfield.size(), coeffL2_vel.cols());
-            coeffL2_tmp.topRows(liftfield.size()) = coeffL2_lift;
-            coeffL2_tmp.bottomRows(NUmodes) = coeffL2_vel;
-            coeffL2_vel = coeffL2_tmp;
+            coeffL2_lift_U.resize(NUmodes + liftfield.size(), coeffL2_U.cols());
+            coeffL2_lift_U.topRows(liftfield.size()) = coeffL2_lift;
+            coeffL2_lift_U.bottomRows(NUmodes) = coeffL2_U;
         }
     }
     if (Pstream::master())
@@ -1073,40 +1087,31 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
         {
             ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
                                        "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "python",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "python",
+                                       "./ITHACAoutput/Matrices/");
         }
         if (para->exportMatlab)
         {
             ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "matlab",
                                        "./ITHACAoutput/Matrices/");
         }
         if (para->exportTxt)
         {
             ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
                                        "./ITHACAoutput/Matrices/");
-        }
-        // Save the coeffs for interpolation
-        ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
-                                      "coeffL2_nut_" + name(nNutModes));
-
-        if (rbfParams == "vel" && para->exportPython)
-        {
-            ITHACAstream::exportMatrix(coeffL2_vel, "coeffL2_vel", "python",
+            ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "eigen",
                                        "./ITHACAoutput/Matrices/");
         }
-        if (rbfParams == "vel" && para->exportMatlab)   
-        {
-            ITHACAstream::exportMatrix(coeffL2_vel, "coeffL2_vel", "matlab",
-                                       "./ITHACAoutput/Matrices/");
-        }
-        if (rbfParams == "vel" && para->exportTxt)
-        {
-            ITHACAstream::exportMatrix(coeffL2_vel, "coeffL2_vel", "eigen",
-                                       "./ITHACAoutput/Matrices/");
-        }
-        // Save the coeffs for interpolation of velocity
-        ITHACAstream::SaveDenseMatrix(coeffL2_vel, "./ITHACAoutput/Matrices/",
-                                      "coeffL2_vel_" + name(NUmodes));
     }
+
     samples.resize(nNutModes);
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
@@ -1124,7 +1129,8 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
             {
                 if (rbfParams == "vel")
                 {
-                    samples[i]->addSample(coeffL2_vel.col(j), coeffL2(i, j));
+                    // samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
+                    samples[i]->addSample(coeffL2_U.col(j), coeffL2(i, j));
                 }
                 else if (rbfParams == "params")
                 {
@@ -1154,7 +1160,7 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
             {
                 if (rbfParams == "vel")
                 {
-                    samples[i]->addSample(coeffL2_vel.col(j), coeffL2(i, j));
+                    samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
                 }
                 else if (rbfParams == "params")
                 {
@@ -1168,7 +1174,7 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
             }
 
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i], rbfType);
-            std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
+            Info << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
             if (Pstream::master())
             {
                 ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,

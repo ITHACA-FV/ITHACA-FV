@@ -108,14 +108,14 @@ class tutorial06 : public SteadyNSTurbNeu
                             mu_now[j] = mu(i, j);
                         }
                         
-                        vectorField Uinl(_mesh().boundary()[BCind].size());
+                        vectorField Uinl(_mesh().boundary()[BCind].size(), Foam::zero());
                         for(label idx = 0; idx < liftfield.size(); idx++)
                         {
                             Uinl += mu(i, idx + 1)*liftDir[idx];
                         }
                         ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                        vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                        vectorField Uout(_mesh().boundary()[BCoutInd].size(), Foam::zero());
                         for(label idx = 0; idx < neuLiftField.size(); idx++)
                         {
                             Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
@@ -125,7 +125,7 @@ class tutorial06 : public SteadyNSTurbNeu
                         change_viscosity(mu(i, 0));
                         counter = Ufield.size() + 1;
                         std::cout << "The paras of Offline case No. " << counter 
-                                << " is changed to " << mu.row(i) << endl;
+                                << " is changed to " << mu.row(i) << nl;
 
                         truthSolve("./ITHACAoutput/Offline/");
                         restart();
@@ -141,14 +141,14 @@ class tutorial06 : public SteadyNSTurbNeu
                         mu_now[j] = mu(i, j);
                     }
                     
-                    vectorField Uinl(_mesh().boundary()[BCind].size());
+                    vectorField Uinl(_mesh().boundary()[BCind].size(), Foam::zero());
                     for(label idx = 0; idx < liftfield.size(); idx++)
                     {
                         Uinl += mu(i, idx + 1)*liftDir[idx];
                     }
                     ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                    vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                    vectorField Uout(_mesh().boundary()[BCoutInd].size(), Foam::zero());
                     for(label idx = 0; idx < neuLiftField.size(); idx++)
                     {
                         Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
@@ -157,7 +157,7 @@ class tutorial06 : public SteadyNSTurbNeu
 
                     change_viscosity(mu(i, 0));
                     std::cout << "The paras of Offline case No. " << counter 
-                            << " is changed to " << mu.row(i) << endl;
+                            << " is changed to " << mu.row(i) << nl;
 
                     truthSolve("./ITHACAoutput/Offline/");
                     restart();
@@ -191,15 +191,15 @@ class tutorial06 : public SteadyNSTurbNeu
                 {
                     mu_now[j] = mu(i, j);
                 }
-                
-                vectorField Uinl(_mesh().boundary()[BCind].size());
+
+                vectorField Uinl(_mesh().boundary()[BCind].size(), Foam::zero());
                 for(label idx = 0; idx < liftfield.size(); idx++)
                 {
                     Uinl += mu(i, idx + 1)*liftDir[idx];
                 }
                 ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                vectorField Uout(_mesh().boundary()[BCoutInd].size(), Foam::zero());
                 for(label idx = 0; idx < neuLiftField.size(); idx++)
                 {
                     Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
@@ -208,7 +208,7 @@ class tutorial06 : public SteadyNSTurbNeu
 
                 change_viscosity(mu(i, 0));
                 std::cout << "The paras of Offline case No. " << counter 
-                        << " is changed to " << mu.row(i) << endl;
+                        << " is changed to " << mu.row(i) << nl;
 
                 truthSolve(folder);
                 restart();
@@ -256,15 +256,15 @@ class tutorial06 : public SteadyNSTurbNeu
                         {
                             mu_now[j] = mu(i, j);
                         }
-                        
-                        vectorField Uinl(_mesh().boundary()[BCind].size());
+
+                        vectorField Uinl(_mesh().boundary()[BCind].size(), Foam::zero());
                         for(label idx = 0; idx < liftfield.size(); idx++)
                         {
                             Uinl += mu(i, idx + 1)*liftDir[idx];
                         }
                         ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                        vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                        vectorField Uout(_mesh().boundary()[BCoutInd].size(), Foam::zero());
                         for(label idx = 0; idx < neuLiftField.size(); idx++)
                         {
                             Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
@@ -274,7 +274,7 @@ class tutorial06 : public SteadyNSTurbNeu
                         change_viscosity(mu(i, 0));
                         counter = Ufield.size() + 1;
                         std::cout << "The paras of Offline case No. " << counter 
-                                << " is changed to " << mu.row(i) << endl;
+                                << " is changed to " << mu.row(i) << nl;
 
                         truthSolve(folder);
                         restart();
@@ -289,15 +289,15 @@ class tutorial06 : public SteadyNSTurbNeu
                     {
                         mu_now[j] = mu(i, j);
                     }
-                    
-                    vectorField Uinl(_mesh().boundary()[BCind].size());
+
+                    vectorField Uinl(_mesh().boundary()[BCind].size(), Foam::zero());
                     for(label idx = 0; idx < liftfield.size(); idx++)
                     {
                         Uinl += mu(i, idx + 1)*liftDir[idx];
                     }
                     ITHACAutilities::assignBC(_U(), BCind, Uinl);
 
-                    vectorField Uout(_mesh().boundary()[BCoutInd].size());
+                    vectorField Uout(_mesh().boundary()[BCoutInd].size(), Foam::zero());
                     for(label idx = 0; idx < neuLiftField.size(); idx++)
                     {
                         Uout += mu(i, idx + liftfield.size() + 1)*liftNeu[idx];
@@ -306,7 +306,7 @@ class tutorial06 : public SteadyNSTurbNeu
 
                     change_viscosity(mu(i, 0));
                     std::cout << "The paras of Offline case No. " << counter 
-                            << " is changed to " << mu.row(i) << endl;
+                            << " is changed to " << mu.row(i) << nl;
 
                     truthSolve(folder);
                     restart();
@@ -438,20 +438,6 @@ int main(int argc, char* argv[])
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("POD");
 
-    // Get coefficients for U, p and nut modes
-    Eigen::MatrixXd coeffL2_U = ITHACAutilities::getCoeffs(example.Uomfield,
-                                         example.Umodes, NmodesU);
-    Eigen::MatrixXd coeffL2_P = ITHACAutilities::getCoeffs(example.Pfield,
-                                         example.Pmodes, NmodesP);
-    ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "eigen",
-                    "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "eigen",
-                    "./ITHACAoutput/Matrices/");
-
-    example.Ufield.clear();
-    example.Phifield.clear();
-    example.Uomfield.clear();
-
     // Solve the supremizer problem based on the pressure modes
     if (supremizerConsistent)
     {
@@ -464,7 +450,6 @@ int main(int argc, char* argv[])
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("SolveSupremizer");
 
-    example.Pfield.clear();
 
     example.NeumannFields.resize(NeuNum);
     forAll (example.NeumannFields, i)
@@ -479,6 +464,11 @@ int main(int argc, char* argv[])
                            NmodesNUT);
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("Project");
+
+    example.Ufield.clear();
+    example.Pfield.clear();
+    example.Phifield.clear();
+    example.Uomfield.clear();
 
     // Create an object of the turbulent class
     ReducedSteadyNSTurbNeu pod_rbf(
