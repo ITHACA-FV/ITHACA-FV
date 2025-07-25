@@ -1,10 +1,10 @@
-FROM  opencfd/openfoam2106-dev
-LABEL maintainer="moaadkhamlich@gmail.com"
+FROM  ithacafv/openfoam2506-muq2-pytorch
+LABEL maintainer="giovannistabile@santannapisa.it"
 
 
 # add enviromental variables and enable the default user
 ARG USER=ithacafv
-ARG of_var="source /usr/lib/openfoam/openfoam2106/etc/bashrc"
+ARG of_var="source /usr/lib/openfoam/openfoam2506/etc/bashrc"
 ARG ithaca_var="source /usr/lib/ITHACA-FV/etc/bashrc"
 ENV USER $USER
 
@@ -33,18 +33,18 @@ RUN apt-get update &&\
         sudo rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/lib
-RUN git clone https://github.com/mathLab/ITHACA-FV.git
+RUN git clone https://github.com/ithacafv/ITHACA-FV.git
 RUN chown -R $USER:$USER openfoam ITHACA-FV
 RUN chown -R $USER:$USER /home/$USER
 USER $USER
 
-RUN /bin/bash -c "source /usr/lib/openfoam/openfoam2106/etc/bashrc && \
+RUN /bin/bash -c "source /usr/lib/openfoam/openfoam2506/etc/bashrc && \
     cd ITHACA-FV && git submodule update --init && source /etc/bash.bashrc && \
-    ./Allwmake -tau -j 4";
+    ./Allwmake -taumq -j 4";
 
 USER root
-RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2106/platforms/linux64GccDPInt32Opt/bin/* /bin/
-RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2106/platforms/linux64GccDPInt32Opt/lib/* /lib/
+RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2506/platforms/linux64GccDPInt32Opt/bin/* /bin/
+RUN 	cp -r /home/ithacafv/OpenFOAM/ithacafv-v2506/platforms/linux64GccDPInt32Opt/lib/* /lib/
 
 #Update bashrc 
 RUN  echo $of_var >> /etc/bash.bashrc
