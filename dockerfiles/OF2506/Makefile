@@ -3,7 +3,7 @@ clean:
 	rm -f hello
 
 build:
-	docker build --build-arg myuser=$(shell whoami) --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t ithacafv/openfoam2506-muq2-pytorch -f ./Dockerfile .
+	docker build -t ithacafv/openfoam2506-muq2-pytorch -f ./Dockerfile .
 
 run: build
 	xhost +"local:docker" && \

@@ -23,9 +23,9 @@ unzip libtorch-cxx11-abi-shared-with-deps-2.7.1+cpu.zip && \
 rm libtorch-cxx11-abi-shared-with-deps-2.7.1+cpu.zip && \
 conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
 conda tos accept --override-channels --channel  https://repo.anaconda.com/pkgs/r && \
-conda install -y -c conda-forge muq cmake && \
+conda install -y -c conda-forge muq cmake pybind11 && \
 conda clean -y --all
 ENV TORCH_LIBRARIES=/libtorch
 ENV MUQ_LIBRARIES=/root/miniconda3
-RUN echo 'source /usr/lib/openfoam/openfoam2412/etc/bashrc' >> ~/.bashrc 
+RUN echo 'source /usr/lib/openfoam/openfoam2506/etc/bashrc' >> ~/.bashrc 
 
