@@ -121,8 +121,16 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
         {
             for (int i = 0; i < nphiNut; i++)
             {
-                // Eigen::MatrixXd coeffL2_tmp = aTmp.topRows(problem->liftfield.size() + problem->NUmodes);
                 Eigen::MatrixXd coeffL2_tmp = aTmp.middleRows(problem->liftfield.size(), problem->NUmodes);
+
+                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+            }
+        }
+        else if (problem->rbfParams == "velLift")
+        {
+            for (int i = 0; i < nphiNut; i++)
+            {
+                Eigen::MatrixXd coeffL2_tmp = aTmp.topRows(problem->liftfield.size() + problem->NUmodes);
 
                 gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
             }
@@ -282,7 +290,7 @@ void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel, Eigen::VectorXd
 
     count_online_solve += 1;
 
-    if (problem->rbfParams == "vel")
+    if (problem->rbfParams == "vel" || problem->rbfParams == "velLift")
     {
         rbfCoeff = newtonObjectSUP.gNut;
     }

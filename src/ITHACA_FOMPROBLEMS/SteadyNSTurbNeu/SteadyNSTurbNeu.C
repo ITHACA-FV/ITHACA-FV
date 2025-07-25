@@ -87,8 +87,8 @@ SteadyNSTurbNeu::SteadyNSTurbNeu(int argc, char* argv[])
              "The BC method must be set to lift or penalty in ITHACAdict");
     viscCoeff = ITHACAdict->lookupOrDefault<word>("viscCoeff", "RBF");
     rbfParams = ITHACAdict->lookupOrDefault<word>("rbfParams", "vel");
-    M_Assert(rbfParams == "vel" || rbfParams == "params",
-             "The rbfParams must be set to vel or params in ITHACAdict");
+    M_Assert(rbfParams == "vel" || rbfParams == "velLift" || rbfParams == "params",
+             "The rbfParams must be set to vel or velLift or params in ITHACAdict");
     rbfKernel = ITHACAdict->lookupOrDefault<word>("rbfKernel", "linear");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
@@ -1063,7 +1063,7 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
     coeffL2_P = ITHACAutilities::getCoeffs(Pfield,
                                          Pmodes, NPmodes);
 
-    if (rbfParams == "vel")
+    if (rbfParams == "velLift")
     {
         // check if the cols of the three matrices: coeffL2, coeffL2_U and coeffL2_lift, are the same,
         // if not, fatal error
@@ -1079,6 +1079,12 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
             coeffL2_lift_U.resize(NUmodes + liftfield.size(), coeffL2_U.cols());
             coeffL2_lift_U.topRows(liftfield.size()) = coeffL2_lift;
             coeffL2_lift_U.bottomRows(NUmodes) = coeffL2_U;
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "The bcMethod is not set to 'lift', but coeffL2_lift_U is being used."
+                << abort(FatalError);
         }
     }
     if (Pstream::master())
@@ -1129,8 +1135,11 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
             {
                 if (rbfParams == "vel")
                 {
-                    // samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
                     samples[i]->addSample(coeffL2_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "velLift")
+                {
+                    samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
                 }
                 else if (rbfParams == "params")
                 {
@@ -1159,6 +1168,10 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
             for (label j = 0; j < coeffL2.cols(); j++)
             {
                 if (rbfParams == "vel")
+                {
+                    samples[i]->addSample(coeffL2_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "velLift")
                 {
                     samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
                 }
