@@ -154,12 +154,11 @@ void getModes(
 
         if (para->eigensolver == "spectra")
         {
-            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double >>
-            es(& op, nmodes, ncv);
+            Spectra::SymEigsSolver<Spectra::DenseSymMatProd<double>> es(op, nmodes, ncv);
             std::cout << "Using Spectra EigenSolver " << std::endl;
             es.init();
-            es.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
-            M_Assert(es.info() == Spectra::SUCCESSFUL,
+            es.compute(Spectra::SortRule::LargestAlge);
+            M_Assert(es.info() == Spectra::CompInfo::Successful,
                      "The Eigenvalue Decomposition did not succeed");
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
@@ -458,12 +457,11 @@ void getModesMemoryEfficient(
             // Use Spectra solver for large eigenvalue problems
             std::cout << "Using Spectra EigenSolver " << std::endl;
             Spectra::DenseSymMatProd<double> op(_corMatrix);
-            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE,
-                    Spectra::DenseSymMatProd<double >>
-                    solver(&op, nmodes, nSnaps);
+            Spectra::SymEigsSolver<Spectra::DenseSymMatProd<double >>
+                    solver(op, nmodes, nSnaps);
             solver.init();
-            solver.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
-            M_Assert(solver.info() == Spectra::SUCCESSFUL,
+            solver.compute(Spectra::SortRule::LargestAlge);
+            M_Assert(solver.info() == Spectra::CompInfo::Successful,
                      "Eigenvalue decomposition failed");
             eigenVectors = solver.eigenvectors().real();
             eigenValues = solver.eigenvalues().real();
@@ -716,14 +714,14 @@ void getWeightedModes(
         label ncv = snapshots.size();
         Spectra::DenseSymMatProd<double> op(_corMatrix);
         Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> esEg;
-        Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double >>
-        es(& op, nmodes, ncv);
+        Spectra::SymEigsSolver<Spectra::DenseSymMatProd<double >>
+        es(op, nmodes, ncv);
         if (para->eigensolver == "spectra")
         {
             std::cout << "Using Spectra EigenSolver " << std::endl;
             es.init();
-            es.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
-            M_Assert(es.info() == Spectra::SUCCESSFUL,
+            es.compute(Spectra::SortRule::LargestAlge);
+            M_Assert(es.info() == Spectra::CompInfo::Successful,
                      "The Eigenvalue Decomposition did not succeed");
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
@@ -1176,14 +1174,14 @@ DEIMmodes(List<Eigen::SparseMatrix<double >> & A,
         Info << "####### Performing the POD for the Matrix List #######" << endl;
         Spectra::DenseSymMatProd<double> opA(corMatrixA);
         Spectra::DenseSymMatProd<double> opB(corMatrixB);
-        Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra:: DenseSymMatProd<double >>
-        esA(& opA, nmodesA, nmodesA + 10);
-        Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra:: DenseSymMatProd<double
+        Spectra::SymEigsSolver<Spectra:: DenseSymMatProd<double >>
+        esA(opA, nmodesA, nmodesA + 10);
+        Spectra::SymEigsSolver<Spectra:: DenseSymMatProd<double
                 >>
-                esB(& opB, nmodesB, nmodesB + 10);
+                esB(opB, nmodesB, nmodesB + 10);
         esA.init();
         esB.init();
-        esA.compute();
+        esA.compute(Spectra::SortRule::LargestAlge);
 
         if (nmodesB != 1)
         {
@@ -1195,12 +1193,12 @@ DEIMmodes(List<Eigen::SparseMatrix<double >> & A,
         Eigen::VectorXd eigenValueseigB;
         Eigen::MatrixXd eigenVectorseigB;
 
-        if (esA.info() == Spectra::SUCCESSFUL)
+        if (esA.info() == Spectra::CompInfo::Successful)
         {
             eigenValueseigA = esA.eigenvalues().real();
             eigenVectorseigA = esA.eigenvectors().real();
 
-            if (esB.info() == Spectra::SUCCESSFUL && nmodesB != 1)
+            if (esB.info() == Spectra::CompInfo::Successful && nmodesB != 1)
             {
                 eigenValueseigB = esB.eigenvalues().real();
                 eigenVectorseigB = esB.eigenvectors().real();
@@ -1410,12 +1408,12 @@ void getModes(
 
         if (para->eigensolver == "spectra")
         {
-            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double >>
-            es(& op, nmodes, ncv);
+            Spectra::SymEigsSolver< Spectra::DenseSymMatProd<double >>
+            es(op, nmodes, ncv);
             std::cout << "Using Spectra EigenSolver " << std::endl;
             es.init();
-            es.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
-            M_Assert(es.info() == Spectra::SUCCESSFUL,
+            es.compute(Spectra::SortRule::LargestAlge);
+            M_Assert(es.info() == Spectra::CompInfo::Successful,
                      "The Eigenvalue Decomposition did not succeed");
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
@@ -1534,21 +1532,21 @@ DEIMmodes(PtrList<type_matrix> & MatrixList, label nmodesA, label nmodesB,
             Spectra::DenseSymMatProd<double> opB(corMatrixB);
             label ncvA = MatrixList.size();
             label ncvB = MatrixList.size();
-            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra:: DenseSymMatProd<double >>
-            esA(& opA, nmodesA, ncvA);
-            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra:: DenseSymMatProd<double
+            Spectra::SymEigsSolver<Spectra:: DenseSymMatProd<double >>
+            esA(opA, nmodesA, ncvA);
+            Spectra::SymEigsSolver<Spectra:: DenseSymMatProd<double
                     >>
-                    esB(& opB, nmodesB, ncvB);
+                    esB(opB, nmodesB, ncvB);
             esA.init();
             esB.init();
-            esA.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
-            M_Assert(esA.info() == Spectra::SUCCESSFUL,
+            esA.compute(Spectra::SortRule::LargestAlge);
+            M_Assert(esA.info() == Spectra::CompInfo::Successful,
                      "The Eigenvalue Decomposition did not succeed");
 
             if (nmodesB != 1)
             {
-                esB.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
-                M_Assert(esB.info() == Spectra::SUCCESSFUL,
+                esB.compute(Spectra::SortRule::LargestAlge);
+                M_Assert(esB.info() == Spectra::CompInfo::Successful,
                          "The Eigenvalue Decomposition did not succeed");
             }
             Info << "####### End of the POD decomposition for the Matrix List #######" <<
@@ -1741,12 +1739,12 @@ PtrList<GeometricField<Type, PatchField, GeoMesh >> DEIMmodes(
 
         if (para->eigensolver == "spectra")
         {
-            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double >>
-            es(& op, nmodes, ncv);
+            Spectra::SymEigsSolver< Spectra::DenseSymMatProd<double >>
+            es(op, nmodes, ncv);
             std::cout << "Using Spectra EigenSolver " << std::endl;
             es.init();
-            es.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
-            M_Assert(es.info() == Spectra::SUCCESSFUL,
+            es.compute(Spectra::SortRule::LargestAlge);
+            M_Assert(es.info() == Spectra::CompInfo::Successful,
                      "The Eigenvalue Decomposition did not succeed");
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
@@ -1924,12 +1922,12 @@ void getModes(
 
         if (para->eigensolver == "spectra")
         {
-            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double >>
-            es(& op, nmodes, ncv);
+            Spectra::SymEigsSolver<Spectra::DenseSymMatProd<double >>
+            es(op, nmodes, ncv);
             std::cout << "Using Spectra EigenSolver " << std::endl;
             es.init();
-            es.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
-            M_Assert(es.info() == Spectra::SUCCESSFUL,
+            es.compute(Spectra::SortRule::LargestAlge);
+            M_Assert(es.info() == Spectra::CompInfo::Successful,
                      "The Eigenvalue Decomposition did not succeed");
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();
