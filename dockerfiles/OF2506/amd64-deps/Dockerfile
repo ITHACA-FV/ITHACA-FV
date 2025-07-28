@@ -27,4 +27,4 @@ conda install -y -c conda-forge muq cmake pybind11 && \
 conda clean -y --all
 ENV TORCH_LIBRARIES=/libtorch
 ENV MUQ_LIBRARIES=/root/miniconda3
-RUN echo 'source /usr/lib/openfoam/openfoam2412/etc/bashrc' >> ~/.bashrc
+RUN echo 'source /usr/lib/openfoam/openfoam2506/etc/bashrc' >> ~/.bashrc

@@ -18,9 +18,6 @@ bash Miniconda3-latest-Linux-aarch64.sh -b && \
 rm Miniconda3-latest-Linux-aarch64.sh && \
 . /root/miniconda3/etc/profile.d/conda.sh && \
 export PATH=/root/miniconda3/bin:$PATH && \
-wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.7.1%2Bcpu.zip && \
-unzip libtorch-cxx11-abi-shared-with-deps-2.7.1+cpu.zip && \
-rm libtorch-cxx11-abi-shared-with-deps-2.7.1+cpu.zip && \
 conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
 conda tos accept --override-channels --channel  https://repo.anaconda.com/pkgs/r && \
 conda install -y -c conda-forge cmake pybind11 eigen hdf5 nlopt && \
@@ -30,7 +27,6 @@ cmake -DCMAKE_INSTALL_PREFIX=/root/miniconda3 -DMUQ_USE_PYTHON=ON .. && \
 make -j4 && make install && \
 cd / && rm -rf /tmp/muq2 && \
 conda clean -y --all
-ENV TORCH_LIBRARIES=/libtorch
 ENV MUQ_LIBRARIES=/root/miniconda3
-RUN echo 'source /usr/lib/openfoam/openfoam2412/etc/bashrc' >> ~/.bashrc
+RUN echo 'source /usr/lib/openfoam/openfoam2506/etc/bashrc' >> ~/.bashrc
 
