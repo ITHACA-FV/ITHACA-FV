@@ -1,5 +1,5 @@
 # Start from the ubuntu Openfoam 2106 image
-FROM opencfd/openfoam-dev:2505
+FROM opencfd/openfoam-dev:2506
 USER root
 ARG PYTHON_VERSION=3.7
 ENV PATH="/root/miniconda3/bin:${PATH}"
