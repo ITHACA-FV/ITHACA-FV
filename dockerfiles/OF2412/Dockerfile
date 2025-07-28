@@ -3,7 +3,7 @@
 ARG TARGETARCH
 FROM ithacafv/openfoam2412-muq2-pytorch:${TARGETARCH} AS base
 
-LABEL maintainer="moaadkhamlich@gmail.com"
+LABEL maintainer="giovannistabile@santannapisa.it"
 
 USER root
 
