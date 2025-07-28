@@ -1,0 +1,12 @@
+var searchData=
+[
+  ['k_0',['k',['../classinverseLaplacianProblem.html#aef022bbc564e31ee166b976cc2d32b25',1,'inverseLaplacianProblem::k'],['../classEnKF__1DinverseHeatTransfer.html#a63bef2300b33005604ae6c550dbbad78',1,'EnKF_1DinverseHeatTransfer::k']]],
+  ['k0_1',['K0',['../msrProblem_2readConstants__N_8H.html#ad5e5725777ecddb48ac6aafe29bbae28',1,'K0(Keff):&#160;readConstants_N.H'],['../unsteadymsrProblem_2readConstants__N_8H.html#ad5e5725777ecddb48ac6aafe29bbae28',1,'K0(Keff):&#160;readConstants_N.H']]],
+  ['k_5fmatrix_2',['K_matrix',['../classmsrProblem.html#a366b070b6af7cffc956d470477fd8e82',1,'msrProblem::K_matrix'],['../classsteadyNS.html#aaae9f3b0ebcad6bb0ee9938e7743dd70',1,'steadyNS::K_matrix'],['../classreducedUnsteadyNST.html#a39b1b6cacd2734cd0c54f32690f30035',1,'reducedUnsteadyNST::K_matrix']]],
+  ['keff_3',['Keff',['../classreducedMSR.html#a0503153b2b021ecf651a607af5aa85f3',1,'reducedMSR::Keff'],['../structnewton__usmsr__n.html#af4e33c0f40897ac901b90f33a56d8276',1,'newton_usmsr_n::Keff'],['../structnewton__usmsr__t.html#a07ee000863aa663b0253b7a539b313ba',1,'newton_usmsr_t::Keff'],['../msrProblem_2readConstants__N_8H.html#a4b5c1c341d0cec56985f10ec54c39a38',1,'Keff:&#160;readConstants_N.H'],['../msrProblem_2updateK_8H.html#ac6163e51308be4e1ed45bea10f4c271a',1,'Keff:&#160;updateK.H'],['../unsteadymsrProblem_2readConstants__N_8H.html#a4b5c1c341d0cec56985f10ec54c39a38',1,'Keff:&#160;readConstants_N.H'],['../unsteadymsrProblem_2updateK_8H.html#ac6163e51308be4e1ed45bea10f4c271a',1,'Keff:&#160;updateK.H']]],
+  ['kf_5fmatrix_4',['KF_matrix',['../classsteadyNS.html#aa87fb1346ed463a47239b0bd43c43fa9',1,'steadyNS']]],
+  ['kmatrix_5',['kMatrix',['../classSteadyNSTurbIntrusive.html#a70ef6268a5703d31da824aa59e92b448',1,'SteadyNSTurbIntrusive::kMatrix'],['../classUnsteadyNSTurbIntrusive.html#a1288c039b096f623d8d278a984af5a71',1,'UnsteadyNSTurbIntrusive::kMatrix']]],
+  ['knots_2ec_6',['knots.C',['../knots_8C.html',1,'']]],
+  ['kroneckerproductmatrices_7',['kroneckerProductMatrices',['../namespaceSPLINTER.html#a990dff9d6b3bc0d21d3a604563d01ff9',1,'SPLINTER']]],
+  ['kroneckerproductvectors_8',['kroneckerProductVectors',['../namespaceSPLINTER.html#afa8170929efea2b69345dd65adb7e39c',1,'SPLINTER::kroneckerProductVectors(const std::vector&lt; SparseVector &gt; &amp;vectors)'],['../namespaceSPLINTER.html#a43e72ad5caa029ac9f566f765a7f9951',1,'SPLINTER::kroneckerProductVectors(const std::vector&lt; DenseVector &gt; &amp;vectors)']]]
+];
