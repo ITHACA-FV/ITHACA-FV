@@ -88,13 +88,13 @@ These images are based **OpenFOAM-v2106**, and provided an isolated environment,
 In order to pull the image, run the following command:
 
 ```
-docker pull ithacafv/ithacafv:manifest-latest
+docker pull ithacafv/ithacafv:latest
 ```
 
 Once the image is downloaded, you can start the container and mount the $HOME directory by executing:
 
 ```
-docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manifest-latest
+docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:latest
 ```
 
 ### 4. Singularity
@@ -114,7 +114,7 @@ export SINGULARITY_CACHEDIR=$HOME/mycontainter
 Buidling singularity image file `.sif` from the docker image, which is build and stored in `$HOME/mycontainter`, The below image used is based **OpenFOAM-v2106**, and where you can find a compiled version of the master branch of **ITHACA-FV**.
 
 ```
-singularity build ithacafv.sif docker://ithacafv/ithacafv:manifest-latest
+singularity build ithacafv.sif docker://ithacafv/ithacafv:latest
 ```
 
 To view / list all the images/cache, 
