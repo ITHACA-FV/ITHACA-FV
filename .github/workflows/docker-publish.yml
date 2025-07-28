@@ -1,12 +1,13 @@
 name: Build and Push Multi-Arch Docker Images
 
 on:
-  push:
-    branches: [ "Docker" ]
+  release:
+    types: [published]
+  workflow_dispatch:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: ithacafv/ithaca-fv
+  IMAGE_NAME: ithacafv/ithacafv
 
 jobs:
   build-amd64:
@@ -36,11 +37,8 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
-          type=ref,event=branch
-          type=ref,event=pr
           type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
-          type=raw,value=latest,enable={{is_default_branch}}
+          type=raw,value=latest
 
     - name: Build and push AMD64 image
       id: build
@@ -48,12 +46,10 @@ jobs:
       with:
         context: ./dockerfiles/OF2412
         platforms: linux/amd64
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=${{ github.event_name != 'pull_request' }}
+        outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
 
   build-arm64:
     runs-on: ubuntu-24.04-arm
@@ -82,11 +78,8 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
-          type=ref,event=branch
-          type=ref,event=pr
           type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
-          type=raw,value=latest,enable={{is_default_branch}}
+          type=raw,value=latest
 
     - name: Build and push ARM64 image
       id: build
@@ -94,12 +87,10 @@ jobs:
       with:
         context: ./dockerfiles/OF2412
         platforms: linux/arm64
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=${{ github.event_name != 'pull_request' }}
+        outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
 
   merge:
     runs-on: ubuntu-latest
@@ -123,11 +114,8 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
-          type=ref,event=branch
-          type=ref,event=pr
           type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
-          type=raw,value=latest,enable={{is_default_branch}}
+          type=raw,value=latest
 
     - name: Create and push manifest list
       working-directory: /tmp
@@ -136,4 +124,4 @@ jobs:
           ${{ needs.build-amd64.outputs.digest }} \
           ${{ needs.build-arm64.outputs.digest }}
       env:
-        DOCKER_METADATA_OUTPUT_JSON: ${{ needs.build-amd64.outputs.metadata }}
+        DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json }}
