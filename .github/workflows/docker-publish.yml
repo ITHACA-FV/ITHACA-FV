@@ -44,7 +44,8 @@ jobs:
       id: build
       uses: docker/build-push-action@v5
       with:
-        context: ./dockerfiles/OF2412
+        context: ./dockerfiles
+        file: ./dockerfiles/Dockerfile
         platforms: linux/amd64
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
@@ -85,7 +86,8 @@ jobs:
       id: build
       uses: docker/build-push-action@v5
       with:
-        context: ./dockerfiles/OF2412
+        context: ./dockerfiles
+        file: ./dockerfiles/Dockerfile
         platforms: linux/arm64
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
