@@ -27,4 +27,15 @@ conda install -y -c conda-forge muq cmake pybind11 && \
 conda clean -y --all
 ENV TORCH_LIBRARIES=/libtorch
 ENV MUQ_LIBRARIES=/root/miniconda3
+
+# Export OpenFOAM environment variables for use in subsequent builds
+RUN /bin/bash -c "source /usr/lib/openfoam/openfoam2412/etc/bashrc && \
+    echo 'export FOAM_ETC=${FOAM_ETC}' >> /etc/environment && \
+    echo 'export FOAM_APP=${FOAM_APP}' >> /etc/environment && \
+    echo 'export FOAM_APPBIN=${FOAM_APPBIN}' >> /etc/environment && \
+    echo 'export FOAM_LIBBIN=${FOAM_LIBBIN}' >> /etc/environment && \
+    echo 'export FOAM_SRC=${FOAM_SRC}' >> /etc/environment && \
+    echo 'export WM_PROJECT_DIR=${WM_PROJECT_DIR}' >> /etc/environment"
+
+ENV FOAM_ETC=/usr/lib/openfoam/openfoam2412/etc
 RUN echo 'source /usr/lib/openfoam/openfoam2412/etc/bashrc' >> ~/.bashrc

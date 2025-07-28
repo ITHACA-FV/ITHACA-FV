@@ -41,7 +41,7 @@ RUN git clone https://github.com/mathLab/ITHACA-FV.git && \
     chown -R $USER:$USER /home/$USER
 
 # Environment variables for bashrc
-ARG of_var="source /usr/lib/openfoam/openfoam2412/etc/bashrc"
+ARG of_var="source \$FOAM_ETC/bashrc"
 ARG ithaca_var="source /opt/ITHACA-FV/etc/bashrc"
 
 # Update bashrc with OpenFOAM and ITHACA-FV sources
@@ -52,22 +52,26 @@ RUN echo $of_var >> /etc/bash.bashrc && \
 USER $USER
 
 # Build ITHACA-FV with architecture-specific flags
-RUN /bin/bash -c "source /usr/lib/openfoam/openfoam2412/etc/bashrc && \
+RUN /bin/bash -c "source \$FOAM_ETC/bashrc  && \
     cd ITHACA-FV && \
     git submodule update --init && \
     source etc/bashrc && \
     if [ \"$TARGETARCH\" = \"amd64\" ]; then \
         ./Allwmake -taumq -j 4; \
     else \
-        ./Allwmake -tau -j 4; \
+        ./Allwmake -au -j 4; \
     fi"
 
 # Copy binaries and libraries to system paths (as root)
 USER root
-RUN if [ -d "/home/$USER/OpenFOAM/$USER-openfoam2412/platforms/linux64GccDPInt32Opt/bin" ]; then \
-        cp -r /home/$USER/OpenFOAM/$USER-openfoam2412/platforms/linux64GccDPInt32Opt/bin/* /usr/local/bin/ || true; \
-        cp -r /home/$USER/OpenFOAM/$USER-openfoam2412/platforms/linux64GccDPInt32Opt/lib/* /usr/local/lib/ || true; \
-    fi
+RUN for openfoam_dir in /home/$USER/OpenFOAM/$USER-openfoam*/platforms/*/; do \
+        if [ -d "$openfoam_dir/bin" ]; then \
+            cp -r "$openfoam_dir/bin"/* /usr/local/bin/ 2>/dev/null || true; \
+        fi; \
+        if [ -d "$openfoam_dir/lib" ]; then \
+            cp -r "$openfoam_dir/lib"/* /usr/local/lib/ 2>/dev/null || true; \
+        fi; \
+    done
 
 # Final setup
 USER $USER
