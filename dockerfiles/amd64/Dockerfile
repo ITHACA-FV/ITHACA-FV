@@ -6,15 +6,14 @@ LABEL maintainer="giovannistabile@santannapisa.it"
 ARG USER=ithacafv
 ARG of_var="source /usr/lib/openfoam/openfoam2506/etc/bashrc"
 ARG ithaca_var="source /usr/lib/ITHACA-FV/etc/bashrc"
-ENV USER $USER
+ENV USER=$USER
 
 # Create the user
 RUN adduser --disabled-password --gecos '' $USER && \
     adduser $USER sudo; echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
     usermod -a -G $USER $USER && \
-    userdel sudofoam && \
-    usermod -u 1000 ithacafv  && \
-    groupmod -g 1000 ithacafv
+    usermod -u 9999 ithacafv  && \
+    groupmod -g 9999 ithacafv
 #make sure everything is in place
 ENV HOME /home/$USER
 RUN chown -R $USER:$USER /home/$USER
@@ -33,7 +32,7 @@ RUN apt-get update &&\
         sudo rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/lib
-RUN git clone https://github.com/ithacafv/ITHACA-FV.git
+RUN git clone https://github.com/ITHACA-FV/ITHACA-FV.git
 RUN chown -R $USER:$USER openfoam ITHACA-FV
 RUN chown -R $USER:$USER /home/$USER
 USER $USER
