@@ -1,7 +1,7 @@
 # Multi-architecture Dockerfile for ITHACA-FV
 # Automatically selects the correct base image based on target platform
 ARG TARGETARCH
-FROM ithaca-fv/ithacafv-dependencies:${TARGETARCH} AS base
+FROM ithacafv/ithacafv-dependencies:${TARGETARCH} AS base
 
 LABEL maintainer="giovannistabile@santannapisa.it"
 
