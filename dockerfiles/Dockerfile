@@ -5,8 +5,6 @@ FROM ithacafv/ithacafv-dependencies:${TARGETARCH} AS base
 
 LABEL maintainer="giovannistabile@santannapisa.it"
 
-USER root
-
 # Install additional packages
 RUN apt-get update && \
     apt-get install -y \
@@ -18,27 +16,9 @@ RUN apt-get update && \
         software-properties-common && \
     rm -rf /var/lib/apt/lists/*
 
-# Create ithacafv user and group
-ARG USER=ithacafv
-RUN if id -u 1000 >/dev/null 2>&1; then \
-        userdel $(id -nu 1000) || true; \
-    fi && \
-    if getent group 1000 >/dev/null 2>&1; then \
-        groupdel $(getent group 1000 | cut -d: -f1) || true; \
-    fi && \
-    adduser --disabled-password --gecos '' --uid 1000 $USER && \
-    adduser $USER sudo && \
-    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-# Set environment variables
-ENV HOME=/home/$USER
-ENV USER=$USER
-
 # Set working directory and clone ITHACA-FV
-WORKDIR /opt
-RUN git clone https://github.com/mathLab/ITHACA-FV.git && \
-    chown -R $USER:$USER ITHACA-FV && \
-    chown -R $USER:$USER /home/$USER
+WORKDIR /usr/dir
+RUN git clone https://github.com/ITHACA-FV/ITHACA-FV.git
 
 # Environment variables for bashrc
 ARG of_var="source \$FOAM_ETC/bashrc"
@@ -48,36 +28,20 @@ ARG ithaca_var="source /opt/ITHACA-FV/etc/bashrc"
 RUN echo $of_var >> /etc/bash.bashrc && \
     echo $ithaca_var >> /etc/bash.bashrc
 
-# Switch to ithacafv user
-USER $USER
+# Update bashrc with OpenFOAM and ITHACA-FV sources
+RUN echo $of_var >> /etc/bash.bashrc && \
+    echo $ithaca_var >> /etc/bash.bashrc
 
-# Build ITHACA-FV with architecture-specific flags
-RUN /bin/bash -c "source \$FOAM_ETC/bashrc  && \
-    cd ITHACA-FV && \
-    git submodule update --init && \
-    source etc/bashrc && \
+
+RUN /bin/bash -c "source \$FOAM_ETC/bashrc && \
+    cd ITHACA-FV && git submodule update --init && source etc/bashrc && \
     if [ \"$TARGETARCH\" = \"amd64\" ]; then \
         ./Allwmake -taumq -j 4; \
     else \
         ./Allwmake -au -j 4; \
     fi"
 
-# Copy binaries and libraries to system paths (as root)
-USER root
-RUN for openfoam_dir in /home/$USER/OpenFOAM/$USER-openfoam*/platforms/*/; do \
-        if [ -d "$openfoam_dir/bin" ]; then \
-            cp -r "$openfoam_dir/bin"/* /usr/local/bin/ 2>/dev/null || true; \
-        fi; \
-        if [ -d "$openfoam_dir/lib" ]; then \
-            cp -r "$openfoam_dir/lib"/* /usr/local/lib/ 2>/dev/null || true; \
-        fi; \
-    done
-
-# Final setup
-USER $USER
-WORKDIR $HOME
 
 # Source bashrc on container start
 RUN /bin/bash -c "source /etc/bash.bashrc"
-
 ENTRYPOINT ["/bin/bash"]
