@@ -1,0 +1,10 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication decomposePar
+rm -rf log.decomposePar &> /dev/null
+runApplication decomposePar -case lift -time '0:10' -decomposeParDict ../system/decomposeParDict
+runParallel 03steadyNS -stage online
