@@ -39,6 +39,7 @@ SourceFiles
 #include "fvMeshSubset.H"
 #include <set>
 #include "redsvd"
+#include <unsupported/Eigen/NNLS>
 
 
 
@@ -293,7 +294,13 @@ class HyperReduction
         void updateNodes(Eigen::SparseMatrix<double> & P, label& ind_max,
                          Eigen::VectorXd& mp_not_mask);
 
-        void updateNodesRemove(Eigen::SparseMatrix<double>& P, label& ind);
+        //----------------------------------------------------------------------
+        /// @brief      Remove from the nodes the weights equal to 0 (used with NNLS)
+        ///
+        /// @tparam     P The mask matrix of the nodes, updated with the call
+        /// @param[in]  weights  A Eigen::VectorXd of quadrature weights (for comparison with 0)
+        ///
+        void updateNodesRemove(Eigen::SparseMatrix<double>& P, Eigen::VectorXd weights);
 
         //----------------------------------------------------------------------
         /// @brief      TODO
