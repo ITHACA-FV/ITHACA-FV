@@ -595,14 +595,13 @@ void read_fields(
     }
     else
     {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
+        Info << "################ Parallel Reading the Data for " << field.name() << " #########" <<
              endl;
         word timename(field.mesh().time().rootPath() + "/" +
                       field.mesh().time().caseName() );
         timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
-        int last_s = numberOfFiles(casename,
-                                   "processor" + name(Pstream::myProcNo()) + "/");
+        Foam::Time runTime2(Foam::Time::controlDictName, timename, casename);
+        int last_s = Eigen::internal::size(runTime2.times()); 
 
         if (first_snap > last_s)
         {
@@ -619,13 +618,18 @@ void read_fields(
             last_s = min(last_s, n_snap + 2);
         }
 
-        for (int i = 1 + first_snap; i < last_s + first_snap; i++)
-        {
+        for (int i = 2 + first_snap; i < last_s + first_snap; i++)
+        {   
+
+            const word& dirName = runTime2.times()[i].name();
+
+            fileName timeDir = casename + runTime2.times()[i].name();
+
             GeometricField<Type, PatchField, GeoMesh> tmp_field(
                 IOobject
                 (
                     field.name(),
-                    timename + "/" + name(i),
+                    runTime2.times()[i].name(),
                     field.mesh(),
                     IOobject::MUST_READ
                 ),
@@ -977,5 +981,70 @@ template void save(const List<Eigen::SparseMatrix<double>>& MatrixList,
 
 template void load(List<Eigen::SparseMatrix<double>>& MatrixList, word folder,
                    word MatrixName);
+
+template<typename T>
+void ITHACAstream::read_snapshot(T& snapshot, const Foam::label& i_snap,
+                                  Foam::word path, Foam::word name)
+{
+    // ITHACAparameters* para(ITHACAparameters::getInstance());
+    const fvMesh& mesh = snapshot.mesh();
+
+    Foam::Time runTimeData(Foam::Time::controlDictName,
+        mesh.time().rootPath(),
+        mesh.time().caseName());
+
+    word timename(mesh.time().rootPath() + "/" +
+                  mesh.time().caseName());
+    timename = timename.substr(0, timename.find_last_of("\\/"));
+    timename = timename + "/" + "processor" + std::to_string(Pstream::myProcNo()) + "/";
+
+    if (name == "default_name")
+    {
+        name = snapshot.name();
+    }
+
+    if (path == "default_path")
+    {
+        if (Pstream::parRun())
+        {
+            path = timename + runTimeData.times()[i_snap].name();
+        }
+        else
+        {
+            path = runTimeData.times()[i_snap].name();
+        }
+    }
+
+    if (!ITHACAutilities::check_file(path))
+    {
+        Info << "Error: data not found at :" << endl;
+        Info << path << endl;
+        Info << name << endl;
+        Info << endl;
+        abort();
+    }
+
+
+    T snapshot_dummy(
+        IOobject
+        (
+            name,
+            path,
+            mesh,
+            IOobject::MUST_READ
+        ),
+        mesh);
+
+    snapshot = snapshot_dummy;
+}
+
+
+template void ITHACAstream::read_snapshot(Foam::volScalarField& snapshot,
+        const Foam::label& i_snap, Foam::word path, Foam::word name);
+template void ITHACAstream::read_snapshot(Foam::volVectorField& snapshot,
+        const Foam::label& i_snap, Foam::word path, Foam::word name);
+template void ITHACAstream::read_snapshot(Foam::volTensorField& snapshot,
+        const Foam::label& i_snap, Foam::word path, Foam::word name);
+
 
 }

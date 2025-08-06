@@ -39,7 +39,7 @@ PODTemplate<T>::PODTemplate(ITHACAPOD::Parameters* myParameters,
         IOobject
         (
             field_name,
-            runTime2.path() + runTime2.times()[1].name(),
+            runTime2.times()[1].name(),
             ithacaFVParameters->get_mesh(),
             IOobject::MUST_READ
         ),
@@ -142,7 +142,7 @@ void PODTemplate<T>::computeMeanField()
                 IOobject
                 (
                     f_field->name() + "lift" + std::to_string(k),
-                    runTime2.path() + runTime2.times()[1].name(),
+                    runTime2.times()[1].name(),
                     ithacaFVParameters->get_mesh(),
                     IOobject::MUST_READ
                 ),
@@ -164,7 +164,7 @@ void PODTemplate<T>::computeMeanField()
             for (label j = 0; j < l_nSnapshot; j++)
             {
                 // Read the j-th field
-                ithacaFVParameters->read_snapshot(snapshotj, l_startTime + j);
+                ITHACAstream::read_snapshot(snapshotj, l_startTime + j);
                 lift(snapshotj);
                 // add j-th field to meanfield
                 ITHACAutilities::addFields(*f_meanField, snapshotj);
@@ -520,7 +520,6 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
 
             snapshotsEnd.clear();
         }
-
         // covMatrix is symetric, the lower part is used to build the upper part
         covMatrix = covMatrix.selfadjointView<Eigen::Lower>();
         cnpy::save(covMatrix, folder_covMatrix + name_covMatrix + ".npy");
@@ -757,7 +756,7 @@ PtrList<T> PODTemplate<T>::computeSpatialModes(Eigen::VectorXd& eigenValueseig,
         for (label j = 0; j < l_nSnapshot; j++)
         {
             T snapshotj = *f_field;
-            ithacaFVParameters->read_snapshot(snapshotj, l_startTime + j);
+            ITHACAstream::read_snapshot(snapshotj, l_startTime + j);
 
             if (ithacaFVParameters->get_DEIMInterpolatedField() == "nut"
                     && l_hilbertSp == "dL2")
@@ -886,7 +885,7 @@ Eigen::MatrixXd PODTemplate<T>::computeSimulationTemporalModes(
         for (label j = 0; j < l_nSnapshotSimulation; j++)
         {
             T snapshotj = *f_field;
-            ithacaFVParameters->read_snapshot(snapshotj, l_startTimeSimulation + j);
+            ITHACAstream::read_snapshot(snapshotj, l_startTimeSimulation + j);
 
             if (ithacaFVParameters->get_DEIMInterpolatedField() == "nut"
                     && l_hilbertSp == "dL2")

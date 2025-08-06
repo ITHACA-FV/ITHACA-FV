@@ -2,8 +2,469 @@
 #include "ITHACAsystem.H"
 #include "PODParameters.H"
 
+template<class Enum>
+struct StrLookup: public std::map<std::string,Enum>{
+  using Base=std::map<std::string,Enum>;
+  using Base::Base;
+  Enum lookup(std::string str,Enum defaultValue){
+    if (this->count(str)){
+      return Base::at(str);
+    }else{
+      return defaultValue;
+    }
+  }
+};
+
 namespace ITHACAPOD
 {
+
+ PODParameters::PODParameters(int argc,char* argv[])
+  {
+
+    _args = autoPtr<argList>
+        (
+          new argList(argc, argv)
+          );
+
+    if (!_args->checkRootCase())
+    {
+      Foam::FatalError.exit();
+    }
+
+    argList& args = _args();
+
+    for (int i=0; i<argc; i++)
+    {
+      Info << "argv[" << i << "] = " << argv[i] << endl;
+    }
+
+    runTime0 = autoPtr<Foam::Time>( new Foam::Time( Foam::Time::controlDictName,
+                                                    args ) );
+
+    mesh = (
+          new fvMesh
+          (
+            Foam::IOobject
+            (
+              Foam::fvMesh::defaultRegion,
+              runTime0->timeName(),
+              *runTime0,
+              Foam::IOobject::MUST_READ
+              )
+            )
+          );
+
+
+    nCells = mesh->cells().size();
+    ithacaLibraryParameters = ITHACAparameters::getInstance(*mesh,*runTime0);
+    ITHACAdict = ithacaLibraryParameters->ITHACAdict;
+    // casenameData = ITHACAdict->lookupOrDefault<fileName>("casename", "./");
+
+    casenameData = ITHACAdict->lookupOrDefault<fileName>("casename", "./");
+    if (Pstream::parRun())
+    {
+      casenameData = casenameData + "/processor"+ name(Pstream::myProcNo())+ "/";
+    }
+    // else{
+    //   casenameData = ITHACAdict->lookupOrDefault<fileName>("casename", "./");
+    // }
+
+    fieldlist = static_cast<List<word>>(ITHACAdict->lookup("fields"));
+    eigensolver = ithacaLibraryParameters->eigensolver;
+    precision = ithacaLibraryParameters->precision;
+    exportPython = ithacaLibraryParameters->exportPython;
+    exportMatlab = ithacaLibraryParameters->exportMatlab;
+    exportTxt = ithacaLibraryParameters->exportTxt;
+    outytpe = ithacaLibraryParameters->outytpe;
+    pressureResolutionKind = StrLookup<PressureResolutionKind>(
+          {
+            {"FullOrder",PressureResolutionKind::FullOrder},
+            {"ReducedOrder",PressureResolutionKind::ReducedOrder},
+            {"Neglected",PressureResolutionKind::Neglected},
+          }).lookup(ITHACAdict->lookupOrDefault<word>("pressureResolutionKind", ""),PressureResolutionKind::Undefined);
+    nBlocks = ITHACAdict->lookupOrDefault<label>("nBlocks", 1);
+    centeredOrNot = ITHACAdict->lookupOrDefault<bool>("centeredOrNot", 1);
+    interpFieldCenteredOrNot = ITHACAdict->lookupOrDefault<bool>("interpFieldCenteredOrNot", 0);
+    // nMagicPoints = ITHACAdict->lookupOrDefault<label>("nMagicPoints", 1);
+    DEIMInterpolatedField = ITHACAdict->lookupOrDefault<word>("DEIMInterpolatedField", "fullStressFunction");
+    onLineReconstruct = ITHACAdict->lookupOrDefault<bool>("onLineReconstruct", 0);
+    forcingOrNot = ITHACAdict->lookupOrDefault<bool>("forcingOrNot", 0);
+    symDiff = ITHACAdict->lookupOrDefault<bool>("symDiff", 0);
+    ROMTemporalScheme = ITHACAdict->lookupOrDefault<word>("ROMTemporalScheme", "euler");
+           // SOTA can be 0 (no SOTA), D (deterministic version), S (stochastic version)
+    useSOTA = ITHACAdict->lookupOrDefault<word>("useSOTA", "None");
+    set_useSOTA(useSOTA);
+
+  if (useSOTA != "None")
+  {
+    Info << "===============================================================" << endl;
+    Info << "  RedLUM is launched in " << useSOTA << "-SOTA mode" << endl;
+    Info << "  Ithacadict file will be overidden by parameters specified in IthacaFVParameters.C" << endl;
+    Info << "===============================================================" << endl;
+
+  }
+  
+    if ( (!(ROMTemporalScheme == "adams-bashforth"))
+         && (!(ROMTemporalScheme == "euler"))
+         && (!(ROMTemporalScheme == "euler–maruyama")) )
+    {
+      Info << "This temporal scheme is not implemented." << endl;
+      abort();
+    }
+
+    // Object Time to read OpenFOAM data in the correct folder
+    runTimeData = new Foam::Time(Foam::Time::controlDictName, ".", casenameData);
+
+
+    template_field_U = new volVectorField
+        (
+          IOobject
+          (
+            "U",
+             runTimeData->times()[1].name(),
+            *mesh,
+            IOobject::MUST_READ
+            ),
+          *mesh
+          );
+
+
+    template_field_p = new volScalarField
+        (
+          IOobject
+          (
+            "p",
+             runTimeData->times()[1].name(),
+            *mesh,
+            IOobject::MUST_READ
+            ),
+          *mesh
+          );
+
+
+
+    nSimu = ITHACAdict->lookupOrDefault("nSimu", 100);
+
+
+    // Initialize field_name, field_type and nModes
+    field_name.resize(fieldlist.size());
+    field_type.resize(fieldlist.size());
+    for (label k = 0; k < fieldlist.size(); k++)
+    {
+      dictionary& subDict = ITHACAdict->subDict(fieldlist[k]);
+      field_name[k] = static_cast<word>(subDict.lookup("field_name"));
+      field_type[k] = static_cast<word>(subDict.lookup("field_type"));
+      nModes.insert(field_name[k],subDict.lookupOrDefault<label>("nmodes",1));
+      hilbertSpacePOD.insert(field_name[k],
+                             subDict.lookupOrDefault<word>("hilbertSpacePOD","L2"));
+      varyingEnergy.insert(field_name[k], 0);
+      resolvedVaryingEnergy.insert(field_name[k], 0);
+    }
+
+    weightH1 = 1.0;
+    weightBC = ITHACAdict->lookupOrDefault<double>("weightBC", 0.);
+    patchBC = ITHACAdict->lookupOrDefault<word>("patchBC", "inlet");
+
+    // Initialize startTime, endTime and nSnapshots
+
+    // Get times list from the case folder
+    instantList Times = runTimeData->times();
+    // Read Initial and last time from the POD dictionary
+    const entry* existnsnap = ITHACAdict->findEntry("Nsnapshots");
+    const entry* existLT = ITHACAdict->findEntry("FinalTime");
+
+    scalar InitialTime(0);
+    // Initiate variable from PODSolverDict
+    if ((existnsnap) && (existLT))
+    {
+      Info << "Error you cannot define LatestTime and NSnapShots together" << endl;
+      abort();
+    }
+    else if (existnsnap)
+    {
+      InitialTime = ITHACAdict->lookupOrDefault<scalar>("InitialTime", 0);
+      FinalTime = ITHACAdict->lookupOrDefault<scalar>("FinalTime", 100000000000000);
+      nSnapshots = readScalar(ITHACAdict->lookup("Nsnapshots"));
+      startTime = Time::findClosestTimeIndex(runTimeData->times(), InitialTime);
+      nSnapshots = min(nSnapshots , Times.size() - startTime);
+      endTime = startTime + nSnapshots - 1;
+      FinalTime = std::stof(runTimeData->times()[endTime].name());
+    }
+    else
+    {
+      InitialTime = ITHACAdict->lookupOrDefault<scalar>("InitialTime", 0);
+      FinalTime = ITHACAdict->lookupOrDefault<scalar>("FinalTime", 100000000000000);
+      endTime = Time::findClosestTimeIndex(runTimeData->times(), FinalTime);
+      startTime = Time::findClosestTimeIndex(runTimeData->times(), InitialTime);
+      nSnapshots = endTime - startTime + 1;
+      if (InitialTime > FinalTime)
+      {
+        Info << "FinalTime cannot be smaller than the InitialTime check your ITHACAdict file\n" << endl;
+        abort();
+      }
+      FinalTime = std::stof(runTimeData->times()[endTime].name());
+    }
+
+    // Read Initial and last time from the POD dictionary
+    const entry* existnsnapSimulation = ITHACAdict->findEntry("NsnapshotsSimulation");
+    const entry* existLTSimulation = ITHACAdict->findEntry("FinalTimeSimulation");
+
+    scalar InitialTimeSimulation(FinalTime);
+    label startTimeSimulation(Time::findClosestTimeIndex(runTimeData->times(), InitialTimeSimulation));
+
+    if ((existnsnapSimulation) && (existLTSimulation))
+    {
+      Info << "Error you cannot define LatestTimeSimulation and NSnapShotsSimulation together" << endl;
+      abort();
+    }
+    else if (existnsnapSimulation)
+    {
+      nSnapshotsSimulation = readScalar(ITHACAdict->lookup("NsnapshotsSimulation"));
+      nSnapshotsSimulation = min(nSnapshotsSimulation , Times.size() - startTimeSimulation);
+      endTimeSimulation = startTimeSimulation + nSnapshotsSimulation - 1;
+      FinalTimeSimulation = std::stof(runTimeData->times()[endTimeSimulation].name());
+    }
+    else
+    {
+      FinalTimeSimulation = ITHACAdict->lookupOrDefault<scalar>("FinalTimeSimulation", 100000000000000);
+      endTimeSimulation = Time::findClosestTimeIndex(runTimeData->times(), FinalTimeSimulation);
+      nSnapshotsSimulation = endTimeSimulation - startTimeSimulation + 1;
+      if (InitialTimeSimulation > FinalTimeSimulation)
+      {
+        Info << "FinalTimeSimulation cannot be smaller than the InitialTimeSimulation check your ITHACAdict file\n" << endl;
+        abort();
+      }
+      FinalTimeSimulation = std::stof(runTimeData->times()[endTimeSimulation].name());
+    }
+
+    // Initialize saveTime
+    IOdictionary controlDict
+        (
+          IOobject
+          (
+            "controlDict",
+            runTimeData->system(),
+            get_mesh(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+            )
+          );
+    saveTime = controlDict.lookupOrDefault<double>("writeInterval", 1);
+
+    IOdictionary transportProperties
+        (
+          IOobject
+          (
+            "transportProperties",
+            runTimeData->constant(),
+            *mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+            )
+          );
+
+    nu = new dimensionedScalar
+        (
+          "nu",
+          dimViscosity,
+          transportProperties
+          );
+
+    volume = new volScalarField(
+          IOobject(
+            "volume",
+            runTimeData->timeName(),
+            *mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+            ),
+          *mesh,
+          dimensionedScalar("volume", dimensionSet(0, 3, 0, 0, 0, 0, 0), 1.0)
+          );
+
+    volume->primitiveFieldRef() = mesh->V().field();
+    Eigen::VectorXd volVect = Foam2Eigen::field2Eigen(mesh->V().field());
+    totalVolume = volVect.sum();
+
+    delta = new volScalarField(pow(*volume,1.0/3.0));
+
+
+    //TO DO : rewrite the following method to search for the object turbulenceProperties and its attibutes (simulationType and LESModel)
+    string simulationType;
+    string LESModel;
+
+    string DDESModel;
+
+    string filename = "constant/turbulenceProperties";
+    std::ifstream strm( filename );
+
+    string line;
+    getline( strm, line );
+
+    while (line.find( "simulationType" ) == string::npos || line.find( "//" ) != string::npos)
+    {
+      getline( strm, line );
+    }
+
+
+    int N = line.size();
+    int i =0;
+    while ( i<N )
+    {
+      if (line[i]==' ')
+      {
+        line.erase(i,1);
+        N=N-1;
+      }
+      else
+      {
+        i++;
+      }
+    }
+
+    line.erase(line.size()-1,1);
+    line.erase(0,14);
+    simulationType=line;
+
+
+
+    Info << "--------------------------------------------" << endl;
+    Info << "Simulation type:" << simulationType << endl;
+
+
+    if (simulationType=="laminar")
+    {
+      Info<< "DNS simulation will be performed" <<endl;
+      set_useDNS(true);
+      set_useDEIM(false);
+    }
+    else if(simulationType =="LES")
+    {
+      template_field_nut = new volScalarField
+          (
+            IOobject
+            (
+              "nut",
+              runTimeData->path() + runTimeData->times()[1].name(),
+              *mesh,
+              IOobject::MUST_READ
+              ),
+            *mesh
+            );
+
+      getline( strm, line );
+      while (line.find( "LESModel" ) == string::npos || line.find( "//" ) != string::npos )
+      {
+        getline( strm, line );
+      }
+
+      N = line.size();
+      i =0;
+      while ( i<N )
+      {
+        if (line[i]==' ')
+        {
+          line.erase(i,1);
+          N=N-1;
+        }
+        else
+        {
+          i++;
+        }
+      }
+      line.erase(N-1,1);
+      line.erase(0,8);
+      LESModel=line;
+
+      Info << "LESmodel:" << LESModel << endl;
+
+      if (LESModel=="Smagorinsky")
+      {
+        Info << "Simulation type LES Smagorinsky, DEIM will be performed on non linear term" << endl;
+        Info << "DEIM will be perfomed on " << DEIMInterpolatedField << " terms." << endl;
+        set_useDEIM(true);
+        set_Ck(ITHACAdict->lookupOrDefault<double>("Ck", 0.094));
+        set_Ce(ITHACAdict->lookupOrDefault<double>("Ce", 1.048));
+        set_useDDES(false);
+
+      }
+      else if (LESModel=="kOmegaSSTDDES")
+      { Info<< "New Simulationtype of DDES model will be performed"<<endl;
+        set_useDDES(true);
+        set_useDEIM(false);
+        template_field_omega = new volScalarField
+            (
+              IOobject
+              (
+                "omega",
+                runTimeData->path() + runTimeData->times()[1].name(),
+                *mesh,
+                IOobject::MUST_READ
+                ),
+              *mesh
+              );
+        template_field_k = new volScalarField
+            (
+              IOobject
+              (
+                "k",
+                runTimeData->path() + runTimeData->times()[1].name(),
+                *mesh,
+                IOobject::MUST_READ
+                ),
+              *mesh
+              );
+      }
+      else
+      {
+        Info << "Only turbulence model Smagorinsky is supported with simulation type LES" << endl;
+        Info << "DDES NOT USED**0**" << endl;
+
+
+      }
+
+
+    }
+    else{
+      Info <<"Simulation type not LES, no DEIM will be performed" << endl;
+      set_useDEIM(false);
+      Info<<"\n"<<"No DDES was  performed"<<endl;
+      set_useDDES(false);
+      Info <<"\n"<<"No DNS simulation was perfomed"<<endl;
+      set_useDNS(false);
+      abort();
+    }
+    
+    if (useDEIM)
+    {
+      if(get_hilbertSpacePOD()["nut"] == "dL2"){
+        set_deltaWeight(ITHACAutilities::getMassMatrixFV(*template_field_nut).array().pow(-2.0/3.0));
+      }
+      nMagicPoints = get_nModes()[DEIMInterpolatedField];
+      if (interpFieldCenteredOrNot)
+      {
+        folder_DEIM = "./ITHACAoutput/DEIM_centered/";
+      }
+      else
+      {
+        folder_DEIM = "./ITHACAoutput/DEIM/";
+      }
+      folder_DEIM += DEIMInterpolatedField + "/";
+      folder_DEIM += std::to_string(nMagicPoints) + "magicPoints/";
+    }
+    else
+    {
+
+      folder_DEIM = "./ITHACAoutput/";
+    }
+  }
+
+
+
+
+
+
+
 Foam::word PODParameters::get_pathHilbertSpace_fromHS(Foam::word hilbertSp)
 {
     Foam::word pathHilbertSpace = "";
@@ -37,45 +498,5 @@ Foam::word PODParameters::get_pathHilbertSpace_fromHS(Foam::word hilbertSp)
 }
 
 
-//specialisation:
-template<typename T>
-void PODParameters::read_snapshot(T& snapshot, const Foam::label& i_snap,
-                                  Foam::word path, Foam::word name) const
-{
-    if (name == "default_name")
-    {
-        name = snapshot.name();
-    }
 
-    if (path == "default_path")
-    {
-        path = runTimeData->path() + "/" + runTimeData->times()[i_snap].name();
-    }
-
-    if (!ITHACAutilities::check_file(path))
-    {
-        Info << "Error: data not found at :" << endl;
-        Info << path << endl;
-        Info << endl;
-        abort();
-    }
-
-    T snapshot_dummy(
-        IOobject
-        (
-            name,
-            path,
-            *mesh,
-            IOobject::MUST_READ
-        ),
-        *mesh
-    );
-    snapshot = snapshot_dummy;
-}
-template void PODParameters::read_snapshot(Foam::volScalarField& snapshot,
-        const Foam::label& i_snap, Foam::word path, Foam::word name) const;
-template void PODParameters::read_snapshot(Foam::volVectorField& snapshot,
-        const Foam::label& i_snap, Foam::word path, Foam::word name) const;
-template void PODParameters::read_snapshot(Foam::volTensorField& snapshot,
-        const Foam::label& i_snap, Foam::word path, Foam::word name) const;
 }

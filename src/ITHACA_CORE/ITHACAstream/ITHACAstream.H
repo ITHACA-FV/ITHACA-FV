@@ -483,6 +483,11 @@ template<typename T>
 void load(List<Eigen::SparseMatrix<T>>& MatrixList, word folder,
           word MatrixName);
 
+template <typename T>
+void read_snapshot(T& snapshot, const Foam::label& i_snap,
+                    Foam::word path = "default_path", Foam::word name = "default_name");
+
+
 };
 
 namespace Foam
