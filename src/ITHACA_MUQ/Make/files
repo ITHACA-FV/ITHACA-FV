@@ -1,3 +1,7 @@
 muq2ithaca.C
+ensembleClass.C
+Fang2017filter/Fang2017filter.C
+Fang2017filter_wDF/Fang2017filter_wDF.C
+Pagani2016filter/Pagani2016filter.C
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_MUQ
