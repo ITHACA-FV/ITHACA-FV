@@ -95,6 +95,15 @@ int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
         }
     }
 
+    if (problem->bcMethod == "penaltyLift")
+    {
+        for (int l = 0; l < N_BC; l++)
+        {
+            penaltyU.col(l) = bc(l) * problem->bcPenLiftMat[l] - problem->bcVelMat[l] *
+                              aTmp;
+        }
+    }
+
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
@@ -102,9 +111,9 @@ int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
         fvec(i) = m1(i) - cc(0, 0) - m2(i);
 
-        if (problem->bcMethod == "penalty")
+        if (problem->bcMethod == "penalty" || problem->bcMethod == "penaltyLift")
         {
-            fvec(i) += ((penaltyU * tauU)(i, 0));
+            fvec(i) += (penaltyU.row(i) * tauU)(0, 0);
         }
     }
 
@@ -157,6 +166,15 @@ int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
         }
     }
 
+    if (problem->bcMethod == "penaltyLift")
+    {
+        for (int l = 0; l < N_BC; l++)
+        {
+            penaltyU.col(l) = bc(l) * problem->bcPenLiftMat[l] - problem->bcVelMat[l] *
+                              aTmp;
+        }
+    }
+
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
@@ -164,9 +182,9 @@ int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
         fvec(i) = m1(i) - cc(0, 0) - m2(i);
 
-        if (problem->bcMethod == "penalty")
+        if (problem->bcMethod == "penalty" || problem->bcMethod == "penaltyLift")
         {
-            fvec(i) += ((penaltyU * tauU)(i, 0));
+            fvec(i) += (penaltyU.row(i) * tauU)(0, 0);
         }
     }
 

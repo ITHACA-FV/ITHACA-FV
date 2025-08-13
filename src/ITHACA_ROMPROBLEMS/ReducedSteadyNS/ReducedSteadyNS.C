@@ -215,10 +215,7 @@ int newton_steadyNS_PPE::operator()(const Eigen::VectorXd& x,
  
         if (problem->bcMethod == "penalty")
         {
-            for (int l = 0; l < N_BC; l++)
-            {
-                fvec(i) += (penaltyU.row(i) * tauU)(0, 0);
-            }
+            fvec(i) += (penaltyU.row(i) * tauU)(0, 0);
         }
 
         if (problem->neumannMethod == "penalty")

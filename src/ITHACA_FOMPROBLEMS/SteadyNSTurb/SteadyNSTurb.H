@@ -133,6 +133,12 @@ class SteadyNSTurb: public steadyNS
         /// Number of viscoisty modes used for the projection
         label nNutModes;
 
+        /// List of pointers used to form the list of lifting functions
+        PtrList<volVectorField> bcBasisFields;
+
+        /// Boundary term for penaltyLift method - matrix
+        List <Eigen::MatrixXd> bcPenLiftMat;
+
         /// Eddy viscosity field
         autoPtr<volScalarField> _nut;
         autoPtr<volScalarField> _nuTilda;
@@ -360,6 +366,16 @@ class SteadyNSTurb: public steadyNS
         ///
         Eigen::Tensor<double, 3 > turbulencePPETensor2_cache_mem(label NUmodes,
                 label NSUPmodes, label NPmodes, label nNutModes);
+
+        //--------------------------------------------------------------------------
+        /// @brief      Boundary integral modes on boundary used by the penaltyLift method
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NLiftmodes  The number of Lift modes.
+        ///
+        /// @return     reduced third order tensor in Eigen::MatrixXd format for the penaltyLift method.
+        ///
+        List <Eigen::MatrixXd> bcPenaltyLiftMat(label NUmodes, label NLiftmodes);
 
 };
 

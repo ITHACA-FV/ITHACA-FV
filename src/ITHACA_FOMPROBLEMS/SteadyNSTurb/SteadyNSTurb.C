@@ -83,8 +83,8 @@ SteadyNSTurb::SteadyNSTurb(int argc, char* argv[])
     tolerance = ITHACAdict->lookupOrDefault<scalar>("tolerance", 1e-5);
     maxIter = ITHACAdict->lookupOrDefault<scalar>("maxIter", 1000);
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
-    M_Assert(bcMethod == "lift" || bcMethod == "penalty",
-             "The BC method must be set to lift or penalty in ITHACAdict");
+    M_Assert(bcMethod == "lift" || bcMethod == "penalty" || bcMethod == "penaltyLift",
+             "The BC method must be set to lift, penalty or penaltyLift in ITHACAdict");
     viscCoeff = ITHACAdict->lookupOrDefault<word>("viscCoeff", "RBF");
     rbfParams = ITHACAdict->lookupOrDefault<word>("rbfParams", "vel");
     rbfKernel = ITHACAdict->lookupOrDefault<word>("rbfKernel", "linear");
@@ -730,6 +730,36 @@ void SteadyNSTurb::getRBFType(const word& viscCoeff, const word& rbfKernel)
     }
 }
 
+List <Eigen::MatrixXd> SteadyNSTurb::bcPenaltyLiftMat(label NUmodes,
+        label NLiftmodes)
+{
+    List <Eigen::MatrixXd> bcPenLiftMat(NLiftmodes);
+
+    for (label i = 0; i < NLiftmodes; i++)
+    {
+        bcPenLiftMat[i].resize(NUmodes, 1);
+    }
+
+    label BCind = inletIndex(0, 0);
+
+    for (label i = 0; i < NLiftmodes; i++)
+    {
+        for (label j = 0; j < NUmodes; j++)
+        {
+            bcPenLiftMat[i](j, 0) = gSum(Umodes[i].boundaryField()[BCind] &
+                                        bcBasisFields[j].boundaryField()[BCind]);
+        }
+    }
+
+    if (Pstream::master())
+    {
+        ITHACAstream::exportMatrix(bcPenLiftMat, "bcPenaltyLiftMat", "eigen",
+                                   "./ITHACAoutput/Matrices");
+    }
+
+    return bcPenLiftMat;
+}
+
 void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                               label Nnut)
 {
@@ -931,6 +961,12 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
             bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
+
+        if (bcMethod == "penaltyLift")
+        {
+            bcPenLiftMat = bcPenaltyLiftMat(NUmodes, inletIndex.rows());
+            bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
+        }
     }
     else
     {
@@ -977,6 +1013,12 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         if (bcMethod == "penalty")
         {
             bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
+            bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
+        }
+
+        if (bcMethod == "penaltyLift")
+        {
+            bcPenLiftMat = bcPenaltyLiftMat(NUmodes, inletIndex.rows());
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
     }
@@ -1256,6 +1298,12 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
             bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
+
+        if (bcMethod == "penaltyLift")
+        {
+            bcPenLiftMat = bcPenaltyLiftMat(NUmodes, inletIndex.rows());
+            bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
+        }
     }
     else
     {
@@ -1297,6 +1345,12 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         if (bcMethod == "penalty")
         {
             bcVelVec = bcVelocityVec(NUmodes, NSUPmodes);
+            bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
+        }
+
+        if (bcMethod == "penaltyLift")
+        {
+            bcPenLiftMat = bcPenaltyLiftMat(NUmodes, inletIndex.rows());
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
     }
