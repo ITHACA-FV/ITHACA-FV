@@ -177,7 +177,7 @@ First, the domain is decomposed as indicated in the directory
 
 In the parallel run also the lift field needs to be split with
 
-    decomposePar -time 0,1
+    decomposePar -case lift -time 0,1
 
 Then, the offline solve is performed in parallel, evaluating the modes and the
 reduced matrices on the whole domain
@@ -187,5 +187,7 @@ reduced matrices on the whole domain
 The online stage is performed analogously
 
     mpirun -np 4 -quiet 03steadyNS -parallel -stage online
+
+Or the users can simple run the script `Allrun_parallel`.
 
 In the case of OF1812 the parallel run is not supported.

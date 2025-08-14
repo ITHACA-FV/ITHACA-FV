@@ -79,7 +79,7 @@ class tutorial02: public laplacianProblem
                 {
                     for (label j = 0; j < mu.cols() ; j++)
                     {
-                        // mu_now[i] =
+                        mu_now[j] = mu(i, j);
                         theta[j] = mu(i, j);
                     }
 
