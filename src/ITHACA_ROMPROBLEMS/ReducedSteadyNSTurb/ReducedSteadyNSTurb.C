@@ -46,6 +46,9 @@ ReducedSteadyNSTurb::ReducedSteadyNSTurb(SteadyNSTurb& fomProblem)
     Nphi_p = problem->K_matrix.cols();
     nphiNut = problem->cTotalTensor.dimension(1);
 
+    tauU.resize(N_BC, 1);
+    tauU.setConstant(problem->tauU);
+
     for (int k = 0; k < problem->liftfield.size(); k++)
     {
         Umodes.append((problem->liftfield[k]).clone());
@@ -97,9 +100,11 @@ int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
 
     if (problem->bcMethod == "penaltyLift")
     {
+        // The index is 0 and times with 0.5 because the penalty is applied to a single Dirichlet boundary,
+        // but two basis functions are used to represent the lift. 
         for (int l = 0; l < N_BC; l++)
         {
-            penaltyU.col(l) = bc(l) * problem->bcPenLiftMat[l] - problem->bcVelMat[l] *
+            penaltyU.col(l) = bc(l) * problem->bcPenLiftMat[l] - 0.5 * problem->bcVelMat[0] *
                               aTmp;
         }
     }
@@ -170,7 +175,7 @@ int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
     {
         for (int l = 0; l < N_BC; l++)
         {
-            penaltyU.col(l) = bc(l) * problem->bcPenLiftMat[l] - problem->bcVelMat[l] *
+            penaltyU.col(l) = bc(l) * problem->bcPenLiftMat[l] - 0.5 * problem->bcVelMat[0] *
                               aTmp;
         }
     }
@@ -240,7 +245,7 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
             vel_now = setOnlineVelocity(vel);
         }
     }
-    else if (problem->bcMethod == "penalty")
+    else if (problem->bcMethod == "penalty" || problem->bcMethod == "penaltyLift")
     {
         vel_now = vel;
     }
@@ -346,7 +351,7 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
             vel_now = setOnlineVelocity(vel);
         }
     }
-    else if (problem->bcMethod == "penalty")
+    else if (problem->bcMethod == "penalty" || problem->bcMethod == "penaltyLift")
     {
         vel_now = vel;
     }

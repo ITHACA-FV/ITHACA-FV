@@ -73,7 +73,7 @@ class tutorial06 : public SteadyNSTurb
         {
             Vector<double> inl(0, 0, 0);
             List<scalar> mu_now(3);
-            label BCind = 2;
+            label BCind = inletIndex(0,0);
 
             vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
             vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
@@ -147,7 +147,7 @@ class tutorial06 : public SteadyNSTurb
         {
             Vector<double> inl(0, 0, 0);
             List<scalar> mu_now(3);
-            label BCind = 2;
+            label BCind = inletIndex(0,0);
 
             vectorField lift_1 (liftfield[0].boundaryField()[BCind]);
             vectorField lift_2 (liftfield[1].boundaryField()[BCind]);
@@ -182,7 +182,7 @@ class tutorial06 : public SteadyNSTurb
         {
             Vector<double> inl(0, 0, 0);
             List<scalar> mu_now(3);
-            label BCind = 2;
+            label BCind = inletIndex(0,0);
 
             // Read the lift functions
             ITHACAstream::read_fields(liftfield, U, "./lift/");
@@ -295,7 +295,10 @@ int main(int argc, char* argv[])
     // The first column is the index of the inlet patch and the second column is the direction,
     // x,y,z of the inlet velocity
     example.inletIndex.resize(example.mu.cols()-1, 2);
-    example.inletIndex.setConstant(0);
+    example.inletIndex(0,0) = 2; // The index of the inlet patch
+    example.inletIndex(0,1) = 0; // The direction of the inlet velocity
+    example.inletIndex(1,0) = 2; // The index of the inlet patch
+    example.inletIndex(1,1) = 0; // The direction of the inlet velocity
 
     // create a list to store the time of different steps
     List<scalar> timeList;
@@ -496,10 +499,15 @@ int main(int argc, char* argv[])
     example.onlineSolve("./ITHACAoutput/Online/");
     
     // Write error of online solutions
+    Info<< "Writing errors of online solutions" << endl;
+    Info<< "-----------------------------------------------------\n";
+    Info<< "The velocity error is: " << endl;
     Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(example.Ufield,
                                                             pod_rbf.uRecFields);
+    Info<< "The pressure error is: " << endl;
     Eigen::MatrixXd errL2P = ITHACAutilities::errorL2Rel(example.Pfield,
                                                             pod_rbf.pRecFields);
+    Info<< "The eddy viscosity error is: " << endl;
     Eigen::MatrixXd errL2NUT = ITHACAutilities::errorL2Rel(example.nutFields,
                                                             pod_rbf.nutRecFields);
     ITHACAstream::exportMatrix(errL2U, "errL2U", "eigen",
@@ -508,6 +516,17 @@ int main(int argc, char* argv[])
                                 "./ITHACAoutput/Online/ErrorsL2/");
     ITHACAstream::exportMatrix(errL2NUT, "errL2NUT", "eigen",
                                 "./ITHACAoutput/Online/ErrorsL2/");
+    Info<< "----------------------------------------------------\n";
+
+    Info<< "The mean L2 error of the online solution is:\n"
+        << "-----------------------------------------------------\n";
+    Info<< "U: \t"
+        << errL2U.mean() << endl;
+    Info<< "P: \t"
+        << errL2P.mean() << endl;
+    Info<< "NUT: \t"
+        << errL2NUT.mean() << endl;
+    Info<< "-----------------------------------------------------\n";
         
     // Export errorfields
     // Perform an online solve for the new values of inlet velocities

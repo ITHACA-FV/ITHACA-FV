@@ -96,6 +96,7 @@ SteadyNSTurb::SteadyNSTurb(int argc, char* argv[])
     M_Assert(neumannMethod == "penalty" || neumannMethod == "none",
              "The neumann BC method must be set to penalty or none in ITHACAdict");
     nonUniformbc = ITHACAdict->lookupOrDefault<bool>("nonUniformbc", false);
+    tauU = ITHACAdict->lookupOrDefault<scalar>("tauU", 1e-1);
 }
 
 
@@ -686,33 +687,33 @@ Eigen::MatrixXd SteadyNSTurb::btTurbulence(label NUmodes, label NSUPmodes)
     return btMatrix;
 }
 
-void SteadyNSTurb::getRBFType(const word& viscCoeff, const word& rbfKernel)
+SPLINTER::RadialBasisFunctionType SteadyNSTurb::getRBFType(const word& viscCoeff, const word& rbfKernel)
 {
     if (viscCoeff == "RBF")
     {
         if (rbfKernel == "linear")
         {
-            rbfType = SPLINTER::RadialBasisFunctionType::LINEAR;
+            return SPLINTER::RadialBasisFunctionType::LINEAR;
         }
         else if (rbfKernel == "thinPlate")
         {
-            rbfType = SPLINTER::RadialBasisFunctionType::THIN_PLATE_SPLINE;
+            return SPLINTER::RadialBasisFunctionType::THIN_PLATE_SPLINE;
         }
         else if (rbfKernel == "multiQuadric")
         {
-            rbfType = SPLINTER::RadialBasisFunctionType::MULTIQUADRIC;
+            return SPLINTER::RadialBasisFunctionType::MULTIQUADRIC;
         }
         else if (rbfKernel == "inverseQuadric")
         {
-            rbfType = SPLINTER::RadialBasisFunctionType::INVERSE_MULTIQUADRIC;
+            return SPLINTER::RadialBasisFunctionType::INVERSE_MULTIQUADRIC;
         }
         else if (rbfKernel == "inverseMultiQuadric")
         {
-            rbfType = SPLINTER::RadialBasisFunctionType::INVERSE_MULTIQUADRIC;
+            return SPLINTER::RadialBasisFunctionType::INVERSE_MULTIQUADRIC;
         }
         else if (rbfKernel == "gaussian")
         {
-            rbfType = SPLINTER::RadialBasisFunctionType::GAUSSIAN;
+            return SPLINTER::RadialBasisFunctionType::GAUSSIAN;
         }
         else
         {
@@ -730,24 +731,26 @@ void SteadyNSTurb::getRBFType(const word& viscCoeff, const word& rbfKernel)
     }
 }
 
-List <Eigen::MatrixXd> SteadyNSTurb::bcPenaltyLiftMat(label NUmodes,
+List <Eigen::MatrixXd> SteadyNSTurb::bcPenaltyLiftMat(label NL_U_SUPmodes,
         label NLiftmodes)
 {
     List <Eigen::MatrixXd> bcPenLiftMat(NLiftmodes);
 
     for (label i = 0; i < NLiftmodes; i++)
     {
-        bcPenLiftMat[i].resize(NUmodes, 1);
+        bcPenLiftMat[i].resize(NL_U_SUPmodes, 1);
     }
 
     label BCind = inletIndex(0, 0);
+    label BCcomp = inletIndex(0, 1);
 
     for (label i = 0; i < NLiftmodes; i++)
     {
-        for (label j = 0; j < NUmodes; j++)
+        for (label j = 0; j < NL_U_SUPmodes; j++)
         {
-            bcPenLiftMat[i](j, 0) = gSum(Umodes[i].boundaryField()[BCind] &
-                                        bcBasisFields[j].boundaryField()[BCind]);
+            bcPenLiftMat[i](j, 0) = gSum(L_U_SUPmodes[j].boundaryField()[BCind].component(BCcomp) *
+                                        bcBasisFields[i].boundaryField()[BCind].component(BCcomp) *
+                                        L_U_SUPmodes[j].mesh().boundary()[BCind].magSf());
         }
     }
 
@@ -964,7 +967,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
 
         if (bcMethod == "penaltyLift")
         {
-            bcPenLiftMat = bcPenaltyLiftMat(NUmodes, inletIndex.rows());
+            bcPenLiftMat = bcPenaltyLiftMat(L_U_SUPmodes.size(), inletIndex.rows());
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
     }
@@ -1018,7 +1021,7 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
 
         if (bcMethod == "penaltyLift")
         {
-            bcPenLiftMat = bcPenaltyLiftMat(NUmodes, inletIndex.rows());
+            bcPenLiftMat = bcPenaltyLiftMat(L_U_SUPmodes.size(), inletIndex.rows());
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
     }
@@ -1119,6 +1122,8 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
 
+    Info<< "The RBF kernel type is: " << rbfKernel << endl;
+
     for (label i = 0; i < nNutModes; i++)
     {
         word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
@@ -1133,11 +1138,12 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
 
+            rbfType = getRBFType(viscCoeff, rbfKernel);
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsPPE/",
                                           weightName);
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i], rbfType, weights);
-            std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            Info << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
+            Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
         else
         {
@@ -1148,14 +1154,15 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
 
+            rbfType = getRBFType(viscCoeff, rbfKernel);
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i], rbfType);
             if (Pstream::master())
             {
                 ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsPPE/", weightName);
             }
-            std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            Info << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
+            Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
     }
 }
@@ -1301,7 +1308,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
         if (bcMethod == "penaltyLift")
         {
-            bcPenLiftMat = bcPenaltyLiftMat(NUmodes, inletIndex.rows());
+            bcPenLiftMat = bcPenaltyLiftMat(L_U_SUPmodes.size(), inletIndex.rows());
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
     }
@@ -1350,7 +1357,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
         if (bcMethod == "penaltyLift")
         {
-            bcPenLiftMat = bcPenaltyLiftMat(NUmodes, inletIndex.rows());
+            bcPenLiftMat = bcPenaltyLiftMat(L_U_SUPmodes.size(), inletIndex.rows());
             bcVelMat = bcVelocityMat(NUmodes, NSUPmodes);
         }
     }
@@ -1423,6 +1430,8 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
 
+    Info<< "The RBF kernel type is: " << rbfKernel << endl;
+
     for (label i = 0; i < nNutModes; i++)
     {
         word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
@@ -1437,11 +1446,12 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
 
+            rbfType = getRBFType(viscCoeff, rbfKernel);
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsSUP/",
                                           weightName);
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i], rbfType, weights);
-            std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            Info << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
+            Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
         else
         {
@@ -1452,6 +1462,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
 
+            rbfType = getRBFType(viscCoeff, rbfKernel);
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i], rbfType);
             std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
             if (Pstream::master())
@@ -1463,7 +1474,8 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                                 "./ITHACAoutput/weightsSUP/"
                                 );
             }
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            Info << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
+            Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
     }
 }

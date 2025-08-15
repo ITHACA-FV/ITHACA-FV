@@ -155,7 +155,11 @@ class SteadyNSTurb: public steadyNS
         /// @brief      Select the rbfkernel for the eddy viscosity
         /// @param[in]  rbfKernel  The name of the RBF kernel to be used for the eddy viscosity
         ///
-        void getRBFType(const word& viscCoeff, const word& rbfKernel);
+        /// @return     The type of the RBF kernel
+        /// @details    The RBF kernel can be one of the following: linear, thinPlate, multiQuadric,
+        /// inverseQuadric, inverseMultiQuadric, gaussian.
+        /// 
+        SPLINTER::RadialBasisFunctionType getRBFType(const word& viscCoeff, const word& rbfKernel);
 
         //--------------------------------------------------------------------------
         /// Project using a PPE approach

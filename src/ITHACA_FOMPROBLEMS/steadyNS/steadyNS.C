@@ -1625,7 +1625,13 @@ Eigen::MatrixXd steadyNS::pressure_BC1(label NUmodes, label NPmodes)
 
             for (label k = 0; k < lpl.boundaryField().size(); k++)
             {
-                s += gSum(lpl.boundaryField()[k]);
+                if (lpl.boundaryField()[k].type() != "processor" &&
+                    lpl.boundaryField()[k].type() != "empty" &&
+                    lpl.boundaryField()[k].type() != "symmetry")
+                {
+                    // Sum the contributions from each patch
+                    s += gSum(lpl.boundaryField()[k]);
+                }
             }
 
             BC1_matrix(i, j) = s;
@@ -1668,7 +1674,12 @@ List <Eigen::MatrixXd> steadyNS::pressure_BC2(label NUmodes, label NPmodes)
 
                 for (label k = 0; k < div_m.boundaryField().size(); k++)
                 {
-                    s += gSum(div_m.boundaryField()[k]);
+                    if (div_m.boundaryField()[k].type() != "processor" &&
+                        div_m.boundaryField()[k].type() != "empty" &&
+                        div_m.boundaryField()[k].type() != "symmetry")
+                    {
+                        s += gSum(div_m.boundaryField()[k]);
+                    }
                 }
 
                 BC2_matrix[i](j, k) = s;
@@ -1700,7 +1711,12 @@ Eigen::Tensor<double, 3> steadyNS::pressureBC2(label NUmodes, label NPmodes)
 
                 for (label k = 0; k < div_m.boundaryField().size(); k++)
                 {
-                    s += gSum(div_m.boundaryField()[k]);
+                    if (div_m.boundaryField()[k].type() != "processor" &&
+                        div_m.boundaryField()[k].type() != "empty" &&
+                        div_m.boundaryField()[k].type() != "symmetry")
+                    {
+                        s += gSum(div_m.boundaryField()[k]);
+                    }
                 }
 
                 bc2Tensor(i, j, k) = s;
@@ -1736,7 +1752,12 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
             double s = 0;
             for (label k = 0; k < BC5.boundaryField().size(); k++)
             {
-                s += gSum(BC5.boundaryField()[k]);
+                if (BC5.boundaryField()[k].type() != "processor" &&
+                    BC5.boundaryField()[k].type() != "empty" &&
+                    BC5.boundaryField()[k].type() != "symmetry")
+                {
+                    s += gSum(BC5.boundaryField()[k]);
+                }
             }
 
             BC3_matrix(i, j) = s;
@@ -1770,7 +1791,12 @@ Eigen::MatrixXd steadyNS::pressure_BC4(label NUmodes, label NPmodes)
 
             for (label k = 0; k < BC5.boundaryField().size(); k++)
             {
-                s += gSum(BC5.boundaryField()[k]);
+                if (BC5.boundaryField()[k].type() != "processor" &&
+                    BC5.boundaryField()[k].type() != "empty" &&
+                    BC5.boundaryField()[k].type() != "symmetry")
+                {
+                    s += gSum(BC5.boundaryField()[k]);
+                }
             }
 
             BC4_matrix(i, j) = s;
@@ -1805,7 +1831,8 @@ List<Eigen::MatrixXd> steadyNS::bcVelocityVec(label NUmodes,
         for (label i = 0; i < BCsize; i++)
         {
             bcVelVec[k](i, 0) = gSum(L_U_SUPmodes[i].boundaryField()[BCind].component(
-                                         BCcomp));
+                                         BCcomp) *
+                                     L_U_SUPmodes[i].mesh().boundary()[BCind].magSf());
         }
     }
 
@@ -1841,7 +1868,8 @@ List<Eigen::MatrixXd> steadyNS::bcVelocityMat(label NUmodes,
             {
                 bcVelMat[k](i, j) = gSum(L_U_SUPmodes[i].boundaryField()[BCind].component(
                                              BCcomp) *
-                                         L_U_SUPmodes[j].boundaryField()[BCind].component(BCcomp));
+                                         L_U_SUPmodes[j].boundaryField()[BCind].component(BCcomp) *
+                                         L_U_SUPmodes[i].mesh().boundary()[BCind].magSf());
             }
         }
     }
@@ -1877,7 +1905,8 @@ List<Eigen::MatrixXd> steadyNS::bcGradVelocityVec(label NUmodes,
         for (label i = 0; i < BCsize; i++)
         {
             bcGradVelVec[k](i, 0) = gSum(L_U_SUPmodes[i].boundaryField()[BCind].component(
-                                         BCcomp));
+                                         BCcomp) *
+                                         L_U_SUPmodes[i].mesh().boundary()[BCind].magSf());
         }
     }
 
