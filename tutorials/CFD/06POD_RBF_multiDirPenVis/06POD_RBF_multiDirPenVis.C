@@ -291,15 +291,6 @@ int main(int argc, char* argv[])
     Eigen::MatrixXd par_online = ITHACAstream::readMatrix(par_new);
     example.mu = ITHACAstream::readMatrix(par_offline);
 
-    // Set the inlet boundaries where we have parameterized boundary conditions
-    // The first column is the index of the inlet patch and the second column is the direction,
-    // x,y,z of the inlet velocity
-    example.inletIndex.resize(example.mu.cols()-1, 2);
-    example.inletIndex(0,0) = 2; // The index of the inlet patch
-    example.inletIndex(0,1) = 2; // The direction of the inlet velocity
-    example.inletIndex(1,0) = 2; // The index of the inlet patch
-    example.inletIndex(1,1) = 2; // The direction of the inlet velocity
-
     // create a list to store the time of different steps
     List<scalar> timeList;
     // The list for name of the steps
@@ -321,6 +312,22 @@ int main(int argc, char* argv[])
                             false);
     bool exportErrorField = para->ITHACAdict->lookupOrDefault<bool>("exportErrorField",
                             false);
+    label DirIndex = para->ITHACAdict->get<label>("DirIndex");
+    label DirComponent = para->ITHACAdict->get<label>("DirComponent");
+
+    Info<< "--------------------------------------------------------\n"
+        << "The index of the Dirichlet boundary is " << DirIndex << endl
+        << "The component of the Dirichlet boundary is " << DirComponent << endl;
+    Info<< "--------------------------------------------------------\n";
+
+    // Set the inlet boundaries where we have parameterized boundary conditions
+    // The first column is the index of the inlet patch and the second column is the direction,
+    // x,y,z of the inlet velocity
+    example.inletIndex.resize(example.mu.cols()-1, 2);
+    example.inletIndex(0,0) = DirIndex; // The index of the inlet patch
+    example.inletIndex(0,1) = DirComponent; // The direction of the inlet velocity
+    example.inletIndex(1,0) = DirIndex; // The index of the inlet patch
+    example.inletIndex(1,1) = DirComponent; // The direction of the inlet velocity
 
     // Read the lift functions
     ITHACAstream::read_fields(example.bcBasisFields, example.U, "./lift/");
