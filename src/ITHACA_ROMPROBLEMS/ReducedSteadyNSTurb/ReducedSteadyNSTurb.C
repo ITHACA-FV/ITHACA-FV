@@ -109,12 +109,43 @@ int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
         }
     }
 
+    if (problem->viscCoeff == "RBF")
+    {
+        if (problem->rbfParams == "params")
+        {            
+        }
+        else if (problem->rbfParams == "vel")
+        {
+            for (int i = 0; i < nphiNut; i++)
+            {
+                Eigen::MatrixXd coeffL2_tmp = aTmp.middleRows(problem->liftfield.size(), problem->NUmodes);
+
+                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+            }
+        }
+        else if (problem->rbfParams == "velLift")
+        {
+            for (int i = 0; i < nphiNut; i++)
+            {
+                Eigen::MatrixXd coeffL2_tmp = aTmp.topRows(problem->liftfield.size() + problem->NUmodes);
+
+                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+            }
+        }
+        else
+        {
+            FatalError << "Unknown rbfParams type: " << problem->rbfParams << endl;
+            FatalError.exit();
+        }
+    }
+
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
              i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
-        fvec(i) = m1(i) - cc(0, 0) - m2(i);
+    
+        fvec(i) = m1(i) - cc(0,0) - m2(i);
 
         if (problem->bcMethod == "penalty" || problem->bcMethod == "penaltyLift")
         {
@@ -180,11 +211,42 @@ int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
         }
     }
 
+    if (problem->viscCoeff == "RBF")
+    {
+        if (problem->rbfParams == "params")
+        {            
+        }
+        else if (problem->rbfParams == "vel")
+        {
+            for (int i = 0; i < nphiNut; i++)
+            {
+                Eigen::MatrixXd coeffL2_tmp = aTmp.middleRows(problem->liftfield.size(), problem->NUmodes);
+
+                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+            }
+        }
+        else if (problem->rbfParams == "velLift")
+        {
+            for (int i = 0; i < nphiNut; i++)
+            {
+                Eigen::MatrixXd coeffL2_tmp = aTmp.topRows(problem->liftfield.size() + problem->NUmodes);
+
+                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+            }
+        }
+        else
+        {
+            FatalError << "Unknown rbfParams type: " << problem->rbfParams << endl;
+            FatalError.exit();
+        }
+    }
+
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
              i) * aTmp - gNut.transpose() *
              Eigen::SliceFromTensor(problem->cTotalTensor, 0, i) * aTmp;
+
         fvec(i) = m1(i) - cc(0, 0) - m2(i);
 
         if (problem->bcMethod == "penalty" || problem->bcMethod == "penaltyLift")
@@ -283,30 +345,14 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     }
     else if (problem->viscCoeff == "RBF")
     {
-        // for (int i = 0; i < nphiNut; i++)
-        // {
-        //     newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-        //     rbfCoeff = newtonObjectPPE.gNut;
-        // }
-
         if (problem->rbfParams == "params")
         {            
             label caseIdx = count_online_solve-1;
-            std::cout << "The rbfparameter is: " << onlineMu.row(caseIdx) << std::endl;
             for (int i = 0; i < nphiNut; i++)
             {                
                 newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
-                rbfCoeff = newtonObjectSUP.gNut;
             }
-        }
-        else
-        {
-            std::cout << "The rbfparameter is: " << vel_now << std::endl;
-            for (int i = 0; i < nphiNut; i++)
-            {
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-                rbfCoeff = newtonObjectSUP.gNut;
-            }
+            rbfCoeff = newtonObjectSUP.gNut;
         }
     }
     else
@@ -320,22 +366,27 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
     hnls.solve(y);
     Eigen::VectorXd res(y);
     newtonObjectSUP.operator()(y, res);
-    std::cout << "################## Online solve N° " << count_online_solve <<
-              " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << vel_now << std::endl;
+    Info << "################## Online solve N° " << count_online_solve <<
+          " ##################" << endl;
+    Info << "Solving for the parameter: " << vel_now << endl;
 
     if (res.norm() < 1e-5)
     {
-        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+             hnls.iter << " iterations " << endl << endl;
     }
     else
     {
-        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+             hnls.iter << " iterations " << endl << endl;
     }
 
     count_online_solve += 1;
+
+    if (problem->rbfParams == "vel" || problem->rbfParams == "velLift")
+    {
+        rbfCoeff = newtonObjectSUP.gNut;
+    }
 }
 
 void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
@@ -389,30 +440,14 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
     }
     else if (problem->viscCoeff == "RBF")
     {
-        // for (int i = 0; i < nphiNut; i++)
-        // {
-        //     newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-        //     rbfCoeff = newtonObjectPPE.gNut;
-        // }
-
         if (problem->rbfParams == "params")
         {            
             label caseIdx = count_online_solve-1;
-            std::cout << "The rbfparameter is: " << onlineMu.row(caseIdx) << std::endl;
             for (int i = 0; i < nphiNut; i++)
             {
                 newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
-                rbfCoeff = newtonObjectSUP.gNut;
             }
-        }
-        else
-        {
-            std::cout << "The rbfparameter is: " << vel_now << std::endl;
-            for (int i = 0; i < nphiNut; i++)
-            {
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(vel_now);
-                rbfCoeff = newtonObjectSUP.gNut;
-            }
+            rbfCoeff = newtonObjectSUP.gNut;
         }
     }
     else
@@ -426,22 +461,27 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
     hnls.solve(y);
     Eigen::VectorXd res(y);
     newtonObjectPPE.operator()(y, res);
-    std::cout << "################## Online solve N° " << count_online_solve <<
-              " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << vel_now << std::endl;
+    Info << "################## Online solve N° " << count_online_solve <<
+          " ##################" << endl;
+    Info << "Solving for the parameter: " << vel_now << endl;
 
     if (res.norm() < 1e-5)
     {
-        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+             hnls.iter << " iterations " << endl << endl;
     }
     else
     {
-        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+             hnls.iter << " iterations " << endl << endl;
     }
 
     count_online_solve += 1;
+
+    if (problem->rbfParams == "vel" || problem->rbfParams == "velLift")
+    {
+        rbfCoeff = newtonObjectSUP.gNut;
+    }
 }
 
 void ReducedSteadyNSTurb::reconstruct(bool exportFields, fileName folder,

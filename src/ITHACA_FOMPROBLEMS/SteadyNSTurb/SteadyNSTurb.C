@@ -86,7 +86,9 @@ SteadyNSTurb::SteadyNSTurb(int argc, char* argv[])
     M_Assert(bcMethod == "lift" || bcMethod == "penalty" || bcMethod == "penaltyLift",
              "The BC method must be set to lift, penalty or penaltyLift in ITHACAdict");
     viscCoeff = ITHACAdict->lookupOrDefault<word>("viscCoeff", "RBF");
-    rbfParams = ITHACAdict->lookupOrDefault<word>("rbfParams", "vel");
+    rbfParams = ITHACAdict->lookupOrDefault<word>("rbfParams", "params");
+    M_Assert(rbfParams == "vel" || rbfParams == "velLift" || rbfParams == "params",
+             "The rbfParams must be set to vel or velLift or params in ITHACAdict");
     rbfKernel = ITHACAdict->lookupOrDefault<word>("rbfKernel", "linear");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
@@ -1103,21 +1105,67 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
     cTotalTensor = ct1Tensor + ct2Tensor;
     cTotalPPETensor.resize(NPmodes, nNutModes, cSize);
     cTotalPPETensor = ct1PPETensor + ct2PPETensor;
+
     // Get the coeffs for interpolation (the orthonormal one is used because basis are orthogonal)
     coeffL2 = ITHACAutilities::getCoeffs(nutFields,
                                          nutModes, nNutModes);
+    // coefficients for U and p modes are computed in the tutorial codes  
+    if (rbfParams == "velLift")
+    {
+        // check if the cols of the three matrices: coeffL2, coeffL2_U and coeffL2_lift, are the same,
+        // if not, fatal error
+        if (coeffL2.cols() != coeffL2_U.cols() || coeffL2.cols() != coeffL2_lift.cols())
+        {
+            FatalErrorInFunction
+                << "Non-equal matrix dimensions for coeffL2, coeffL2_U and coeffL2_lift."
+                << abort(FatalError);
+        }
+
+        if (bcMethod == "lift")
+        {
+            // coeffL2_lift is defined in the tutorial codes
+            coeffL2_lift_U.resize(NUmodes + liftfield.size(), coeffL2_U.cols());
+            coeffL2_lift_U.topRows(liftfield.size()) = coeffL2_lift;
+            coeffL2_lift_U.bottomRows(NUmodes) = coeffL2_U;
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "The bcMethod is not set to 'lift', but coeffL2_lift_U is being used."
+                << abort(FatalError);
+        }
+    }
     if (Pstream::master())
     {
-        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
-            "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
-                    "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
-                    "./ITHACAoutput/Matrices/");
-        // Export the matrix
-        ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
-                    "coeffL2_nut_" + name(nNutModes));
-    }    
+        if (para->exportPython)
+        {
+            ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "python",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "python",
+                                       "./ITHACAoutput/Matrices/");
+        }
+        if (para->exportMatlab)
+        {
+            ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+        }
+        if (para->exportTxt)
+        {
+            ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+        }
+    }
+
     samples.resize(nNutModes);
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
@@ -1135,7 +1183,23 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
 
             for (label j = 0; j < coeffL2.cols(); j++)
             {
-                samples[i]->addSample(mu.row(j), coeffL2(i, j));
+                if (rbfParams == "vel")
+                {
+                    samples[i]->addSample(coeffL2_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "velLift")
+                {
+                    samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "params")
+                {
+                    samples[i]->addSample(mu.row(j), coeffL2(i, j));
+                }
+                else
+                {
+                    FatalError << "Unknown rbfParams type: " << rbfParams << endl;
+                    FatalError.exit();
+                }
             }
 
             rbfType = getRBFType(viscCoeff, rbfKernel);
@@ -1151,7 +1215,23 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
 
             for (label j = 0; j < coeffL2.cols(); j++)
             {
-                samples[i]->addSample(mu.row(j), coeffL2(i, j));
+                if (rbfParams == "vel")
+                {
+                    samples[i]->addSample(coeffL2_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "velLift")
+                {
+                    samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "params")
+                {
+                    samples[i]->addSample(mu.row(j), coeffL2(i, j));
+                }
+                else
+                {
+                    FatalError << "Unknown rbfParams type: " << rbfParams << endl;
+                    FatalError.exit();
+                }
             }
 
             rbfType = getRBFType(viscCoeff, rbfKernel);
@@ -1411,21 +1491,67 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     cTotalTensor.resize(cSize, nNutModes, cSize);
     cTotalTensor = ct1Tensor + ct2Tensor;
+    
     // Get the coeffs for interpolation (the orthonormal one is used because basis are orthogonal)
     coeffL2 = ITHACAutilities::getCoeffs(nutFields,
-                                         nutModes, nNutModes);
+                                         nutModes, nNutModes); 
+    // coefficients for U and p modes are computed in the tutorial codes  
+    if (rbfParams == "velLift")
+    {
+        // check if the cols of the three matrices: coeffL2, coeffL2_U and coeffL2_lift, are the same,
+        // if not, fatal error
+        if (coeffL2.cols() != coeffL2_U.cols() || coeffL2.cols() != coeffL2_lift.cols())
+        {
+            FatalErrorInFunction
+                << "Non-equal matrix dimensions for coeffL2, coeffL2_U and coeffL2_lift."
+                << abort(FatalError);
+        }
+
+        if (bcMethod == "lift")
+        {
+            // coeffL2_lift is defined in the tutorial codes
+            coeffL2_lift_U.resize(NUmodes + liftfield.size(), coeffL2_U.cols());
+            coeffL2_lift_U.topRows(liftfield.size()) = coeffL2_lift;
+            coeffL2_lift_U.bottomRows(NUmodes) = coeffL2_U;
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "The bcMethod is not set to 'lift', but coeffL2_lift_U is being used."
+                << abort(FatalError);
+        }
+    } 
     if (Pstream::master())
     {
-        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
-            "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
-                    "./ITHACAoutput/Matrices/");
-        ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
-                    "./ITHACAoutput/Matrices/");
-        // Export the matrix
-        ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
-                    "coeffL2_nut_" + name(nNutModes));
+        if (para->exportPython)
+        {
+            ITHACAstream::exportMatrix(coeffL2, "coeffL2", "python",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "python",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "python",
+                                       "./ITHACAoutput/Matrices/");
+        }
+        if (para->exportMatlab)
+        {
+            ITHACAstream::exportMatrix(coeffL2, "coeffL2", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "matlab",
+                                       "./ITHACAoutput/Matrices/");
+        }
+        if (para->exportTxt)
+        {
+            ITHACAstream::exportMatrix(coeffL2, "coeffL2", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+            ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+        }
     }
+
     samples.resize(nNutModes);
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
@@ -1433,7 +1559,7 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     Info<< "The RBF kernel type is: " << rbfKernel << endl;
 
     for (label i = 0; i < nNutModes; i++)
-    {
+    {        
         word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
                           + name(NUmodes) + "_" + name(NSUPmodes) ;
 
@@ -1443,7 +1569,23 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
             for (label j = 0; j < coeffL2.cols(); j++)
             {
-                samples[i]->addSample(mu.row(j), coeffL2(i, j));
+                if (rbfParams == "vel")
+                {
+                    samples[i]->addSample(coeffL2_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "velLift")
+                {
+                    samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "params")
+                {
+                    samples[i]->addSample(mu.row(j), coeffL2(i, j));
+                }
+                else
+                {
+                    FatalError << "Unknown rbfParams type: " << rbfParams << endl;
+                    FatalError.exit();
+                }
             }
 
             rbfType = getRBFType(viscCoeff, rbfKernel);
@@ -1459,12 +1601,28 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
             for (label j = 0; j < coeffL2.cols(); j++)
             {
-                samples[i]->addSample(mu.row(j), coeffL2(i, j));
+                if (rbfParams == "vel")
+                {
+                    samples[i]->addSample(coeffL2_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "velLift")
+                {
+                    samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
+                }
+                else if (rbfParams == "params")
+                {
+                    samples[i]->addSample(mu.row(j), coeffL2(i, j));
+                }
+                else
+                {
+                    FatalError << "Unknown rbfParams type: " << rbfParams << endl;
+                    FatalError.exit();
+                }
             }
 
             rbfType = getRBFType(viscCoeff, rbfKernel);
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i], rbfType);
-            std::cout << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << std::endl;
+            Info << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
             if (Pstream::master())
             {
                 ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,

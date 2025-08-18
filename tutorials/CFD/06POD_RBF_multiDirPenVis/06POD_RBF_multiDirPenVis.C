@@ -352,6 +352,7 @@ int main(int argc, char* argv[])
             }
         }
         // The shape of mu is different from the old code, so transpose it
+        example.coeffL2_lift = tmpmu.transpose();
         Eigen::MatrixXd muTranspose = tmpmu.transpose();
 
         // Compute the lift velocity fields
@@ -362,6 +363,9 @@ int main(int argc, char* argv[])
         ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
                             example.podex,
                             example.supex, 0, NmodesProject);
+        
+        example.coeffL2_U = ITHACAutilities::getCoeffs(example.Uomfield,
+                                            example.Umodes, NmodesU);
     }
     else if (example.bcMethod == "lift")
     {        
@@ -371,12 +375,18 @@ int main(int argc, char* argv[])
         ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
                             example.podex,
                             example.supex, 0, NmodesProject);
+
+        example.coeffL2_U = ITHACAutilities::getCoeffs(example.Uomfield,
+                                            example.Umodes, NmodesU);
     }
     else 
     {
         ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
                             example.podex,
                             example.supex, 0, NmodesProject);
+
+        example.coeffL2_U = ITHACAutilities::getCoeffs(example.Ufield,
+                                            example.Umodes, NmodesU);
     }
     
     // Perform a POD decomposition for the velocity, the pressure and the eddy viscosity
@@ -389,25 +399,8 @@ int main(int argc, char* argv[])
     timeList.append(example._runTime().elapsedCpuTime());
     nameList.append("POD");
 
-    // Get coefficients for U, p and nut modes
-    Eigen::MatrixXd coeffL2_U;
-    if (example.Uomfield.size() > 0)
-    {
-        coeffL2_U = ITHACAutilities::getCoeffs(example.Uomfield,
-                                         example.Umodes, NmodesU);
-    }
-    else
-    {
-        coeffL2_U = ITHACAutilities::getCoeffs(example.Ufield,
-                                         example.Umodes, NmodesU);
-    }
-    
-    Eigen::MatrixXd coeffL2_P = ITHACAutilities::getCoeffs(example.Pfield,
+    example.coeffL2_P = ITHACAutilities::getCoeffs(example.Pfield,
                                          example.Pmodes, NmodesP);
-    ITHACAstream::exportMatrix(coeffL2_U, "coeffL2_U", "eigen",
-                    "./ITHACAoutput/Matrices/");
-    ITHACAstream::exportMatrix(coeffL2_P, "coeffL2_P", "eigen",
-                    "./ITHACAoutput/Matrices/");
 
     // export the homogeneous velocity snapshots
     IFstream exUomfield1(fileName ("./ITHACAoutput/Offline/1/Uofield"));

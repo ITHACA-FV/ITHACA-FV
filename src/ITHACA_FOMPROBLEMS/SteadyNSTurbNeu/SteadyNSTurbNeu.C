@@ -86,7 +86,7 @@ SteadyNSTurbNeu::SteadyNSTurbNeu(int argc, char* argv[])
     M_Assert(bcMethod == "lift" || bcMethod == "penalty",
              "The BC method must be set to lift or penalty in ITHACAdict");
     viscCoeff = ITHACAdict->lookupOrDefault<word>("viscCoeff", "RBF");
-    rbfParams = ITHACAdict->lookupOrDefault<word>("rbfParams", "vel");
+    rbfParams = ITHACAdict->lookupOrDefault<word>("rbfParams", "params");
     M_Assert(rbfParams == "vel" || rbfParams == "velLift" || rbfParams == "params",
              "The rbfParams must be set to vel or velLift or params in ITHACAdict");
     rbfKernel = ITHACAdict->lookupOrDefault<word>("rbfKernel", "linear");
@@ -1076,6 +1076,7 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
 
         if (bcMethod == "lift")
         {
+            // coeffL2_lift is defined in the tutorial codes
             coeffL2_lift_U.resize(NUmodes + liftfield.size(), coeffL2_U.cols());
             coeffL2_lift_U.topRows(liftfield.size()) = coeffL2_lift;
             coeffL2_lift_U.bottomRows(NUmodes) = coeffL2_U;
