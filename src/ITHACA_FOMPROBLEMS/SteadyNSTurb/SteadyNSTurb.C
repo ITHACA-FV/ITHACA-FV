@@ -975,32 +975,6 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
     }
     else
     {
-        L_U_SUPmodes.resize(0);
-
-        if (liftfield.size() != 0)
-        {
-            for (label k = 0; k < liftfield.size(); k++)
-            {
-                L_U_SUPmodes.append(liftfield[k].clone());
-            }
-        }
-
-        if (NUmodes != 0)
-        {
-            for (label k = 0; k < NUmodes; k++)
-            {
-                L_U_SUPmodes.append(Umodes[k].clone());
-            }
-        }
-
-        if (NSUPmodes != 0)
-        {
-            for (label k = 0; k < NSUPmodes; k++)
-            {
-                L_U_SUPmodes.append(supmodes[k].clone());
-            }
-        }
-
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
         C_tensor = convective_term_tens_cache_mem(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);
@@ -1394,32 +1368,6 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     }
     else
     {
-        L_U_SUPmodes.resize(0);
-
-        if (liftfield.size() != 0)
-        {
-            for (label k = 0; k < liftfield.size(); k++)
-            {
-                L_U_SUPmodes.append(liftfield[k].clone());
-            }
-        }
-
-        if (NUmodes != 0)
-        {
-            for (label k = 0; k < NUmodes; k++)
-            {
-                L_U_SUPmodes.append(Umodes[k].clone());
-            }
-        }
-
-        if (NSUPmodes != 0)
-        {
-            for (label k = 0; k < NSUPmodes; k++)
-            {
-                L_U_SUPmodes.append(supmodes[k].clone());
-            }
-        }
-
         B_matrix = diffusive_term(NUmodes, NPmodes, NSUPmodes);
         C_tensor = convective_term_tens_cache_mem(NUmodes, NPmodes, NSUPmodes);
         K_matrix = pressure_gradient_term(NUmodes, NPmodes, NSUPmodes);

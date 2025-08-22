@@ -225,6 +225,7 @@ int main(int argc, char* argv[])
     // We create the matrix rbfCoeff which will store the values of the interpolation results for the eddy viscosity field
     Eigen::MatrixXd rbfCoeff;
     rbfCoeff.resize(NmodesNUT, par_online.rows());
+    pod_rbf.onlineMu = par_online;
 
     // Perform an online solve for the new values of inlet velocities
     for (label k = 0; k < par_online.rows(); k++)
@@ -272,6 +273,7 @@ int main(int argc, char* argv[])
     // Set value of the reduced viscosity and the penalty factor
     pod_normal.nu = 1e-3;
     pod_normal.tauU.resize(2, 1);
+    pod_rbf.onlineMu = par_online;
 
     // Perform an online solve for the new values of inlet velocities
     for (label k = 0; k < par_online.rows(); k++)

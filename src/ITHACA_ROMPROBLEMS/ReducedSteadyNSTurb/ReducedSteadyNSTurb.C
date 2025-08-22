@@ -445,9 +445,9 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
             label caseIdx = count_online_solve-1;
             for (int i = 0; i < nphiNut; i++)
             {
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
+                newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
             }
-            rbfCoeff = newtonObjectSUP.gNut;
+            rbfCoeff = newtonObjectPPE.gNut;
         }
     }
     else
@@ -480,7 +480,7 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
 
     if (problem->rbfParams == "vel" || problem->rbfParams == "velLift")
     {
-        rbfCoeff = newtonObjectSUP.gNut;
+        rbfCoeff = newtonObjectPPE.gNut;
     }
 }
 
