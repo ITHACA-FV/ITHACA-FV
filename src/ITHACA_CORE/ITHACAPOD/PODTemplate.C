@@ -451,9 +451,19 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
         // (parameter used by [deletePreviousTempCovMatrix_N])
         int N_previous_temp_Mat = 3;
 
+        // Modifying the casename locally so that readfields look the data in the 
+        // processor* directory in the case of a parallel run
+        fileName local_casename = casenameData;
+        if (Pstream::parRun())
+        {
+         local_casename = casenameData + "processor" + name(Pstream::myProcNo());
+        }
+
+        // Info << "casenameData is " << local_casename << endl;
+
         for (label i = etapeI; i < l_nBlocks; i++)
         {
-            ITHACAstream::read_fields(snapshots, (*f_field), casenameData,
+            ITHACAstream::read_fields(snapshots, (*f_field), local_casename,
                                       l_startTime - 2 + i * q, q);
             lift(snapshots);
             indexTri indTri;
@@ -465,7 +475,7 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
 
             for (label j = etapeJ; j < i; j++)
             {
-                ITHACAstream::read_fields(snapshots2, (*f_field), casenameData,
+                ITHACAstream::read_fields(snapshots2, (*f_field), local_casename,
                                           l_startTime - 2 + j * q, q);
                 lift(snapshots2);
                 indexSquare indSquare;
@@ -491,7 +501,7 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
         if (r != 0)
         {
             PtrList<T> snapshotsEnd;
-            ITHACAstream::read_fields(snapshotsEnd, (*f_field), casenameData,
+            ITHACAstream::read_fields(snapshotsEnd, (*f_field), local_casename,
                                       l_startTime - 2 + l_nBlocks * q, r);
             lift(snapshotsEnd);
             indexTri indTri;
@@ -502,7 +512,7 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
 
             for (label j = 0; j < l_nBlocks; j++)
             {
-                ITHACAstream::read_fields(snapshotsEnd2, (*f_field), casenameData,
+                ITHACAstream::read_fields(snapshotsEnd2, (*f_field), local_casename,
                                           l_startTime - 2 + j * q, q);
                 lift(snapshotsEnd2);
                 indexSquare indSquare;

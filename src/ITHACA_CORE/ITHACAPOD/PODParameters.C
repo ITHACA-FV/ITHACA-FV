@@ -61,13 +61,6 @@ namespace ITHACAPOD
     // casenameData = ITHACAdict->lookupOrDefault<fileName>("casename", "./");
 
     casenameData = ITHACAdict->lookupOrDefault<fileName>("casename", "./");
-    if (Pstream::parRun())
-    {
-      casenameData = casenameData + "/processor"+ name(Pstream::myProcNo())+ "/";
-    }
-    // else{
-    //   casenameData = ITHACAdict->lookupOrDefault<fileName>("casename", "./");
-    // }
 
     fieldlist = static_cast<List<word>>(ITHACAdict->lookup("fields"));
     eigensolver = ithacaLibraryParameters->eigensolver;
@@ -114,14 +107,24 @@ namespace ITHACAPOD
 
     // Object Time to read OpenFOAM data in the correct folder
     runTimeData = new Foam::Time(Foam::Time::controlDictName, ".", casenameData);
-
+    Foam::Time* runTime;
+    
+    if (Pstream::parRun()) 
+    {
+      Foam::fileName casenamePar = casenameData + "processor" + name(Pstream::myProcNo());
+      Foam::Time* runTimePar = new Foam::Time(Foam::Time::controlDictName, ".", casenamePar);
+      runTime = runTimePar;
+    }
+    else{
+      runTime = runTimeData;
+    }
 
     template_field_U = new volVectorField
         (
           IOobject
           (
             "U",
-             runTimeData->times()[1].name(),
+             runTime->times()[1].name(),
             *mesh,
             IOobject::MUST_READ
             ),
@@ -134,7 +137,7 @@ namespace ITHACAPOD
           IOobject
           (
             "p",
-             runTimeData->times()[1].name(),
+             runTime->times()[1].name(),
             *mesh,
             IOobject::MUST_READ
             ),
@@ -168,7 +171,8 @@ namespace ITHACAPOD
     // Initialize startTime, endTime and nSnapshots
 
     // Get times list from the case folder
-    instantList Times = runTimeData->times();
+    instantList Times = runTime->times();
+
     // Read Initial and last time from the POD dictionary
     const entry* existnsnap = ITHACAdict->findEntry("Nsnapshots");
     const entry* existLT = ITHACAdict->findEntry("FinalTime");
@@ -185,24 +189,24 @@ namespace ITHACAPOD
       InitialTime = ITHACAdict->lookupOrDefault<scalar>("InitialTime", 0);
       FinalTime = ITHACAdict->lookupOrDefault<scalar>("FinalTime", 100000000000000);
       nSnapshots = readScalar(ITHACAdict->lookup("Nsnapshots"));
-      startTime = Time::findClosestTimeIndex(runTimeData->times(), InitialTime);
+      startTime = Time::findClosestTimeIndex(runTime->times(), InitialTime);
       nSnapshots = min(nSnapshots , Times.size() - startTime);
       endTime = startTime + nSnapshots - 1;
-      FinalTime = std::stof(runTimeData->times()[endTime].name());
+      FinalTime = std::stof(runTime->times()[endTime].name());
     }
     else
     {
       InitialTime = ITHACAdict->lookupOrDefault<scalar>("InitialTime", 0);
       FinalTime = ITHACAdict->lookupOrDefault<scalar>("FinalTime", 100000000000000);
-      endTime = Time::findClosestTimeIndex(runTimeData->times(), FinalTime);
-      startTime = Time::findClosestTimeIndex(runTimeData->times(), InitialTime);
+      endTime = Time::findClosestTimeIndex(runTime->times(), FinalTime);
+      startTime = Time::findClosestTimeIndex(runTime->times(), InitialTime);
       nSnapshots = endTime - startTime + 1;
       if (InitialTime > FinalTime)
       {
         Info << "FinalTime cannot be smaller than the InitialTime check your ITHACAdict file\n" << endl;
         abort();
       }
-      FinalTime = std::stof(runTimeData->times()[endTime].name());
+      FinalTime = std::stof(runTime->times()[endTime].name());
     }
 
     // Read Initial and last time from the POD dictionary
@@ -210,7 +214,7 @@ namespace ITHACAPOD
     const entry* existLTSimulation = ITHACAdict->findEntry("FinalTimeSimulation");
 
     scalar InitialTimeSimulation(FinalTime);
-    label startTimeSimulation(Time::findClosestTimeIndex(runTimeData->times(), InitialTimeSimulation));
+    label startTimeSimulation(Time::findClosestTimeIndex(runTime->times(), InitialTimeSimulation));
 
     if ((existnsnapSimulation) && (existLTSimulation))
     {
@@ -222,19 +226,19 @@ namespace ITHACAPOD
       nSnapshotsSimulation = readScalar(ITHACAdict->lookup("NsnapshotsSimulation"));
       nSnapshotsSimulation = min(nSnapshotsSimulation , Times.size() - startTimeSimulation);
       endTimeSimulation = startTimeSimulation + nSnapshotsSimulation - 1;
-      FinalTimeSimulation = std::stof(runTimeData->times()[endTimeSimulation].name());
+      FinalTimeSimulation = std::stof(runTime->times()[endTimeSimulation].name());
     }
     else
     {
       FinalTimeSimulation = ITHACAdict->lookupOrDefault<scalar>("FinalTimeSimulation", 100000000000000);
-      endTimeSimulation = Time::findClosestTimeIndex(runTimeData->times(), FinalTimeSimulation);
+      endTimeSimulation = Time::findClosestTimeIndex(runTime->times(), FinalTimeSimulation);
       nSnapshotsSimulation = endTimeSimulation - startTimeSimulation + 1;
       if (InitialTimeSimulation > FinalTimeSimulation)
       {
         Info << "FinalTimeSimulation cannot be smaller than the InitialTimeSimulation check your ITHACAdict file\n" << endl;
         abort();
       }
-      FinalTimeSimulation = std::stof(runTimeData->times()[endTimeSimulation].name());
+      FinalTimeSimulation = std::stof(runTime->times()[endTimeSimulation].name());
     }
 
     // Initialize saveTime
@@ -345,7 +349,7 @@ namespace ITHACAPOD
             IOobject
             (
               "nut",
-              runTimeData->path() + runTimeData->times()[1].name(),
+              runTime->path() + runTime->times()[1].name(),
               *mesh,
               IOobject::MUST_READ
               ),
@@ -397,7 +401,7 @@ namespace ITHACAPOD
               IOobject
               (
                 "omega",
-                runTimeData->path() + runTimeData->times()[1].name(),
+                runTime->path() + runTime->times()[1].name(),
                 *mesh,
                 IOobject::MUST_READ
                 ),
@@ -408,7 +412,7 @@ namespace ITHACAPOD
               IOobject
               (
                 "k",
-                runTimeData->path() + runTimeData->times()[1].name(),
+                runTime->path() + runTime->times()[1].name(),
                 *mesh,
                 IOobject::MUST_READ
                 ),

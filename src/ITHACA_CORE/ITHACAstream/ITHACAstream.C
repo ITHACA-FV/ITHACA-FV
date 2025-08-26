@@ -597,10 +597,9 @@ void read_fields(
     {
         Info << "################ Parallel Reading the Data for " << field.name() << " #########" <<
              endl;
-        word timename(field.mesh().time().rootPath() + "/" +
-                      field.mesh().time().caseName() );
-        timename = timename.substr(0, timename.find_last_of("\\/"));
-        Foam::Time runTime2(Foam::Time::controlDictName, timename, casename);
+
+        Foam::Time runTime2(Foam::Time::controlDictName, ".", casename);
+        
         int last_s = Eigen::internal::size(runTime2.times()); 
 
         if (first_snap > last_s)
@@ -620,10 +619,7 @@ void read_fields(
 
         for (int i = 2 + first_snap; i < last_s + first_snap; i++)
         {   
-
-            const word& dirName = runTime2.times()[i].name();
-
-            fileName timeDir = casename + runTime2.times()[i].name();
+            fileName timeDir = casename + "/" + runTime2.times()[i].name() + "/";
 
             GeometricField<Type, PatchField, GeoMesh> tmp_field(
                 IOobject
