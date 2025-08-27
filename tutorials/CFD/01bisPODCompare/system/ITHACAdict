@@ -57,8 +57,7 @@ casename "./";
 InitialTime 0.0;
 
 // Set Time when you want to stop taking the Snapshots
-FinalTime 1.0;
-//FinalTime 200.0;
+FinalTime 5.0;
 //FinalTime 103.0;
 //FinalTime 600.3;
 
@@ -69,7 +68,7 @@ FinalTime 1.0;
 //FinalTimeSimulation 600.5;
 
 // Eventually you could set just InitalTime and Number of Snapshots you want
-// Nsnapshots 10;
+// Nsnapshots 40;
 
 // number of blocks to compute cov matrix
 nBlocks 2;
@@ -100,7 +99,7 @@ OutType fixed;
 nParticules 2;
 //nParticules 100;
 
-reducingNoisesMatrix 1;
+reducingNoisesMatrix 0;
 
 // Time step decreasing factor for ROM time integration
 // N_resolve 1;
