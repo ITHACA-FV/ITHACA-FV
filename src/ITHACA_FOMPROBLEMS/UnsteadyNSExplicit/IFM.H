@@ -30,7 +30,7 @@ Faux = dt * (fvc::laplacian(nu, U) - fvc::div(phi, U));
 U1aux = U + Faux;
 fvScalarMatrix pEqn = fvm::laplacian(p).ref();
 pEqn.setReference(pRefCell, pRefValue);
-solve(pEqn ==  (1 / dt)*fvc::div(U1aux));
+solve(pEqn ==  (1 / dt) * fvc::div(U1aux));
 U = U1aux - dt * fvc::grad(p);
 phi = fvc::interpolate(U)& mesh.Sf();
 

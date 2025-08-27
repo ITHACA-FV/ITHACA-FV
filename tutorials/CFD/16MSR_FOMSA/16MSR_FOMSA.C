@@ -222,7 +222,7 @@ int main(int argc, char* argv[])
     TmediaSA.buildMO(folder);
     PtotSA.buildMO(folder);
     //assign it to VDSensitivity object
-    analisi.M = autoPtr<FofM>(&TmediaSA);
+    analisi.M = autoPtr<FofM>(& TmediaSA);
     //load the model output in the VDSensitivity object
     analisi.load_output();
     analisi.getYstat();
@@ -251,7 +251,7 @@ int main(int argc, char* argv[])
     coeffsT.row(3) = analisi.betas;
     ITHACAstream::exportMatrix(coeffsT, "coeffsT", "eigen", "./ITHACAoutput");
     //assign it to VDSensitivity object
-    analisi.M = autoPtr<FofM>(&PtotSA);
+    analisi.M = autoPtr<FofM>(& PtotSA);
     //load the model output in the VDSensitivity object
     analisi.load_output();
     analisi.getYstat();

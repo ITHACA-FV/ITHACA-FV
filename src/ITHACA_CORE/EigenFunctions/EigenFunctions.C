@@ -112,7 +112,8 @@ vectorTensorProduct<>(
 
 template Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>
 vectorTensorProduct(
-    const Eigen::Matrix<int, Eigen::Dynamic, 1>& g, const Eigen::Tensor<int, 3 >& c,
+    const Eigen::Matrix<int, Eigen::Dynamic, 1>& g,
+    const Eigen::Tensor<int, 3 >& c,
     const Eigen::Matrix<int, Eigen::Dynamic, 1>& a);
 
 template Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>

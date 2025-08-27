@@ -76,11 +76,11 @@ class ITHACADMD
         /// @param[in]  snapshots  The snapshots on which you want to perform DMD
         /// @param[in]  dt         The Time Step used to acquire the snapshots
         ///
-        ITHACADMD(PtrList<GeometricField<Type, PatchField, GeoMesh>>& snapshots,
+        ITHACADMD(PtrList<GeometricField<Type, PatchField, GeoMesh >> & snapshots,
                   double dt);
 
         /// PtrList of OpenFOAM GeoometricFields where the snapshots are stored
-        PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshotsDMD;
+        PtrList<GeometricField<Type, PatchField, GeoMesh >> snapshotsDMD;
 
         /// Modes object used to store the Real part of the DMD modes
         Modes<Type, PatchField, GeoMesh> DMDmodesReal;

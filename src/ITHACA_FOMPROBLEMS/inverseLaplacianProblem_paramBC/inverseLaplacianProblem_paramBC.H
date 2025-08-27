@@ -107,7 +107,7 @@ class inverseLaplacianProblem_paramBC: public inverseLaplacianProblem
         bool offlineReady = 0;
 
         /// Basis of the heat flux parameterization
-        List<List<scalar>> gBaseFunctions;
+        List<List<scalar >> gBaseFunctions;
 
         /// Weights of the heat flux parameterization
         List<scalar> gWeights;

@@ -61,10 +61,10 @@ class ITHACAforces
         };
 
         //- Pressure, viscous and porous force per bin
-        List<Field<vector>> force_;
+        List<Field<vector >> force_;
 
         //- Pressure, viscous and porous moment per bin
-        List<Field<vector>> moment_;
+        List<Field<vector >> moment_;
 
 
         // Read from dictionary

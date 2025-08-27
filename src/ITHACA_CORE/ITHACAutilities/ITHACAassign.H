@@ -280,7 +280,8 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& field,
 /// @tparam         Type   Type of field vector or scalar
 ///
 template<typename Type>
-void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>& field,
+void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>&
+                             field,
                              Type& value);
 
 
@@ -396,7 +397,7 @@ void assignMixedBC(GeometricField<Type, fvPatchField, volMesh>& field,
 ///
 template<typename Type>
 void normalizeFields(
-    PtrList<GeometricField<Type, fvPatchField, volMesh>>& fields);
+    PtrList<GeometricField<Type, fvPatchField, volMesh >> & fields);
 
 //------------------------------------------------------------------------------
 /// @brief      /// @brief      Gets the values from a list of indices
@@ -426,7 +427,7 @@ Eigen::MatrixXd getValues(GeometricField<Type, fvPatchField,
 ///
 template<typename Type>
 Eigen::MatrixXd getValues(PtrList<GeometricField<Type, fvPatchField,
-                          volMesh>>& field, labelList& indices, labelList* xyz = NULL);
+                          volMesh >> & field, labelList& indices, labelList* xyz = NULL);
 
 }
 

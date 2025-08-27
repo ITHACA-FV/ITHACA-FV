@@ -123,7 +123,7 @@ bool isTurbulent();
 /// @return     list in unique order
 ///
 template<typename T>
-List<T> combineList(List<List<T>>& doubleList);
+List<T> combineList(List<List<T >> & doubleList);
 
 //------------------------------------------------------------------------------
 /// @brief      Using the Eigen library, using the SVD decomposition method to solve the
@@ -134,17 +134,18 @@ List<T> combineList(List<List<T>>& doubleList);
 ///
 /// @return     Inversed matrix
 ///
-Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
+Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd& origin, const float er = 0);
 
 //------------------------------------------------------------------------------
 /// @brief      Invert a matrix given the method name in the ITHACAdict
 ///
 /// @param[in]      matrixToInvert  Matrix to invert
-/// @param[in]      methodName      Method 
+/// @param[in]      methodName      Method
 ///
 /// @return         Inversed matrix
 ///
-Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert, const word inversionMethod);
+Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert,
+                             const word inversionMethod);
 
 
 
@@ -436,4 +437,5 @@ template<typename T>
 double norm_L2wBC(const T& v, const double& weightBC, const word& patchBC="inlet");
 
 };
+
 #endif

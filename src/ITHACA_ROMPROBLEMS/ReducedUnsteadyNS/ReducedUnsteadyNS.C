@@ -44,7 +44,7 @@ reducedUnsteadyNS::reducedUnsteadyNS()
 
 reducedUnsteadyNS::reducedUnsteadyNS(unsteadyNS& FOMproblem)
     :
-    problem(&FOMproblem)
+    problem(& FOMproblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
@@ -128,7 +128,7 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * a_tmp;
+             i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M2(i);
 
         if (problem->bcMethod == "penalty")
@@ -161,7 +161,7 @@ int newton_unsteadyNS_sup::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyNS_sup::df(const Eigen::VectorXd& x,
                               Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNS_sup> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNS_sup> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -221,7 +221,7 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * a_tmp;
+             i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M2(i);
 
         if (problem->bcMethod == "penalty")
@@ -237,7 +237,7 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
     {
         int k = j + Nphi_u;
         gg = a_tmp.transpose() * Eigen::SliceFromTensor(problem->gTensor, 0,
-                j) * a_tmp;
+             j) * a_tmp;
         fvec(k) = M3(j, 0) + gg(0, 0) - M7(j, 0);
 
         if (problem->timedepbcMethod == "yes")
@@ -261,7 +261,7 @@ int newton_unsteadyNS_PPE::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyNS_PPE::df(const Eigen::VectorXd& x,
                               Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNS_PPE> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNS_PPE> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -904,4 +904,5 @@ Eigen::MatrixXd reducedUnsteadyNS::setOnlineVelocity(Eigen::MatrixXd vel)
 
     return vel_scal;
 }
+
 //************************************************************************* //

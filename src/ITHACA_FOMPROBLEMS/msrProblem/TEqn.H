@@ -9,9 +9,9 @@ tmp<fvScalarMatrix> tTEqn
     ==
     fvm::laplacian(turbulence->nu() / Pr + alphat, T)
     +(v / CpRef) * (decLam1 * dec1 + decLam2 * dec2 + decLam3* dec3)
-    + (SP * (1 - decbetaTot)*v / CpRef)*flux
+    + (SP * (1 - decbetaTot) * v / CpRef) * flux
 
-    );
+);
 fvScalarMatrix& TEqn = tTEqn.ref();
 //TEqn.relax();
 //TEqn.solve();

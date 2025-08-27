@@ -98,6 +98,7 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
         residual = max(residual, dec3residual);
         Info << "\nResidual: " << residual << endl << endl;
     }
+
     laminarTransport.correct();
     turbulence->correct();
     powerDens = (1 - decbetaTot) * flux * SP1_0 + (decLam1 * dec1 + decLam2 * dec2 +

@@ -109,6 +109,7 @@ class IHTP01inverseLaplacian_paramBC: public inverseLaplacianProblem_paramBC
                     ITHACAutilities::assignBC(Tad, patchI, -heatFlux_gammaEx4);
                 }
             }
+
 #if defined(OFVER) && (OFVER == 6)
 
             while (simple.loop(runTime))
@@ -186,9 +187,11 @@ class IHTP01inverseLaplacian_paramBC: public inverseLaplacianProblem_paramBC
                     mass(baseI, baseJ) = ITHACAutilities::L2productOnPatch(mesh,
                                          gBaseFunctions[baseI], gBaseFunctions[baseJ], "hotSide");
                 }
+
                 source(baseI) = ITHACAutilities::L2productOnPatch(mesh, gBaseFunctions[baseI],
                                 gTrue, "hotSide");
             }
+
             return mass.fullPivLu().solve(source); //Vector of coefficients
         }
 
@@ -217,8 +220,10 @@ class IHTP01inverseLaplacian_paramBC: public inverseLaplacianProblem_paramBC
                                                    shapeParameter
                                                    * radius * radius));
                 }
+
                 coeff(baseI) = k * (b * thermocouplesPos[baseI].x() + c);
             }
+
             return Phi.fullPivLu().solve(coeff);
         }
 
@@ -336,4 +341,5 @@ class IHTP01inverseLaplacian_CG: public inverseLaplacianProblem_CG
 #include"solveTrue.H"
         }
 };
+
 #endif

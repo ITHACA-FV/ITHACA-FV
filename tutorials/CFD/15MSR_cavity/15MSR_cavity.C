@@ -148,6 +148,7 @@ class Ploct: public Ptot_time
 
         volScalarField& powerDens;
 };
+
 class Plocal: public Ptot
 {
     public:
@@ -159,6 +160,7 @@ class Plocal: public Ptot
 
         volScalarField& powerDens;
 };
+
 class Tmloct: public Tm_time
 {
     public:
@@ -486,7 +488,7 @@ int main(int argc, char* argv[])
     TmediaSA.buildMO(folder);
     PtotSA.buildMO(folder);
     //assign FofM to LRSensitivity object, first figure of merit considered is the average temperature
-    analisi.M = autoPtr<FofM>(&TmediaSA);
+    analisi.M = autoPtr<FofM>(& TmediaSA);
     //load the model output in the LRSensitivity object
     analisi.load_output();
     //compute output statistics
@@ -519,7 +521,7 @@ int main(int argc, char* argv[])
     coeffsT.row(3) = analisi.betas;
     ITHACAstream::exportMatrix(coeffsT, "coeffsT", "eigen", "./ITHACAoutput");
     //assign FofM object to LRSensitivity object
-    analisi.M = autoPtr<FofM>(&PtotSA);
+    analisi.M = autoPtr<FofM>(& PtotSA);
     //load the model output in the LRSensitivity object, repeat all the previous step
     // for the total power
     analisi.load_output();

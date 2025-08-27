@@ -84,7 +84,7 @@ UnsteadyNSTurb::UnsteadyNSTurb(int argc, char* argv[])
              "The BC method must be set to lift or penalty in ITHACAdict");
     M_Assert(timeDerivativeSchemeOrder == "first"
              || timeDerivativeSchemeOrder == "second",
-             "The time derivative approximation must be set to either first or second order scheme in ITHACAdict");
+                                          "The time derivative approximation must be set to either first or second order scheme in ITHACAdict");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -123,35 +123,31 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
     instantList Times = runTime.times();
     label& pRefCell = _pRefCell;
     scalar& pRefValue = _pRefValue;
-
     mesh.setFluxRequired(p.name());
-
     runTime.setEndTime(finalTime);
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime + writeEvery;
-
     label nsnapshots = 0;
 
     // Start the time loop
     while (runTime.run())
     {
-        #include "readTimeControls.H"
-        #include "CourantNo.H"
-        #include "setDeltaT.H"
-
+#include "readTimeControls.H"
+#include "CourantNo.H"
+#include "setDeltaT.H"
         ++runTime;
-
         Info << "Time = " << runTime.timeName() << nl << endl;
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            #include "UEqn.H"
+#include "UEqn.H"
+
             // --- Pressure corrector loop
             while (pimple.correct())
             {
-                #include "pEqn.H"
+#include "pEqn.H"
             }
 
             if (pimple.turbCorr())
@@ -159,7 +155,6 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
                 laminarTransport.correct();
                 turbulence->correct();
             }
-
         }
 
         Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
@@ -172,7 +167,6 @@ void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
             // Produces error when uncommented
             // volScalarField nut = turbulence->nut().ref();
             nut = turbulence->nut();
-
             ITHACAstream::exportSolution(U, name(counter), offlinepath);
             ITHACAstream::exportSolution(p, name(counter), offlinepath);
             ITHACAstream::exportSolution(nut, name(counter), offlinepath);
@@ -783,7 +777,7 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
                 ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsSUP/",
                                               weightName);
-                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
                                                         SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, radii(i));
                 std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
             }
@@ -796,7 +790,7 @@ void UnsteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                     samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
                 }
 
-                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
                                                         SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, radii(i));
                 ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                               "./ITHACAoutput/weightsSUP/", weightName);
@@ -1270,7 +1264,7 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
 
                 ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsPPE/",
                                               weightName);
-                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
                                                         SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights, radii(i));
                 std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
             }
@@ -1283,7 +1277,7 @@ void UnsteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                     samples[i]->addSample(velRBF.row(j), coeffL2(i, j));
                 }
 
-                rbfSplines[i] = new SPLINTER::RBFSpline(*samples[i],
+                rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
                                                         SPLINTER::RadialBasisFunctionType::GAUSSIAN, false, radii(i));
                 ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                               "./ITHACAoutput/weightsPPE/", weightName);
@@ -1321,7 +1315,7 @@ List < Eigen::MatrixXd > UnsteadyNSTurb::velDerivativeCoeff(Eigen::MatrixXd A,
                            timeSnapshotsPerSample - 1, newColsNum) = bNew;
         newCoeffs[1].middleRows(j * timeSnapshotsPerSample - j,
                                 timeSnapshotsPerSample - 1) = G.middleRows(j * timeSnapshotsPerSample + 1,
-                                        timeSnapshotsPerSample - 1);
+                                    timeSnapshotsPerSample - 1);
     }
 
     interChoice = 3;
@@ -1370,13 +1364,13 @@ List < Eigen::MatrixXd > UnsteadyNSTurb::velParDerivativeCoeff(
         bNew << b2, (b2 - b0) / (timeSnap(j, 0));
         newCoeffs[0].block(j * timeSnapshotsPerSample - j, 0,
                            timeSnapshotsPerSample - 1, z.cols() - 1) = pars.middleRows(
-                                       j * timeSnapshotsPerSample + 1,
-                                       timeSnapshotsPerSample - 1);
+                                   j * timeSnapshotsPerSample + 1,
+                                   timeSnapshotsPerSample - 1);
         newCoeffs[0].block(j * timeSnapshotsPerSample - j, z.cols() - 1,
                            timeSnapshotsPerSample - 1, newColsNum) = bNew;
         newCoeffs[1].middleRows(j * timeSnapshotsPerSample - j,
                                 timeSnapshotsPerSample - 1) = G.middleRows(j * timeSnapshotsPerSample + 1,
-                                        timeSnapshotsPerSample - 1);
+                                    timeSnapshotsPerSample - 1);
     }
 
     interChoice = 4;
