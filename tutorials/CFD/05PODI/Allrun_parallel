@@ -1,0 +1,11 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication decomposePar
+## use if the Dirichlet is treated with lifting functions
+rm log.decomposePar
+runApplication decomposePar -case lift -time '0:10' -decomposeParDict ../system/decomposeParDict
+runParallel 05PODI

@@ -24,5 +24,6 @@ CompressibleSteadyNS/CompressibleSteadyNS.C
 CompressibleUnSteadyNSRhoPimple/CompressibleUnSteadyRhoPimple.C
 ScalarTransport/ScalarTransport.C
 MyIcoSolver/MyIcoSolver.C
+sequentialIHTP/sequentialIHTP.C
 
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_FOMPROBLEMS

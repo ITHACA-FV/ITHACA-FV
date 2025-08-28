@@ -1323,7 +1323,10 @@ Eigen::MatrixXd steadyNS::pressure_BC1(label NUmodes, label NPmodes)
 
             for (label k = 0; k < lpl.boundaryField().size(); k++)
             {
-                s += gSum(lpl.boundaryField()[k]);
+                if (lpl.boundaryField()[k].type() != "processor")
+                {
+                    s += gSum(lpl.boundaryField()[k]);
+                }
             }
 
             BC1_matrix(i, j) = s;
@@ -1366,7 +1369,10 @@ List <Eigen::MatrixXd> steadyNS::pressure_BC2(label NUmodes, label NPmodes)
 
                 for (label k = 0; k < div_m.boundaryField().size(); k++)
                 {
-                    s += gSum(div_m.boundaryField()[k]);
+                    if (div_m.boundaryField()[k].type() != "processor")
+                    {
+                        s += gSum(div_m.boundaryField()[k]);
+                    }
                 }
 
                 BC2_matrix[i](j, k) = s;
@@ -1398,7 +1404,10 @@ Eigen::Tensor<double, 3> steadyNS::pressureBC2(label NUmodes, label NPmodes)
 
                 for (label k = 0; k < div_m.boundaryField().size(); k++)
                 {
-                    s += gSum(div_m.boundaryField()[k]);
+                    if (div_m.boundaryField()[k].type() != "processor")
+                    {
+                        s += gSum(div_m.boundaryField()[k]);
+                    }
                 }
 
                 bc2Tensor(i, j, k) = s;
@@ -1434,7 +1443,10 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
             double s = 0;
             for (label k = 0; k < BC5.boundaryField().size(); k++)
             {
-                s += gSum(BC5.boundaryField()[k]);
+                if (BC5.boundaryField()[k].type() != "processor")
+                {
+                    s += gSum(BC5.boundaryField()[k]);
+                }
             }
 
             BC3_matrix(i, j) = s;
@@ -1468,7 +1480,10 @@ Eigen::MatrixXd steadyNS::pressure_BC4(label NUmodes, label NPmodes)
 
             for (label k = 0; k < BC5.boundaryField().size(); k++)
             {
-                s += gSum(BC5.boundaryField()[k]);
+                if (BC5.boundaryField()[k].type() != "processor")
+                {
+                    s += gSum(BC5.boundaryField()[k]);
+                }
             }
 
             BC4_matrix(i, j) = s;
