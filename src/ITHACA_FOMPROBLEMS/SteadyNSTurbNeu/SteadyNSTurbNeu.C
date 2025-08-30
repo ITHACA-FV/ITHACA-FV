@@ -90,6 +90,7 @@ SteadyNSTurbNeu::SteadyNSTurbNeu(int argc, char* argv[])
     M_Assert(rbfParams == "vel" || rbfParams == "velLift" || rbfParams == "params",
              "The rbfParams must be set to vel or velLift or params in ITHACAdict");
     rbfKernel = ITHACAdict->lookupOrDefault<word>("rbfKernel", "linear");
+    rbfScaler = ITHACAdict->lookupOrDefault<bool>("rbfScaler", false);
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -1122,6 +1123,71 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
     samples.resize(nNutModes);
     rbfSplines.resize(nNutModes);
     Eigen::MatrixXd weights;
+    Eigen::MatrixXd inputs;
+
+    Info<< "The RBF kernel type is: " << rbfKernel << endl;
+
+    if (rbfParams == "vel")
+    {
+        if (coeffL2_U.cols() != coeffL2.cols())
+        {
+            FatalErrorInFunction
+                << "Non-equal number of columns for coeffL2_U and coeffL2."
+                << abort(FatalError);
+        }
+
+        inputs = coeffL2_U;
+    }
+    else if (rbfParams == "velLift")
+    {
+        if (coeffL2_lift_U.cols() != coeffL2.cols())
+        {
+            FatalErrorInFunction
+                << "Non-equal number of columns for coeffL2_lift_U and coeffL2."
+                << abort(FatalError);
+        }
+
+        inputs = coeffL2_lift_U;
+    }
+    else if (rbfParams == "params")
+    {
+        if (mu.transpose().cols() != coeffL2.cols())
+        {
+            FatalErrorInFunction
+                << "Non-equal number of columns for mu.transpose() and coeffL2."
+                << abort(FatalError);
+        }
+
+        inputs = mu.transpose();
+    }
+    else
+    {
+        FatalError << "Unknown rbfParams type: " << rbfParams << endl;
+        FatalError.exit();
+    }
+
+    if (rbfScaler)
+    {
+        // Compute row-wise min and max
+        Eigen::VectorXd rowMins = inputs.rowwise().minCoeff();
+        Eigen::VectorXd rowMaxs = inputs.rowwise().maxCoeff();
+        Eigen::VectorXd range   = rowMaxs - rowMins;
+
+        // Check for zero ranges
+        if ((range.array().abs() < 1e-12).any()) {
+            FatalErrorInFunction
+                << "Some rows have zero range, cannot scale."
+                << abort(FatalError);
+        }
+
+        // Store min/max
+        inputScaler.resize(inputs.rows(), 2);
+        inputScaler.col(0) = rowMins;
+        inputScaler.col(1) = rowMaxs;
+
+        // Vectorized scaling
+        inputs = (inputs.colwise() - rowMins).array().colwise() / range.array();
+    }
 
     for (label i = 0; i < nNutModes; i++)
     {
@@ -1134,23 +1200,7 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
 
             for (label j = 0; j < coeffL2.cols(); j++)
             {
-                if (rbfParams == "vel")
-                {
-                    samples[i]->addSample(coeffL2_U.col(j), coeffL2(i, j));
-                }
-                else if (rbfParams == "velLift")
-                {
-                    samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
-                }
-                else if (rbfParams == "params")
-                {
-                    samples[i]->addSample(mu.row(j), coeffL2(i, j));
-                }
-                else
-                {
-                    FatalError << "Unknown rbfParams type: " << rbfParams << endl;
-                    FatalError.exit();
-                }
+                samples[i]->addSample(inputs.col(j), coeffL2(i, j));
             }
 
             if (Pstream::master())
@@ -1159,7 +1209,6 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
                                               weightName);
             }
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i], rbfType, weights);
-            Info << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
             Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
         else
@@ -1168,27 +1217,10 @@ void SteadyNSTurbNeu::projectSUP(fileName folder, label NU, label NP, label NSUP
 
             for (label j = 0; j < coeffL2.cols(); j++)
             {
-                if (rbfParams == "vel")
-                {
-                    samples[i]->addSample(coeffL2_U.col(j), coeffL2(i, j));
-                }
-                else if (rbfParams == "velLift")
-                {
-                    samples[i]->addSample(coeffL2_lift_U.col(j), coeffL2(i, j));
-                }
-                else if (rbfParams == "params")
-                {
-                    samples[i]->addSample(mu.row(j), coeffL2(i, j));
-                }
-                else
-                {
-                    FatalError << "Unknown rbfParams type: " << rbfParams << endl;
-                    FatalError.exit();
-                }
+                samples[i]->addSample(inputs.col(j), coeffL2(i, j));
             }
 
             rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i], rbfType);
-            Info << "dim of rbfSplines[" << i << "] = " << rbfSplines[i]->getNumVariables() << endl;
             if (Pstream::master())
             {
                 ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,

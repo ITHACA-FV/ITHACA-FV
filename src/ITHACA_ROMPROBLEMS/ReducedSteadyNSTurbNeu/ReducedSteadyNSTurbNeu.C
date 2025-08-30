@@ -122,8 +122,10 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
             for (int i = 0; i < nphiNut; i++)
             {
                 Eigen::MatrixXd coeffL2_tmp = aTmp.middleRows(problem->liftfield.size(), problem->NUmodes);
+                Eigen::VectorXd scaledInputs = (coeffL2_tmp - problem->inputScaler.col(0)).array() /
+                                                (problem->inputScaler.col(1) - problem->inputScaler.col(0)).array();
 
-                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                gNut(i) = problem->rbfSplines[i]->eval(scaledInputs);
             }
         }
         else if (problem->rbfParams == "velLift")
@@ -131,8 +133,10 @@ int newtonSteadyNSTurbNeuSUP::operator()(const Eigen::VectorXd& x,
             for (int i = 0; i < nphiNut; i++)
             {
                 Eigen::MatrixXd coeffL2_tmp = aTmp.topRows(problem->liftfield.size() + problem->NUmodes);
+                Eigen::VectorXd scaledInputs = (coeffL2_tmp - problem->inputScaler.col(0)).array() /
+                                                (problem->inputScaler.col(1) - problem->inputScaler.col(0)).array();
 
-                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                gNut(i) = problem->rbfSplines[i]->eval(scaledInputs);
             }
         }
         else
@@ -255,10 +259,13 @@ void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel, Eigen::VectorXd
         if (problem->rbfParams == "params")
         {            
             label caseIdx = count_online_solve-1;
-            std::cout << "The rbfparameter is: " << onlineMu.row(caseIdx) << std::endl;
+
+            Eigen::VectorXd inputs = onlineMu.row(caseIdx).transpose();
+            Eigen::VectorXd range = problem->inputScaler.col(1) - problem->inputScaler.col(0);
+            Eigen::VectorXd scaledInputs = (inputs - problem->inputScaler.col(0)).array() / range.array();
             for (int i = 0; i < nphiNut; i++)
-            {                
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
+            {
+                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(scaledInputs);
             }
             rbfCoeff = newtonObjectSUP.gNut;
         }
@@ -274,18 +281,18 @@ void ReducedSteadyNSTurbNeu::solveOnlineSUP(Eigen::MatrixXd vel, Eigen::VectorXd
     hnls.solve(y);
     Eigen::VectorXd res(y);
     newtonObjectSUP.operator()(y, res);
-    std::cout << "################## Online solve N° " << count_online_solve <<
-              " ##################" << std::endl;
+    Info << "################## Online solve N° " << count_online_solve <<
+              " ##################" << endl;
 
     if (res.norm() < 1e-5)
     {
-        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << endl << endl;
     }
     else
     {
-        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << endl << endl;
     }
 
     count_online_solve += 1;

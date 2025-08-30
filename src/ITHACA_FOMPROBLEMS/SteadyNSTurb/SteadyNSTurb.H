@@ -130,6 +130,9 @@ class SteadyNSTurb: public steadyNS
         /// The vector of L2 projection coefficients for the eddy viscosity snapshot
         Eigen::VectorXd nutCoeff;
 
+        /// The parameter scaler matrix
+        Eigen::MatrixXd inputScaler;
+
         /// The way to compute the eddy viscosity snapshots
         word viscCoeff;
 
@@ -138,6 +141,9 @@ class SteadyNSTurb: public steadyNS
 
         /// The name of RBF interpolation kernel
         word rbfKernel;
+
+        /// The scaler bool for RBF interpolation
+        bool rbfScaler;
 
         /// The type of RBF interpolation kernel
         SPLINTER::RadialBasisFunctionType rbfType;

@@ -119,8 +119,13 @@ int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
             for (int i = 0; i < nphiNut; i++)
             {
                 Eigen::MatrixXd coeffL2_tmp = aTmp.middleRows(problem->liftfield.size(), problem->NUmodes);
-
-                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                if (problem->rbfScaler) {
+                    Eigen::VectorXd scaledInputs = (coeffL2_tmp - problem->inputScaler.col(0)).array() /
+                                                    (problem->inputScaler.col(1) - problem->inputScaler.col(0)).array();
+                    gNut(i) = problem->rbfSplines[i]->eval(scaledInputs);
+                } else {
+                    gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                }
             }
         }
         else if (problem->rbfParams == "velLift")
@@ -128,8 +133,13 @@ int newtonSteadyNSTurbSUP::operator()(const Eigen::VectorXd& x,
             for (int i = 0; i < nphiNut; i++)
             {
                 Eigen::MatrixXd coeffL2_tmp = aTmp.topRows(problem->liftfield.size() + problem->NUmodes);
-
-                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                if (problem->rbfScaler) {
+                    Eigen::VectorXd scaledInputs = (coeffL2_tmp - problem->inputScaler.col(0)).array() /
+                                                    (problem->inputScaler.col(1) - problem->inputScaler.col(0)).array();
+                    gNut(i) = problem->rbfSplines[i]->eval(scaledInputs);
+                } else {
+                    gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                }
             }
         }
         else
@@ -221,8 +231,14 @@ int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
             for (int i = 0; i < nphiNut; i++)
             {
                 Eigen::MatrixXd coeffL2_tmp = aTmp.middleRows(problem->liftfield.size(), problem->NUmodes);
+                if (problem->rbfScaler) {
+                    Eigen::VectorXd scaledInputs = (coeffL2_tmp - problem->inputScaler.col(0)).array() /
+                                                    (problem->inputScaler.col(1) - problem->inputScaler.col(0)).array();
 
-                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                    gNut(i) = problem->rbfSplines[i]->eval(scaledInputs);
+                } else {
+                    gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                }
             }
         }
         else if (problem->rbfParams == "velLift")
@@ -230,8 +246,14 @@ int newtonSteadyNSTurbPPE::operator()(const Eigen::VectorXd& x,
             for (int i = 0; i < nphiNut; i++)
             {
                 Eigen::MatrixXd coeffL2_tmp = aTmp.topRows(problem->liftfield.size() + problem->NUmodes);
+                if (problem->rbfScaler) {
+                    Eigen::VectorXd scaledInputs = (coeffL2_tmp - problem->inputScaler.col(0)).array() /
+                                                    (problem->inputScaler.col(1) - problem->inputScaler.col(0)).array();
 
-                gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                    gNut(i) = problem->rbfSplines[i]->eval(scaledInputs);
+                } else {
+                    gNut(i) = problem->rbfSplines[i]->eval(coeffL2_tmp);
+                }
             }
         }
         else
@@ -348,9 +370,17 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
         if (problem->rbfParams == "params")
         {            
             label caseIdx = count_online_solve-1;
+
+            Eigen::VectorXd inputs = onlineMu.row(caseIdx).transpose();
+            if (problem->rbfScaler)
+            {
+                Eigen::VectorXd range = problem->inputScaler.col(1) - problem->inputScaler.col(0);
+                inputs = (inputs - problem->inputScaler.col(0)).array() / range.array();
+            }
+
             for (int i = 0; i < nphiNut; i++)
-            {                
-                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
+            {
+                newtonObjectSUP.gNut(i) = problem->rbfSplines[i]->eval(inputs);
             }
             rbfCoeff = newtonObjectSUP.gNut;
         }
@@ -443,9 +473,17 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
         if (problem->rbfParams == "params")
         {            
             label caseIdx = count_online_solve-1;
+
+            Eigen::VectorXd inputs = onlineMu.row(caseIdx).transpose();
+            if (problem->rbfScaler)
+            {
+                Eigen::VectorXd range = problem->inputScaler.col(1) - problem->inputScaler.col(0);
+                inputs = (inputs - problem->inputScaler.col(0)).array() / range.array();
+            }
+
             for (int i = 0; i < nphiNut; i++)
             {
-                newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(onlineMu.row(caseIdx));
+                newtonObjectPPE.gNut(i) = problem->rbfSplines[i]->eval(inputs);
             }
             rbfCoeff = newtonObjectPPE.gNut;
         }

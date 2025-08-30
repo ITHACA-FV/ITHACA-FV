@@ -132,6 +132,9 @@ class SteadyNSTurbNeu: public steadyNS
         /// The matrix of L2 projection coefficients for velocity modes and lifting functions
         Eigen::MatrixXd coeffL2_lift_U;
 
+        /// The parameter scaler matrix
+        Eigen::MatrixXd inputScaler;
+
         /// The vector of L2 projection coefficients for the eddy viscosity snapshot
         Eigen::VectorXd nutCoeff;
 
@@ -143,6 +146,9 @@ class SteadyNSTurbNeu: public steadyNS
 
         /// The name of RBF interpolation kernel
         word rbfKernel;
+
+        /// The scaler bool for RBF interpolation
+        bool rbfScaler;
 
         /// The type of RBF interpolation kernel
         SPLINTER::RadialBasisFunctionType rbfType;
