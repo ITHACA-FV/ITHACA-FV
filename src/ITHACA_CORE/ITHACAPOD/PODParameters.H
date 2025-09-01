@@ -219,6 +219,12 @@ class PODParameters : public Parameters
     public:
         PODParameters(int argc,char* argv[]);
 
+        /// Getter to access all IthacaFVParameters members in the other classes
+        ITHACAparameters* get_ITHACAparameters() const
+        { 
+            return ithacaLibraryParameters;
+        }
+
         const Foam::HashTable<Foam::label, Foam::word>& get_nModes() const
         {
             return nModes;
@@ -336,6 +342,11 @@ class PODParameters : public Parameters
             return *deltaWeight;
         }
 
+        void set_centeredOrNot(const bool b)
+        {
+            centeredOrNot = b;
+        }
+
         /// Setters to the members of PODParameters that cannot initialize at the beginning of the program
         void set_eigenValues_U(const Eigen::VectorXd& input_eigenValues_U)
         {
@@ -377,7 +388,7 @@ class PODParameters : public Parameters
     const HashTable<double,word>& get_resolvedVaryingEnergy() const { return resolvedVaryingEnergy; }
     const HashTable<double,word>& get_varyingEnergy() const { return varyingEnergy; }
     const HashTable<double,word>& get_meanEnergy() const { return meanEnergy; }
-    word get_pathHilbertSpace(word fieldName);
+    Foam::word get_pathHilbertSpace(Foam::word fieldName);
 
     const List<word>& get_field_name() const { return field_name; }
     const List<word>& get_field_type() const { return field_type; }
@@ -483,6 +494,7 @@ class PODParameters : public Parameters
     void set_useDNS(const bool & c) {useDNS= c;}
 
     /// Setters of POD and DEIM parameters
+    void set_DEIMInterpolatedField(Foam::word name) {HRInterpolatedField=name;}
     void set_nMagicPoints(const label& n) {nMagicPoints=n;}
     void set_Ck(const float& c) {Ck=c;}
     void set_Ce(const float& c) {Ce=c;}

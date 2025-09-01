@@ -380,12 +380,9 @@ namespace ITHACAPOD
       line.erase(0,8);
       LESModel=line;
 
-      Info << "LESmodel:" << LESModel << endl;
 
       if (LESModel=="Smagorinsky")
       {
-        Info << "Simulation type LES Smagorinsky, DEIM will be performed on non linear term" << endl;
-        Info << "DEIM will be perfomed on " << DEIMInterpolatedField << " terms." << endl;
         set_useDEIM(true);
         set_Ck(ITHACAdict->lookupOrDefault<double>("Ck", 0.094));
         set_Ce(ITHACAdict->lookupOrDefault<double>("Ce", 1.048));
@@ -393,7 +390,7 @@ namespace ITHACAPOD
 
       }
       else if (LESModel=="kOmegaSSTDDES")
-      { Info<< "New Simulationtype of DDES model will be performed"<<endl;
+      {
         set_useDDES(true);
         set_useDEIM(false);
         template_field_omega = new volScalarField
@@ -499,6 +496,11 @@ Foam::word PODParameters::get_pathHilbertSpace_fromHS(Foam::word hilbertSp)
     }
 
     return pathHilbertSpace;
+}
+
+Foam::word PODParameters::get_pathHilbertSpace(Foam::word fieldName)
+{
+  return get_pathHilbertSpace_fromHS(hilbertSpacePOD[fieldName]);
 }
 
 
