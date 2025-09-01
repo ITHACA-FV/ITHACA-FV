@@ -662,7 +662,7 @@ void read_fields(
 
         Foam::Time runTime2(Foam::Time::controlDictName, ".", casename);
         
-        int last_s = Eigen::internal::size(runTime2.times()); 
+        int last_s = std::size(runTime2.times()); 
 
         if (first_snap > last_s)
         {

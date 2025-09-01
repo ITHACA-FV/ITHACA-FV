@@ -468,7 +468,7 @@ bool saveMarketVector (const VectorType& vec, const std::string& filename,
 
     for (label i = 0; i < vec.size(); i++)
     {
-        internal::putVectorElt(vec(i), out);
+        internal::putDenseElt(vec(i), out);
     }
 
     out.close();
