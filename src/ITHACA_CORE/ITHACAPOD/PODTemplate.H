@@ -4,8 +4,11 @@
 #include <Time.H>
 #include <volFieldsFwd.H>
 #include <FieldField.H>
+#include "Foam2Eigen.H"
 
-// #include "IthacaFVParameters.H"
+#include "ITHACAstream.H"
+#include "ITHACAutilities.H"
+#include "PODParameters.H"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -35,8 +38,8 @@ struct indexSquare
     Foam::label index2_end;
 };
 
-class Parameters;
-class PODParameters;
+//class Parameters;
+//class PODParameters;
 
 // Class that compute POD (spatial modes and temporal modes)
 template<typename T>

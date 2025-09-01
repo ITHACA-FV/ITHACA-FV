@@ -1,11 +1,5 @@
 
 #include "PODTemplate.H"
-#include "ITHACAstream.H"
-#include "Foam2Eigen.H"
-//
-#include "ITHACAutilities.H"
-#include "PODParameters.H"
-
 
 namespace ITHACAPOD
 {
