@@ -51,9 +51,10 @@ struct newtonUnsteadyNSTurbIntrusive: public newton_argument<double>
 {
     public:
         newtonUnsteadyNSTurbIntrusive() {}
+
         newtonUnsteadyNSTurbIntrusive(int Nx, int Ny,
                                       UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_u(problem.nModesOnline),
             N_BC(problem.inletIndex.rows())
         {}
@@ -76,9 +77,10 @@ struct newtonUnsteadyNSTurbIntrusivePPE: public newton_argument<double>
 {
     public:
         newtonUnsteadyNSTurbIntrusivePPE() {}
+
         newtonUnsteadyNSTurbIntrusivePPE(int Nx, int Ny,
                                          UnsteadyNSTurbIntrusive& problem): newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_u(problem.NUmodes),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows())

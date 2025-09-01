@@ -26,15 +26,15 @@
 {
     volScalarField rAU("rAU", 1.0 / UEqn.A());
     surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU));
-    volVectorField HbyA(constrainHbyA(rAU * UEqn.H(), U, p_rgh));
+    volVectorField HbyA(constrainHbyA(rAU* UEqn.H(), U, p_rgh));
 
-    surfaceScalarField phig(-rAUf* ghf * fvc::snGrad(rhok)*mesh.magSf());
+    surfaceScalarField phig(-rAUf* ghf* fvc::snGrad(rhok) * mesh.magSf());
 
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
         fvc::flux(HbyA)
-        + rAUf * fvc::ddtCorr(U, phi)
+        + rAUf* fvc::ddtCorr(U, phi)
         + phig
     );
 
@@ -59,7 +59,7 @@
             // Explicitly relax pressure for momentum corrector
             p_rgh.relax();
             // Correct the momentum source with the pressure gradient flux calculated from the relaxed pressure
-            U = HbyA + rAU * fvc::reconstruct((phig - p_rghEqn.flux()) / rAUf);
+            U = HbyA + rAU* fvc::reconstruct((phig - p_rghEqn.flux()) / rAUf);
             U.correctBoundaryConditions();
             fvOptions.correct(U);
         }
@@ -67,7 +67,7 @@
 
 #include "continuityErrs.H"
 
-    p = p_rgh + rhok * gh;
+    p = p_rgh + rhok* gh;
 
 
     if (p_rgh.needReference())
@@ -78,7 +78,7 @@
                  p.dimensions(),
                  pRefValue - getRefCellValue(p, pRefCell)
              );
-        p_rgh = p - rhok * gh;
+        p_rgh = p - rhok* gh;
     }
 }
 

@@ -45,7 +45,7 @@ ReducedUnsteadyNSTurbIntrusive::ReducedUnsteadyNSTurbIntrusive()
 ReducedUnsteadyNSTurbIntrusive::ReducedUnsteadyNSTurbIntrusive(
     UnsteadyNSTurbIntrusive& fomProblem)
 {
-    problem = &fomProblem;
+    problem = & fomProblem;
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->bMatrix.rows();
     Nphi_p = problem->kMatrix.cols();
@@ -104,9 +104,9 @@ int newtonUnsteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
     // Convective term
     Eigen::MatrixXd cc(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
+    Eigen::VectorXd m1 = problem->bTotalMatrix* aTmp* nu;
     // Gradient of pressure
-    Eigen::VectorXd m2 = problem->kMatrix * aTmp;
+    Eigen::VectorXd m2 = problem->kMatrix* aTmp;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -123,12 +123,12 @@ int newtonUnsteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->cTotalTensor, 0,
-                i) * aTmp;
+             i) * aTmp;
         fvec(i) = - a_dot(i) + m1(i) - cc(0, 0) - m2(i);
 
         if (problem->bcMethod == "penalty")
         {
-            fvec(i) += ((penaltyU * tauU)(i, 0));
+            fvec(i) += ((penaltyU* tauU)(i, 0));
         }
     }
 
@@ -147,7 +147,7 @@ int newtonUnsteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
 int newtonUnsteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
                                       Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonUnsteadyNSTurbIntrusive> numDiff(*this);
+    Eigen::NumericalDiff<newtonUnsteadyNSTurbIntrusive> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -181,15 +181,15 @@ int newtonUnsteadyNSTurbIntrusivePPE::operator()(const Eigen::VectorXd& x,
     Eigen::MatrixXd bb(1, 1);
     Eigen::MatrixXd nn(1, 1);
     // Mom Term
-    Eigen::VectorXd m1 = problem->bTotalMatrix * aTmp * nu;
+    Eigen::VectorXd m1 = problem->bTotalMatrix* aTmp* nu;
     // Gradient of pressure
-    Eigen::VectorXd m2 = problem->kMatrix * bTmp;
+    Eigen::VectorXd m2 = problem->kMatrix* bTmp;
     // Pressure Term
-    Eigen::VectorXd m3 = problem->D_matrix * bTmp;
+    Eigen::VectorXd m3 = problem->D_matrix* bTmp;
     // BC PPE
-    Eigen::VectorXd m6 = problem->BC1_matrix * aTmp * nu;
+    Eigen::VectorXd m6 = problem->BC1_matrix* aTmp* nu;
     // BC PPE
-    Eigen::VectorXd m7 = problem->BC3_matrix * aTmp * nu;
+    Eigen::VectorXd m7 = problem->BC3_matrix* aTmp* nu;
     // Penalty term
     Eigen::MatrixXd penaltyU = Eigen::MatrixXd::Zero(Nphi_u, N_BC);
 
@@ -206,12 +206,12 @@ int newtonUnsteadyNSTurbIntrusivePPE::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->cTotalTensor, 0,
-                i) * aTmp;
+             i) * aTmp;
         fvec(i) = - a_dot(i) + m1(i) - cc(0, 0) - m2(i);
 
         if (problem->bcMethod == "penalty")
         {
-            fvec(i) += ((penaltyU * tauU)(i, 0));
+            fvec(i) += ((penaltyU* tauU)(i, 0));
         }
     }
 
@@ -219,11 +219,11 @@ int newtonUnsteadyNSTurbIntrusivePPE::operator()(const Eigen::VectorXd& x,
     {
         int k = j + Nphi_u;
         gg = aTmp.transpose() * Eigen::SliceFromTensor(problem->gTensor, 0,
-                j) * aTmp;
+             j) * aTmp;
         bb = aTmp.transpose() * Eigen::SliceFromTensor(problem->bc2Tensor, 0,
-                j) * aTmp;
+             j) * aTmp;
         nn = aTmp.transpose() * Eigen::SliceFromTensor(problem->cTotalPPETensor, 0,
-                j) * aTmp;
+             j) * aTmp;
         fvec(k) = m3(j, 0) + gg(0, 0) - m7(j, 0) - nn(0, 0);
     }
 
@@ -242,7 +242,7 @@ int newtonUnsteadyNSTurbIntrusivePPE::operator()(const Eigen::VectorXd& x,
 int newtonUnsteadyNSTurbIntrusivePPE::df(const Eigen::VectorXd& x,
         Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonUnsteadyNSTurbIntrusivePPE> numDiff(*this);
+    Eigen::NumericalDiff<newtonUnsteadyNSTurbIntrusivePPE> numDiff( * this);
     numDiff.df(x, fjac);
     return 0;
 }

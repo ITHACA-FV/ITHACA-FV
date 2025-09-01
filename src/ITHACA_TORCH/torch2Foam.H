@@ -58,7 +58,7 @@ namespace torch2Foam
 /// @return     the torch tensor
 ///
 template <class type_f>
-torch::Tensor field2Torch(Field<type_f>& field);
+torch::Tensor field2Torch(Field<type_f> & field);
 
 //--------------------------------------------------------------------------
 /// @brief      Convert an Torch TensorOpenFOAM to an OpenFoam Field
@@ -73,7 +73,7 @@ template <class type_f>
 Field<type_f> torch2Field(torch::Tensor& tTensor);
 
 template <class type_f>
-torch::Tensor ptrList2Torch(PtrList<type_f>& ptrList);
+torch::Tensor ptrList2Torch(PtrList<type_f> & ptrList);
 
 template <class type_f>
 PtrList<Field<type_f>> torch2PtrList(torch::Tensor& tTensor);

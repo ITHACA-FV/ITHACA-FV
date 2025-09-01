@@ -97,7 +97,7 @@ void DataTable::addSample(const DataPoint& sample)
 
 void DataTable::addSample(std::initializer_list<DataPoint> samples)
 {
-    for (auto& sample : samples)
+    for (auto & sample : samples)
     {
         addSample(sample);
     }
@@ -116,7 +116,7 @@ unsigned int DataTable::getNumSamplesRequired() const
     unsigned long samplesRequired = 1;
     unsigned int i = 0;
 
-    for (auto& variable : grid)
+    for (auto & variable : grid)
     {
         samplesRequired *= (unsigned long) variable.size();
         i++;
@@ -150,14 +150,14 @@ void DataTable::gridCompleteGuard() const
 void DataTable::save(const std::string& fileName) const
 {
     Serializer s;
-    s.serialize(*this);
+    s.serialize( * this);
     s.saveToFile(fileName);
 }
 
 void DataTable::load(const std::string& fileName)
 {
     Serializer s(fileName);
-    s.deserialize(*this);
+    s.deserialize( * this);
 }
 
 /*
@@ -192,7 +192,7 @@ std::vector< std::vector<double>> DataTable::getTableX() const
     // Fill table with values
     int i = 0;
 
-    for (auto& sample : samples)
+    for (auto & sample : samples)
     {
         std::vector<double> x = sample.getX();
 
@@ -231,12 +231,12 @@ DataTable operator+(const DataTable& lhs, const DataTable& rhs)
 
     for (auto it = lhs.cbegin(); it != lhs.cend(); it++)
     {
-        result.addSample(*it);
+        result.addSample( * it);
     }
 
     for (auto it = rhs.cbegin(); it != rhs.cend(); it++)
     {
-        result.addSample(*it);
+        result.addSample( * it);
     }
 
     return result;
@@ -255,9 +255,9 @@ DataTable operator-(const DataTable& lhs, const DataTable& rhs)
     // Add all samples from lhs that are not in rhs
     for (auto it = lhs.cbegin(); it != lhs.cend(); it++)
     {
-        if (rhsSamples.count(*it) == 0)
+        if (rhsSamples.count( * it) == 0)
         {
-            result.addSample(*it);
+            result.addSample( * it);
         }
     }
 

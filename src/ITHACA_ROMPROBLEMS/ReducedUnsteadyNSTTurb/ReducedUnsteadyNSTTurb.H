@@ -58,9 +58,10 @@ struct newton_unsteadyNSTTurb_sup: public newton_argument<double>
 {
     public:
         newton_unsteadyNSTTurb_sup() {}
+
         newton_unsteadyNSTTurb_sup(int Nx, int Ny,
                                    UnsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_nut(problem.Nnutmodes),
             Nphi_p(problem.NPmodes),
@@ -89,9 +90,10 @@ struct newton_unsteadyNSTTurb_sup_t: public newton_argument<double>
 {
     public:
         newton_unsteadyNSTTurb_sup_t() {}
+
         newton_unsteadyNSTTurb_sup_t(int Nx, int Ny,
                                      UnsteadyNSTTurb& problem): newton_argument<double>(Nx, Ny),
-            problem(&problem),
+            problem( & problem),
             Nphi_t(problem.NTmodes + problem.liftfieldT.size()),
             N_BC_t(problem.inletIndexT.rows()),
             nu_c(problem.Nnutmodes)

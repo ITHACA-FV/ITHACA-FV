@@ -119,8 +119,8 @@ void msrProblem::truthSolve(List<scalar> mu_now)
     volScalarField& logT = _logT();
     volScalarField& alphat = _alphat();
     volScalarField& difft = _difft();
-    volScalarField powerDens = ((1 - decbetaTot) * flux * SP +
-                                (decLam1 * dec1 + decLam2 * dec2 + decLam3 * dec3)).ref();
+    volScalarField powerDens = ((1 - decbetaTot) * flux* SP +
+                                (decLam1* dec1 + decLam2* dec2 + decLam3* dec3)).ref();
     powerDens.rename("powerDens");
 #include "NLmsrProblem.H"
     counter++;
@@ -338,7 +338,7 @@ void msrProblem::liftSolve()
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("Phi", dimLength * dimVelocity, 0),
+            dimensionedScalar("Phi", dimLength* dimVelocity, 0),
             p.boundaryField().types()
         );
         label PhiRefCell = 0;
@@ -767,7 +767,7 @@ Eigen::MatrixXd msrProblem::laplacian_pressure(label NPmodes)
     {
         for (label j = 0; j < Dsize; j++)
         {
-            D_matrix(i, j) = fvc::domainIntegrate(fvc::grad(Pmodes[i])&fvc::grad(
+            D_matrix(i, j) = fvc::domainIntegrate(fvc::grad(Pmodes[i]) & fvc::grad(
                     Pmodes[j])).value();
         }
     }
@@ -807,7 +807,7 @@ Eigen::MatrixXd msrProblem::pressure_BC1(label NUmodes, label NPmodes)
         for (label j = 0; j < P_BC2size; j++)
         {
             surfaceScalarField lpl((fvc::interpolate(fvc::laplacian(
-                                        Together[j]))&mesh.Sf())*fvc::interpolate(Pmodes[i]));
+                                        Together[j])) & mesh.Sf()) * fvc::interpolate(Pmodes[i]));
             double s = 0;
 
             for (label k = 0; k < lpl.boundaryField().size(); k++)
@@ -863,7 +863,8 @@ List <Eigen::MatrixXd> msrProblem::pressure_BC2(label NUmodes, label NPmodes)
             for (label k = 0; k < P2_BC2size; k++)
             {
                 surfaceScalarField div_m(fvc::interpolate(fvc::div(fvc::interpolate(
-                                             Together[j]) & mesh.Sf(), Together[k]))&mesh.Sf()*fvc::interpolate(Pmodes[i]));
+                                             Together[j]) & mesh.Sf(),
+                                         Together[k])) & mesh.Sf() * fvc::interpolate(Pmodes[i]));
                 double s = 0;
 
                 for (label k = 0; k < div_m.boundaryField().size(); k++)
@@ -913,8 +914,8 @@ Eigen::MatrixXd msrProblem::pressure_BC3(label NUmodes, label NPmodes)
         for (label j = 0; j < P3_BC2size; j++)
         {
             surfaceVectorField BC3 = fvc::interpolate(fvc::curl(Together[j])).ref();
-            surfaceVectorField BC4 = (n ^ fvc::interpolate(fvc::grad(Pmodes[i]))).ref();
-            surfaceScalarField BC5 = ((BC3 & BC4) * mesh.magSf()).ref();
+            surfaceVectorField BC4 = (n^ fvc::interpolate(fvc::grad(Pmodes[i]))).ref();
+            surfaceScalarField BC5 = ((BC3& BC4) * mesh.magSf()).ref();
             double s = 0;
 
             for (label k = 0; k < BC5.boundaryField().size(); k++)
@@ -1812,8 +1813,8 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_v[i]->addSample(mu_samples.row(j), Ncoeff_v(i, j));
         }
 
-        rbfsplines_v[i] = new SPLINTER::RBFSpline(*SAMPLES_v[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+        rbfsplines_v[i] = new SPLINTER::RBFSpline( * SAMPLES_v[i],
+            SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
     Eigen::MatrixXd Ncoeff_D = ITHACAutilities::getCoeffs(DFields, Dmodes);
@@ -1833,8 +1834,8 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_D[i]->addSample(mu_samples.row(j), Ncoeff_D(i, j));
         }
 
-        rbfsplines_D[i] = new SPLINTER::RBFSpline(*SAMPLES_D[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+        rbfsplines_D[i] = new SPLINTER::RBFSpline( * SAMPLES_D[i],
+            SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
     Eigen::MatrixXd Ncoeff_NSF = ITHACAutilities::getCoeffs(NSFFields,
@@ -1855,8 +1856,8 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_NSF[i]->addSample(mu_samples.row(j), Ncoeff_NSF(i, j));
         }
 
-        rbfsplines_NSF[i] = new SPLINTER::RBFSpline(*SAMPLES_NSF[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+        rbfsplines_NSF[i] = new SPLINTER::RBFSpline( * SAMPLES_NSF[i],
+            SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
     Eigen::MatrixXd Ncoeff_A = ITHACAutilities::getCoeffs(AFields, Amodes);
@@ -1876,8 +1877,8 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_A[i]->addSample(mu_samples.row(j), Ncoeff_A(i, j));
         }
 
-        rbfsplines_A[i] = new SPLINTER::RBFSpline(*SAMPLES_A[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+        rbfsplines_A[i] = new SPLINTER::RBFSpline( * SAMPLES_A[i],
+            SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
     Eigen::MatrixXd Ncoeff_SP = ITHACAutilities::getCoeffs(SPFields,
@@ -1898,8 +1899,8 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_SP[i]->addSample(mu_samples.row(j), Ncoeff_SP(i, j));
         }
 
-        rbfsplines_SP[i] = new SPLINTER::RBFSpline(*SAMPLES_SP[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+        rbfsplines_SP[i] = new SPLINTER::RBFSpline( * SAMPLES_SP[i],
+            SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 
     Eigen::MatrixXd Ncoeff_TXS = ITHACAutilities::getCoeffs(TXSFields,
@@ -1920,8 +1921,8 @@ void msrProblem::msrcoeff(label& NC)
             SAMPLES_TXS[i]->addSample(mu_samples.row(j), Ncoeff_TXS(i, j));
         }
 
-        rbfsplines_TXS[i] = new SPLINTER::RBFSpline(*SAMPLES_TXS[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+        rbfsplines_TXS[i] = new SPLINTER::RBFSpline( * SAMPLES_TXS[i],
+            SPLINTER::RadialBasisFunctionType::GAUSSIAN);
     }
 }
 
@@ -1998,7 +1999,7 @@ void msrProblem::liftSolveT()
             fvScalarMatrix TEqn
             (
                 fvm::div(phi, Tlift) == fvm::laplacian(turbulence->nu() / Pr + alphat, Tlift)
-                + sp * (1 - dbtot) / (cp * rho)*source
+                + sp * (1 - dbtot) / (cp* rho) * source
             );
             TEqn.solve();
             Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
@@ -2065,8 +2066,8 @@ void msrProblem::restart()
     U = U0;
     phi = phi0;
     turbulence.reset(
-        (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
-    );
+                  (incompressible::turbulenceModel::New(U, phi, _laminarTransport())).ptr()
+              );
     flux = flux0;
     prec1 = prec10;
     prec2 = prec20;

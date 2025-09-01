@@ -38,7 +38,7 @@ DataPoint::DataPoint(DenseVector x, double y)
     setData(newX, y);
 }
 
-void DataPoint::setData(const std::vector<double>& x, double y)
+void DataPoint::setData(const std::vector<double> & x, double y)
 {
     this->x = x;
     this->y = y;
