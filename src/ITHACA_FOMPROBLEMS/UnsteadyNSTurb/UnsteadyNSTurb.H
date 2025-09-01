@@ -54,6 +54,14 @@ SourceFiles
 #include <rbfspline.h>
 #include <spline.h>
 
+#include "Smagorinsky.H"
+#include "kOmegaSSTBase.H"
+#include "DESModelBase.H"
+#include "DESModel.H"
+#include "kOmegaSSTDES.H"
+#include "PODParameters.H"
+#include <optional>
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 /*---------------------------------------------------------------------------*\
@@ -73,6 +81,9 @@ class UnsteadyNSTurb: public unsteadyNS
 
         /// Construct with argc and argv
         UnsteadyNSTurb(int argc, char* argv[]);
+
+        // Small construct with Parameters to access member functions linked to Smagorinsky diffusion 
+        UnsteadyNSTurb(ITHACAPOD::Parameters* myParameters);
 
         // Specific variable for the unstationary case
         // Member Functions
@@ -374,6 +385,202 @@ class UnsteadyNSTurb: public unsteadyNS
         ///
         Eigen::MatrixXd velParDerivativeCoeff(Eigen::MatrixXd A,
                                               Eigen::VectorXd par, double timeSnap);
+
+private :
+
+        /// Parameter object containing main information
+        const ITHACAPOD::PODParameters* ithacaFVParameters;
+
+        // /// Turbulence model
+        // autoPtr<incompressible::turbulenceModel> turbModel;
+    
+ public :
+
+    // =========================================================================
+    // ============================= Smagorinsky ===============================
+    // =========================================================================
+
+        //--------------------------------------------------------------------------
+        /// @brief   Compute non linear Snapshot at a given time
+        /// @details Overloaded function depending on the type of the second argument
+        ///          If volVectorField then it computes the Smagorinsky term
+        ///
+        /// @param[in]     index    label defining concerned time step
+        /// @param[in,out] Smag     volVectorField in wich the Smagorinsky term will be computed
+        /// @param[in]     modesU   PtrList<volVectorField>, (optional) if given then compute 
+        ///                         Smag from reduced velocity
+        ///
+        /// @return  Smag
+        ///
+        void computeNonLinearSnapshot_at_time(const label& index, volVectorField& Smag, 
+                        std::optional<PtrList<volVectorField>> modesU = std::nullopt);
+
+        //--------------------------------------------------------------------------
+        /// @brief   Initialize Smagorinsky term with values at time 0
+        /// @details Smagorinsky at time 0 is not provided by OpenFOAM, it is required to compute this quantity
+        ///
+        /// @return  Smag
+        ///
+        volVectorField initSmagFunction();
+
+        //--------------------------------------------------------------------------
+        /// @brief   Initialize Smagorinsky term of a tracer phi with values at time 0
+        /// @details Smagorinsky of a tracer phi at time 0 is not provided by OpenFOAM, it is required to compute this quantity
+        ///
+        /// @return  Smag
+        ///
+        volScalarField initSmagPhiFunction(const volScalarField template_field_phi);
+
+        //--------------------------------------------------------------------------
+        /// @brief   Compute Smagorinsky Snapshot at a given time
+        ///
+        /// @param[in] index    label defining concerned time step term will be computed
+        /// @param[in] modesU   PtrList<volVectorField> (optional) storing the velocity modes, 
+        ///                     if given then compute Smag from reduced velocity
+        ///
+        /// @return  Smag
+        ///
+        volVectorField computeSmagTerm_at_time(const label& index, std::optional<PtrList<volVectorField>> modesU = std::nullopt);
+
+        //--------------------------------------------------------------------------
+        /// @brief   Compute Smagorinsky Snapshot of a tracer phi at a given time
+        ///
+        /// @param[in] index               label defining concerned time step term will be computed
+        /// @param[in] template_field_phi  volScalarField, template field of the tracer
+        ///
+        /// @return  Smagorinsky volScalarField
+        ///
+        volScalarField computeSmagTermPhi_at_time(const label& index, const volScalarField template_field_phi);
+
+        //--------------------------------------------------------------------------
+        /// @brief   Compute Smagorinsky Snapshot for a given velocity field U
+        ///
+        /// @param[in] snapshotj volVectorField of snapshot U
+        ///
+        /// @return  Smagorinsky volVectorField
+        ///
+        volVectorField computeSmagTerm_fromU(const volVectorField& snapshotj);
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute Smagorinsky Snapshot for given velocity field U and tracer phi
+        ///
+        /// @param[in] snapshotj volVectorField of snapshot U
+        /// @param[in] phij      volScalarField of snapshot phi
+        ///
+        /// @return  Smagorinsky volScalarField
+        ///
+        volScalarField computeSmagTermPhi_fromUPhi(const volVectorField& snapshotj, const volScalarField& phij);
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute Smagorinsky Snapshot for a given velocity field U (=computeSmagTerm_fromU)
+        ///
+        /// @param[in] snapshotj volVectorField of snapshot U
+        /// @param[in] phij      volScalarField of snapshot phi (unsused, assumed to be = U)
+        ///
+        /// @return  Smagorinsky volScalarField
+        ///
+        volVectorField computeSmagTermPhi_fromUPhi(const volVectorField& snapshotj, const volVectorField& phij);
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute diffusion term for a given scalar field phi
+        ///
+        /// @param[in] coefDiff  volScalarField or volTensorField of diffusion coefficient or matrix
+        /// @param[in] phi       volScalarField of snapshot phi
+        ///
+        /// @return  diffusion term volScalarField
+        ///
+        template<typename T>
+        static volScalarField diffusion(const T& coefDiff, const volScalarField& phi);
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute diffusion term for a given vector field u
+        ///
+        /// @param[in] coefDiff  volScalarField or volTensorField of diffusion coefficient or matrix
+        /// @param[in] u         volVectorField of snapshot u
+        ///
+        /// @return  diffusion term volVectorField
+        ///
+        template<typename T>
+        static volVectorField diffusion(const T& coefDiff, const volVectorField& u);
+
+
+
+    // =========================================================================
+    // ============================= NUT =======================================
+    // =========================================================================
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute non linear Snapshot at a given time
+        /// @details Overloaded function depending on the type of the second argument
+        ///          If volScalarField then it computes the turbulent viscosity term
+        ///
+        /// @param[in]     index  label defining concerned time step
+        /// @param[in,out] nut    volScalarField in wich the turbulent viscosity term will be computed
+        /// @param[in]     modesU PtrList<volVectorField>, optional, if given then compute nut from reduced velocity
+        ///
+        /// @return  nut
+        ///
+        void computeNonLinearSnapshot_at_time(const label& index, volScalarField& nut, 
+              std::optional<PtrList<volVectorField>> modesU = std::nullopt);
+
+        //--------------------------------------------------------------------------
+        /// @brief  Initialize Nut term with values at time 0
+        /// @details Nut is provided by OpenFOAM, but for homogeneity purposes 
+        ///          it is initialized the same way as Smagorinsky term
+        ///
+        /// @return  nonLinearSnapshot
+        ///
+        volScalarField initNutFunction();
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute non linear Snapshot at a given time
+        /// @details Overloaded function depending on the type of the second argument
+        ///          If volScalarField then it computes the turbulent viscosity term
+        ///
+        /// @param[in] index label defining concerned time step
+        /// @param[in] modesU PtrList<volVectorField>, optional, if given then compute nut from reduced velocity
+        ///
+        /// @return  nut volScalarField
+        ///
+        volScalarField computeNut_at_time(const label& index, std::optional<PtrList<volVectorField>> modesU = std::nullopt);
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute turbulent viscosity Snapshot for a given velocity field U
+        ///
+        /// @param[in] snapshotj volVectorField of snapshot U
+        ///
+        /// @return  nut volScalarField
+        ///
+        volScalarField computeNut_fromU(const volVectorField& snapshotj);
+
+        //--------------------------------------------------------------------------
+        /// @brief   Compute turbulent viscosity Snapshot for a given tensor Field S
+        ///
+        /// @param[in] S volTensorField  S = 0.5*(gradV+gradV^t)
+        ///
+        /// @return  nut volScalarField
+        ///
+        volScalarField computeNut_fromS(const volTensorField& S);
+
+        // void initTurbModel();
+
+        //--------------------------------------------------------------------------
+        /// @brief   Compute S deformation tensor for a given vector field U
+        ///
+        /// @param[in] snapshotj volVectorField U
+        ///
+        /// @return  S deformation Tensor
+        ///
+        static volTensorField computeS_fromU(const volVectorField& snapshotj);
+
+        //--------------------------------------------------------------------------
+        /// @brief   Compute gradient for a given scalar field Phi
+        ///
+        /// @param[in] phij volScalarField  (omega or k)
+        ///
+        /// @return  S grad(phij)
+        ///
+        static volVectorField computeS_fromU(const volScalarField& phij);
 
 };
 

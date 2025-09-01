@@ -263,6 +263,19 @@ std::string str_trim(std::string const& s);
 void str_format_io( std::string const& s, unsigned int Nmax );
 
 //------------------------------------------------------------------------------
+/// @brief      Returns the double d in string format without keeping all the extra 0
+///
+/// @param      d double
+std::string double2ConciseString(const double& d);
+
+//------------------------------------------------------------------------------
+/// @brief      Returns true if contained is a substring of contain, false otherwise
+///
+/// @param      contain string
+/// @param      contained string
+bool containsSubstring(std::string contain, std::string contained);
+
+//------------------------------------------------------------------------------
 /// @brief      Perform the dot product of v and w for a given hilbertSpace
 
 /// @param      v a volVectorField

@@ -105,6 +105,12 @@ UnsteadyNSTurb::UnsteadyNSTurb(int argc, char* argv[])
     NNutModes = para->ITHACAdict->lookupOrDefault<label>("NmodesNutProj", 0);
 }
 
+// Small construct to access member functions linked to Smagorinsky diffusion   
+UnsteadyNSTurb::UnsteadyNSTurb(ITHACAPOD::Parameters* myParameters):
+  ithacaFVParameters(static_cast<ITHACAPOD::PODParameters*>(myParameters))
+{
+}
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void UnsteadyNSTurb::truthSolve(List<scalar> mu_now, std::string& offlinepath)
@@ -1396,3 +1402,246 @@ Eigen::MatrixXd UnsteadyNSTurb::velParDerivativeCoeff(Eigen::MatrixXd A,
     newCoeffs.rightCols(newColsNum - parsSamplesNum) = bNew;
     return newCoeffs;
 }
+
+
+
+// =========================================================================
+// ============================= Smagorinsky ===============================
+// =========================================================================
+
+void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const label& index, 
+                 volVectorField& Smag, std::optional<PtrList<volVectorField>> modesU)
+{
+    if (ithacaFVParameters->get_DEIMInterpolatedField() == "fullStressFunction"
+      || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedFullStressFunction"))
+    {
+        Smag = computeSmagTerm_at_time(index, modesU) ;
+    }
+    else
+    {
+      Info << "Error : DEIMInterpolatedField not valid : "
+           << ithacaFVParameters->get_DEIMInterpolatedField() << endl;
+      Info << "DEIM is available for fullStressFunction and nut only." << endl;
+      abort();
+    }
+}
+
+// Init Smagorinsky term
+volVectorField UnsteadyNSTurb::initSmagFunction()
+{
+    // Index 1 corresponds to folder 0
+    return volVectorField("fullStressFunction", computeSmagTerm_at_time(1) );
+}
+
+// Init Smagorinsky term
+volScalarField UnsteadyNSTurb::initSmagPhiFunction(const volScalarField template_field_phi)
+{
+    // Index 1 corresponds to folder 0
+    return volScalarField(ithacaFVParameters->get_DEIMInterpolatedField(), computeSmagTermPhi_at_time(1,template_field_phi));
+}
+
+volVectorField UnsteadyNSTurb::computeSmagTerm_at_time(const label& index, 
+                                        std::optional<PtrList<volVectorField>> modesU)
+{
+    // Read the j-th field
+    volVectorField snapshotj = ithacaFVParameters->get_template_field_U();
+    ITHACAstream::read_snapshot(snapshotj, index);
+
+    if (modesU)
+    {
+        Eigen::MatrixXd coeffs_field_U = ITHACAutilities::getCoeffs(snapshotj, modesU.value(), modesU.value().size(), 1);
+        PtrList<volVectorField> reduced_field_U = ITHACAutilities::reconstructFromCoeff(modesU.value(), 
+                                                                coeffs_field_U, modesU.value().size());
+        snapshotj = ithacaFVParameters->get_meanU() + reduced_field_U[0];
+    }
+
+    return computeSmagTerm_fromU(snapshotj);
+}
+
+volScalarField UnsteadyNSTurb::computeSmagTermPhi_at_time(const label& index, const volScalarField template_field_phi)
+{
+    // Read the j-th field
+    volScalarField phij = template_field_phi;
+    ITHACAstream::read_snapshot(phij, index);
+    volVectorField snapshotj = ithacaFVParameters->get_template_field_U();
+    ITHACAstream::read_snapshot(snapshotj, index);
+    return computeSmagTermPhi_fromUPhi(snapshotj,phij);
+}
+
+volVectorField UnsteadyNSTurb::computeSmagTerm_fromU(const volVectorField& snapshotj)
+{
+    volTensorField S=computeS_fromU(snapshotj);
+    volScalarField nut = computeNut_fromS(S);
+    return (fvc::div(2*nut*dev(S)));
+}
+
+volScalarField UnsteadyNSTurb::computeSmagTermPhi_fromUPhi(const volVectorField& snapshotj, const volScalarField& phij)
+{
+    volTensorField S=computeS_fromU(snapshotj);
+    volScalarField nut = computeNut_fromS(S);
+    return (fvc::div(nut*fvc::grad(phij)));
+}
+
+template<typename T>
+volScalarField UnsteadyNSTurb::diffusion(const T& coefDiff, const volScalarField& phi)
+{
+    return ( fvc::laplacian(coefDiff , phi) );
+}
+template volScalarField UnsteadyNSTurb::diffusion(const volScalarField& coefDiff, const volScalarField& u);
+template volScalarField UnsteadyNSTurb::diffusion(const volTensorField& coefDiff, const volScalarField& u);
+
+template<typename T>
+volVectorField UnsteadyNSTurb::diffusion(const T& coefDiff, const volVectorField& u)
+{
+    volTensorField S_u=computeS_fromU(u);
+    return ( fvc::div( 2 * ITHACAutilities::tensorFieldProduct( coefDiff , dev(S_u) ) ) );
+}
+template volVectorField UnsteadyNSTurb::diffusion(const volScalarField& coefDiff, const volVectorField& u);
+template volVectorField UnsteadyNSTurb::diffusion(const volTensorField& coefDiff, const volVectorField& u);
+
+volVectorField UnsteadyNSTurb::computeSmagTermPhi_fromUPhi(const volVectorField& snapshotj, const volVectorField& phij)
+{
+    return computeSmagTerm_fromU(snapshotj);
+}
+
+
+
+// =========================================================================
+// ============================= NUT =======================================
+// =========================================================================
+
+void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, 
+                                                 std::optional<PtrList<volVectorField>> modesU)
+{
+    if (ithacaFVParameters->get_DEIMInterpolatedField() == "nut"
+        || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedNut"))
+    {
+        phi = computeNut_at_time(index, modesU) ;
+    }
+    else if (ithacaFVParameters->get_DEIMInterpolatedField() == "fullStressFunction_K")
+    {
+        phi = computeSmagTermPhi_at_time(index, ithacaFVParameters->get_template_field_k());
+    }
+    else if (ithacaFVParameters->get_DEIMInterpolatedField() == "fullStressFunction_Omega")
+    {
+        phi = computeSmagTermPhi_at_time(index, ithacaFVParameters->get_template_field_omega());
+    }
+    else
+    {
+        Info << "Error : DEIMInterpolatedField not valid : "
+        << ithacaFVParameters->get_DEIMInterpolatedField() << endl;
+        Info << "DEIM is available for fullStressFunction and nut only." << endl;
+        abort();
+    }
+}
+
+volScalarField UnsteadyNSTurb::initNutFunction()
+{
+    return volScalarField(ithacaFVParameters->get_template_field_nut());
+}
+
+volScalarField UnsteadyNSTurb::computeNut_at_time(const label& index, std::optional<PtrList<volVectorField>> modesU)
+{
+    // Read the j-th field
+    volVectorField snapshotj = ithacaFVParameters->get_template_field_U();
+    ITHACAstream::read_snapshot(snapshotj, index);
+
+    if (modesU)
+    {
+    Eigen::MatrixXd coeffs_field_U = ITHACAutilities::getCoeffs(snapshotj, modesU.value(), modesU.value().size(), 1);
+    PtrList<volVectorField> reduced_field_U = ITHACAutilities::reconstructFromCoeff(modesU.value(), 
+                                                                coeffs_field_U, modesU.value().size());
+    snapshotj = ithacaFVParameters->get_meanU() + reduced_field_U[0];
+    }
+
+    return computeNut_fromU(snapshotj);
+}
+
+volScalarField UnsteadyNSTurb::computeNut_fromU(const volVectorField& snapshotj)
+{
+    volTensorField S=computeS_fromU(snapshotj);
+    return (computeNut_fromS(S));
+}
+
+volScalarField UnsteadyNSTurb::computeNut_fromS(const volTensorField& S)
+{
+
+    volScalarField delta = ithacaFVParameters->get_delta();
+    float Ck = ithacaFVParameters->get_Ck();
+    float Ce = ithacaFVParameters->get_Ce();
+
+    // // Incompressible flows:
+    // float Cs = std::pow(Ck*std::pow(Ck/Ce,0.5),0.5);
+    // return (pow(Cs*delta,2)*sqrt(2*S&&S));
+
+    // OpenFOAM like version
+    // Piece of code strongly inspired by Smagorinsky OpenFOAM Methods
+    // see https://develop.openfoam.com/Development/openfoam/blob/OpenFOAM-v2012/src/TurbulenceModels/turbulenceModels/LES/Smagorinsky/Smagorinsky.C
+
+    volScalarField a(Ce/delta);
+    volScalarField b((2.0/3.0)*tr(S));
+    volScalarField c(2*Ck*delta*(dev(S) && S));
+
+    volScalarField k(sqr((-b + sqrt(sqr(b) + 4*a*c))/(2*a)));
+
+    volScalarField nut = ithacaFVParameters->get_template_field_nut();
+
+    // Loop over inner values to conserve BC informations
+    for (int i=0; i<nut.size(); i++)
+        {
+        nut[i] = Ck*delta[i]*std::pow(k[i],0.5);
+        }
+
+    // TO DO : make it works
+    nut.correctBoundaryConditions();
+    return nut;
+ }
+
+
+ // void UnsteadyNSTurb::initTurbModel()
+ // {
+ //   const volVectorField& U(ithacaFVParameters->get_template_field_U());
+ //
+ //   Foam::Time runTime(Foam::Time::controlDictName, ".", ithacaFVParameters->get_casenameData());
+ //   wordList boundaryTypeNut = ithacaFVParameters->get_template_field_nut().boundaryField().types();
+ //
+ //   const surfaceScalarField phi
+ //     (
+ //     IOobject
+ //       (
+ //       "phi",
+ //       runTime.timeName(),
+ //       ithacaFVParameters->get_mesh(),
+ //       IOobject::READ_IF_PRESENT,
+ //       IOobject::AUTO_WRITE
+ //       ),
+ //     ithacaFVParameters->get_mesh(),
+ //     dimensionedScalar("phi", dimensionSet(0,0,0,0,0,0,0), 1.0),
+ //     boundaryTypeNut
+ //     );
+ //
+ //    const Foam::singlePhaseTransportModel transportModel_(U, phi);
+ //    turbModel = autoPtr<incompressible::turbulenceModel>
+ //      (
+ //          incompressible::turbulenceModel::New(U, phi, transportModel_)
+ //      );
+ //
+ //    // turbModel->correct();
+ //    // volScalarField nut_test( turbModel->nut());
+ //
+ //
+ //  }
+
+
+
+ volTensorField UnsteadyNSTurb::computeS_fromU(const volVectorField& snapshotj)
+ {
+    volTensorField gradV=fvc::grad(snapshotj);
+    return 0.5*(gradV+gradV.T());
+ }
+
+ volVectorField UnsteadyNSTurb::computeS_fromU(const volScalarField& phij)
+ {
+    volVectorField gradV=fvc::grad(phij);
+    return gradV;
+ }

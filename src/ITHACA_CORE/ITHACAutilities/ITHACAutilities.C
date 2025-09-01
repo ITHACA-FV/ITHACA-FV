@@ -406,6 +406,31 @@ void str_format_io(std::string const& s, unsigned int nMax)
   }
 }
 
+std::string double2ConciseString(const double& d)
+{
+    std::string s = std::to_string(d);
+
+    // Removing trailling zeros
+    int dot_pos = s.find_first_of('.');
+    if(dot_pos != std::string::npos)
+    {
+        int ipos = s.size()-1;
+        while((s[ipos]=='0' || s[ipos]=='.') && ipos>dot_pos-1)
+        {
+            --ipos;
+        }
+        s.erase(ipos + 1, std::string::npos);
+    }
+  return s;
+}
+
+bool containsSubstring(std::string contain, std::string contained)
+{
+    std::transform(contain.begin(), contain.end(), contain.begin(), ::tolower);
+    std::transform(contained.begin(), contained.end(), contained.begin(), ::tolower);
+    return contain.find(contained) != std::string::npos;
+}
+
 
 template<typename T>
 Eigen::MatrixXd dot_product_POD(PtrList<T>& v, PtrList<T>& w,
