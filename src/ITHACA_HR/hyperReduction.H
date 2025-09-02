@@ -39,6 +39,7 @@ SourceFiles
 #include "fvMeshSubset.H"
 #include <set>
 #include "redsvd"
+#include <unsupported/Eigen/NNLS>
 
 
 
@@ -90,13 +91,15 @@ class HyperReduction
         /// @param[in]  n_cells           Number of cells
         /// @param[in]  initialSeeds      Initial nodes
         /// @param[in]  problemName       Name of the function to be hyper-reduced
+        /// @param[in]  volumes           Volume of each cell (optional, used in offlineECP)
         ///
         HyperReduction(label n_modes,
                        label n_nodes,
                        unsigned int vectorial_dim,
                        label n_cells,
                        Eigen::VectorXi initialSeeds,
-                       word problemName);
+                       word problemName,
+                       Eigen::VectorXd volumes = Eigen::VectorXd::Constant(1,0.0));
 
         // ITHACA parameters dict
         ITHACAparameters* para;
@@ -139,6 +142,9 @@ class HyperReduction
 
         /// Int Number of Cells;
         label n_cells;
+
+        /// Volume of each cell
+        Eigen::VectorXd volumes;
 
         /// Int Number of Cells in submeshes;
         label n_cellsSubfields;
@@ -194,6 +200,7 @@ class HyperReduction
 
         /// Quadrature weights. Ordered in the same order of matrix P.
         Eigen::VectorXd quadratureWeights;
+        List<Eigen::VectorXd> quadratureWeightsSubspaces;
 
         /// Submesh of the HyperReduction method
         autoPtr<fvMeshSubset> submesh;
@@ -230,7 +237,21 @@ class HyperReduction
         }
 
         void offlineECP(Eigen::MatrixXd& snapshotsModes,
-                        Eigen::VectorXd& normalizingWeights, word folderMethodName);
+                        Eigen::VectorXd& normalizingWeights, word folderMethodName, bool predictVolume = 1)
+        {
+            List<Eigen::MatrixXd> listSnapshotsModes(1);
+            listSnapshotsModes[0] = snapshotsModes.leftCols(n_modes);
+            offlineECP(listSnapshotsModes, normalizingWeights, folderMethodName, predictVolume);
+        }
+
+        //----------------------------------------------------------------------
+        /// @brief      Methods implemented: close to 'SAW-ECM' from "J.R.Bravo, J.A.Hernández, S.Ares de Parga, R.Rossi. "A subspace-adaptive weights cubature method with application to the local hyperreduction of parameterized finite element models". (2024). TODO implement non-negative LS.
+        ///                                  and also close to the above method when vectorial_dim > 1
+        ///                                  Snapshots are grouped into subspaces. HR nodes are shared by all subspaces. HR weights can differ.
+        ///
+        void offlineECP(List<Eigen::MatrixXd>& listSnapshotsModes,
+                        Eigen::VectorXd& weights, word folderMethodName, bool predictVolume = 1);
+
 
         //----------------------------------------------------------------------
         /// @brief      TODO
@@ -241,7 +262,7 @@ class HyperReduction
         /// @brief      TODO
         ///
         void computeLS(Eigen::MatrixXd& J, Eigen::MatrixXd& JWhole, Eigen::VectorXd& b,
-                       Eigen::VectorXd& q);
+                       Eigen::VectorXd& q, bool NNLS);
 
         //----------------------------------------------------------------------
         /// @brief      TODO
@@ -272,6 +293,14 @@ class HyperReduction
         ///
         void updateNodes(Eigen::SparseMatrix<double> & P, label& ind_max,
                          Eigen::VectorXd& mp_not_mask);
+
+        //----------------------------------------------------------------------
+        /// @brief      Remove from the nodes the weights equal to 0 (used with NNLS)
+        ///
+        /// @tparam     P The mask matrix of the nodes, updated with the call
+        /// @param[in]  weights  A Eigen::VectorXd of quadrature weights (for comparison with 0)
+        ///
+        void updateNodesRemove(Eigen::SparseMatrix<double>& P, Eigen::VectorXd weights);
 
         //----------------------------------------------------------------------
         /// @brief      TODO
