@@ -244,7 +244,7 @@ void HyperReduction<SnapshotsLists...>::getModesSVD(
         getSnapMatrix(snapMatrix, fieldWeights, snapMatrixBoundary,
                       fieldWeightsBoundaryList);
 
-        for (unsigned int id = 0; id < n_boundary_patches; id++)
+        for (int id = 0; id < n_boundary_patches; id++)
         {
             snapMatrix.conservativeResize(snapMatrix.rows() + snapMatrixBoundary[id].rows(),
                                           snapMatrix.cols());
@@ -545,7 +545,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(
                 double max;
                 Eigen::MatrixXd V = snapshotsModes.leftCols(n_modes);
 
-                for (unsigned int ith_node = 0; ith_node < na; ith_node++)
+                for (int ith_node = 0; ith_node < na; ith_node++)
                 {
                     if (P.cols() > 0)
                     {
@@ -593,7 +593,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(
                                             & c1);
                 updateNodes(P, ind_max, mp_not_mask);
 
-                for (unsigned int ith_node = 1; ith_node < na; ith_node++)
+                for (int ith_node = 1; ith_node < na; ith_node++)
                 {
                     if (ith_node < n_modes)
                     {
@@ -616,7 +616,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(
                                                      n_modes);
                         Eigen::VectorXd results(n_cells);
 
-                        for (unsigned int ith_cell = 0; ith_cell < n_cells; ith_cell++)
+                        for (int ith_cell = 0; ith_cell < n_cells; ith_cell++)
                         {
                             for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
                             {
@@ -691,7 +691,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
     label n_subspaces = listSnapshotsModes.size();
     List<label> n_subspaceModes(0);
     label n_totalModes = 0;
-    for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
+    for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
     {
         n_subspaceModes.append(listSnapshotsModes[ith_subspace].cols());
         n_totalModes += listSnapshotsModes[ith_subspace].cols();
@@ -734,7 +734,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
         double volume = volumes.array().sum();
         label n_modesPrevious = 0;
 
-        for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
+        for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
         {
             label n_modesCurrent = n_subspaceModes[ith_subspace];
             label n_modesCurrent_modif = n_modesCurrent + predictVolume;
@@ -796,7 +796,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
         {
             initSeeds(mp_not_mask, nodePointsSet);
             n_modesPrevious = 0;
-                for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
+                for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
                 {
                     label n_modesCurrent = n_subspaceModes[ith_subspace];
                     label n_modesCurrent_modif = n_modesCurrent + predictVolume;
@@ -831,7 +831,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
                             n_cells).asDiagonal()).colwise().sum()).maxCoeff( & r1, & ind_max);
                 updateNodes(P, ind_max, mp_not_mask);
                 n_modesPrevious = 0;
-                for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
+                for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
                 {
                     label n_modesCurrent = n_subspaceModes[ith_subspace];
                     label n_modesCurrent_modif = n_modesCurrent + predictVolume;
@@ -853,7 +853,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
                 if (NNLS)    // Removes nodes with weight 0 from set of nodes
                 {
                     Eigen::VectorXd maxQuadWeights = Eigen::VectorXd::Zero(nodePoints->size());
-                    for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++) 
+                    for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++) 
                     {
                         for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
                         {
@@ -870,7 +870,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
         {
             for (label i=0; i<nodePoints->size(); i++)
             {
-                for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
+                for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
                 {
                     for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
                     {
@@ -894,7 +894,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
         else
         {
             Eigen::MatrixXd quadratureWeightsMerged(n_nodes, n_subspaces);
-            for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
+            for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
             {
                 cnpy::save(quadratureWeightsSubspaces[ith_subspace], folderMethod + "/quadratureWeights_subspace" +
                         std::to_string(ith_subspace+1) + ".npy");
@@ -919,7 +919,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
         }
         else
         {
-            for (unsigned int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
+            for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
             {
             cnpy::load(quadratureWeightsSubspaces[ith_subspace], folderMethod + "/quadratureWeights_subspace" +
                         std::to_string(ith_subspace+1) + ".npy");
@@ -1022,7 +1022,6 @@ void HyperReduction<SnapshotsLists...>::updateNodesRemove(Eigen::SparseMatrix<do
     nodePoints->transfer(nodePointsCopy);
     nodes.conservativeResize(n);
     
-    unsigned int last_col{0};
     P.resize(n_cells* vectorial_dim, nodes.size()*vectorial_dim);
     P.reserve(nodes.size()*vectorial_dim);
     P.setZero();
@@ -1070,7 +1069,7 @@ void HyperReduction<SnapshotsLists...>::initReshapeMat(
     reshapeMat.reserve(Eigen::VectorXi::Constant(n_cells* vectorial_dim /*n_cols*/,
                        1 /*n_non_zero_elements*/));
 
-    for (unsigned int i = 0; i < n_cells; i++)
+    for (int i = 0; i < n_cells; i++)
     {
         for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
         {
@@ -1241,7 +1240,7 @@ void HyperReduction<SnapshotsLists...>::createMasks(bool offlineStage)
                              n_cells* vectorial_dim);
         field2submesh.reserve(Eigen::VectorXi::Constant(n_cells* vectorial_dim, 1));
 
-        for (unsigned int ith_subCell{0} ; ith_subCell < submesh().cellMap().size();
+        for (int ith_subCell{0} ; ith_subCell < submesh().cellMap().size();
                 ith_subCell++)
         {
             for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
@@ -1259,9 +1258,9 @@ void HyperReduction<SnapshotsLists...>::createMasks(bool offlineStage)
         submesh2nodesMask.resize(nodePoints().size() * vectorial_dim);
         int index_col = 0;
 
-        for (unsigned int ith_node{0} ; ith_node < nodePoints().size(); ith_node++)
+        for (int ith_node{0} ; ith_node < nodePoints().size(); ith_node++)
         {
-            for (unsigned int ith_subCell{0} ; ith_subCell < submesh().cellMap().size();
+            for (int ith_subCell{0} ; ith_subCell < submesh().cellMap().size();
                     ith_subCell++)
             {
                 if (nodePoints()[ith_node] == submesh().cellMap()[ith_subCell])
