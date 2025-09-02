@@ -6,11 +6,12 @@ namespace ITHACAPOD
 
 template<typename T>
 PODTemplate<T>::PODTemplate(ITHACAPOD::Parameters* myParameters,
-                            const word& myfield_name) :
+                            const word& myfield_name, const word& mySnapshots_path) :
     ithacaFVParameters(static_cast<ITHACAPOD::PODParameters*>(myParameters)),
     field_name(myfield_name),
     casenameData(ithacaFVParameters->get_casenameData()),
     l_nSnapshot(ithacaFVParameters->get_nSnapshots()),
+    snapshotsPath(mySnapshots_path),
     l_nBlocks(ithacaFVParameters->get_nBlocks()),
     l_nmodes(ithacaFVParameters->get_nModes()[field_name]),
     l_hilbertSp(ithacaFVParameters->get_hilbertSpacePOD()[field_name]),
@@ -29,11 +30,18 @@ PODTemplate<T>::PODTemplate(ITHACAPOD::Parameters* myParameters,
     runTime2(Foam::Time::controlDictName, ".",
              ithacaFVParameters->get_casenameData())
 {
+    if (snapshotsPath == "default_path")
+    {
+        snapshotsPath = casenameData;
+    }
+    timeFolders = runTime2.findTimes(snapshotsPath);
+    l_startTime = Time::findClosestTimeIndex(timeFolders,std::stoi(runTime2.times()[l_startTime].name()));
+    l_endTime = l_startTime + l_nSnapshot - 1;
     f_field = new T(
         IOobject
         (
             field_name,
-            runTime2.times()[1].name(),
+            snapshotsPath + timeFolders[1].name(),
             ithacaFVParameters->get_mesh(),
             IOobject::MUST_READ
         ),
@@ -136,7 +144,7 @@ void PODTemplate<T>::computeMeanField()
                 IOobject
                 (
                     f_field->name() + "lift" + std::to_string(k),
-                    runTime2.times()[1].name(),
+                    snapshotsPath + timeFolders[1].name(),
                     ithacaFVParameters->get_mesh(),
                     IOobject::MUST_READ
                 ),
@@ -158,7 +166,8 @@ void PODTemplate<T>::computeMeanField()
             for (label j = 0; j < l_nSnapshot; j++)
             {
                 // Read the j-th field
-                ITHACAstream::read_snapshot(snapshotj, l_startTime + j);
+                word snapFilePath = snapshotsPath + timeFolders[l_startTime+j].name();
+                ITHACAstream::read_snapshot(snapshotj, -1, snapFilePath);
                 lift(snapshotj);
                 // add j-th field to meanfield
                 ITHACAutilities::addFields(*f_meanField, snapshotj);
@@ -246,7 +255,9 @@ void PODTemplate<T>::findTempFile(Eigen::MatrixXd* covMat, int* index1,
                     && (strncmp(ext_name, extTemp.c_str(), 4) == 0))
             {
                 int num1, num2;
-                sscanf(entry->d_name, "%*[^0-9]%d_%d", &num1, &num2);
+                char endFileName[12];
+                strncpy(endFileName, entry->d_name+strlen(entry->d_name)-12, 12);
+                sscanf(endFileName, "%*[^0-9]%d_%d", &num1, &num2);
                 *index1 = num1;
                 *index2 = num2;
 
@@ -447,7 +458,7 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
 
         // Modifying the casename locally so that readfields look the data in the 
         // processor* directory in the case of a parallel run
-        fileName local_casename = casenameData;
+        fileName local_casename = snapshotsPath;
         if (Pstream::parRun())
         {
          local_casename = casenameData + "processor" + name(Pstream::myProcNo());
@@ -760,10 +771,12 @@ PtrList<T> PODTemplate<T>::computeSpatialModes(Eigen::VectorXd& eigenValueseig,
         for (label j = 0; j < l_nSnapshot; j++)
         {
             T snapshotj = *f_field;
-            ITHACAstream::read_snapshot(snapshotj, l_startTime + j);
+            word snapFilePath = snapshotsPath + timeFolders[l_startTime+j].name();
+            ITHACAstream::read_snapshot(snapshotj, -1, snapFilePath);
 
-            if (ithacaFVParameters->get_DEIMInterpolatedField() == "nut"
-                    && l_hilbertSp == "dL2")
+            if ((ithacaFVParameters->get_DEIMInterpolatedField() == "nut" 
+                || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedNut")) 
+                && l_hilbertSp == "dL2")
             {
                 ITHACAutilities::multField(snapshotj, ithacaFVParameters->get_deltaWeight());
             }
@@ -889,10 +902,12 @@ Eigen::MatrixXd PODTemplate<T>::computeSimulationTemporalModes(
         for (label j = 0; j < l_nSnapshotSimulation; j++)
         {
             T snapshotj = *f_field;
-            ITHACAstream::read_snapshot(snapshotj, l_startTimeSimulation + j);
+            word snapFilePath = snapshotsPath + timeFolders[l_startTimeSimulation+j].name();
+            ITHACAstream::read_snapshot(snapshotj, -1, snapFilePath);
 
-            if (ithacaFVParameters->get_DEIMInterpolatedField() == "nut"
-                    && l_hilbertSp == "dL2")
+            if ((ithacaFVParameters->get_DEIMInterpolatedField() == "nut" 
+                 || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedNut")) 
+                 && l_hilbertSp == "dL2")
             {
                 ITHACAutilities::multField(snapshotj, ithacaFVParameters->get_deltaWeight());
             }
@@ -972,7 +987,7 @@ void PODTemplate<T>::lift(T& snapshot)
 
 // Specialisation
 template PODTemplate<volTensorField>::PODTemplate(ITHACAPOD::Parameters*
-        myParameters, const word& myfield_name);
+        myParameters, const word& myfield_name, const word& mySnapshots_path);
 // template PODTemplate<volTensorField>::PODTemplate(IthacaFVParameters* myParameters, const word& myfield_name);
 // template PODTemplate<volTensorField>::PODTemplate(ITHACAPOD::Parameters* myParameters, const word& myfield_name, bool b_centeredOrNot);
 template PODTemplate<volTensorField>::~PODTemplate();
@@ -1023,7 +1038,7 @@ template void PODTemplate<volTensorField>::lift(volTensorField& snapshot);
 
 // Specialisation
 template PODTemplate<volVectorField>::PODTemplate(ITHACAPOD::Parameters*
-        myParameters, const word& myfield_name);
+        myParameters, const word& myfield_name, const word& mySnapshots_path);
 // template PODTemplate<volVectorField>::PODTemplate(IthacaFVParameters* myParameters, const word& myfield_name);
 // template PODTemplate<volVectorField>::PODTemplate(ITHACAPOD::Parameters* myParameters, const word& myfield_name, bool b_centeredOrNot);
 template PODTemplate<volVectorField>::~PODTemplate();
@@ -1064,7 +1079,7 @@ template void PODTemplate<volVectorField>::lift(volVectorField& snapshot);
 
 // Specialisation
 template PODTemplate<volScalarField>::PODTemplate(ITHACAPOD::Parameters*
-        myParameters, const word& myfield_name);
+        myParameters, const word& myfield_name, const word& mySnapshots_path);
 // template PODTemplate<volScalarField>::PODTemplate(IthacaFVParameters* myParameters, const word& myfield_name);
 // template PODTemplate<volScalarField>::PODTemplate(ITHACAPOD::Parameters* myParameters, const word& myfield_name, bool b_centeredOrNot);
 template PODTemplate<volScalarField>::~PODTemplate();

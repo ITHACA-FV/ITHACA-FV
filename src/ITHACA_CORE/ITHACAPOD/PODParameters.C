@@ -79,7 +79,9 @@ namespace ITHACAPOD
     centeredOrNot = ITHACAdict->lookupOrDefault<bool>("centeredOrNot", 1);
     interpFieldCenteredOrNot = ITHACAdict->lookupOrDefault<bool>("interpFieldCenteredOrNot", 0);
     // nMagicPoints = ITHACAdict->lookupOrDefault<label>("nMagicPoints", 1);
-    DEIMInterpolatedField = ITHACAdict->lookupOrDefault<word>("DEIMInterpolatedField", "fullStressFunction");
+    HRMethod = ITHACAdict->lookupOrDefault<word>("HyperReduction", "DEIM");
+    HRInterpolatedField = ITHACAdict->lookupOrDefault<word>("DEIMInterpolatedField", "fullStressFunction");
+    ECPAlgo = ITHACAdict->lookupOrDefault<word>("ECPAlgo", "Global");
     onLineReconstruct = ITHACAdict->lookupOrDefault<bool>("onLineReconstruct", 0);
     forcingOrNot = ITHACAdict->lookupOrDefault<bool>("forcingOrNot", 0);
     symDiff = ITHACAdict->lookupOrDefault<bool>("symDiff", 0);
@@ -177,7 +179,6 @@ namespace ITHACAPOD
     const entry* existnsnap = ITHACAdict->findEntry("Nsnapshots");
     const entry* existLT = ITHACAdict->findEntry("FinalTime");
 
-    scalar InitialTime(0);
     // Initiate variable from PODSolverDict
     if ((existnsnap) && (existLT))
     {
@@ -441,17 +442,98 @@ namespace ITHACAPOD
       if(get_hilbertSpacePOD()["nut"] == "dL2"){
         set_deltaWeight(ITHACAutilities::getMassMatrixFV(*template_field_nut).array().pow(-2.0/3.0));
       }
-      nMagicPoints = get_nModes()[DEIMInterpolatedField];
+
+      if (HRMethod == "GappyDEIM")
+      {
+        HRMethod = "DEIM";
+      }
+
       if (interpFieldCenteredOrNot)
       {
-        folder_DEIM = "./ITHACAoutput/DEIM_centered/";
+        folder_DEIM = "./ITHACAoutput/Hyperreduction/" + HRMethod + "_centered/";
       }
       else
       {
-        folder_DEIM = "./ITHACAoutput/DEIM/";
+        folder_DEIM = "./ITHACAoutput/Hyperreduction/" + HRMethod + "/";
       }
-      folder_DEIM += DEIMInterpolatedField + "/";
-      folder_DEIM += std::to_string(nMagicPoints) + "magicPoints/";
+
+      if (HRInterpolatedField == "reducedFullStressFunction" || HRInterpolatedField == "reducedNut" )
+      {
+        word nameToReplace = HRInterpolatedField.substr(7);
+        nameToReplace[0] = tolower(nameToReplace[0]);
+        HRInterpolatedField += "_" + std::to_string(get_nModes()["U"]) + "modes";
+        field_name.append(HRInterpolatedField);
+        field_type.append(field_type[find(field_name.begin(), field_name.end(), nameToReplace) - field_name.begin()]);
+        nModes.insert(HRInterpolatedField, get_nModes()[nameToReplace]);
+        hilbertSpacePOD.insert(HRInterpolatedField,get_hilbertSpacePOD()[nameToReplace]);
+        varyingEnergy.insert(HRInterpolatedField, 0);
+        resolvedVaryingEnergy.insert(HRInterpolatedField, 0);
+      }
+
+      nMagicPoints = get_nModes()[HRInterpolatedField];
+      HRSnapshotsField = HRInterpolatedField;
+      std::string nbModesUInFolderDEIM = "";
+      std::string ECPAlgoInFolderDEIM = "";
+
+      if (HRMethod == "ECP")
+      {
+        if (!(ECPAlgo == "Global" || ECPAlgo == "EachMode"))
+        {
+          Info << "Error: ECPAlgo must be Global or EachMode" << endl;
+          abort();
+        }
+
+        if (HRInterpolatedField == "fullStressFunction")
+        {
+          HRSnapshotsField = "projFullStressFunction_" + std::to_string(get_nModes()["U"]) + "modes";
+        }
+        else if (ITHACAutilities::containsSubstring(HRInterpolatedField, "reducedFullStressFunction"))
+        {
+          HRSnapshotsField = "projReducedFullStressFunction_" + std::to_string(get_nModes()["U"]) + "modes";
+        }
+        else if (HRInterpolatedField == "nut")
+        {
+          HRSnapshotsField = "projSmagFromNut_" + std::to_string(get_nModes()["U"]) + "modes";
+        }
+        else if (ITHACAutilities::containsSubstring(HRInterpolatedField, "reducedNut"))
+        {
+          HRSnapshotsField = "projSmagFromReducedNut_" + std::to_string(get_nModes()["U"]) + "modes";
+        }
+        else
+        {
+          Info << "Error: ECP method is coded only for fullStressFunction and nut" << endl;
+          abort();
+        }
+
+        nMagicPoints = ITHACAdict->lookupOrDefault("nMagicPoints", nMagicPoints);
+        ECPAlgoInFolderDEIM = ECPAlgo + "/";
+        nbModesUInFolderDEIM = std::to_string(get_nModes()["U"]) + "modesU/";
+
+        label nECPFields = 1;
+        if (ECPAlgo == "EachMode") {nECPFields = nModes["U"];}
+
+        for (label c = 0; c < nECPFields; c++)
+        {
+          for (label k = 0; k <= (c+1) * (ECPAlgo == "EachMode") * (ITHACAutilities::containsSubstring(HRInterpolatedField,"nut")); k++)
+          {
+            word fieldNameModec = HRSnapshotsField;
+            if (ECPAlgo == "EachMode")
+            {
+              fieldNameModec += "_" + std::to_string(c+1);
+              if (ITHACAutilities::containsSubstring(HRInterpolatedField,"nut")){fieldNameModec += "_" + std::to_string(k);}
+            }
+            field_name.append(fieldNameModec);
+            field_type.append("scalar");
+            nModes.insert(fieldNameModec, nModes[HRInterpolatedField]);
+            hilbertSpacePOD.insert(field_name.last(),"L2");
+            varyingEnergy.insert(field_name.last(), 0);
+            resolvedVaryingEnergy.insert(field_name.last(), 0);
+          }
+        }
+      }
+      
+      folder_DEIM +=  HRInterpolatedField.substr(0,HRInterpolatedField.find("_")) + "/" + nbModesUInFolderDEIM;
+      folder_DEIM += std::to_string(nMagicPoints) + "magicPoints/" + ECPAlgoInFolderDEIM;
     }
     else
     {

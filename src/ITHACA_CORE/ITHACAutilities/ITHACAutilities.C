@@ -431,6 +431,43 @@ bool containsSubstring(std::string contain, std::string contained)
     return contain.find(contained) != std::string::npos;
 }
 
+std::vector<int> extractIntFromString(std::string input)
+{
+    std::stringstream ss;
+    std::vector<int> numbers;
+    int num;
+
+    for (char c : input) 
+    {
+        if (isdigit(c)) ss << c;
+        else ss << ' ';
+    }
+    while (ss >> num)
+        numbers.push_back(num);
+    return numbers;
+}
+
+
+Eigen::SparseMatrix<double> sparseBlockDiagonalRepeat(Eigen::SparseMatrix<double>& A, int n)
+{
+  std::vector<Eigen::Triplet<double>> tripletList;
+  tripletList.reserve(n*A.nonZeros());
+
+  for (int i = 0; i < A.outerSize(); i++) 
+  {
+    for (Eigen::SparseMatrix<double>::InnerIterator j(A,i); j; ++j) 
+    {
+      for (int k = 0; k < n; k++)
+      {
+        tripletList.push_back(Eigen::Triplet<double>(j.row() + k*A.rows(), j.col() + k*A.cols(), j.value()));
+      }
+    }
+  }
+  Eigen::SparseMatrix<double> out(n*A.rows(), n*A.cols());
+  out.setFromTriplets(tripletList.begin(), tripletList.end());
+  return out;
+}
+
 
 template<typename T>
 Eigen::MatrixXd dot_product_POD(PtrList<T>& v, PtrList<T>& w,

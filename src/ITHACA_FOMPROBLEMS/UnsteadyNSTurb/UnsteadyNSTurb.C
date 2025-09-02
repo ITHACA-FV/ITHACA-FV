@@ -106,8 +106,8 @@ UnsteadyNSTurb::UnsteadyNSTurb(int argc, char* argv[])
 }
 
 // Small construct to access member functions linked to Smagorinsky diffusion   
-UnsteadyNSTurb::UnsteadyNSTurb(ITHACAPOD::Parameters* myParameters):
-  ithacaFVParameters(static_cast<ITHACAPOD::PODParameters*>(myParameters))
+UnsteadyNSTurb::UnsteadyNSTurb(const ITHACAPOD::Parameters* myParameters):
+  ithacaFVParameters(static_cast<const ITHACAPOD::PODParameters*>(myParameters))
 {
 }
 
@@ -1504,6 +1504,105 @@ volVectorField UnsteadyNSTurb::computeSmagTermPhi_fromUPhi(const volVectorField&
     return computeSmagTerm_fromU(snapshotj);
 }
 
+
+// =========================================================================
+// ======================= projFullStressFunction ==========================
+// =========================================================================
+
+void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, volVectorField& modeU)
+{
+    if (ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projFullStressFunction") 
+        || ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projReducedFullStressFunction"))
+    {
+        phi = computeProjSmagTerm_at_time_fromMode(index, modeU);
+    }
+}
+
+// Init projected Smagorinsky term
+volScalarField UnsteadyNSTurb::initProjSmagFunction()
+{
+    return volScalarField("projFullStressFunction",
+        ithacaFVParameters->get_template_field_fullStressFunction() & ithacaFVParameters->get_template_field_U());
+}
+
+volScalarField UnsteadyNSTurb::computeProjSmagTerm_at_time_fromMode(const label& index, const volVectorField& mode)
+{
+    // Read the j-th field
+    volVectorField Smagj = ithacaFVParameters->get_template_field_fullStressFunction();  
+    if (!ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projReducedFullStressFunction"))
+    {
+        ITHACAstream::read_snapshot(Smagj, index);
+    }
+    else
+    {
+        string idxStr(ITHACAutilities::double2ConciseString(ithacaFVParameters->get_initialTime() 
+                    + (index - ithacaFVParameters->get_startTime())*ithacaFVParameters->get_saveTime()));
+        word path = "./ITHACAoutput/Hyperreduction/reducedFullStressFunction/" + idxStr;
+        ITHACAstream::read_snapshot(Smagj, index, path);
+    }
+    
+    return Smagj & mode;
+}
+
+void UnsteadyNSTurb::computeProjSmagTerm_fromSmag_fromMode(volScalarField& phi, const volVectorField& Smag, 
+                                                                                 const volVectorField& mode)
+{
+    phi = Smag & mode;
+}
+
+
+// =========================================================================
+// ========================== projSmagFromNut ==============================
+// =========================================================================
+
+void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, 
+                                                                 volVectorField& modeU_proj , volVectorField& modeU_grad)
+{
+    if (ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projSmagFromNut") 
+        || ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projSmagFromReducedNut"))
+    {
+        phi = computeProjSmagFromNut_at_time_fromModes(index, modeU_proj, modeU_grad);
+    }
+}
+
+// Init projected Smagorinsky term from nut
+volScalarField UnsteadyNSTurb::initProjSmagFromNutFunction()
+{
+    return volScalarField("projSmagFromNut", initSmagFunction() & ithacaFVParameters->get_template_field_U());
+}
+
+volScalarField UnsteadyNSTurb::computeProjSmagFromNut_at_time_fromModes
+                  (const label& index, const volVectorField& modeU_proj, const volVectorField& modeU_grad)
+{
+    // Read the j-th field
+    volScalarField Nutj(ithacaFVParameters->get_DEIMInterpolatedField(), ithacaFVParameters->get_template_field_nut());
+    if (ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projSmagFromNut") )
+    {
+        ITHACAstream::read_snapshot(Nutj, index);
+    }
+    else if (ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projSmagFromReducedNut"))
+    {
+        string idxStr(ITHACAutilities::double2ConciseString(ithacaFVParameters->get_initialTime() 
+                    + (index - ithacaFVParameters->get_startTime())*ithacaFVParameters->get_saveTime()));
+        word path = "./ITHACAoutput/Hyperreduction/reducedNut/" + idxStr;
+        ITHACAstream::read_snapshot(Nutj, index, path);
+    }
+    return projDiffusionIBP(Nutj, modeU_grad, modeU_proj);
+}
+
+void UnsteadyNSTurb::computeProjSmagFromNut_fromNut_fromModes(volScalarField& phi, 
+        const volScalarField& Nut, const volVectorField& modeU_proj, const volVectorField& modeU_grad)
+{
+    phi = projDiffusionIBP(Nut, modeU_grad, modeU_proj);
+}
+
+volScalarField UnsteadyNSTurb::projDiffusionIBP(const volScalarField& coefDiff, 
+                               const volVectorField& u, const volVectorField& v)
+{
+    volTensorField symGradU = computeS_fromU(u);
+    volTensorField symGradV = computeS_fromU(v);
+    return 2*coefDiff*(dev(symGradU) && dev(symGradV));
+}
 
 
 // =========================================================================

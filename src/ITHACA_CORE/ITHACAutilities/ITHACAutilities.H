@@ -276,6 +276,19 @@ std::string double2ConciseString(const double& d);
 bool containsSubstring(std::string contain, std::string contained);
 
 //------------------------------------------------------------------------------
+/// @brief      Returns an array storing all the integers in the input string
+///
+/// @param      input string
+std::vector<int> extractIntFromString(std::string input);
+
+//------------------------------------------------------------------------------
+/// @brief      Builds a block diagonal sparse matrix from n repetitions of the sparse matrix A
+///
+/// @param      A Eigen::SparseMatrix
+/// @param      n int
+Eigen::SparseMatrix<double> sparseBlockDiagonalRepeat(Eigen::SparseMatrix<double>& A, int n);
+
+//------------------------------------------------------------------------------
 /// @brief      Perform the dot product of v and w for a given hilbertSpace
 
 /// @param      v a volVectorField

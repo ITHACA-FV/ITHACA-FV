@@ -6,6 +6,8 @@
 
 #include "fvMesh.H"
 
+#include "ITHACAparameters.H"
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #include <Eigen/Eigen>
@@ -94,6 +96,7 @@ class PODParameters : public Parameters
 
 
     // ITHACA-FV
+    double InitialTime;
     double FinalTime;
     double FinalTimeSimulation;
 
@@ -172,6 +175,7 @@ class PODParameters : public Parameters
         Foam::volScalarField* template_field_nut;
         Foam::volScalarField* template_field_omega;
         Foam::volScalarField* template_field_k;
+        Foam::volVectorField* template_field_fullStressFunction;
 
         // ITHACA-FV
         Foam::HashTable<Foam::label, Foam::word> nModes;
@@ -210,7 +214,10 @@ class PODParameters : public Parameters
         Eigen::VectorXd lambda;
 
         // ITHACA-FV
-        Foam::word DEIMInterpolatedField;
+        Foam::word HRMethod;
+        Foam::word HRInterpolatedField;
+        Foam::word HRSnapshotsField;
+        Foam::word ECPAlgo;
         Eigen::VectorXd* deltaWeight;
 
         // ITHACA-FV
@@ -327,15 +334,36 @@ class PODParameters : public Parameters
         {
             return *template_field_k;
         }
+        const Foam::volVectorField& get_template_field_fullStressFunction() const 
+        { 
+            return *template_field_fullStressFunction; 
+        }
+        void set_template_field_fullStressFunction(volVectorField& templateSmag)  
+        {
+            template_field_fullStressFunction = new volVectorField(templateSmag);
+        }
+
 
         const double& get_saveTime() const
         {
             return saveTime;
         }
 
+        const word& get_HRMethod() const 
+        {
+            return HRMethod;
+        }
         const Foam::word& get_DEIMInterpolatedField() const
         {
-            return DEIMInterpolatedField;
+            return HRInterpolatedField;
+        }
+        const word& get_HRSnapshotsField() const 
+        {
+            return HRSnapshotsField;
+        }
+        const word& get_ECPAlgo() const 
+        {
+            return ECPAlgo;
         }
         Eigen::VectorXd get_deltaWeight() const
         {
@@ -401,6 +429,7 @@ class PODParameters : public Parameters
 
     const word& get_ROMTemporalScheme() const { return ROMTemporalScheme; }
 
+    const double& get_initialTime() const { return InitialTime; }
     const double& get_initialTimeSimulation() const {
       return FinalTime; }
     const double& get_finalTime() const {

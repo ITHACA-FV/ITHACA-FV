@@ -83,7 +83,7 @@ class UnsteadyNSTurb: public unsteadyNS
         UnsteadyNSTurb(int argc, char* argv[]);
 
         // Small construct with Parameters to access member functions linked to Smagorinsky diffusion 
-        UnsteadyNSTurb(ITHACAPOD::Parameters* myParameters);
+        UnsteadyNSTurb(const ITHACAPOD::Parameters* myParameters);
 
         // Specific variable for the unstationary case
         // Member Functions
@@ -502,6 +502,161 @@ private :
         ///
         template<typename T>
         static volVectorField diffusion(const T& coefDiff, const volVectorField& u);
+
+
+    // =========================================================================
+    // ======================= projFullStressFunction ==========================
+    // =========================================================================
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute non linear Snapshot at a given time
+        /// @details computes the projection of the Smagorinsky term
+        ///          on the velocity mode given in the third argument
+        ///          Other definitions to enable calling the function from a templatized class
+        ///
+        /// @param[in]     index      label defining concerned time step
+        /// @param[in,out] phi        volScalarField in wich the projected Smagorinsky term will be computed
+        /// @param[in]     modeU volVectorField containing a velocity mode to project the Smagorinsky term
+        /// @param[in]     modeU_grad volVectorField containing a velocity mode to compute the symmetric gradient for Smag
+        ///
+        /// @return  projSmagFromNut volScalarField
+        ///
+        void computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, volVectorField& modeU);
+
+        void computeNonLinearSnapshot_at_time(const label& index, volVectorField& phi, volVectorField& modeU)
+        {
+            Info << "Output field with this call to computeNonLinearSnapshot_at_time is scalar" << endl;
+            abort();
+        };
+
+        //--------------------------------------------------------------------------
+        /// @brief  Initialize projFullStressFunction with values at time 0
+        ///
+        /// @return  template field for projFullStressFunction
+        ///
+        volScalarField initProjSmagFunction();
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute projFullStressFunction snapshot at a given time projected on the given mode
+        ///
+        /// @param[in] index label defining concerned time step
+        /// @param[in] mode  volVectorField containing the field on which the Smagorinsky term is projected
+        ///
+        /// @return  projFullStressFunction volScalarField
+        ///
+        volScalarField computeProjSmagTerm_at_time_fromMode(const label& index, const volVectorField& mode);
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute projFullStressFunction given the Smagorinsky term and the velocity mode
+        /// @details Other definitions to enable calling the function from a templatized class
+        ///
+        /// @param[in,out]  phi volScalarField
+        /// @param[in]      Smag volVectorField containing the Smagorinsky term
+        /// @param[in]      mode volVectorField containing the field on which the Smagorinsky term is projected
+        ///
+        /// @return  projFullStressFunction volScalarField
+        ///
+        void computeProjSmagTerm_fromSmag_fromMode(volScalarField& phi, const volVectorField& Smag, const volVectorField& mode);
+
+        void computeProjSmagTerm_fromSmag_fromMode(volScalarField phi,const volScalarField& Smag, const volVectorField& mode)
+        {
+            Info << "Input fields for this call to computeProjSmagTerm_fromSmag_fromMode are vectors" << endl;
+            abort();
+        };
+
+        void computeProjSmagTerm_fromSmag_fromMode(volVectorField phi, const volVectorField& Smag, const volVectorField& mode)
+        {
+            Info << "Output field for this call to computeProjSmagTerm_fromSmag_fromMode is scalar" << endl;
+            abort();
+        };
+
+
+    // =========================================================================
+    // =========================== projSmagFromNut =============================
+    // =========================================================================
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute non linear Snapshot at a given time
+        /// @details Computes the projection on a velocity mode of the Smagorinsky term computed from 
+        ///          a nut snapshot and a velocity mode for the symmetric gradient.
+        ///          Other definitions to enable calling the function from a templatized class
+        ///
+        /// @param[in]     index      label defining concerned time step
+        /// @param[in,out] phi        volScalarField in wich the projected Smagorinsky term will be computed
+        /// @param[in]     modeU_proj volVectorField containing the field on which the Smagorinsky term is projected
+        /// @param[in]     modeU_grad volVectorField containing a velocity mode to compute the symmetric gradient for Smag
+        ///
+        /// @return  projSmagFromNut volScalarField
+        ///
+        void computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, 
+                                volVectorField& modeU_proj , volVectorField& modeU_grad);
+
+        void computeNonLinearSnapshot_at_time(const label& index, volVectorField& phi, 
+                                volVectorField& modeU_proj , volVectorField& modeU_grad)
+        {
+            Info << "Output field with this call to computeNonLinearSnapshot_at_time is scalar" << endl;
+            abort();
+        };
+
+        //--------------------------------------------------------------------------
+        /// @brief  Initialize projSmagFromNut with values at time 0
+        ///
+        /// @return  template field for projSmagFromNut
+        ///
+        volScalarField initProjSmagFromNutFunction();
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute projSmagFromNut snapshot at a given time from 2 velocity modes
+        /// @details Other definitions to enable calling the function from a templatized class
+        ///
+        /// @param[in]  index      label defining concerned time step
+        /// @param[in]  modeU_proj volVectorField containing the field on which the Smagorinsky term is projected
+        /// @param[in]  modeU_grad volVectorField containing a velocity mode to compute the symmetric gradient for Smag
+        ///
+        /// @return  projSmagFromNut volScalarField
+        ///
+        volScalarField computeProjSmagFromNut_at_time_fromModes(const label& index, const volVectorField& modeU_proj, 
+                                                           const volVectorField& modeU_grad);
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute projSmagFromNut given Nut and 2 velocity modes
+        /// @details Other definitions to enable calling the function from a templatized class
+        ///
+        /// @param[in,out]  phi        volScalarField storing the result
+        /// @param[in]      Smag       volVectorField containing the Smagorinsky term
+        /// @param[in]      modeU_proj volVectorField containing the field on which the Smagorinsky term is projected
+        /// @param[in]      modeU_grad volVectorField containing a velocity mode to compute the symmetric gradient for Smag
+        ///
+        /// @return  projSmagFromNut volScalarField
+        ///
+        void computeProjSmagFromNut_fromNut_fromModes(volScalarField& phi, const volScalarField& Nut, 
+                                const volVectorField& modeU_proj, const volVectorField& modeU_grad);
+
+        void computeProjSmagFromNut_fromNut_fromModes(volVectorField& phi, const volVectorField& Nut, 
+                                const volVectorField& modeU_proj, const volVectorField& modeU_grad)
+        {
+            Info << "Output field for this call to computeProjSmagFromNut_fromNut_fromModes is a scalar field" << endl;
+            abort();
+        };
+
+        void computeProjSmagFromNut_fromNut_fromModes(volScalarField& phi, const volVectorField& Nut, 
+                                const volVectorField& modeU_proj, const volVectorField& modeU_grad)
+        {
+            Info << "Input field for this call to computeProjSmagFromNut_fromNut_fromModes is a scalar field" << endl;
+            abort();
+        };
+
+        //--------------------------------------------------------------------------
+        /// @brief  Compute projected diffusion term with the integration by parts (IBP) equation for a given vector field u
+        ///
+        /// @param[in] coefDiff volScalarField of diffusion coefficient
+        /// @param[in] u volVectorField of velocity for the diffusion
+        /// @param[in] v volVectorField of velocity mode for the projection
+        ///
+        /// @return  volScalarField of non integrated projected diffusion  
+        ///
+        static volScalarField projDiffusionIBP(const volScalarField& coefDiff, 
+                             const volVectorField& u, const volVectorField& v);
 
 
 
