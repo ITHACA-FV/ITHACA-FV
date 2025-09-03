@@ -25,7 +25,9 @@ enum class RadialBasisFunctionType
     INVERSE_MULTIQUADRIC,
     THIN_PLATE_SPLINE,
     GAUSSIAN,
-    LINEAR
+    LINEAR,
+    CUBIC,
+    QUINTIC
 };
 
 /*
@@ -118,6 +120,32 @@ public:
     double evalDerivative(double r) const
     {
         return 1;
+    }
+};
+
+class Cubic : public RadialBasisFunction
+{
+public:
+    double eval(double r) const
+    {
+        return r*r*r;
+    }
+    double evalDerivative(double r) const
+    {
+        return 3*r*r;
+    }
+};
+
+class Quintic : public RadialBasisFunction
+{
+public:
+    double eval(double r) const
+    {
+        return r*r*r*r*r;
+    }
+    double evalDerivative(double r) const
+    {
+        return 5*r*r*r*r;
     }
 };
 

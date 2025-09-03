@@ -718,10 +718,18 @@ SPLINTER::RadialBasisFunctionType SteadyNSTurb::getRBFType(const word& viscCoeff
         {
             return SPLINTER::RadialBasisFunctionType::GAUSSIAN;
         }
+        else if (rbfKernel == "cubic")
+        {
+            return SPLINTER::RadialBasisFunctionType::CUBIC;
+        }
+        else if (rbfKernel == "quintic")
+        {
+            return SPLINTER::RadialBasisFunctionType::QUINTIC;
+        }
         else
         {
             Info<< "Available RBF kernels are: linear, thinPlate, multiQuadric, "
-                << "inverseQuadric, inverseMultiQuadric, gaussian." << endl;
+                << "inverseQuadric, inverseMultiQuadric, gaussian, cubic, quintic." << endl;
             Info<< "Current rbfKernel is: " << rbfKernel << endl;
             FatalError << "Unknown RBF kernel type: " << rbfKernel << endl;
             FatalError.exit();
