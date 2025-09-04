@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.x                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+|*---------------------------------------------------------------------------*|
+|  File created by CFD support s.r.o., Wed Jan 25 11:27:58 2017               |
+|                    http://www.cdfsupport.com                                |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     3.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default        Euler;
+    // backward;
+}
+
+gradSchemes
+{
+    default         cellLimited Gauss linear 1;
+    grad(U)         cellLimited Gauss linear 1;
+    //grad(p)         Gauss linear 0.333;
+    grad(p)         Gauss linear; // Avoid limiting pressure gradients
+}
+
+divSchemes
+{
+    default           Gauss linear;
+    //default         none;
+    //div(phi,U)      Gauss upwind grad(U);
+    div(phi,U)      Gauss upwind;
+    //div(phi,U)        Gauss linearUpwind grad(U);  // 2nd-order, less dissipative
+    //div(phi,U)      Gauss QUICK; // 3rd-order, higher accuracy (unstable for high Co)
+    //div(phi,U)      Gauss linear;
+    //div((nuEff*dev(T(grad(U))))) Gauss linear;
+
+
+}
+
+laplacianSchemes
+{
+    default        Gauss linear limited 0.5;
+    //default        Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    //default        upwind phi;
+    default        linear;
+}
+
+snGradSchemes
+{
+    default         limited 0.5;
+    //default         limited 1.0;
+}
+/*
+fluxRequired
+{
+    default         no;
+    p;
+    //Phi;
+}*/
+
+
+
+// ************************************************************************* //

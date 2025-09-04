@@ -1,0 +1,4 @@
+HyperReducedCompressibleUnSteadyNS.C
+CompressibleUnSteadyPimpleTutorial.C
+
+EXE = $(FOAM_USER_APPBIN)/CompressibleUnSteadyPimpleTutorial

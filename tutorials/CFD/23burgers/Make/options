@@ -32,6 +32,9 @@ EXE_LIBS = \
     -lfvOptions \
     -lmeshTools \
     -lsampling \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lITHACA_ROMPROBLEMS \
     -lITHACA_FOMPROBLEMS \
     -lITHACA_THIRD_PARTY \
