@@ -11,6 +11,8 @@
 #include "rbfspline.h"
 #include "linearsolvers.h"
 #include <Eigen/Eigen>
+#include "IOstreams.H"
+#include <iomanip>
 
 namespace SPLINTER
 {
@@ -175,8 +177,8 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
     }
 
 #ifndef NDEBUG
-    std::cout << "Computing RBF weights using dense solver." << std::endl;
-    std::cout << "The radius of the RBF is equal to " << e << std::endl;
+    Foam::Info << "Computing RBF weights using dense solver." << Foam::endl;
+    Foam::Info << "The radius of the RBF is equal to " << e << Foam::endl;
 #endif // NDEBUG
     // SVD analysis
     //         Eigen::JacobiSVD<DenseMatrix> svd(A, Eigen::ComputeThinU | Eigen::ComputeThinV);
@@ -196,7 +198,7 @@ RBFSpline::RBFSpline(const DataTable& samples, RadialBasisFunctionType type,
 #ifndef NDEBUG
     // Compute error. If it is used later on, move this statement above the NDEBUG
     double err = (A * weights - b).norm() / b.norm();
-    std::cout << "Error: " << std::setprecision(10) << err << std::endl;
+    Foam::Info << "Error: " << err << Foam::endl;
 #endif // NDEBUG
     //    // Alternative solver
     //    DenseQR s;

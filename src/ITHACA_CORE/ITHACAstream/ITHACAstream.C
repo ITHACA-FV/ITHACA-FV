@@ -913,7 +913,7 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         fileName fieldname = folder + "/" + subfolder + "/" + fieldName;
         OFstream os(fieldname);
         act.writeHeader(os);
-        os << act << endl;
+        os << act;
     }
     else
     {
@@ -922,10 +922,9 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
                              subfolder + "/" + fieldName;
-        std::cout << fieldname << std::endl;
         OFstream os(fieldname);
         act.writeHeader(os);
-        os << act << endl;
+        os << act;
     }
 }
 
