@@ -884,7 +884,7 @@ void exportFields(
         printProgress(double(j + 1) / field.size());
     }
 
-    std::cout << std::endl;
+    Info << endl;
 }
 
 template void exportFields(
@@ -956,7 +956,7 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         fileName fieldname = folder + "/" + subfolder + "/" + s.name();
         OFstream os(fieldname);
         s.writeHeader(os);
-        os << s << endl;
+        os << s;
     }
     else
     {
@@ -966,7 +966,7 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
                              subfolder + "/" + s.name();
         OFstream os(fieldname);
         s.writeHeader(os);
-        os << s << endl;
+        os << s;
     }
 }
 
