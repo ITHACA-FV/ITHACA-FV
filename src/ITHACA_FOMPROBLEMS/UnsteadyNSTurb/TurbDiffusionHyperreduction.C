@@ -152,21 +152,30 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
         }
         l_nSnapshotSimulation = 0;
     }
-    else if (ITHACAutilities::containsSubstring(fieldToCompute, "reducedFullStressFunction") 
-             || ITHACAutilities::containsSubstring(fieldToCompute, "reducedNut")){
-        snapshotsFolder = "./ITHACAoutput/Hyperreduction/" + fieldToCompute.substr(0, fieldToCompute.find("_")) + "/";
+
+    word pathProcessor("");
+    if (Pstream::parRun())
+    {
+        pathProcessor = "processor" + name(Pstream::myProcNo()) + "/";
     }
 
-    string local_file  = snapshotsFolder + runTime2.times()[1].name() +  "/" + fieldToCompute;
+    string local_file = snapshotsFolder + pathProcessor + runTime2.times()[1].name() +  "/" + fieldToCompute;
     bool exist_precomputed_fields = ITHACAutilities::check_file(local_file);
 
     for (label j = 0; j < nTotalSnapshots ; j++)
     {
         // Read the j-th field
-        local_file = snapshotsFolder + ITHACAutilities::double2ConciseString(startingTime + j*saveTime)
+        local_file = snapshotsFolder + pathProcessor + ITHACAutilities::double2ConciseString(startingTime + j*saveTime)
                      + "/" + fieldToCompute;
         exist_precomputed_fields = exist_precomputed_fields && ITHACAutilities::check_file(local_file);
     }
+
+    string pathCentered = "";
+    if (interpFieldCenteredOrNot) {pathCentered = "_centered";}
+    bool exist_covMatrix = ITHACAutilities::check_file("./ITHACAoutput/CovMatrices" 
+                           + pathCentered + "/covMatrix" + fieldToCompute + ".npy")
+                           && ITHACAutilities::check_file("./ITHACAoutput/mean/1/" + fieldToCompute);
+    exist_precomputed_fields = exist_precomputed_fields || exist_covMatrix;
 
     if (!exist_precomputed_fields)
     {
@@ -181,6 +190,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
                 || ITHACAutilities::containsSubstring(fieldToCompute, "reducedNut"))
             {
               ITHACAstream::exportSolution(nonLinearSnapshotsj, "0", snapshotsFolder, fieldToCompute);
+              ITHACAstream::exportSolution(nonLinearSnapshotsj, "0", ithacaPODParameters->get_casenameData(), fieldToCompute);
             }
             else if(fieldToCompute == "nut")
             {
@@ -243,6 +253,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
             
                 Info << "Evaluating " << fieldToCompute << " term" << endl;
                 ITHACAstream::exportSolution(snapshotECPcj, "0", snapshotsFolder, fieldToCompute);
+                ITHACAstream::exportSolution(snapshotECPcj, "0", ithacaPODParameters->get_casenameData(), fieldToCompute);
 
                 for (label c = 0; c < nUsedModesU; c++)
                 {
@@ -299,6 +310,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
           
                 Info << "Evaluating " << fieldToCompute << " term" << endl;
                 ITHACAstream::exportSolution(snapshotECPckj, "0", snapshotsFolder, fieldToCompute);
+                ITHACAstream::exportSolution(snapshotECPckj, "0", ithacaPODParameters->get_casenameData(), fieldToCompute);
 
                 for (label c = 0; c < f_spatialModesU.size(); c++)
                 {
@@ -353,7 +365,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
         if (interpFieldCenteredOrNot)
         {
             T meanField = template_HRInterpField;
-            if (ITHACAutilities::check_file("./ITHACAoutput/mean/" + fieldToCompute))
+            if (ITHACAutilities::check_file("./ITHACAoutput/mean/" + pathProcessor + fieldToCompute))
             {
                 Info << "Reading the mean of " << fieldToCompute << " field" << endl;
                 PtrList<T> meanRead;  
@@ -388,10 +400,10 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
     // Compute the mean of the nonpolynomial field from high-fidelity velocity if HR learnt from reduced velocity
     if (ITHACAutilities::containsSubstring(HRInterpField, "reduced"))
     {
-        snapshotsFolder = "./ITHACAoutput/Hyperreduction/" + HRInterpField.substr(0, HRInterpField.find("_")) + "/";
         word nameNotReduced = HRInterpField.substr(7, HRInterpField.find("_")-7);
         nameNotReduced[0] = tolower(nameNotReduced[0]);
         precomputeTurbDiffusionFunctions(nameNotReduced);
+        snapshotsFolder = "./ITHACAoutput/Hyperreduction/" + HRInterpField.substr(0, HRInterpField.find("_")) + "/";
     }
 
     // Evaluate and save the nonpolynomial field for HR learning
@@ -429,6 +441,16 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
         ithacaFVPOD_template_field.getModes(f_subsetSpatialModesHR, m_temporalModesHR,
                                             m_temporalModesHRSimulation, covMatrixHR);
         forAll(f_subsetSpatialModesHR, i){f_spatialModesHR.append(tmp<S>(f_subsetSpatialModesHR[i]));}
+    }
+
+    if (Pstream::parRun())
+    {
+        bool waitMaster = false;
+        if (Pstream::master()){ waitMaster = true; }
+        Pstream::scatter(waitMaster);
+
+        Info << "Hyperreduction POD done in parallel. Magic points selection must run sequentially. Aborting." << endl << endl;
+        std::exit(111); 
     }
 
     // Convertion to Eigen and weight of the HR modes

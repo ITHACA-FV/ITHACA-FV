@@ -34,9 +34,17 @@ PODTemplate<T>::PODTemplate(ITHACAPOD::Parameters* myParameters,
     {
         snapshotsPath = casenameData;
     }
-    timeFolders = runTime2.findTimes(snapshotsPath);
+
+    word pathProcessor("");
+    if (Pstream::parRun())
+    {
+        pathProcessor = "processor" + name(Pstream::myProcNo()) + "/";
+    }
+    timeFolders = runTime2.findTimes(snapshotsPath + pathProcessor);
+
     l_startTime = Time::findClosestTimeIndex(timeFolders,std::stoi(runTime2.times()[l_startTime].name()));
     l_endTime = l_startTime + l_nSnapshot - 1;
+
     f_field = new T(
         IOobject
         (
@@ -88,6 +96,12 @@ void PODTemplate<T>::define_paths()
         pathCentered += "Lifted";
     }
 
+    word pathProcessor("");
+    if (Pstream::parRun())
+    {
+        pathProcessor = "processor" + name(Pstream::myProcNo()) + "/";
+    }
+
     word pathHilbertSpace(ithacaFVParameters->get_pathHilbertSpace_fromHS(
                               l_hilbertSp));
     // name and folder of the covariance
@@ -110,7 +124,7 @@ void PODTemplate<T>::define_paths()
     // folder of the spatial modes and check if every modes were already computed
     folder_spatialModes = "./ITHACAoutput/spatialModes"
                           + pathCentered + "_" + std::to_string(l_nmodes) + "modes/";
-    exist_spatialModes = ITHACAutilities::check_file(folder_spatialModes + "1/" +
+    exist_spatialModes = ITHACAutilities::check_file(folder_spatialModes + pathProcessor + "1/" +
                          f_field->name());
     // folder of the temporal modes and check if modes were already computed
     folder_temporalModes = "./ITHACAoutput/temporalModes"
@@ -124,8 +138,8 @@ void PODTemplate<T>::define_paths()
                                         folder_temporalModesSimulation + f_field->name() + ".npy");
     // folder of mean field and check if mean was already computed
     folder_mean = "./ITHACAoutput/mean/";
-    exist_noMean = !ITHACAutilities::check_file(folder_mean + "/" + std::to_string(
-                       1) + "/" + f_field->name());
+    exist_noMean = !ITHACAutilities::check_file(folder_mean + "/" + pathProcessor +
+                    std::to_string(1) + "/" + f_field->name());
 }
 
 
@@ -343,7 +357,10 @@ template<typename T>
 void PODTemplate<T>::saveTempCovMatrix(Eigen::MatrixXd& covMatrix, int i, int j)
 {
     word filename = nameTempCovMatrix(i, j);
-    cnpy::save(covMatrix, filename);
+    if (Pstream::master())
+    {
+        cnpy::save(covMatrix, filename);
+    }
 }
 
 template<typename T>
@@ -456,19 +473,9 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
         // (parameter used by [deletePreviousTempCovMatrix_N])
         int N_previous_temp_Mat = 3;
 
-        // Modifying the casename locally so that readfields look the data in the 
-        // processor* directory in the case of a parallel run
-        fileName local_casename = snapshotsPath;
-        if (Pstream::parRun())
-        {
-         local_casename = casenameData + "processor" + name(Pstream::myProcNo());
-        }
-
-        // Info << "casenameData is " << local_casename << endl;
-
         for (label i = etapeI; i < l_nBlocks; i++)
         {
-            ITHACAstream::read_fields(snapshots, (*f_field), local_casename,
+            ITHACAstream::read_fields(snapshots, (*f_field), snapshotsPath,
                                       l_startTime - 2 + i * q, q);
             lift(snapshots);
             indexTri indTri;
@@ -480,7 +487,7 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
 
             for (label j = etapeJ; j < i; j++)
             {
-                ITHACAstream::read_fields(snapshots2, (*f_field), local_casename,
+                ITHACAstream::read_fields(snapshots2, (*f_field), snapshotsPath,
                                           l_startTime - 2 + j * q, q);
                 lift(snapshots2);
                 indexSquare indSquare;
@@ -506,7 +513,7 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
         if (r != 0)
         {
             PtrList<T> snapshotsEnd;
-            ITHACAstream::read_fields(snapshotsEnd, (*f_field), local_casename,
+            ITHACAstream::read_fields(snapshotsEnd, (*f_field), snapshotsPath,
                                       l_startTime - 2 + l_nBlocks * q, r);
             lift(snapshotsEnd);
             indexTri indTri;
@@ -517,7 +524,7 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
 
             for (label j = 0; j < l_nBlocks; j++)
             {
-                ITHACAstream::read_fields(snapshotsEnd2, (*f_field), local_casename,
+                ITHACAstream::read_fields(snapshotsEnd2, (*f_field), snapshotsPath,
                                           l_startTime - 2 + j * q, q);
                 lift(snapshotsEnd2);
                 indexSquare indSquare;
@@ -537,8 +544,11 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
         }
         // covMatrix is symetric, the lower part is used to build the upper part
         covMatrix = covMatrix.selfadjointView<Eigen::Lower>();
-        cnpy::save(covMatrix, folder_covMatrix + name_covMatrix + ".npy");
+        if (Pstream::master())
+        {
+            cnpy::save(covMatrix, folder_covMatrix + name_covMatrix + ".npy");
 
+        }
         // Delete previous covMatrix temp file after saving the current one
         if (r == 0)
         {
@@ -563,7 +573,10 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
         Info << "Reading (binary) the covariance matrix of the " << f_field->name() <<
              " field" << endl;
         ITHACAstream::ReadDenseMatrix(covMatrix, folder_covMatrix, name_covMatrix);
-        cnpy::save(covMatrix, folder_covMatrix + name_covMatrix + ".npy");
+        if (Pstream::master())
+        {
+            cnpy::save(covMatrix, folder_covMatrix + name_covMatrix + ".npy");
+        }
     }
 
     // looking for CovUnrealValue
@@ -694,27 +707,31 @@ void PODTemplate<T>::diagonalisation(Eigen::MatrixXd& covMatrix,
         // Compute the norm of each Modes
         eigenValueseigLam = eigenValueseig.real().array().abs().sqrt();
         // save the eigen values
-        cnpy::save(eigenValueseig, folder_eigen + name_eigenValues + ".npy");
-        // save the eigen vectors
-        cnpy::save(eigenVectoreig,
-                   folder_eigen + "/Eigenvector_" + f_field->name() + ".npy");
-        // save the norm of each Modes
-        cnpy::save(eigenValueseigLam,
-                   folder_eigen + "/EigenvectorLambda_" + f_field->name() + ".npy");
-        Eigen::VectorXd eigenValueseigNormalized = eigenValueseig /
-                eigenValueseig.sum();
-        Eigen::VectorXd cumEigenValues(eigenValueseigNormalized);
 
-        for (int j = 1; j < cumEigenValues.size(); ++j)
+        if (Pstream::master())
         {
-            cumEigenValues(j) += cumEigenValues(j - 1);
-        }
+            cnpy::save(eigenValueseig, folder_eigen + name_eigenValues + ".npy");
+            // save the eigen vectors
+            cnpy::save(eigenVectoreig,
+                    folder_eigen + "/Eigenvector_" + f_field->name() + ".npy");
+            // save the norm of each Modes
+            cnpy::save(eigenValueseigLam,
+                    folder_eigen + "/EigenvectorLambda_" + f_field->name() + ".npy");
+            Eigen::VectorXd eigenValueseigNormalized = eigenValueseig /
+                    eigenValueseig.sum();
+            Eigen::VectorXd cumEigenValues(eigenValueseigNormalized);
 
-        // save eigen values normalized
-        cnpy::save(eigenValueseigNormalized,
-                   folder_eigen + name_eigenValuesNormalized + ".npy");
-        // save the cumulated eigen values
-        cnpy::save(cumEigenValues, folder_eigen + name_cumEigenValues + ".npy");
+            for (int j = 1; j < cumEigenValues.size(); ++j)
+            {
+                cumEigenValues(j) += cumEigenValues(j - 1);
+            }
+
+            // save eigen values normalized
+            cnpy::save(eigenValueseigNormalized,
+                    folder_eigen + name_eigenValuesNormalized + ".npy");
+            // save the cumulated eigen values
+            cnpy::save(cumEigenValues, folder_eigen + name_cumEigenValues + ".npy");
+        }
     }
     else
     {
@@ -827,7 +844,10 @@ Eigen::MatrixXd PODTemplate<T>::computeTemporalModes(Eigen::VectorXd&
             temporalModes.col(i) = eigenVectoreig.col(i) * eigenValueseigLam(i);
         }
 
-        cnpy::save(temporalModes, folder_temporalModes + f_field->name() + ".npy");
+        if (Pstream::master())
+        {
+            cnpy::save(temporalModes, folder_temporalModes + f_field->name() + ".npy");
+        }
     }
     else
     {
@@ -921,8 +941,11 @@ Eigen::MatrixXd PODTemplate<T>::computeSimulationTemporalModes(
             }
         }
 
-        cnpy::save(temporalModesSimulation,
+        if (Pstream::master())
+        {
+            cnpy::save(temporalModesSimulation,
                    folder_temporalModesSimulation + f_field->name() + ".npy");
+        }
     }
     else
     {

@@ -39,8 +39,11 @@ Eigen::MatrixXd PODTemplateH1<T,G>::buildCovMatrix()
 
   covMatrix += covMatrixGrad;
 
-  mkDir(folder_covMatrix);
-  cnpy::save(covMatrix, folder_covMatrix + name_covMatrix+ ".npy");
+  if (Pstream::master())
+  {
+    mkDir(folder_covMatrix);
+    cnpy::save(covMatrix, folder_covMatrix + name_covMatrix+ ".npy");
+  }
 
   double varyingEnergy = covMatrix.trace()/l_nSnapshot;
   ithacaFVParameters->set_varyingEnergy( field_name + "_" + l_hilbertSp, varyingEnergy);
@@ -57,13 +60,20 @@ void PODTemplateH1<T,G>::precomputeGradients()
   G gradSnapshotsj = fvc::grad(*f_field);
   word local_file;
   bool exist_precomputed_fields = true;
-  local_file = runTime2.caseName() + runTime2.times()[1].name()
+
+  word pathProcessor("");
+  if (Pstream::parRun())
+  {
+      pathProcessor = "processor" + name(Pstream::myProcNo()) + "/";
+  }
+
+  local_file = runTime2.caseName() + pathProcessor + runTime2.times()[1].name()
     +  "/" + gradfield_name;
   exist_precomputed_fields = exist_precomputed_fields && ITHACAutilities::check_file(local_file);
   for (label j = 0; j < l_nSnapshot + l_nSnapshotSimulation - 1 ; j++)
   {
     // Read the j-th field
-    local_file = runTime2.caseName() + runTime2.times()[l_startTime + j].name()
+    local_file = runTime2.caseName() + pathProcessor + runTime2.times()[l_startTime + j].name()
       +  "/" + gradfield_name;
     exist_precomputed_fields = exist_precomputed_fields && ITHACAutilities::check_file(local_file);
   }

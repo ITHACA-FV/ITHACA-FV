@@ -660,9 +660,13 @@ void read_fields(
         Info << "################ Parallel Reading the Data for " << field.name() << " #########" <<
              endl;
 
-        Foam::Time runTime2(Foam::Time::controlDictName, ".", casename);
-        
-        int last_s = std::size(runTime2.times()); 
+        word timename = casename + "processor" + name(Pstream::myProcNo());
+        Foam::Time runTime2(Foam::Time::controlDictName, ".", timename);
+        int last_s = runTime2.times().size();
+
+        timename = field.mesh().time().rootPath() + "/" + field.mesh().time().caseName();
+        timename = timename.substr(0, timename.find_last_of("\\/"));
+        timename = timename + "/" + casename + "processor" + name(Pstream::myProcNo());
 
         if (first_snap > last_s)
         {
@@ -687,7 +691,7 @@ void read_fields(
                 IOobject
                 (
                     field.name(),
-                    runTime2.times()[i].name(),
+                    timename + "/" + runTime2.times()[i].name(),
                     field.mesh(),
                     IOobject::MUST_READ
                 ),
@@ -1223,6 +1227,22 @@ void ITHACAstream::read_snapshot(T& snapshot, const Foam::label& i_snap,
         else
         {
             path = runTimeData.times()[i_snap].name();
+        }
+    }
+    else if (Pstream::parRun())
+    {
+        // If specific path, changing processor* from casename directory to the target directory
+        word path_start = mesh.time().rootPath() + "/" + mesh.time().caseName();
+        path_start = path_start.substr(0, path_start.find_last_of("\\/")) + "/";
+        
+        if (!ITHACAutilities::containsSubstring(path, "/processor" + std::to_string(Pstream::myProcNo()) + "/"))
+        {
+            path = path_start + path.substr(0, path.find_last_of("\\/")) + "/" + "processor" 
+                         + std::to_string(Pstream::myProcNo()) + "/" + path.substr(path.find_last_of("\\/"), path.size());
+        }
+        else
+        {
+            path = path_start + path;
         }
     }
 
