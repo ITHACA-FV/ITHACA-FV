@@ -31,7 +31,7 @@ tolerance  1e-3;
 maxIter    500;
 
 // Boundary method
-BCMethod lift;
+bcMethod lift;
 
 // eddy viscosity coefficients computation method
 viscCoeff RBF;
