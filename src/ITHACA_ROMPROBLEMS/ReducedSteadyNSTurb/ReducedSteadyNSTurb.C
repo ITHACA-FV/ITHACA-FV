@@ -402,13 +402,13 @@ void ReducedSteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
 
     if (res.norm() < 1e-5)
     {
-        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-             hnls.iter << " iterations " << endl << endl;
+        Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << endl << endl;
     }
     else
     {
-        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-             hnls.iter << " iterations " << endl << endl;
+        Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << endl << endl;
     }
 
     count_online_solve += 1;
@@ -505,13 +505,13 @@ void ReducedSteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
 
     if (res.norm() < 1e-5)
     {
-        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-             hnls.iter << " iterations " << endl << endl;
+        Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << endl << endl;
     }
     else
     {
-        Info << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-             hnls.iter << " iterations " << endl << endl;
+        Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << endl << endl;
     }
 
     count_online_solve += 1;

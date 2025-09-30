@@ -64,6 +64,7 @@ SourceFiles
 #pragma GCC diagnostic ignored "-Wignored-attributes"
 #include <Eigen/Eigen>
 #include "EigenFunctions.H"
+#include "colormod.H"
 
 #include <unsupported/Eigen/CXX11/Tensor>
 #pragma GCC diagnostic pop
@@ -601,6 +602,13 @@ Istream& operator>> (Istream& is, Eigen::Tensor<T, 3>& tens)
     UList<T> list(tens.data(), d1 * d2 * d3);
     is >> list;
     return is;
+}
+
+inline Ostream& operator<<(Ostream& os, const Color::Modifier& mod)
+{
+    // Output ANSI code to Foam Ostream
+    os << "\033[" << int(mod.getCode()) << "m";
+    return os;
 }
 
 }
