@@ -679,12 +679,11 @@ void PODTemplate<T>::diagonalisation(Eigen::MatrixXd& covMatrix,
         if (w_eigensolver == "spectra")
         {
             Spectra::DenseSymMatProd<double> op(covMatrix);
-            Spectra::SymEigsSolver<double, Spectra::LARGEST_ALGE, Spectra::DenseSymMatProd<double>>
-                    es(&op, l_nmodes, l_nSnapshot);
+            Spectra::SymEigsSolver<Spectra::DenseSymMatProd<double>> es(op, l_nmodes, l_nSnapshot);
             std::cout << "Using Spectra EigenSolver " << std::endl;
             es.init();
-            es.compute(1000, 1e-10, Spectra::LARGEST_ALGE);
-            M_Assert(es.info() == Spectra::SUCCESSFUL,
+            es.compute(Spectra::SortRule::LargestAlge);
+            M_Assert(es.info() == Spectra::CompInfo::Successful,
                      "The Eigenvalue Decomposition did not succeed");
             eigenVectoreig = es.eigenvectors().real();
             eigenValueseig = es.eigenvalues().real();

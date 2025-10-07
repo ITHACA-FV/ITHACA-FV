@@ -16,7 +16,7 @@ EXE_INC = \
     -I$(MUQ_EXT_LIBRARIES)/include\
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -Wno-comment \
-    -std=c++11 \
+    -std=c++17 \
     -Wno-maybe-uninitialized \
     -Wno-sign-compare \
     -Wno-unknown-pragmas \
@@ -35,6 +35,9 @@ EXE_LIBS = \
     -lmeshTools \
     -lfvOptions \
     -lsampling \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lfluidThermophysicalModels \
     -lradiationModels \
     -lspecie \

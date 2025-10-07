@@ -31,6 +31,8 @@ EXE_LIBS = \
     -lturbulenceModels \
     -lfiniteVolume \
     -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lmeshTools \
     -lfvOptions \
     -lsampling \

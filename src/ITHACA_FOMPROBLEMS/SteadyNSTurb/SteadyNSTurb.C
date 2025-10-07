@@ -201,9 +201,40 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor1(label NUmodes,
     return ct1Tensor;
 }
 
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor1_cache(label NUmodes,
+        label NSUPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct1Tensor(cSize, nNutModes, cSize);
 
+    for (label j = 0; j < nNutModes; ++j)
+    {
+        // Cache only one row (j fixed)
+        List<tmp<volVectorField>> lapRow(cSize);
+        for (label k = 0; k < cSize; ++k)
+        {
+            lapRow[k] = fvc::laplacian(nutModes[j], L_U_SUPmodes[k]);
+        }
 
+        for (label i = 0; i < cSize; ++i)
+        {
+            for (label k = 0; k < cSize; ++k)
+            {
+                const volVectorField& lapField = lapRow[k]();
+                ct1Tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & lapField).value();
+            }
+        }
+    }
 
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct1Tensor, "./ITHACAoutput/Matrices/",
+                                      "ct1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(nNutModes) + "_t");
+    }
+    return ct1Tensor;
+}
 
 List < Eigen::MatrixXd > SteadyNSTurb::turbulenceTerm2(label NUmodes,
         label NSUPmodes, label nNutModes)
@@ -268,6 +299,41 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2(label NUmodes,
     return ct2Tensor;
 }
 
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2_cache(label NUmodes,
+        label NSUPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct2Tensor(cSize, nNutModes, cSize);
+
+    for (label j = 0; j < nNutModes; ++j)
+    {
+        // Cache only one j-row
+        List<tmp<volVectorField>> divRow(cSize);
+        for (label k = 0; k < cSize; ++k)
+        {
+            divRow[k] = fvc::div(nutModes[j] * dev((fvc::grad(L_U_SUPmodes[k]))().T()));
+        }
+
+        for (label i = 0; i < cSize; ++i)
+        {
+            for (label k = 0; k < cSize; ++k)
+            {
+                const volVectorField& divRowField = divRow[k]();
+                ct2Tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & divRowField).value();
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct2Tensor, "./ITHACAoutput/Matrices/",
+                                      "ct2_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(nNutModes) + "_t");
+    }
+    return ct2Tensor;
+}
+
 Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1(label NUmodes,
         label NSUPmodes, label NPmodes, label nNutModes)
 {
@@ -300,6 +366,48 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1(label NUmodes,
     return ct1PPETensor;
 }
 
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
+        label NSUPmodes, label NPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct1PPETensor(NPmodes, nNutModes, cSize);
+
+    List<tmp<volVectorField>> PmodesGrad(NPmodes);
+    for (label i = 0; i < NPmodes; ++i)
+    {
+        PmodesGrad[i] = fvc::grad(Pmodes[i]);
+    }
+
+    for (label j = 0; j < nNutModes; ++j)
+    {
+        // Cache one row (j fixed)
+        List<tmp<volVectorField>> lapRow(cSize);
+        for (label k = 0; k < cSize; ++k)
+        {
+            lapRow[k] = fvc::laplacian(nutModes[j], L_U_SUPmodes[k]);
+        }
+
+        for (label i = 0; i < NPmodes; ++i)
+        {
+            const volVectorField& gradPi = PmodesGrad[i]();
+            for (label k = 0; k < cSize; ++k)
+            {
+                const volVectorField& lapRowField = lapRow[k]();
+                ct1PPETensor(i, j, k) = fvc::domainIntegrate(gradPi & lapRowField).value();
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct1PPETensor, "./ITHACAoutput/Matrices/",
+                                      "ct1PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
+    }
+    return ct1PPETensor;
+}
+
 Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2(label NUmodes,
         label NSUPmodes, label NPmodes, label nNutModes)
 {
@@ -328,6 +436,48 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2(label NUmodes,
     ITHACAstream::SaveDenseTensor(ct2PPETensor, "./ITHACAoutput/Matrices/",
                                   "ct2PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                       NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
+    return ct2PPETensor;
+}
+
+Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
+        label NSUPmodes, label NPmodes, label nNutModes)
+{
+    label cSize = NUmodes + NSUPmodes + liftfield.size();
+    Eigen::Tensor<double, 3> ct2PPETensor(NPmodes, nNutModes, cSize);
+
+    List<tmp<volVectorField>> PmodesGrad(NPmodes);
+    for (label i = 0; i < NPmodes; ++i)
+    {
+        PmodesGrad[i] = fvc::grad(Pmodes[i]);
+    }
+
+    for (label j = 0; j < nNutModes; ++j)
+    {
+        // Cache one row of div fields for this nutMode[j]
+        List<tmp<volVectorField>> divLow(cSize);
+        for (label k = 0; k < cSize; ++k)
+        {
+            divLow[k] = fvc::div(nutModes[j] * dev2((fvc::grad(L_U_SUPmodes[k]))().T()));
+        }
+
+        for (label i = 0; i < NPmodes; ++i)
+        {
+            const volVectorField& gradPi = PmodesGrad[i]();
+            for (label k = 0; k < cSize; ++k)
+            {
+                const volVectorField& divLowField = divLow[k]();
+                ct2PPETensor(i, j, k) = fvc::domainIntegrate(gradPi & divLowField).value();
+            }
+        }
+    }
+
+    // Export the tensor
+    if (Pstream::master())
+    {
+        ITHACAstream::SaveDenseTensor(ct2PPETensor, "./ITHACAoutput/Matrices/",
+                                      "ct2PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
+                                          NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
+    }
     return ct2PPETensor;
 }
 
@@ -690,8 +840,8 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
 
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsPPE/",
                                           weightName);
-            rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
+            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
+                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
         else
@@ -703,8 +853,8 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
 
-            rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
+                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsPPE/", weightName);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
@@ -976,8 +1126,8 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
 
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsSUP/",
                                           weightName);
-            rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
+            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
+                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
             std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
         }
         else
@@ -989,8 +1139,8 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
                 samples[i]->addSample(mu.row(j), coeffL2(i, j));
             }
 
-            rbfSplines[i] = new SPLINTER::RBFSpline( * samples[i],
-                SPLINTER::RadialBasisFunctionType::GAUSSIAN);
+            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
+                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weightsSUP/", weightName);
             ITHACAstream::exportMatrix(rbfSplines[i]->weights,

@@ -21,6 +21,7 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/fvOptions/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I$(LIB_SRC)/sixDoFRigidBodyMotion/lnInclude\
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
@@ -50,6 +51,7 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools \
     -lfvOptions \
+    -lsixDoFRigidBodyMotion\
     -lsampling \
     -lfluidThermophysicalModels \
     -lradiationModels \

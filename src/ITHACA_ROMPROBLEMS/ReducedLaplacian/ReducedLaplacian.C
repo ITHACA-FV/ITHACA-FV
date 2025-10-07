@@ -43,7 +43,7 @@ reducedLaplacian::reducedLaplacian()
 
 reducedLaplacian::reducedLaplacian(laplacianProblem& problem)
     :
-    problem( & problem)
+    problem(& problem)
 {
 }
 

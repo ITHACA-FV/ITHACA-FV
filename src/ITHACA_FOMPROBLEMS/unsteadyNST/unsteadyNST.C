@@ -228,7 +228,7 @@ void unsteadyNST::liftSolveT()
         scalar dt = mesh.time().deltaTValue();
         forAll(Tlift, i)
         {
-            Tlift[i] = (totalTime* Tlift[i] + dt* Tlift[i] ) / (totalTime + dt);
+            Tlift[i] = (totalTime * Tlift[i] + dt * Tlift[i] ) / (totalTime + dt);
         }
 
         Tlift.write();
@@ -520,7 +520,7 @@ void unsteadyNST::liftSolve()
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("Phi", dimLength* dimVelocity, 0),
+            dimensionedScalar("Phi", dimLength * dimVelocity, 0),
             p.boundaryField().types()
         );
         label PhiRefCell = 0;

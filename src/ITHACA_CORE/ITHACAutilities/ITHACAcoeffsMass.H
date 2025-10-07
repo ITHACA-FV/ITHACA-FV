@@ -75,8 +75,8 @@ namespace ITHACAutilities
 /// @return     rec_field     The reconstructed field as PtrList.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstructFromCoeff(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes,
+PtrList<GeometricField<Type, PatchField, GeoMesh >> reconstructFromCoeff(
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& modes,
     Eigen::MatrixXd& coeff_matrix, label Nmodes);
 
 //-----------------------------------------------------------------------------
@@ -92,10 +92,11 @@ PtrList<GeometricField<Type, PatchField, GeoMesh>> reconstructFromCoeff(
 /// @return     The mass matrix eigen.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
-                              &
-                              fields, label nModes = 0,
-                              bool consider_volumes = true);
+Eigen::MatrixXd getMassMatrix(
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>
+    &
+    fields, label nModes = 0,
+    bool consider_volumes = true);
 
 //-----------------------------------------------------------------------------
 /// Gets the cross mass matrix using the eigen routine
@@ -109,13 +110,14 @@ Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
 ///
 /// @return     The cross mass matrix eigen.
 ///
-template<class Type, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
-                              &
-                              fields,
-                              PtrList<GeometricField<Type, PatchField, GeoMesh>> &
-                              fields2, label nModes = 0,
-                              bool consider_volumes = true);
+template<class Type, template<class> class PatchField, class GeoMesh >
+Eigen::MatrixXd getMassMatrix(
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>
+    &
+    fields,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>&
+    fields2, label nModes = 0,
+    bool consider_volumes = true);
 
 //-----------------------------------------------------------------------------
 /// Gets the cross mass matrix using the eigen routine
@@ -132,12 +134,13 @@ Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
 /// @return     The cross mass matrix eigen.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
-                              & fields,
-                              PtrList<GeometricField<Type, PatchField, GeoMesh>> & fields2,
-                              Eigen::VectorXd weights,
-                              label Nmodes = 0,
-                              bool consider_volumes = true);
+Eigen::MatrixXd getMassMatrix(
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>
+    & fields,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& fields2,
+    Eigen::VectorXd weights,
+    label Nmodes = 0,
+    bool consider_volumes = true);
 
 
 //--------------------------------------------------------------------------
@@ -153,7 +156,7 @@ Eigen::MatrixXd getMassMatrix(PtrList<GeometricField<Type, PatchField, GeoMesh>>
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd getMassMatrixFV(
-    GeometricField<Type, PatchField, GeoMesh> & snapshot);
+    GeometricField<Type, PatchField, GeoMesh>& snapshot);
 
 //------------------------------------------------------------------------------
 /// Projects a snapshot on a basis function and gets
@@ -171,9 +174,9 @@ Eigen::VectorXd getMassMatrixFV(
 /// @return     The coefficients of the projection.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh>
-Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh> &
+Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
                           snapshot,
-                          PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes, label Nmodes = 0,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh >> & modes, label Nmodes = 0,
                           bool consider_volumes = true);
 
 //------------------------------------------------------------------------------
@@ -191,10 +194,10 @@ Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh> &
 ///
 /// @return     The coefficients of the projection.
 ///
-template<class Type, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh>> &
+template<class Type, template<class> class PatchField, class GeoMesh >
+Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
                           snapshot,
-                          PtrList<GeometricField<Type, PatchField, GeoMesh>> & modes, label Nmodes = 0,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh >>& modes, label Nmodes = 0,
                           bool consider_volumes = true);
 
 //--------------------------------------------------------------------------

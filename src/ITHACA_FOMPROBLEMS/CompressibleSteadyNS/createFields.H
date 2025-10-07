@@ -69,16 +69,16 @@ volScalarField& rho = _rho();
 volScalarField rho0(rho);
 
 _rho0 = autoPtr<volScalarField>
-      (
-          new volScalarField(rho0)
-      );
+        (
+            new volScalarField(rho0)
+        );
 
 _E = autoPtr<volScalarField>
      (
          new volScalarField(thermo.he())
      );
 
-volScalarField E0(_E);
+volScalarField E0(_E());
 
 _E0 = autoPtr<volScalarField>
       (

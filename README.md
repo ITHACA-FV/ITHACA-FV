@@ -14,18 +14,15 @@
 <img alt="Codacy Badge" src="https://app.codacy.com/project/badge/Grade/f51e1de0fd7c42a6a0be13889cbd4b0e">
 </a>
 </p>
-<p align="center">
-<a href="https://github.com/ithaca-fv/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="OF1812" src="https://github.com/ithaca-fv/ITHACA-FV/workflows/OF2212/badge.svg"></a>
-</p>
 
 ### 0. Introduction
-**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2212**](https://www.openfoam.com/news/main-news/openfoam-v2212/) but it can be easily adapted also to other versions of OpenFOAM.
+**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2412**](https://www.openfoam.com/news/main-news/openfoam-v2412/) but it can be easily adapted also to other versions of OpenFOAM.
 
 **ITHACA-FV** can also be used as a basis for more advanced projects that would like to assess the capability of reduced order models in their existing **OpenFOAM**-based software, thanks to the availability of several reduced order methods and algorithms.
 
-Linear and non-linear algebra operations which are not already implemented in OpenFOAM are performed with the external library [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page). The source code of Eigen 3.3.7 is provided together with ITHACA-FV and is located in the [src/thirdyparty/Eigen](./src/thirdparty/Eigen) folder.  For the EigenValue decomposition it is also possible to rely on the [**Spectra-0.7.0**](https://spectralib.org/) library and the source code is provided in the [src/thirdyparty/spectra](./src//thirdparty/spectra) folder. Numerical optimization can be performed using the external library [**OptimLib**](https://www.kthohr.com/optimlib.html) and the header based source code is provided in the [src/thirdyparty/OptimLib](./src/thirdparty/OptimLib) folder.
+Linear and non-linear algebra operations which are not already implemented in OpenFOAM are performed with the external library [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page). Eigen 3.4 is provided as a git submodule together with ITHACA-FV and is located in the [src/thirdyparty/Eigen](./src/thirdparty/Eigen) folder.  For the EigenValue decomposition it is also possible to rely on the [**Spectra-1.2.0**](https://spectralib.org/) library and the source code, as a git submodule, is provided in the [src/thirdyparty/spectra](./src//thirdparty/spectra) folder. Numerical optimization can be performed using the external library [**OptimLib**](https://www.kthohr.com/optimlib.html) and the header based source code, as a git submodule, is provided in the [src/thirdyparty/OptimLib](./src/thirdparty/OptimLib) folder.
 
-**ITHACA-FV** has been tested on ubuntu 16.04, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 2106, OpenFOAM 2212, OpenFOAM 2306, and OpenFOAM 2312.
+**ITHACA-FV** has been tested on several versions of ubuntu, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 2106, OpenFOAM 2212, OpenFOAM 2306, OpenFOAM 2312, OpenFOAM 2406, OpenFOAM 2412 and OpenFOAM 2506.
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
@@ -33,12 +30,15 @@ Linear and non-linear algebra operations which are not already implemented in Op
 *   [**OpenFOAM 2212**](https://www.openfoam.com/news/main-news/openfoam-v2212) or 
 *   [**OpenFOAM 2306**](https://www.openfoam.com/news/main-news/openfoam-v2306) or
 *   [**OpenFOAM 2312**](https://www.openfoam.com/news/main-news/openfoam-v2312) or
+*   [**OpenFOAM 2406**](https://www.openfoam.com/news/main-news/openfoam-v2406) or
+*   [**OpenFOAM 2412**](https://www.openfoam.com/news/main-news/openfoam-v2412) or
+*   [**OpenFOAM 2506**](https://www.openfoam.com/news/main-news/openfoam-v2506)
 
 
 ### 2. Installation and usage
 First of all you need to source the bashrc file of your installation **OpenFOAM**. This is of course depending on the location of your OpenFOAM installation and of your particular version of OpenFOAM
 ```
-source $HOME/OpenFOAM/OpenFOAM-v2106/etc/bashrc
+source $HOME/OpenFOAM/OpenFOAM-v2506/etc/bashrc
 ```
 Then navigate to the folder where you want to install ITHACA-FV such as, for example, your HOME folder
 ```
@@ -73,8 +73,9 @@ source etc/bashrc
 
 In the near future the ITHACA-FV will also be linked with the pytorch package for machine learning. Some basic functions are already available. In order to compile these additional functionalities one will need to have torch installed and compile the library with the `-m` options. Moreover one will need to install a version of libtorch with ABI enabled. The one available at the following link for example has it:
 ```
-    curl https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.4.0%2Bcpu.zip > libtorch.zip && \
-    unzip libtorch.zip -d opt/ && \
+    wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.7.1%2Bcpu.zip > libtorch.zip && \
+    unzip libtorch.zip && \
+    export TORCH_LIBRARIES=libtorch
 ```
 
 For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://ithaca-fv.github.io/ITHACA-FV).
@@ -87,13 +88,13 @@ These images are based **OpenFOAM-v2106**, and provided an isolated environment,
 In order to pull the image, run the following command:
 
 ```
-docker pull ithacafv/ithacafv:manifest-latest
+docker pull ithacafv/ithacafv:latest
 ```
 
 Once the image is downloaded, you can start the container and mount the $HOME directory by executing:
 
 ```
-docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manifest-latest
+docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:latest
 ```
 
 ### 4. Singularity
@@ -113,7 +114,7 @@ export SINGULARITY_CACHEDIR=$HOME/mycontainter
 Buidling singularity image file `.sif` from the docker image, which is build and stored in `$HOME/mycontainter`, The below image used is based **OpenFOAM-v2106**, and where you can find a compiled version of the master branch of **ITHACA-FV**.
 
 ```
-singularity build ithacafv.sif docker://ithacafv/ithacafv:manifest-latest
+singularity build ithacafv.sif docker://ithacafv/ithacafv:latest
 ```
 
 To view / list all the images/cache, 

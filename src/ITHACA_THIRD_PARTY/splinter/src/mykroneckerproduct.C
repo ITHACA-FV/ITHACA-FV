@@ -102,7 +102,7 @@ SparseMatrix myKroneckerProduct(const SparseMatrix& A, const SparseMatrix& B)
     return AB;
 }
 
-SparseVector kroneckerProductVectors(const std::vector<SparseVector> & vectors)
+SparseVector kroneckerProductVectors(const std::vector<SparseVector>& vectors)
 {
     // Create two temp matrices
     SparseMatrix temp1(1, 1);
@@ -135,7 +135,7 @@ SparseVector kroneckerProductVectors(const std::vector<SparseVector> & vectors)
     return temp1;
 }
 
-DenseVector kroneckerProductVectors(const std::vector<DenseVector> & vectors)
+DenseVector kroneckerProductVectors(const std::vector<DenseVector>& vectors)
 {
     // Create two temp matrices
     DenseVector temp1(1);
@@ -168,7 +168,7 @@ DenseVector kroneckerProductVectors(const std::vector<DenseVector> & vectors)
     return temp1;
 }
 
-SparseMatrix kroneckerProductMatrices(const std::vector<SparseMatrix> &
+SparseMatrix kroneckerProductMatrices(const std::vector<SparseMatrix>&
                                       matrices)
 {
     // Create two temp matrices

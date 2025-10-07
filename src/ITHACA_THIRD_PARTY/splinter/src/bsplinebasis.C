@@ -20,7 +20,7 @@ BSplineBasis::BSplineBasis()
 {
 }
 
-BSplineBasis::BSplineBasis(std::vector< std::vector<double>> & knotVectors,
+BSplineBasis::BSplineBasis(std::vector< std::vector<double >> & knotVectors,
                            std::vector<unsigned int> basisDegrees)
     : numVariables(knotVectors.size())
 {
@@ -242,7 +242,7 @@ SparseMatrix BSplineBasis::evalBasisHessian(DenseVector& x) const
                 {
                     if (it.value() != 0)
                     {
-                        int row = i* getNumBasisFunctions() + it.row();
+                        int row = i * getNumBasisFunctions() + it.row();
                         int col = j;
                         H.insert(row, col) = it.value();
                     }
@@ -339,8 +339,8 @@ SparseMatrix BSplineBasis::decomposeToBezierForm()
     return A;
 }
 
-SparseMatrix BSplineBasis::reduceSupport(std::vector<double> & lb,
-        std::vector<double> & ub)
+SparseMatrix BSplineBasis::reduceSupport(std::vector<double>& lb,
+        std::vector<double>& ub)
 {
     if (lb.size() != ub.size() || lb.size() != numVariables)
     {
@@ -407,9 +407,9 @@ std::vector<double> BSplineBasis::getKnotVector(int dim) const
     return bases.at(dim).getKnotVector();
 }
 
-std::vector< std::vector<double>> BSplineBasis::getKnotVectors() const
+std::vector< std::vector<double >> BSplineBasis::getKnotVectors() const
 {
-    std::vector< std::vector<double>> knots;
+    std::vector< std::vector<double >> knots;
 
     for (unsigned int i = 0; i < numVariables; i++)
     {

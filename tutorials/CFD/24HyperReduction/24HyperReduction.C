@@ -51,8 +51,8 @@ class HyperReduction_function : public
 
             for (auto i = 0; i < S.size(); i++)
             {
-                S[i] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
-                                                2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+                S[i] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 1,
+                                               2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
             }
 
             return S;
@@ -67,8 +67,8 @@ class HyperReduction_function : public
 
             for (auto i = 0; i < nodesList.size(); i++)
             {
-                ret[i] = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
-                                                  2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
+                ret[i] = std::exp(- 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
+                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
             }
 
             return ret;
@@ -77,7 +77,7 @@ class HyperReduction_function : public
         Eigen::VectorXd onlineCoeffs(volScalarField& S, Eigen::MatrixXd mu)
         {
             Eigen::VectorXd f = evaluate_expression(S, mu, localNodePoints);
-            return pinvPU* f;
+            return pinvPU * f;
         }
 
 };
@@ -94,12 +94,12 @@ class HyperReduction_vectorFunction : public
 
             for (auto i = 0; i < S.size(); i++)
             {
-                S[i][0] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
-                                                   2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
-                S[i][1] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 0.5,
-                                                   2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
-                S[i][2] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1.5,
-                                                   2) - 2 * std::pow(yPos[i] - mu(1) - 0., 2));
+                S[i][0] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 1,
+                                                  2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+                S[i][1] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 0.5,
+                                                  2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+                S[i][2] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 1.5,
+                                                  2) - 2 * std::pow(yPos[i] - mu(1) - 0., 2));
             }
 
             return S;
@@ -114,12 +114,12 @@ class HyperReduction_vectorFunction : public
 
             for (auto i = 0; i < nodesList.size(); i++)
             {
-                ret(i) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
-                                                  2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i + nodesList.size()) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(
+                ret(i) = std::exp(- 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
+                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
+                ret(i + nodesList.size()) = std::exp(- 2 * std::pow(xPos[nodesList[i]] - mu(
                         0) - 0.5,
-                                                      2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i + 2 * nodesList.size()) = std::exp( - 2 * std::pow(
+                                                     2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
+                ret(i + 2 * nodesList.size()) = std::exp(- 2 * std::pow(
                                                     xPos[nodesList[i]] - mu(0) - 1.5,
                                                     2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0., 2));
             }
@@ -130,7 +130,7 @@ class HyperReduction_vectorFunction : public
         Eigen::VectorXd onlineCoeffs(volVectorField& S, Eigen::MatrixXd mu)
         {
             Eigen::VectorXd f = evaluate_expression(S, mu, localNodePoints);
-            return pinvPU* f;
+            return pinvPU * f;
         }
 
 };
@@ -148,14 +148,14 @@ class HyperReduction_vectorScalarFunction : public
 
             for (auto i = 0; i < S.size(); i++)
             {
-                V[i][0] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
-                                                   2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
-                V[i][1] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 0.5,
-                                                   2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
-                V[i][2] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1.5,
-                                                   2) - 2 * std::pow(yPos[i] - mu(1) - 0., 2));
-                S[i] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
-                                                2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+                V[i][0] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 1,
+                                                  2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+                V[i][1] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 0.5,
+                                                  2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
+                V[i][2] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 1.5,
+                                                  2) - 2 * std::pow(yPos[i] - mu(1) - 0., 2));
+                S[i] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 1,
+                                               2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2));
             }
 
             return std::make_pair(V, S);
@@ -170,15 +170,15 @@ class HyperReduction_vectorScalarFunction : public
 
             for (auto i = 0; i < nodesList.size(); i++)
             {
-                ret(i) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
-                                                  2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i + nodesList.size()) = std::exp( - 2 * std::pow(xPos[nodesList[i]] - mu(
+                ret(i) = std::exp(- 2 * std::pow(xPos[nodesList[i]] - mu(0) - 1,
+                                                 2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
+                ret(i + nodesList.size()) = std::exp(- 2 * std::pow(xPos[nodesList[i]] - mu(
                         0) - 0.5,
-                                                      2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
-                ret(i + 2 * nodesList.size()) = std::exp( - 2 * std::pow(
+                                                     2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
+                ret(i + 2 * nodesList.size()) = std::exp(- 2 * std::pow(
                                                     xPos[nodesList[i]] - mu(0) - 1.5,
                                                     2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0., 2));
-                ret(i + 3 * nodesList.size()) = std::exp( - 2 * std::pow(
+                ret(i + 3 * nodesList.size()) = std::exp(- 2 * std::pow(
                                                     xPos[nodesList[i]] - mu(0) - 1,
                                                     2) - 2 * std::pow(yPos[nodesList[i]] - mu(1) - 0.5, 2));
             }
@@ -189,7 +189,7 @@ class HyperReduction_vectorScalarFunction : public
         Eigen::VectorXd onlineCoeffs(volScalarField& S, Eigen::MatrixXd mu)
         {
             Eigen::VectorXd f = evaluate_expression(S, mu, localNodePoints);
-            return pinvPU* f;
+            return pinvPU * f;
         }
 
 };
@@ -255,7 +255,7 @@ void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh,
         for (unsigned int idTest = 0; idTest < parTest.rows(); idTest++)
         {
             // Online evaluation of the non linear function
-            Eigen::VectorXd aprfield = c.renormalizedBasisMatrix* c.onlineCoeffs(sfield(),
+            Eigen::VectorXd aprfield = c.renormalizedBasisMatrix * c.onlineCoeffs(sfield(),
                                        parTest.row(idTest));
             // Transform to an OpenFOAM field and export
             volScalarField S2("S_online", Foam2Eigen::Eigen2field(S, aprfield));
@@ -296,7 +296,7 @@ void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh,
                                  parTest.row(idTest)));
             double trueIntegral = (normalizingWeights.cwiseInverse().asDiagonal() *
                                    ff).array().sum();
-            double testIntegral = (c.wPU* f).array().sum();
+            double testIntegral = (c.wPU * f).array().sum();
             // Info << "Integral: " << trueIntegral << endl;
             // Info << "Reconstructed Integral: " << testIntegral << endl;
             results(idTest) = trueIntegral - testIntegral;
@@ -369,7 +369,7 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh,
         for (unsigned int idTest = 0; idTest < parTest.rows(); idTest++)
         {
             // Online evaluation of the non linear function
-            Eigen::VectorXd aprfield = c.renormalizedBasisMatrix* c.onlineCoeffs(sfield(),
+            Eigen::VectorXd aprfield = c.renormalizedBasisMatrix * c.onlineCoeffs(sfield(),
                                        parTest.row(idTest));
             // Transform to an OpenFOAM field and export
             volVectorField S2("S_online", Foam2Eigen::Eigen2field(S, aprfield));
@@ -411,7 +411,7 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh,
             Eigen::VectorXd ff = Foam2Eigen::field2Eigen(wholeField);
             double trueIntegral = (normalizingWeights.cwiseInverse().asDiagonal() *
                                    ff).array().sum();
-            double testIntegral = (c.wPU* f).array().sum();
+            double testIntegral = (c.wPU * f).array().sum();
             // Info << "Integral: " << trueIntegral << endl;
             // Info << "Reconstructed Integral: " << testIntegral << endl;
             results(idTest) = trueIntegral - testIntegral;
@@ -505,7 +505,7 @@ void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh,
         {
             // Online evaluation of the non linear function
             auto theta = c.onlineCoeffs(sfield(), parTest.row(idTest));
-            Eigen::VectorXd aprfield = c.renormalizedBasisMatrix* theta;
+            Eigen::VectorXd aprfield = c.renormalizedBasisMatrix * theta;
             Eigen::VectorXd recvec = aprfield.head(3 * S.size());
             Eigen::VectorXd recsca = aprfield.tail(S.size());
             // Transform to an OpenFOAM field and export
@@ -565,7 +565,7 @@ void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh,
             ff.tail(ffS.rows()) = ffS;
             double trueIntegral = (normalizingWeights.cwiseInverse().asDiagonal() *
                                    ff).array().sum();
-            double testIntegral = (c.wPU* f).array().sum();
+            double testIntegral = (c.wPU * f).array().sum();
             // Info << "Integral: " << trueIntegral << endl;
             // Info << "Reconstructed Integral: " << testIntegral << endl;
             results(idTest) = trueIntegral - testIntegral;

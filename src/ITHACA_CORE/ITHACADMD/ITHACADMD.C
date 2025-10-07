@@ -35,7 +35,7 @@
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 ITHACADMD<Type, PatchField, GeoMesh>::ITHACADMD(
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> & snapshots, double dt)
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> & snapshots, double dt)
     :
     snapshotsDMD(snapshots),
     NSnaps(snapshots.size()),
@@ -98,8 +98,8 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(label SVD_rank, bool exact,
         S = svd.singularValues().head(SVD_rank).array().cwiseInverse();
     }
 
-    Eigen::MatrixXcd A_tilde = U.transpose().conjugate() * Ym*
-                               V*
+    Eigen::MatrixXcd A_tilde = U.transpose().conjugate() * Ym *
+                               V *
                                S.asDiagonal();
     Eigen::ComplexEigenSolver<Eigen::MatrixXcd> esEg(A_tilde);
     eigenValues = esEg.eigenvalues();
@@ -115,22 +115,21 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(label SVD_rank, bool exact,
     }
 
     std::sort(sortedList.begin(), sortedList.end(),
-              std::less<std::pair<double, label>>());
-
+              std::less<std::pair<double, label >> ());
     if (exact)
     {
         DMDEigenModes = Ym* V* S.asDiagonal() * esEg.eigenvectors();
         DMDEigenModesBC.resize(YmBC.size());
-
         for (label i = 0; i < YmBC.size(); i++)
         {
             DMDEigenModesBC[i] = YmBC[i] * V* S.asDiagonal() * esEg.eigenvectors();
         }
     }
+
     else
     {
         Eigen::VectorXd eigenValueseigLam =
-            S.array().sqrt();
+        S.array().sqrt();
         PODm = (Xm* V) * eigenValueseigLam.asDiagonal();
         PODmBC.resize(XmBC.size());
 
@@ -147,9 +146,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(label SVD_rank, bool exact,
             DMDEigenModesBC[i] = PODmBC[i] * esEg.eigenvectors();
         }
     }
-
     Amplitudes = DMDEigenModes.real().fullPivLu().solve(Xm.col(0));
-
     if (exportDMDmodes)
     {
         convert2Foam();
@@ -161,7 +158,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getModes(label SVD_rank, bool exact,
     }
 }
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, template<class> class PatchField, class GeoMesh >
 void ITHACADMD<Type, PatchField, GeoMesh>::getDynamics(double tStart,
         double tFinal, double dt)
 {
@@ -172,7 +169,7 @@ void ITHACADMD<Type, PatchField, GeoMesh>::getDynamics(double tStart,
 
     for (double t = tStart; t <= tFinal; t += dt)
     {
-        Eigen::VectorXcd coli = (omega* t).array().exp() * Amplitudes.array();
+        Eigen::VectorXcd coli = (omega * t).array().exp() * Amplitudes.array();
         dynamics.col(i) = coli;
         i++;
     }
@@ -194,8 +191,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 void ITHACADMD<Type, PatchField, GeoMesh>::reconstruct(word exportFolder,
         word fieldName)
 {
-    PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshotsrec;
-
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> snapshotsrec;
     for (label i = 0; i < dynamics.cols(); i++)
     {
         Eigen::MatrixXcd col = DMDEigenModes* dynamics.col(i);

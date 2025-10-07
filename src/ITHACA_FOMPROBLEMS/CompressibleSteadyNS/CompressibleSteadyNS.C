@@ -40,6 +40,7 @@
 
 // Constructor
 CompressibleSteadyNS::CompressibleSteadyNS() {}
+
 CompressibleSteadyNS::CompressibleSteadyNS(int argc, char* argv[])
 {
     //#include "postProcess.H"
@@ -80,7 +81,7 @@ CompressibleSteadyNS::CompressibleSteadyNS(int argc, char* argv[])
             IOobject::NO_WRITE
         )
     );
-    ITHACAparameters* para = ITHACAparameters::getInstance(_mesh(),_runTime());
+    ITHACAparameters* para = ITHACAparameters::getInstance(_mesh(), _runTime());
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
@@ -213,7 +214,7 @@ surfaceScalarField CompressibleSteadyNS::getPhiHbyA(fvVectorMatrix& Ueqn,
     HbyA.reset(new volVectorField(constrainHbyA(rAU * Ueqn.H(), U,
                                   p))); // H is the extra diagonal part summed to the r.h.s. of the U equation
     phiHbyA.reset(new surfaceScalarField("phiHbyA",
-                                         fvc::interpolate(rho)*fvc::flux(HbyA)));
+                                         fvc::interpolate(rho)*fvc::flux(HbyA())));
     return phiHbyA;
 }
 
@@ -233,13 +234,15 @@ surfaceScalarField CompressibleSteadyNS::getRhorAUf(fvVectorMatrix& Ueqn)
     return rhorAUf;
 }
 
-fvScalarMatrix CompressibleSteadyNS::getPoissonTerm(fvVectorMatrix& Ueqn, volScalarField& p)
+fvScalarMatrix CompressibleSteadyNS::getPoissonTerm(fvVectorMatrix& Ueqn,
+        volScalarField& p)
 {
     fvScalarMatrix poissonTerm = fvm::laplacian(getRhorAUf(Ueqn), p);
     return poissonTerm;
 }
 
-fvScalarMatrix CompressibleSteadyNS::getPmatrix(fvVectorMatrix& Ueqn, volVectorField& U, volScalarField& p)
+fvScalarMatrix CompressibleSteadyNS::getPmatrix(fvVectorMatrix& Ueqn,
+        volVectorField& U, volScalarField& p)
 {
     volScalarField& rho = _rho();
     fv::options& fvOptions = _fvOptions();
@@ -316,7 +319,6 @@ void CompressibleSteadyNS::restart()
          (
              new volScalarField(thermo.p())
          );
-         
     volScalarField& p = thermo.p();
     _rho = autoPtr<volScalarField>
            (
@@ -396,8 +398,7 @@ void CompressibleSteadyNS::restart()
            (
                new volScalarField(thermo.psi())
            );
-
-        _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
+    _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
 #include "initContinuityErrs.H"
     //turbulence->validate();
 }

@@ -56,7 +56,7 @@ struct newton_steadyNS: public newton_argument<double>
         newton_steadyNS(int Nx, int Ny,
                         steadyNS& problem): newton_argument<double>(Nx,
                                     Ny),
-            problem( & problem),
+            problem(& problem),
             Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
             Nphi_p(problem.NPmodes),
             N_BC(problem.inletIndex.rows())
