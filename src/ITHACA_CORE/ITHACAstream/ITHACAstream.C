@@ -996,7 +996,7 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
                              subfolder + "/" + fieldName;
-        std::cout << fieldname << std::endl;
+        //std::cout << fieldname << std::endl;
         OFstream os(fieldname);
         act.writeHeader(os);
         os << act << endl;
@@ -1285,48 +1285,38 @@ void ITHACAstream::read_snapshot(T& snapshot, const Foam::label& i_snap,
 {
     // ITHACAparameters* para(ITHACAparameters::getInstance());
     const fvMesh& mesh = snapshot.mesh();
-
-    Foam::Time runTimeData(Foam::Time::controlDictName,
-        mesh.time().rootPath(),
-        mesh.time().caseName());
-
-    word timename(mesh.time().rootPath() + "/" +
-                  mesh.time().caseName());
-    timename = timename.substr(0, timename.find_last_of("\\/"));
-    timename = timename + "/" + "processor" + std::to_string(Pstream::myProcNo()) + "/";
+    word arg_path = path;
+    word pathProcessor = "";
 
     if (name == "default_name")
     {
         name = snapshot.name();
     }
 
-    if (path == "default_path")
-    {
-        if (Pstream::parRun())
-        {
-            path = timename + runTimeData.times()[i_snap].name();
-        }
-        else
-        {
-            path = runTimeData.times()[i_snap].name();
-        }
-    }
-    else if (Pstream::parRun())
+    if (Pstream::parRun())
     {
         // If specific path, changing processor* from casename directory to the target directory
         word path_start = mesh.time().rootPath() + "/" + mesh.time().caseName();
         path_start = path_start.substr(0, path_start.find_last_of("\\/")) + "/";
-        
-        if (!ITHACAutilities::containsSubstring(path, "/processor" + std::to_string(Pstream::myProcNo()) + "/"))
+        pathProcessor = "/processor" + std::to_string(Pstream::myProcNo());
+
+        if (!ITHACAutilities::containsSubstring(path, pathProcessor + "/"))
         {
-            path = path_start + path.substr(0, path.find_last_of("\\/")) + "/" + "processor" 
-                         + std::to_string(Pstream::myProcNo()) + "/" + path.substr(path.find_last_of("\\/"), path.size());
+            path = path_start + arg_path.substr(0, arg_path.find_last_of("\\/")) + pathProcessor
+                              + "/" + arg_path.substr(arg_path.find_last_of("\\/"), arg_path.size());
         }
         else
         {
-            path = path_start + path;
+            path = path_start + arg_path;
         }
     }
+    else
+    {
+        path = arg_path;
+    }
+
+    Foam::Time runTime2(Foam::Time::controlDictName, ".", arg_path + pathProcessor);
+    path = path + "/" + runTime2.times()[i_snap].name();
 
     if (!ITHACAutilities::check_file(path))
     {

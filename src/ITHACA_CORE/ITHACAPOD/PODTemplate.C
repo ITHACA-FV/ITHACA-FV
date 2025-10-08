@@ -180,8 +180,7 @@ void PODTemplate<T>::computeMeanField()
             for (label j = 0; j < l_nSnapshot; j++)
             {
                 // Read the j-th field
-                word snapFilePath = snapshotsPath + timeFolders[l_startTime+j].name();
-                ITHACAstream::read_snapshot(snapshotj, -1, snapFilePath);
+                ITHACAstream::read_snapshot(snapshotj, l_startTime+j, snapshotsPath);
                 lift(snapshotj);
                 // add j-th field to meanfield
                 ITHACAutilities::addFields(*f_meanField, snapshotj);
@@ -787,8 +786,7 @@ PtrList<T> PODTemplate<T>::computeSpatialModes(Eigen::VectorXd& eigenValueseig,
         for (label j = 0; j < l_nSnapshot; j++)
         {
             T snapshotj = *f_field;
-            word snapFilePath = snapshotsPath + timeFolders[l_startTime+j].name();
-            ITHACAstream::read_snapshot(snapshotj, -1, snapFilePath);
+            ITHACAstream::read_snapshot(snapshotj, l_startTime+j, snapshotsPath);
 
             if ((ithacaFVParameters->get_DEIMInterpolatedField() == "nut" 
                 || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedNut")) 
@@ -921,8 +919,7 @@ Eigen::MatrixXd PODTemplate<T>::computeSimulationTemporalModes(
         for (label j = 0; j < l_nSnapshotSimulation; j++)
         {
             T snapshotj = *f_field;
-            word snapFilePath = snapshotsPath + timeFolders[l_startTimeSimulation+j].name();
-            ITHACAstream::read_snapshot(snapshotj, -1, snapFilePath);
+            ITHACAstream::read_snapshot(snapshotj, l_startTimeSimulation+j, snapshotsPath);
 
             if ((ithacaFVParameters->get_DEIMInterpolatedField() == "nut" 
                  || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedNut")) 
