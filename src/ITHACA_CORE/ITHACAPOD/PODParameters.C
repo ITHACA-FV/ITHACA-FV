@@ -1,174 +1,154 @@
-
 #include "ITHACAsystem.H"
 #include "PODParameters.H"
+#include "SnapshotConfiguration.H"
 
-template<class Enum>
-struct StrLookup: public std::map<std::string,Enum>{
-  using Base=std::map<std::string,Enum>;
-  using Base::Base;
-  Enum lookup(std::string str,Enum defaultValue){
-    if (this->count(str)){
-      return Base::at(str);
-    }else{
-      return defaultValue;
+template <class Enum>
+struct StrLookup : public std::map<std::string, Enum> {
+    using Base = std::map<std::string, Enum>;
+    using Base::Base;
+    Enum lookup(std::string str, Enum defaultValue)
+    {
+        if (this->count(str))
+        {
+            return Base::at(str);
+        } else
+        {
+            return defaultValue;
+        }
     }
-  }
 };
 
 namespace ITHACAPOD
 {
 
- PODParameters::PODParameters(int argc,char* argv[])
-  {
+PODParameters::PODParameters(int argc, char* argv[]):
+    meshConfig_(std::make_unique<MeshConfiguration>())
+    , fieldTemplates_(std::make_unique<FieldTemplates>())
+    , snapshotConfiguration_(std::make_unique<SnapshotConfiguration>())
+    , solverConfiguration_(std::make_unique<SolverConfiguration>())
+    , DEIMConfiguration_(std::make_unique<DEIMConfiguration>())
+    , ROMExecutionConfig_(std::make_unique<ROMExecutionConfig>())
+    , SimulationFlags_(std::make_unique<SimulationFlags>())
+    , PODConfiguration_(std::make_unique<PODConfiguration>())
+{
 
-    _args = autoPtr<argList>
-        (
-          new argList(argc, argv)
-          );
+    _args = autoPtr<argList>(
+        new argList(argc, argv));
 
     if (!_args->checkRootCase())
     {
-      Foam::FatalError.exit();
+        Foam::FatalError.exit();
     }
 
     argList& args = _args();
 
-    for (int i=0; i<argc; i++)
+    for (int i = 0; i < argc; i++)
     {
-      Info << "argv[" << i << "] = " << argv[i] << endl;
+        Info << "argv[" << i << "] = " << argv[i] << endl;
     }
 
-    runTime0 = autoPtr<Foam::Time>( new Foam::Time( Foam::Time::controlDictName,
-                                                    args ) );
-
-    mesh = (
-          new fvMesh
-          (
-            Foam::IOobject
-            (
-              Foam::fvMesh::defaultRegion,
-              runTime0->timeName(),
-              *runTime0,
-              Foam::IOobject::MUST_READ
-              )
-            )
-          );
+    runTime0 = autoPtr<Foam::Time>(new Foam::Time(Foam::Time::controlDictName,
+        args));
 
 
-    nCells = mesh->cells().size();
-    ithacaLibraryParameters = ITHACAparameters::getInstance(*mesh,*runTime0);
+    meshConfig_->set_mesh(
+        new fvMesh(
+            Foam::IOobject(
+                Foam::fvMesh::defaultRegion,
+                runTime0->timeName(),
+                *runTime0,
+                Foam::IOobject::MUST_READ)));
+
+
+    meshConfig_->set_nCells(get_mesh().cells().size());
+    ithacaLibraryParameters = ITHACAparameters::getInstance(get_mesh(), *runTime0);
     ITHACAdict = ithacaLibraryParameters->ITHACAdict;
-    // casenameData = ITHACAdict->lookupOrDefault<fileName>("casename", "./");
 
-    casenameData = ITHACAdict->lookupOrDefault<fileName>("casename", "./");
+    snapshotConfiguration_->set_casenameData(ITHACAdict->lookupOrDefault<fileName>("casename", "./"));
 
-    fieldlist = static_cast<List<word>>(ITHACAdict->lookup("fields"));
-    eigensolver = ithacaLibraryParameters->eigensolver;
-    precision = ithacaLibraryParameters->precision;
-    exportPython = ithacaLibraryParameters->exportPython;
-    exportMatlab = ithacaLibraryParameters->exportMatlab;
-    exportTxt = ithacaLibraryParameters->exportTxt;
-    outytpe = ithacaLibraryParameters->outytpe;
-    pressureResolutionKind = StrLookup<PressureResolutionKind>(
-          {
-            {"FullOrder",PressureResolutionKind::FullOrder},
-            {"ReducedOrder",PressureResolutionKind::ReducedOrder},
-            {"Neglected",PressureResolutionKind::Neglected},
-          }).lookup(ITHACAdict->lookupOrDefault<word>("pressureResolutionKind", ""),PressureResolutionKind::Undefined);
-    nBlocks = ITHACAdict->lookupOrDefault<label>("nBlocks", 1);
-    centeredOrNot = ITHACAdict->lookupOrDefault<bool>("centeredOrNot", 1);
-    interpFieldCenteredOrNot = ITHACAdict->lookupOrDefault<bool>("interpFieldCenteredOrNot", 0);
+    PODConfiguration_->set_fieldlist(static_cast<List<word>>(ITHACAdict->lookup("fields")));
+    solverConfiguration_->set_eigensolver(ithacaLibraryParameters->eigensolver);
+    solverConfiguration_->set_precision(ithacaLibraryParameters->precision);
+    SimulationFlags_->set_exportPython(ithacaLibraryParameters->exportPython);
+    SimulationFlags_->set_exportMatlab(ithacaLibraryParameters->exportMatlab);
+    SimulationFlags_->set_exportTxt(ithacaLibraryParameters->exportTxt);
+    solverConfiguration_->set_outytpe(ithacaLibraryParameters->outytpe);
+    ROMExecutionConfig_->setPressureResolutionKind(StrLookup<PressureResolutionKind>(
+        {
+            { "FullOrder", PressureResolutionKind::FullOrder },
+            { "ReducedOrder", PressureResolutionKind::ReducedOrder },
+            { "Neglected", PressureResolutionKind::Neglected },
+        })
+            .lookup(ITHACAdict->lookupOrDefault<word>("pressureResolutionKind", ""), PressureResolutionKind::Undefined));
+    solverConfiguration_->set_nBlocks(ITHACAdict->lookupOrDefault<label>("nBlocks", 1));
+    solverConfiguration_->set_centeredOrNot(ITHACAdict->lookupOrDefault<bool>("centeredOrNot", 1));
+    SimulationFlags_->set_interpFieldCentered(ITHACAdict->lookupOrDefault<bool>("interpFieldCenteredOrNot", 0));
     // nMagicPoints = ITHACAdict->lookupOrDefault<label>("nMagicPoints", 1);
-    HRMethod = ITHACAdict->lookupOrDefault<word>("HyperReduction", "DEIM");
-    HRInterpolatedField = ITHACAdict->lookupOrDefault<word>("DEIMInterpolatedField", "fullStressFunction");
-    ECPAlgo = ITHACAdict->lookupOrDefault<word>("ECPAlgo", "Global");
-    onLineReconstruct = ITHACAdict->lookupOrDefault<bool>("onLineReconstruct", 0);
-    forcingOrNot = ITHACAdict->lookupOrDefault<bool>("forcingOrNot", 0);
-    symDiff = ITHACAdict->lookupOrDefault<bool>("symDiff", 0);
-    ROMTemporalScheme = ITHACAdict->lookupOrDefault<word>("ROMTemporalScheme", "euler");
-           // SOTA can be 0 (no SOTA), D (deterministic version), S (stochastic version)
-    useSOTA = ITHACAdict->lookupOrDefault<word>("useSOTA", "None");
-    set_useSOTA(useSOTA);
+    SimulationFlags_->setHRMethod(ITHACAdict->lookupOrDefault<word>("HyperReduction", "DEIM"));
+    ROMExecutionConfig_->setHRInterpolatedField(ITHACAdict->lookupOrDefault<word>("DEIMInterpolatedField", "fullStressFunction"));
+    ROMExecutionConfig_->setECPAlgo(ITHACAdict->lookupOrDefault<word>("ECPAlgo", "Global"));
+    SimulationFlags_->set_onLineReconstruct(ITHACAdict->lookupOrDefault<bool>("onLineReconstruct", 0));
+    SimulationFlags_->set_forcingOrNot(ITHACAdict->lookupOrDefault<bool>("forcingOrNot", 0));
+    SimulationFlags_->set_symDiff(ITHACAdict->lookupOrDefault<bool>("symDiff", 0));
+    ROMExecutionConfig_->setROMTemporalScheme(ITHACAdict->lookupOrDefault<word>("ROMTemporalScheme", "euler"));
+    // SOTA can be 0 (no SOTA), D (deterministic version), S (stochastic version)
+    ROMExecutionConfig_->setUseSOTA(ITHACAdict->lookupOrDefault<word>("useSOTA", "None"));
 
-  if (useSOTA != "None")
-  {
-    Info << "===============================================================" << endl;
-    Info << "  RedLUM is launched in " << useSOTA << "-SOTA mode" << endl;
-    Info << "  Ithacadict file will be overidden by parameters specified in IthacaFVParameters.C" << endl;
-    Info << "===============================================================" << endl;
-
-  }
-  
-    if ( (!(ROMTemporalScheme == "adams-bashforth"))
-         && (!(ROMTemporalScheme == "euler"))
-         && (!(ROMTemporalScheme == "euler–maruyama")) )
+    if (ROMExecutionConfig_->useSOTA() != "None")
     {
-      Info << "This temporal scheme is not implemented." << endl;
-      abort();
+        Info << "===============================================================" << endl;
+        Info << "  RedLUM is launched in " << ROMExecutionConfig_->useSOTA() << "-SOTA mode" << endl;
+        Info << "  Ithacadict file will be overidden by parameters specified in IthacaFVParameters.C" << endl;
+        Info << "===============================================================" << endl;
+    }
+
+    if ((!(ROMExecutionConfig_->ROMTemporalScheme() == "adams-bashforth")) && (!(ROMExecutionConfig_->ROMTemporalScheme() == "euler")) && (!(ROMExecutionConfig_->ROMTemporalScheme() == "euler–maruyama")))
+    {
+        Info << "This temporal scheme is not implemented." << endl;
+        abort();
     }
 
     // Object Time to read OpenFOAM data in the correct folder
-    runTimeData = new Foam::Time(Foam::Time::controlDictName, ".", casenameData);
+    runTimeData = new Foam::Time(Foam::Time::controlDictName, ".", get_casenameData());
     Foam::Time* runTime;
-    
-    if (Pstream::parRun()) 
+
+    if (Pstream::parRun())
     {
-      Foam::fileName casenamePar = casenameData + "processor" + name(Pstream::myProcNo());
-      Foam::Time* runTimePar = new Foam::Time(Foam::Time::controlDictName, ".", casenamePar);
-      runTime = runTimePar;
-    }
-    else{
-      runTime = runTimeData;
+        Foam::fileName casenamePar = get_casenameData() + "processor" + name(Pstream::myProcNo());
+        Foam::Time* runTimePar = new Foam::Time(Foam::Time::controlDictName, ".", casenamePar);
+        runTime = runTimePar;
+    } else
+    {
+        runTime = runTimeData;
     }
 
-    template_field_U = new volVectorField
-        (
-          IOobject
-          (
+
+    fieldTemplates_->set_U(new volVectorField(
+        IOobject(
             "U",
-             runTime->times()[1].name(),
-            *mesh,
-            IOobject::MUST_READ
-            ),
-          *mesh
-          );
+            runTime->times()[1].name(),
+            get_mesh(),
+            IOobject::MUST_READ),
+        get_mesh()));
 
 
-    template_field_p = new volScalarField
-        (
-          IOobject
-          (
+    fieldTemplates_->set_p(new volScalarField(
+        IOobject(
             "p",
-             runTime->times()[1].name(),
-            *mesh,
-            IOobject::MUST_READ
-            ),
-          *mesh
-          );
+            runTime->times()[1].name(),
+            get_mesh(),
+            IOobject::MUST_READ),
+        get_mesh()));
 
 
+    snapshotConfiguration_->set_nSimu(ITHACAdict->lookupOrDefault("nSimu", 100));
 
-    nSimu = ITHACAdict->lookupOrDefault("nSimu", 100);
 
+    initializeFieldConfiguration();
 
-    // Initialize field_name, field_type and nModes
-    field_name.resize(fieldlist.size());
-    field_type.resize(fieldlist.size());
-    for (label k = 0; k < fieldlist.size(); k++)
-    {
-      dictionary& subDict = ITHACAdict->subDict(fieldlist[k]);
-      field_name[k] = static_cast<word>(subDict.lookup("field_name"));
-      field_type[k] = static_cast<word>(subDict.lookup("field_type"));
-      nModes.insert(field_name[k],subDict.lookupOrDefault<label>("nmodes",1));
-      hilbertSpacePOD.insert(field_name[k],
-                             subDict.lookupOrDefault<word>("hilbertSpacePOD","L2"));
-      varyingEnergy.insert(field_name[k], 0);
-      resolvedVaryingEnergy.insert(field_name[k], 0);
-    }
-
-    weightH1 = 1.0;
-    weightBC = ITHACAdict->lookupOrDefault<double>("weightBC", 0.);
-    patchBC = ITHACAdict->lookupOrDefault<word>("patchBC", "inlet");
+    PODConfiguration_->set_weightH1(1.0);
+    PODConfiguration_->set_weightBC(ITHACAdict->lookupOrDefault<double>("weightBC", 0.));
+    PODConfiguration_->set_patchBC(ITHACAdict->lookupOrDefault<word>("patchBC", "inlet"));
 
     // Initialize startTime, endTime and nSnapshots
 
@@ -182,370 +162,380 @@ namespace ITHACAPOD
     // Initiate variable from PODSolverDict
     if ((existnsnap) && (existLT))
     {
-      Info << "Error you cannot define LatestTime and NSnapShots together" << endl;
-      abort();
-    }
-    else if (existnsnap)
-    {
-      InitialTime = ITHACAdict->lookupOrDefault<scalar>("InitialTime", 0);
-      FinalTime = ITHACAdict->lookupOrDefault<scalar>("FinalTime", 100000000000000);
-      nSnapshots = readScalar(ITHACAdict->lookup("Nsnapshots"));
-      startTime = Time::findClosestTimeIndex(runTime->times(), InitialTime);
-      nSnapshots = min(nSnapshots , Times.size() - startTime);
-      endTime = startTime + nSnapshots - 1;
-      FinalTime = std::stof(runTime->times()[endTime].name());
-    }
-    else
-    {
-      InitialTime = ITHACAdict->lookupOrDefault<scalar>("InitialTime", 0);
-      FinalTime = ITHACAdict->lookupOrDefault<scalar>("FinalTime", 100000000000000);
-      endTime = Time::findClosestTimeIndex(runTime->times(), FinalTime);
-      startTime = Time::findClosestTimeIndex(runTime->times(), InitialTime);
-      nSnapshots = endTime - startTime + 1;
-      if (InitialTime > FinalTime)
-      {
-        Info << "FinalTime cannot be smaller than the InitialTime check your ITHACAdict file\n" << endl;
+        Info << "Error you cannot define LatestTime and NSnapShots together" << endl;
         abort();
-      }
-      FinalTime = std::stof(runTime->times()[endTime].name());
+    } else if (existnsnap)
+    {
+        snapshotConfiguration_->set_initialTime(ITHACAdict->lookupOrDefault<scalar>("InitialTime", 0));
+        snapshotConfiguration_->set_finalTime(ITHACAdict->lookupOrDefault<scalar>("FinalTime", 100000000000000));
+        snapshotConfiguration_->set_nSnapshots(readScalar(ITHACAdict->lookup("Nsnapshots")));
+        snapshotConfiguration_->set_startTime(Time::findClosestTimeIndex(runTime->times(), get_initialTime()));
+        snapshotConfiguration_->set_nSnapshots(min(get_nSnapshots(), Times.size() - get_startTime()));
+        snapshotConfiguration_->set_endTime(get_startTime() + get_nSnapshots() - 1);
+        snapshotConfiguration_->set_finalTime(std::stof(runTime->times()[get_endTime()].name()));
+    } else
+    {
+        snapshotConfiguration_->set_initialTime(ITHACAdict->lookupOrDefault<scalar>("InitialTime", 0));
+        snapshotConfiguration_->set_finalTime(ITHACAdict->lookupOrDefault<scalar>("FinalTime", 100000000000000));
+        snapshotConfiguration_->set_endTime(Time::findClosestTimeIndex(runTime->times(), get_finalTime()));
+        snapshotConfiguration_->set_startTime(Time::findClosestTimeIndex(runTime->times(), get_initialTime()));
+        snapshotConfiguration_->set_nSnapshots(get_endTime() - get_startTime() + 1);
+        if (get_initialTime() > get_finalTime())
+        {
+            Info << "FinalTime cannot be smaller than the InitialTime check your ITHACAdict file\n"
+                 << endl;
+            abort();
+        }
+        snapshotConfiguration_->set_finalTime(std::stof(runTime->times()[get_endTime()].name()));
     }
 
     // Read Initial and last time from the POD dictionary
     const entry* existnsnapSimulation = ITHACAdict->findEntry("NsnapshotsSimulation");
     const entry* existLTSimulation = ITHACAdict->findEntry("FinalTimeSimulation");
 
-    scalar InitialTimeSimulation(FinalTime);
+    scalar InitialTimeSimulation(get_finalTime());
     label startTimeSimulation(Time::findClosestTimeIndex(runTime->times(), InitialTimeSimulation));
 
     if ((existnsnapSimulation) && (existLTSimulation))
     {
-      Info << "Error you cannot define LatestTimeSimulation and NSnapShotsSimulation together" << endl;
-      abort();
-    }
-    else if (existnsnapSimulation)
-    {
-      nSnapshotsSimulation = readScalar(ITHACAdict->lookup("NsnapshotsSimulation"));
-      nSnapshotsSimulation = min(nSnapshotsSimulation , Times.size() - startTimeSimulation);
-      endTimeSimulation = startTimeSimulation + nSnapshotsSimulation - 1;
-      FinalTimeSimulation = std::stof(runTime->times()[endTimeSimulation].name());
-    }
-    else
-    {
-      FinalTimeSimulation = ITHACAdict->lookupOrDefault<scalar>("FinalTimeSimulation", 100000000000000);
-      endTimeSimulation = Time::findClosestTimeIndex(runTime->times(), FinalTimeSimulation);
-      nSnapshotsSimulation = endTimeSimulation - startTimeSimulation + 1;
-      if (InitialTimeSimulation > FinalTimeSimulation)
-      {
-        Info << "FinalTimeSimulation cannot be smaller than the InitialTimeSimulation check your ITHACAdict file\n" << endl;
+        Info << "Error you cannot define LatestTimeSimulation and NSnapShotsSimulation together" << endl;
         abort();
-      }
-      FinalTimeSimulation = std::stof(runTime->times()[endTimeSimulation].name());
+    } else if (existnsnapSimulation)
+    {
+        snapshotConfiguration_->set_nSnapshotsSimulation(readScalar(ITHACAdict->lookup("NsnapshotsSimulation")));
+        snapshotConfiguration_->set_nSnapshotsSimulation(min(get_nSnapshotsSimulation(), Times.size() - startTimeSimulation));
+        snapshotConfiguration_->set_endTimeSimulation(startTimeSimulation + get_nSnapshotsSimulation() - 1);
+        snapshotConfiguration_->set_finalTimeSimulation(std::stof(runTime->times()[get_endTimeSimulation()].name()));
+    } else
+    {
+        snapshotConfiguration_->set_finalTimeSimulation(ITHACAdict->lookupOrDefault<scalar>("FinalTimeSimulation", 100000000000000));
+        snapshotConfiguration_->set_endTimeSimulation(Time::findClosestTimeIndex(runTime->times(), get_finalTimeSimulation()));
+        snapshotConfiguration_->set_nSnapshotsSimulation(get_endTimeSimulation() - startTimeSimulation + 1);
+        if (InitialTimeSimulation > get_finalTimeSimulation())
+        {
+            Info << "FinalTimeSimulation cannot be smaller than the InitialTimeSimulation check your ITHACAdict file\n"
+                 << endl;
+            abort();
+        }
+        snapshotConfiguration_->set_finalTimeSimulation(std::stof(runTime->times()[get_endTimeSimulation()].name()));
     }
 
-    // Initialize saveTime
-    IOdictionary controlDict
-        (
-          IOobject
-          (
+    // Initialize writeInterval
+    IOdictionary controlDict(
+        IOobject(
             "controlDict",
             runTimeData->system(),
             get_mesh(),
             IOobject::MUST_READ,
-            IOobject::NO_WRITE
-            )
-          );
-    saveTime = controlDict.lookupOrDefault<double>("writeInterval", 1);
+            IOobject::NO_WRITE));
+    snapshotConfiguration_->set_writeInterval(controlDict.lookupOrDefault<double>("writeInterval", 1));
 
-    IOdictionary transportProperties
-        (
-          IOobject
-          (
+    IOdictionary transportProperties(
+        IOobject(
             "transportProperties",
             runTimeData->constant(),
-            *mesh,
+            get_mesh(),
             IOobject::MUST_READ,
-            IOobject::NO_WRITE
-            )
-          );
+            IOobject::NO_WRITE));
 
-    nu = new dimensionedScalar
-        (
-          "nu",
-          dimViscosity,
-          transportProperties
-          );
+    ROMExecutionConfig_->setNu(new dimensionedScalar(
+        "nu",
+        dimViscosity,
+        transportProperties));
 
-    volume = new volScalarField(
-          IOobject(
+    meshConfig_->set_volume(new volScalarField(
+        IOobject(
             "volume",
             runTimeData->timeName(),
-            *mesh,
+            get_mesh(),
             IOobject::NO_READ,
-            IOobject::NO_WRITE
-            ),
-          *mesh,
-          dimensionedScalar("volume", dimensionSet(0, 3, 0, 0, 0, 0, 0), 1.0)
-          );
+            IOobject::NO_WRITE),
+        get_mesh(),
+        dimensionedScalar("volume", dimensionSet(0, 3, 0, 0, 0, 0, 0), 1.0)));
 
-    volume->primitiveFieldRef() = mesh->V().field();
-    Eigen::VectorXd volVect = Foam2Eigen::field2Eigen(mesh->V().field());
-    totalVolume = volVect.sum();
+    meshConfig_->get_volume().primitiveFieldRef() = get_mesh().V().field();
+    Eigen::VectorXd volVect = Foam2Eigen::field2Eigen(get_mesh().V().field());
+    meshConfig_->set_totalVolume(volVect.sum());
 
-    delta = new volScalarField(pow(*volume,1.0/3.0));
+    meshConfig_->set_delta(new volScalarField(pow(get_volume(), 1.0 / 3.0)));
 
 
-    //TO DO : rewrite the following method to search for the object turbulenceProperties and its attibutes (simulationType and LESModel)
+    // TO DO : rewrite the following method to search for the object turbulenceProperties and its attibutes (simulationType and LESModel)
     string simulationType;
     string LESModel;
 
     string DDESModel;
 
     string filename = "constant/turbulenceProperties";
-    std::ifstream strm( filename );
+    std::ifstream strm(filename);
 
     string line;
-    getline( strm, line );
+    getline(strm, line);
 
-    while (line.find( "simulationType" ) == string::npos || line.find( "//" ) != string::npos)
+    while (line.find("simulationType") == string::npos || line.find("//") != string::npos)
     {
-      getline( strm, line );
+        getline(strm, line);
     }
 
 
     int N = line.size();
-    int i =0;
-    while ( i<N )
+    int i = 0;
+    while (i < N)
     {
-      if (line[i]==' ')
-      {
-        line.erase(i,1);
-        N=N-1;
-      }
-      else
-      {
-        i++;
-      }
+        if (line[i] == ' ')
+        {
+            line.erase(i, 1);
+            N = N - 1;
+        } else
+        {
+            i++;
+        }
     }
 
-    line.erase(line.size()-1,1);
-    line.erase(0,14);
-    simulationType=line;
-
+    line.erase(line.size() - 1, 1);
+    line.erase(0, 14);
+    simulationType = line;
 
 
     Info << "--------------------------------------------" << endl;
     Info << "Simulation type:" << simulationType << endl;
 
 
-    if (simulationType=="laminar")
+    if (simulationType == "laminar")
     {
-      Info<< "DNS simulation will be performed" <<endl;
-      set_useDNS(true);
-      set_useDEIM(false);
-    }
-    else if(simulationType =="LES")
-    {
-      template_field_nut = new volScalarField
-          (
-            IOobject
-            (
-              "nut",
-              runTime->path() + runTime->times()[1].name(),
-              *mesh,
-              IOobject::MUST_READ
-              ),
-            *mesh
-            );
-
-      getline( strm, line );
-      while (line.find( "LESModel" ) == string::npos || line.find( "//" ) != string::npos )
-      {
-        getline( strm, line );
-      }
-
-      N = line.size();
-      i =0;
-      while ( i<N )
-      {
-        if (line[i]==' ')
-        {
-          line.erase(i,1);
-          N=N-1;
-        }
-        else
-        {
-          i++;
-        }
-      }
-      line.erase(N-1,1);
-      line.erase(0,8);
-      LESModel=line;
-
-
-      if (LESModel=="Smagorinsky")
-      {
-        set_useDEIM(true);
-        set_Ck(ITHACAdict->lookupOrDefault<double>("Ck", 0.094));
-        set_Ce(ITHACAdict->lookupOrDefault<double>("Ce", 1.048));
-        set_useDDES(false);
-
-      }
-      else if (LESModel=="kOmegaSSTDDES")
-      {
-        set_useDDES(true);
+        Info << "DNS simulation will be performed" << endl;
+        set_useDNS(true);
         set_useDEIM(false);
-        template_field_omega = new volScalarField
-            (
-              IOobject
-              (
-                "omega",
-                runTime->path() + runTime->times()[1].name(),
-                *mesh,
-                IOobject::MUST_READ
-                ),
-              *mesh
-              );
-        template_field_k = new volScalarField
-            (
-              IOobject
-              (
-                "k",
-                runTime->path() + runTime->times()[1].name(),
-                *mesh,
-                IOobject::MUST_READ
-                ),
-              *mesh
-              );
-      }
-      else
-      {
-        Info << "Only turbulence model Smagorinsky is supported with simulation type LES" << endl;
-        Info << "DDES NOT USED**0**" << endl;
-
-
-      }
-
-
-    }
-    else{
-      Info <<"Simulation type not LES, no DEIM will be performed" << endl;
-      set_useDEIM(false);
-      Info<<"\n"<<"No DDES was  performed"<<endl;
-      set_useDDES(false);
-      Info <<"\n"<<"No DNS simulation was perfomed"<<endl;
-      set_useDNS(false);
-      abort();
-    }
-    
-    if (useDEIM)
+    } else if (simulationType == "LES")
     {
-      if(get_hilbertSpacePOD()["nut"] == "dL2"){
-        set_deltaWeight(ITHACAutilities::getMassMatrixFV(*template_field_nut).array().pow(-2.0/3.0));
-      }
+        fieldTemplates_->set_nut(new volScalarField(
+            IOobject(
+                "nut",
+                runTime->path() + runTime->times()[1].name(),
+                get_mesh(),
+                IOobject::MUST_READ),
+            get_mesh()));
 
-      if (HRMethod == "GappyDEIM")
-      {
-        HRMethod = "DEIM";
-      }
-
-      if (interpFieldCenteredOrNot)
-      {
-        folder_DEIM = "./ITHACAoutput/Hyperreduction/" + HRMethod + "_centered/";
-      }
-      else
-      {
-        folder_DEIM = "./ITHACAoutput/Hyperreduction/" + HRMethod + "/";
-      }
-
-      if (HRInterpolatedField == "reducedFullStressFunction" || HRInterpolatedField == "reducedNut" )
-      {
-        word nameToReplace = HRInterpolatedField.substr(7);
-        nameToReplace[0] = tolower(nameToReplace[0]);
-        HRInterpolatedField += "_" + std::to_string(get_nModes()["U"]) + "modes";
-        field_name.append(HRInterpolatedField);
-        field_type.append(field_type[find(field_name.begin(), field_name.end(), nameToReplace) - field_name.begin()]);
-        nModes.insert(HRInterpolatedField, get_nModes()[nameToReplace]);
-        hilbertSpacePOD.insert(HRInterpolatedField,get_hilbertSpacePOD()[nameToReplace]);
-        varyingEnergy.insert(HRInterpolatedField, 0);
-        resolvedVaryingEnergy.insert(HRInterpolatedField, 0);
-      }
-
-      nMagicPoints = get_nModes()[HRInterpolatedField];
-      HRSnapshotsField = HRInterpolatedField;
-      std::string nbModesUInFolderDEIM = "";
-      std::string ECPAlgoInFolderDEIM = "";
-
-      if (HRMethod == "ECP")
-      {
-        if (!(ECPAlgo == "Global" || ECPAlgo == "EachMode"))
+        getline(strm, line);
+        while (line.find("LESModel") == string::npos || line.find("//") != string::npos)
         {
-          Info << "Error: ECPAlgo must be Global or EachMode" << endl;
-          abort();
+            getline(strm, line);
         }
 
-        if (HRInterpolatedField == "fullStressFunction")
+        N = line.size();
+        i = 0;
+        while (i < N)
         {
-          HRSnapshotsField = "projFullStressFunction_" + std::to_string(get_nModes()["U"]) + "modes";
-        }
-        else if (ITHACAutilities::containsSubstring(HRInterpolatedField, "reducedFullStressFunction"))
-        {
-          HRSnapshotsField = "projReducedFullStressFunction_" + std::to_string(get_nModes()["U"]) + "modes";
-        }
-        else if (HRInterpolatedField == "nut")
-        {
-          HRSnapshotsField = "projSmagFromNut_" + std::to_string(get_nModes()["U"]) + "modes";
-        }
-        else if (ITHACAutilities::containsSubstring(HRInterpolatedField, "reducedNut"))
-        {
-          HRSnapshotsField = "projSmagFromReducedNut_" + std::to_string(get_nModes()["U"]) + "modes";
-        }
-        else
-        {
-          Info << "Error: ECP method is coded only for fullStressFunction and nut" << endl;
-          abort();
-        }
-
-        nMagicPoints = ITHACAdict->lookupOrDefault("nMagicPoints", nMagicPoints);
-        ECPAlgoInFolderDEIM = ECPAlgo + "/";
-        nbModesUInFolderDEIM = std::to_string(get_nModes()["U"]) + "modesU/";
-
-        label nECPFields = 1;
-        if (ECPAlgo == "EachMode") {nECPFields = nModes["U"];}
-
-        for (label c = 0; c < nECPFields; c++)
-        {
-          for (label k = 0; k <= (c+1) * (ECPAlgo == "EachMode") * (ITHACAutilities::containsSubstring(HRInterpolatedField,"nut")); k++)
-          {
-            word fieldNameModec = HRSnapshotsField;
-            if (ECPAlgo == "EachMode")
+            if (line[i] == ' ')
             {
-              fieldNameModec += "_" + std::to_string(c+1);
-              if (ITHACAutilities::containsSubstring(HRInterpolatedField,"nut")){fieldNameModec += "_" + std::to_string(k);}
+                line.erase(i, 1);
+                N = N - 1;
+            } else
+            {
+                i++;
             }
-            field_name.append(fieldNameModec);
-            field_type.append("scalar");
-            nModes.insert(fieldNameModec, nModes[HRInterpolatedField]);
-            hilbertSpacePOD.insert(field_name.last(),"L2");
-            varyingEnergy.insert(field_name.last(), 0);
-            resolvedVaryingEnergy.insert(field_name.last(), 0);
-          }
         }
-      }
-      
-      folder_DEIM +=  HRInterpolatedField.substr(0,HRInterpolatedField.find("_")) + "/" + nbModesUInFolderDEIM;
-      folder_DEIM += std::to_string(nMagicPoints) + "magicPoints/" + ECPAlgoInFolderDEIM;
-    }
-    else
+        line.erase(N - 1, 1);
+        line.erase(0, 8);
+        LESModel = line;
+
+
+        if (LESModel == "Smagorinsky")
+        {
+            set_useDEIM(true);
+            set_Ck(ITHACAdict->lookupOrDefault<double>("Ck", 0.094));
+            set_Ce(ITHACAdict->lookupOrDefault<double>("Ce", 1.048));
+            set_useDDES(false);
+
+        } else if (LESModel == "kOmegaSSTDDES")
+        {
+            set_useDDES(true);
+            set_useDEIM(false);
+            fieldTemplates_->set_omega(new volScalarField(
+                IOobject(
+                    "omega",
+                    runTime->path() + runTime->times()[1].name(),
+                    get_mesh(),
+                    IOobject::MUST_READ),
+                get_mesh()));
+            fieldTemplates_->set_k(new volScalarField(
+                IOobject(
+                    "k",
+                    runTime->path() + runTime->times()[1].name(),
+                    get_mesh(),
+                    IOobject::MUST_READ),
+                get_mesh()));
+        } else
+        {
+            Info << "Only turbulence model Smagorinsky is supported with simulation type LES" << endl;
+            Info << "DDES NOT USED**0**" << endl;
+        }
+
+
+    } else
     {
-
-      folder_DEIM = "./ITHACAoutput/";
+        Info << "Simulation type not LES, no DEIM will be performed" << endl;
+        set_useDEIM(false);
+        Info << "\n"
+             << "No DDES was  performed" << endl;
+        set_useDDES(false);
+        Info << "\n"
+             << "No DNS simulation was perfomed" << endl;
+        set_useDNS(false);
+        abort();
     }
-  }
 
+    word folder_DEIM = "./ITHACAoutput/";
+    if (SimulationFlags_->useDEIM())
+    {
+        if (get_hilbertSpacePOD()["nut"] == "dL2")
+        {
+            set_deltaWeight(ITHACAutilities::getMassMatrixFV(fieldTemplates_->get_nut()).array().pow(-2.0 / 3.0));
+        }
 
+        if (SimulationFlags_->HRMethod() == "GappyDEIM")
+        {
+            SimulationFlags_->setHRMethod("DEIM");
+        }
 
+        if (SimulationFlags_->interpFieldCentered())
+        {
+            folder_DEIM = "./ITHACAoutput/Hyperreduction/" + SimulationFlags_->HRMethod() + "_centered/";
+        } else
+        {
+            folder_DEIM = "./ITHACAoutput/Hyperreduction/" + SimulationFlags_->HRMethod() + "/";
+        }
 
+        const word& HRInterpolatedField = ROMExecutionConfig_->HRInterpolatedField();
+        initializeHyperReductionField(HRInterpolatedField);
 
+        DEIMConfiguration_->setNMagicPoints(get_nModes()[HRInterpolatedField]);
+        ROMExecutionConfig_->setHRSnapshotsField(HRInterpolatedField);
+        std::string nbModesUInFolderDEIM = "";
+        std::string ECPAlgoInFolderDEIM = "";
+
+        if (SimulationFlags_->HRMethod() == "ECP")
+        {
+            if (!(ROMExecutionConfig_->ECPAlgo() == "Global" || ROMExecutionConfig_->ECPAlgo() == "EachMode"))
+            {
+                Info << "Error: ECPAlgo must be Global or EachMode" << endl;
+                abort();
+            }
+
+            if (HRInterpolatedField == "fullStressFunction")
+            {
+                ROMExecutionConfig_->setHRSnapshotsField("projFullStressFunction_" + std::to_string(get_nModes()["U"]) + "modes");
+            } else if (ITHACAutilities::containsSubstring(HRInterpolatedField, "reducedFullStressFunction"))
+            {
+                ROMExecutionConfig_->setHRSnapshotsField("projReducedFullStressFunction_" + std::to_string(get_nModes()["U"]) + "modes");
+            } else if (HRInterpolatedField == "nut")
+            {
+                ROMExecutionConfig_->setHRSnapshotsField("projSmagFromNut_" + std::to_string(get_nModes()["U"]) + "modes");
+            } else if (ITHACAutilities::containsSubstring(HRInterpolatedField, "reducedNut"))
+            {
+                ROMExecutionConfig_->setHRSnapshotsField("projSmagFromReducedNut_" + std::to_string(get_nModes()["U"]) + "modes");
+            } else
+            {
+                Info << "Error: ECP method is coded only for fullStressFunction and nut" << endl;
+                abort();
+            }
+
+            DEIMConfiguration_->setNMagicPoints(ITHACAdict->lookupOrDefault("nMagicPoints", get_nMagicPoints()));
+            ECPAlgoInFolderDEIM = ROMExecutionConfig_->ECPAlgo() + "/";
+            nbModesUInFolderDEIM = std::to_string(get_nModes()["U"]) + "modesU/";
+
+            label nECPFields = 1;
+            if (ROMExecutionConfig_->ECPAlgo() == "EachMode")
+            {
+                nECPFields = get_nModes()["U"];
+            }
+
+            for (label c = 0; c < nECPFields; c++)
+            {
+                for (label k = 0; k <= (c + 1) * (ROMExecutionConfig_->ECPAlgo() == "EachMode") * (ITHACAutilities::containsSubstring(HRInterpolatedField, "nut")); k++)
+                {
+                    word fieldNameModec = ROMExecutionConfig_->HRSnapshotsField();
+                    if (ROMExecutionConfig_->ECPAlgo() == "EachMode")
+                    {
+                        fieldNameModec += "_" + std::to_string(c + 1);
+                        if (ITHACAutilities::containsSubstring(HRInterpolatedField, "nut"))
+                        {
+                            fieldNameModec += "_" + std::to_string(k);
+                        }
+                    }
+                    PODConfiguration_->appendField(fieldNameModec, "scalar");
+                    PODConfiguration_->insert_nModes(fieldNameModec, get_nModes()[HRInterpolatedField]);
+                    PODConfiguration_->insert_hilbertSpacePOD(PODConfiguration_->field_name().last(), "L2");
+                    PODConfiguration_->set_varyingEnergy(PODConfiguration_->field_name().last(), 0);
+                    PODConfiguration_->set_resolvedVaryingEnergy(PODConfiguration_->field_name().last(), 0);
+                }
+            }
+        }
+
+        folder_DEIM += HRInterpolatedField.substr(0, HRInterpolatedField.find("_")) + "/" + nbModesUInFolderDEIM;
+        folder_DEIM += std::to_string(get_nMagicPoints()) + "magicPoints/" + ECPAlgoInFolderDEIM;
+    }
+    DEIMConfiguration_->setFolderDEIM(folder_DEIM);
+}
+
+void PODParameters::initializeHyperReductionField(const word& HRInterpolatedField)
+{
+
+bool isReducedField = HRInterpolatedField == "reducedFullStressFunction" 
+                   || HRInterpolatedField == "reducedNut";
+    if (isReducedField)
+    {
+        word modifiedFieldName = createReducedFieldName(HRInterpolatedField);
+        addREducedField(HRInterpolatedField, modifiedFieldName);
+    }
+}
+
+void PODParameters::addREducedField(const word& nameToReplace,  const word& modifiedFieldName)
+{
+        const auto& field_type = PODConfiguration_->field_type();
+        const auto& field_name = PODConfiguration_->field_name();
+
+        PODConfiguration_->appendField(modifiedFieldName , field_type[find(field_name.begin(), field_name.end(), nameToReplace) - field_name.begin()]);
+        PODConfiguration_->insert_nModes(modifiedFieldName, get_nModes()[nameToReplace]);
+        PODConfiguration_->insert_hilbertSpacePOD(modifiedFieldName, get_hilbertSpacePOD()[nameToReplace]);
+        PODConfiguration_->set_varyingEnergy(modifiedFieldName, 0);
+        PODConfiguration_->set_resolvedVaryingEnergy(modifiedFieldName, 0);
+
+}
+
+word PODParameters::createReducedFieldName(const word& HRInterpolatedField)
+{
+      return HRInterpolatedField + "_" + std::to_string(get_nModes()["U"]) + "modes";
+}
+
+void PODParameters::initializeFieldConfiguration()
+{
+    const auto& fieldlist = PODConfiguration_->fieldlist();
+    // Resize field name/type arrays
+    Foam::List<Foam::word> field_names(fieldlist.size());
+    Foam::List<Foam::word> field_types(fieldlist.size());
+    // Read from dictionary and populate PODModeConfig
+    for (label k = 0; k < fieldlist.size(); k++)
+    {
+        dictionary& subDict = ITHACAdict->subDict(fieldlist[k]);
+
+        field_names[k] = static_cast<word>(subDict.lookup("field_name"));
+        field_types[k] = static_cast<word>(subDict.lookup("field_type"));
+
+        label nMode = subDict.lookupOrDefault<label>("nmodes", 1);
+        word hilbertSpace = subDict.lookupOrDefault<word>("hilbertSpacePOD", "L2");
+
+        // Populate the PODModeConfig module
+        PODConfiguration_->insert_nModes(field_names[k], nMode);
+        PODConfiguration_->insert_hilbertSpacePOD(field_names[k], hilbertSpace);
+        PODConfiguration_->set_varyingEnergy(field_names[k], 0);
+        PODConfiguration_->set_resolvedVaryingEnergy(field_names[k], 0);
+    }
+
+    // Store field names and types
+    PODConfiguration_->set_field_name(field_names);
+    PODConfiguration_->set_field_type(field_types);
+}
 
 
 Foam::word PODParameters::get_pathHilbertSpace_fromHS(Foam::word hilbertSp)
@@ -555,25 +545,20 @@ Foam::word PODParameters::get_pathHilbertSpace_fromHS(Foam::word hilbertSp)
     if (hilbertSp == "L2" || hilbertSp == "dL2")
     {
         pathHilbertSpace = "";
-    }
-    else if (hilbertSp == "L2wBC")
+    } else if (hilbertSp == "L2wBC")
     {
         pathHilbertSpace = "_L2wBC";
-    }
-    else if (hilbertSp == "H1")
+    } else if (hilbertSp == "H1")
     {
         pathHilbertSpace = "_H1";
-    }
-    else if (hilbertSp == "wH1")
+    } else if (hilbertSp == "wH1")
     {
         pathHilbertSpace = "_wH1";
-    }
-    else
+    } else
     {
         Foam::Info << "Error: hilbertSpacePOD type " << hilbertSp
                    << " is not valid." << Foam::endl;
-        Foam::Info << "dot_product_POD is available for L2, L2wBC, H1 and wH1 only." <<
-                   Foam::endl;
+        Foam::Info << "dot_product_POD is available for L2, L2wBC, H1 and wH1 only." << Foam::endl;
         abort();
     }
 
@@ -582,9 +567,8 @@ Foam::word PODParameters::get_pathHilbertSpace_fromHS(Foam::word hilbertSp)
 
 Foam::word PODParameters::get_pathHilbertSpace(Foam::word fieldName)
 {
-  return get_pathHilbertSpace_fromHS(hilbertSpacePOD[fieldName]);
+    return get_pathHilbertSpace_fromHS(PODConfiguration_->hilbertSpacePOD()[fieldName]);
 }
-
 
 
 }

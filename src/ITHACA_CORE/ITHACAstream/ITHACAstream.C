@@ -518,7 +518,7 @@ void read_fields(
     fileName casename, int first_snap, int n_snap)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
-    fvMesh& mesh = para->mesh;
+    const fvMesh& mesh = para->mesh;
     const pointMesh& pMesh  = pointMesh::New(mesh);
     constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value || std::is_same<surfaceMesh, GeoMesh>::value;
     if (!Pstream::parRun())
@@ -653,7 +653,7 @@ void read_fields(
     fileName casename, int first_snap, int n_snap)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
-    fvMesh& mesh = para->mesh;
+    const fvMesh& mesh = para->mesh;
     const pointMesh& pMesh  = pointMesh::New(mesh );
     constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value || std::is_same<surfaceMesh, GeoMesh>::value;
     if (!Pstream::parRun())
