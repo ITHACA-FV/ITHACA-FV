@@ -5,3 +5,6 @@
 [submodule "src/thirdparty/Eigen"]
 	path = src/thirdparty/Eigen
 	url = https://gitlab.com/libeigen/eigen.git
+[submodule "src/thirdparty/mathtoolbox"]
+	path = src/thirdparty/mathtoolbox
+	url = https://github.com/yuki-koyama/mathtoolbox.git
