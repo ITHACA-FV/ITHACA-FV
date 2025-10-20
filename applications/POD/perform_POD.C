@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
     else
     {
         scalar InitialTime = ITHACAPODdict.lookupOrDefault<scalar>("InitialTime", 0);
-        scalar FinalTime = ITHACAPODdict.lookupOrDefault<scalar>("FinalTime", 100000000000000);
+        scalar FinalTime = ITHACAPODdict.lookupOrDefault<scalar>("FinalTime", 1000000);
         endTime = Time::findClosestTimeIndex(runTime.times(), FinalTime);
         startTime = Time::findClosestTimeIndex(runTime.times(), InitialTime);
         nSnapshots = endTime - startTime + 1;
@@ -146,7 +146,9 @@ int main(int argc, char *argv[])
         }
     }
     // Print out some Infos
-    Info << "startTime: " << startTime << "\n" << "endTime: " << endTime << "\n" << "nSnapshots: " << nSnapshots << "\n" << endl;
+    Info<< "startTime: " << Times[startTime].name() << "\n" 
+        << "endTime: " << Times[endTime].name() << "\n" 
+        << "nSnapshots: " << nSnapshots << "\n" << endl;
 
     // Set the initial time
     runTime.setTime(Times[startTime], startTime);
@@ -174,7 +176,7 @@ int main(int argc, char *argv[])
 
         for (label i = startTime; i < endTime + 1; i++)
         {
-            Info << "Reading snapshot " << i << " for field " << field_name << endl;
+            Info << "Reading snapshot " << Times[i].name() << " for field " << field_name << endl;
             runTime.setTime(Times[i], i);
             mesh.readUpdate();
 
