@@ -17,7 +17,7 @@ EXE_INC = \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -Wno-comment \
     -g \
-    -std=c++11 \
+    -std=c++17 \
     -Wno-maybe-uninitialized \
     -Wno-sign-compare \
     -Wno-unknown-pragmas \
@@ -37,6 +37,9 @@ EXE_LIBS = \
     -lmeshTools \
     -lfvOptions \
     -lsampling \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lfluidThermophysicalModels \
     -lradiationModels \
     -lspecie \

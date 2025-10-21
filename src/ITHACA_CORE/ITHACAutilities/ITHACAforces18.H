@@ -57,10 +57,10 @@ class ITHACAforces
         // Protected data
 
         //- Pressure, viscous and porous force per bin
-        List<Field<vector>> force_;
+        List<Field<vector >> force_;
 
         //- Pressure, viscous and porous moment per bin
-        List<Field<vector>> moment_;
+        List<Field<vector >> moment_;
 
         // File streams
 
@@ -235,7 +235,7 @@ class ITHACAforces
         //- Helper function to write binned forces and moments
         void writeBinnedForceMoment
         (
-            const List<Field<vector>>& fm,
+            const List<Field<vector >> & fm,
             autoPtr<OFstream>& osPtr
         ) const;
 

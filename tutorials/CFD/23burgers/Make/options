@@ -25,13 +25,16 @@ EXE_INC = \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -Wno-comment \
     -w \
-    -std=c++11 \
+    -std=c++17 \
 
 EXE_LIBS = \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools \
     -lsampling \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lITHACA_ROMPROBLEMS \
     -lITHACA_FOMPROBLEMS \
     -lITHACA_THIRD_PARTY \

@@ -28,7 +28,7 @@ EXE_INC = \
     -I$(TORCH_LIBRARIES)/include/torch/csrc/api/include \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++14
+    -std=c++17
 
 EXE_LIBS = \
     -lturbulenceModels \
@@ -39,6 +39,9 @@ EXE_LIBS = \
     -lfvOptions \
     -lsampling \
     -lforces \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lITHACA_ROMPROBLEMS \
     -lITHACA_FOMPROBLEMS \
     -lITHACA_THIRD_PARTY \

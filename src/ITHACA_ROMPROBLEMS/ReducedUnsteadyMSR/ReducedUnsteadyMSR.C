@@ -29,7 +29,7 @@ reducedusMSR::reducedusMSR() {}
 
 reducedusMSR::reducedusMSR(usmsrProblem& FOMproblem)
 {
-    problem = &FOMproblem;
+    problem = & FOMproblem;
     N_BC = problem->inletIndex.rows();
     N_BCt = problem->inletIndexT.rows();
     Nphi_u = problem->B_matrix.rows();
@@ -234,7 +234,7 @@ int newton_usmsr_fd::operator()(const Eigen::VectorXd& x,
 int newton_usmsr_fd::df(const Eigen::VectorXd& x,
                         Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_usmsr_fd> numDiff(*this);
+    Eigen::NumericalDiff<newton_usmsr_fd> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -455,7 +455,7 @@ int newton_usmsr_n::operator()(const Eigen::VectorXd& n,
 int newton_usmsr_n::df(const Eigen::VectorXd& n,
                        Eigen::MatrixXd& fjacn) const
 {
-    Eigen::NumericalDiff<newton_usmsr_n> numDiff(*this);
+    Eigen::NumericalDiff<newton_usmsr_n> numDiff(* this);
     numDiff.df(n, fjacn);
     return 0;
 }
@@ -571,7 +571,7 @@ int newton_usmsr_t::operator()(const Eigen::VectorXd& t,
 int newton_usmsr_t::df(const Eigen::VectorXd& t,
                        Eigen::MatrixXd& fjact) const
 {
-    Eigen::NumericalDiff<newton_usmsr_t> numDiff(*this);
+    Eigen::NumericalDiff<newton_usmsr_t> numDiff(* this);
     numDiff.df(t, fjact);
     return 0;
 }
@@ -836,39 +836,39 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
         if (res_fd.norm() / y.norm() < 1e-5)
         {
             std::cout << green << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
-                      " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
+                                  " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
                       << std::endl;
         }
         else
         {
             std::cout << red << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
-                      " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
+                                " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
                       << std::endl;
         }
 
         if (res_n.norm() / w.norm() < 1e-5)
         {
             std::cout << green << "|F_n(x)| = " << res_n.norm() / w.norm() <<
-                      " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
+                                  " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
                       std::endl;
         }
         else
         {
             std::cout << red << "|F_n(x)| = " << res_n.norm() / w.norm() <<
-                      " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
+                                " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
                       std::endl;
         }
 
         if (res_t.norm() / z.norm() < 1e-5)
         {
             std::cout << green << "|F_t(x)| = " << res_t.norm() / z.norm() <<
-                      " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
+                                  " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
                       std::endl;
         }
         else
         {
             std::cout << red << "|F_t(x)| = " << res_t.norm() / z.norm() <<
-                      " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
+                                " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
                       std::endl;
         }
 

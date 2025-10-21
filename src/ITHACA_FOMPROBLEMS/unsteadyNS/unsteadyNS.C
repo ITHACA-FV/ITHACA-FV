@@ -77,6 +77,10 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
 #include "createFields.H"
 #include "createFvOptions.H"
     para = ITHACAparameters::getInstance(mesh, runTime);
+    method = ITHACAdict->lookupOrDefault<word>("method", "supremizer");
+    M_Assert(method == "supremizer"
+             || method == "PPE",
+                       "The method must be set to supremizer or PPE in ITHACAdict");
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
     M_Assert(bcMethod == "lift" || bcMethod == "penalty",
              "The BC method must be set to lift or penalty in ITHACAdict");
@@ -87,7 +91,7 @@ unsteadyNS::unsteadyNS(int argc, char* argv[])
         ITHACAdict->lookupOrDefault<word>("timeDerivativeSchemeOrder", "second");
     M_Assert(timeDerivativeSchemeOrder == "first"
              || timeDerivativeSchemeOrder == "second",
-             "The time derivative approximation must be set to either first or second order scheme in ITHACAdict");
+                                          "The time derivative approximation must be set to either first or second order scheme in ITHACAdict");
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     supex = ITHACAutilities::check_sup();

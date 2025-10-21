@@ -1,0 +1,100 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    "pcorr.*"
+    {
+        solver           GAMG;
+        tolerance        0.02;
+        relTol           0;
+        smoother         GaussSeidel;
+    }
+
+    p
+    {
+        $pcorr;
+        tolerance        1e-7;
+        relTol           0.01;
+    }
+
+    pFinal
+    {
+        $p;
+        tolerance        1e-7;
+        relTol           0;
+    }
+
+    "(U|k|omega)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-06;
+        relTol          0.1;
+    }
+
+    "(U|k|omega)Final"
+    {
+        $U;
+        tolerance       1e-06;
+        relTol          0;
+    }
+
+    cellDisplacement
+    {
+        solver          GAMG;
+        tolerance       1e-5;
+        relTol          0;
+        smoother        GaussSeidel;
+    }
+}
+
+SIMPLE
+{
+    nNonOrthogonalCorrectors 2;
+    pRefCell 0;
+    pRefValue 0;
+}
+
+PIMPLE
+{
+    correctPhi          yes;
+    nOuterCorrectors    2; //2
+    nCorrectors         1; //1
+    nNonOrthogonalCorrectors 0; //0 nNonOrthogonalCorrectors
+    //consistent            true;
+}
+
+relaxationFactors
+{
+    fields
+    {
+        p               0.3; //0.3; 0.4
+    }
+    equations
+    {
+        "(U|k|omega)"   0.7; //0.7; 0.8
+        "(U|k|omega)Final" 1.0; //1.0
+    }
+}
+
+cache
+{
+    grad(U);
+}
+
+
+// ************************************************************************* //

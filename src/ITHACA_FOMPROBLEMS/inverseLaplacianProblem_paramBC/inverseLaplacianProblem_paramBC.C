@@ -138,6 +138,7 @@ void inverseLaplacianProblem_paramBC::set_gBaseFunctionsPOD(label Nmodes)
             gBaseFuncEigen(faceI, funcI) = gBaseFunctions[funcI][faceI];
         }
     }
+
     Eigen::MatrixXd correlationMatrix = gBaseFuncEigen.transpose() *
                                         faceAreaVect.asDiagonal() * gBaseFuncEigen;
     Eigen::JacobiSVD<Eigen::MatrixXd> svd(correlationMatrix,
@@ -169,6 +170,7 @@ void inverseLaplacianProblem_paramBC::set_gParametrized(word _baseFuncType,
     {
         gWeights[weigthI] = 0; //-10000;
     }
+
     Info << "gWeights = " << gWeights << endl;
     forAll (T.boundaryField()[hotSide_ind], faceI)
     {
@@ -213,14 +215,14 @@ void inverseLaplacianProblem_paramBC::parameterizedBCoffline(bool force)
                 metaData.basisType >> metaData.shapeParameter;
             fin.close();
             std::cout << "\nOffline FOUND with parameter:\n" <<
-                      "Number of thermocouples = " << metaData.numberTC <<
-                      "\nNumber of basis functions = " << metaData.numberBasis <<
-                      "\nType of basis functions = " << metaData.basisType <<
-                      "\nRBF shape parameters = " << metaData.shapeParameter <<
-                      "\n\nShould I recompute it? [y/n]" << std::endl;
+                         "Number of thermocouples = " << metaData.numberTC <<
+                         "\nNumber of basis functions = " << metaData.numberBasis <<
+                         "\nType of basis functions = " << metaData.basisType <<
+                         "\nRBF shape parameters = " << metaData.shapeParameter <<
+                         "\n\nShould I recompute it? [y/n]" << std::endl;
             std::cin >> recomputeOffline;
         }
-        while ( !cin.fail() && recomputeOffline != 'y' && recomputeOffline != 'n' );
+        while (!cin.fail() && recomputeOffline != 'y' && recomputeOffline != 'n' );
     }
 
     if (recomputeOffline == 'y')
@@ -386,6 +388,7 @@ void inverseLaplacianProblem_paramBC::parameterizedBCpostProcess(
     {
         gWeights[weightI] = weigths(weightI);
     }
+
     update_gParametrized(gWeights);
     reconstructT();
     volScalarField& T = _T();
@@ -421,6 +424,7 @@ void inverseLaplacianProblem_paramBC::solveAdditional()
             ITHACAutilities::assignBC(Tad, patchI, homogeneousBC);
         }
     }
+
 #if defined(OFVER) && (OFVER == 6)
 
     while (simple.loop(runTime))
@@ -456,6 +460,7 @@ void inverseLaplacianProblem_paramBC::reconstructT()
     {
         Trec += gWeights[baseI] * (Tbasis[baseI] + Tad_base[0]);
     }
+
     Trec += - Tad_base[0];
     volScalarField& T = _T();
     T = Trec;

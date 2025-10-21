@@ -18,15 +18,28 @@ FoamFile
 EigenSolver eigen;
 
 // Number of modes to output and to use for projection
-NmodesUout 50;
+NmodesUout 10;
 NmodesUproj 10;
-
-NmodesPout 50;
-NmodesPproj 8;
-
-NmodesSUPout 50;
+NmodesPout 10;
+NmodesPproj 10;
+NmodesSUPout 10;
 NmodesSUPproj 10;
 
 // Output format to save market vectors.
 OutPrecision 20;
 OutType fixed;
+
+// Specific problem of a stationary case
+// Boundary condition method, can be "lift" or "penalty"
+method  PPE;  // or "PPE"
+bcMethod penalty;
+
+
+// Time-dependent boundary condition method, can be "yes" or "no"
+timedepbcMethod no;
+
+// Time derivative scheme order, can be "first" or "second"
+timeDerivativeSchemeOrder second;
+
+
+

@@ -8,6 +8,7 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/sixDoFRigidBodyMotion/lnInclude\
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/fvOptions/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
@@ -26,7 +27,7 @@ EXE_INC = \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -Wno-comment \
     -w \
-    -std=c++11 \
+    -std=c++17 \
 
 EXE_LIBS = \
     -lturbulenceModels \
@@ -36,6 +37,9 @@ EXE_LIBS = \
     -lsampling \
     -lfluidThermophysicalModels \
     -lradiationModels \
+     -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lspecie \
     -lforces \
     -lfileFormats \

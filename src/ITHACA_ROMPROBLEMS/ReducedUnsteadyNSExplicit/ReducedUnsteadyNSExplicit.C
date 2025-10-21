@@ -45,7 +45,7 @@ ReducedUnsteadyNSExplicit::ReducedUnsteadyNSExplicit()
 ReducedUnsteadyNSExplicit::ReducedUnsteadyNSExplicit(UnsteadyNSExplicit&
         FOMproblem)
     :
-    problem(&FOMproblem)
+    problem(& FOMproblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->B_matrix.rows();
@@ -110,7 +110,7 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
             for (label l = 0; l < Nphi_p; l++)
             {
                 cf = a_o.transpose() * Eigen::SliceFromTensor(problem->Cf_tensor, 0,
-                        l) * a_o;
+                     l) * a_o;
                 RHS(l) = (1 / dt) * M2(l, 0) - cf(0, 0) + M1(l, 0);
             }
 
@@ -145,7 +145,7 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
             for (label l = 0; l < Nphi_u; l++)
             {
                 cc = a_o.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                        l) * a_o;
+                     l) * a_o;
                 a_n(l) = a_o(l) + (M5(l) - cc(0, 0) - M3(l)) * dt;
 
                 for (label j = 0; j < N_BC; j++)
@@ -220,7 +220,7 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
             for (label l = 0; l < Nphi_p; l++)
             {
                 cf = c_o.transpose() * Eigen::SliceFromTensor(problem->Cf_tensor, 0,
-                        l) * a_o;
+                     l) * a_o;
                 RHS(l) = (1 / dt) * M2(l, 0) - cf(0, 0) + M1(l, 0);
             }
 
@@ -255,7 +255,7 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
             for (label k = 0; k < Nphi_u; k++)
             {
                 cc = c_o.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                        k) * a_o;
+                     k) * a_o;
                 a_n(k) = a_o(k) + (M5(k) - cc(0, 0) - M3(k)) * dt;
 
                 for (label l = 0; l < N_BC; l++)
@@ -290,7 +290,7 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
             }
 
             c_n = problem->W_matrix.colPivHouseholderQr().solve(M6 - M9 + dt * (-M8 + M7
-                    + boundaryTermFlux));
+                  + boundaryTermFlux));
             tmp_sol(0) = time;
             tmp_sol.col(0).segment(1, Nphi_u) = a_n;
             tmp_sol.col(0).segment(Nphi_u + 1, Nphi_p) = b;
@@ -303,7 +303,7 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
     else
     {
         std::cout <<
-                  "Only the inconsistent flux method and consistent flux method are implemented."
+        "Only the inconsistent flux method and consistent flux method are implemented."
                   << std::endl;
         exit(0);
     }

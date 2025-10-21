@@ -54,15 +54,15 @@ int main(int argc, char* argv[])
     int stateSize = A.rows();
     int obsSize = H.rows();
     std::cout <<
-              "In this tutorial we have a dynamical system in the form:\ndx/dt = A * x" <<
+    "In this tutorial we have a dynamical system in the form:\ndx/dt = A * x" <<
               std::endl;
     std::cout << "with A = \n" << A << std::endl;
     std::cout << "We observe the state x by mean of the observation matrix \nH = \n"
               << H << std::endl;
     std::cout <<
-              "The objective is to reconstruct the vector state knowing H and x0 = \n" <<
+    "The objective is to reconstruct the vector state knowing H and x0 = \n" <<
               x0.transpose() <<
-              "\nbut having a wrong A" << std::endl;
+    "\nbut having a wrong A" << std::endl;
     std::cout << "A_wrong =\n" << Aw << std::endl;
     int Ntimes = 201;
     int sampleDeltaStep = 10;

@@ -82,6 +82,7 @@ List<label> getIndices(const fvMesh& mesh, int index, int layers)
     {
         out2.append(out[uniqueIndex[i]]);
     }
+
     return out2;
 }
 
@@ -110,6 +111,7 @@ List<label> getIndices(const fvMesh& mesh, int index_row,
     {
         out2.append(out[uniqueIndex[i]]);
     }
+
     return out2;
 }
 
@@ -228,7 +230,7 @@ Field<vector> rotateMesh(fvMesh& mesh, double r1, double r2,
 {
     M_Assert(angleVariationMethod == "Linear"
              || angleVariationMethod == "Sinusoidal" || angleVariationMethod == "Sigmoid",
-             "The variation function of the angle from the inner radius to the outer radius must be either Linear or Sinusoidal or Sigmoid");
+                                     "The variation function of the angle from the inner radius to the outer radius must be either Linear or Sinusoidal or Sigmoid");
     Field<vector> pointRot(mesh.points());
 
     for (label i = 0; i < movingPointsIDs.size(); i++)
@@ -310,6 +312,7 @@ Eigen::VectorXd boudaryFaceToCellDistance(
         label faceOwner = faceCells[faceI] ;
         cellFaceDistance(faceI) = mag(mesh.C()[faceOwner] - mesh.Cf()[faceID]);
     }
+
     return (cellFaceDistance);
 }
 

@@ -34,7 +34,7 @@ void Serializer::saveToFile(const std::string& fileName)
 {
     std::fstream fs(fileName, std::fstream::out | std::fstream::binary);
 
-    for (const auto& byte : stream)
+    for (const auto & byte : stream)
     {
         fs << byte;
     }

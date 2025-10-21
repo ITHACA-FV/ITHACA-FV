@@ -205,7 +205,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
         /// Constructor
         explicit reducedSimpleSteadyNN(SteadyNSSimpleNN& FOMproblem)
             :
-            problem(&FOMproblem)
+            problem(& FOMproblem)
         {}
 
         /// Full problem.
@@ -253,7 +253,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
                 problem->para->ITHACAdict->lookupOrDefault<float>("residualJumpLim", 1e-5);
             float normalizedResidualLim =
                 problem->para->ITHACAdict->lookupOrDefault<float>("normalizedResidualLim",
-                        1e-5);
+                    1e-5);
             scalar residual_jump(1 + residualJumpLim);
             volScalarField& P = problem->_p();
             volVectorField& U = problem->_U();
@@ -396,7 +396,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
             res_os_U.close();
             res_os_P.close();
             std::cout << "Solution " << counter << " converged in " << iter <<
-                      " iterations." << std::endl;
+                         " iterations." << std::endl;
             std::cout << "Final normalized residual for velocity: " << U_norm_res <<
                       std::endl;
             std::cout << "Final normalized residual for pressure: " << P_norm_res <<
@@ -522,7 +522,7 @@ class tutorial01cl : public SteadyNSSimpleNN
             {
                 points2Move[i].component(0) = points2Move[i].component(0) +
                                               (yMax - points2Move[i].component(1)) / (yMax - yMin) * (xMax -
-                                                      points2Move[i].component(0)) / (xMax - xMin) * sMax;
+                                                  points2Move[i].component(0)) / (xMax - xMin) * sMax;
             }
         }
 };

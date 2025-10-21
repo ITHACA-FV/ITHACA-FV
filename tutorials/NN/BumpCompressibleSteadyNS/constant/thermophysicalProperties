@@ -1,0 +1,49 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType
+{
+    type            hePsiThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          hConst; // cp = const
+    equationOfState perfectGas; // rho = p/RT
+    specie          specie;
+    energy          sensibleInternalEnergy; // TEs -> We are using internal energy
+}
+
+mixture // air at room temperature (293 K)
+{
+    specie
+    {
+        molWeight   28.9;
+    }
+    thermodynamics
+    {
+        Cp          1005;
+        Hf          0;
+    }
+    transport
+    {
+        mu          1.7495839743640202024e-05;//1.82e-05;
+        Pr          0.71;
+    }
+}
+
+// ************************************************************************* //
+
+// Pr = mu*Cp/k -> k thermal conductivity can be calculeted.

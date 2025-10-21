@@ -145,7 +145,7 @@ class inverseLaplacianProblem: public laplacianProblem
         List<scalar> g;
 
         /// List of boundary heat fluxes
-        List<List<scalar>> gList;
+        List<List<scalar >> gList;
 
         /// True heat flux at hotSide [w/m2]
         List<scalar> gTrue;

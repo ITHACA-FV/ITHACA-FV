@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
                        0.000001);
     example_CG.JtolRel =
         para->ITHACAdict->lookupOrDefault<double>("JrelativeTolerance",
-                0.001);
+            0.001);
     double rbfShapePar = para->ITHACAdict->lookupOrDefault<double>("rbfShapePar",
                          0);
     M_Assert(rbfShapePar > 0, "rbfShapePar not specified");
@@ -129,6 +129,7 @@ int main(int argc, char* argv[])
             mesh.boundaryMesh()[example_paramBC.hotSide_ind].faceCentres()[faceI].x();
         example_paramBC.g[faceI] = example_paramBC.k * (b * faceX + c) ;
     }
+
     example_paramBC.gTrue = example_paramBC.g;
     example_paramBC.solveTrue();
     example_CG.g = example_paramBC.g;

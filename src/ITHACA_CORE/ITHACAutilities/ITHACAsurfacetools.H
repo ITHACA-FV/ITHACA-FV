@@ -39,29 +39,37 @@ namespace ITHACAutilities
 namespace ITHACAsurfacetools
 {
 
-  template<typename T>
-  List<label> surfaceIndexInt(T& field, const label patchInt, const label patchExt);
+template<typename T>
+List<label> surfaceIndexInt(T& field, const label patchInt,
+                            const label patchExt);
 
-  template<typename T>
-  List<label> surfaceIndexExt(T& field, const label patchInt, const label patchExt);
+template<typename T>
+List<label> surfaceIndexExt(T& field, const label patchInt,
+                            const label patchExt);
 
-  template<typename T, typename V>
-  void surfaceValuesInt(T& field, const label patchInt, const label patchExt, List<V>& result);
+template<typename T, typename V>
+void surfaceValuesInt(T& field, const label patchInt, const label patchExt,
+                      List<V>& result);
 
-  template<typename T, typename V>
-  void surfaceValuesExt(T& field, const label patchInt, const label patchExt, List<V>& result);
+template<typename T, typename V>
+void surfaceValuesExt(T& field, const label patchInt, const label patchExt,
+                      List<V>& result);
 
-  template<typename T>
-  Foam::Vector<scalar> surfaceFindMirrorPoint(T& field, const label patchInt, const label patchExt, const label cellID);
+template<typename T>
+Foam::Vector<scalar> surfaceFindMirrorPoint(T& field, const label patchInt,
+        const label patchExt, const label cellID);
 
-  template<typename T>
-  label surfaceFindClosest(T& field, const label patchInt, const label patchExt, Foam::Vector<scalar> point);
+template<typename T>
+label surfaceFindClosest(T& field, const label patchInt, const label patchExt,
+                         Foam::Vector<scalar> point);
 
-  template<typename T, typename V>
-  void surfaceAverage(T& field, const label patchInt, const label patchExt, List<V>& result);
+template<typename T, typename V>
+void surfaceAverage(T& field, const label patchInt, const label patchExt,
+                    List<V>& result);
 
-  template<typename T, typename V>
-  void surfaceJump(T& field, const label patchInt, const label patchExt, List<V>& result);
+template<typename T, typename V>
+void surfaceJump(T& field, const label patchInt, const label patchExt,
+                 List<V>& result);
 
 }; // End namespace ITHACAsurfacetools
 } // End namespace ITHACAutilities

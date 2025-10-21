@@ -4,8 +4,11 @@
 #include <Time.H>
 #include <volFieldsFwd.H>
 #include <FieldField.H>
+#include "Foam2Eigen.H"
 
-// #include "IthacaFVParameters.H"
+#include "ITHACAstream.H"
+#include "ITHACAutilities.H"
+#include "PODParameters.H"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -35,8 +38,8 @@ struct indexSquare
     Foam::label index2_end;
 };
 
-class Parameters;
-class PODParameters;
+//class Parameters;
+//class PODParameters;
 
 // Class that compute POD (spatial modes and temporal modes)
 template<typename T>
@@ -49,7 +52,7 @@ class PODTemplate
         // Type of data used in the POD
         const Foam::fileName& casenameData;
         // Number of snapshot, also number of time step
-        const Foam::label l_nSnapshot;
+        Foam::label l_nSnapshot;
         // number of blocks to load snapshots
         const Foam::label l_nBlocks;
         // number of modes
@@ -64,14 +67,21 @@ class PODTemplate
         //Patch for the boundary conditions
         const Foam::word patchBC;
         // start time of the POD decomposition
-        const Foam::label l_startTime;
+        Foam::label l_startTime;
         // end time of the POD decomposition
-        const Foam::label l_endTime;
+        Foam::label l_endTime;
 
         // Number of Simulation snapshot, also number of time step
-        const Foam::label l_nSnapshotSimulation;
+        Foam::label l_nSnapshotSimulation;
         // end time of the Simulation
         const Foam::label l_endTimeSimulation;
+
+        // Path to the directory where the snapshots are stored 
+        // (usually casenameData, but can be different through 3rd arg in constructor)
+        fileName snapshotsPath;
+
+        // List linking indices and time for the snapshots data directories
+        Foam::instantList timeFolders;
 
         // name and folder to save the covMatrix
         Foam::fileName name_covMatrix;
@@ -124,7 +134,7 @@ class PODTemplate
 
     public :
         // Constructor
-        PODTemplate(Parameters* myParameters, const Foam::word& myfield_name);
+        PODTemplate(Parameters* myParameters, const Foam::word& myfield_name, const word& mySnapshots_path = "default_path");
 
         // Destructor
         virtual ~PODTemplate();
@@ -261,6 +271,16 @@ class PODTemplate
         // @param[in]      Lfield     The list of snapshots to be homogenized.
         void lift(Foam::PtrList<T>& snapshots);
         void lift(T& snapshot);
+
+
+        // Modify parameters for the snapshots. Useful if they are different from the OpenFOAM simulation
+        void set_snapFolderParams(label nSnapshot=-1, label nSnapshotSimulation=-1, label startTime=-1, label endTime=-1)
+        {
+            if (nSnapshot != -1) {l_nSnapshot = nSnapshot;}
+            if (nSnapshotSimulation != -1) {l_nSnapshotSimulation = nSnapshotSimulation;}
+            if (startTime != -1) {l_startTime = startTime;}
+            if (endTime != -1) {l_endTime = endTime;}
+        };
 
 };
 

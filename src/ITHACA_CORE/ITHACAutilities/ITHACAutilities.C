@@ -108,10 +108,10 @@ bool isTurbulent()
 }
 
 template<typename T>
-List<T> combineList(List<List<T>>& doubleList)
+List<T> combineList(List<List<T >> & doubleList)
 {
-    List<T> a = ListListOps::combine<List<T>>(doubleList,
-                accessOp<List<T>>());
+    List<T> a = ListListOps::combine<List<T >> (doubleList,
+                accessOp<List<T >> ());
 #if OPENFOAM >= 1812
     inplaceUniqueSort(a);
 #else
@@ -123,90 +123,112 @@ List<T> combineList(List<List<T>>& doubleList)
     {
         b[i] = a[order[i]];
     }
-
     a.resize(order.size());
     a = b;
 #endif
     return a;
 }
 
-template List<label> combineList(List<List<label>>& doubleList);
+template List<label> combineList(List<List<label >> & doubleList);
 
 
 // Using the Eigen library, using the SVD decomposition method to solve the
 // matrix pseudo-inverse, the default error er is 0
-Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er) {
-  // perform svd decomposition
-  Eigen::JacobiSVD<Eigen::MatrixXd> svd_holder(origin, Eigen::ComputeThinU | Eigen::ComputeThinV);
-  // Build SVD decomposition results
-  Eigen::MatrixXd U = svd_holder.matrixU();
-  Eigen::MatrixXd V = svd_holder.matrixV();
-  Eigen::MatrixXd D = svd_holder.singularValues();
+Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd& origin, const float er)
+{
+    // perform svd decomposition
+    Eigen::JacobiSVD<Eigen::MatrixXd> svd_holder(origin,
+            Eigen::ComputeThinU | Eigen::ComputeThinV);
+    // Build SVD decomposition results
+    Eigen::MatrixXd U = svd_holder.matrixU();
+    Eigen::MatrixXd V = svd_holder.matrixV();
+    Eigen::MatrixXd D = svd_holder.singularValues();
+    // Build the S matrix
+    Eigen::MatrixXd S(V.cols(), U.cols());
+    S.setZero();
 
-  // Build the S matrix
-  Eigen::MatrixXd S(V.cols(), U.cols());
-  S.setZero();
-
-  for (unsigned int i = 0; i < D.size(); ++i) {
-
-    if (D(i, 0) > er) {
-      S(i, i) = 1 / D(i, 0);
-    } else {
-      S(i, i) = 0;
+    for (unsigned int i = 0; i < D.size(); ++i)
+    {
+        if (D(i, 0) > er)
+        {
+            S(i, i) = 1 / D(i, 0);
+        }
+        else
+        {
+            S(i, i) = 0;
+        }
     }
-  }
-  return V * S * U.transpose();
+
+    return V * S * U.transpose();
 }
 
 
-Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert, const word inversionMethod){
+Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert,
+                             const word inversionMethod)
+{
+    Info << "Inversion method : " << inversionMethod << endl;
 
-  Info << "Inversion method : " << inversionMethod << endl;
-  if(inversionMethod == "pinv_eigen_based"){
-    return pinv_eigen_based(matrixToInvert);
-  }
-  else if(inversionMethod == "direct"){
-    return matrixToInvert.inverse();
-  }
-  else if(inversionMethod == "fullPivLu"){
-    return matrixToInvert.fullPivLu().inverse();
-  }
-  else if(inversionMethod == "partialPivLu"){
-    return matrixToInvert.partialPivLu().inverse();
-  }
-  else if(inversionMethod == "householderQr"){
-    return matrixToInvert.householderQr().solve(Eigen::MatrixXd::Identity(matrixToInvert.rows(), matrixToInvert.cols()));
-  }
-  else if(inversionMethod == "colPivHouseholderQr"){
-    return matrixToInvert.colPivHouseholderQr().inverse();
-  }
-  else if(inversionMethod == "fullPivHouseholderQr"){
-    return matrixToInvert.fullPivHouseholderQr().inverse();
-  }
-  else if(inversionMethod == "completeOrthogonalDecomposition"){
-    return matrixToInvert.completeOrthogonalDecomposition().pseudoInverse();
-  }
-  else if(inversionMethod == "jacobiSvd")
-  {
-    return matrixToInvert.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Eigen::MatrixXd::Identity(matrixToInvert.rows(), matrixToInvert.cols()));
-  }
-  else if(inversionMethod == "llt")
-  {
-    return matrixToInvert.llt().solve(Eigen::MatrixXd::Identity(matrixToInvert.rows(), matrixToInvert.cols()));
-  }
-  else if(inversionMethod == "ldlt")
-  {
-    Eigen::LLT<Eigen::MatrixXd> lltOfA(matrixToInvert);
-    return lltOfA.solve(Eigen::MatrixXd::Identity(matrixToInvert.rows(), matrixToInvert.cols()));
-  }
-  else if(inversionMethod == "bdcSvd")
-  {
-    return matrixToInvert.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Eigen::MatrixXd::Identity(matrixToInvert.rows(), matrixToInvert.cols()));
-  } 
-  else{
-    Info << "Unkwown inversion method, solving with : completeOrthogonalDecomposition" << endl;
-    return matrixToInvert.completeOrthogonalDecomposition().pseudoInverse();
-  }
+    if (inversionMethod == "pinv_eigen_based")
+    {
+        return pinv_eigen_based(matrixToInvert);
+    }
+    else if (inversionMethod == "direct")
+    {
+        return matrixToInvert.inverse();
+    }
+    else if (inversionMethod == "fullPivLu")
+    {
+        return matrixToInvert.fullPivLu().inverse();
+    }
+    else if (inversionMethod == "partialPivLu")
+    {
+        return matrixToInvert.partialPivLu().inverse();
+    }
+    else if (inversionMethod == "householderQr")
+    {
+        return matrixToInvert.householderQr().solve(Eigen::MatrixXd::Identity(
+                    matrixToInvert.rows(), matrixToInvert.cols()));
+    }
+    else if (inversionMethod == "colPivHouseholderQr")
+    {
+        return matrixToInvert.colPivHouseholderQr().inverse();
+    }
+    else if (inversionMethod == "fullPivHouseholderQr")
+    {
+        return matrixToInvert.fullPivHouseholderQr().inverse();
+    }
+    else if (inversionMethod == "completeOrthogonalDecomposition")
+    {
+        return matrixToInvert.completeOrthogonalDecomposition().pseudoInverse();
+    }
+    else if (inversionMethod == "jacobiSvd")
+    {
+        return matrixToInvert.jacobiSvd(Eigen::ComputeThinU |
+                                        Eigen::ComputeThinV).solve(Eigen::MatrixXd::Identity(matrixToInvert.rows(),
+                                                matrixToInvert.cols()));
+    }
+    else if (inversionMethod == "llt")
+    {
+        return matrixToInvert.llt().solve(Eigen::MatrixXd::Identity(
+                                              matrixToInvert.rows(), matrixToInvert.cols()));
+    }
+    else if (inversionMethod == "ldlt")
+    {
+        Eigen::LLT<Eigen::MatrixXd> lltOfA(matrixToInvert);
+        return lltOfA.solve(Eigen::MatrixXd::Identity(matrixToInvert.rows(),
+                            matrixToInvert.cols()));
+    }
+    else if (inversionMethod == "bdcSvd")
+    {
+        return matrixToInvert.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(
+                   Eigen::MatrixXd::Identity(matrixToInvert.rows(), matrixToInvert.cols()));
+    }
+    else
+    {
+        Info << "Unkwown inversion method, solving with : completeOrthogonalDecomposition"
+             << endl;
+        return matrixToInvert.completeOrthogonalDecomposition().pseudoInverse();
+    }
 }
 
 template<typename T>
@@ -381,6 +403,68 @@ void str_format_io(std::string const& s, unsigned int nMax)
     for (unsigned int n=0; n<nMax-3; n++) std::cout << s[n];
     for (unsigned int n=nMax-3; n<nMax; n++) std::cout << ".";
   }
+}
+
+std::string double2ConciseString(const double& d)
+{
+    std::string s = std::to_string(d);
+
+    // Removing trailling zeros
+    int dot_pos = s.find_first_of('.');
+    if(dot_pos != std::string::npos)
+    {
+        int ipos = s.size()-1;
+        while((s[ipos]=='0' || s[ipos]=='.') && ipos>dot_pos-1)
+        {
+            --ipos;
+        }
+        s.erase(ipos + 1, std::string::npos);
+    }
+  return s;
+}
+
+bool containsSubstring(std::string contain, std::string contained)
+{
+    std::transform(contain.begin(), contain.end(), contain.begin(), ::tolower);
+    std::transform(contained.begin(), contained.end(), contained.begin(), ::tolower);
+    return contain.find(contained) != std::string::npos;
+}
+
+std::vector<int> extractIntFromString(std::string input)
+{
+    std::stringstream ss;
+    std::vector<int> numbers;
+    int num;
+
+    for (char c : input) 
+    {
+        if (isdigit(c)) ss << c;
+        else ss << ' ';
+    }
+    while (ss >> num)
+        numbers.push_back(num);
+    return numbers;
+}
+
+
+Eigen::SparseMatrix<double> sparseBlockDiagonalRepeat(Eigen::SparseMatrix<double>& A, int n)
+{
+  std::vector<Eigen::Triplet<double>> tripletList;
+  tripletList.reserve(n*A.nonZeros());
+
+  for (int i = 0; i < A.outerSize(); i++) 
+  {
+    for (Eigen::SparseMatrix<double>::InnerIterator j(A,i); j; ++j) 
+    {
+      for (int k = 0; k < n; k++)
+      {
+        tripletList.push_back(Eigen::Triplet<double>(j.row() + k*A.rows(), j.col() + k*A.cols(), j.value()));
+      }
+    }
+  }
+  Eigen::SparseMatrix<double> out(n*A.rows(), n*A.cols());
+  out.setFromTriplets(tripletList.begin(), tripletList.end());
+  return out;
 }
 
 

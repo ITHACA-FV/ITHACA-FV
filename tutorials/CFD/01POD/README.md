@@ -43,3 +43,9 @@ Eventually, instead of the finalTime you could define the number of snapshots
 
     // a fake class just to print out the doxygen documentation
     class fake
+
+## Parallel running
+
+Please modify the setup in __decomposeParDict__ to the number of processors you need.
+
+The case can run in parallel with the script `Allrun_parallel`.

@@ -123,7 +123,7 @@ bool isTurbulent();
 /// @return     list in unique order
 ///
 template<typename T>
-List<T> combineList(List<List<T>>& doubleList);
+List<T> combineList(List<List<T >> & doubleList);
 
 //------------------------------------------------------------------------------
 /// @brief      Using the Eigen library, using the SVD decomposition method to solve the
@@ -134,17 +134,18 @@ List<T> combineList(List<List<T>>& doubleList);
 ///
 /// @return     Inversed matrix
 ///
-Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd &origin, const float er = 0);
+Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd& origin, const float er = 0);
 
 //------------------------------------------------------------------------------
 /// @brief      Invert a matrix given the method name in the ITHACAdict
 ///
 /// @param[in]      matrixToInvert  Matrix to invert
-/// @param[in]      methodName      Method 
+/// @param[in]      methodName      Method
 ///
 /// @return         Inversed matrix
 ///
-Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert, const word inversionMethod);
+Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert,
+                             const word inversionMethod);
 
 
 
@@ -260,6 +261,32 @@ std::string str_trim(std::string const& s);
 /// @param      s string
 /// @param      Nmax max length of the string
 void str_format_io( std::string const& s, unsigned int Nmax );
+
+//------------------------------------------------------------------------------
+/// @brief      Returns the double d in string format without keeping all the extra 0
+///
+/// @param      d double
+std::string double2ConciseString(const double& d);
+
+//------------------------------------------------------------------------------
+/// @brief      Returns true if contained is a substring of contain, false otherwise
+///
+/// @param      contain string
+/// @param      contained string
+bool containsSubstring(std::string contain, std::string contained);
+
+//------------------------------------------------------------------------------
+/// @brief      Returns an array storing all the integers in the input string
+///
+/// @param      input string
+std::vector<int> extractIntFromString(std::string input);
+
+//------------------------------------------------------------------------------
+/// @brief      Builds a block diagonal sparse matrix from n repetitions of the sparse matrix A
+///
+/// @param      A Eigen::SparseMatrix
+/// @param      n int
+Eigen::SparseMatrix<double> sparseBlockDiagonalRepeat(Eigen::SparseMatrix<double>& A, int n);
 
 //------------------------------------------------------------------------------
 /// @brief      Perform the dot product of v and w for a given hilbertSpace
@@ -436,4 +463,5 @@ template<typename T>
 double norm_L2wBC(const T& v, const double& weightBC, const word& patchBC="inlet");
 
 };
+
 #endif

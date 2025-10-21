@@ -45,7 +45,7 @@ ReducedUnsteadyBB::ReducedUnsteadyBB()
 
 ReducedUnsteadyBB::ReducedUnsteadyBB(UnsteadyBB& FOMproblem)
     :
-    problem(&FOMproblem)
+    problem(& FOMproblem)
 {
     N_BC_t    = problem->inletIndexT.rows();
     N_BC      = problem->inletIndex.rows();
@@ -126,7 +126,7 @@ int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * a_tmp;
+             i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M10(i) - M2(i);
     }
 
@@ -161,7 +161,7 @@ int newton_unsteadyBB_sup::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyBB_sup::df(const Eigen::VectorXd& x,
                               Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyBB_sup> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyBB_sup> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -212,7 +212,7 @@ int newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * Eigen::SliceFromTensor(problem->C_tensor, 0,
-                i) * a_tmp;
+             i) * a_tmp;
         fvec(i) = - M5(i) + M1(i) - cc(0, 0) - M10(i) - M2(i);
     }
 
@@ -243,7 +243,7 @@ int newton_unsteadyBB_PPE::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
                               Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyBB_PPE> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyBB_PPE> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }

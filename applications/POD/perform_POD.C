@@ -84,10 +84,7 @@ int main(int argc, char *argv[])
     {
         pod_exist = false;
         Info << "POD don't exist, performing a POD decomposition" << endl;
-        mkDir("./ITHACAoutput/POD");
-        system("ln -s ../../constant ./ITHACAoutput/POD/constant");
-        system("ln -s ../../0 ./ITHACAoutput/POD/0");
-        system("ln -s ../../system ./ITHACAoutput/POD/system");
+        ITHACAutilities::createSymLink("./ITHACAoutput/POD");
     }
     if(pod_exist == 1)
     {
@@ -217,11 +214,11 @@ int main(int argc, char *argv[])
 
         if (field_type == "vector")
         {
-            ITHACAPOD::getModes(Vfield, Vmodes, field_name, 0, 0, 0, nmodes);
+            ITHACAPOD::getModes(Vfield, Vmodes, field_name, 0, 0, 0, nmodes, para->correctBC);
         }
         if (field_type == "scalar")
         {
-            ITHACAPOD::getModes(Sfield, Smodes, field_name, 0, 0, 0, nmodes);
+            ITHACAPOD::getModes(Sfield, Smodes, field_name, 0, 0, 0, nmodes, para->correctBC);
         }
 
         Vfield.clear();

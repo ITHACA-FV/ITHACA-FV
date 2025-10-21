@@ -1,0 +1,180 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v1912                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     rhoPimpleFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.3;
+
+deltaT          2e-6;
+adjustTimeStep  yes;
+
+maxCo           3.0;
+
+
+writeControl    adjustable;
+
+#include "writeInterval"
+
+//writeInterval   0.01;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision   8;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    #includeFunc MachNo
+    #includeFunc residuals
+    
+    fileUpdate1
+    {
+        type              timeActivatedFileUpdate;
+        libs              ("libutilityFunctionObjects.so");
+        writeControl      timeStep;
+        writeInterval     1;
+        fileToUpdate      "<system>/writeInterval";
+        timeVsFile
+        (
+            
+            (-1   "<system>/writeInterval.00")
+            (0.002   "<system>/writeInterval.01")
+            (0.005 "<system>/writeInterval.02")
+            (0.011 "<system>/writeInterval.03")
+            (0.022 "<system>/writeInterval.04")
+            (0.028 "<system>/writeInterval.05")
+            (0.047 "<system>/writeInterval.06")
+            (0.053 "<system>/writeInterval.07")
+            (0.064 "<system>/writeInterval.08")
+            (0.071 "<system>/writeInterval.09")
+            (0.08 "<system>/writeInterval.10")
+            (0.087   "<system>/writeInterval.11")
+            (0.095 "<system>/writeInterval.12")
+            (0.11 "<system>/writeInterval.13")
+            (0.12 "<system>/writeInterval.14")
+            (0.13 "<system>/writeInterval.15")
+            (0.14 "<system>/writeInterval.16")
+            (0.15   "<system>/writeInterval.17")
+            (0.153 "<system>/writeInterval.18")
+            (0.159 "<system>/writeInterval.19")
+            (0.17 "<system>/writeInterval.20")
+            (0.18 "<system>/writeInterval.21")
+            (0.195 "<system>/writeInterval.22")
+            (0.21 "<system>/writeInterval.23")
+            (0.212 "<system>/writeInterval.24")
+            (0.218 "<system>/writeInterval.25")
+            (0.228 "<system>/writeInterval.26")
+            (0.24   "<system>/writeInterval.27")
+            (0.25 "<system>/writeInterval.28")
+            (0.26 "<system>/writeInterval.29")
+            (0.27 "<system>/writeInterval.30")
+            (0.28 "<system>/writeInterval.31")
+            (0.285 "<system>/writeInterval.32")
+        );
+    }
+
+    
+    forces1
+    {
+       type          forces;
+
+       libs          ("libforces.so");
+
+       writeControl  timeStep;
+       timeInterval  1;
+
+       log           yes;
+
+       patches       ("wall");
+       origin (0.25 0 0);
+       coordinateRotation
+        {
+            type            axesRotation;
+            e3              (0 0 1);
+            e1              (1 0 0);
+        }
+
+    }
+    
+    forceCoeffs1
+    {
+        // Mandatory entries
+        type            forceCoeffs;
+        libs            ("libforces.so");
+        patches         (<list of patch names>);
+
+
+        // Optional entries
+
+        // Field names
+        p               p;
+        U               U;
+        rho             rho;
+
+        patches       ("wall");
+        // Reference pressure [Pa]
+        pRef            1e5;
+        
+        rhoInf     1.169;
+
+        // Include porosity effects?
+        porosity        no;
+
+        // Store and write volume field representations of forces and moments
+        writeFields     no;
+
+        // Centre of rotation for moment calculations
+        CofR            (0.25 0 0);
+
+        // Lift direction
+        liftDir         (0 0 1);
+
+        // Drag direction
+        dragDir         (1 0 0);
+
+        // Pitch axis
+        pitchAxis       (0 1 0);
+
+        // Freestream velocity magnitude [m/s]
+        magUInf         261.3;
+
+        // Reference length [m]
+        lRef            1;
+
+        // Reference area [m2]
+        Aref            0.1;
+
+        
+    }
+
+}
+
+// ************************************************************************* //

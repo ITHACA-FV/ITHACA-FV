@@ -20,7 +20,7 @@ BSplineBasis::BSplineBasis()
 {
 }
 
-BSplineBasis::BSplineBasis(std::vector< std::vector<double>>& knotVectors,
+BSplineBasis::BSplineBasis(std::vector< std::vector<double >> & knotVectors,
                            std::vector<unsigned int> basisDegrees)
     : numVariables(knotVectors.size())
 {
@@ -200,7 +200,7 @@ SparseMatrix BSplineBasis::evalBasisHessian(DenseVector& x) const
      * so that basis hessian H is in R^(numBasisFunctions*numInputs x numInputs)
      * The real B-spline Hessian is calculated as (c^T x 1^(numInputs x 1))*H
      */
-    SparseMatrix H(getNumBasisFunctions()*numVariables, numVariables);
+    SparseMatrix H(getNumBasisFunctions() * numVariables, numVariables);
     //H.setZero(numBasisFunctions()*numInputs, numInputs);
 
     // Calculate partial derivatives
@@ -367,7 +367,7 @@ std::vector<unsigned int> BSplineBasis::getBasisDegrees() const
 {
     std::vector<unsigned int> degrees;
 
-    for (const auto& basis : bases)
+    for (const auto & basis : bases)
     {
         degrees.push_back(basis.getBasisDegree());
     }
@@ -407,9 +407,9 @@ std::vector<double> BSplineBasis::getKnotVector(int dim) const
     return bases.at(dim).getKnotVector();
 }
 
-std::vector< std::vector<double>> BSplineBasis::getKnotVectors() const
+std::vector< std::vector<double >> BSplineBasis::getKnotVectors() const
 {
-    std::vector< std::vector<double>> knots;
+    std::vector< std::vector<double >> knots;
 
     for (unsigned int i = 0; i < numVariables; i++)
     {
