@@ -56,7 +56,31 @@ SourceFiles
 #include <stdio.h>
 #include "ITHACAPOD.H"
 #include "ITHACAparameters.H"
+#include "ITHACAstream.H"
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<typename T>
+void computeLift(PtrList<T>& Lfield,
+                PtrList<T>& liftfield,
+                PtrList<T>& omfield)
+{
+    for (label k = 0; k < liftfield.size(); k++)
+    {
+        for (label j = 0; j < Lfield.size(); j++)
+        {
+            if (k == 0)
+            {
+                autoPtr<T> p(new T("U", Lfield[j] - liftfield[k]));
+                omfield.append(p);
+            }
+            else
+            {
+                autoPtr<T> p(new T("U", omfield[j] - liftfield[k]));
+                omfield.set(j, p);
+            }
+        }
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -67,6 +91,8 @@ int main(int argc, char *argv[])
 
     PtrList<volVectorField> Vfield;
     PtrList<volScalarField> Sfield;
+    PtrList<volVectorField> Vomfield;
+    PtrList<volScalarField> Somfield;
     PtrList<volVectorField> Vmodes;
     PtrList<volScalarField> Smodes;
 
@@ -116,6 +142,9 @@ int main(int argc, char *argv[])
     // Read Initial and last time from the POD dictionary
     const entry* existnsnap = ITHACAPODdict.lookupEntryPtr("Nsnapshots", false, true);
     const entry* existLT = ITHACAPODdict.lookupEntryPtr("FinalTime", false, true);
+
+    // Check if the snapshots are lifted
+    const bool lifted = ITHACAPODdict.lookupOrDefault<bool>("lifted", false);
 
     // Initiate variable from PODSolverDict
     if ((existnsnap) && (existLT))
@@ -182,8 +211,7 @@ int main(int argc, char *argv[])
 
             if (field_type == "vector")
             {
-
-                volVectorField vector_field
+                autoPtr<volVectorField> p(new volVectorField
                 (
                     IOobject
                     (
@@ -193,13 +221,13 @@ int main(int argc, char *argv[])
                         IOobject::MUST_READ
                     ),
                     mesh
-                );
-                Vfield.append(vector_field.clone());
+                ));
+                Vfield.append(p);
             }
 
             if (field_type == "scalar")
             {
-                volScalarField scalar_field
+                autoPtr<volScalarField> p(new volScalarField
                 (
                     IOobject
                     (
@@ -209,22 +237,78 @@ int main(int argc, char *argv[])
                         IOobject::MUST_READ
                     ),
                     mesh
-                );
-                Sfield.append(scalar_field.clone());
+                ));
+                Sfield.append(p);
             }
         }
 
         if (field_type == "vector")
         {
-            ITHACAPOD::getModes(Vfield, Vmodes, field_name, 0, 0, 0, nmodes, para->correctBC);
+            if (lifted)
+            {
+                PtrList<volVectorField> liftFields;
+                ITHACAstream::read_fields(liftFields, field_name, "./lift/");                
+                computeLift<volVectorField>(Vfield, liftFields, Vomfield);
+
+                ITHACAPOD::getModes(Vomfield, Vmodes, field_name, 0, 0, 0, nmodes, para->correctBC);
+                Eigen::MatrixXd coeffs = ITHACAutilities::getCoeffs(Vomfield,
+                                            Vmodes, nmodes);
+                
+                ITHACAstream::exportFields(Vomfield, "./ITHACAoutput/Offline", field_name+"omfield");
+                ITHACAstream::exportMatrix(coeffs, field_name+"coeffs", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+                Vfield.clear();
+                Vmodes.clear();
+                Vomfield.clear();
+                liftFields.clear();
+                Info << "Lifted POD modes computed for field " << field_name << endl;
+            }
+            else
+            {
+                ITHACAPOD::getModes(Vfield, Vmodes, field_name, 0, 0, 0, nmodes, para->correctBC);
+                Eigen::MatrixXd coeffs = ITHACAutilities::getCoeffs(Vfield,
+                                            Vmodes, nmodes);
+
+                ITHACAstream::exportMatrix(coeffs, field_name+"coeffs", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+                Vfield.clear();
+                Vmodes.clear();
+                Info << "POD modes computed for field " << field_name << endl;
+            }
         }
         if (field_type == "scalar")
         {
-            ITHACAPOD::getModes(Sfield, Smodes, field_name, 0, 0, 0, nmodes, para->correctBC);
-        }
+            if (lifted)
+            {
+                PtrList<volScalarField> liftFields;
+                ITHACAstream::read_fields(liftFields, field_name, "./lift/");
+                computeLift<volScalarField>(Sfield, liftFields, Somfield);
 
-        Vfield.clear();
-        Sfield.clear();
+                ITHACAPOD::getModes(Somfield, Smodes, field_name, 0, 0, 0, nmodes, para->correctBC);
+                Eigen::MatrixXd coeffs = ITHACAutilities::getCoeffs(Somfield,
+                                            Smodes, nmodes);
+
+                ITHACAstream::exportFields(Somfield, "./ITHACAoutput/Offline", "Sofield");
+                ITHACAstream::exportMatrix(coeffs, field_name+"coeffs", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+                Sfield.clear();
+                Smodes.clear();
+                Somfield.clear();
+                liftFields.clear();
+                Info << "Lifted POD modes computed for field " << field_name << endl;
+            }
+            else
+            {
+                ITHACAPOD::getModes(Sfield, Smodes, field_name, 0, 0, 0, nmodes, para->correctBC);
+                Eigen::MatrixXd coeffs = ITHACAutilities::getCoeffs(Sfield,
+                                            Smodes, nmodes);
+                ITHACAstream::exportMatrix(coeffs, field_name+"coeffs", "eigen",
+                                       "./ITHACAoutput/Matrices/");
+                Sfield.clear();
+                Smodes.clear();
+                Info << "POD modes computed for field " << field_name << endl;
+            }
+        }
     }
     Info << endl;
     Info << "End\n" << endl;
