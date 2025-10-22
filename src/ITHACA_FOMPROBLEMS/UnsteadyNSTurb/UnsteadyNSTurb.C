@@ -1449,6 +1449,7 @@ volVectorField UnsteadyNSTurb::computeSmagTerm_at_time(const label& index,
 
     if (modesU)
     {
+        ITHACAutilities::subtractFields(snapshotj,ithacaFVParameters->get_meanU());
         Eigen::MatrixXd coeffs_field_U = ITHACAutilities::getCoeffs(snapshotj, modesU.value(), modesU.value().size(), 1);
         PtrList<volVectorField> reduced_field_U = ITHACAutilities::reconstructFromCoeff(modesU.value(), 
                                                                 coeffs_field_U, modesU.value().size());
@@ -1643,6 +1644,7 @@ volScalarField UnsteadyNSTurb::computeNut_at_time(const label& index, std::optio
 
     if (modesU)
     {
+    ITHACAutilities::subtractFields(snapshotj,ithacaFVParameters->get_meanU());
     Eigen::MatrixXd coeffs_field_U = ITHACAutilities::getCoeffs(snapshotj, modesU.value(), modesU.value().size(), 1);
     PtrList<volVectorField> reduced_field_U = ITHACAutilities::reconstructFromCoeff(modesU.value(), 
                                                                 coeffs_field_U, modesU.value().size());
