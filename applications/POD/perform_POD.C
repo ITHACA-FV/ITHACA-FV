@@ -273,8 +273,9 @@ int main(int argc, char *argv[])
                 Info << "POD modes computed for field " << field_name << endl;
             }
         }
+        
         if (field_type == "scalar")
-        {   
+        {      
             if (lifted)
             {
                 FatalErrorInFunction
@@ -287,10 +288,10 @@ int main(int argc, char *argv[])
                                             Smodes, ncoeffs);
             ITHACAstream::exportMatrix(coeffs, field_name+"coeffs", "eigen",
                                     "./ITHACAoutput/Matrices/");
+            Smodes.clear();
+            Sfield.clear();
+            Info << "POD modes computed for field " << field_name << endl;
         }
-
-        Vfield.clear();
-        Sfield.clear();
     }
 
     Info << endl;
