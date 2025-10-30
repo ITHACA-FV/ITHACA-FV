@@ -365,7 +365,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
         if (interpFieldCenteredOrNot)
         {
             T meanField = template_HRInterpField;
-            if (ITHACAutilities::check_file("./ITHACAoutput/mean/" + pathProcessor + fieldToCompute))
+            if (ITHACAutilities::check_file("./ITHACAoutput/mean/" + pathProcessor + "1/" + fieldToCompute))
             {
                 Info << "Reading the mean of " << fieldToCompute << " field" << endl;
                 PtrList<T> meanRead;  

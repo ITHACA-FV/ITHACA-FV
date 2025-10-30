@@ -1449,11 +1449,8 @@ volVectorField UnsteadyNSTurb::computeSmagTerm_at_time(const label& index,
 
     if (modesU)
     {
-        ITHACAutilities::subtractFields(snapshotj,ithacaFVParameters->get_meanU());
-        Eigen::MatrixXd coeffs_field_U = ITHACAutilities::getCoeffs(snapshotj, modesU.value(), modesU.value().size(), 1);
-        PtrList<volVectorField> reduced_field_U = ITHACAutilities::reconstructFromCoeff(modesU.value(), 
-                                                                coeffs_field_U, modesU.value().size());
-        snapshotj = ithacaFVParameters->get_meanU() + reduced_field_U[0];
+        volVectorField proj_snapshotj = ITHACAutilities::project_to_POD_basis(snapshotj, modesU.value(), ithacaFVParameters->get_meanU());
+        snapshotj = proj_snapshotj;
     }
 
     return computeSmagTerm_fromU(snapshotj);
@@ -1644,11 +1641,8 @@ volScalarField UnsteadyNSTurb::computeNut_at_time(const label& index, std::optio
 
     if (modesU)
     {
-    ITHACAutilities::subtractFields(snapshotj,ithacaFVParameters->get_meanU());
-    Eigen::MatrixXd coeffs_field_U = ITHACAutilities::getCoeffs(snapshotj, modesU.value(), modesU.value().size(), 1);
-    PtrList<volVectorField> reduced_field_U = ITHACAutilities::reconstructFromCoeff(modesU.value(), 
-                                                                coeffs_field_U, modesU.value().size());
-    snapshotj = ithacaFVParameters->get_meanU() + reduced_field_U[0];
+        volVectorField proj_snapshotj = ITHACAutilities::project_to_POD_basis(snapshotj, modesU.value(), ithacaFVParameters->get_meanU());
+        snapshotj = proj_snapshotj;
     }
 
     return computeNut_fromU(snapshotj);
