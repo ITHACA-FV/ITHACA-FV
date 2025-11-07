@@ -1280,7 +1280,7 @@ readFieldByIndex(
 
 
 template<typename T>
-void ITHACAstream::read_snapshot(T& snapshot, const Foam::label& i_snap,
+void ITHACAstream::read_snapshot(T& snapshot, const Foam::word snap_time,
                                   Foam::word path, Foam::word name)
 {
     // ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -1315,10 +1315,9 @@ void ITHACAstream::read_snapshot(T& snapshot, const Foam::label& i_snap,
         path = arg_path;
     }
 
-    Foam::Time runTime2(Foam::Time::controlDictName, ".", arg_path + pathProcessor);
-    path = path + "/" + runTime2.times()[i_snap].name();
+    path = path + "/" + snap_time;
 
-    if (!ITHACAutilities::check_file(path))
+    if (!ITHACAutilities::check_file(path + "/" + name))
     {
         Info << "Error: data not found at :" << endl;
         Info << path << endl;
@@ -1343,11 +1342,11 @@ void ITHACAstream::read_snapshot(T& snapshot, const Foam::label& i_snap,
 
 
 template void ITHACAstream::read_snapshot(Foam::volScalarField& snapshot,
-        const Foam::label& i_snap, Foam::word path, Foam::word name);
+        const Foam::word snap_time, Foam::word path, Foam::word name);
 template void ITHACAstream::read_snapshot(Foam::volVectorField& snapshot,
-        const Foam::label& i_snap, Foam::word path, Foam::word name);
+        const Foam::word snap_time, Foam::word path, Foam::word name);
 template void ITHACAstream::read_snapshot(Foam::volTensorField& snapshot,
-        const Foam::label& i_snap, Foam::word path, Foam::word name);
+        const Foam::word snap_time, Foam::word path, Foam::word name);
 
 
 

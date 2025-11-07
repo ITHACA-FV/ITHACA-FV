@@ -412,7 +412,7 @@ private :
         ///
         /// @return  Smag
         ///
-        void computeNonLinearSnapshot_at_time(const label& index, volVectorField& Smag, 
+        void computeNonLinearSnapshot_at_time(const word& snap_time, volVectorField& Smag, 
                         std::optional<PtrList<volVectorField>> modesU = std::nullopt);
 
         //--------------------------------------------------------------------------
@@ -440,7 +440,7 @@ private :
         ///
         /// @return  Smag
         ///
-        volVectorField computeSmagTerm_at_time(const label& index, std::optional<PtrList<volVectorField>> modesU = std::nullopt);
+        volVectorField computeSmagTerm_at_time(const word& snap_time, std::optional<PtrList<volVectorField>> modesU = std::nullopt);
 
         //--------------------------------------------------------------------------
         /// @brief   Compute Smagorinsky Snapshot of a tracer phi at a given time
@@ -450,7 +450,7 @@ private :
         ///
         /// @return  Smagorinsky volScalarField
         ///
-        volScalarField computeSmagTermPhi_at_time(const label& index, const volScalarField template_field_phi);
+        volScalarField computeSmagTermPhi_at_time(const word& snap_time, const volScalarField template_field_phi);
 
         //--------------------------------------------------------------------------
         /// @brief   Compute Smagorinsky Snapshot for a given velocity field U
@@ -521,9 +521,9 @@ private :
         ///
         /// @return  projSmagFromNut volScalarField
         ///
-        void computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, volVectorField& modeU);
+        void computeNonLinearSnapshot_at_time(const word& snap_time, volScalarField& phi, volVectorField& modeU);
 
-        void computeNonLinearSnapshot_at_time(const label& index, volVectorField& phi, volVectorField& modeU)
+        void computeNonLinearSnapshot_at_time(const word& snap_time, volVectorField& phi, volVectorField& modeU)
         {
             Info << "Output field with this call to computeNonLinearSnapshot_at_time is scalar" << endl;
             abort();
@@ -544,7 +544,7 @@ private :
         ///
         /// @return  projFullStressFunction volScalarField
         ///
-        volScalarField computeProjSmagTerm_at_time_fromMode(const label& index, const volVectorField& mode);
+        volScalarField computeProjSmagTerm_at_time_fromMode(const word& snap_time, const volVectorField& mode);
 
         //--------------------------------------------------------------------------
         /// @brief  Compute projFullStressFunction given the Smagorinsky term and the velocity mode
@@ -588,10 +588,10 @@ private :
         ///
         /// @return  projSmagFromNut volScalarField
         ///
-        void computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, 
+        void computeNonLinearSnapshot_at_time(const word& snap_time, volScalarField& phi, 
                                 volVectorField& modeU_proj , volVectorField& modeU_grad);
 
-        void computeNonLinearSnapshot_at_time(const label& index, volVectorField& phi, 
+        void computeNonLinearSnapshot_at_time(const word& snap_time, volVectorField& phi, 
                                 volVectorField& modeU_proj , volVectorField& modeU_grad)
         {
             Info << "Output field with this call to computeNonLinearSnapshot_at_time is scalar" << endl;
@@ -615,7 +615,7 @@ private :
         ///
         /// @return  projSmagFromNut volScalarField
         ///
-        volScalarField computeProjSmagFromNut_at_time_fromModes(const label& index, const volVectorField& modeU_proj, 
+        volScalarField computeProjSmagFromNut_at_time_fromModes(const word& snap_time, const volVectorField& modeU_proj, 
                                                            const volVectorField& modeU_grad);
 
         //--------------------------------------------------------------------------
@@ -675,7 +675,7 @@ private :
         ///
         /// @return  nut
         ///
-        void computeNonLinearSnapshot_at_time(const label& index, volScalarField& nut, 
+        void computeNonLinearSnapshot_at_time(const word& snap_time, volScalarField& nut, 
               std::optional<PtrList<volVectorField>> modesU = std::nullopt);
 
         //--------------------------------------------------------------------------
@@ -697,7 +697,7 @@ private :
         ///
         /// @return  nut volScalarField
         ///
-        volScalarField computeNut_at_time(const label& index, std::optional<PtrList<volVectorField>> modesU = std::nullopt);
+        volScalarField computeNut_at_time(const word& snap_time, std::optional<PtrList<volVectorField>> modesU = std::nullopt);
 
         //--------------------------------------------------------------------------
         /// @brief  Compute turbulent viscosity Snapshot for a given velocity field U

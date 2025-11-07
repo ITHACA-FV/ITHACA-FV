@@ -23,6 +23,7 @@ class PODTemplateH1 : public PODTemplate<T>
   using PODTemplate<T>::l_endTime;
   using PODTemplate<T>::l_nSnapshotSimulation;
   using PODTemplate<T>::l_endTimeSimulation;
+  using PODTemplate<T>::timeFolders;
   using PODTemplate<T>::name_covMatrix;
   using PODTemplate<T>::folder_covMatrix;
   using PODTemplate<T>::exist_covMatrix;
