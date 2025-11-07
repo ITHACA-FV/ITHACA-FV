@@ -209,15 +209,15 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
 
             for (label j = offset_1; j < nTotalSnapshots; j++)
             {
-                label index = l_startTime + j;
+                word snap_time = runTime2.times()[l_startTime + j].name();
                 string idxTimeStr = ITHACAutilities::double2ConciseString(startingTime + j*saveTime);
                 if (!ITHACAutilities::containsSubstring(fieldToCompute, "reduced"))
                 {
-                  ithacaUnsteadyNSTurb->computeNonLinearSnapshot_at_time(index, nonLinearSnapshotsj) ;
+                  ithacaUnsteadyNSTurb->computeNonLinearSnapshot_at_time(snap_time, nonLinearSnapshotsj) ;
                 }
                 else
                 {
-                  ithacaUnsteadyNSTurb->computeNonLinearSnapshot_at_time(index, nonLinearSnapshotsj, f_spatialModesU) ;
+                  ithacaUnsteadyNSTurb->computeNonLinearSnapshot_at_time(snap_time, nonLinearSnapshotsj, f_spatialModesU) ;
                 }
                 ITHACAstream::exportSolution(nonLinearSnapshotsj, idxTimeStr, snapshotsFolder, fieldToCompute);
             }
@@ -270,9 +270,9 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
 
                     for (label j = 0; j < nTotalSnapshots/nUsedModesU; j++)       
                     {
-                        label index = l_startTime + j;
+                        word snap_time = runTime2.times()[l_startTime + j].name();
                         string idxStr = ITHACAutilities::double2ConciseString(startingTime + (c*l_nSnapshot + j)*saveTime);
-                        ithacaUnsteadyNSTurb->computeNonLinearSnapshot_at_time(index, snapshotECPcj, f_spatialModesU[currentModeU]);
+                        ithacaUnsteadyNSTurb->computeNonLinearSnapshot_at_time(snap_time, snapshotECPcj, f_spatialModesU[currentModeU]);
                         ITHACAutilities::subtractFields(snapshotECPcj, meanECPModec);
                         ITHACAstream::exportSolution(snapshotECPcj, idxStr, snapshotsFolder, fieldToCompute);
                         ITHACAstream::printProgress(double(c*l_nSnapshot + j) / (nTotalSnapshots-1));
@@ -330,11 +330,11 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
 
                         for (label j = 0; j < l_nSnapshot; j++)       
                         {
-                            label index = l_startTime + j;
-                             string idxStr = ITHACAutilities::double2ConciseString(startingTime + (((c*(c+1)/2 + c)*l_nSnapshot
+                            word snap_time = runTime2.times()[l_startTime + j].name();
+                            string idxStr = ITHACAutilities::double2ConciseString(startingTime + (((c*(c+1)/2 + c)*l_nSnapshot
                                                         + k*l_nSnapshot)*(ECPAlgo=="Global") + j)*saveTime);
-                            ithacaUnsteadyNSTurb->computeNonLinearSnapshot_at_time(index, snapshotECPckj,
-                                                         f_spatialModesU[c], f_mean_and_spatialModesU[k]);
+                            ithacaUnsteadyNSTurb->computeNonLinearSnapshot_at_time(snap_time, snapshotECPckj,
+                                                             f_spatialModesU[c], f_mean_and_spatialModesU[k]);
                             ITHACAutilities::subtractFields(snapshotECPckj, meanECPModeck);
                             ITHACAstream::exportSolution(snapshotECPckj, idxStr, snapshotsFolder, fieldToCompute);
                             ITHACAstream::printProgress(double(((c*(c+1)/2 + c)*l_nSnapshot + k*l_nSnapshot)

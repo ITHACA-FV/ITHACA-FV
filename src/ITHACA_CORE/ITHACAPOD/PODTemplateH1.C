@@ -82,7 +82,7 @@ void PODTemplateH1<T,G>::precomputeGradients()
   {
     Info << "Evaluating gradient fields" << endl;
     local_file = runTime2.caseName() + ".";
-    ITHACAstream::read_snapshot(snapshotj, 1, runTime2.caseName());
+    ITHACAstream::read_snapshot(snapshotj, "0", runTime2.caseName());
     gradSnapshotsj = fvc::grad(snapshotj);
     ITHACAstream::exportSolution(gradSnapshotsj,
                                  "0",
@@ -91,7 +91,7 @@ void PODTemplateH1<T,G>::precomputeGradients()
     for (label j = 0; j < l_nSnapshot + l_nSnapshotSimulation - 1; j++)
       {
         label index = l_startTime + j;
-        ITHACAstream::read_snapshot(snapshotj, index, runTime2.caseName());
+        ITHACAstream::read_snapshot(snapshotj, timeFolders[index].name(), runTime2.caseName());
         gradSnapshotsj = fvc::grad(snapshotj);
         // Write the j-th field
         string idxTimeStr( runTime2.times()[ index ].name() );

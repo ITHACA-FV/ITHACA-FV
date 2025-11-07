@@ -1409,13 +1409,13 @@ Eigen::MatrixXd UnsteadyNSTurb::velParDerivativeCoeff(Eigen::MatrixXd A,
 // ============================= Smagorinsky ===============================
 // =========================================================================
 
-void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const label& index, 
+void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const word& snap_time, 
                  volVectorField& Smag, std::optional<PtrList<volVectorField>> modesU)
 {
     if (ithacaFVParameters->get_DEIMInterpolatedField() == "fullStressFunction"
       || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedFullStressFunction"))
     {
-        Smag = computeSmagTerm_at_time(index, modesU) ;
+        Smag = computeSmagTerm_at_time(snap_time, modesU) ;
     }
     else
     {
@@ -1429,23 +1429,21 @@ void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const label& index,
 // Init Smagorinsky term
 volVectorField UnsteadyNSTurb::initSmagFunction()
 {
-    // Index 1 corresponds to folder 0
-    return volVectorField("fullStressFunction", computeSmagTerm_at_time(1) );
+    return volVectorField("fullStressFunction", computeSmagTerm_at_time("0") );
 }
 
 // Init Smagorinsky term
 volScalarField UnsteadyNSTurb::initSmagPhiFunction(const volScalarField template_field_phi)
 {
-    // Index 1 corresponds to folder 0
-    return volScalarField(ithacaFVParameters->get_DEIMInterpolatedField(), computeSmagTermPhi_at_time(1,template_field_phi));
+    return volScalarField(ithacaFVParameters->get_DEIMInterpolatedField(), computeSmagTermPhi_at_time("0",template_field_phi));
 }
 
-volVectorField UnsteadyNSTurb::computeSmagTerm_at_time(const label& index, 
+volVectorField UnsteadyNSTurb::computeSmagTerm_at_time(const word& snap_time, 
                                         std::optional<PtrList<volVectorField>> modesU)
 {
     // Read the j-th field
     volVectorField snapshotj = ithacaFVParameters->get_template_field_U();
-    ITHACAstream::read_snapshot(snapshotj, index, ithacaFVParameters->get_casenameData());
+    ITHACAstream::read_snapshot(snapshotj, snap_time, ithacaFVParameters->get_casenameData());
 
     if (modesU)
     {
@@ -1458,13 +1456,13 @@ volVectorField UnsteadyNSTurb::computeSmagTerm_at_time(const label& index,
     return computeSmagTerm_fromU(snapshotj);
 }
 
-volScalarField UnsteadyNSTurb::computeSmagTermPhi_at_time(const label& index, const volScalarField template_field_phi)
+volScalarField UnsteadyNSTurb::computeSmagTermPhi_at_time(const word& snap_time, const volScalarField template_field_phi)
 {
     // Read the j-th field
     volScalarField phij = template_field_phi;
-    ITHACAstream::read_snapshot(phij, index, ithacaFVParameters->get_casenameData());
+    ITHACAstream::read_snapshot(phij, snap_time, ithacaFVParameters->get_casenameData());
     volVectorField snapshotj = ithacaFVParameters->get_template_field_U();
-    ITHACAstream::read_snapshot(snapshotj, index, ithacaFVParameters->get_casenameData());
+    ITHACAstream::read_snapshot(snapshotj, snap_time, ithacaFVParameters->get_casenameData());
     return computeSmagTermPhi_fromUPhi(snapshotj,phij);
 }
 
@@ -1509,12 +1507,12 @@ volVectorField UnsteadyNSTurb::computeSmagTermPhi_fromUPhi(const volVectorField&
 // ======================= projFullStressFunction ==========================
 // =========================================================================
 
-void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, volVectorField& modeU)
+void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const word& snap_time, volScalarField& phi, volVectorField& modeU)
 {
     if (ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projFullStressFunction") 
         || ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projReducedFullStressFunction"))
     {
-        phi = computeProjSmagTerm_at_time_fromMode(index, modeU);
+        phi = computeProjSmagTerm_at_time_fromMode(snap_time, modeU);
     }
 }
 
@@ -1525,18 +1523,18 @@ volScalarField UnsteadyNSTurb::initProjSmagFunction()
         ithacaFVParameters->get_template_field_fullStressFunction() & ithacaFVParameters->get_template_field_U());
 }
 
-volScalarField UnsteadyNSTurb::computeProjSmagTerm_at_time_fromMode(const label& index, const volVectorField& mode)
+volScalarField UnsteadyNSTurb::computeProjSmagTerm_at_time_fromMode(const word& snap_time, const volVectorField& mode)
 {
     // Read the j-th field
     volVectorField Smagj = ithacaFVParameters->get_template_field_fullStressFunction();  
     if (!ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projReducedFullStressFunction"))
     {
-        ITHACAstream::read_snapshot(Smagj, index, ithacaFVParameters->get_casenameData());
+        ITHACAstream::read_snapshot(Smagj, snap_time, ithacaFVParameters->get_casenameData());
     }
     else
     {
         word path = "./ITHACAoutput/Hyperreduction/reducedFullStressFunction/";
-        ITHACAstream::read_snapshot(Smagj, index, path);
+        ITHACAstream::read_snapshot(Smagj, snap_time, path);
     }
     
     return Smagj & mode;
@@ -1553,13 +1551,13 @@ void UnsteadyNSTurb::computeProjSmagTerm_fromSmag_fromMode(volScalarField& phi, 
 // ========================== projSmagFromNut ==============================
 // =========================================================================
 
-void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, 
+void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const word& snap_time, volScalarField& phi, 
                                                                  volVectorField& modeU_proj , volVectorField& modeU_grad)
 {
     if (ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projSmagFromNut") 
         || ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projSmagFromReducedNut"))
     {
-        phi = computeProjSmagFromNut_at_time_fromModes(index, modeU_proj, modeU_grad);
+        phi = computeProjSmagFromNut_at_time_fromModes(snap_time, modeU_proj, modeU_grad);
     }
 }
 
@@ -1570,18 +1568,18 @@ volScalarField UnsteadyNSTurb::initProjSmagFromNutFunction()
 }
 
 volScalarField UnsteadyNSTurb::computeProjSmagFromNut_at_time_fromModes
-                  (const label& index, const volVectorField& modeU_proj, const volVectorField& modeU_grad)
+                  (const word& snap_time, const volVectorField& modeU_proj, const volVectorField& modeU_grad)
 {
     // Read the j-th field
     volScalarField Nutj(ithacaFVParameters->get_DEIMInterpolatedField(), ithacaFVParameters->get_template_field_nut());
     if (ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projSmagFromNut") )
     {
-        ITHACAstream::read_snapshot(Nutj, index, ithacaFVParameters->get_casenameData());
+        ITHACAstream::read_snapshot(Nutj, snap_time, ithacaFVParameters->get_casenameData());
     }
     else if (ITHACAutilities::containsSubstring(ithacaFVParameters->get_HRSnapshotsField(), "projSmagFromReducedNut"))
     {
         word path = "./ITHACAoutput/Hyperreduction/reducedNut/";
-        ITHACAstream::read_snapshot(Nutj, index, path);
+        ITHACAstream::read_snapshot(Nutj, snap_time, path);
     }
     return projDiffusionIBP(Nutj, modeU_grad, modeU_proj);
 }
@@ -1605,21 +1603,21 @@ volScalarField UnsteadyNSTurb::projDiffusionIBP(const volScalarField& coefDiff,
 // ============================= NUT =======================================
 // =========================================================================
 
-void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const label& index, volScalarField& phi, 
+void UnsteadyNSTurb::computeNonLinearSnapshot_at_time(const word& snap_time, volScalarField& phi, 
                                                  std::optional<PtrList<volVectorField>> modesU)
 {
     if (ithacaFVParameters->get_DEIMInterpolatedField() == "nut"
         || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedNut"))
     {
-        phi = computeNut_at_time(index, modesU) ;
+        phi = computeNut_at_time(snap_time, modesU) ;
     }
     else if (ithacaFVParameters->get_DEIMInterpolatedField() == "fullStressFunction_K")
     {
-        phi = computeSmagTermPhi_at_time(index, ithacaFVParameters->get_template_field_k());
+        phi = computeSmagTermPhi_at_time(snap_time, ithacaFVParameters->get_template_field_k());
     }
     else if (ithacaFVParameters->get_DEIMInterpolatedField() == "fullStressFunction_Omega")
     {
-        phi = computeSmagTermPhi_at_time(index, ithacaFVParameters->get_template_field_omega());
+        phi = computeSmagTermPhi_at_time(snap_time, ithacaFVParameters->get_template_field_omega());
     }
     else
     {
@@ -1635,11 +1633,11 @@ volScalarField UnsteadyNSTurb::initNutFunction()
     return volScalarField(ithacaFVParameters->get_template_field_nut());
 }
 
-volScalarField UnsteadyNSTurb::computeNut_at_time(const label& index, std::optional<PtrList<volVectorField>> modesU)
+volScalarField UnsteadyNSTurb::computeNut_at_time(const word& snap_time, std::optional<PtrList<volVectorField>> modesU)
 {
     // Read the j-th field
     volVectorField snapshotj = ithacaFVParameters->get_template_field_U();
-    ITHACAstream::read_snapshot(snapshotj, index, ithacaFVParameters->get_casenameData());
+    ITHACAstream::read_snapshot(snapshotj, snap_time, ithacaFVParameters->get_casenameData());
 
     if (modesU)
     {
