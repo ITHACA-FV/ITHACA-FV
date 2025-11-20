@@ -11,9 +11,10 @@ where \f$k\f$ is the diffusivity, \f$T\f$ is the temperature and \f$S\f$ is the 
 
 $$AT = S,$$
 
-where \f$A\f$ is the matrix of interpolation coefficients, \f$T\f$  is the vector of unknowns and $S$ is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
-
-![](images/drawing.png)
+where \f$A\f$ is the matrix of interpolation coefficients, \f$T\f$  is the vector of unknowns and \f$S\f$ is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
+<center>
+![](https://github.com/ITHACA-FV/ITHACA-FV/blob/master/docs/images/drawing.png?raw=True 'Domain with parametrized diffusivity')
+</center>
 
 Both the full order and the reduced order problem are solved exploiting the parametric affine decomposition of the differential operators:
 
@@ -121,8 +122,11 @@ Define by:
 $$S = \sin \left(\frac{\pi}{L}\cdot x \right) + \sin \left(\frac{\pi}{L}\cdot y \right)$$
 
 where \f$L\f$ is the dimension of the thermal block which is equal to 0.9.
+The source term appears as follows.
 
-![](images/hat.jpg)
+<center>
+![](https://github.com/ITHACA-FV/ITHACA-FV/blob/master/docs/images/hat.jpg?raw=True 'Source term')
+</center>
 
 With the following is defined a method to set the parameter of the affine expansion:
 ```cpp
