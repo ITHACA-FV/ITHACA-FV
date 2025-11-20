@@ -16,9 +16,9 @@ In this section are explained the main steps necessary to construct the tutorial
 
 ## The necessary header files
 
-First of all let's have a look to the header files that needs to be included and what they are responsible for.
+First of all let's have a look to the header files that need to be included and what they are responsible for.
 
-The header files of ITHACA-FV necessary for this tutorial
+The header files of ITHACA-FV necessary for this tutorial are the following:
 ```cpp
     #include "steadyNS.H"
     #include "ITHACAstream.H"
@@ -198,5 +198,4 @@ Or the users can simple run the script `Allrun_parallel`.
 
 In the case of OF1812 the parallel run is not supported.
 
-
-[def]: https
+The plain code can be found [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/03steadyNS/03steadyNS.C).

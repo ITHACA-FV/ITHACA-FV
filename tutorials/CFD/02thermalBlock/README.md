@@ -307,4 +307,4 @@ The online stage is performed analogously
 ```
 Or the users can simple run the script `Allrun_parallel`.
 
-The plain code can be found [here](https://github.com/ITHACA-FV/ITHACA-FV/blob/master/tutorials/CFD/02thermalBlock/02thermalBlock.C).
+The plain code can be found [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/02thermalBlock/02thermalBlock.C).
