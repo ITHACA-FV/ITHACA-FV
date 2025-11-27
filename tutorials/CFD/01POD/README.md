@@ -1,5 +1,4 @@
-\example 01POD
-# Tutorial 01POD
+# Tutorial 01
 ## Introduction
 
 In this tutorial the POD is applied on a simple lid-driven cavity example.

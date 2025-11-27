@@ -1,5 +1,4 @@
-\example 02thermalBlock
-# Introduction to tutorial 2
+# Tutorial 02
 ## Implementation of a tutorial of a steady heat transfer problem
 
 The problem consists of a parametrized POD-Galerkin ROM for a steady heat transfer phenomenon. The parametrization is on the diffusivity constant. The OpenFOAM full order problem is based on **laplacianFoam**.
@@ -7,13 +6,14 @@ The problem equation is
 
 $$\nabla \cdot (k \nabla T) = S$$
 
-where \f$k\f$ is the diffusivity, \f$T\f$ is the temperature and \f$S\f$ is the source term. The problem discretised and formalized in matrix equation reads:
+where $k$ <!--!$k$--> is the diffusivity, $T$ is the temperature and $S$ is the source term. The problem discretised and formalized in matrix equation reads:
 
 $$AT = S,$$
 
-where \f$A\f$ is the matrix of interpolation coefficients, \f$T\f$  is the vector of unknowns and \f$S\f$ is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
+where $A$ is the matrix of interpolation coefficients, $T$  is the vector of unknowns and $S$ is the vector representing the source term. The domain is subdivided in 9 different parts and each part has parametrized diffusivity. See the image below for a clarification.
+
 <center>
-![](https://github.com/ITHACA-FV/ITHACA-FV/blob/master/docs/images/drawing.png?raw=True 'Domain with parametrized diffusivity')
+<img src="https://github.com/ITHACA-FV/ITHACA-FV/blob/master/docs/images/drawing.png?raw=True" alt="Domain with parametrized diffusivity"/>
 </center>
 
 Both the full order and the reduced order problem are solved exploiting the parametric affine decomposition of the differential operators:
@@ -121,11 +121,11 @@ Define by:
 
 $$S = \sin \left(\frac{\pi}{L}\cdot x \right) + \sin \left(\frac{\pi}{L}\cdot y \right)$$
 
-where \f$L\f$ is the dimension of the thermal block which is equal to 0.9.
+where $L$ is the dimension of the thermal block which is equal to 0.9.
 The source term appears as follows.
 
 <center>
-![](https://github.com/ITHACA-FV/ITHACA-FV/blob/master/docs/images/hat.jpg?raw=True 'Source term')
+<img src="https://github.com/ITHACA-FV/ITHACA-FV/blob/master/docs/images/hat.jpg?raw=True" alt="Source term"/>
 </center>
 
 With the following is defined a method to set the parameter of the affine expansion:
