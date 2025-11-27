@@ -1,15 +1,15 @@
-\example 04unsteadyNS
-# Introduction to tutorial 4
+# Tutorial 04
+## Introduction
 
 In this tutorial we implement a parametrized unsteady Navier-Stokes 2D problem where the parameter is the kinematic viscosity.
 The physical problem represents an incompressible flow passing around a very long cylinder. The simulation domain is rectangular
-with spatial bounds of \f$[-4, 30]\f$, and \f$[-5, 5]\f$ in the X and Y directions, respectively. The cylinder has a radius of 0.5 unit length and is located at the origin. The system has a prescribed uniform inlet velocity of 1 m/s which is constant through the whole simulation.
+with spatial bounds of $[-4, 30]$, and $[-5, 5]$ in the X and Y directions, respectively. The cylinder has a radius of 0.5 unit length and is located at the origin. The system has a prescribed uniform inlet velocity of 1 m/s which is constant through the whole simulation.
 
-The following image illustrates the simulated system at time \f$= 50\f$ s and \f$Re = 100\f$.
+The following image illustrates the simulated system at time $= 50$ s and $Re = 100$.
 
-<center>
-![](https://github.com/ITHACA-FV/ITHACA-FV/blob/master/docs/images/cylinder.png?raw=True 'Flow past a cylinder at Re=100')
-</center>
+
+![cylinder](../../../docs/images/cylinder.png)
+
 
 # A detailed look into the code
 In this section are explained the main steps necessary to construct the tutorial N°4.
@@ -18,7 +18,7 @@ In this section are explained the main steps necessary to construct the tutorial
 
 First of all let's have a look to the header files that need to be included and what they are responsible for.
 
-The header files of ITHACA-FV necessary for this tutorial are: <unsteadyNS.H> for the full order unsteady NS problem, <ITHACAPOD.H> for the POD decomposition, <reducedUnsteadyNS.H> for the construction of the reduced order problem, and finally <ITHACAstream.H> for some ITHACA input-output operations.
+The header files of ITHACA-FV necessary for this tutorial are: `<unsteadyNS.H>` for the full order unsteady NS problem, `<ITHACAPOD.H>` for the POD decomposition, `<reducedUnsteadyNS.H>` for the construction of the reduced order problem, and finally `<ITHACAstream.H>` for some ITHACA input-output operations.
 ```cpp
     #include "unsteadyNS.H"
     #include "ITHACAPOD.H"
@@ -27,7 +27,7 @@ The header files of ITHACA-FV necessary for this tutorial are: <unsteadyNS.H> fo
 ```
 ## Implementation of the tutorial04 class
 
-We can define the tutorial04 class as a child of the <unsteadyNS> class. The constructor is defined with members that are the fields need to be manipulated during the resolution of the full order problem using `pimpleFoam`. Such fields are also initialized with the same initial conditions in the solver. 
+We can define the tutorial04 class as a child of the `<unsteadyNS>` class. The constructor is defined with members that are the fields need to be manipulated during the resolution of the full order problem using `pimpleFoam`. Such fields are also initialized with the same initial conditions in the solver. 
 ```cpp
     class tutorial04 : public unsteadyNS
     {
@@ -60,7 +60,7 @@ Inside the tutorial04 class we define the `offlineSolve` method according to the
             }
         }
 ```
-We note that in the commented line we show that it is possible to parametrize the boundary conditions. For further details we refer to the classes: <reductionProblem>, and <unsteadyNS>.
+We note that in the commented line we show that it is possible to parametrize the boundary conditions. For further details we refer to the classes: `<reductionProblem>`, and `<unsteadyNS>`.
 
 ## Definition of the main function
 In this section we show the definition of the main function. First we construct the object "example" of type tutorial04:
@@ -80,7 +80,7 @@ Then we parse the `ITHACAdict` file to determine the number of modes to be writt
 ```
 We note that a default value can be assigned in case the parser did not find the corresponding string in the `ITHACAdict` file.
 
-Now we would like to perform 10 parametrized simulations where the kinematic viscosity is the sole parameter to change, and we take 10 equispaced values in the range of \f$[0.01, 0.1]\f$ m\f$^2\f$/s. Alternatively, we can also think of those simulations as that they are performed for fluid flow that has \f$Re\f$ changes from \f$Re=10\f$ to \f$Re=100\f$ with step size \f$= 10\f$. In fact, both definitions are the same since the inlet velocity and the domain geometry are both kept fixed through all simulations.
+Now we would like to perform 10 parametrized simulations where the kinematic viscosity is the sole parameter to change, and we take 10 equispaced values in the range of $[0.01, 0.1]$ m$^2$/s. Alternatively, we can also think of those simulations as that they are performed for fluid flow that has $Re$ changes from $Re=10$ to $Re=100$ with step size $= 10$. In fact, both definitions are the same since the inlet velocity and the domain geometry are both kept fixed through all simulations.
 
 In our implementation, the parameter (viscosity) can be defined by specifying that `Nparameters=1, Nsamples=10,` and the parameter ranges from 0.01 to 0.1 equispaced, i.e.
 
@@ -103,7 +103,7 @@ After that we set the inlet boundaries where we have the non homogeneous BC:
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
 ```
-And we set the parameters for the time integration, so as to simulate 20 seconds for each simulation, with a step size \f$= 0.01\f$ seconds, and the data are dumped every 0.1 seconds, i.e.
+And we set the parameters for the time integration, so as to simulate 20 seconds for each simulation, with a step size $= 0.01$ seconds, and the data are dumped every 0.1 seconds, i.e.
 
 ```cpp
     example.startTime = 60;
@@ -150,7 +150,7 @@ Now that we obtained all the necessary information from the POD decomposition an
 ```cpp
 reducedUnsteadyNS reduced(example);
 ```
-And then we can use the new constructed ROM to perform the online procedure, from which we can simulate the problem at new set of parameters. For instance, we solve the problem with a viscosity\f$=0.005\f$ for 10 seconds of physical time:
+And then we can use the new constructed ROM to perform the online procedure, from which we can simulate the problem at new set of parameters. For instance, we solve the problem with a viscosity$=0.005$ for 10 seconds of physical time:
 ```cpp
 reduced.nu = 0.005;
 reduced.tstart = 60;

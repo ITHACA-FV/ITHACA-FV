@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
     example.mu = ITHACAstream::readMatrix(filename);
     // Perform the offline solve
     example.offlineSolve();
-    // Perform POD on velocity pressure and supremizers and store the first 10 modes
+    // Perform POD on velocity and pressure, and store the first 10 modes
     ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
                         example.podex, 0, 0,
                         NmodesUout);

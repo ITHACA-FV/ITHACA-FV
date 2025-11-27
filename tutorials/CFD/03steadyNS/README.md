@@ -1,13 +1,10 @@
-\example 03steadyNS
-# Introduction to tutorial 3
-
+# Tutorial 03
+## Introduction 
 The problem consists of steady Navier-Stokes problem with parametrized
 viscosity. The physical problem is the backward facing step depicted in the
 following image:
 
-<center>
-![](https://github.com/ITHACA-FV/ITHACA-FV/blob/master/docs/images/step.png?raw=True 'Backstep flow example')
-</center>
+![step](../../../docs/images/step.png)
 
 At the inlet a uniform and constant velocity equal to 1 m/s is prescribed.
 
