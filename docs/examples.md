@@ -27,6 +27,14 @@
 [`06POD_RBF`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/06POD_RBF#tutorial-06): apply POD with RBF interpolation to the pitzdaily test case, with parametrized inlet velocity magnitude and orientation.
 <div class="tutorial-image">![Velocity snapshots](images/06_pitzdaily.gif)</div>
 </div>
+<div class="tutorial-card">
+[`08DEIM`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/08DEIM#tutorial-08): reconstruction of a parametric Gaussian function using the Discrete Empirical Interpolation Method (DEIM).
+<div class="tutorial-image">![DEIM approximations](images/08_deim.gif)</div>
+</div>
+<div class="tutorial-card">
+[`09DEIM_ROM`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/09DEIM_ROM#tutorial-09): solves a parameterized heat-transfer problem and builds a reduced-order model using POD + DEIM.
+<div class="tutorial-image">![DEIM approximations](images/09_deimrom.gif)</div>
+</div>
 </div>
 
 ### Examples related to machine learning (**NN** folder)

@@ -226,12 +226,12 @@ Now we proceed to the ROM part of the tutorial, at first we construct an object 
     pod_rbf.tauU.resize(2, 1);
 ```
 
-We create the matrix rbfCoeff in order to store the values of the interpolated eddy viscosity coefficient using the RBF in the online stage
+We create the matrix `rbfCoeff` in order to store the values of the interpolated eddy viscosity coefficient using the RBF in the online stage
 ```cpp
     Eigen::MatrixXd rbfCoeff;
 ```
 
-Now we solve the online reduced system for the parameter values stored in par_online which is a different set of samples for the parameters than the one used in the offline stage.
+Now we solve the online reduced system for the parameter values stored in `par_online` which is a different set of samples for the parameters than the one used in the offline stage.
 This represent a cross validation test for assessing the reduced order model in a better way.
 ```cpp
     // Perform an online solve for the new values of inlet velocities
