@@ -26,7 +26,7 @@ PODParameters::PODParameters(int argc, char* argv[]):
     , fieldTemplates_(std::make_unique<FieldTemplates>())
     , snapshotConfiguration_(std::make_unique<SnapshotConfiguration>())
     , solverConfiguration_(std::make_unique<SolverConfiguration>())
-    , DEIMConfiguration_(std::make_unique<DEIMConfiguration>())
+    , HyperreductionConfiguration_(std::make_unique<HyperreductionConfiguration>())
     , ROMExecutionConfig_(std::make_unique<ROMExecutionConfig>())
     , SimulationFlags_(std::make_unique<SimulationFlags>())
     , PODConfiguration_(std::make_unique<PODConfiguration>())
@@ -82,11 +82,11 @@ PODParameters::PODParameters(int argc, char* argv[]):
             .lookup(ITHACAdict->lookupOrDefault<word>("pressureResolutionKind", ""), PressureResolutionKind::Undefined));
     solverConfiguration_->set_nBlocks(ITHACAdict->lookupOrDefault<label>("nBlocks", 1));
     solverConfiguration_->set_centeredOrNot(ITHACAdict->lookupOrDefault<bool>("centeredOrNot", 1));
-    SimulationFlags_->set_interpFieldCentered(ITHACAdict->lookupOrDefault<bool>("interpFieldCenteredOrNot", 0));
+    HyperreductionConfiguration_->set_interpFieldCentered(ITHACAdict->lookupOrDefault<bool>("interpFieldCenteredOrNot", 0));
     // nMagicPoints = ITHACAdict->lookupOrDefault<label>("nMagicPoints", 1);
-    SimulationFlags_->setHRMethod(ITHACAdict->lookupOrDefault<word>("HyperReduction", "DEIM"));
-    ROMExecutionConfig_->setHRInterpolatedField(ITHACAdict->lookupOrDefault<word>("DEIMInterpolatedField", "fullStressFunction"));
-    ROMExecutionConfig_->setECPAlgo(ITHACAdict->lookupOrDefault<word>("ECPAlgo", "Global"));
+    HyperreductionConfiguration_->setHRMethod(ITHACAdict->lookupOrDefault<word>("HyperReduction", "DEIM"));
+    HyperreductionConfiguration_->setHRInterpolatedField(ITHACAdict->lookupOrDefault<word>("DEIMInterpolatedField", "fullStressFunction"));
+    HyperreductionConfiguration_->setECPAlgo(ITHACAdict->lookupOrDefault<word>("ECPAlgo", "Global"));
     SimulationFlags_->set_onLineReconstruct(ITHACAdict->lookupOrDefault<bool>("onLineReconstruct", 0));
     SimulationFlags_->set_forcingOrNot(ITHACAdict->lookupOrDefault<bool>("forcingOrNot", 0));
     SimulationFlags_->set_symDiff(ITHACAdict->lookupOrDefault<bool>("symDiff", 0));
@@ -385,127 +385,15 @@ PODParameters::PODParameters(int argc, char* argv[]):
         abort();
     }
 
-    word folder_DEIM = "./ITHACAoutput/";
+    HyperreductionConfiguration_->setFolderDEIM("./ITHACAoutput/");
     if (SimulationFlags_->useDEIM())
     {
         if (get_hilbertSpacePOD()["nut"] == "dL2")
         {
             set_deltaWeight(ITHACAutilities::getMassMatrixFV(fieldTemplates_->get_nut()).array().pow(-2.0 / 3.0));
         }
-
-        if (SimulationFlags_->HRMethod() == "GappyDEIM")
-        {
-            SimulationFlags_->setHRMethod("DEIM");
-        }
-
-        if (SimulationFlags_->interpFieldCentered())
-        {
-            folder_DEIM = "./ITHACAoutput/Hyperreduction/" + SimulationFlags_->HRMethod() + "_centered/";
-        } else
-        {
-            folder_DEIM = "./ITHACAoutput/Hyperreduction/" + SimulationFlags_->HRMethod() + "/";
-        }
-
-        const word& HRInterpolatedField = ROMExecutionConfig_->HRInterpolatedField();
-        initializeHyperReductionField(HRInterpolatedField);
-
-        DEIMConfiguration_->setNMagicPoints(get_nModes()[HRInterpolatedField]);
-        ROMExecutionConfig_->setHRSnapshotsField(HRInterpolatedField);
-        std::string nbModesUInFolderDEIM = "";
-        std::string ECPAlgoInFolderDEIM = "";
-
-        if (SimulationFlags_->HRMethod() == "ECP")
-        {
-            if (!(ROMExecutionConfig_->ECPAlgo() == "Global" || ROMExecutionConfig_->ECPAlgo() == "EachMode"))
-            {
-                Info << "Error: ECPAlgo must be Global or EachMode" << endl;
-                abort();
-            }
-
-            if (HRInterpolatedField == "fullStressFunction")
-            {
-                ROMExecutionConfig_->setHRSnapshotsField("projFullStressFunction_" + std::to_string(get_nModes()["U"]) + "modes");
-            } else if (ITHACAutilities::containsSubstring(HRInterpolatedField, "reducedFullStressFunction"))
-            {
-                ROMExecutionConfig_->setHRSnapshotsField("projReducedFullStressFunction_" + std::to_string(get_nModes()["U"]) + "modes");
-            } else if (HRInterpolatedField == "nut")
-            {
-                ROMExecutionConfig_->setHRSnapshotsField("projSmagFromNut_" + std::to_string(get_nModes()["U"]) + "modes");
-            } else if (ITHACAutilities::containsSubstring(HRInterpolatedField, "reducedNut"))
-            {
-                ROMExecutionConfig_->setHRSnapshotsField("projSmagFromReducedNut_" + std::to_string(get_nModes()["U"]) + "modes");
-            } else
-            {
-                Info << "Error: ECP method is coded only for fullStressFunction and nut" << endl;
-                abort();
-            }
-
-            DEIMConfiguration_->setNMagicPoints(ITHACAdict->lookupOrDefault("nMagicPoints", get_nMagicPoints()));
-            ECPAlgoInFolderDEIM = ROMExecutionConfig_->ECPAlgo() + "/";
-            nbModesUInFolderDEIM = std::to_string(get_nModes()["U"]) + "modesU/";
-
-            label nECPFields = 1;
-            if (ROMExecutionConfig_->ECPAlgo() == "EachMode")
-            {
-                nECPFields = get_nModes()["U"];
-            }
-
-            for (label c = 0; c < nECPFields; c++)
-            {
-                for (label k = 0; k <= (c + 1) * (ROMExecutionConfig_->ECPAlgo() == "EachMode") * (ITHACAutilities::containsSubstring(HRInterpolatedField, "nut")); k++)
-                {
-                    word fieldNameModec = ROMExecutionConfig_->HRSnapshotsField();
-                    if (ROMExecutionConfig_->ECPAlgo() == "EachMode")
-                    {
-                        fieldNameModec += "_" + std::to_string(c + 1);
-                        if (ITHACAutilities::containsSubstring(HRInterpolatedField, "nut"))
-                        {
-                            fieldNameModec += "_" + std::to_string(k);
-                        }
-                    }
-                    PODConfiguration_->appendField(fieldNameModec, "scalar");
-                    PODConfiguration_->insert_nModes(fieldNameModec, get_nModes()[HRInterpolatedField]);
-                    PODConfiguration_->insert_hilbertSpacePOD(PODConfiguration_->field_name().last(), "L2");
-                    PODConfiguration_->set_varyingEnergy(PODConfiguration_->field_name().last(), 0);
-                    PODConfiguration_->set_resolvedVaryingEnergy(PODConfiguration_->field_name().last(), 0);
-                }
-            }
-        }
-
-        folder_DEIM += HRInterpolatedField.substr(0, HRInterpolatedField.find("_")) + "/" + nbModesUInFolderDEIM;
-        folder_DEIM += std::to_string(get_nMagicPoints()) + "magicPoints/" + ECPAlgoInFolderDEIM;
+        HyperreductionConfiguration_->initializeHyperreduction(PODConfiguration_);
     }
-    DEIMConfiguration_->setFolderDEIM(folder_DEIM);
-}
-
-void PODParameters::initializeHyperReductionField(const word& HRInterpolatedField)
-{
-
-bool isReducedField = HRInterpolatedField == "reducedFullStressFunction" 
-                   || HRInterpolatedField == "reducedNut";
-    if (isReducedField)
-    {
-        word modifiedFieldName = createReducedFieldName(HRInterpolatedField);
-        addREducedField(HRInterpolatedField, modifiedFieldName);
-    }
-}
-
-void PODParameters::addREducedField(const word& nameToReplace,  const word& modifiedFieldName)
-{
-        const auto& field_type = PODConfiguration_->field_type();
-        const auto& field_name = PODConfiguration_->field_name();
-
-        PODConfiguration_->appendField(modifiedFieldName , field_type[find(field_name.begin(), field_name.end(), nameToReplace) - field_name.begin()]);
-        PODConfiguration_->insert_nModes(modifiedFieldName, get_nModes()[nameToReplace]);
-        PODConfiguration_->insert_hilbertSpacePOD(modifiedFieldName, get_hilbertSpacePOD()[nameToReplace]);
-        PODConfiguration_->set_varyingEnergy(modifiedFieldName, 0);
-        PODConfiguration_->set_resolvedVaryingEnergy(modifiedFieldName, 0);
-
-}
-
-word PODParameters::createReducedFieldName(const word& HRInterpolatedField)
-{
-      return HRInterpolatedField + "_" + std::to_string(get_nModes()["U"]) + "modes";
 }
 
 void PODParameters::initializeFieldConfiguration()

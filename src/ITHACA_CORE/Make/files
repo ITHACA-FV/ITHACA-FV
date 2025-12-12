@@ -10,11 +10,10 @@ ITHACAutilities/ITHACAcoeffsMass.C
 ITHACAparallel/ITHACAparallel.C
 ITHACAutilities/ITHACAforces.C
 ITHACAutilities/ITHACAsurfacetools.C
-ITHACAPOD/DEIMConfiguration.C
+ITHACAPOD/HyperreductionConfiguration.C
 ITHACAPOD/FieldTemplates.C
 ITHACAPOD/incrementalPOD.C
 ITHACAPOD/ITHACAPOD.C
-ITHACAPOD/MeshConfiguration.C
 ITHACAPOD/PODParameters.C
 ITHACAPOD/PODTemplate.C
 ITHACAPOD/PODTemplateH1.C

@@ -2,11 +2,6 @@
 #include "GeometricField.H"
 #include "fvPatchField.H"
 
-void ITHACAPOD::ROMExecutionConfig::setDeltaWeight(const Eigen::VectorXd& dw)
-{
-    m_deltaWeight = new Eigen::VectorXd(dw);
-}
-
 void ITHACAPOD::ROMExecutionConfig::setROMTemporalScheme(const Foam::word& scheme)
 {
     m_ROMTemporalScheme = scheme;

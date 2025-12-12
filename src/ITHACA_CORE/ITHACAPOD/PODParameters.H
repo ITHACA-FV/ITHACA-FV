@@ -9,7 +9,7 @@
 #include "SnapshotConfiguration.H"
 #include "MeshConfiguration.H"
 #include "SolverConfiguration.H"
-#include "DEIMConfiguration.H"
+#include "HyperreductionConfiguration.H"
 #include "ROMExecutionConfig.H"
 #include "SimulationFlags.H"
 
@@ -166,23 +166,23 @@ public:
 
     const word& get_HRMethod() const
     {
-        return SimulationFlags_->HRMethod();
+        return HyperreductionConfiguration_->HRMethod();
     }
     const Foam::word& get_DEIMInterpolatedField() const
     {
-        return ROMExecutionConfig_->HRInterpolatedField();
+        return HyperreductionConfiguration_->HRInterpolatedField();
     }
     const word& get_HRSnapshotsField() const
     {
-        return ROMExecutionConfig_->HRSnapshotsField();
+        return HyperreductionConfiguration_->HRSnapshotsField();
     }
     const word& get_ECPAlgo() const
     {
-        return ROMExecutionConfig_->ECPAlgo();
+        return HyperreductionConfiguration_->ECPAlgo();
     }
     Eigen::VectorXd get_deltaWeight() const
     {
-        return *ROMExecutionConfig_->deltaWeight();
+        return HyperreductionConfiguration_->deltaWeight();
     }
 
     void set_centeredOrNot(const bool b)
@@ -257,7 +257,7 @@ public:
         return snapshotConfiguration_->get_finalTimeSimulation();
     }
 
-    bool get_interpFieldCenteredOrNot() const { return SimulationFlags_->interpFieldCentered(); }
+    bool get_interpFieldCenteredOrNot() const { return HyperreductionConfiguration_->interpFieldCentered(); }
 
     bool get_exportPython() const { return SimulationFlags_->exportPython(); }
     bool get_exportMatlab() const { return SimulationFlags_->exportMatlab(); }
@@ -286,38 +286,38 @@ public:
 
     /// Getters of DEIM parameters
     bool get_useDEIM() const { return SimulationFlags_->useDEIM(); }
-    const float& get_Ck() const { return DEIMConfiguration_->Ck(); }
-    const float& get_Ce() const { return DEIMConfiguration_->Ce(); }
-    const label& get_nMagicPoints() const { return DEIMConfiguration_->nMagicPoints(); }
-    const word& get_folder_DEIM() const { return DEIMConfiguration_->folderDEIM(); }
+    const float& get_Ck() const { return HyperreductionConfiguration_->Ck(); }
+    const float& get_Ce() const { return HyperreductionConfiguration_->Ce(); }
+    const label& get_nMagicPoints() const { return HyperreductionConfiguration_->nMagicPoints(); }
+    const word& get_folder_DEIM() const { return HyperreductionConfiguration_->folderDEIM(); }
 
-    const PtrList<volVectorField>& get_tracerGradOfModesOnMagicNeighborhoods() const { return DEIMConfiguration_->tracerGradOnMagicNeighborhoods(); }
-    const PtrList<volVectorField>& get_tracerGradOfModesOnMagicPoints() const { return DEIMConfiguration_->tracerGradOnMagicPoints(); }
-    const PtrList<volTensorField>& get_deformationTensorOfModesOnMagicNeighborhoods() const { return DEIMConfiguration_->deformationTensorOnMagicNeighborhoods(); }
-    const PtrList<volTensorField>& get_deformationTensorOfModesOnMagicPoints() const { return DEIMConfiguration_->deformationTensorOnMagicPoints(); }
-    const List<label>& get_magicPoints() const { return DEIMConfiguration_->magicPoints(); }
-    const List<label>& get_localMagicPoints() const { return DEIMConfiguration_->localMagicPoints(); }
-    const Eigen::MatrixXd& get_projected_K_DEIM() const { return DEIMConfiguration_->projectedK_DEIM(); }
-    const Eigen::MatrixXd& get_projected_MK_DEIM() const { return DEIMConfiguration_->projectedMK_DEIM(); }
+    const PtrList<volVectorField>& get_tracerGradOfModesOnMagicNeighborhoods() const { return HyperreductionConfiguration_->tracerGradOnMagicNeighborhoods(); }
+    const PtrList<volVectorField>& get_tracerGradOfModesOnMagicPoints() const { return HyperreductionConfiguration_->tracerGradOnMagicPoints(); }
+    const PtrList<volTensorField>& get_deformationTensorOfModesOnMagicNeighborhoods() const { return HyperreductionConfiguration_->deformationTensorOnMagicNeighborhoods(); }
+    const PtrList<volTensorField>& get_deformationTensorOfModesOnMagicPoints() const { return HyperreductionConfiguration_->deformationTensorOnMagicPoints(); }
+    const List<label>& get_magicPoints() const { return HyperreductionConfiguration_->magicPoints(); }
+    const List<label>& get_localMagicPoints() const { return HyperreductionConfiguration_->localMagicPoints(); }
+    const Eigen::MatrixXd& get_projected_K_DEIM() const { return HyperreductionConfiguration_->projectedK_DEIM(); }
+    const Eigen::MatrixXd& get_projected_MK_DEIM() const { return HyperreductionConfiguration_->projectedMK_DEIM(); }
     const volScalarField& get_delta() const { return meshConfig_->get_delta(); }
-    const volScalarField& get_magicDelta() const { return meshConfig_->get_magicDelta(); }
-    const fvMesh& get_submesh() const { return meshConfig_->get_submesh(); }
+    const volScalarField& get_magicDelta() const { return HyperreductionConfiguration_->get_magicDelta(); }
+    const fvMesh& get_submesh() const { return HyperreductionConfiguration_->get_submesh(); }
     const volScalarField& get_volume() const { return meshConfig_->get_volume(); }
     const double& get_totalVolume() const { return meshConfig_->get_totalVolume(); }
     const volVectorField& get_meanU() const { return *ROMExecutionConfig_->meanU(); }
-    const volVectorField& get_meanVectorDEIM() const { return *DEIMConfiguration_->meanVectorDEIM(); }
-    const volScalarField& get_meanScalarDEIM() const { return *DEIMConfiguration_->meanScalarDEIM(); }
+    const volVectorField& get_meanVectorDEIM() const { return *HyperreductionConfiguration_->meanVectorDEIM(); }
+    const volScalarField& get_meanScalarDEIM() const { return *HyperreductionConfiguration_->meanScalarDEIM(); }
     void get_meanDEIM(volVectorField& meanVectorDEIM_out) { meanVectorDEIM_out = get_meanVectorDEIM(); }
     void get_meanDEIM(volScalarField& meanVectorDEIM_out) { meanVectorDEIM_out = get_meanScalarDEIM(); }
-    const volVectorField& get_meanVectorDEIMMagic() const { return *DEIMConfiguration_->meanVectorDEIMMagic(); }
-    const volScalarField& get_meanScalarDEIMMagic() const { return *DEIMConfiguration_->meanScalarDEIMMagic(); }
+    const volVectorField& get_meanVectorDEIMMagic() const { return *HyperreductionConfiguration_->meanVectorDEIMMagic(); }
+    const volScalarField& get_meanScalarDEIMMagic() const { return *HyperreductionConfiguration_->meanScalarDEIMMagic(); }
 
-    const Eigen::Tensor<double, 3>& get_xi_onMagicPts() const { return DEIMConfiguration_->xiOnMagicPts(); }
-    const Eigen::Tensor<double, 3>& get_M_xi_onMagicPts() const { return DEIMConfiguration_->M_xiOnMagicPts(); }
+    const Eigen::Tensor<double, 3>& get_xi_onMagicPts() const { return HyperreductionConfiguration_->xiOnMagicPts(); }
+    const Eigen::Tensor<double, 3>& get_M_xi_onMagicPts() const { return HyperreductionConfiguration_->M_xiOnMagicPts(); }
 
     /// Getter and setter of DEIM matrix K
-    const Eigen::MatrixXd& get_K_DEIM() const { return DEIMConfiguration_->K_DEIM(); }
-    void set_K_DEIM(Eigen::MatrixXd& K) { DEIMConfiguration_->setK_DEIM(K); }
+    const Eigen::MatrixXd& get_K_DEIM() const { return HyperreductionConfiguration_->K_DEIM(); }
+    void set_K_DEIM(Eigen::MatrixXd& K) { HyperreductionConfiguration_->setK_DEIM(K); }
 
     /// Setters to the members of IthacaFVParameters that cannot initialize at the beginning of the program
     /// For instance, eigen values can be known only after POD was performed
@@ -325,8 +325,8 @@ public:
     void set_nSnapshotsSimulation(const label& input_nSnapshotsSimulation) { snapshotConfiguration_->set_nSnapshotsSimulation(input_nSnapshotsSimulation); }
     void set_eigenValues_p(const Eigen::VectorXd& input_eigenValues_p) { PODConfiguration_->set_eigenValues_p(input_eigenValues_p); }
     void set_saveTime(const double& input_saveTime) { snapshotConfiguration_->set_writeInterval(input_saveTime); }
-    void set_xi_onMagicPts(const Eigen::Tensor<double, 3> xi) { DEIMConfiguration_->setXiOnMagicPts(xi); }
-    void set_M_xi_onMagicPts(const Eigen::Tensor<double, 3> M_xi) { DEIMConfiguration_->setM_XiOnMagicPts(M_xi); }
+    void set_xi_onMagicPts(const Eigen::Tensor<double, 3> xi) { HyperreductionConfiguration_->setXiOnMagicPts(xi); }
+    void set_M_xi_onMagicPts(const Eigen::Tensor<double, 3> M_xi) { HyperreductionConfiguration_->setM_XiOnMagicPts(M_xi); }
     void set_useSOTA(word& input_useSOTA) { ROMExecutionConfig_->setUseSOTA(input_useSOTA); }
 
     /// set DDES
@@ -336,52 +336,52 @@ public:
     void set_useDNS(const bool& c) { SimulationFlags_->set_useDNS(c); }
 
     /// Setters of POD and DEIM parameters
-    void set_DEIMInterpolatedField(Foam::word name) { ROMExecutionConfig_->setHRInterpolatedField(name); }
-    void set_nMagicPoints(const label& n) { DEIMConfiguration_->setNMagicPoints(n); }
-    void set_Ck(const float& c) { DEIMConfiguration_->setCk(c); }
-    void set_Ce(const float& c) { DEIMConfiguration_->setCe(c); }
+    void set_DEIMInterpolatedField(Foam::word name) { HyperreductionConfiguration_->setHRInterpolatedField(name); }
+    void set_nMagicPoints(const label& n) { HyperreductionConfiguration_->setNMagicPoints(n); }
+    void set_Ck(const float& c) { HyperreductionConfiguration_->setCk(c); }
+    void set_Ce(const float& c) { HyperreductionConfiguration_->setCe(c); }
     void set_useDEIM(const bool& b) { SimulationFlags_->set_useDEIM(b); }
 
-    void set_magicPoints(const List<label>& nn) { DEIMConfiguration_->setMagicPoints(nn); }
-    void set_localMagicPoints(const List<label>& nn) { DEIMConfiguration_->setLocalMagicPoints(nn); }
-    void set_projected_K_DEIM(const Eigen::MatrixXd& K_input) { DEIMConfiguration_->setProjectedK_DEIM(K_input); }
+    void set_magicPoints(const List<label>& nn) { HyperreductionConfiguration_->setMagicPoints(nn); }
+    void set_localMagicPoints(const List<label>& nn) { HyperreductionConfiguration_->setLocalMagicPoints(nn); }
+    void set_projected_K_DEIM(const Eigen::MatrixXd& K_input) { HyperreductionConfiguration_->setProjectedK_DEIM(K_input); }
     void set_deformationTensorOfModesOnMagicNeighborhoods(PtrList<volVectorField>& defT)
     {
-        DEIMConfiguration_->setTracerGradOnMagicNeighborhoods(defT, get_nModes()["U"] + 1);
+        HyperreductionConfiguration_->setTracerGradOnMagicNeighborhoods(defT, get_nModes()["U"] + 1);
     }
 
     void set_deformationTensorOfModesOnMagicPoints(PtrList<volVectorField>& defT)
     {
-        DEIMConfiguration_->setTracerGradOnMagicPoints(defT, get_nModes()["U"] + 1);
+        HyperreductionConfiguration_->setTracerGradOnMagicPoints(defT, get_nModes()["U"] + 1);
     }
 
     void set_deformationTensorOfModesOnMagicNeighborhoods(PtrList<volTensorField>& defT)
     {
-        DEIMConfiguration_->setDeformationTensorOnMagicNeighborhoods(defT, get_nModes()["U"] + 1);
+        HyperreductionConfiguration_->setDeformationTensorOnMagicNeighborhoods(defT, get_nModes()["U"] + 1);
     }
 
     void set_deformationTensorOfModesOnMagicPoints(PtrList<volTensorField>& defT)
     {
-        DEIMConfiguration_->setDeformationTensorOnMagicPoints(defT, get_nModes()["U"] + 1);
+        HyperreductionConfiguration_->setDeformationTensorOnMagicPoints(defT, get_nModes()["U"] + 1);
     }
 
-    void set_projected_MK_DEIM(const Eigen::MatrixXd& proj_MK_input) { DEIMConfiguration_->setProjectedMK_DEIM(proj_MK_input); }
-    void set_magicDelta(const volScalarField& mD) { meshConfig_->set_magicDelta(mD); }
-    void set_submesh(fvMesh& s) { meshConfig_->set_submesh(s); }
+    void set_projected_MK_DEIM(const Eigen::MatrixXd& proj_MK_input) { HyperreductionConfiguration_->setProjectedMK_DEIM(proj_MK_input); }
+    void set_magicDelta(const volScalarField& mD) { HyperreductionConfiguration_->set_magicDelta(mD); }
+    void set_submesh(fvMesh& s) { HyperreductionConfiguration_->set_submesh(s); }
 
 
     void set_meanU(const volVectorField& mm) { ROMExecutionConfig_->setMeanU(mm); }
-    void set_meanDEIM(const volVectorField& mm) { DEIMConfiguration_->setMeanVectorDEIM(mm); }
-    void set_meanDEIM(const volScalarField& mm) { DEIMConfiguration_->setMeanScalarDEIM(mm); }
+    void set_meanDEIM(const volVectorField& mm) { HyperreductionConfiguration_->setMeanVectorDEIM(mm); }
+    void set_meanDEIM(const volScalarField& mm) { HyperreductionConfiguration_->setMeanScalarDEIM(mm); }
     void set_meanDEIMMagic(const volVectorField& mm)
     {
-        DEIMConfiguration_->setMeanVectorDEIMMagic(mm);
+        HyperreductionConfiguration_->setMeanVectorDEIMMagic(mm);
     }
     void set_meanDEIMMagic(const volScalarField& mm)
     {
-        DEIMConfiguration_->setMeanScalarDEIMMagic(mm);
+        HyperreductionConfiguration_->setMeanScalarDEIMMagic(mm);
     }
-    void set_deltaWeight(Eigen::VectorXd dw) { ROMExecutionConfig_->setDeltaWeight(dw); }
+    void set_deltaWeight(Eigen::VectorXd dw) { HyperreductionConfiguration_->setDeltaWeight(dw); }
 
 private:
     // configuration components
@@ -389,20 +389,12 @@ private:
     std::unique_ptr<FieldTemplates> fieldTemplates_;
     std::unique_ptr<SnapshotConfiguration> snapshotConfiguration_;
     std::unique_ptr<SolverConfiguration> solverConfiguration_;
-    std::unique_ptr<DEIMConfiguration> DEIMConfiguration_;
+    std::unique_ptr<HyperreductionConfiguration> HyperreductionConfiguration_;
     std::unique_ptr<ROMExecutionConfig> ROMExecutionConfig_;
     std::unique_ptr<SimulationFlags> SimulationFlags_;
     std::unique_ptr<PODConfiguration> PODConfiguration_;
 
-
-    void initializeHyperReductionField(const word& HRInterpolatedField);
-
-    void addREducedField(const word& nameToReplace, const word& modifiedFieldName);
-
-    word createReducedFieldName(const word& HRInterpolatedField);
-
     void initializeFieldConfiguration();
-
 
 protected:
     // OPENFOAM runtime

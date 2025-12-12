@@ -1,12 +1,15 @@
 #pragma once
-#ifndef DEIMConfiguration_H
-#define DEIMConfiguration_H
+#ifndef HyperreductionConfiguration_H
+#define HyperreductionConfiguration_H
 
 #include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "List.H"
 #include "labelFwd.H"
 #include "volFieldsFwd.H"
+#include "fvMesh.H"
+#include "ITHACAutilities.H"
+#include "PODConfiguration.H"
 
 
 namespace ITHACAPOD
@@ -18,22 +21,41 @@ namespace ITHACAPOD
  * Manages magic points, interpolation matrices, and DEIM-specific fields
  * for hyper-reduction of nonlinear terms.
  */
-class DEIMConfiguration
+class HyperreductionConfiguration
 {
 public:
-    DEIMConfiguration():
+    HyperreductionConfiguration():
         m_nMagicPoints(0), m_Ck(0.0), m_Ce(0.0),
+        m_interpFieldCentered(false),
         m_meanVectorDEIM(nullptr), m_meanScalarDEIM(nullptr),
         m_meanVectorDEIMMagic(nullptr), m_meanScalarDEIMMagic(nullptr) { };
+
+    // Hyperreduction method: DEIM or ECP (itself Global or EachMode)
+    const Foam::word& HRMethod() const { return m_HRMethod; }
+    const Foam::word& ECPAlgo() const { return m_ECPAlgo; }
+
+    void setHRMethod(const Foam::word& method) { m_HRMethod = method; }
+    void setECPAlgo(const Foam::word& algo) { m_ECPAlgo = algo; }
+
+    // Hyperreduced field name
+    const Foam::word& HRSnapshotsField() const { return m_HRSnapshotsField; }
+    const Foam::word& HRInterpolatedField() const { return m_HRInterpolatedField; }
+    const bool& interpFieldCentered() const { return m_interpFieldCentered; }
+
+    void setHRInterpolatedField(const Foam::word& field) { m_HRInterpolatedField = field; }
+    void setHRSnapshotsField(const Foam::word& field) { m_HRSnapshotsField = field; }
+    void set_interpFieldCentered(const bool& b) { m_interpFieldCentered = b; }
 
     // Magic points
     const Foam::label& nMagicPoints() const { return m_nMagicPoints; }
     const Foam::List<Foam::label>& magicPoints() const { return m_magicPoints; }
     const Foam::List<Foam::label>& localMagicPoints() const { return m_localMagicPoints; }
+    const Foam::fvMesh& get_submesh() const { return *m_submesh; }
 
     void setNMagicPoints(Foam::label n) { m_nMagicPoints = n; }
     void setMagicPoints(const Foam::List<Foam::label>& points) { m_magicPoints = points; }
     void setLocalMagicPoints(const Foam::List<Foam::label>& points) { m_localMagicPoints = points; }
+    void set_submesh(Foam::fvMesh& s) { m_submesh = &s; }
 
     // Turbulence model coefficients
     const float& Ck() const { return m_Ck; }
@@ -95,10 +117,33 @@ public:
     void setMeanVectorDEIMMagic(const Foam::volVectorField& mean);
     void setMeanScalarDEIMMagic(const Foam::volScalarField& mean);
 
+    // Delta weights for DEIM on dL2 nut
+    const Eigen::VectorXd deltaWeight() const { return m_deltaWeight; }
+    const Foam::volScalarField& get_magicDelta() const { return *m_magicDelta; }
+
+    void setDeltaWeight(const Eigen::VectorXd& dw);
+    void set_magicDelta(const Foam::volScalarField& mD);
+
+    // Initializers for the hyperreduction
+    void initializeHyperreduction(std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig);
+    void initializeReducedField(const Foam::word origField, std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig);
+    void addReducedFieldToPOD(const Foam::word& nameToReplace, const Foam::word& modifiedFieldName,
+                                           std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig);
+    Foam::word createReducedFieldName(const Foam::word& fieldName, std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig);
+
 private:
+
+    Foam::word m_HRMethod;
+    Foam::word m_ECPAlgo;
+
+    Foam::word m_HRInterpolatedField;
+    Foam::word m_HRSnapshotsField;
+    bool m_interpFieldCentered;
+
     Foam::label m_nMagicPoints;
     Foam::List<Foam::label> m_magicPoints;
     Foam::List<Foam::label> m_localMagicPoints;
+    Foam::fvMesh* m_submesh;
 
     float m_Ck; // Smagorinsky coefficient
     float m_Ce; // Smagorinsky coefficient
@@ -125,8 +170,11 @@ private:
     Foam::volScalarField* m_meanScalarDEIM;
     Foam::volVectorField* m_meanVectorDEIMMagic;
     Foam::volScalarField* m_meanScalarDEIMMagic;
+
+    Eigen::VectorXd m_deltaWeight;
+    Foam::volScalarField* m_magicDelta;
 };
 
 } // namespace ITHACAPOD
 
-#endif // DEIMConfiguration_H
+#endif // HyperreductionConfiguration_H
