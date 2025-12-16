@@ -73,6 +73,7 @@ LIB_LIBS = \
     -lITHACA_FOMPROBLEMS \
     -lITHACA_THIRD_PARTY \
     -lITHACA_CORE \
+    -lsixDoFRigidBodyMotion \
     -L$(FOAM_USER_LIBBIN) \
     -L/usr/lib \
     -lcrypt \
