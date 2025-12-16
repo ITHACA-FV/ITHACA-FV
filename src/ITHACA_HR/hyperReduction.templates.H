@@ -680,7 +680,7 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(
 
 template <typename... SnapshotsLists>
 void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSnapshotsModes, 
-        Eigen::VectorXd& weights, word folderMethodName, bool predictVolume)
+        Eigen::VectorXd& weights, word folderMethodName)
 {
     folderMethod = folderMethodName;
     Info << "FolderMethod : " << folderMethod << endl;
@@ -711,17 +711,12 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
     {
 
         bool normalizedArgmaxForCubaturePointsSelection = 1;
-        bool cellVolumesInCubatureWeights = 0;  // Else in the modes. Gives an equivalent system, but changes the condition number.
-        bool NNLS = 1;
+        bool cellVolumesInCubatureWeights = 0;  // Gives an equivalent system, but changes the condition number.
+        bool predictVolume = 0;  // Adding the prediction of the volume in the system
+        bool NNLS = 1;  // Weights are all positive
 
         assert(n_totalModes > 0);
         // assert(n_nodes >= n_modes);
-
-        if (predictVolume && !(volumes.size() == n_cells))
-        {
-            Info << "Cell's volumes must be filled if predicting volume in ECP" << endl;
-            abort();
-        }  
 
         // matrices for quadratureWeights evaluation
         Eigen::MatrixXd J;
@@ -731,7 +726,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
         Eigen::MatrixXd A(vectorial_dim * n_totalModes, n_cells);
         Eigen::VectorXd b = Eigen::VectorXd::Constant(vectorial_dim * n_totalModes, 1);
         Eigen::VectorXd cellVolumes = volumes;
-        double volume = volumes.array().sum();
+        double volume = cellVolumes.array().sum();
         label n_modesPrevious = 0;
 
         for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
@@ -745,24 +740,23 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
             {
                 Eigen::MatrixXd block = listSnapshotsModes[ith_subspace].block(ith_field* n_cells, 0, n_cells,
                                         n_modesCurrent).transpose();
+
+                if (predictVolume)
+                {
+                    Eigen::MatrixXd volumeAwareMean = (block.rowwise().sum()/volume) * cellVolumes.transpose();
+                    block -= volumeAwareMean;
+
+                    q[ith_subspace](ith_field * n_modesCurrent_modif + n_modesCurrent) = volume;
+                    Jwhole[ith_subspace].row(ith_field * n_modesCurrent_modif + n_modesCurrent) = cellVolumes;
+                }
+
                 q[ith_subspace].segment(ith_field * n_modesCurrent_modif, n_modesCurrent) = block.rowwise().sum();
                 Jwhole[ith_subspace].middleRows(ith_field * n_modesCurrent_modif, n_modesCurrent) = block;
 
                 if (cellVolumesInCubatureWeights)
                 {
-                    block.array().rowwise() /= volumes.transpose().array();
-                    Eigen::MatrixXd invNormModes = block.rowwise().norm().array().cwiseInverse().matrix().asDiagonal();
-                    block = invNormModes * block;
-                    Jwhole[ith_subspace].middleRows(ith_field * n_modesCurrent_modif, n_modesCurrent) = block;
-                    q[ith_subspace].segment(ith_field * n_modesCurrent_modif, n_modesCurrent) = 
-                            invNormModes * q[ith_subspace].segment(ith_field * n_modesCurrent_modif, n_modesCurrent);
-                    cellVolumes = Eigen::VectorXd::Constant(n_cells,1);
-                }
-
-                if (predictVolume)
-                {
-                    q[ith_subspace](ith_field * n_modesCurrent_modif + n_modesCurrent) = volume / cellVolumes.norm();
-                    Jwhole[ith_subspace].row(ith_field * n_modesCurrent_modif + n_modesCurrent) = (cellVolumes.array() / cellVolumes.norm()).matrix();
+                    Jwhole[ith_subspace].middleRows(ith_field * n_modesCurrent_modif, n_modesCurrent_modif)
+                                                           .array().rowwise() /= cellVolumes.transpose().array().sqrt();
                 }
 
                 if (normalizedArgmaxForCubaturePointsSelection)
@@ -874,8 +868,8 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
                 {
                     for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
                     {
-                        quadratureWeightsSubspaces[ith_subspace](ith_field * nodePoints->size() + i) = 
-                            quadratureWeightsSubspaces[ith_subspace](ith_field * nodePoints->size() + i)/(volumes(nodePoints()[i]));
+                        quadratureWeightsSubspaces[ith_subspace](ith_field * nodePoints->size() + i) /= 
+                                                                    std::sqrt(volumes(nodePoints()[i]));
                     }
                 }
             }

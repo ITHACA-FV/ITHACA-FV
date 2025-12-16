@@ -481,23 +481,10 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
     {
         // ECP snapshots are weighted by cells' volume not sqrt
         spatialModesHR = weights.asDiagonal() * spatialModesHR;
-        spatialModesHR.array().rowwise() /= (spatialModesHR.colwise().norm().array());
 
-        bool spacedCenteredModes_predictVolume = 0;
-        bool weightedModesWithEigenval = 0;
+        bool weightModesWithEigenval = 0;
 
-        if (spacedCenteredModes_predictVolume)
-        {
-            for (label i = 0; i < spatialModesHR.cols(); i++)
-            {
-                Eigen::VectorXd discreteMeani = weights.array().square().matrix() *
-                        (spatialModesHR.col(i).sum()/weights.array().square().sum());
-                spatialModesHR.col(i) = spatialModesHR.col(i) - discreteMeani;
-                spatialModesHR.col(i) = (spatialModesHR.col(i).array() / spatialModesHR.col(i).norm()).matrix();
-            }
-        }
-
-        if (weightedModesWithEigenval)
+        if (weightModesWithEigenval)
         {
             for (unsigned int c = 0; c < HRPODFields.size(); c++)
             {
@@ -517,7 +504,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
         if (ECPAlgo == "Global")
         {
             quadWeights.resize(f_spatialModesU.size());
-            ithacaHyperreduction->offlineECP(spatialModesHR, fieldWeightsOnes, folder_HR, spacedCenteredModes_predictVolume);
+            ithacaHyperreduction->offlineECP(spatialModesHR, fieldWeightsOnes, folder_HR);
             for (label c = 0; c < f_spatialModesU.size(); c++)
             {
                 quadWeights[c] = ithacaHyperreduction->quadratureWeights; 
@@ -531,7 +518,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
             {
                 listspatialModesHR[c] = spatialModesHR.middleCols(nModesSubspace*c, nModesSubspace);
             }
-            ithacaHyperreduction->offlineECP(listspatialModesHR, fieldWeightsOnes, folder_HR, spacedCenteredModes_predictVolume);
+            ithacaHyperreduction->offlineECP(listspatialModesHR, fieldWeightsOnes, folder_HR);
             quadWeights = ithacaHyperreduction->quadratureWeightsSubspaces;
         }
     }
