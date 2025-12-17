@@ -1,3 +1,0 @@
-compare_POD.C
-
-EXE = $(FOAM_USER_APPBIN)/compare_POD

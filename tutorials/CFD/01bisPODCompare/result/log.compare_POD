@@ -1,1251 +1,0 @@
-/*---------------------------------------------------------------------------*\
-| =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2106                                  |
-|   \\  /    A nd           | Website:  www.openfoam.com                      |
-|    \\/     M anipulation  |                                                 |
-\*---------------------------------------------------------------------------*/
-Build  : _40a7d5d6-20210727 OPENFOAM=2106 patch=211215
-Arch   : "LSB;label=32;scalar=64"
-Exec   : compare_POD
-Date   : Aug 04 2025
-Time   : 17:43:26
-Host   : LS-PF4RTR07
-PID    : 302407
-I/O    : uncollated
-Case   : /home/fregnault/Code/ITHACA-FV/tutorials/CFD/01bisPODCompare
-nProcs : 1
-trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
-fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
-allowSystemOperations : Allowing user-supplied system call operations
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-Create time
-
-Create mesh for time = 1001
-
-POD don't exist, performing a POD decomposition
-nSnapshots =41
-nSnapshots =41
-nSnapshots =41
-nSnapshots =41
-startTime: 1
-endTime: 41
-nSnapshots: 41
-
-Reading snapshot 1 for field U
-Reading snapshot 2 for field U
-Reading snapshot 3 for field U
-Reading snapshot 4 for field U
-Reading snapshot 5 for field U
-Reading snapshot 6 for field U
-Reading snapshot 7 for field U
-Reading snapshot 8 for field U
-Reading snapshot 9 for field U
-Reading snapshot 10 for field U
-Reading snapshot 11 for field U
-Reading snapshot 12 for field U
-Reading snapshot 13 for field U
-Reading snapshot 14 for field U
-Reading snapshot 15 for field U
-Reading snapshot 16 for field U
-Reading snapshot 17 for field U
-Reading snapshot 18 for field U
-Reading snapshot 19 for field U
-Reading snapshot 20 for field U
-Reading snapshot 21 for field U
-Reading snapshot 22 for field U
-Reading snapshot 23 for field U
-Reading snapshot 24 for field U
-Reading snapshot 25 for field U
-Reading snapshot 26 for field U
-Reading snapshot 27 for field U
-Reading snapshot 28 for field U
-Reading snapshot 29 for field U
-Reading snapshot 30 for field U
-Reading snapshot 31 for field U
-Reading snapshot 32 for field U
-Reading snapshot 33 for field U
-Reading snapshot 34 for field U
-Reading snapshot 35 for field U
-Reading snapshot 36 for field U
-Reading snapshot 37 for field U
-Reading snapshot 38 for field U
-Reading snapshot 39 for field U
-Reading snapshot 40 for field U
-Reading snapshot 41 for field U
-0 before
-0 before
-0 before
-Entering PODParameters 01/*---------------------------------------------------------------------------*\
-| =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2106                                  |
-|   \\  /    A nd           | Website:  www.openfoam.com                      |
-|    \\/     M anipulation  |                                                 |
-\*---------------------------------------------------------------------------*/
-Build  : _40a7d5d6-20210727 OPENFOAM=2106 patch=211215
-Arch   : "LSB;label=32;scalar=64"
-Exec   : compare_POD
-Date   : Aug 04 2025
-Time   : 17:44:15
-Host   : LS-PF4RTR07
-PID    : 302407
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry startDate which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry startTime which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry userName which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry foamVersion which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry code which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry argList which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry currentDir which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry PPID which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry PGID which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry foamBuild which already exists in dictionary "JobInfo"
-I/O    : uncollated
-Case   : /home/fregnault/Code/ITHACA-FV/tutorials/CFD/01bisPODCompare
-nProcs : 1
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry root which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry case which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry nProcs which already exists in dictionary "JobInfo"
-fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
-allowSystemOperations : Allowing user-supplied system call operations
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-For proc n° 0argv[0] = compare_POD
-For proc n° 0 : mesh read
-For proc n° 0 : parameters loaded
-runTimeData
-"././"
-1001
-template field U passed
-For proc n° 0 : template field initialised
-runTimeData in PODParams
-1
-InitialTime and FinalTime
-1001 & 1001.2
-For proc n° 0 : start and final time loaded
-For proc n° 0 : control and transport loaded
-For proc n° 0 : get line simulationType
-For proc n° 0 : while passed
-For proc n° 0 : set simulation passed
------------------0---------------------------
-Simulation type:"laminar"
-DNS simulation will be performed
-For proc n° 0 : no DEIM
-Exiting PODParameters 01---------------------------------------------------------
-0 after
-0 after
-0 after
-1
-nSnapshot at PODtemplate instanciation
-41
-casenameData at PODtemplate instanciation
-"./"
-runTime at PODtemplate instanciation
-
-42
-(
-0	constant
-1001	1001
-1001	1001.005
-1001.01	1001.01
-1001.01	1001.015
-1001.02	1001.02
-1001.02	1001.025
-1001.03	1001.03
-1001.03	1001.035
-1001.04	1001.04
-1001.04	1001.045
-1001.05	1001.05
-1001.05	1001.055
-1001.06	1001.06
-1001.07	1001.065
-1001.07	1001.07
-1001.08	1001.075
-1001.08	1001.08
-1001.09	1001.085
-1001.09	1001.09
-1001.1	1001.095
-1001.1	1001.1
-1001.11	1001.105
-1001.11	1001.11
-1001.12	1001.115
-1001.12	1001.12
-1001.12	1001.125
-1001.13	1001.13
-1001.13	1001.135
-1001.14	1001.14
-1001.14	1001.145
-1001.15	1001.15
-1001.15	1001.155
-1001.16	1001.16
-1001.16	1001.165
-1001.17	1001.17
-1001.17	1001.175
-1001.18	1001.18
-1001.18	1001.185
-1001.19	1001.19
-1001.2	1001.195
-1001.2	1001.2
-)
-
--------------------------------------------------------------------------------------------
-The POD is performing with the following parameters :
-Field : U
-Number of modes : 4
-POD Hilbert space : L2
-Weight for the boundary conditions (0 for L2 POD Hilbert space) : 0
-Patch for the boundary conditions(inlet by default) used in L2wBC : inlet
-start time : 1
-End time : 41
-Number of snapshots : 41
-Number of test snapshots : 1
-Number of blocks : 4
-Centered datas or not : 0 (1 centered, 0 not centered)
-Name of eigensolver used : spectra
-Results folder : ITHACAoutput
-
-Inside the buildCovMatrix
-looking for covMatrixU_temp_*.npy in ./ITHACAoutput/CovMatrices/
-Computing the covariance matrix of the U field
-q = 10
-r = 1
-nSnapshot = 41
-nBlocks = 4
-
-casenameData "./"
-l_startTime 1
-i 0
-q 10
-######### Reading the Data for U #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [0:9]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-casenameData "./"
-l_startTime 1
-i 1
-q 10
-######### Reading the Data for U #########
-First and last snapshot number
-9
-12
- 57% [||||||||||||||||||||||||||||||||||                          ] 61% [|||||||||||||||||||||||||||||||||||||                       ] 66% [||||||||||||||||||||||||||||||||||||||||                    ] 71% [||||||||||||||||||||||||||||||||||||||||||                  ] 76% [|||||||||||||||||||||||||||||||||||||||||||||               ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [10:19]x[10:19] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for U #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [10:19]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-casenameData "./"
-l_startTime 1
-i 2
-q 10
-######### Reading the Data for U #########
-First and last snapshot number
-19
-12
- 70% [||||||||||||||||||||||||||||||||||||||||||                  ] 74% [||||||||||||||||||||||||||||||||||||||||||||                ] 77% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 83% [||||||||||||||||||||||||||||||||||||||||||||||||||          ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 93% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||    ] 96% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [20:29]x[20:29] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for U #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [20:29]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for U #########
-First and last snapshot number
-9
-12
- 57% [||||||||||||||||||||||||||||||||||                          ] 61% [|||||||||||||||||||||||||||||||||||||                       ] 66% [||||||||||||||||||||||||||||||||||||||||                    ] 71% [||||||||||||||||||||||||||||||||||||||||||                  ] 76% [|||||||||||||||||||||||||||||||||||||||||||||               ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [20:29]x[10:19] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-casenameData "./"
-l_startTime 1
-i 3
-q 10
-######### Reading the Data for U #########
-First and last snapshot number
-29
-12
- 78% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 82% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 92% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||     ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ] 97% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [30:39]x[30:39] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for U #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [30:39]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for U #########
-First and last snapshot number
-9
-12
- 57% [||||||||||||||||||||||||||||||||||                          ] 61% [|||||||||||||||||||||||||||||||||||||                       ] 66% [||||||||||||||||||||||||||||||||||||||||                    ] 71% [||||||||||||||||||||||||||||||||||||||||||                  ] 76% [|||||||||||||||||||||||||||||||||||||||||||||               ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [30:39]x[10:19] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for U #########
-First and last snapshot number
-19
-12
- 70% [||||||||||||||||||||||||||||||||||||||||||                  ] 74% [||||||||||||||||||||||||||||||||||||||||||||                ] 77% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 83% [||||||||||||||||||||||||||||||||||||||||||||||||||          ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 93% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||    ] 96% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [30:39]x[20:29] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-in r != 0 loop
-######### Reading the Data for U #########
-First and last snapshot number
-39
-3
-100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [40:40]x[40:40] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-######### Reading the Data for U #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [40:40]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-######### Reading the Data for U #########
-First and last snapshot number
-9
-12
- 57% [||||||||||||||||||||||||||||||||||                          ] 61% [|||||||||||||||||||||||||||||||||||||                       ] 66% [||||||||||||||||||||||||||||||||||||||||                    ] 71% [||||||||||||||||||||||||||||||||||||||||||                  ] 76% [|||||||||||||||||||||||||||||||||||||||||||||               ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [40:40]x[10:19] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-######### Reading the Data for U #########
-First and last snapshot number
-19
-12
- 70% [||||||||||||||||||||||||||||||||||||||||||                  ] 74% [||||||||||||||||||||||||||||||||||||||||||||                ] 77% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 83% [||||||||||||||||||||||||||||||||||||||||||||||||||          ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 93% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||    ] 96% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [40:40]x[20:29] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-######### Reading the Data for U #########
-First and last snapshot number
-29
-12
- 78% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 82% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 92% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||     ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ] 97% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [40:40]x[30:39] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Exiting double Loop
-Total varying L2 energy for U : 1286.56
-
-Performing the eigen decomposition
-Using Spectra EigenSolver 
-% of varying L2 energy captures by the modes for U : 100%
-
-Computing the spatial modes of the U field
-In read_snapshot
-Reading path
-1001
-In read_snapshot
-Reading path
-1001.005
-In read_snapshot
-Reading path
-1001.01
-In read_snapshot
-Reading path
-1001.015
-In read_snapshot
-Reading path
-1001.02
-In read_snapshot
-Reading path
-1001.025
-In read_snapshot
-Reading path
-1001.03
-In read_snapshot
-Reading path
-1001.035
-In read_snapshot
-Reading path
-1001.04
-In read_snapshot
-Reading path
-1001.045
-In read_snapshot
-Reading path
-1001.05
-In read_snapshot
-Reading path
-1001.055
-In read_snapshot
-Reading path
-1001.06
-In read_snapshot
-Reading path
-1001.065
-In read_snapshot
-Reading path
-1001.07
-In read_snapshot
-Reading path
-1001.075
-In read_snapshot
-Reading path
-1001.08
-In read_snapshot
-Reading path
-1001.085
-In read_snapshot
-Reading path
-1001.09
-In read_snapshot
-Reading path
-1001.095
-In read_snapshot
-Reading path
-1001.1
-In read_snapshot
-Reading path
-1001.105
-In read_snapshot
-Reading path
-1001.11
-In read_snapshot
-Reading path
-1001.115
-In read_snapshot
-Reading path
-1001.12
-In read_snapshot
-Reading path
-1001.125
-In read_snapshot
-Reading path
-1001.13
-In read_snapshot
-Reading path
-1001.135
-In read_snapshot
-Reading path
-1001.14
-In read_snapshot
-Reading path
-1001.145
-In read_snapshot
-Reading path
-1001.15
-In read_snapshot
-Reading path
-1001.155
-In read_snapshot
-Reading path
-1001.16
-In read_snapshot
-Reading path
-1001.165
-In read_snapshot
-Reading path
-1001.17
-In read_snapshot
-Reading path
-1001.175
-In read_snapshot
-Reading path
-1001.18
-In read_snapshot
-Reading path
-1001.185
-In read_snapshot
-Reading path
-1001.19
-In read_snapshot
-Reading path
-1001.195
-In read_snapshot
-Reading path
-1001.2
-######### Exporting the Data for U #########
- 25% [|||||||||||||||                                             ] 50% [||||||||||||||||||||||||||||||                              ] 75% [|||||||||||||||||||||||||||||||||||||||||||||               ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-
-Computing the temporal modes of the U field
-
-Computing the Simulation temporal modes of the U field
-In read_snapshot
-Reading path
-1001.2
-before dot_product_POD1in dot_product_L2 vector vector1after dot_product_POD1before dot_product_POD1in dot_product_L2 vector vector1after dot_product_POD1before dot_product_POD1in dot_product_L2 vector vector1after dot_product_POD1before dot_product_POD1in dot_product_L2 vector vector1after dot_product_POD1
--------------------------------------------------------------------------------------------
-POD RL finished !!!
-*********************************************************
-POD-RL for the speed took 240.01 s
-*********************************************************
-Performing POD for U using the L2 norm
-####### Performing the POD using EigenDecomposition U #######
-Using Spectra EigenSolver 
-####### End of the POD for U #######
-  229.656
-  2.68714
- 0.327547
-0.0444225
-####### Saving the POD bases for U #######
-######### Exporting the Data for U #########
- 25% [|||||||||||||||                                             ] 50% [||||||||||||||||||||||||||||||                              ] 75% [|||||||||||||||||||||||||||||||||||||||||||||               ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Reading snapshot 1 for field p
-Reading snapshot 2 for field p
-Reading snapshot 3 for field p
-Reading snapshot 4 for field p
-Reading snapshot 5 for field p
-Reading snapshot 6 for field p
-Reading snapshot 7 for field p
-Reading snapshot 8 for field p
-Reading snapshot 9 for field p
-Reading snapshot 10 for field p
-Reading snapshot 11 for field p
-Reading snapshot 12 for field p
-Reading snapshot 13 for field p
-Reading snapshot 14 for field p
-Reading snapshot 15 for field p
-Reading snapshot 16 for field p
-Reading snapshot 17 for field p
-Reading snapshot 18 for field p
-Reading snapshot 19 for field p
-Reading snapshot 20 for field p
-Reading snapshot 21 for field p
-Reading snapshot 22 for field p
-Reading snapshot 23 for field p
-Reading snapshot 24 for field p
-Reading snapshot 25 for field p
-Reading snapshot 26 for field p
-Reading snapshot 27 for field p
-Reading snapshot 28 for field p
-Reading snapshot 29 for field p
-Reading snapshot 30 for field p
-Reading snapshot 31 for field p
-Reading snapshot 32 for field p
-Reading snapshot 33 for field p
-Reading snapshot 34 for field p
-Reading snapshot 35 for field p
-Reading snapshot 36 for field p
-Reading snapshot 37 for field p
-Reading snapshot 38 for field p
-Reading snapshot 39 for field p
-Reading snapshot 40 for field p
-Reading snapshot 41 for field p
-0 before
-0 before
-0 before
-Entering PODParameters 01/*---------------------------------------------------------------------------*\
-| =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  2106                                  |
-|   \\  /    A nd           | Website:  www.openfoam.com                      |
-|    \\/     M anipulation  |                                                 |
-\*---------------------------------------------------------------------------*/
-Build  : _40a7d5d6-20210727 OPENFOAM=2106 patch=211215
-Arch   : "LSB;label=32;scalar=64"
-Exec   : compare_POD
-Date   : Aug 04 2025
-Time   : 17:48:50
-Host   : LS-PF4RTR07
-PID    : 302407
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry startDate which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry startTime which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry userName which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry foamVersion which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry code which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry argList which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry currentDir which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry PPID which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry PGID which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry foamBuild which already exists in dictionary "JobInfo"
-I/O    : uncollated
-Case   : /home/fregnault/Code/ITHACA-FV/tutorials/CFD/01bisPODCompare
-nProcs : 1
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry root which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry case which already exists in dictionary "JobInfo"
---> FOAM Warning : 
-    From Foam::entry* Foam::dictionary::add(Foam::entry*, bool)
-    in file db/dictionary/dictionary.C at line 777
-    Reading "JobInfo" at line 0
-    Attempt to add entry nProcs which already exists in dictionary "JobInfo"
-fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
-allowSystemOperations : Allowing user-supplied system call operations
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-For proc n° 0argv[0] = compare_POD
-For proc n° 0 : mesh read
-For proc n° 0 : parameters loaded
-runTimeData
-"././"
-1001
-template field U passed
-For proc n° 0 : template field initialised
-runTimeData in PODParams
-1
-InitialTime and FinalTime
-1001 & 1001.2
-For proc n° 0 : start and final time loaded
-For proc n° 0 : control and transport loaded
-For proc n° 0 : get line simulationType
-For proc n° 0 : while passed
-For proc n° 0 : set simulation passed
------------------0---------------------------
-Simulation type:"laminar"
-DNS simulation will be performed
-For proc n° 0 : no DEIM
-Exiting PODParameters 01---------------------------------------------------------
-0 after
-0 after
-0 after
-1
-nSnapshot at PODtemplate instanciation
-41
-casenameData at PODtemplate instanciation
-"./"
-runTime at PODtemplate instanciation
-
-42
-(
-0	constant
-1001	1001
-1001	1001.005
-1001.01	1001.01
-1001.01	1001.015
-1001.02	1001.02
-1001.02	1001.025
-1001.03	1001.03
-1001.03	1001.035
-1001.04	1001.04
-1001.04	1001.045
-1001.05	1001.05
-1001.05	1001.055
-1001.06	1001.06
-1001.07	1001.065
-1001.07	1001.07
-1001.08	1001.075
-1001.08	1001.08
-1001.09	1001.085
-1001.09	1001.09
-1001.1	1001.095
-1001.1	1001.1
-1001.11	1001.105
-1001.11	1001.11
-1001.12	1001.115
-1001.12	1001.12
-1001.12	1001.125
-1001.13	1001.13
-1001.13	1001.135
-1001.14	1001.14
-1001.14	1001.145
-1001.15	1001.15
-1001.15	1001.155
-1001.16	1001.16
-1001.16	1001.165
-1001.17	1001.17
-1001.17	1001.175
-1001.18	1001.18
-1001.18	1001.185
-1001.19	1001.19
-1001.2	1001.195
-1001.2	1001.2
-)
-
--------------------------------------------------------------------------------------------
-The POD is performing with the following parameters :
-Field : p
-Number of modes : 4
-POD Hilbert space : L2
-Weight for the boundary conditions (0 for L2 POD Hilbert space) : 0
-Patch for the boundary conditions(inlet by default) used in L2wBC : inlet
-start time : 1
-End time : 41
-Number of snapshots : 41
-Number of test snapshots : 1
-Number of blocks : 4
-Centered datas or not : 0 (1 centered, 0 not centered)
-Name of eigensolver used : spectra
-Results folder : ITHACAoutput
-
-Inside the buildCovMatrix
-looking for covMatrixp_temp_*.npy in ./ITHACAoutput/CovMatrices/
-Computing the covariance matrix of the p field
-q = 10
-r = 1
-nSnapshot = 41
-nBlocks = 4
-
-casenameData "./"
-l_startTime 1
-i 0
-q 10
-######### Reading the Data for p #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [0:9]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-casenameData "./"
-l_startTime 1
-i 1
-q 10
-######### Reading the Data for p #########
-First and last snapshot number
-9
-12
- 57% [||||||||||||||||||||||||||||||||||                          ] 61% [|||||||||||||||||||||||||||||||||||||                       ] 66% [||||||||||||||||||||||||||||||||||||||||                    ] 71% [||||||||||||||||||||||||||||||||||||||||||                  ] 76% [|||||||||||||||||||||||||||||||||||||||||||||               ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [10:19]x[10:19] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for p #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [10:19]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-casenameData "./"
-l_startTime 1
-i 2
-q 10
-######### Reading the Data for p #########
-First and last snapshot number
-19
-12
- 70% [||||||||||||||||||||||||||||||||||||||||||                  ] 74% [||||||||||||||||||||||||||||||||||||||||||||                ] 77% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 83% [||||||||||||||||||||||||||||||||||||||||||||||||||          ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 93% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||    ] 96% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [20:29]x[20:29] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for p #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [20:29]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for p #########
-First and last snapshot number
-9
-12
- 57% [||||||||||||||||||||||||||||||||||                          ] 61% [|||||||||||||||||||||||||||||||||||||                       ] 66% [||||||||||||||||||||||||||||||||||||||||                    ] 71% [||||||||||||||||||||||||||||||||||||||||||                  ] 76% [|||||||||||||||||||||||||||||||||||||||||||||               ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [20:29]x[10:19] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-casenameData "./"
-l_startTime 1
-i 3
-q 10
-######### Reading the Data for p #########
-First and last snapshot number
-29
-12
- 78% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 82% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 92% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||     ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ] 97% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [30:39]x[30:39] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for p #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [30:39]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for p #########
-First and last snapshot number
-9
-12
- 57% [||||||||||||||||||||||||||||||||||                          ] 61% [|||||||||||||||||||||||||||||||||||||                       ] 66% [||||||||||||||||||||||||||||||||||||||||                    ] 71% [||||||||||||||||||||||||||||||||||||||||||                  ] 76% [|||||||||||||||||||||||||||||||||||||||||||||               ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [30:39]x[10:19] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Entering 2nd read_fields with "./"
-######### Reading the Data for p #########
-First and last snapshot number
-19
-12
- 70% [||||||||||||||||||||||||||||||||||||||||||                  ] 74% [||||||||||||||||||||||||||||||||||||||||||||                ] 77% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 83% [||||||||||||||||||||||||||||||||||||||||||||||||||          ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 93% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||    ] 96% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [30:39]x[20:29] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-in r != 0 loop
-######### Reading the Data for p #########
-First and last snapshot number
-39
-3
-100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the triangular block [40:40]x[40:40] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-######### Reading the Data for p #########
-First and last snapshot number
--1
-12
- 18% [||||||||||                                                  ] 27% [||||||||||||||||                                            ] 36% [|||||||||||||||||||||                                       ] 45% [|||||||||||||||||||||||||||                                 ] 54% [||||||||||||||||||||||||||||||||                            ] 63% [||||||||||||||||||||||||||||||||||||||                      ] 72% [|||||||||||||||||||||||||||||||||||||||||||                 ] 81% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [40:40]x[0:9] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-######### Reading the Data for p #########
-First and last snapshot number
-9
-12
- 57% [||||||||||||||||||||||||||||||||||                          ] 61% [|||||||||||||||||||||||||||||||||||||                       ] 66% [||||||||||||||||||||||||||||||||||||||||                    ] 71% [||||||||||||||||||||||||||||||||||||||||||                  ] 76% [|||||||||||||||||||||||||||||||||||||||||||||               ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [40:40]x[10:19] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-######### Reading the Data for p #########
-First and last snapshot number
-19
-12
- 70% [||||||||||||||||||||||||||||||||||||||||||                  ] 74% [||||||||||||||||||||||||||||||||||||||||||||                ] 77% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 83% [||||||||||||||||||||||||||||||||||||||||||||||||||          ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 93% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||    ] 96% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [40:40]x[20:29] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-######### Reading the Data for p #########
-First and last snapshot number
-29
-12
- 78% [||||||||||||||||||||||||||||||||||||||||||||||              ] 80% [||||||||||||||||||||||||||||||||||||||||||||||||            ] 82% [|||||||||||||||||||||||||||||||||||||||||||||||||           ] 85% [|||||||||||||||||||||||||||||||||||||||||||||||||||         ] 87% [||||||||||||||||||||||||||||||||||||||||||||||||||||        ] 90% [||||||||||||||||||||||||||||||||||||||||||||||||||||||      ] 92% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||     ] 95% [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||   ] 97% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-Adding the square block [40:40]x[30:39] to the covariance matrix
-in dot_product_POD getMassmatrix
-in dot_product, if L2
-In getmassmatrix 1234
-In nModes == 0
-Computation passed
-reduce passed
-
-Exiting double Loop
-Total varying L2 energy for p : 4.20063
-
-Performing the eigen decomposition
-Using Spectra EigenSolver 
-% of varying L2 energy captures by the modes for p : 99.9997%
-
-Computing the spatial modes of the p field
-In read_snapshot
-Reading path
-1001
-In read_snapshot
-Reading path
-1001.005
-In read_snapshot
-Reading path
-1001.01
-In read_snapshot
-Reading path
-1001.015
-In read_snapshot
-Reading path
-1001.02
-In read_snapshot
-Reading path
-1001.025
-In read_snapshot
-Reading path
-1001.03
-In read_snapshot
-Reading path
-1001.035
-In read_snapshot
-Reading path
-1001.04
-In read_snapshot
-Reading path
-1001.045
-In read_snapshot
-Reading path
-1001.05
-In read_snapshot
-Reading path
-1001.055
-In read_snapshot
-Reading path
-1001.06
-In read_snapshot
-Reading path
-1001.065
-In read_snapshot
-Reading path
-1001.07
-In read_snapshot
-Reading path
-1001.075
-In read_snapshot
-Reading path
-1001.08
-In read_snapshot
-Reading path
-1001.085
-In read_snapshot
-Reading path
-1001.09
-In read_snapshot
-Reading path
-1001.095
-In read_snapshot
-Reading path
-1001.1
-In read_snapshot
-Reading path
-1001.105
-In read_snapshot
-Reading path
-1001.11
-In read_snapshot
-Reading path
-1001.115
-In read_snapshot
-Reading path
-1001.12
-In read_snapshot
-Reading path
-1001.125
-In read_snapshot
-Reading path
-1001.13
-In read_snapshot
-Reading path
-1001.135
-In read_snapshot
-Reading path
-1001.14
-In read_snapshot
-Reading path
-1001.145
-In read_snapshot
-Reading path
-1001.15
-In read_snapshot
-Reading path
-1001.155
-In read_snapshot
-Reading path
-1001.16
-In read_snapshot
-Reading path
-1001.165
-In read_snapshot
-Reading path
-1001.17
-In read_snapshot
-Reading path
-1001.175
-In read_snapshot
-Reading path
-1001.18
-In read_snapshot
-Reading path
-1001.185
-In read_snapshot
-Reading path
-1001.19
-In read_snapshot
-Reading path
-1001.195
-In read_snapshot
-Reading path
-1001.2
-######### Exporting the Data for p #########
- 25% [|||||||||||||||                                             ] 50% [||||||||||||||||||||||||||||||                              ] 75% [|||||||||||||||||||||||||||||||||||||||||||||               ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-
-Computing the temporal modes of the p field
-
-Computing the Simulation temporal modes of the p field
-In read_snapshot
-Reading path
-1001.2
-in dot_product_L2 scalar scalar1in dot_product_L2 scalar scalar1in dot_product_L2 scalar scalar1in dot_product_L2 scalar scalar1
--------------------------------------------------------------------------------------------
-*********************************************************
-POD-RL for the pressure took 70.9423 s
-*********************************************************
-Performing POD for p using the L2 norm
-####### Performing the POD using EigenDecomposition p #######
-Using Spectra EigenSolver 
-####### End of the POD for p #######
-  13.1108
-   0.5721
-0.0745727
-0.0206224
-####### Saving the POD bases for p #######
-######### Exporting the Data for p #########
- 25% [|||||||||||||||                                             ] 50% [||||||||||||||||||||||||||||||                              ] 75% [|||||||||||||||||||||||||||||||||||||||||||||               ]100% [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||]
-
-End
-
