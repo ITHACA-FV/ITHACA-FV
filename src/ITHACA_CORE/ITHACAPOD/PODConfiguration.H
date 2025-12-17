@@ -1,7 +1,7 @@
 #pragma once
 #ifndef PODConfiguration_H
 #define PODConfiguration_H
-#include "Eigen/Core"
+#include <Eigen/Eigen>
 #include "HashTable.H"
 
 namespace ITHACAPOD

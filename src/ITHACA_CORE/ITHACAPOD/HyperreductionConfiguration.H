@@ -2,7 +2,7 @@
 #ifndef HyperreductionConfiguration_H
 #define HyperreductionConfiguration_H
 
-#include <Eigen/Core>
+#include <Eigen/Eigen>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "List.H"
 #include "labelFwd.H"

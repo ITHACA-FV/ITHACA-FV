@@ -2,7 +2,7 @@
 #ifndef ROMExecutionConfig_H
 #define ROMExecutionConfig_H
 
-#include <Eigen/Core>
+#include <Eigen/Eigen>
 #include <volFieldsFwd.H>
 
 
