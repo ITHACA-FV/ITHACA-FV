@@ -55,6 +55,7 @@ SourceFiles
 using namespace std::placeholders;
 #include "Foam2Eigen.H"
 #include "ITHACAstream.H"
+#include "ITHACAfieldsOperations.H"
 
 /// Namespace to implement projection coefficients calculation and mass matrices
 namespace ITHACAutilities
@@ -199,6 +200,32 @@ Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
                           snapshot,
                           PtrList<GeometricField<Type, PatchField, GeoMesh >>& modes, label Nmodes = 0,
                           bool consider_volumes = true);
+
+//------------------------------------------------------------------------------
+/// @brief      Compute the projection of a field in a POD basis
+
+/// @tparam     T type of field, can be vol[Scalar|Vector|Tensor]Field
+/// @param      field field of type T to project
+/// @param      modes PtrList<T> containing the POD modes to project onto
+
+/// @return     Projected field
+template<typename T>
+T project_to_POD_basis(T& field, PtrList<T>& modes);
+
+//------------------------------------------------------------------------------
+/// @brief      Compute the projection of a field in a POD basis 
+/// @details    To project field on their own POD basis because removing the mean 
+///             to project and adding it after projecting
+
+/// @tparam     T type of field, can be vol[Scalar|Vector|Tensor]Field
+/// @param      field field of type T to project
+/// @param      modes PtrList<T> containing the POD modes to project onto
+/// @param      meanField field of type T, removed from field before projecting and added back 
+///                       at the end (for projecting a field on its own POD basis)
+
+/// @return     Projected field
+template<typename T>
+T project_to_POD_basis(T& field, PtrList<T>& modes, const T& meanField);
 
 //--------------------------------------------------------------------------
 /// @brief      A method to compute the time-parameter combined matrix whose any single element

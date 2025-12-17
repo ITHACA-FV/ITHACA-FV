@@ -460,6 +460,42 @@ template Eigen::MatrixXd getCoeffs(
     label Nmodes,
     bool consider_volumes);
 
+
+template<typename T>
+T project_to_POD_basis(T& field, PtrList<T>& modes)
+{
+  bool consider_volumes = true;
+  Eigen::MatrixXd coeffsField = getCoeffs(field, modes, modes.size(), consider_volumes);
+  PtrList<T> reducedField = reconstructFromCoeff(modes, coeffsField, modes.size());
+
+  T projField = field;
+  setToZero(projField);
+  addFields(projField, reducedField[0]);
+
+  return projField;
+}
+template volVectorField project_to_POD_basis(volVectorField& field, PtrList<volVectorField>& modes);
+template volScalarField project_to_POD_basis(volScalarField& field, PtrList<volScalarField>& modes);
+
+template<typename T>
+T project_to_POD_basis(T& field, PtrList<T>& modes, const T& meanField)
+{
+  T fieldCentered = field;
+  subtractFields(fieldCentered, meanField);
+
+  bool consider_volumes = true;
+  Eigen::MatrixXd coeffsField = getCoeffs(fieldCentered, modes, modes.size(), consider_volumes);
+  PtrList<T> reducedField = reconstructFromCoeff(modes, coeffsField, modes.size());
+
+  T projField = meanField;
+  addFields(projField, reducedField[0]);
+
+  return projField;
+}
+template volVectorField project_to_POD_basis(volVectorField& field, PtrList<volVectorField>& modes, const volVectorField& meanField);
+template volScalarField project_to_POD_basis(volScalarField& field, PtrList<volScalarField>& modes, const volScalarField& meanField);
+
+
 Eigen::MatrixXd parTimeCombMat(List<Eigen::VectorXd>
                                acquiredSnapshotsTimes,
                                Eigen::MatrixXd parameters)

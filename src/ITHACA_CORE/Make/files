@@ -7,6 +7,9 @@ ITHACAutilities/ITHACAsystem.C
 ITHACAutilities/ITHACAerror.C
 ITHACAutilities/ITHACAassign.C
 ITHACAutilities/ITHACAcoeffsMass.C
+ITHACAutilities/ITHACAnorm.C
+ITHACAutilities/ITHACAfieldsOperations.C
+ITHACAutilities/ITHACAstring.C
 ITHACAparallel/ITHACAparallel.C
 ITHACAutilities/ITHACAforces.C
 ITHACAutilities/ITHACAsurfacetools.C

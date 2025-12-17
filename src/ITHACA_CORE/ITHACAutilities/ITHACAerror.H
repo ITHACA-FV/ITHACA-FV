@@ -51,6 +51,7 @@ License
 #include "fvMeshSubset.H"
 using namespace std::placeholders;
 #include "Foam2Eigen.H"
+#include "ITHACAnorm.H"
 
 namespace ITHACAutilities
 {
@@ -201,111 +202,6 @@ Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh >> &
                            fields1,
                            PtrList<GeometricField<T, fvPatchField, volMesh >>& fields2,
                            List<label>* labels = NULL);
-
-//------------------------------------------------------------------------------
-/// Evaluate the L2 norm of a geometric field
-///
-/// @param[in]  field  The field.
-///
-/// @tparam     T      Type of field, scalar or vector
-///
-/// @return     L2 norm of the volVectorField.
-///
-template<class T>
-double L2Norm(GeometricField<T, fvPatchField, volMesh>& field);
-
-//------------------------------------------------------------------------------
-/// Evaluate the Linf norm of a geometric field
-///
-/// @param[in]  field  The field.
-///
-/// @tparam     T      Type of field, scalar or vector
-///
-/// @return     Linf norm of the volVectorField.
-///
-template<class T>
-double LinfNorm(GeometricField<T, fvPatchField, volMesh>& field);
-
-//------------------------------------------------------------------------------
-/// Evaluate the H1 seminorm of a geoemtri
-///
-/// @param[in]  field  The field.
-///
-/// @tparam     T      Type of field, scalar or vector
-///
-/// @return     H1 seminorm of the volVectorField.
-///
-template<class T>
-double H1Seminorm(GeometricField<T, fvPatchField, volMesh>& field);
-
-//------------------------------------------------------------------------------
-/// Evaluate the Frobenius norm of a field
-///
-/// @param[in]  field  The field.
-///
-/// @tparam     T      Type of field, scalar or vector
-///
-/// @return     Frobenius norm of the field.
-///
-template<class Type, template<class> class PatchField, class GeoMesh>
-double frobNorm(GeometricField<Type, PatchField, GeoMesh>& field);
-
-//--------------------------------------------------------------------------
-/// Evaluate the L2 norm of a field on a boundary patch
-///
-/// @param[in]  mesh   The mesh.
-/// @param[in]  field  The field.
-/// @param[in]  patch  Name of the patch.
-///
-/// @return     L2 norm of the field on the patch.
-///
-double L2normOnPatch(fvMesh& mesh, volScalarField& field, word patch);
-
-//--------------------------------------------------------------------------
-/// Evaluate the L2 inner product between two scalarLists
-///
-/// @param[in]  mesh   The mesh.
-/// @param[in]  field1 The first field.
-/// @param[in]  field2 The second field.
-/// @param[in]  patch  Name of the patch.
-///
-/// @return     L2 norm of the field on the patch.
-///
-double L2productOnPatch(fvMesh& mesh, List<scalar>& field1,
-                        List<scalar>& field2, word patch);
-
-//--------------------------------------------------------------------------
-/// Evaluate the Linf norm of a field on a boundary patch
-///
-/// @param[in]  mesh   The mesh.
-/// @param[in]  field  The field.
-/// @param[in]  patch  Name of the patch.
-///
-/// @return     Linf norm of the field on the patch.
-///
-double LinfNormOnPatch(fvMesh& mesh, volScalarField& field, word patch);
-
-//--------------------------------------------------------------------------
-/// Evaluate the integral on a patch
-///
-/// @param[in]  mesh   The mesh.
-/// @param[in]  field  The field.
-/// @param[in]  patch  Name of the patch.
-///
-/// @return     Integral of the field on the patch.
-///
-double integralOnPatch(fvMesh& mesh, volScalarField& field, word patch);
-
-//--------------------------------------------------------------------------
-/// Evaluate the integral on a patch
-///
-/// @param[in]  mesh   The mesh.
-/// @param[in]  field  A list of values of the field on the patch.
-/// @param[in]  patch  Name of the patch.
-///
-/// @return     Integral of the field on the patch.
-///
-double integralOnPatch(fvMesh& mesh, List<scalar> field, word patch);
 
 }
 
