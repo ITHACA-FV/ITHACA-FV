@@ -1,0 +1,5 @@
+27Offline.C
+27Online.C
+27SmagorinskyHyperreduction.C
+
+EXE = $(FOAM_USER_APPBIN)/27SmagorinskyHyperreduction
