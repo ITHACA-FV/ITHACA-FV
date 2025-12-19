@@ -10,13 +10,13 @@ The following image depicts the magnitude of the Smagorinsky term for one time s
 
 First, the LES simulation is ran for 6 vortex shedding cycles, saving 20 snapshots per cycle. The initial conditions correspond to fields value during the steady state (the transitional period has been precomputed). The first 5 vortex shedding cycle are then used for learning, and the final one serves as validation data. Hence, we are trying to extrapolate in time but the simulation is not parametric.
 
-The nonpolynomial term that we are considering is $F(u) = 2\nabla \cdot (\nu_{t}(u) \; \nabla^s u)$
-with $\nu_{t}(u) = C_S \delta^2 \|\nabla^s u\|$. We denote $F$ by Smagorinsky term (or fullStressFunction in the code) and $\nu_{t}$ by nut.
+The nonpolynomial term that we are considering is $F(u) = 2\nabla \cdot (\nu_{t}(u) \nabla^s u)$
+with $\nu_{t}(u) = C_S \delta^2 ||\nabla^s u||$. We denote $F$ by Smagorinsky term (or fullStressFunction in the code) and $\nu_{t}$ by nut.
 Given the reduced basis $\Phi$ and the associated temporal modes $a$ for the velocity $u$, we are trying to approximate at a low computational cost $\Phi^T F(\Phi a)$.
 
 Two methods are possible:
-- DEIM (on $F$ or on $\nu_t), see [Chaturantabut et al., 2010]
-- Empirical Quadrature (keeping or not a linear dependency in a), see [Hernández et al, 2017]
+- DEIM (on $F$ or on $\nu_t$), see [Chaturantabut et al., 2010]
+- Empirical Quadrature (keeping or not a linear dependency in $a$), see [Hernández et al, 2017]
 
 
 ## A look into the code
@@ -48,11 +48,11 @@ All these information are declared in the ITHACAdict file inside the system fold
 - nmodes: integer specifying the number of modes kept after the POD. Can be changed both for the velocity U and for the hyperreduced fields. The number of magic points automatically equals the number of modes for the hyperreduced field.
 
 
-### Looking at the results
+### Results
 
 Results are stored in the folder ITHACAoutput/Online. Additional subfolders are created depending on the chosen parameters (see above section).
-They include:
+Saved results include:
 - a file 'exactCoeffs.npy' containing the (vectorial) values of $\Phi^T F(\Phi a)$ at each time step of the test interval
 - a file 'predictionCoeffs.npy' containing the approximated values $\widehat{\Phi^T F(\Phi a)}$ at each time step of the test interval
-- a file 'relativeSmagProjError.npy' containing the L2 relative error between the reference $\Phi\Phi^T F(\Phi a)$ and the prediction $\Phi \widehat{\Phi^T F(\Phi a)}$
-- subfolders containg the OpenFOAM field for the reference $\Phi\Phi^T F(\Phi a)$ and the prediction $\Phi \widehat{\Phi^T F(\Phi a)}$, for visualization
+- a file 'relativeSmagProjError.npy' containing the L2 relative error between the reference $\Phi\Phi^T F(\Phi a)$ and the prediction
+- subfolders containg the OpenFOAM field for the reference $\Phi\Phi^T F(\Phi a)$ and the prediction, for visualization
