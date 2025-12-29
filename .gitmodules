@@ -11,3 +11,6 @@
 [submodule "src/thirdparty/OptimLib"]
 	path = src/thirdparty/OptimLib
 	url = https://github.com/kthohr/optim.git
+[submodule "src/thirdparty/mathtoolbox"]
+	path = src/thirdparty/mathtoolbox
+	url = https://github.com/yuki-koyama/mathtoolbox.git
