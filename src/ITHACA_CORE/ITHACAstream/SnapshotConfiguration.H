@@ -5,8 +5,6 @@
 #pragma once
 
 
-namespace ITHACAPOD
-{
 
 // ============================================================================
 // Snapshot Configuration
@@ -67,9 +65,5 @@ private:
 
     Foam::label m_nSimu; // Relationship between the simulation time step and the time step used for the ROM
 };
-
-
-}
-
 
 #endif

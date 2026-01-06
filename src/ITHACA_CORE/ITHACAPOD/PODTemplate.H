@@ -8,7 +8,7 @@
 
 #include "ITHACAstream.H"
 #include "ITHACAutilities.H"
-#include "PODParameters.H"
+#include "StoredParameters.H"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -38,15 +38,13 @@ struct indexSquare
     Foam::label index2_end;
 };
 
-//class Parameters;
-//class PODParameters;
 
 // Class that compute POD (spatial modes and temporal modes)
 template<typename T>
 class PODTemplate
 {
     protected :
-        PODParameters* ithacaFVParameters;
+        StoredParameters* m_parameters;
         // Path where OpenFOAM simulation outputs are
         Foam::word field_name;
         // Type of data used in the POD

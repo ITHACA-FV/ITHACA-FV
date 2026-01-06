@@ -37,7 +37,7 @@ class tutorial27_offline
 {
     public:
 
-            ITHACAPOD::PODParameters* m_parameters;
+            StoredParameters* m_parameters;
             UnsteadyNSTurb* m_UnsteadyNSTurb;
 
             volVectorField* meanU;

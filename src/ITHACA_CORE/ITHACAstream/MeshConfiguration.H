@@ -6,8 +6,6 @@
 #include "volFieldsFwd.H"
 
 
-namespace ITHACAPOD
-{
 /**
  * @brief Manages mesh-related parameters and geometric information
  */
@@ -37,5 +35,5 @@ private:
     double m_totalVolume;
     Foam::volScalarField* m_delta;
 };
-}
+
 #endif // MESHPARAMETERS_H

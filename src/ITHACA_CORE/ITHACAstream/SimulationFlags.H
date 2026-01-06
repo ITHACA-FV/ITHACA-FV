@@ -3,8 +3,6 @@
 #ifndef SimulationFlags_H
 #define SimulationFlags_H
 
-namespace ITHACAPOD
-{
 /**
  * @brief Manages boolean flags for various simulation options
  */
@@ -48,6 +46,5 @@ private:
     bool m_symDiff;
     bool m_useDEIM;
 };
-} // namespace ITHACAPOD
 
 #endif

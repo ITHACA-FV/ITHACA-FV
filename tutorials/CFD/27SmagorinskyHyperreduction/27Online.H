@@ -37,7 +37,7 @@ class tutorial27_online
 {
     public:
 
-        ITHACAPOD::PODParameters* m_parameters;
+        StoredParameters* m_parameters;
         UnsteadyNSTurb* m_UnsteadyNSTurb;
 
         Foam::Time runTime2;
@@ -75,7 +75,7 @@ class tutorial27_online
         volScalarField* meanNutOnMagicPoints=nullptr;
 
 
-    tutorial27_online(ITHACAPOD::PODParameters* parameters);
+    tutorial27_online(StoredParameters* parameters);
 
     // Evaluate nut at the magic points
     void evaluateApproxNut(const Eigen::VectorXd& reducedCoeffs);

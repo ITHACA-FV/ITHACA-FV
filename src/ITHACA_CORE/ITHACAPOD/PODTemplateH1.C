@@ -17,12 +17,12 @@ Eigen::MatrixXd PODTemplateH1<T,G>::buildCovMatrix()
   l_hilbertSp = "L2";
   PODTemplate<T>::define_paths();
   Eigen::MatrixXd covMatrix = PODTemplate<T>::buildCovMatrix();
-  l_hilbertSp = ithacaFVParameters->get_hilbertSpacePOD()[field_name];
+  l_hilbertSp = m_parameters->get_hilbertSpacePOD()[field_name];
   PODTemplate<T>::define_paths();
 
-  ithacaFVParameters->set_hilbertSpacePOD(gradfield_name, "L2");
-  ithacaFVParameters->set_nModes(gradfield_name, l_nmodes);
-  PODTemplate<G> ithacaFVPODgrad(ithacaFVParameters,gradfield_name);
+  m_parameters->set_hilbertSpacePOD(gradfield_name, "L2");
+  m_parameters->set_nModes(gradfield_name, l_nmodes);
+  PODTemplate<G> ithacaFVPODgrad(m_parameters,gradfield_name);
   ithacaFVPODgrad.computeMeanField();
   Eigen::MatrixXd covMatrixGrad = ithacaFVPODgrad.buildCovMatrix();
 
@@ -35,7 +35,7 @@ Eigen::MatrixXd PODTemplateH1<T,G>::buildCovMatrix()
   {
     weightH1 = 1.0;
   }
-  ithacaFVParameters->set_weightH1(weightH1);
+  m_parameters->set_weightH1(weightH1);
 
   covMatrix += covMatrixGrad;
 
@@ -46,7 +46,7 @@ Eigen::MatrixXd PODTemplateH1<T,G>::buildCovMatrix()
   }
 
   double varyingEnergy = covMatrix.trace()/l_nSnapshot;
-  ithacaFVParameters->set_varyingEnergy( field_name + "_" + l_hilbertSp, varyingEnergy);
+  m_parameters->set_varyingEnergy( field_name + "_" + l_hilbertSp, varyingEnergy);
   Info << "Total varying energy " << l_hilbertSp << " : " << varyingEnergy << endl;
   Info << endl;
 

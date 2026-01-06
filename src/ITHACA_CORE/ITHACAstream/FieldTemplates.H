@@ -4,8 +4,6 @@
 
 #include "volFieldsFwd.H"
 
-namespace ITHACAPOD
-{
 /**
  * @brief Stores template fields for velocity, pressure, and turbulence quantities
  */
@@ -39,5 +37,5 @@ private:
     Foam::volScalarField* m_k;
     Foam::volVectorField* m_fullStressFunction;
 };
-}
+
 #endif // MESHPARAMETERS_H

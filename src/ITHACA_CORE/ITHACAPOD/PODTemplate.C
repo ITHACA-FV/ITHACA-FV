@@ -5,30 +5,30 @@ namespace ITHACAPOD
 {
 
 template<typename T>
-PODTemplate<T>::PODTemplate(ITHACAPOD::Parameters* myParameters,
+PODTemplate<T>::PODTemplate(Parameters* myParameters,
                             const word& myfield_name, const word& mySnapshots_path) :
-    ithacaFVParameters(static_cast<ITHACAPOD::PODParameters*>(myParameters)),
+    m_parameters(static_cast<StoredParameters*>(myParameters)),
     field_name(myfield_name),
-    casenameData(ithacaFVParameters->get_casenameData()),
-    l_nSnapshot(ithacaFVParameters->get_nSnapshots()),
+    casenameData(m_parameters->get_casenameData()),
+    l_nSnapshot(m_parameters->get_nSnapshots()),
     snapshotsPath(mySnapshots_path),
-    l_nBlocks(ithacaFVParameters->get_nBlocks()),
-    l_nmodes(ithacaFVParameters->get_nModes()[field_name]),
-    l_hilbertSp(ithacaFVParameters->get_hilbertSpacePOD()[field_name]),
-    weightH1(ithacaFVParameters->get_weightH1()),
-    weightBC(ithacaFVParameters->get_weightPOD()),
-    patchBC(ithacaFVParameters->get_patchBC()),
-    l_startTime(ithacaFVParameters->get_startTime()),
-    l_endTime(ithacaFVParameters->get_endTime()),
-    l_nSnapshotSimulation(ithacaFVParameters->get_nSnapshotsSimulation()),
-    l_endTimeSimulation(ithacaFVParameters->get_endTimeSimulation()),
-    b_centeredOrNot(ithacaFVParameters->get_centeredOrNot()),
+    l_nBlocks(m_parameters->get_nBlocks()),
+    l_nmodes(m_parameters->get_nModes()[field_name]),
+    l_hilbertSp(m_parameters->get_hilbertSpacePOD()[field_name]),
+    weightH1(m_parameters->get_weightH1()),
+    weightBC(m_parameters->get_weightPOD()),
+    patchBC(m_parameters->get_patchBC()),
+    l_startTime(m_parameters->get_startTime()),
+    l_endTime(m_parameters->get_endTime()),
+    l_nSnapshotSimulation(m_parameters->get_nSnapshotsSimulation()),
+    l_endTimeSimulation(m_parameters->get_endTimeSimulation()),
+    b_centeredOrNot(m_parameters->get_centeredOrNot()),
     lambda(Eigen::VectorXd::Zero(l_nmodes)),
-    w_eigensolver(ithacaFVParameters->get_eigensolver()),
-    i_precision(ithacaFVParameters->get_precision()),
-    ios_outytpe(ithacaFVParameters->get_outytpe()),
+    w_eigensolver(m_parameters->get_eigensolver()),
+    i_precision(m_parameters->get_precision()),
+    ios_outytpe(m_parameters->get_outytpe()),
     runTime2(Foam::Time::controlDictName, ".",
-             ithacaFVParameters->get_casenameData())
+             m_parameters->get_casenameData())
 {
     if (snapshotsPath == "default_path")
     {
@@ -50,10 +50,10 @@ PODTemplate<T>::PODTemplate(ITHACAPOD::Parameters* myParameters,
         (
             field_name,
             snapshotsPath + timeFolders[1].name(),
-            ithacaFVParameters->get_mesh(),
+            m_parameters->get_mesh(),
             IOobject::MUST_READ
         ),
-        ithacaFVParameters->get_mesh()
+        m_parameters->get_mesh()
     );
     f_meanField = new T(f_field->name(), *f_field);
     // // Set the inlet boundaries where we have non homogeneous boundary conditions
@@ -102,7 +102,7 @@ void PODTemplate<T>::define_paths()
         pathProcessor = "processor" + name(Pstream::myProcNo()) + "/";
     }
 
-    word pathHilbertSpace(ithacaFVParameters->get_pathHilbertSpace_fromHS(
+    word pathHilbertSpace(m_parameters->get_pathHilbertSpace_fromHS(
                               l_hilbertSp));
     // name and folder of the covariance
     // check if the matrix was already computed
@@ -159,10 +159,10 @@ void PODTemplate<T>::computeMeanField()
                 (
                     f_field->name() + "lift" + std::to_string(k),
                     snapshotsPath + timeFolders[1].name(),
-                    ithacaFVParameters->get_mesh(),
+                    m_parameters->get_mesh(),
                     IOobject::MUST_READ
                 ),
-                ithacaFVParameters->get_mesh()
+                m_parameters->get_mesh()
             );
             liftfield.set(k, f_lift );
         }
@@ -203,8 +203,8 @@ void PODTemplate<T>::computeMeanField()
         double energyMean = ITHACAutilities::dot_product_L2(*f_meanField, *f_meanField);
         double energyHilbertMean = ITHACAutilities::dot_product_POD(*f_meanField,
                                    *f_meanField, l_hilbertSp);
-        ithacaFVParameters->set_meanEnergy( f_meanField->name(), energyMean);
-        ithacaFVParameters->set_meanEnergy( f_meanField->name() + "_" + l_hilbertSp,
+        m_parameters->set_meanEnergy( f_meanField->name(), energyMean);
+        m_parameters->set_meanEnergy( f_meanField->name() + "_" + l_hilbertSp,
                                             energyHilbertMean);
     }
     else
@@ -606,7 +606,7 @@ Eigen::MatrixXd PODTemplate<T>::buildCovMatrix()
 
     if (l_hilbertSp == "L2" || l_hilbertSp == "dL2")
     {
-        ithacaFVParameters->set_varyingEnergy( f_field->name(), varyingEnergy);
+        m_parameters->set_varyingEnergy( f_field->name(), varyingEnergy);
     }
 
     Info << "Total varying " << l_hilbertSp << " energy for " << field_name << " : "
@@ -748,12 +748,12 @@ void PODTemplate<T>::diagonalisation(Eigen::MatrixXd& covMatrix,
 
     if (l_hilbertSp == "L2")
     {
-        ithacaFVParameters->set_resolvedVaryingEnergy( f_field->name(),
+        m_parameters->set_resolvedVaryingEnergy( f_field->name(),
                 resolvedVaryingEnergy);
     }
     else
     {
-        ithacaFVParameters->set_resolvedVaryingEnergy( f_field->name() + "_" +
+        m_parameters->set_resolvedVaryingEnergy( f_field->name() + "_" +
                 l_hilbertSp, resolvedVaryingEnergy);
     }
 
@@ -788,11 +788,11 @@ PtrList<T> PODTemplate<T>::computeSpatialModes(Eigen::VectorXd& eigenValueseig,
             T snapshotj = *f_field;
             ITHACAstream::read_snapshot(snapshotj, timeFolders[l_startTime+j].name(), snapshotsPath);
 
-            if ((ithacaFVParameters->get_DEIMInterpolatedField() == "nut" 
-                || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedNut")) 
+            if ((m_parameters->get_DEIMInterpolatedField() == "nut" 
+                || ITHACAutilities::containsSubstring(m_parameters->get_DEIMInterpolatedField(), "reducedNut")) 
                 && l_hilbertSp == "dL2")
             {
-                ITHACAutilities::multField(snapshotj, ithacaFVParameters->get_deltaWeight());
+                ITHACAutilities::multField(snapshotj, m_parameters->get_deltaWeight());
             }
 
             lift(snapshotj);
@@ -895,8 +895,8 @@ void PODTemplate<T>::getModes(PtrList<T>& spatialModes,
 
     if (field_name == "U")
     {
-        ithacaFVParameters->set_eigenValues_U(eigenValueseig);
-        ithacaFVParameters->set_lambda(lambda);
+        m_parameters->set_eigenValues_U(eigenValueseig);
+        m_parameters->set_lambda(lambda);
     }
 
     Info << "-------------------------------------------------------------------------------------------"
@@ -921,11 +921,11 @@ Eigen::MatrixXd PODTemplate<T>::computeSimulationTemporalModes(
             T snapshotj = *f_field;
             ITHACAstream::read_snapshot(snapshotj, timeFolders[l_startTimeSimulation+j].name(), snapshotsPath);
 
-            if ((ithacaFVParameters->get_DEIMInterpolatedField() == "nut" 
-                 || ITHACAutilities::containsSubstring(ithacaFVParameters->get_DEIMInterpolatedField(), "reducedNut")) 
+            if ((m_parameters->get_DEIMInterpolatedField() == "nut" 
+                 || ITHACAutilities::containsSubstring(m_parameters->get_DEIMInterpolatedField(), "reducedNut")) 
                  && l_hilbertSp == "dL2")
             {
-                ITHACAutilities::multField(snapshotj, ithacaFVParameters->get_deltaWeight());
+                ITHACAutilities::multField(snapshotj, m_parameters->get_deltaWeight());
             }
 
             lift(snapshotj);
@@ -1005,10 +1005,10 @@ void PODTemplate<T>::lift(T& snapshot)
 }
 
 // Specialisation
-template PODTemplate<volTensorField>::PODTemplate(ITHACAPOD::Parameters*
+template PODTemplate<volTensorField>::PODTemplate(Parameters*
         myParameters, const word& myfield_name, const word& mySnapshots_path);
-// template PODTemplate<volTensorField>::PODTemplate(IthacaFVParameters* myParameters, const word& myfield_name);
-// template PODTemplate<volTensorField>::PODTemplate(ITHACAPOD::Parameters* myParameters, const word& myfield_name, bool b_centeredOrNot);
+// template PODTemplate<volTensorField>::PODTemplate(m_parameters* myParameters, const word& myfield_name);
+// template PODTemplate<volTensorField>::PODTemplate(Parameters* myParameters, const word& myfield_name, bool b_centeredOrNot);
 template PODTemplate<volTensorField>::~PODTemplate();
 template void PODTemplate<volTensorField>::define_paths();
 template void PODTemplate<volTensorField>::computeMeanField();
@@ -1056,10 +1056,10 @@ template void PODTemplate<volTensorField>::lift(PtrList<volTensorField>&
 template void PODTemplate<volTensorField>::lift(volTensorField& snapshot);
 
 // Specialisation
-template PODTemplate<volVectorField>::PODTemplate(ITHACAPOD::Parameters*
+template PODTemplate<volVectorField>::PODTemplate(Parameters*
         myParameters, const word& myfield_name, const word& mySnapshots_path);
-// template PODTemplate<volVectorField>::PODTemplate(IthacaFVParameters* myParameters, const word& myfield_name);
-// template PODTemplate<volVectorField>::PODTemplate(ITHACAPOD::Parameters* myParameters, const word& myfield_name, bool b_centeredOrNot);
+// template PODTemplate<volVectorField>::PODTemplate(m_parameters* myParameters, const word& myfield_name);
+// template PODTemplate<volVectorField>::PODTemplate(Parameters* myParameters, const word& myfield_name, bool b_centeredOrNot);
 template PODTemplate<volVectorField>::~PODTemplate();
 template void PODTemplate<volVectorField>::define_paths();
 template void PODTemplate<volVectorField>::computeMeanField();
@@ -1097,10 +1097,10 @@ template void PODTemplate<volVectorField>::lift(PtrList<volVectorField>&
 template void PODTemplate<volVectorField>::lift(volVectorField& snapshot);
 
 // Specialisation
-template PODTemplate<volScalarField>::PODTemplate(ITHACAPOD::Parameters*
+template PODTemplate<volScalarField>::PODTemplate(Parameters*
         myParameters, const word& myfield_name, const word& mySnapshots_path);
-// template PODTemplate<volScalarField>::PODTemplate(IthacaFVParameters* myParameters, const word& myfield_name);
-// template PODTemplate<volScalarField>::PODTemplate(ITHACAPOD::Parameters* myParameters, const word& myfield_name, bool b_centeredOrNot);
+// template PODTemplate<volScalarField>::PODTemplate(m_parameters* myParameters, const word& myfield_name);
+// template PODTemplate<volScalarField>::PODTemplate(Parameters* myParameters, const word& myfield_name, bool b_centeredOrNot);
 template PODTemplate<volScalarField>::~PODTemplate();
 template void PODTemplate<volScalarField>::define_paths();
 template void PODTemplate<volScalarField>::computeMeanField();

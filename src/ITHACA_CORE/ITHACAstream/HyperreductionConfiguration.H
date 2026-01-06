@@ -12,8 +12,6 @@
 #include "PODConfiguration.H"
 
 
-namespace ITHACAPOD
-{
 
 /**
  * @brief Discrete Empirical Interpolation Method settings
@@ -125,11 +123,11 @@ public:
     void set_magicDelta(const Foam::volScalarField& mD);
 
     // Initializers for the hyperreduction
-    void initializeHyperreduction(std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig);
-    void initializeReducedField(const Foam::word origField, std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig);
+    void initializeHyperreduction(std::unique_ptr<PODConfiguration>& PODConfig);
+    void initializeReducedField(const Foam::word origField, std::unique_ptr<PODConfiguration>& PODConfig);
     void addReducedFieldToPOD(const Foam::word& nameToReplace, const Foam::word& modifiedFieldName,
-                                           std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig);
-    Foam::word createReducedFieldName(const Foam::word& fieldName, std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig);
+                                           std::unique_ptr<PODConfiguration>& PODConfig);
+    Foam::word createReducedFieldName(const Foam::word& fieldName, std::unique_ptr<PODConfiguration>& PODConfig);
 
 private:
 
@@ -175,6 +173,5 @@ private:
     Foam::volScalarField* m_magicDelta;
 };
 
-} // namespace ITHACAPOD
 
 #endif // HyperreductionConfiguration_H

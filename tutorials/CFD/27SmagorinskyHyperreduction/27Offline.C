@@ -31,7 +31,7 @@ SourceFiles
 
 
 tutorial27_offline::tutorial27_offline(int argc, char* argv[]):
-    m_parameters(new ITHACAPOD::PODParameters(argc, argv)),
+    m_parameters(new StoredParameters(argc, argv)),
     m_UnsteadyNSTurb(new UnsteadyNSTurb(m_parameters)),
     nModesU(m_parameters->get_nModes()["U"]),
     interpolatedField(m_parameters->get_DEIMInterpolatedField()),

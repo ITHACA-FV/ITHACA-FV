@@ -4,8 +4,6 @@
 #include <Eigen/Eigen>
 #include "HashTable.H"
 
-namespace ITHACAPOD
-{
 /**
  * @brief Manages POD-specific parameters including modes, energy, and Hilbert spaces
  */
@@ -100,5 +98,5 @@ private:
     double m_weightBC;
     Foam::word m_patchBC;
 };
-} // namespace ITHACAPOD
+
 #endif

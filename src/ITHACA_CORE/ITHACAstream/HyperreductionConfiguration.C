@@ -3,7 +3,7 @@
 #include "fvPatchField.H"
 #include "volFieldsFwd.H"
 
-void ITHACAPOD::HyperreductionConfiguration::setTracerGradOnMagicNeighborhoods(Foam::PtrList<Foam::volVectorField>& defT, Foam::label nModes)
+void HyperreductionConfiguration::setTracerGradOnMagicNeighborhoods(Foam::PtrList<Foam::volVectorField>& defT, Foam::label nModes)
 {
     m_tracerGradOnMagicNeighborhoods.resize(nModes);
     for (Foam::label k = 0; k < nModes; k++)
@@ -12,7 +12,7 @@ void ITHACAPOD::HyperreductionConfiguration::setTracerGradOnMagicNeighborhoods(F
     }
 }
 
-void ITHACAPOD::HyperreductionConfiguration::setTracerGradOnMagicPoints(Foam::PtrList<Foam::volVectorField>& defT, Foam::label nModes)
+void HyperreductionConfiguration::setTracerGradOnMagicPoints(Foam::PtrList<Foam::volVectorField>& defT, Foam::label nModes)
 {
     m_tracerGradOnMagicPoints.resize(nModes);
     for (Foam::label k = 0; k < nModes; k++)
@@ -21,7 +21,7 @@ void ITHACAPOD::HyperreductionConfiguration::setTracerGradOnMagicPoints(Foam::Pt
     }
 }
 
-void ITHACAPOD::HyperreductionConfiguration::setDeformationTensorOnMagicNeighborhoods(Foam::PtrList<Foam::volTensorField>& defT, Foam::label nModes)
+void HyperreductionConfiguration::setDeformationTensorOnMagicNeighborhoods(Foam::PtrList<Foam::volTensorField>& defT, Foam::label nModes)
 {
     m_deformationTensorOnMagicNeighborhoods.resize(nModes);
     for (Foam::label k = 0; k < nModes; k++)
@@ -30,7 +30,7 @@ void ITHACAPOD::HyperreductionConfiguration::setDeformationTensorOnMagicNeighbor
     }
 }
 
-void ITHACAPOD::HyperreductionConfiguration::setDeformationTensorOnMagicPoints(Foam::PtrList<Foam::volTensorField>& defT, Foam::label nModes)
+void HyperreductionConfiguration::setDeformationTensorOnMagicPoints(Foam::PtrList<Foam::volTensorField>& defT, Foam::label nModes)
 {
     m_deformationTensorOnMagicPoints.resize(nModes);
     for (Foam::label k = 0; k < nModes; k++)
@@ -39,37 +39,37 @@ void ITHACAPOD::HyperreductionConfiguration::setDeformationTensorOnMagicPoints(F
     }
 }
 
-void ITHACAPOD::HyperreductionConfiguration::setMeanVectorDEIM(const Foam::volVectorField& mean)
+void HyperreductionConfiguration::setMeanVectorDEIM(const Foam::volVectorField& mean)
 {
     m_meanVectorDEIM = new Foam::volVectorField(mean);
 }
 
-void ITHACAPOD::HyperreductionConfiguration::setMeanScalarDEIM(const Foam::volScalarField& mean)
+void HyperreductionConfiguration::setMeanScalarDEIM(const Foam::volScalarField& mean)
 {
     m_meanScalarDEIM = new Foam::volScalarField(mean);
 }
 
-void ITHACAPOD::HyperreductionConfiguration::setMeanVectorDEIMMagic(const Foam::volVectorField& mean)
+void HyperreductionConfiguration::setMeanVectorDEIMMagic(const Foam::volVectorField& mean)
 {
     m_meanVectorDEIMMagic = new Foam::volVectorField(mean);
 }
 
-void ITHACAPOD::HyperreductionConfiguration::setMeanScalarDEIMMagic(const Foam::volScalarField& mean)
+void HyperreductionConfiguration::setMeanScalarDEIMMagic(const Foam::volScalarField& mean)
 {
     m_meanScalarDEIMMagic = new Foam::volScalarField(mean);
 }
 
-void ITHACAPOD::HyperreductionConfiguration::setDeltaWeight(const Eigen::VectorXd& dw)
+void HyperreductionConfiguration::setDeltaWeight(const Eigen::VectorXd& dw)
 {
     m_deltaWeight = dw;
 }
 
-void ITHACAPOD::HyperreductionConfiguration::set_magicDelta(const Foam::volScalarField& mD) 
+void HyperreductionConfiguration::set_magicDelta(const Foam::volScalarField& mD) 
 {
     m_magicDelta = new Foam::GeometricField<Foam::scalar, Foam::fvPatchField, Foam::volMesh>(mD); 
 }
 
-void ITHACAPOD::HyperreductionConfiguration::initializeHyperreduction(std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig)
+void HyperreductionConfiguration::initializeHyperreduction(std::unique_ptr<PODConfiguration>& PODConfig)
 {
     if (m_HRMethod == "GappyDEIM")
     {
@@ -92,7 +92,6 @@ void ITHACAPOD::HyperreductionConfiguration::initializeHyperreduction(std::uniqu
     if (isReducedField)
     {
         initializeReducedField(m_HRInterpolatedField, PODConfig);
-        Foam::Info << "b" << Foam::endl;
         nbModesUInFolderDEIM = std::to_string(PODConfig->nModes()["U"]) + "modesU/";
     }
     m_nMagicPoints = PODConfig->nModes()[m_HRInterpolatedField];
@@ -163,8 +162,8 @@ void ITHACAPOD::HyperreductionConfiguration::initializeHyperreduction(std::uniqu
     m_folderDEIM += std::to_string(m_nMagicPoints) + "magicPoints/" + ECPAlgoInFolderDEIM;
 }
 
-void ITHACAPOD::HyperreductionConfiguration::initializeReducedField(const Foam::word origField,
-                                       std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig)
+void HyperreductionConfiguration::initializeReducedField(const Foam::word origField,
+                                       std::unique_ptr<PODConfiguration>& PODConfig)
 {
     Foam::word nameToReplace = origField.substr(7);
     nameToReplace[0] = tolower(nameToReplace[0]);
@@ -173,8 +172,8 @@ void ITHACAPOD::HyperreductionConfiguration::initializeReducedField(const Foam::
     addReducedFieldToPOD(nameToReplace, modifiedFieldName, PODConfig);
 }
 
-void ITHACAPOD::HyperreductionConfiguration::addReducedFieldToPOD(const Foam::word& nameToReplace,
-     const Foam::word& modifiedFieldName, std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig)
+void HyperreductionConfiguration::addReducedFieldToPOD(const Foam::word& nameToReplace,
+     const Foam::word& modifiedFieldName, std::unique_ptr<PODConfiguration>& PODConfig)
 {
     const auto& field_type = PODConfig->field_type();
     const auto& field_name = PODConfig->field_name();
@@ -186,8 +185,8 @@ void ITHACAPOD::HyperreductionConfiguration::addReducedFieldToPOD(const Foam::wo
     PODConfig->set_resolvedVaryingEnergy(modifiedFieldName, 0);
 }
 
-Foam::word ITHACAPOD::HyperreductionConfiguration::createReducedFieldName(const Foam::word& fieldName,
-                                              std::unique_ptr<ITHACAPOD::PODConfiguration>& PODConfig)
+Foam::word HyperreductionConfiguration::createReducedFieldName(const Foam::word& fieldName,
+                                              std::unique_ptr<PODConfiguration>& PODConfig)
 {
     return fieldName + "_" + std::to_string(PODConfig->nModes()["U"]) + "modes";
 }

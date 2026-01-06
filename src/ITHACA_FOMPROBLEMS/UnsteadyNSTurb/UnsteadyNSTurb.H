@@ -59,7 +59,7 @@ SourceFiles
 #include "DESModelBase.H"
 #include "DESModel.H"
 #include "kOmegaSSTDES.H"
-#include "PODParameters.H"
+#include "StoredParameters.H"
 #include <optional>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -83,7 +83,7 @@ class UnsteadyNSTurb: public unsteadyNS
         UnsteadyNSTurb(int argc, char* argv[]);
 
         // Small construct with Parameters to access member functions linked to Smagorinsky diffusion 
-        UnsteadyNSTurb(const ITHACAPOD::Parameters* myParameters);
+        UnsteadyNSTurb(const Parameters* myParameters);
 
         // Specific variable for the unstationary case
         // Member Functions
@@ -389,7 +389,7 @@ class UnsteadyNSTurb: public unsteadyNS
 private :
 
         /// Parameter object containing main information
-        const ITHACAPOD::PODParameters* ithacaFVParameters;
+        const StoredParameters* m_parameters;
 
         // /// Turbulence model
         // autoPtr<incompressible::turbulenceModel> turbModel;

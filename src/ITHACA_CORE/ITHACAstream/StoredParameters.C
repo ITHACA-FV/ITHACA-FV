@@ -1,5 +1,5 @@
 #include "ITHACAsystem.H"
-#include "PODParameters.H"
+#include "StoredParameters.H"
 #include "SnapshotConfiguration.H"
 
 template <class Enum>
@@ -18,10 +18,8 @@ struct StrLookup : public std::map<std::string, Enum> {
     }
 };
 
-namespace ITHACAPOD
-{
 
-PODParameters::PODParameters(int argc, char* argv[]):
+StoredParameters::StoredParameters(int argc, char* argv[]):
     meshConfig_(std::make_unique<MeshConfiguration>())
     , fieldTemplates_(std::make_unique<FieldTemplates>())
     , snapshotConfiguration_(std::make_unique<SnapshotConfiguration>())
@@ -98,7 +96,7 @@ PODParameters::PODParameters(int argc, char* argv[]):
     {
         Info << "===============================================================" << endl;
         Info << "  RedLUM is launched in " << ROMExecutionConfig_->useSOTA() << "-SOTA mode" << endl;
-        Info << "  Ithacadict file will be overidden by parameters specified in IthacaFVParameters.C" << endl;
+        Info << "  Ithacadict file will be overidden by parameters specified in m_parameters.C" << endl;
         Info << "===============================================================" << endl;
     }
 
@@ -396,7 +394,7 @@ PODParameters::PODParameters(int argc, char* argv[]):
     }
 }
 
-void PODParameters::initializeFieldConfiguration()
+void StoredParameters::initializeFieldConfiguration()
 {
     const auto& fieldlist = PODConfiguration_->fieldlist();
     // Resize field name/type arrays
@@ -426,7 +424,7 @@ void PODParameters::initializeFieldConfiguration()
 }
 
 
-Foam::word PODParameters::get_pathHilbertSpace_fromHS(Foam::word hilbertSp)
+Foam::word StoredParameters::get_pathHilbertSpace_fromHS(Foam::word hilbertSp)
 {
     Foam::word pathHilbertSpace = "";
 
@@ -453,10 +451,8 @@ Foam::word PODParameters::get_pathHilbertSpace_fromHS(Foam::word hilbertSp)
     return pathHilbertSpace;
 }
 
-Foam::word PODParameters::get_pathHilbertSpace(Foam::word fieldName)
+Foam::word StoredParameters::get_pathHilbertSpace(Foam::word fieldName)
 {
     return get_pathHilbertSpace_fromHS(PODConfiguration_->hilbertSpacePOD()[fieldName]);
 }
 
-
-}

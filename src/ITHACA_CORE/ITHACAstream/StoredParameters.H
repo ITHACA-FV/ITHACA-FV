@@ -24,8 +24,6 @@
 #pragma GCC diagnostic pop
 
 
-namespace ITHACAPOD
-{
 class Parameters
 {
 public:
@@ -33,14 +31,14 @@ public:
 };
 // only one derivate
 /**
- *  @brief  Class that containing all parameters of the stochastic POD
+ *  @brief  Class that contains all parameters of the stochastic POD
  ***********************************************/
-class PODParameters : public Parameters
+class StoredParameters : public Parameters
 {
 public:
-    PODParameters(int argc, char* argv[]);
+    StoredParameters(int argc, char* argv[]);
 
-    /// Getter to access all IthacaFVParameters members in the other classes
+    /// Getter to access all m_parameters members in the other classes
     ITHACAparameters* get_ITHACAparameters() const
     {
         return ithacaLibraryParameters;
@@ -190,7 +188,7 @@ public:
         solverConfiguration_->set_centeredOrNot(b);
     }
 
-    /// Setters to the members of PODParameters that cannot initialize at the beginning of the program
+    /// Setters to the members of StoredParameters that cannot initialize at the beginning of the program
     void set_eigenValues_U(const Eigen::VectorXd& input_eigenValues_U)
     {
         PODConfiguration_->set_eigenValues_U(input_eigenValues_U);
@@ -319,7 +317,7 @@ public:
     const Eigen::MatrixXd& get_K_DEIM() const { return HyperreductionConfiguration_->K_DEIM(); }
     void set_K_DEIM(Eigen::MatrixXd& K) { HyperreductionConfiguration_->setK_DEIM(K); }
 
-    /// Setters to the members of IthacaFVParameters that cannot initialize at the beginning of the program
+    /// Setters to the members of m_parameters that cannot initialize at the beginning of the program
     /// For instance, eigen values can be known only after POD was performed
     void set_nSnapshots(const label& input_nSnapshots) { snapshotConfiguration_->set_nSnapshots(input_nSnapshots); }
     void set_nSnapshotsSimulation(const label& input_nSnapshotsSimulation) { snapshotConfiguration_->set_nSnapshotsSimulation(input_nSnapshotsSimulation); }
@@ -409,5 +407,4 @@ protected:
 };
 
 
-}
 #endif

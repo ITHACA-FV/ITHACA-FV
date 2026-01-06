@@ -37,26 +37,26 @@
 
 template<typename volF, typename T, typename S>
 TurbDiffusionHyperreduction<volF,T,S>::TurbDiffusionHyperreduction
-        (ITHACAPOD::Parameters* myParameters, bool mgPoints_0_Neighborhoods_1, T& template_HRInterpField, 
+        (Parameters* myParameters, bool mgPoints_0_Neighborhoods_1, T& template_HRInterpField, 
          S& template_HRSnapshotsField, volF*& meanU, PtrList<volF>& spatialModesU):
-    ithacaPODParameters(static_cast<ITHACAPOD::PODParameters*>(myParameters)),
-    ithacaUnsteadyNSTurb(autoPtr<UnsteadyNSTurb>(new UnsteadyNSTurb(ithacaPODParameters))),
-    l_nSnapshot(ithacaPODParameters->get_nSnapshots()),  
-    l_startTime(ithacaPODParameters->get_startTime()),
-    l_nSnapshotSimulation(ithacaPODParameters->get_nSnapshotsSimulation()),
+    m_parameters(static_cast<StoredParameters*>(myParameters)),
+    ithacaUnsteadyNSTurb(autoPtr<UnsteadyNSTurb>(new UnsteadyNSTurb(m_parameters))),
+    l_nSnapshot(m_parameters->get_nSnapshots()),  
+    l_startTime(m_parameters->get_startTime()),
+    l_nSnapshotSimulation(m_parameters->get_nSnapshotsSimulation()),
     template_HRInterpField(template_HRInterpField),
     template_HRSnapshotsField(template_HRSnapshotsField),
     f_spatialModesU(spatialModesU),
     f_meanU(meanU),
-    folder_HR(ithacaPODParameters->get_folder_DEIM()),
-    runTime2(Foam::Time::controlDictName, ".", ithacaPODParameters->get_casenameData()),
-    snapshotsFolder(ithacaPODParameters->get_casenameData()),
+    folder_HR(m_parameters->get_folder_DEIM()),
+    runTime2(Foam::Time::controlDictName, ".", m_parameters->get_casenameData()),
+    snapshotsFolder(m_parameters->get_casenameData()),
     mgPoints_0_Neighborhoods_1(mgPoints_0_Neighborhoods_1),
-    HRMethod(ithacaPODParameters->get_HRMethod()),
-    HRInterpField(ithacaPODParameters->get_DEIMInterpolatedField()),
-    HRSnapshotsField(ithacaPODParameters->get_HRSnapshotsField()),
-    ECPAlgo(ithacaPODParameters->get_ECPAlgo()),
-    interpFieldCenteredOrNot(ithacaPODParameters->get_interpFieldCenteredOrNot())
+    HRMethod(m_parameters->get_HRMethod()),
+    HRInterpField(m_parameters->get_DEIMInterpolatedField()),
+    HRSnapshotsField(m_parameters->get_HRSnapshotsField()),
+    ECPAlgo(m_parameters->get_ECPAlgo()),
+    interpFieldCenteredOrNot(m_parameters->get_interpFieldCenteredOrNot())
 {
     //
 }
@@ -89,11 +89,11 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeDefTensor(volGradF tensorMean
     }
     if(!mgPoints_0_Neighborhoods_1)
     {
-        ithacaPODParameters->set_deformationTensorOfModesOnMagicPoints(defTensorOfModesOnMgPointsORMgNeighborhoods);
+        m_parameters->set_deformationTensorOfModesOnMagicPoints(defTensorOfModesOnMgPointsORMgNeighborhoods);
     }
     else
     {
-        ithacaPODParameters->set_deformationTensorOfModesOnMagicNeighborhoods(defTensorOfModesOnMgPointsORMgNeighborhoods);
+        m_parameters->set_deformationTensorOfModesOnMagicNeighborhoods(defTensorOfModesOnMgPointsORMgNeighborhoods);
     }
 }
 
@@ -112,7 +112,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::common_MeanHRInterpField()
         ITHACAutilities::setToZero(meanHR);
       }
       T meanHRMagic = ithacaHyperreduction->interpolateField(meanHR);
-      ithacaPODParameters->set_meanDEIMMagic(meanHRMagic);  
+      m_parameters->set_meanDEIMMagic(meanHRMagic);  
 }
 
 template<typename volF, typename T, typename S>
@@ -125,7 +125,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
     }
 
     double startingTime = std::stod(runTime2.times()[l_startTime].name());
-    double saveTime = ithacaPODParameters->get_saveTime();
+    double saveTime = m_parameters->get_saveTime();
 
     if (HRMethod == "ECP" && ITHACAutilities::containsSubstring(fieldToCompute, HRSnapshotsField))
     {
@@ -190,7 +190,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
                 || ITHACAutilities::containsSubstring(fieldToCompute, "reducedNut"))
             {
               ITHACAstream::exportSolution(nonLinearSnapshotsj, "0", snapshotsFolder, fieldToCompute);
-              ITHACAstream::exportSolution(nonLinearSnapshotsj, "0", ithacaPODParameters->get_casenameData(), fieldToCompute);
+              ITHACAstream::exportSolution(nonLinearSnapshotsj, "0", m_parameters->get_casenameData(), fieldToCompute);
             }
             else if(fieldToCompute == "nut")
             {
@@ -253,7 +253,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
             
                 Info << "Evaluating " << fieldToCompute << " term" << endl;
                 ITHACAstream::exportSolution(snapshotECPcj, "0", snapshotsFolder, fieldToCompute);
-                ITHACAstream::exportSolution(snapshotECPcj, "0", ithacaPODParameters->get_casenameData(), fieldToCompute);
+                ITHACAstream::exportSolution(snapshotECPcj, "0", m_parameters->get_casenameData(), fieldToCompute);
 
                 for (label c = 0; c < nUsedModesU; c++)
                 {
@@ -310,7 +310,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
           
                 Info << "Evaluating " << fieldToCompute << " term" << endl;
                 ITHACAstream::exportSolution(snapshotECPckj, "0", snapshotsFolder, fieldToCompute);
-                ITHACAstream::exportSolution(snapshotECPckj, "0", ithacaPODParameters->get_casenameData(), fieldToCompute);
+                ITHACAstream::exportSolution(snapshotECPckj, "0", m_parameters->get_casenameData(), fieldToCompute);
 
                 for (label c = 0; c < f_spatialModesU.size(); c++)
                 {
@@ -359,7 +359,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
     }
 
 
-    // Compute/Read and store in ithacaPODParameters the mean of the non polynomial field from high-fidelity velocity
+    // Compute/Read and store in m_parameters the mean of the non polynomial field from high-fidelity velocity
     if (fieldToCompute == HRInterpField || fieldToCompute == "fullStressFunction" || fieldToCompute == "nut")  
     {
         if (interpFieldCenteredOrNot)
@@ -374,7 +374,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
             }
             else  // Computing the mean
             {
-                ITHACAPOD::PODTemplate<T> ithacaFVPOD_interp_field(ithacaPODParameters, fieldToCompute, snapshotsFolder);
+                ITHACAPOD::PODTemplate<T> ithacaFVPOD_interp_field(m_parameters, fieldToCompute, snapshotsFolder);
                 ithacaFVPOD_interp_field.set_b_centeredOrNot(1);
                 ithacaFVPOD_interp_field.computeMeanField();
                 meanField = ithacaFVPOD_interp_field.get_mean();
@@ -382,14 +382,14 @@ void TurbDiffusionHyperreduction<volF,T,S>::precomputeTurbDiffusionFunctions(wor
 
             if (fieldToCompute == "fullStressFunction" || fieldToCompute == "nut")
             {
-                ithacaPODParameters->set_meanDEIM(meanField);
+                m_parameters->set_meanDEIM(meanField);
             }
         }  
         else
         {
             T meanZero(fieldToCompute, template_HRInterpField);
             ITHACAutilities::setToZero(meanZero);
-            ithacaPODParameters->set_meanDEIM(meanZero);
+            m_parameters->set_meanDEIM(meanZero);
         }
     }
 }
@@ -418,8 +418,8 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
     else if (HRMethod == "ECP")
     {
         word HRSnapshotsField_copy = HRSnapshotsField;
-        std::vector<word> HRFields_temp{std::begin(ithacaPODParameters->get_field_name()), 
-                                           std::end(ithacaPODParameters->get_field_name())};
+        std::vector<word> HRFields_temp{std::begin(m_parameters->get_field_name()), 
+                                           std::end(m_parameters->get_field_name())};
         HRFields_temp.erase(std::remove_if(HRFields_temp.begin(), HRFields_temp.end(),
             [HRSnapshotsField_copy](const word x) {return !ITHACAutilities::containsSubstring(x,HRSnapshotsField_copy);}),
              HRFields_temp.end());
@@ -435,7 +435,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
     {
         // POD of nonpolynomial fields
         PtrList<S> f_subsetSpatialModesHR;
-        ITHACAPOD::PODTemplate<S> ithacaFVPOD_template_field(ithacaPODParameters, fieldIterator, snapshotsFolder);
+        ITHACAPOD::PODTemplate<S> ithacaFVPOD_template_field(m_parameters, fieldIterator, snapshotsFolder);
         ithacaFVPOD_template_field.set_snapFolderParams(POD_nSnapshot,l_nSnapshotSimulation,POD_startTime,POD_endTime);
         ithacaFVPOD_template_field.set_b_centeredOrNot(interpFieldCenteredOrNot);
         ithacaFVPOD_template_field.getModes(f_subsetSpatialModesHR, m_temporalModesHR,
@@ -461,7 +461,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
     // Constructor of the hyperReduction object
     ithacaHyperreduction = autoPtr<HyperReduction<PtrList<S>>>(
             new HyperReduction<PtrList<S>>(f_spatialModesHR.size(), 
-                                           ithacaPODParameters->get_nMagicPoints(), 
+                                           m_parameters->get_nMagicPoints(), 
                                            std::is_same<S, volScalarField>::value ? 1 : 3,
                                            f_spatialModesHR[0].size(),
                                            initSeeds, 
@@ -488,7 +488,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
         {
             for (unsigned int c = 0; c < HRPODFields.size(); c++)
             {
-                label nModesSubspace = ithacaPODParameters->get_nModes()[HRInterpField];
+                label nModesSubspace = m_parameters->get_nModes()[HRInterpField];
                 Eigen::VectorXd eigenValuesModesHR;
                 std::string pathCentered = "";
                 if (interpFieldCenteredOrNot){pathCentered = "_centered";}
@@ -513,7 +513,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
         else if (ECPAlgo == "EachMode")
         {
             List<Eigen::MatrixXd> listspatialModesHR(HRPODFields.size());
-            label nModesSubspace = ithacaPODParameters->get_nModes()[HRInterpField];
+            label nModesSubspace = m_parameters->get_nModes()[HRInterpField];
             for (unsigned int c = 0; c < HRPODFields.size(); c++)
             {
                 listspatialModesHR[c] = spatialModesHR.middleCols(nModesSubspace*c, nModesSubspace);
@@ -537,7 +537,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
         cnpy::save(ithacaHyperreduction->pinvPU, folder_K_DEIM + "/P_U_inv.npy");
         cnpy::save(ithacaHyperreduction->MatrixOnline, folder_K_DEIM + "/MatrixOnline.npy");
 
-        ithacaPODParameters->set_K_DEIM(ithacaHyperreduction->MatrixOnline);
+        m_parameters->set_K_DEIM(ithacaHyperreduction->MatrixOnline);
     }
 
     else if (HRMethod == "ECP" && ITHACAutilities::containsSubstring(HRInterpField, "fullStressFunction"))
@@ -556,7 +556,7 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
             }
         }
         cnpy::save(K_DEIM, folder_HR + "/K_DEIM.npy");
-        ithacaPODParameters->set_K_DEIM(K_DEIM);
+        m_parameters->set_K_DEIM(K_DEIM);
     }
 
     else if (HRMethod == "ECP" && ITHACAutilities::containsSubstring(HRInterpField, "nut"))
@@ -568,20 +568,20 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
             K_DEIM.row(c) = (sparseWeights.array() * quadWeights[c].array()).matrix();
         }
         cnpy::save(K_DEIM, folder_HR + "/K_DEIM.npy");
-        ithacaPODParameters->set_K_DEIM(K_DEIM);
+        m_parameters->set_K_DEIM(K_DEIM);
     }
 
         
     // Generate submeshes
-    ithacaPODParameters->set_magicPoints(ithacaHyperreduction->nodePoints);
+    m_parameters->set_magicPoints(ithacaHyperreduction->nodePoints);
     ithacaHyperreduction->problemName = HRInterpField;
-    ithacaHyperreduction->generateSubmesh(2, ithacaPODParameters->get_mesh());
+    ithacaHyperreduction->generateSubmesh(2, m_parameters->get_mesh());
 
-    ithacaPODParameters->set_localMagicPoints(ithacaHyperreduction->localNodePoints);
-    ithacaPODParameters->set_submesh(ithacaHyperreduction->submesh->subMesh());
+    m_parameters->set_localMagicPoints(ithacaHyperreduction->localNodePoints);
+    m_parameters->set_submesh(ithacaHyperreduction->submesh->subMesh());
 
     // Set delta on submesh
-    ithacaPODParameters->set_magicDelta(ithacaHyperreduction->interpolateField(ithacaPODParameters->get_delta()));
+    m_parameters->set_magicDelta(ithacaHyperreduction->interpolateField(m_parameters->get_delta()));
          
     // Get deformation tensor on submesh
     computeDefTensor(UnsteadyNSTurb::computeS_fromU(*f_meanU));
@@ -592,19 +592,19 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
 
 
 template TurbDiffusionHyperreduction<volVectorField,volVectorField,volVectorField>::TurbDiffusionHyperreduction(
-        ITHACAPOD::Parameters* myParameters,
+        Parameters* myParameters,
         bool mgPoints_0_Neighborhoods_1,
         volVectorField& template_HRInterpField,
         volVectorField& template_HRSnapshotsField,
         volVectorField*& meanU, PtrList<volVectorField>& spatialModesU);
 template TurbDiffusionHyperreduction<volVectorField,volVectorField,volScalarField>::TurbDiffusionHyperreduction(
-        ITHACAPOD::Parameters* myParameters,
+        Parameters* myParameters,
         bool mgPoints_0_Neighborhoods_1,
         volVectorField& template_HRInterpField,
         volScalarField& template_HRSnapshotsField,
         volVectorField*& meanU, PtrList<volVectorField>& spatialModesU);
 template TurbDiffusionHyperreduction<volVectorField,volScalarField,volScalarField>::TurbDiffusionHyperreduction(
-        ITHACAPOD::Parameters* myParameters,
+        Parameters* myParameters,
         bool mgPoints_0_Neighborhoods_1,
         volScalarField& template_HRInterpField,
         volScalarField& template_HRSnapshotsField,

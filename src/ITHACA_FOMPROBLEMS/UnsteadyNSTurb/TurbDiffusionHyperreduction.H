@@ -49,7 +49,7 @@ class TurbDiffusionHyperreduction
 {
   protected :
     /// Parameter object containing main information
-    ITHACAPOD::PODParameters* ithacaPODParameters;
+    StoredParameters* m_parameters;
 
     /// Parameter object to evaluate interpolated functions
     autoPtr<UnsteadyNSTurb> ithacaUnsteadyNSTurb;
@@ -129,13 +129,13 @@ class TurbDiffusionHyperreduction
         /// @brief      Class TurbDiffusionHyperreduction Constructor
         /// @details    This class is used to perform the offline part of hyperreduction on a turbulent non-stationnary diffusion
         ///
-        /// @param[in]  myParameters ITHACAPOD::PODParameters object
+        /// @param[in]  myParameters StoredParameters object
         /// @param[in]  mgPoints_0_Neighborhoods_1 boolean  Include neighboroods in submesh or not
         /// @param[in]  template_HRInterpField volScalarField or volVectorField  Template of the interpolated field
         /// @param[in]  template_HRInterpField volScalarField or volVectorField  Template of the snapshots field
         /// @param[in]  meanU volVectorField  Mean of the velocity field
         /// @param[in]  spatialModesU PtrList<volVectorField>  POD modes of the velocity field
-        TurbDiffusionHyperreduction(ITHACAPOD::Parameters* myParameters, bool mgPoints_0_Neighborhoods_1,
+        TurbDiffusionHyperreduction(Parameters* myParameters, bool mgPoints_0_Neighborhoods_1,
                                     T& template_HRInterpField, S& template_HRSnapshotsField,
                                     volF*& meanU, PtrList<volF>& spatialModesU);
 
@@ -154,14 +154,14 @@ class TurbDiffusionHyperreduction
 
         //--------------------------------------------------------------------------
         /// @brief   Compute the symmetric tensor of the velocity modes on the magic points submesh
-        /// @details Saves the result in the PODParameters object
+        /// @details Saves the result in the StoredParameters object
         ///
         template<typename volGradF>
         void computeDefTensor(volGradF tensorMeanU);
 
         //--------------------------------------------------------------------------
         /// @brief   Compute the interpolated field's mean on the magic points submesh
-        /// @details Saves the result in the PODParameters object
+        /// @details Saves the result in the StoredParameters object
         ///
         void common_MeanHRInterpField();
        

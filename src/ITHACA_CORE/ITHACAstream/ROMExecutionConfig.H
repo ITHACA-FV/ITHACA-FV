@@ -4,13 +4,9 @@
 
 #include <Eigen/Eigen>
 #include <volFieldsFwd.H>
-
-
 #include "dimensionedScalarFwd.H"
 
 
-namespace ITHACAPOD
-{
 /**
  * @brief Runtime settings for ROM execution
  *
@@ -61,8 +57,5 @@ private:
     Foam::word m_useSOTA;
 
 };
-
-
-} // namespace ITHACAPOD
 
 #endif // ROMExecutionConfig_H

@@ -11,7 +11,7 @@ namespace ITHACAPOD {
 template<typename T, typename G>
 class PODTemplateH1 : public PODTemplate<T>
 {
-  using PODTemplate<T>::ithacaFVParameters;
+  using PODTemplate<T>::m_parameters;
   using PODTemplate<T>::field_name;
   using PODTemplate<T>::casenameData;
   using PODTemplate<T>::l_nSnapshot;

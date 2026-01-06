@@ -30,7 +30,7 @@ SourceFiles
 #include "27Online.H"
 
 
-tutorial27_online::tutorial27_online(ITHACAPOD::PODParameters* parameters):
+tutorial27_online::tutorial27_online(StoredParameters* parameters):
     m_parameters(parameters),
     m_UnsteadyNSTurb(new UnsteadyNSTurb(m_parameters)),
     runTime2(Foam::Time::controlDictName, ".", m_parameters->get_casenameData()),
