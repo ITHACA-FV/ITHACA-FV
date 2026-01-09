@@ -35,10 +35,10 @@ Author
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::RBFInterpolation::interpolate
-                          (
-                              const Field<Type>& ctrlField
-                          ) const
+Foam::tmp<Foam::Field<Type >> Foam::RBFInterpolation::interpolate
+(
+    const Field<Type>& ctrlField
+) const
 {
     // HJ and FB (05 Jan 2009)
     // Collect the values from ALL control points to all CPUs
@@ -56,10 +56,10 @@ Foam::tmp<Foam::Field<Type>> Foam::RBFInterpolation::interpolate
             << abort(FatalError);
     }
 
-    tmp<Field<Type>> tresult
-                  (
-                      new Field<Type>(dataPoints_.size(), pTraits<Type>::zero)
-                  );
+    tmp<Field<Type >> tresult
+    (
+        new Field<Type>(dataPoints_.size(), pTraits<Type>::zero)
+    );
     Field<Type>& result = const_cast<Field<Type>&>(tresult());
     // FB 21-12-2008
     // 1) Calculate alpha and beta coefficients using the Inverse
@@ -79,7 +79,6 @@ Foam::tmp<Foam::Field<Type>> Foam::RBFInterpolation::interpolate
             alpha[row] += mat[row][col] * ctrlField[col];
         }
     }
-
     if (polynomials_)
     {
         for
@@ -95,7 +94,6 @@ Foam::tmp<Foam::Field<Type>> Foam::RBFInterpolation::interpolate
             }
         }
     }
-
     // Evaluation
     scalar t;
     // Algorithmic improvement, Matteo Lombardi.  21/Mar/2011
@@ -143,6 +141,7 @@ Foam::tmp<Foam::Field<Type>> Foam::RBFInterpolation::interpolate
             result[flPoint] = w * result[flPoint];
         }
     }
+
     return tresult;
 }
 

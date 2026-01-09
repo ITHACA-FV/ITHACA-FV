@@ -46,7 +46,7 @@ ReducedUnsteadyNSTTurb::ReducedUnsteadyNSTTurb(UnsteadyNSTTurb& FOMproblem)
 
 //problem(&FOMproblem)
 {
-    problem   = &FOMproblem;
+    problem   = & FOMproblem;
     N_BC      = problem->inletIndex.rows();
     N_BC_t    = problem->inletIndexT.rows();
     Nphi_u    = problem->B_matrix.rows();
@@ -154,7 +154,7 @@ int newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
 int newton_unsteadyNSTTurb_sup::df(const Eigen::VectorXd& x,
                                    Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -190,10 +190,11 @@ int newton_unsteadyNSTTurb_sup_t::operator()(const Eigen::VectorXd& t,
 
     return 0;
 }
+
 int newton_unsteadyNSTTurb_sup_t::df(const Eigen::VectorXd& t,
                                      Eigen::MatrixXd& fjact) const
 {
-    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup_t> numDiff(*this);
+    Eigen::NumericalDiff<newton_unsteadyNSTTurb_sup_t> numDiff(* this);
     numDiff.df(t, fjact);
     return 0;
 }
@@ -468,4 +469,5 @@ void ReducedUnsteadyNSTTurb::reconstructSupt(fileName folder, int printevery)
         counter++;
     }
 }
+
 // ************************************************************************* //

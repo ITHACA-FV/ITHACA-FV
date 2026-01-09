@@ -109,6 +109,9 @@ class steadyNS: public reductionProblem
         /// List of pointers used to form the list of lifting functions
         PtrList<volVectorField> liftfield;
 
+        /// List of pointer used to form the list of lifting functions for the pressure
+        PtrList<volScalarField> liftfieldP;
+
         /// List of pointers used to form the homogeneous velocity snapshots
         PtrList<volVectorField> Uomfield;
 
@@ -168,6 +171,12 @@ class steadyNS: public reductionProblem
 
         /// Div of velocity
         Eigen::MatrixXd P_matrix;
+
+        /// Convective background / Large scale advection term
+        Eigen::MatrixXd L_matrix;
+
+        /// Divergent convective background / Large scale advection term
+        Eigen::MatrixXd L_D_matrix;
 
         /// Laplacian term PPE
         Eigen::MatrixXd D_matrix;
@@ -386,6 +395,19 @@ class steadyNS: public reductionProblem
         Eigen::MatrixXd diffusive_term(label NUmodes, label NPmodes, label NSUPmodes);
 
         //--------------------------------------------------------------------------
+        //  Projection Methods Momentum Equation
+        /// Symetric diffusive Term
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NSUPmodes  The number of supremizer modes.
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the diffusion term.
+        ///
+        Eigen::MatrixXd diffusive_term_sym(label NUmodes, label NPmodes,
+                                           label NSUPmodes);
+
+        //--------------------------------------------------------------------------
         /// Gradient of pressure
         ///
         /// @param[in]  NUmodes    The number of velocity modes.
@@ -452,6 +474,18 @@ class steadyNS: public reductionProblem
         /// @return     reduced third order tensor for the conv. term which is used for the PPE approach
         ///
         Eigen::Tensor<double, 3 > divMomentum(label NUmodes, label NPmodes);
+        
+        //--------------------------------------------------------------------------
+        /// Divergence of convective term (PPE approach) using the cached procedure
+        ///
+        /// @brief      Divergence of convective term (PPE approach)
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  NPmodes    The number of pressure modes.
+        ///
+        /// @return     reduced third order tensor for the conv. term which is used for the PPE approach
+        ///
+        Eigen::Tensor<double, 3 > divMomentum_cache(label NUmodes, label NPmodes);
 
         //--------------------------------------------------------------------------
         /// Laplacian of pressure term (PPE approach)
@@ -461,6 +495,28 @@ class steadyNS: public reductionProblem
         /// @return     reduced matrix in Eigen::MatrixXd format for the laplacian of pressure.
         ///
         Eigen::MatrixXd laplacian_pressure(label NPmodes);
+
+        //--------------------------------------------------------------------------
+        /// Large Scale / Background Advection
+        ///
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  vls        Additional advecting field
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the Large Scale Advection
+        ///
+        Eigen::MatrixXd convective_background(label NUmodes, volVectorField vls);
+
+        //--------------------------------------------------------------------------
+        /// Divergent of Large Scale / Background Advection
+        ///
+        /// @param[in]  NPmodes    The number of pressure modes.
+        /// @param[in]  NUmodes    The number of velocity modes.
+        /// @param[in]  vls        Additional advecting field
+        ///
+        /// @return     reduced matrix in Eigen::MatrixXd format for the Large Scale Advection
+        ///
+        Eigen::MatrixXd divergent_convective_background(label NPmodes, label NUmodes,
+                volVectorField vls);
 
         //--------------------------------------------------------------------------
         /// @brief      Term N° 1 given by the additional boundary condition using a PPE approach
@@ -744,6 +800,19 @@ class steadyNS: public reductionProblem
         /// @return     tensor_C
         ///
         Eigen::Tensor<double, 3 > convective_term_tens(label NUmodes,
+                label NPmodes,
+                label NSUPmodes);
+        
+        //--------------------------------------------------------------------------
+        /// @brief      Export convective term as a tensor using the cached procedure
+        ///
+        /// @param[in]  NUmodes    The N of velocity modes
+        /// @param[in]  NPmodes    The N of pressure modes
+        /// @param[in]  NSUPmodes  The N of supremizer modes
+        ///
+        /// @return     tensor_C
+        ///
+        Eigen::Tensor<double, 3 > convective_term_tens_cache(label NUmodes,
                 label NPmodes,
                 label NSUPmodes);
 

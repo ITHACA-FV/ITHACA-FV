@@ -68,14 +68,14 @@ void inverseLaplacianProblemTotalHeatMeasure_paramBC::parameterizedBCoffline(
                 metaData.basisType >> metaData.shapeParameter;
             fin.close();
             std::cout << "\nOffline FOUND with parameter:\n" <<
-                      "Number of thermocouples = " << metaData.numberTC <<
-                      "\nNumber of basis functions = " << metaData.numberBasis <<
-                      "\nType of basis functions = " << metaData.basisType <<
-                      "\nRBF shape parameters = " << metaData.shapeParameter <<
-                      "\n\nShould I recompute it? [y/n]" << std::endl;
+                         "Number of thermocouples = " << metaData.numberTC <<
+                         "\nNumber of basis functions = " << metaData.numberBasis <<
+                         "\nType of basis functions = " << metaData.basisType <<
+                         "\nRBF shape parameters = " << metaData.shapeParameter <<
+                         "\n\nShould I recompute it? [y/n]" << std::endl;
             std::cin >> recomputeOffline;
         }
-        while ( !cin.fail() && recomputeOffline != 'y' && recomputeOffline != 'n' );
+        while (!cin.fail() && recomputeOffline != 'y' && recomputeOffline != 'n' );
     }
 
     if (recomputeOffline == 'y')

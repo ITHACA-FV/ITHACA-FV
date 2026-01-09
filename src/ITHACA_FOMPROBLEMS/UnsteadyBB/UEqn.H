@@ -51,7 +51,7 @@ if (pimple.momentumPredictor())
             (
                 - ghf * fvc::snGrad(rhok)
                 - fvc::snGrad(p_rgh)
-            )*mesh.magSf()
+            ) * mesh.magSf()
         )
     );
     fvOptions.correct(U);

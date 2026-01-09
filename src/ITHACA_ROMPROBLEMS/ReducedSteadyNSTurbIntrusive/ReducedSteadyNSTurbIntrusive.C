@@ -40,7 +40,7 @@ ReducedSteadyNSTurbIntrusive::ReducedSteadyNSTurbIntrusive()
 ReducedSteadyNSTurbIntrusive::ReducedSteadyNSTurbIntrusive(
     SteadyNSTurbIntrusive& fomProblem)
     :
-    problem(&fomProblem)
+    problem(& fomProblem)
 {
     N_BC = problem->inletIndex.rows();
     Nphi_u = problem->bMatrix.rows();
@@ -81,7 +81,7 @@ int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = aTmp.transpose() * Eigen::SliceFromTensor(problem->cTotalTensor, 0,
-                i) * aTmp;
+             i) * aTmp;
         fvec(i) = m1(i) - cc(0, 0) - m2(i);
 
         if (problem->bcMethod == "penalty")
@@ -104,7 +104,7 @@ int newtonSteadyNSTurbIntrusive::operator()(const Eigen::VectorXd& x,
 int newtonSteadyNSTurbIntrusive::df(const Eigen::VectorXd& x,
                                     Eigen::MatrixXd& fjac) const
 {
-    Eigen::NumericalDiff<newtonSteadyNSTurbIntrusive> numDiff(*this);
+    Eigen::NumericalDiff<newtonSteadyNSTurbIntrusive> numDiff(* this);
     numDiff.df(x, fjac);
     return 0;
 }
@@ -284,6 +284,7 @@ void ReducedSteadyNSTurbIntrusive::reconstructLiftAndDrag(
         ITHACAstream::exportMatrix(fN, "fN", "eigen", folder);
     }
 }
+
 // ************************************************************************* //
 
 

@@ -22,7 +22,7 @@ namespace SPLINTER
  */
 SparseMatrix myKroneckerProduct(const SparseMatrix& A, const SparseMatrix& B)
 {
-    SparseMatrix AB(A.rows()*B.rows(), A.cols()*B.cols());
+    SparseMatrix AB(A.rows() * B.rows(), A.cols() * B.cols());
     // Reserve memory for AB
     //AB.reserve(A.nonZeros()*B.nonZeros()); // Does not reserve inner vectors (slow)
     //int innernnz = std::ceil(A.nonZeros()*B.nonZeros()/AB.outerSize());
@@ -86,7 +86,7 @@ SparseMatrix myKroneckerProduct(const SparseMatrix& A, const SparseMatrix& B)
                 {
                     for (SparseMatrix::InnerIterator itB(B, jB); itB; ++itB)
                     {
-                        if (std::abs(itA.value()*itB.value()) > tolerance)
+                        if (std::abs(itA.value() * itB.value()) > tolerance)
                         {
                             int row = jrow + itB.row();
                             int col = jcol + itB.col();
@@ -111,7 +111,7 @@ SparseVector kroneckerProductVectors(const std::vector<SparseVector>& vectors)
     // Multiply from left
     int counter = 0;
 
-    for (const auto& vec : vectors)
+    for (const auto & vec : vectors)
     {
         // Avoid copy
         if (counter % 2 == 0)
@@ -144,7 +144,7 @@ DenseVector kroneckerProductVectors(const std::vector<DenseVector>& vectors)
     // Multiply from left
     int counter = 0;
 
-    for (const auto& vec : vectors)
+    for (const auto & vec : vectors)
     {
         // Avoid copy
         if (counter % 2 == 0)
@@ -168,7 +168,8 @@ DenseVector kroneckerProductVectors(const std::vector<DenseVector>& vectors)
     return temp1;
 }
 
-SparseMatrix kroneckerProductMatrices(const std::vector<SparseMatrix>& matrices)
+SparseMatrix kroneckerProductMatrices(const std::vector<SparseMatrix>&
+                                      matrices)
 {
     // Create two temp matrices
     SparseMatrix temp1(1, 1);
@@ -177,7 +178,7 @@ SparseMatrix kroneckerProductMatrices(const std::vector<SparseMatrix>& matrices)
     // Multiply from left
     int counter = 0;
 
-    for (const auto& mat : matrices)
+    for (const auto & mat : matrices)
     {
         // Avoid copy
         if (counter % 2 == 0)

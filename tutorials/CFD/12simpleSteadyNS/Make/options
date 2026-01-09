@@ -23,7 +23,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11
+    -std=c++17
 
 EXE_LIBS = \
     -lturbulenceModels \
@@ -33,6 +33,9 @@ EXE_LIBS = \
     -lmeshTools \
     -lfvOptions \
     -lsampling \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lforces \
     -lITHACA_ROMPROBLEMS \
     -lITHACA_FOMPROBLEMS \

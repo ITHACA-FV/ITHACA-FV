@@ -25,7 +25,7 @@ EXE_INC = \
     -Wno-comment \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11
+    -std=c++17
 
 EXE_LIBS = \
     -lturbulenceModels \
@@ -35,6 +35,9 @@ EXE_LIBS = \
     -lmeshTools \
     -lfvOptions \
     -lsampling \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lforces \
     -lITHACA_FOMPROBLEMS \
     -lITHACA_ROMPROBLEMS \

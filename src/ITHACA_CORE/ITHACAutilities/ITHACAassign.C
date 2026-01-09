@@ -200,7 +200,7 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
         }
 
         freestreamFvPatchField<scalar>& Tpatch =
-            refCast<freestreamFvPatchField<scalar>>(s.boundaryFieldRef()[BC_ind]);
+            refCast<freestreamFvPatchField<scalar >> (s.boundaryFieldRef()[BC_ind]);
         scalarField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
@@ -208,8 +208,10 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
             gradTpatch[faceI] = value;
         }
     }
+
     else if (typeBC == "empty" || typeBC == "zeroGradient")
     {}
+
     else
     {
         try
@@ -220,7 +222,7 @@ void assignBC(GeometricField<scalar, fvPatchField, volMesh>& s, label BC_ind,
                     && typeBC != "nutkWallFunction" && typeBC != "mixedEnergy")
             {
                 word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
-                               " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
                 throw (message);
             }
         }
@@ -309,6 +311,36 @@ void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
 
     assignBC(s, BC_ind, valueList);
 }
+void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
+              Eigen::MatrixXd valueVec)
+{ 
+    label sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC * 3 == valueVec.size(),
+             "The size of the given values matrix has to be equal to 3 times the dimension of the boundaryField");
+    List<vector> valueList(sizeBC);
+
+    for (label i = 0; i < sizeBC; i++)
+    {
+        valueList[i].component(0) = valueVec(i);
+        valueList[i].component(1) = valueVec(i + sizeBC);
+        valueList[i].component(2) = valueVec(i + sizeBC * 2);
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
+
+void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
+              double value)
+{
+    label sizeBC = s.boundaryField()[BC_ind].size();
+    List<double> valueList(sizeBC);
+    for (label i = 0; i < sizeBC; i++)
+    {
+        valueList[i] = value;
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
 
 void assignBC(GeometricField<scalar, fvsPatchField, surfaceMesh>& s,
               label BC_ind, Eigen::MatrixXd valueVec)
@@ -367,12 +399,59 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
         }
 
         freestreamFvPatchField<vector>& Tpatch =
-            refCast<freestreamFvPatchField<vector>>(s.boundaryFieldRef()[BC_ind]);
+            refCast<freestreamFvPatchField<vector >> (s.boundaryFieldRef()[BC_ind]);
         vectorField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
             gradTpatch[faceI] = valueList[faceI];
         }
+    }
+
+    else if (s.boundaryField()[BC_ind].type() == "empty"
+             || s.boundaryField()[BC_ind].type() == "zeroGradient")
+    {}
+
+    else
+    {
+        try
+        {
+            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty"
+                    && typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated"
+                    &&  typeBC != "processor")
+            {
+                word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
+                " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                throw (message);
+            }
+        }
+        catch (const word message)
+        {
+            if (para->warnings)
+            {
+                WarningInFunction << message << endl;
+            }
+        }
+
+        for (label i = 0; i < sizeBC; i++)
+        {
+            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
+        }
+    }
+}
+
+// Assign a BC for a point patch field
+void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
+              List<vector> valueList)
+{
+    word typeBC = s.boundaryField()[BC_ind].type();
+    label sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC == valueList.size(),
+             "The size of the given values list has to be equal to the dimension of the boundaryField");
+
+    if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        Info << "This Feature is not implemented for this boundary condition" << endl;
+        exit(0);
     }
     else if (s.boundaryField()[BC_ind].type() == "empty"
              || s.boundaryField()[BC_ind].type() == "zeroGradient")
@@ -392,20 +471,16 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
         }
         catch (const word message)
         {
-            if (para->warnings)
-            {
-                WarningInFunction << message << endl;
-            }
+            cerr << "WARNING: " << message << endl;
         }
 
         for (label i = 0; i < sizeBC; i++)
         {
-            s.boundaryFieldRef()[BC_ind][i] = valueList[i];
+             s.boundaryFieldRef()[BC_ind].patchInternalField()()[i] == valueList[i];
+            
         }
     }
 }
-
-
 // Assign a BC for a tensor field
 void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
               List<tensor> valueList)
@@ -429,16 +504,18 @@ void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
         }
 
         freestreamFvPatchField<tensor>& Tpatch =
-            refCast<freestreamFvPatchField<tensor>>(s.boundaryFieldRef()[BC_ind]);
+            refCast<freestreamFvPatchField<tensor >> (s.boundaryFieldRef()[BC_ind]);
         tensorField& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
             gradTpatch[faceI] = valueList[faceI];
         }
     }
+
     else if (s.boundaryField()[BC_ind].type() == "empty"
              || s.boundaryField()[BC_ind].type() == "zeroGradient")
     {}
+
     else
     {
         try
@@ -448,7 +525,7 @@ void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
                     &&  typeBC != "processor")
             {
                 word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
-                               " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
                 throw (message);
             }
         }
@@ -468,8 +545,68 @@ void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
 }
 
 
+void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, 
+              label BC_ind, vector value)
+{
+    M_Assert(value.size() == 3, "The size of the given vector has to be equal to 3 for the 3 components");
+    label sizeBC = s.boundaryField()[BC_ind].size();
+    List<vector> valueList(sizeBC);
+
+    for (label i = 0; i < sizeBC; i++)
+    {
+        valueList[i] = value;
+    }
+
+    assignBC(s, BC_ind, valueList);
+}
+  
+void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_ind,
+              List<double> valueList)
+{
+    word typeBC = s.boundaryField()[BC_ind].type();
+    label sizeBC = s.boundaryField()[BC_ind].size();
+    M_Assert(sizeBC == valueList.size(),
+             "The size of the given values list has to be equal to the dimension of the boundaryField");
+    ITHACAparameters* para(ITHACAparameters::getInstance());
+    if (s.boundaryField()[BC_ind].type() == "fixedGradient")
+    {
+        Info << "This Feature is not implemented for this boundary condition" << endl;
+        exit(0);
+    }
+    else if (typeBC == "empty")
+    {}
+    else
+    {
+        try
+        {
+            if (typeBC != "fixedGradient" && typeBC != "freestream" && typeBC != "empty"
+                    && typeBC != "zeroGradient" && typeBC != "fixedValue" && typeBC != "calculated"
+                    &&  typeBC != "processor")
+            {
+                word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
+                               " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                throw (message);
+            }
+        }
+        catch (const word message)
+        {
+            cerr << "WARNING: " << message << endl;
+        }
+
+        for (label i = 0; i < sizeBC; i++)
+        {
+          double value = valueList[i];
+          
+          //s.boundaryFieldRef()[BC_ind].patchInternalField()()[i] == valueList[i];
+            s.primitiveFieldRef()[BC_ind][i] = value;
+        }
+    }
+}
+
+
 template<typename Type>
-void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
+void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s,
+              label BC_ind,
               List<Type>& valueList)
 {
     word typeBC = s.boundaryField()[BC_ind].type();
@@ -481,7 +618,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
     if (s.boundaryField()[BC_ind].type() == "fixedGradient")
     {
         fixedGradientFvPatchField<Type>& Tpatch =
-            refCast<fixedGradientFvPatchField<Type>>(s.boundaryFieldRef()[BC_ind]);
+            refCast<fixedGradientFvPatchField<Type >> (s.boundaryFieldRef()[BC_ind]);
         Field<Type>& gradTpatch = Tpatch.gradient();
         forAll(gradTpatch, faceI)
         {
@@ -496,7 +633,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
         }
 
         freestreamFvPatchField<Type>& Tpatch =
-            refCast<freestreamFvPatchField<Type>>(s.boundaryFieldRef()[BC_ind]);
+            refCast<freestreamFvPatchField<Type >> (s.boundaryFieldRef()[BC_ind]);
         Field<Type>& gradTpatch = Tpatch.freestreamValue();
         forAll(gradTpatch, faceI)
         {
@@ -515,7 +652,7 @@ void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
                     && typeBC != "fixedFluxPressure" &&  typeBC != "processor")
             {
                 word message = "Pay attention, your typeBC " + typeBC + " for " + s.name() +
-                               " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
+                " is not included into the developed ones. Your BC will be treated as a classical fixedValue.";
                 throw (message);
             }
         }
@@ -542,7 +679,8 @@ template void assignBC(
     List<vector>& valueList);
 
 template<typename Type>
-void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s, label BC_ind,
+void assignBC(GeometricField<Type, fvsPatchField, surfaceMesh>& s,
+              label BC_ind,
               Type& value)
 {
     label sizeBC = s.boundaryField()[BC_ind].size();
@@ -564,7 +702,8 @@ template void assignBC(
     vector& valueList);
 
 template<typename Type>
-void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>& field,
+void changeNeumann2Dirichlet(GeometricField<Type, fvPatchField, volMesh>&
+                             field,
                              Type& value)
 {
     forAll(field.mesh().boundary(), i)
@@ -596,8 +735,10 @@ void assignZeroDirichlet(GeometricField<Type, fvPatchField, volMesh>& field)
             assignBC(field, i, v);
         }
     }
+
     changeNeumann2Dirichlet(field, v);
 }
+
 template void assignZeroDirichlet(
     GeometricField<vector, fvPatchField, volMesh>& field);
 template void assignZeroDirichlet(
@@ -711,7 +852,7 @@ void assignMixedBC(
     if (field.boundaryField()[BC_ind].type() == "mixed")
     {
         mixedFvPatchField<Type>& Tpatch =
-            refCast<mixedFvPatchField<Type>>(field.boundaryFieldRef()[BC_ind]);
+            refCast<mixedFvPatchField<Type >> (field.boundaryFieldRef()[BC_ind]);
         Field<Type>& valueTpatch = Tpatch.refValue();
         Field<Type>& gradTpatch = Tpatch.refGrad();
         Field<scalar>& valueFracTpatch = Tpatch.valueFraction();
@@ -731,7 +872,7 @@ template void assignMixedBC<vector>(
 
 template<typename Type>
 void normalizeFields(
-    PtrList<GeometricField<Type, fvPatchField, volMesh>>& fields)
+    PtrList<GeometricField<Type, fvPatchField, volMesh >> & fields)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     word normType = para->ITHACAdict->lookupOrDefault<word>("normalizationNorm",
@@ -771,9 +912,9 @@ void normalizeFields(
 }
 
 template void normalizeFields(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh>>& fields);
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >> & fields);
 template void normalizeFields(
-    PtrList<GeometricField<vector, fvPatchField, volMesh>>& fields);
+    PtrList<GeometricField<vector, fvPatchField, volMesh >>& fields);
 
 
 template<typename Type>
@@ -803,9 +944,9 @@ Eigen::MatrixXd getValues(GeometricField<vector, fvPatchField,
     {
         List<scalar> list;
         list.resize(indices.size());
-        M_Assert(max(*xyz) <= 2,
+        M_Assert(max(* xyz) <= 2,
                  "The list of xyz positions contains at list one value larger than 2");
-        labelList l = *xyz;
+        labelList l = * xyz;
 
         for (label i = 0; i < indices.size(); i++)
         {
@@ -847,13 +988,12 @@ Eigen::MatrixXd getValues(GeometricField<scalar, fvPatchField,
 
 template<typename T>
 Eigen::MatrixXd getValues(PtrList<GeometricField<T, fvPatchField,
-                          volMesh>>& fields, labelList& indices, labelList* xyz)
+                          volMesh >> & fields, labelList& indices, labelList* xyz)
 {
     Eigen::MatrixXd out;
     Eigen::MatrixXd a = getValues(fields[0], indices, xyz);
     out.resize(a.rows(), fields.size());
     out.col(0) = a;
-
     for (label i = 1; i < fields.size(); i++)
     {
         out.col(i) = getValues(fields[i], indices, xyz);
@@ -865,10 +1005,10 @@ Eigen::MatrixXd getValues(PtrList<GeometricField<T, fvPatchField,
 
 template
 Eigen::MatrixXd getValues(PtrList<GeometricField<scalar, fvPatchField,
-                                  volMesh>>& fields, labelList& indices, labelList* xyz);
+                                  volMesh >>& fields, labelList& indices, labelList* xyz);
 template
 Eigen::MatrixXd getValues(PtrList<GeometricField<vector, fvPatchField,
-                                  volMesh>>& fields, labelList& indices, labelList* xyz);
+                                  volMesh >> & fields, labelList& indices, labelList* xyz);
 
 
 }

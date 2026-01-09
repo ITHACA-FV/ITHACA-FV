@@ -52,7 +52,7 @@ EXE_INC = \
     -I$(includepybind1) \
     -I$(includepybind2) \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11 \
+    -std=c++17 \
     -O3 \
     -w \
     -shared \
@@ -73,6 +73,7 @@ LIB_LIBS = \
     -lITHACA_FOMPROBLEMS \
     -lITHACA_THIRD_PARTY \
     -lITHACA_CORE \
+    -lsixDoFRigidBodyMotion \
     -L$(FOAM_USER_LIBBIN) \
     -L/usr/lib \
     -lcrypt \

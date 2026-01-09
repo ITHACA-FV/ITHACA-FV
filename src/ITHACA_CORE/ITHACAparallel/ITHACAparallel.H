@@ -77,8 +77,8 @@ class ITHACAparallel
 
         /// Function to get a global field from a parallel one
         template<class Type>
-        List<List <Type>> combineFields(GeometricField<Type, fvPatchField, volMesh>&
-                                        field);
+        List<List <Type >> combineFields(GeometricField<Type, fvPatchField, volMesh>&
+                                         field);
 
         template<class type>
         GeometricField<type, fvPatchField, volMesh> constructGlobalField(
@@ -100,7 +100,7 @@ class ITHACAparallel
         autoPtr<labelList> Gsize_BF;
 
         /// Indexing
-        autoPtr< List<labelList>> IndFaceLocal;
+        autoPtr< List<labelList >> IndFaceLocal;
 
         /// Local size at the boundary
         autoPtr<labelList> Lsize_BF;
@@ -123,8 +123,8 @@ class ITHACAparallel
 };
 
 template<>
-List<List<scalar>> ITHACAparallel::combineFields(
-                    GeometricField<scalar, fvPatchField, volMesh>& field);
+List<List<scalar >> ITHACAparallel::combineFields(
+    GeometricField<scalar, fvPatchField, volMesh>& field);
 
 template<class type>
 GeometricField<type, fvPatchField, volMesh>
@@ -175,6 +175,7 @@ ITHACAparallel::constructGlobalField(GeometricField<type, fvPatchField, volMesh>
     );
     return F_glob;
 }
+
 #endif
 
 

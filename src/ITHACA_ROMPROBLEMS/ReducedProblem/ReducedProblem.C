@@ -47,7 +47,7 @@ reducedProblem::reducedProblem()
 
 reducedProblem::reducedProblem(reductionProblem& problem)
     :
-    problem(&problem)
+    problem(& problem)
 {
 }
 
@@ -97,7 +97,7 @@ Eigen::MatrixXd reducedProblem::solveLinearSys(List<Eigen::MatrixXd> LinSys,
             A =  LinSys[0].transpose() * LinSys[0];
             b =  LinSys[0].transpose() * LinSys[1];
             WarningInFunction <<
-                              "Using normal equation, results might be inaccurate, better to rely on completeOrthogonalDecomposition, bdcSvd or jacobiSvd"
+            "Using normal equation, results might be inaccurate, better to rely on completeOrthogonalDecomposition, bdcSvd or jacobiSvd"
                               << endl;
         }
     }

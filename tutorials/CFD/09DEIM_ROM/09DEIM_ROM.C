@@ -56,8 +56,8 @@ class DEIM_function : public DEIM<fvScalarMatrix>
 
             for (auto i = 0; i < nu.size(); i++)
             {
-                nu[i] = std::exp( - 2 * std::pow(xPos[i] - mu(0) - 1,
-                                                 2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2)) + 1;
+                nu[i] = std::exp(- 2 * std::pow(xPos[i] - mu(0) - 1,
+                                                2) - 2 * std::pow(yPos[i] - mu(1) - 0.5, 2)) + 1;
             }
 
             nu.correctBoundaryConditions();
@@ -179,17 +179,17 @@ class DEIMLaplacian: public laplacianProblem
         {
             auto t1 = std::chrono::high_resolution_clock::now();
             auto t2 = std::chrono::high_resolution_clock::now();
-            auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>
+            auto time_span = std::chrono::duration_cast<std::chrono::duration<double >>
                              (t2 - t1);
             time_full = 0;
-
             for (int i = 0; i < par.rows(); i++)
             {
                 fvScalarMatrix Teqn = DEIMmatrice->evaluate_expression(T, par.row(i));
                 t1 = std::chrono::high_resolution_clock::now();
                 Teqn.solve();
                 t2 = std::chrono::high_resolution_clock::now();
-                time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+                time_span = std::chrono::duration_cast<std::chrono::duration<double >>
+                            (t2 - t1);
                 time_full += time_span.count();
                 ITHACAstream::exportSolution(T, name(i + 1), "./ITHACAoutput/" + Folder);
                 Tfield.append((T).clone());
@@ -232,10 +232,9 @@ class DEIMLaplacian: public laplacianProblem
         {
             auto t1 = std::chrono::high_resolution_clock::now();
             auto t2 = std::chrono::high_resolution_clock::now();
-            auto time_span = std::chrono::duration_cast<std::chrono::duration<double>>
+            auto time_span = std::chrono::duration_cast<std::chrono::duration<double >>
                              (t2 - t1);
             time_rom = 0;
-
             for (int i = 0; i < par_new.rows(); i++)
             {
                 // solve
@@ -245,9 +244,10 @@ class DEIMLaplacian: public laplacianProblem
                 Eigen::MatrixXd A = EigenFunctions::MVproduct(ReducedMatricesA, thetaonA);
                 Eigen::VectorXd B = EigenFunctions::MVproduct(ReducedVectorsB, thetaonB);
                 Eigen::VectorXd x = A.fullPivLu().solve(B);
-                Eigen::VectorXd full = ModesTEig * x;
+                Eigen::VectorXd full = ModesTEig* x;
                 t2 = std::chrono::high_resolution_clock::now();
-                time_span = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1);
+                time_span = std::chrono::duration_cast<std::chrono::duration<double >>
+                            (t2 - t1);
                 time_rom += time_span.count();
                 // Export
                 volScalarField Tred("Tred", T);
@@ -283,9 +283,9 @@ int main(int argc, char* argv[])
     example_new.OnlineSolveFull(par_new1, "Online_full");
     // Output some infos
     std::cout << std::endl << "The FOM Solve took: " << example_new.time_full  <<
-              " seconds." << std::endl;
+                              " seconds." << std::endl;
     std::cout << std::endl << "The ROM Solve took: " << example.time_rom  <<
-              " seconds." << std::endl;
+                              " seconds." << std::endl;
     std::cout << std::endl << "The Speed-up is: " << example_new.time_full /
               example.time_rom  << std::endl << std::endl;
     Eigen::MatrixXd error = ITHACAutilities::errorL2Abs(example_new.Tfield,

@@ -62,14 +62,14 @@ void reductionProblem::computeLift(T& Lfield, T& liftfield, T& omfield)
             {
                 u_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] *
                             Lfield[j].boundaryField()[p]).component(l) / area;
-                volVectorField C("U", Lfield[j] - liftfield[k]*u_bc / u_lf);
+                volVectorField C("U", Lfield[j] - liftfield[k] * u_bc / u_lf);
                 omfield.append(C.clone());
             }
             else
             {
                 u_bc = gSum(omfield[j].mesh().magSf().boundaryField()[p] *
                             omfield[j].boundaryField()[p]).component(l) / area;
-                volVectorField C("U", omfield[j] - liftfield[k]*u_bc / u_lf);
+                volVectorField C("U", omfield[j] - liftfield[k] * u_bc / u_lf);
                 omfield.set(j, C.clone());
             }
         }
@@ -96,14 +96,14 @@ void reductionProblem::computeLiftT(T& Lfield, T& liftfield, T& omfield)
             {
                 t_bc = gSum(Lfield[j].mesh().magSf().boundaryField()[p] *
                             Lfield[j].boundaryField()[p]) / area;
-                volScalarField C(Lfield[0].name(), Lfield[j] - liftfield[k]*t_bc / t_lf);
+                volScalarField C(Lfield[0].name(), Lfield[j] - liftfield[k] * t_bc / t_lf);
                 omfield.append(C.clone());
             }
             else
             {
                 t_bc = gSum(omfield[j].mesh().magSf().boundaryField()[p] *
                             omfield[j].boundaryField()[p]) / area;
-                volScalarField C(Lfield[0].name(), omfield[j] - liftfield[k]*t_bc / t_lf);
+                volScalarField C(Lfield[0].name(), omfield[j] - liftfield[k] * t_bc / t_lf);
                 omfield.set(j, C.clone());
             }
         }

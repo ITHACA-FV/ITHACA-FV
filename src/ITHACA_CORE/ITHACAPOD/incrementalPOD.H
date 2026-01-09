@@ -166,8 +166,8 @@ class incrementalPOD : public Modes<Type, PatchField, GeoMesh>
         /// @param[in]  numberOfModes   Number of modes for projection (0 for all modes)
         ///
         void projectSnapshots(
-            PtrList<GeometricField<Type, PatchField, GeoMesh>> snapshots,
-            PtrList<GeometricField<Type, PatchField, GeoMesh>>& projSnapshots,
+            PtrList<GeometricField<Type, PatchField, GeoMesh >> snapshots,
+            PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
             label numberOfModes = 0);
 
         //--------------------------------------------------------------------------
@@ -214,6 +214,7 @@ void weightedGramSchmidt(
     matrix = Ortho;
 };
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif

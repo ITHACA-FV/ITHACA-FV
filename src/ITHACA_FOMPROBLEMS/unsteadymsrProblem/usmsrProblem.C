@@ -606,35 +606,35 @@ void usmsrProblem::computePrecsBC(label call)
     bc_prec(0, call) = gSum(prec1.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam1.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(1, call) = gSum(prec2.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam2.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(2, call) = gSum(prec3.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam3.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(3, call) = gSum(prec4.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam4.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(4, call) = gSum(prec5.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam5.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(5, call) = gSum(prec6.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam6.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(6, call) = gSum(prec7.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam7.value() *
-                                   tau.value());
+                               tau.value());
     bc_prec(7, call) = gSum(prec8.boundaryField()[precoutIndex] *
                             mesh.magSf().boundaryField()[precoutIndex]) / gSum(
                            mesh.magSf().boundaryField()[precoutIndex]) * std::exp(-lam8.value() *
-                                   tau.value());
+                               tau.value());
 }
 
 void usmsrProblem::assignPrecsBC(label call, label Ntau)

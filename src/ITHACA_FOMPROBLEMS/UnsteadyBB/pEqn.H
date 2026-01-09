@@ -28,7 +28,7 @@
     surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU));
     volVectorField HbyA(constrainHbyA(rAU * UEqn.H(), U, p_rgh));
 
-    surfaceScalarField phig(-rAUf* ghf * fvc::snGrad(rhok)*mesh.magSf());
+    surfaceScalarField phig(-rAUf* ghf * fvc::snGrad(rhok) * mesh.magSf());
 
     surfaceScalarField phiHbyA
     (

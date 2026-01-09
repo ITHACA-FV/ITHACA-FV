@@ -13,18 +13,18 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/turbulenceModels/compressible/turbulenceModel \
     -I$(LIB_SRC)/functionObjects/forces/lnInclude \
-    -I$(LIB_ITHACA_SRC)/ITHACA_DEIM \
+    -I$(LIB_ITHACA_SRC)/ITHACA_HR \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/lnInclude \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/redsvd \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -Wno-comment \
     -w \
     -DOFVER=$${WM_PROJECT_VERSION%.*} \
-    -std=c++11 \
-
+    -std=c++17 \
 
 EXE_LIBS = \
     -lturbulenceModels \
@@ -33,6 +33,9 @@ EXE_LIBS = \
     -lmeshTools \
     -lfvOptions \
     -lsampling \
+    -ldynamicMesh \
+    -ldynamicFvMesh \
+    -lsixDoFRigidBodyMotion\
     -lfluidThermophysicalModels \
     -lradiationModels \
     -lspecie \

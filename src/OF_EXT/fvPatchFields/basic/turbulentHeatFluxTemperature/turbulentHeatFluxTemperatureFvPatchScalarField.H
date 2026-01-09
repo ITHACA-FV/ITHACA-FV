@@ -147,7 +147,7 @@ class turbulentHeatFluxTemperatureFvPatchScalarField
         {
             return tmp<fvPatchScalarField>
                    (
-                       new turbulentHeatFluxTemperatureFvPatchScalarField(*this)
+                       new turbulentHeatFluxTemperatureFvPatchScalarField(* this)
                    );
         }
 
@@ -168,7 +168,7 @@ class turbulentHeatFluxTemperatureFvPatchScalarField
                    (
                        new turbulentHeatFluxTemperatureFvPatchScalarField
                        (
-                           *this,
+                           * this,
                            iF
                        )
                    );

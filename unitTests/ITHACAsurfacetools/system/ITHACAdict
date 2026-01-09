@@ -1,0 +1,15 @@
+FoamFile
+{
+    version     5.0;
+    format      ascii;
+    class       dictionary;
+    object      ITHACAPODdict;
+}
+
+patchInt 6;
+patchExt 7;
+
+
+
+
+// ************************************************************************* //

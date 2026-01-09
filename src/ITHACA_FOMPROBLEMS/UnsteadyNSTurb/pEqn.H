@@ -24,17 +24,23 @@
 \*---------------------------------------------------------------------------*/
 // Solve pressure equation
 volScalarField rAU(1.0 / UEqn.A());
+
 volVectorField HbyA(constrainHbyA(rAU* UEqn.H(), U, p));
 surfaceScalarField phiHbyA
 (
     "phiHbyA",
     fvc::flux(HbyA)
-    + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi)
+    + MRF.zeroFilter(fvc::interpolate(rAU) * fvc::ddtCorr(U, phi, _Uf))
 );
 
 MRF.makeRelative(phiHbyA);
 
-adjustPhi(phiHbyA, U, p);
+if (p.needReference())
+{
+    fvc::makeRelative(phiHbyA, U);
+    adjustPhi(phiHbyA, U, p);
+    fvc::makeAbsolute(phiHbyA, U);
+}
 
 tmp<volScalarField> rAtU(rAU);
 
@@ -79,3 +85,9 @@ p.relax();
 U = HbyA - rAtU() * fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);
+
+// Correct Uf if the mesh is moving
+fvc::correctUf(_Uf, U, phi);
+
+// Make the fluxes relative to the mesh motion
+fvc::makeRelative(phi, U);

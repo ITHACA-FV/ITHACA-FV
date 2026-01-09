@@ -161,7 +161,7 @@ class RBFInterpolation
 
         //- Interpolate
         template<class Type>
-        tmp<Field<Type>> interpolate(const Field<Type>& ctrlField) const;
+        tmp<Field<Type >> interpolate(const Field<Type>& ctrlField) const;
 
         //- Move points
         void movePoints();

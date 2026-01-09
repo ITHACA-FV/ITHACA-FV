@@ -137,18 +137,21 @@ void Foam::functionObjects::ITHACAforces::writeBinHeader
         binPoints[pointi] = (binMin_ + (pointi + 1) * binDx_) * binDir_;
         os  << tab << binPoints[pointi].x();
     }
+
     os  << nl;
     writeCommented(os, "y co-ords  :");
     forAll(binPoints, pointi)
     {
         os  << tab << binPoints[pointi].y();
     }
+
     os  << nl;
     writeCommented(os, "z co-ords  :");
     forAll(binPoints, pointi)
     {
         os  << tab << binPoints[pointi].z();
     }
+
     os  << nl;
     writeHeader(os, "");
     writeCommented(os, "Time");
@@ -239,7 +242,7 @@ void Foam::functionObjects::ITHACAforces::initialiseBins()
             const scalarField dd(mesh_.C() & binDir_);
             forAllConstIter(HashTable<const porosityModel*>, models, iter)
             {
-                const porosityModel& pm = *iter();
+                const porosityModel& pm = * iter();
                 const labelList& cellZoneIDs = pm.cellZoneIDs();
 
                 for (const label zonei : cellZoneIDs)
@@ -600,7 +603,7 @@ void Foam::functionObjects::ITHACAforces::writeForces()
 
 void Foam::functionObjects::ITHACAforces::writeBinnedForceMoment
 (
-    const List<Field<vector>>& fm,
+    const List<Field<vector >> & fm,
     autoPtr<OFstream>& osPtr
 ) const
 {
@@ -609,8 +612,7 @@ void Foam::functionObjects::ITHACAforces::writeBinnedForceMoment
         return;
     }
 
-    List<Field<vector>> f(fm);
-
+    List<Field<vector >> f(fm);
     if (binCumulative_)
     {
         for (label i = 1; i < f[0].size(); i++)
@@ -633,12 +635,12 @@ void Foam::functionObjects::ITHACAforces::writeBinnedForceMoment
         os  << tab << total
             << tab << f[0][i]
             << tab << f[1][i];
-
         if (porosity_)
         {
             os  << tab << f[2][i];
         }
     }
+
     os  << nl;
 }
 
@@ -647,11 +649,10 @@ void Foam::functionObjects::ITHACAforces::writeBins()
 {
     writeBinnedForceMoment(force_, forceBinFilePtr_);
     writeBinnedForceMoment(moment_, momentBinFilePtr_);
-
     if (localSystem_)
     {
-        List<Field<vector>> lf(3);
-        List<Field<vector>> lm(3);
+        List<Field<vector >> lf(3);
+        List<Field<vector >> lm(3);
         lf[0] = coordSys_.localVector(force_[0]);
         lf[1] = coordSys_.localVector(force_[1]);
         lf[2] = coordSys_.localVector(force_[2]);
@@ -812,7 +813,6 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
         // Reference pressure, 0 by default
         pRef_ = dict.lookupOrDefault<scalar>("pRef", 0.0);
     }
-
     coordSys_.clear();
     localSystem_ = false;
 
@@ -838,7 +838,6 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
 
         localSystem_ = true;
     }
-
     dict.readIfPresent("porosity", porosity_);
 
     if (porosity_)
@@ -849,7 +848,6 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
     {
         Info << "    Not including porosity effects" << endl;
     }
-
     if (dict.found("binData"))
     {
         const dictionary& binDict(dict.subDict("binData"));
@@ -873,7 +871,6 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
             binDir_.normalise();
         }
     }
-
     writeFields_ = dict.lookupOrDefault("writeFields", false);
 
     if (writeFields_)
@@ -914,7 +911,6 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
         );
         mesh_.objectRegistry::store(momentPtr);
     }
-
     return true;
 }
 
@@ -970,7 +966,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
             );
             vectorField fN
             (
-                rho(p)*Sfb[patchi] * (p.boundaryField()[patchi] - pRef)
+                rho(p) * Sfb[patchi] * (p.boundaryField()[patchi] - pRef)
             );
             vectorField fT(Sfb[patchi] & devRhoReffb[patchi]);
             vectorField fP(Md.size(), Zero);
@@ -998,7 +994,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
         forAllConstIters(models, iter)
         {
             // Non-const access required if mesh is changing
-            porosityModel& pm = const_cast<porosityModel&>(*iter());
+            porosityModel& pm = const_cast<porosityModel&>(* iter());
             vectorField fPTot(pm.force(U, rho, mu));
             const labelList& cellZoneIDs = pm.cellZoneIDs();
 
@@ -1174,18 +1170,21 @@ void Foam::functionObjects::ITHACAforces::writeFileHeader(const label i)
                 binPoints[pointi] = (binMin_ + (pointi + 1) * binDx_) * binDir_;
                 file(i) << tab << binPoints[pointi].x();
             }
+
             file(i) << nl;
             writeCommented(file(i), "y co-ords  :");
             forAll(binPoints, pointi)
             {
                 file(i) << tab << binPoints[pointi].y();
             }
+
             file(i) << nl;
             writeCommented(file(i), "z co-ords  :");
             forAll(binPoints, pointi)
             {
                 file(i) << tab << binPoints[pointi].z();
             }
+
             file(i) << nl;
             writeCommented(file(i), "Time");
             const word binForceTypes("[pressure,viscous,porous]");
@@ -1493,8 +1492,8 @@ void Foam::functionObjects::ITHACAforces::writeBins()
         return;
     }
 
-    List<Field<vector>> f(force_);
-    List<Field<vector>> m(moment_);
+    List<Field<vector >> f(force_);
+    List<Field<vector >> m(moment_);
 
     if (binCumulative_)
     {
@@ -1508,7 +1507,6 @@ void Foam::functionObjects::ITHACAforces::writeBins()
             m[2][i] += m[2][i - 1];
         }
     }
-
     writeTime(file(BINS_FILE));
     forAll(f[0], i)
     {
@@ -1524,8 +1522,8 @@ void Foam::functionObjects::ITHACAforces::writeBins()
 
     if (localSystem_)
     {
-        List<Field<vector>> lf(3);
-        List<Field<vector>> lm(3);
+        List<Field<vector >> lf(3);
+        List<Field<vector >> lm(3);
         lf[0] = coordSys_.localVector(force_[0]);
         lf[1] = coordSys_.localVector(force_[1]);
         lf[2] = coordSys_.localVector(force_[2]);
@@ -1545,7 +1543,6 @@ void Foam::functionObjects::ITHACAforces::writeBins()
                 lm[2][i] += lm[2][i - 1];
             }
         }
-
         forAll(lf[0], i)
         {
             file(BINS_FILE)
@@ -1558,7 +1555,6 @@ void Foam::functionObjects::ITHACAforces::writeBins()
                     << lm[2][i] << setw(1) << ')';
         }
     }
-
     file(BINS_FILE) << endl;
 }
 
@@ -1730,6 +1726,7 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
                 binMin_ = min(min(d), binMin_);
                 binMax = max(max(d), binMax);
             }
+
             reduce(binMin_, minOp<scalar>());
             reduce(binMax, maxOp<scalar>());
             // slightly boost binMax so that region of interest is fully
@@ -1742,6 +1739,7 @@ bool Foam::functionObjects::ITHACAforces::read(const dictionary& dict)
             {
                 binPoints_[i] = (i + 0.5) * binDir_ * binDx_;
             }
+
             binDict.lookup("cumulative") >> binCumulative_;
             // allocate storage for forces and moments
             forAll(force_, i)
@@ -1824,7 +1822,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
             );
             vectorField fN
             (
-                rho(p)*Sfb[patchi] * (p.boundaryField()[patchi] - pRef)
+                rho(p) * Sfb[patchi] * (p.boundaryField()[patchi] - pRef)
             );
             vectorField fT(Sfb[patchi] & devRhoReffb[patchi]);
             vectorField fP(Md.size(), Zero);
@@ -1851,7 +1849,7 @@ void Foam::functionObjects::ITHACAforces::calcForcesMoment()
         forAllConstIter(HashTable<const porosityModel*>, models, iter)
         {
             // non-const access required if mesh is changing
-            porosityModel& pm = const_cast<porosityModel&>(*iter());
+            porosityModel& pm = const_cast<porosityModel&>(* iter());
             vectorField fPTot(pm.force(U, rho, mu));
             const labelList& cellZoneIDs = pm.cellZoneIDs();
             forAll(cellZoneIDs, i)
@@ -1921,5 +1919,6 @@ bool Foam::functionObjects::ITHACAforces::write()
 
     return true;
 }
+
 #endif
 // ************************************************************************* //

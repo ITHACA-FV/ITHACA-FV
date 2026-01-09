@@ -14,37 +14,31 @@
 <img alt="Codacy Badge" src="https://app.codacy.com/project/badge/Grade/f51e1de0fd7c42a6a0be13889cbd4b0e">
 </a>
 </p>
-<p align="center">
-<a href="https://github.com/ithaca-fv/ITHACA-FV/actions?query=workflow%3AOF1812"><img alt="OF1812" src="https://github.com/ithaca-fv/ITHACA-FV/workflows/OF1812/badge.svg"></a>
-<a href="https://github.com/ithaca-fv/ITHACA-FV/actions?query=workflow%3AOF1906"><img alt="OF1906" src="https://github.com/ithaca-fv/ITHACA-FV/workflows/OF1906/badge.svg"></a>
-<a href="https://github.com/ithaca-fv/ITHACA-FV/actions?query=workflow%3AOF1912"><img alt="OF1912" src="https://github.com/ithaca-fv/ITHACA-FV/workflows/OF1912/badge.svg"></a>
-<a href="https://github.com/ithaca-fv/ITHACA-FV/actions?query=workflow%3AOF2006"><img alt="OF2006" src="https://github.com/ithaca-fv/ITHACA-FV/workflows/OF2006/badge.svg"></a>
-</p>
 
 ### 0. Introduction
-**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2212**](https://www.openfoam.com/news/main-news/openfoam-v2212/) and older openfoam.com versions but it can be easily adapted also to other versions of OpenFOAM.
+**ITHACA-FV** is an implementation in **OpenFOAM** of several reduced order modelling techniques. **ITHACA-FV** is designed for [**OpenFOAM v2412**](https://www.openfoam.com/news/main-news/openfoam-v2412/) but it can be easily adapted also to other versions of OpenFOAM.
 
 **ITHACA-FV** can also be used as a basis for more advanced projects that would like to assess the capability of reduced order models in their existing **OpenFOAM**-based software, thanks to the availability of several reduced order methods and algorithms.
 
-Linear and non-linear algebra operations which are not already implemented in OpenFOAM are performed with the external library [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page). The source code of Eigen 3.3.7 is provided together with ITHACA-FV and is located in the [src/thirdyparty/Eigen](./src/thirdparty/Eigen) folder.  For the EigenValue decomposition it is also possible to rely on the [**Spectra-0.7.0**](https://spectralib.org/) library and the source code is provided in the [src/thirdyparty/spectra](./src//thirdparty/spectra) folder. Numerical optimization can be performed using the external library [**OptimLib**](https://www.kthohr.com/optimlib.html) and the header based source code is provided in the [src/thirdyparty/OptimLib](./src/thirdparty/OptimLib) folder.
+Linear and non-linear algebra operations which are not already implemented in OpenFOAM are performed with the external library [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page). Eigen 3.4 is provided as a git submodule together with ITHACA-FV and is located in the [src/thirdyparty/Eigen](./src/thirdparty/Eigen) folder.  For the EigenValue decomposition it is also possible to rely on the [**Spectra-1.2.0**](https://spectralib.org/) library and the source code, as a git submodule, is provided in the [src/thirdyparty/spectra](./src//thirdparty/spectra) folder. Numerical optimization can be performed using the external library [**OptimLib**](https://www.kthohr.com/optimlib.html) and the header based source code, as a git submodule, is provided in the [src/thirdyparty/OptimLib](./src/thirdparty/OptimLib) folder.
 
-**ITHACA-FV** has been tested on ubuntu 16.04, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 1812, OpenFOAM 1906, OpenFOAM 1912, OpenFOAM 2006, OpenFOAM 2012 and OpenFOAM 2106.
+**ITHACA-FV** has been tested on several versions of ubuntu, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 2106, OpenFOAM 2212, OpenFOAM 2306, OpenFOAM 2312, OpenFOAM 2406, OpenFOAM 2412 and OpenFOAM 2506.
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
-*   [**OpenFOAM 1812**](https://www.openfoam.com/news/main-news/openfoam-v1812/) or
-*   [**OpenFOAM 1906**](https://www.openfoam.com/news/main-news/openfoam-v1906/) or
-*   [**OpenFOAM 1912**](https://www.openfoam.com/news/main-news/openfoam-v1912/) or
-*   [**OpenFOAM 2006**](https://www.openfoam.com/news/main-news/openfoam-v2006/) or
-*   [**OpenFOAM 2012**](https://www.openfoam.com/news/main-news/openfoam-v2012/) or
 *   [**OpenFOAM 2106**](https://www.openfoam.com/news/main-news/openfoam-v2106) or
-*   [**OpenFOAM 2212**](https://www.openfoam.com/news/main-news/openfoam-v2212)
+*   [**OpenFOAM 2212**](https://www.openfoam.com/news/main-news/openfoam-v2212) or 
+*   [**OpenFOAM 2306**](https://www.openfoam.com/news/main-news/openfoam-v2306) or
+*   [**OpenFOAM 2312**](https://www.openfoam.com/news/main-news/openfoam-v2312) or
+*   [**OpenFOAM 2406**](https://www.openfoam.com/news/main-news/openfoam-v2406) or
+*   [**OpenFOAM 2412**](https://www.openfoam.com/news/main-news/openfoam-v2412) or
+*   [**OpenFOAM 2506**](https://www.openfoam.com/news/main-news/openfoam-v2506)
 
 
 ### 2. Installation and usage
 First of all you need to source the bashrc file of your installation **OpenFOAM**. This is of course depending on the location of your OpenFOAM installation and of your particular version of OpenFOAM
 ```
-source $HOME/OpenFOAM/OpenFOAM-v2106/etc/bashrc
+source $HOME/OpenFOAM/OpenFOAM-v2506/etc/bashrc
 ```
 Then navigate to the folder where you want to install ITHACA-FV such as, for example, your HOME folder
 ```
@@ -79,8 +73,9 @@ source etc/bashrc
 
 In the near future the ITHACA-FV will also be linked with the pytorch package for machine learning. Some basic functions are already available. In order to compile these additional functionalities one will need to have torch installed and compile the library with the `-m` options. Moreover one will need to install a version of libtorch with ABI enabled. The one available at the following link for example has it:
 ```
-    curl https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.4.0%2Bcpu.zip > libtorch.zip && \
-    unzip libtorch.zip -d opt/ && \
+    wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.7.1%2Bcpu.zip > libtorch.zip && \
+    unzip libtorch.zip && \
+    export TORCH_LIBRARIES=libtorch
 ```
 
 For a brief description of the classes and methods, you can check the official ITHACA-FV doxygen [documentation](https://ithaca-fv.github.io/ITHACA-FV).
@@ -93,13 +88,13 @@ These images are based **OpenFOAM-v2106**, and provided an isolated environment,
 In order to pull the image, run the following command:
 
 ```
-docker pull ithacafv/ithacafv:manifest-latest
+docker pull ithacafv/ithacafv:latest
 ```
 
 Once the image is downloaded, you can start the container and mount the $HOME directory by executing:
 
 ```
-docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:manifest-latest
+docker run -ti --rm -v "${HOME}:/home/ithacafv/${USER}" ithacafv/ithacafv:latest
 ```
 
 ### 4. Singularity
@@ -119,7 +114,7 @@ export SINGULARITY_CACHEDIR=$HOME/mycontainter
 Buidling singularity image file `.sif` from the docker image, which is build and stored in `$HOME/mycontainter`, The below image used is based **OpenFOAM-v2106**, and where you can find a compiled version of the master branch of **ITHACA-FV**.
 
 ```
-singularity build ithacafv.sif docker://ithacafv/ithacafv:manifest-latest
+singularity build ithacafv.sif docker://ithacafv/ithacafv:latest
 ```
 
 To view / list all the images/cache, 
@@ -177,7 +172,7 @@ Several tutorials are provided in the [**tutorials** subfolder](./tutorials).
 
 
 ### 6. Authors and contributors
-**ITHACA-FV** is currently developed and maintained at the [University of Urbino Carlo Bo](https://www.uniurb.it/) by [Dr. Giovanni Stabile](www.giovannistabile.com) and at [SISSA mathLab](http://mathlab.sissa.it/) in collaboration with [Prof. Gianluigi Rozza](https://people.sissa.it/~grozza/)'s group.
+**ITHACA-FV** is currently developed and maintained mainly at the [Sant'Anna School of Advanced Studies](https://www.santannapisa.it/en) by the group of [Prof. Giovanni Stabile](https://www.giovannistabile.com) and partially at [SISSA mathLab](http://mathlab.sissa.it/) in collaboration with [Prof. Gianluigi Rozza](https://people.sissa.it/~grozza/)'s group.
 
 Contact us by email for further information or questions about **ITHACA-FV**, or open an ''Issue'' on this website. **ITHACA-FV** is at an early development stage, so contributions improving either the code or the documentation are welcome, both as patches or merge requests on this website. If you are willing to contribute please follow the [developer instructions](https://github.com/ithaca-fv/ITHACA-FV/tree/master/src).
 
@@ -208,11 +203,12 @@ Doi                      = {10.1016/j.compfluid.2018.01.035}}
 and cite the [ITHACA-FV website](https://ithaca-fv.github.io/ITHACA-FV).
 
 ### 8. Funding
-A significant part of PyDMD has been written either as a by-product for other projects people were funded for, or by people on university-funded positions. There are probably many of such projects that have led to some development of PyDMD. We are very grateful for this support!
+A significant part of ITHACA-FV has been written either as a by-product for other projects people were funded for, or by people on university-funded positions. There are probably many of such projects that have led to some development of ITHACA-FV. We are very grateful for this support!
 
-Beyond this, PyDMD has also been supported by some dedicated projects that have allowed us to work on extensions, documentation, training and dissemination that would otherwise not have been possible. In particular, we acknowledge the following sources of support with great gratitude:
+Beyond this, ITHACA-FV has also been supported by some dedicated projects that have allowed us to work on extensions, documentation, training and dissemination that would otherwise not have been possible. In particular, we acknowledge the following sources of support with great gratitude:
 
 * [H2020 ERC CoG 2015 AROMA-CFD project 681447](https://people.sissa.it/~grozza/aroma-cfd/), P.I. Professor [Gianluigi Rozza](https://people.sissa.it/~grozza) at [SISSA mathLab](https://mathlab.sissa.it/).
+* [Horizon Europe ERC StG 2023 DANTE project 	101115741](https://www.santannapisa.it/it/istituto/biorobotica/dante), P.I. Professor [Giovanni Stabile](https://www.giovannistabile.com) at the [Biorobotics Institute](https://www.santannapisa.it/en/institute/biorobotics) of the [Scuola Superiore Sant'Anna di Pisa](https://www.santannapisa.it/en).
 
 ### 8. License
 **ITHACA-FV** is freely available under the GNU LGPL, version 3.
