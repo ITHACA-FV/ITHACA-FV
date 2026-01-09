@@ -197,19 +197,19 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
         }
     }
 
-    else if  constexpr(std::is_same<pointMesh, GeoMesh>::value)
-    {
-        for (label i = 0; i < size; i++ )
-        {
-            label sizei = field.boundaryField()[i].size();
-            Out[i].resize(sizei * 3);
+    // else if  constexpr(std::is_same<pointMesh, GeoMesh>::value)
+    // {
+    //     for (label i = 0; i < size; i++ )
+    //     {
+    //         label sizei = field.boundaryField()[i].size();
+    //         Out[i].resize(sizei * 3);
 
-            for (label k = 0; k < sizei ; k++)
-            {
-                Out[i](k * 3 + j) = field.boundaryField()[i][k][j];
-            }
-        }
-    }
+    //         for (label k = 0; k < sizei ; k++)
+    //         {
+    //             Out[i](k * 3 + j) = field.boundaryField()[i][k][j];
+    //         }
+    //     }
+    // }
 
     return Out;
 }
