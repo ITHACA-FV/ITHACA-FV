@@ -18,6 +18,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/lnInclude \
+    -I$(LIB_ITHACA_SRC)/ITHACA_INTERPOLATOR/lnInclude \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
@@ -44,6 +45,7 @@ EXE_LIBS = \
     -lsixDoFRigidBodyMotion\
     -lITHACA_ROMPROBLEMS \
     -lITHACA_FOMPROBLEMS \
+    -lITHACA_INTERPOLATOR \
     -lITHACA_THIRD_PARTY \
     -lITHACA_CORE \
     -lITHACA_DEIM \
