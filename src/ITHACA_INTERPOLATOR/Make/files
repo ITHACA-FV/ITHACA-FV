@@ -1,0 +1,5 @@
+RBFinterpolator.C
+mtbRBF/mtbRBF.C
+splinterRBF/splinterRBF.C
+
+LIB = $(FOAM_USER_LIBBIN)/libITHACA_INTERPOLATOR
