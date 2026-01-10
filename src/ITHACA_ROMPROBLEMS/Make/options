@@ -37,6 +37,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen/src \
     -I$(LIB_ITHACA_SRC)/ForceCoeff \
+    -I$(LIB_ITHACA_SRC)/ITHACA_INTERPOLATOR/lnInclude \
     -ftemplate-depth=500 \
     -Wno-comment \
     -w \
