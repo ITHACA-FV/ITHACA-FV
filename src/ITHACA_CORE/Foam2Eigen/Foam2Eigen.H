@@ -168,27 +168,14 @@ class Foam2Eigen
         /// @param[in]  field       The field
         ///
         /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     GeoMesh     volMesh, point or surfaceMesh.
         ///
         /// @return     Dense Eigen vector
         ///
-        template<template<class> class PatchField, class GeoMesh >
-        static Eigen::VectorXd field2Eigen(GeometricField<tensor, PatchField, GeoMesh>&
-                                           field);
+        template<class Type, template<class> class PatchField, class GeoMesh>
+        static Eigen::MatrixXd field2Eigen(
+            GeometricField<Type, PatchField, GeoMesh>& field);
 
-        //----------------------------------------------------------------------
-        /// @brief      Convert a vector OpenFOAM field into an Eigen Vector
-        ///
-        /// @param[in]  field       The field
-        ///
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        /// @return     Dense Eigen vector
-        ///
-        template<template<class> class PatchField, class GeoMesh>
-        static Eigen::VectorXd field2Eigen(GeometricField<vector, PatchField, GeoMesh>&
-                                           field);
 
         //----------------------------------------------------------------------
         /// @brief      Convert a scalar OpenFOAM field into an Eigen Vector
@@ -200,24 +187,9 @@ class Foam2Eigen
         ///
         /// @return     Dense Eigen vector
         ///
-        template<template<class> class PatchField, class GeoMesh>
-        static Eigen::VectorXd field2Eigen(GeometricField<scalar, PatchField, GeoMesh>&
-                                           field);
-
-        //----------------------------------------------------------------------
-        /// @brief      Convert a scalar OpenFOAM field into an Eigen Vector
-        ///
-        /// @param[in]  field       The field
-        ///
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        /// @return     Dense Eigen vector
-        ///
-        template<template<class> class PatchField, class GeoMesh>
+        template<class Type, template<class> class PatchField, class GeoMesh>
         static Eigen::Map<Eigen::MatrixXd> field2EigenMap(
-            GeometricField<scalar, PatchField, GeoMesh>&
-            field);
+            GeometricField<Type, PatchField, GeoMesh>& field);
 
         //----------------------------------------------------------------------
         /// @brief      Map a scalar OpenFOAM field boundary into an Eigen Matrix
@@ -230,9 +202,9 @@ class Foam2Eigen
         ///
         /// @return     Dense Eigen Map Matrix
         ///
-        template<template<class> class PatchField, class GeoMesh>
+        template<class Type, template<class> class PatchField, class GeoMesh>
         static Eigen::Map<Eigen::MatrixXd> field2EigenMapBC(
-            GeometricField<scalar, PatchField, GeoMesh>&
+            GeometricField<Type, PatchField, GeoMesh>&
             field, int BC_index);
 
         //----------------------------------------------------------------------

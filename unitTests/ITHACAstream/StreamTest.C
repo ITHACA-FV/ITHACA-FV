@@ -166,7 +166,6 @@ int TestSparseMatrix()
 {
     Eigen::SparseMatrix<double> mat;
     cnpy::load(mat,"forCnpy.npz");
-    // std::cout << mat << std::endl;
     cnpy::save(mat,"forNpy.npz");
     Eigen::SparseMatrix<double> mat2;
     cnpy::load(mat2,"forNpy.npz");
