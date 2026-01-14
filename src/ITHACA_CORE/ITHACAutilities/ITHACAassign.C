@@ -286,7 +286,7 @@ void assignBC(GeometricField<vector, fvPatchField, volMesh>& s, label BC_ind,
     {
         for (label j = 0; j < 3; j++)
         {
-            valueList[i].component(j) = valueVec(i + sizeBC * j);
+            valueList[i].component(j) = valueVec(i * 3 + j);
         }
     }
 
@@ -305,7 +305,7 @@ void assignBC(GeometricField<tensor, fvPatchField, volMesh>& s, label BC_ind,
     {
         for (label j = 0; j < 9; j++)
         {
-            valueList[i].component(j) = valueVec(i + sizeBC * j);
+            valueList[i].component(j) = valueVec(i *9 + j);
         }
     }
 
@@ -321,9 +321,9 @@ void assignBC(GeometricField<vector, pointPatchField, pointMesh>& s, label BC_in
 
     for (label i = 0; i < sizeBC; i++)
     {
-        valueList[i].component(0) = valueVec(i);
-        valueList[i].component(1) = valueVec(i + sizeBC);
-        valueList[i].component(2) = valueVec(i + sizeBC * 2);
+        valueList[i].component(0) = valueVec(i*3);
+        valueList[i].component(1) = valueVec(i*3 + 1);
+        valueList[i].component(2) = valueVec(i*3 + 2);
     }
 
     assignBC(s, BC_ind, valueList);
@@ -368,9 +368,9 @@ void assignBC(GeometricField<vector, fvsPatchField, surfaceMesh>& s,
 
     for (label i = 0; i < sizeBC; i++)
     {
-        valueList[i].component(0) = valueVec(i);
-        valueList[i].component(1) = valueVec(i + sizeBC);
-        valueList[i].component(2) = valueVec(i + sizeBC * 2);
+        valueList[i].component(0) = valueVec(i*3);
+        valueList[i].component(1) = valueVec(i*3 + 1);
+        valueList[i].component(2) = valueVec(i*3 + 2);
     }
 
     assignBC(s, BC_ind, valueList);
