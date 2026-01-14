@@ -112,10 +112,18 @@ Foam::fvMesh& mesh = meshPtr();
     Eigen::MatrixXd p_eigen;
     p_eigen = Foam2Eigen::field2Eigen(p);
     std::cerr << p_eigen << std::endl;
-    exit(0);
-    
+    p.ref()[0] = 1;
+    Info << p << endl;
+    Foam2Eigen::Eigen2field(p, p_eigen);
+    Info << p << endl;
     Info << U << endl;
-    Info << R << endl;
+    Eigen::VectorXd U_eigen = Foam2Eigen::field2Eigen(U);
+    std::cerr << U_eigen << std::endl;
+    U.ref()[0] = vector::zero;
+    Info << U << endl;
+    U = Foam2Eigen::Eigen2field(U, U_eigen,0);
+    Info << U << endl;
+    // Info << R << endl;
 
 
         // Info << *(&U.ref()[0][0]) << endl;

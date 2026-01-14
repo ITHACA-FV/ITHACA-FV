@@ -187,7 +187,7 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const
 
     return out;
 }
-
+// To be modified with map
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     GeometricField<tensor, PatchField, GeoMesh>& field)
@@ -215,7 +215,7 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 
 template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     volTensorField& field);
-
+// To be modified with map
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     GeometricField<vector, PatchField, GeoMesh>& field)
@@ -265,7 +265,7 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     volVectorField& field);
 
-
+// To be modified with map
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     GeometricField<scalar, PatchField, GeoMesh>& field)
@@ -425,7 +425,7 @@ List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
 
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     PtrList<volTensorField>& fields, label Nfields);
-
+// Not consistent with the others, to be fixed, it is changing just the BC
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<tensor, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     GeometricField<tensor, PatchField, GeoMesh>& field_in,
@@ -451,7 +451,7 @@ GeometricField<tensor, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
 
 template volTensorField Foam2Eigen::Eigen2field(
     volTensorField& field_in, Eigen::VectorXd& eigen_vector, bool correctBC);
-
+// This is correct to assign also BCs
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     GeometricField<vector, PatchField, GeoMesh>& field_in,
@@ -512,6 +512,8 @@ template volScalarField Foam2Eigen::Eigen2field(
     volScalarField& field_in, Eigen::VectorXd& eigen_vector,
     List<Eigen::VectorXd>& eigen_vector_boundary);
 
+
+// Now this is correct, the one for tensor is missing
 template<template<class> class PatchField, class GeoMesh>
 GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     GeometricField<vector, PatchField, GeoMesh>& field_in,
@@ -523,7 +525,7 @@ GeometricField<vector, PatchField, GeoMesh> Foam2Eigen::Eigen2field(
     {
         for (label j = 0; j < 3; j++)
         {
-            field_out.ref()[i][j] = eigen_vector(i + field_out.size() * j);
+            field_out.ref()[i][j] = eigen_vector(i*3 + j);
         }
     }
 
@@ -607,7 +609,7 @@ Field<scalar> Foam2Eigen::Eigen2field(
 
     return field;
 }
-
+// This needs to be changed with MAP and changing the order of assignment
 template <>
 Field<vector> Foam2Eigen::Eigen2field(
     Field<vector>& field, Eigen::MatrixXd& matrix, bool correctBC)
@@ -639,7 +641,7 @@ Field<vector> Foam2Eigen::Eigen2field(
 
     return field;
 }
-
+// This needs to be changed with MAP and changing the order of assignment
 template <>
 Field<tensor> Foam2Eigen::Eigen2field(
     Field<tensor>& field, Eigen::MatrixXd& matrix, bool correctBC)
@@ -1455,7 +1457,7 @@ Eigen::MatrixXd Foam2Eigen::field2Eigen(const List<vector>& field)
 
     return out;
 }
-
+// There might repetions of functions (Matrix vs Vector). I wouls only use matrices
 template <>
 Eigen::MatrixXd Foam2Eigen::field2Eigen(const List<scalar>& field)
 {
