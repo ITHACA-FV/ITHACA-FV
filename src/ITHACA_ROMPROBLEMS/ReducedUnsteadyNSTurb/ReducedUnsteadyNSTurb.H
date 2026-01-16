@@ -46,6 +46,8 @@ SourceFiles
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
 
+// Forward declarations for Splinter types we only keep pointers to
+namespace SPLINTER { class RBFSpline; class DataTable; }
 
 struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
 {
@@ -147,6 +149,8 @@ struct newtonUnsteadyNSTurbSUPAve: public newton_argument<double>
         Eigen::MatrixXd tauU;
         Eigen::VectorXd gNut;
         Eigen::VectorXd gNutAve;
+        // used in .C
+        Eigen::VectorXd gNutFluct;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
@@ -183,6 +187,8 @@ struct newtonUnsteadyNSTurbPPEAve: public newton_argument<double>
         Eigen::MatrixXd tauU;
         Eigen::VectorXd gNut;
         Eigen::VectorXd gNutAve;
+        // used in .C
+        Eigen::VectorXd gNutFluct;
         std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
@@ -192,38 +198,49 @@ struct newtonUnsteadyNSTurbPPEAve: public newton_argument<double>
                         Class reducedProblem Declaration
 \*---------------------------------------------------------------------------*/
 
-/// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem.
-/** In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes
-equations. This class must be used together with the steadyNS class */
 class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
 {
     private:
 
     public:
         // Constructors
-        /// Construct Null
         ReducedUnsteadyNSTurb();
-        /// Construct Null
-        ///
-        /// @param      problem  a full order UnsteadyNSTurb problem
-        ///
         explicit ReducedUnsteadyNSTurb(UnsteadyNSTurb& problem);
-
         ~ReducedUnsteadyNSTurb() {};
 
         /// Pointer to the FOM problem
         UnsteadyNSTurb* problem;
 
-        /// Number of viscosity modes
+        /// Number of viscosity modes (combined)
         int nphiNut;
+
+        /// Split counts for average/fluctuation ν_t
+        int nphiNutAvg{0};
+        int nphiNutFluct{0};
 
         /// Dimension of the interpolation independent variable
         int dimA;
 
-        /// List of pointers to store the modes for the eddy viscosity
+        /// Legacy combined ν_t modes
         PtrList<volScalarField> nutModes;
 
-        /// The matrix of the eddy viscosity RBF interoplated coefficients
+        /// Split ν_t modes
+        PtrList<volScalarField> nutAvgModes;
+        PtrList<volScalarField> nutFluctModes;
+
+        /// Coeff buffers for avg/fluct ν_t
+        Eigen::VectorXd coeffNutAvg;
+        Eigen::VectorXd coeffNutFluct;
+
+        /// RBF sample tables (match FOM types)
+        List<SPLINTER::DataTable*> samplesNutAvg;
+        List<SPLINTER::DataTable*> samplesNutFluct;
+
+        /// RBF splines (match FOM types)
+        List<SPLINTER::RBFSpline*> rbfSplinesNutAvg;
+        List<SPLINTER::RBFSpline*> rbfSplinesNutFluct;
+
+        /// The matrix of the eddy viscosity RBF interpolated coefficients
         Eigen::MatrixXd rbfCoeffMat;
 
         /// The matrix of the initial velocity and pressure reduced coefficients
@@ -232,17 +249,11 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         /// The initial eddy viscosity reduced coefficients
         Eigen::VectorXd nut0;
 
-        /// Function object to call the non linear solver sup approach
-        newtonUnsteadyNSTurbSUP newtonObjectSUP;
-
-        /// Function object to call the non linear solver sup approach with the splitting of the eddy viscosity
-        newtonUnsteadyNSTurbSUPAve newtonObjectSUPAve;
-
-        /// Function object to call the non linear solver PPE approach
-        newtonUnsteadyNSTurbPPE newtonObjectPPE;
-
-        /// Function object to call the non linear solver PPE approach with the splitting of the eddy viscosity
-        newtonUnsteadyNSTurbPPEAve newtonObjectPPEAve;
+        /// Newton objects
+        newtonUnsteadyNSTurbSUP     newtonObjectSUP;
+        newtonUnsteadyNSTurbSUPAve  newtonObjectSUPAve;
+        newtonUnsteadyNSTurbPPE     newtonObjectPPE;
+        newtonUnsteadyNSTurbPPEAve  newtonObjectPPEAve;
 
         /// Online parameter value
         Eigen::VectorXd muStar;
@@ -259,71 +270,31 @@ class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
         /// Reconstructed eddy viscosity fields list
         PtrList<volScalarField> nutRecFields;
 
+        /// Reconstructed U and p fields (used in reconstruct)
+        PtrList<volVectorField> uRecFields;
+        PtrList<volScalarField> pRecFields;
+
+        /// Time series container (each entry is an (N+1)x1 column matrix [t; a; b])
+        List<Eigen::MatrixXd> online_solution;
+
+        /// Sizes used in constructor/reconstruct
+        int Nphi_u{0};
+        int Nphi_p{0};
+        int N_BC  {0};
+
         // Functions
-
-        ///
-        /// Method to perform an online solve using a PPE stabilisation method
-        ///
-        /// @param[in]  velNow   The vector of online velocity. It is defined in
-        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
-        /// of parametrized boundary conditions.
-        ///
         void solveOnlinePPE(Eigen::MatrixXd velNow);
-
-        ///
-        /// Method to perform an online solve using a supremizer stabilisation method
-        ///
-        /// @param[in]  velNow   The vector of online velocity. It is defined in
-        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
-        /// of parametrized boundary conditions.
-        ///
         void solveOnlineSUP(Eigen::MatrixXd velNow);
-
-        ///
-        /// Method to perform an online solve using a supremizer stabilisation method
-        /// with the use of the average splitting approach for the eddy viscosity
-        ///
-        /// @param[in]  velNow  The velocity now
-        ///
         void solveOnlineSUPAve(Eigen::MatrixXd velNow);
-
-        ///
-        /// Method to perform an online solve using a PPE stabilisation method
-        /// with the use of the average splitting approach for the eddy viscosity
-        ///
-        /// @param[in]  velNow  The velocity now
-        ///
         void solveOnlinePPEAve(Eigen::MatrixXd velNow);
 
-        /// Method to reconstruct the solutions from an online solve with any of
-        /// the two techniques SUP or the PPE
-        ///
-        /// @param[in]  exportFields  A boolean variable which determines whether to export fields or not
-        /// @param[in]  folder        The folder where to output the solutions in case on wants to
-        ///
         void reconstruct(bool exportFields = false,
                          fileName folder = "./online_rec");
 
-        ///
-        /// @brief      Sets the online velocity.
-        ///
-        /// @param[in]  vel   The velocity
-        ///
-        /// @return     The rescaled velocity vector
-        ///
         Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
-
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
-
 #endif
-
-
-
-
-
-
