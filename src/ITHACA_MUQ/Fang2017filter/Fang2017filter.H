@@ -50,64 +50,64 @@ namespace ITHACAmuq
 ///
 class Fang2017filter
 {
-    int Nsamples = 0;
+        int Nsamples = 0;
 
-    int stateSize = 0;
-    int parameterSize = 0;
-    int observationSize = 0;
+        int stateSize = 0;
+        int parameterSize = 0;
+        int observationSize = 0;
 
-    int timeStepI = 0;
-    double startTime;
-    double deltaTime;
-    double endTime;
-    int Ntimes;
+        int timeStepI = 0;
+        double startTime;
+        double deltaTime;
+        double endTime;
+        int Ntimes;
 
-    bool initialStateFlag = 0;
-    bool parameterPriorFlag = 0;
-    bool modelErrorFlag = 0;
-    bool measurementNoiseFlag = 0;
+        bool initialStateFlag = 0;
+        bool parameterPriorFlag = 0;
+        bool modelErrorFlag = 0;
+        bool measurementNoiseFlag = 0;
 
-    /// Mean of the initial state
-    Eigen::VectorXd initialStateMean;
+        /// Mean of the initial state
+        Eigen::VectorXd initialStateMean;
 
-    /// Covariance of the initial state
-    Eigen::MatrixXd initialStateCov;
+        /// Covariance of the initial state
+        Eigen::MatrixXd initialStateCov;
 
-    /// Mean of the prior parameter
-    Eigen::VectorXd parameterPriorMean;
+        /// Mean of the prior parameter
+        Eigen::VectorXd parameterPriorMean;
 
-    /// Covariance of the prior parameter
-    Eigen::MatrixXd parameterPriorCov;
+        /// Covariance of the prior parameter
+        Eigen::MatrixXd parameterPriorCov;
 
-    /// Parameters mean
-    Eigen::MatrixXd parameterMean;
+        /// Parameters mean
+        Eigen::MatrixXd parameterMean;
 
-    /// State mean
-    Eigen::MatrixXd stateMean;
+        /// State mean
+        Eigen::MatrixXd stateMean;
 
-    /// Timesteps vector
-    Eigen::VectorXd timeVector;
+        /// Timesteps vector
+        Eigen::VectorXd timeVector;
 
-    /// Timestep at which observations start
-    int observationStart;
+        /// Timestep at which observations start
+        int observationStart;
 
-    /// Number of timesteps between observations
-    int observationDelta;
+        /// Number of timesteps between observations
+        int observationDelta;
 
-    /// Vector that has 1 for the timestesp for which I have samples
-    Eigen::VectorXi observationBoolVec;
+        /// Vector that has 1 for the timestesp for which I have samples
+        Eigen::VectorXi observationBoolVec;
 
-    /// Matrix containing on each column the observations
-    Eigen::MatrixXd observations;
+        /// Matrix containing on each column the observations
+        Eigen::MatrixXd observations;
 
-    /// Initial state density
-    std::shared_ptr<muq::Modeling::Gaussian> initialStateDensity;
+        /// Initial state density
+        std::shared_ptr<muq::Modeling::Gaussian> initialStateDensity;
 
-    /// Parameter prior density
-    std::shared_ptr<muq::Modeling::Gaussian> parameterPriorDensity;
+        /// Parameter prior density
+        std::shared_ptr<muq::Modeling::Gaussian> parameterPriorDensity;
 
 
-    int innerLoopI = 0;
+        int innerLoopI = 0;
 
 
     public:
@@ -117,7 +117,7 @@ class Fang2017filter
         Fang2017filter(int _Nsamples);
 
         virtual ~Fang2017filter() = default;
-            
+
         /// Model noise density
         std::shared_ptr<muq::Modeling::Gaussian> modelErrorDensity;
 
@@ -182,11 +182,11 @@ class Fang2017filter
         void setObservations(Eigen::MatrixXd _observations);
 
         //--------------------------------------------------------------------------
-        /// Setup the time vector 
+        /// Setup the time vector
         void setTime(double _startTime, double _deltaTime, double _endTime);
 
         //--------------------------------------------------------------------------
-        /// Setup the observation vector 
+        /// Setup the observation vector
         void setObservationTime(int _observationStart, int _observationDelta);
 
         //--------------------------------------------------------------------------
@@ -198,60 +198,60 @@ class Fang2017filter
         void setMeasNoise(double cov);
 
         //--------------------------------------------------------------------------
-        /// Create initial state ensemble 
+        /// Create initial state ensemble
         void setInitialStateDensity(Eigen::VectorXd _mean, Eigen::MatrixXd _cov);
 
         //--------------------------------------------------------------------------
-        /// Create initial state ensemble 
+        /// Create initial state ensemble
         void sampleInitialState();
 
         //--------------------------------------------------------------------------
-        /// Create parameter ensemble 
+        /// Create parameter ensemble
         void setParameterPriorDensity(Eigen::VectorXd _mean, Eigen::MatrixXd _cov);
 
         //--------------------------------------------------------------------------
-        /// Create parameter ensemble 
+        /// Create parameter ensemble
         void sampleParameterDist();
 
         //--------------------------------------------------------------------------
-        /// General class to sample from an input density 
+        /// General class to sample from an input density
         Eigen::MatrixXd ensembleFromDensity(
-                std::shared_ptr<muq::Modeling::Gaussian> _density);
+            std::shared_ptr<muq::Modeling::Gaussian> _density);
 
         //--------------------------------------------------------------------------
-        /// Concatenate state and parameter ensambles to create the joint ensamble 
+        /// Concatenate state and parameter ensambles to create the joint ensamble
         void buildJointEns();
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         virtual void stateProjection() = 0;
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         virtual void observeState() = 0;
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         void setObservationSize(int _size);
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         void setStateSize(int _size);
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         int getStateSize();
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         void setParameterSize(int _size);
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         int getParameterSize();
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         void updateJointEns(Eigen::VectorXd _observation);
 
         //--------------------------------------------------------------------------

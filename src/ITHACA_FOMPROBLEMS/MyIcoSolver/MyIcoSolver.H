@@ -110,8 +110,8 @@ class MyIcoSolver: public steadyNS, public UnsteadyProblem
         ///
         void truthSolve(List<scalar> mu_now,
                         fileName folder = "./ITHACAoutput/Offline/");
-         /// set U and P back to the values into the 0 folder
-        void restart();                
+        /// set U and P back to the values into the 0 folder
+        void restart();
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -112,12 +112,10 @@ void UnsteadyNSTTurb::truthSolve(List<scalar> mu_now)
 #include "pEqn.H"
             }
         }
-
         {
 #include "TEqn.H"
             //TEqn.solve();
         }
-
         volScalarField _nut(turbulence->nut());
         laminarTransport.correct();
         turbulence->correct();
@@ -228,7 +226,6 @@ void UnsteadyNSTTurb::liftSolveT()
         {
             Tlift[i] = (totalTime * Tlift[i] + dt * Tlift[i] ) / (totalTime + dt);
         }
-
         Tlift.write();
         liftfieldT.append(Tlift.clone());
     }

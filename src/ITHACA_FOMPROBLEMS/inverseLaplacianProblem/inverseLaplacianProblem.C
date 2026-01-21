@@ -115,7 +115,6 @@ volScalarField inverseLaplacianProblem::list2Field(List<scalar> list,
         label faceOwner = faceCells[faceI] ;
         field[faceOwner] = list[faceI];
     }
-
     return field;
 }
 
@@ -133,7 +132,6 @@ void inverseLaplacianProblem::set_valueFraction()
         valueFraction[faceI] =  1.0 / (1.0 + (k / H / faceDist));
         homogeneousBCcoldSide[faceI] =  0;
     }
-
     refGrad = homogeneousBCcoldSide;
 }
 
@@ -227,14 +225,12 @@ void inverseLaplacianProblem::readThermocouples()
             {
                 thermocouplesCellID[tcI] = mesh.findCell(thermocouplesPos[tcI]);
             }
-
             volScalarField thermocouplesField(T);
             ITHACAutilities::assignIF(thermocouplesField, homogeneousBC);
             forAll(thermocouplesCellID, tcI)
             {
                 thermocouplesField.ref()[thermocouplesCellID[tcI]] = 1;
             }
-
             ITHACAstream::exportSolution(thermocouplesField, "1", "./ITHACAoutput/debug/",
                                          "thermocouplesField,");
             Eigen::MatrixXi thermocouplesCellID_eigen = Foam2Eigen::List2EigenMatrix(
@@ -273,7 +269,6 @@ Eigen::VectorXd inverseLaplacianProblem::fieldValueAtThermocouples(
         fieldInt(tcI) = fieldInterp->interpolate(thermocouplesPos[tcI],
                         thermocouplesCellID[tcI]);
     }
-
     return fieldInt;
 }
 

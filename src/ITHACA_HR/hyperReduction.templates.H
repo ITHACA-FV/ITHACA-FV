@@ -63,19 +63,16 @@ HyperReduction<SnapshotsLists...>::HyperReduction(label n_modes,
     {
         (..., stackNames(snapList));
     }, snapshotsListTuple);
-
     // Get fields' dimensions
     std::apply([this](auto & ...snapList)
     {
         (..., stackDimensions(snapList));
     }, snapshotsListTuple);
-
     sumFieldsDim = 0;
     std::apply([this](auto & ...snapList)
     {
         (..., sumDimensions(this->sumFieldsDim, snapList));
     }, snapshotsListTuple);
-
     Info << "Fields names: ";
 
     for (unsigned int ith_field = 0; ith_field < fieldNames.size(); ith_field++)
@@ -207,7 +204,6 @@ void HyperReduction<SnapshotsLists...>::getModesSVD(
                 {
                     (..., saveModes(snapList, modesSVD, rowIndex, modeIndex, folderSVD));
                 }, snapshotsListTuple);
-
                 rowIndex = 0;
             }
         }
@@ -324,7 +320,6 @@ void HyperReduction<SnapshotsLists...>::getModesSVD(
                     (..., saveModes(snapList, modesSVD, modesSVDBoundary, rowIndex,
                                     rowIndexBoundary, modeIndex, folderSVD));
                 }, snapshotsListTuple);
-
                 rowIndex = 0;
             }
         }
@@ -366,7 +361,6 @@ void HyperReduction<SnapshotsLists...>::getSnapMatrix(Eigen::MatrixXd&
         (..., stackSnapshotsBoundary(snapList, snapMatrixBoundary,
                                      fieldWeightsBoundary));
     },
-
     snapshotsListTuple);
 }
 
@@ -1029,6 +1023,7 @@ void HyperReduction<SnapshotsLists...>::generateSubmesh(label layers,
         uniqueNodePoints().write();
         ITHACAstream::exportSolution(Indici, "1", folderMethod);
     }
+
     submesh->setCellSubset(uniqueNodePoints());
     submesh->subMesh().fvSchemes::readOpt() = mesh.fvSchemes::readOpt();
     submesh->subMesh().fvSolution::readOpt() = mesh.fvSolution::readOpt();

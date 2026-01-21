@@ -25,8 +25,9 @@ std::vector<double> Function::evalJacobian(const std::vector<double>& x) const
     return denseVectorToVector(evalJacobian(denseX));
 }
 
-std::vector<std::vector<double >> Function::evalHessian(const std::vector<double>
-        & x) const
+std::vector<std::vector<double >> Function::evalHessian(
+    const std::vector<double>
+    & x) const
 {
     auto denseX = vectorToDenseVector(x);
     return denseMatrixToVectorVector(secondOrderCentralDifference(denseX));

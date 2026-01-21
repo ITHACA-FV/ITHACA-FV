@@ -20,7 +20,7 @@ BSplineBasis::BSplineBasis()
 {
 }
 
-BSplineBasis::BSplineBasis(std::vector< std::vector<double >> & knotVectors,
+BSplineBasis::BSplineBasis(std::vector< std::vector<double >>& knotVectors,
                            std::vector<unsigned int> basisDegrees)
     : numVariables(knotVectors.size())
 {

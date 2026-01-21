@@ -30,26 +30,25 @@ SourceFiles
     CompressibleUnSteadyPimple.C
 \*---------------------------------------------------------------------------*/
 autoPtr<surfaceVectorField> rhoUf;
-  
- if (mesh.dynamic())
- {
-     Info<< "Constructing face momentum rhoUf" << endl;
-  
-     rhoUf.reset
-     (
-         new surfaceVectorField
-         (
-             IOobject
-             (
-                 "rhoUf",
-                 runTime.timeName(),
-                 mesh,
-                 IOobject::READ_IF_PRESENT,
-                 IOobject::AUTO_WRITE
-             ),
-             fvc::interpolate(rho*U)
-         )
-     );
- }
+
+if (mesh.dynamic())
+{
+    Info << "Constructing face momentum rhoUf" << endl;
+    rhoUf.reset
+    (
+        new surfaceVectorField
+        (
+            IOobject
+            (
+                "rhoUf",
+                runTime.timeName(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
+            fvc::interpolate(rho * U)
+        )
+    );
+}
 
 // ************************************************************************* //

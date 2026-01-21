@@ -123,7 +123,7 @@ bool isTurbulent();
 /// @return     list in unique order
 ///
 template<typename T>
-List<T> combineList(List<List<T >> & doubleList);
+List<T> combineList(List<List<T >>& doubleList);
 
 //------------------------------------------------------------------------------
 /// @brief      Using the Eigen library, using the SVD decomposition method to solve the

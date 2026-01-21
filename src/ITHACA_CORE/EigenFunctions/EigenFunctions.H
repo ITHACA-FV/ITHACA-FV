@@ -120,7 +120,7 @@ void sortEigenvalues(Eigen::VectorXd& eigenvalues,
 ///
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> innerProduct(
-    List <Eigen::SparseMatrix<T >> & A, List <Eigen::SparseMatrix<T >>& B);
+    List <Eigen::SparseMatrix<T >>& A, List <Eigen::SparseMatrix<T >>& B);
 
 //--------------------------------------------------------------------------
 /// @brief      Perform Frobenius inner Product between a list of sparse matrices A and a sparse matrix B
@@ -136,7 +136,7 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> innerProduct(
 ///
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> innerProduct(
-    List <Eigen::SparseMatrix<T >> & A, Eigen::SparseMatrix<T>& B);
+    List <Eigen::SparseMatrix<T >>& A, Eigen::SparseMatrix<T>& B);
 
 //--------------------------------------------------------------------------
 /// @brief      Perform Frobenius inner Product between two sparse matrices A and B
@@ -169,7 +169,7 @@ T innerProduct(Eigen::SparseMatrix<T>& A, Eigen::SparseMatrix<T>& B);
 /// @return     out Sparse Matrix containing the sum of all the matrices multiplied by the vector coefficients
 ///
 template <typename T>
-Eigen::SparseMatrix<T> MVproduct(List<Eigen::SparseMatrix<T >> & A,
+Eigen::SparseMatrix<T> MVproduct(List<Eigen::SparseMatrix<T >>& A,
                                  Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >>& C);
 
 //--------------------------------------------------------------------------
@@ -188,7 +188,7 @@ Eigen::SparseMatrix<T> MVproduct(List<Eigen::SparseMatrix<T >> & A,
 ///
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> MVproduct(
-    const std::vector< Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >> & A,
+    const std::vector< Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >>& A,
     Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >>& C);
 
 //--------------------------------------------------------------------------
@@ -207,7 +207,7 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> MVproduct(
 ///
 template <typename T>
 List<Eigen::SparseMatrix<T >> MMproduct(List<Eigen::SparseMatrix<T >>& A,
-                                        Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >> & C);
+                                        Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >>& C);
 
 //--------------------------------------------------------------------------
 /// @brief      Conditioning number of a dense matrix
@@ -323,7 +323,7 @@ T EigenFunctions::min(Eigen::SparseMatrix<T>& mat, label& ind_row,
 
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> EigenFunctions::innerProduct(
-    List <Eigen::SparseMatrix<T >> & A, List <Eigen::SparseMatrix<T >>& B)
+    List <Eigen::SparseMatrix<T >>& A, List <Eigen::SparseMatrix<T >>& B)
 {
     label rows = A.size();
     label cols = B.size();
@@ -343,7 +343,7 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> EigenFunctions::innerProduct(
 
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> EigenFunctions::innerProduct(
-    List<Eigen::SparseMatrix<T >> & A, Eigen::SparseMatrix<T>& B)
+    List<Eigen::SparseMatrix<T >>& A, Eigen::SparseMatrix<T>& B)
 {
     label rows = A.size();
     label cols = 1;
@@ -373,7 +373,7 @@ T EigenFunctions::innerProduct(Eigen::SparseMatrix<T>& A,
 }
 
 template <typename T>
-Eigen::SparseMatrix<T> EigenFunctions::MVproduct(List<Eigen::SparseMatrix<T >> &
+Eigen::SparseMatrix<T> EigenFunctions::MVproduct(List<Eigen::SparseMatrix<T >>&
         A
         , Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >>& C)
 {
@@ -390,7 +390,7 @@ Eigen::SparseMatrix<T> EigenFunctions::MVproduct(List<Eigen::SparseMatrix<T >> &
 
 template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> EigenFunctions::MVproduct(
-    const std::vector< Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >> & A,
+    const std::vector< Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >>& A,
     Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >>& C)
 {
     Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> out;
@@ -409,7 +409,7 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> EigenFunctions::MVproduct(
 template <typename T>
 List<Eigen::SparseMatrix<T >> EigenFunctions::MMproduct(
     List<Eigen::SparseMatrix<T >>& A,
-    Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >> & C)
+    Eigen::DenseBase<Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic >>& C)
 {
     List<Eigen::SparseMatrix<T >> out;
     out.resize(C.cols());
@@ -420,6 +420,7 @@ List<Eigen::SparseMatrix<T >> EigenFunctions::MMproduct(
         col = C.col(i);
         out[i] = MVproduct(A, col);
     }
+
     return out;
 }
 
@@ -462,12 +463,14 @@ bool saveMarketVector (const VectorType & vec, const std::string & filename,
     {
         out << "%%MatrixMarket matrix array real general\n";
     }
+
     out << vec.size() << " " << 1 << "\n";
 
     for (label i = 0; i < vec.size(); i++)
     {
         internal::putDenseElt(vec(i), out);
     }
+
     out.close();
     return true;
 }

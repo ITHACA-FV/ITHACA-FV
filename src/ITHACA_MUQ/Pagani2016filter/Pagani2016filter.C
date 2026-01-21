@@ -134,16 +134,19 @@ void Pagani2016filter::setTrueObservations(Eigen::MatrixXd _observations)
 {
     trueObservations = _observations;
     std::cout << "trueObservations = \n" << trueObservations << std::endl;
-    for(int colI = 0; colI < trueObservations.cols(); colI++)
+
+    for (int colI = 0; colI < trueObservations.cols(); colI++)
     {
         trueObservations.col(colI) += measNoiseDensity->Sample();
     }
+
     std::cout << "trueObservations w. error = \n" << trueObservations << std::endl;
 }
 
 //--------------------------------------------------------------------------
-/// Setup the time vector 
-void Pagani2016filter::setTime(double _startTime, double _deltaTime, double _endTime)
+/// Setup the time vector
+void Pagani2016filter::setTime(double _startTime, double _deltaTime,
+                               double _endTime)
 {
     M_Assert(_endTime > _startTime, "endTime must be bigger than startTime");
     startTime = _startTime;
@@ -158,17 +161,21 @@ void Pagani2016filter::setTime(double _startTime, double _deltaTime, double _end
 }
 
 //--------------------------------------------------------------------------
-/// Setup the observation vector 
-void Pagani2016filter::setObservationTime(int _observationStart, int _observationDelta)
+/// Setup the observation vector
+void Pagani2016filter::setObservationTime(int _observationStart,
+        int _observationDelta)
 {
-    M_Assert(timeVector.size() > 0, "Setup the timeVector before setting up the observations vector");
+    M_Assert(timeVector.size() > 0,
+             "Setup the timeVector before setting up the observations vector");
     M_Assert(_observationStart > 0, "First observation timestep can't be 0");
     observationStart = _observationStart;
     observationDelta = _observationDelta;
-    Info << "First observation at time = " << timeVector(observationStart) << " s" << endl;
+    Info << "First observation at time = " << timeVector(observationStart) << " s"
+         << endl;
     Info << "Observations taken every " << observationDelta << " timesteps" << endl;
     observationBoolVec = Eigen::VectorXi::Zero(timeVector.size() - 1);
-    for(int i = observationStart - 1; i < Ntimes; i += observationDelta)
+
+    for (int i = observationStart - 1; i < Ntimes; i += observationDelta)
     {
         observationBoolVec(i) = 1;
     }
@@ -178,7 +185,8 @@ void Pagani2016filter::setObservationTime(int _observationStart, int _observatio
 /// Setup of the measurement noise distribution
 void Pagani2016filter::setMeasNoise(double cov)
 {
-    M_Assert(observationSize > 0, "Read measurements before setting up the measurement noise");
+    M_Assert(observationSize > 0,
+             "Read measurements before setting up the measurement noise");
     Eigen::VectorXd measNoise_mu = Eigen::VectorXd::Zero(observationSize);
     Eigen::MatrixXd measNoise_cov = Eigen::MatrixXd::Identity(observationSize,
                                     observationSize) * cov;
@@ -191,69 +199,78 @@ void Pagani2016filter::setMeasNoise(double cov)
 /// Setup of the measurement noise distribution
 void Pagani2016filter::setParameterError(double cov)
 {
-    M_Assert(parameterSize > 0, 
-            "Set parameter size before setting up the parameter error");
+    M_Assert(parameterSize > 0,
+             "Set parameter size before setting up the parameter error");
     Eigen::VectorXd parameterError_mu = Eigen::VectorXd::Zero(parameterSize);
     Eigen::MatrixXd parameterError_cov = Eigen::MatrixXd::Identity(parameterSize,
-                                    parameterSize) * cov;
-    parameterErrorDensity = std::make_shared<muq::Modeling::Gaussian>(parameterError_mu,
-                       parameterError_cov);
+                                         parameterSize) * cov;
+    parameterErrorDensity = std::make_shared<muq::Modeling::Gaussian>
+                            (parameterError_mu,
+                             parameterError_cov);
 }
 
 //--------------------------------------------------------------------------
-/// Create initial state ensemble 
-void Pagani2016filter::setInitialStateDensity(Eigen::VectorXd _mean, Eigen::MatrixXd _cov)
+/// Create initial state ensemble
+void Pagani2016filter::setInitialStateDensity(Eigen::VectorXd _mean,
+        Eigen::MatrixXd _cov)
 {
-    if(stateSize == 0)
+    if (stateSize == 0)
     {
         stateSize = _mean.size();
     }
     else
     {
         std::string message = "State has size = " + std::to_string(stateSize)
-            + " while input mean vector has size = "
-            + std::to_string(_mean.size());
-
+                              + " while input mean vector has size = "
+                              + std::to_string(_mean.size());
         M_Assert(stateSize == _mean.size(), message.c_str());
     }
-    M_Assert(_cov.rows() == stateSize && _cov.cols() == stateSize, "To initialize the state ensemble use mean and cov with same dimentions");
+
+    M_Assert(_cov.rows() == stateSize
+             && _cov.cols() == stateSize,
+             "To initialize the state ensemble use mean and cov with same dimentions");
     initialStateDensity = std::make_shared<muq::Modeling::Gaussian>(_mean, _cov);
     initialStateFlag = 1;
 }
 
 //--------------------------------------------------------------------------
-/// Create initial state ensemble 
+/// Create initial state ensemble
 void Pagani2016filter::sampleInitialState()
 {
-    M_Assert(initialStateFlag == 1, "Initialize the initial state density before sampling it");
+    M_Assert(initialStateFlag == 1,
+             "Initialize the initial state density before sampling it");
     stateEns.assignSamples(ensembleFromDensity(initialStateDensity));
 }
 
 //--------------------------------------------------------------------------
-/// Create initial parameter ensemble 
+/// Create initial parameter ensemble
 void Pagani2016filter::sampleInitialParameter()
 {
-    M_Assert(parameterPriorFlag == 1, "Initialize the initial parameter density before sampling it");
+    M_Assert(parameterPriorFlag == 1,
+             "Initialize the initial parameter density before sampling it");
     parameterEns.assignSamples(ensembleFromDensity(parameterPriorDensity));
 }
 
 //--------------------------------------------------------------------------
-/// Create parameter ensemble 
-void Pagani2016filter::setParameterPriorDensity(Eigen::VectorXd _mean, Eigen::MatrixXd _cov)
+/// Create parameter ensemble
+void Pagani2016filter::setParameterPriorDensity(Eigen::VectorXd _mean,
+        Eigen::MatrixXd _cov)
 {
-    if(parameterSize == 0)
+    if (parameterSize == 0)
     {
         parameterSize = _mean.size();
     }
     else
     {
-        std::string message = "The input mean has size = " + std::to_string(_mean.size())
-            + " but the parameterSize is "
-            + std::to_string(parameterSize);
-
+        std::string message = "The input mean has size = " + std::to_string(
+                                  _mean.size())
+                              + " but the parameterSize is "
+                              + std::to_string(parameterSize);
         M_Assert(parameterSize == _mean.size(), message.c_str());
     }
-    M_Assert(_cov.rows() == parameterSize && _cov.cols() == parameterSize, "Use mean and cov with same dimentions");
+
+    M_Assert(_cov.rows() == parameterSize
+             && _cov.cols() == parameterSize, "Use mean and cov with same dimentions");
     parameterPriorMean = _mean;
     parameterPriorCov = _cov;
     parameterPriorDensity = std::make_shared<muq::Modeling::Gaussian>(_mean, _cov);
@@ -261,11 +278,13 @@ void Pagani2016filter::setParameterPriorDensity(Eigen::VectorXd _mean, Eigen::Ma
 }
 
 //--------------------------------------------------------------------------
-/// General class to sample from an input density 
-Eigen::MatrixXd Pagani2016filter::ensembleFromDensity(std::shared_ptr<muq::Modeling::Gaussian> _density)
+/// General class to sample from an input density
+Eigen::MatrixXd Pagani2016filter::ensembleFromDensity(
+    std::shared_ptr<muq::Modeling::Gaussian> _density)
 {
     M_Assert(Nseeds > 0, "Number of samples not set up correctly");
     Eigen::MatrixXd output(_density->Sample().size(), Nseeds);
+
     for (int i = 0; i < Nseeds; i++)
     {
         output.col(i) = _density->Sample();
@@ -275,7 +294,7 @@ Eigen::MatrixXd Pagani2016filter::ensembleFromDensity(std::shared_ptr<muq::Model
 }
 
 //--------------------------------------------------------------------------
-/// 
+///
 void Pagani2016filter::setObservationSize(int _size)
 {
     observationSize = _size;
@@ -283,7 +302,7 @@ void Pagani2016filter::setObservationSize(int _size)
 }
 
 //--------------------------------------------------------------------------
-/// 
+///
 void Pagani2016filter::setStateSize(int _size)
 {
     stateSize = _size;
@@ -291,14 +310,14 @@ void Pagani2016filter::setStateSize(int _size)
 }
 
 //--------------------------------------------------------------------------
-/// 
+///
 int Pagani2016filter::getStateSize()
 {
     return stateSize;
 }
 
 //--------------------------------------------------------------------------
-/// 
+///
 void Pagani2016filter::setParameterSize(int _size)
 {
     parameterSize = _size;
@@ -306,41 +325,42 @@ void Pagani2016filter::setParameterSize(int _size)
 }
 
 //--------------------------------------------------------------------------
-/// 
+///
 int Pagani2016filter::getParameterSize()
 {
     return parameterSize;
 }
 
 //--------------------------------------------------------------------------
-/// Perform Kalman filter update 
+/// Perform Kalman filter update
 void Pagani2016filter::update()
 {
-    Eigen::MatrixXd parameterObservation_crossCov = 
+    Eigen::MatrixXd parameterObservation_crossCov =
         parameterEns.crossCov(observationEns.getSamples());
-    Eigen::MatrixXd stateObservation_crossCov = 
+    Eigen::MatrixXd stateObservation_crossCov =
         stateEns.crossCov(observationEns.getSamples());
     Eigen::MatrixXd observation_Cov = observationEns.cov();
-
     Eigen::MatrixXd P = measNoiseDensity->ApplyCovariance(
-            Eigen::MatrixXd::Identity(observationSize, observationSize));
+                            Eigen::MatrixXd::Identity(observationSize, observationSize));
     P += observation_Cov;
     std::cout << "debug : P = \n" << P << std::endl;
     P = P.inverse(); //TODO check if invertible
     std::cout << "debug : P inverse = \n" << P << std::endl;
-    
     Eigen::MatrixXd parameterUpdateMat = parameterObservation_crossCov * P;
     Eigen::MatrixXd stateUpdateMat = stateObservation_crossCov * P;
-    for(int seedI = 0; seedI < Nseeds; seedI++)
+
+    for (int seedI = 0; seedI < Nseeds; seedI++)
     {
-        Eigen::VectorXd observationDelta = 
+        Eigen::VectorXd observationDelta =
             trueObservations.col(timeSampI) - observationEns.getSample(seedI);
-        parameterEns.assignSample(seedI, 
-            parameterEns.getSample(seedI) + parameterUpdateMat * observationDelta);
-        stateEns.assignSample(seedI, 
-            stateEns.getSample(seedI) + stateUpdateMat * observationDelta);
+        parameterEns.assignSample(seedI,
+                                  parameterEns.getSample(seedI) + parameterUpdateMat * observationDelta);
+        stateEns.assignSample(seedI,
+                              stateEns.getSample(seedI) + stateUpdateMat * observationDelta);
     }
-    std::cout << "debug : parameterEns.mean() =\n" << parameterEns.mean() << std::endl;
+
+    std::cout << "debug : parameterEns.mean() =\n" << parameterEns.mean() <<
+              std::endl;
     std::cout << "debug : stateEns.mean() =\n" << stateEns.mean() << std::endl;
 }
 
@@ -354,7 +374,6 @@ void Pagani2016filter::run(word outputFolder)
     M_Assert(stateSize > 0, "Set state size");
     M_Assert(observationSize > 0, "Set observation size");
     M_Assert(parameterSize > 0, "Set parameter size");
-
     // Initialization
     sampleInitialState();
     sampleInitialParameter();
@@ -366,25 +385,23 @@ void Pagani2016filter::run(word outputFolder)
     parameter_minConf.resize(parameterSize, Ntimes);
     parameterMean.resize(parameterSize, Ntimes);
 
-
-    for(timeSampI = 0; timeSampI < NtimeObservations; timeSampI++)
+    for (timeSampI = 0; timeSampI < NtimeObservations; timeSampI++)
     {
         Info << "timeSamp " << timeSampI << endl;
         oldStateEns.assignSamples(stateEns.getSamples());
-
         stateProjection();
-
         update();
     }
+
     ITHACAstream::exportMatrix(stateMean, "stateMean", "eigen", outputFolder);
-    ITHACAstream::exportMatrix(parameterMean, "parameterMean", "eigen", outputFolder);
-    ITHACAstream::exportMatrix(parameter_maxConf, "parameter_maxConf", "eigen", 
-            outputFolder);
-    ITHACAstream::exportMatrix(parameter_minConf, "parameter_minConf", "eigen", 
-            outputFolder);
+    ITHACAstream::exportMatrix(parameterMean, "parameterMean", "eigen",
+                               outputFolder);
+    ITHACAstream::exportMatrix(parameter_maxConf, "parameter_maxConf", "eigen",
+                               outputFolder);
+    ITHACAstream::exportMatrix(parameter_minConf, "parameter_minConf", "eigen",
+                               outputFolder);
     Info << "\n*****************************************************" << endl;
     Info << "Kalman filter run ENDED" << endl;
     Info << "\n*****************************************************" << endl;
-
 }
 }

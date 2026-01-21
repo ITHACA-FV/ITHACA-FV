@@ -139,7 +139,6 @@ void inverseLaplacianProblemTotalHeatMeasure_CG::computeGradJ()
         gradJ_L2norm += gradJ[faceI] * gradJ[faceI]  *
                         mesh.magSf().boundaryField()[hotSide_ind][faceI];
     }
-
     gradJ_L2norm = Foam::sqrt(gradJ_L2norm);
     Info << "gradJ L2norm = " << gradJ_L2norm << endl;
 }

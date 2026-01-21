@@ -144,7 +144,6 @@ void reductionProblem::assignBC(volScalarField& s, label BC_ind, double& value)
             gradTpatch[faceI] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "calculated")
     {
         for (label i = 0; i < s.boundaryField()[BC_ind].size(); i++)
@@ -152,7 +151,6 @@ void reductionProblem::assignBC(volScalarField& s, label BC_ind, double& value)
             s.boundaryFieldRef()[BC_ind][i] = value;
         }
     }
-
     else if (s.boundaryField()[BC_ind].type() == "empty")
     {
     }
@@ -251,7 +249,6 @@ void reductionProblem::writeMu(List<scalar> mu_now)
     {
         ofs << mu_now[i] << ' ';
     }
-
     ofs << "\n";
     ofs.close();
 }

@@ -1044,10 +1044,11 @@ Eigen::Tensor<double, 3> steadyNS::convective_term_tens_cache(label NUmodes,
 
     for (label j = 0; j < Csize; ++j)
     {
-        surfaceScalarField SfUj = linearInterpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf();
-
+        surfaceScalarField SfUj = linearInterpolate(L_U_SUPmodes[j]) &
+                                  L_U_SUPmodes[j].mesh().Sf();
         // Cache all div fields for fixed j, all k
         List<tmp<volVectorField>> divRow(Csize);
+
         for (label k = 0; k < Csize; ++k)
         {
             if (fluxMethod == "consistent")
@@ -1102,6 +1103,7 @@ Eigen::MatrixXd steadyNS::mass_term(label NUmodes, label NPmodes,
         ITHACAstream::SaveDenseMatrix(M_matrix, "./ITHACAoutput/Matrices/",
                                       "M_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NSUPmodes));
     }
+
     return M_matrix;
 }
 
@@ -1202,13 +1204,14 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum(label NUmodes, label NPmodes)
     return gTensor;
 }
 
-Eigen::Tensor<double, 3> steadyNS::divMomentum_cache(label NUmodes, label NPmodes)
+Eigen::Tensor<double, 3> steadyNS::divMomentum_cache(label NUmodes,
+        label NPmodes)
 {
     label g1Size = NPmodes + liftfieldP.size();
     label g2Size = NUmodes + NSUPmodes + liftfield.size();
     Eigen::Tensor<double, 3> gTensor (g1Size, g2Size, g2Size);
-
     List<tmp<volVectorField>> PmodesGrad(g1Size);
+
     for (label i = 0; i < g1Size; i++)
     {
         PmodesGrad[i] = fvc::grad(Pmodes[i]);
@@ -1216,10 +1219,11 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum_cache(label NUmodes, label NPmode
 
     for (label j = 0; j < g2Size; j++)
     {
-        surfaceScalarField interpUj = fvc::interpolate(L_U_SUPmodes[j]) & L_U_SUPmodes[j].mesh().Sf();
-
+        surfaceScalarField interpUj = fvc::interpolate(L_U_SUPmodes[j]) &
+                                      L_U_SUPmodes[j].mesh().Sf();
         // Cache only one row (j fixed)
         List<tmp<volVectorField>> divRow(g2Size);
+
         for (label k = 0; k < g2Size; ++k)
         {
             divRow[k] = fvc::div(interpUj, L_U_SUPmodes[k]);
@@ -1228,6 +1232,7 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum_cache(label NUmodes, label NPmode
         for (label i = 0; i < g1Size; i++)
         {
             const volVectorField& gradPi = PmodesGrad[i]();
+
             for (label k = 0; k < g2Size; k++)
             {
                 const volVectorField& divField = divRow[k]();
@@ -1248,10 +1253,12 @@ Eigen::Tensor<double, 3> steadyNS::divMomentum_cache(label NUmodes, label NPmode
 }
 
 // large scale convection (or background convection)
-Eigen::MatrixXd steadyNS::convective_background(label NUmodes, volVectorField vls)
+Eigen::MatrixXd steadyNS::convective_background(label NUmodes,
+        volVectorField vls)
 {
     label Lsize = NUmodes + liftfield.size();
     Eigen::MatrixXd L_matrix(Lsize, Lsize);
+
     for (label i = 0; i < Lsize; i++)
     {
         for (label j = 0; j < Lsize; j++)
@@ -1265,11 +1272,13 @@ Eigen::MatrixXd steadyNS::convective_background(label NUmodes, volVectorField vl
     return L_matrix;
 }
 
-Eigen::MatrixXd steadyNS::divergent_convective_background(label NPmodes, label NUmodes, volVectorField vls)
+Eigen::MatrixXd steadyNS::divergent_convective_background(label NPmodes,
+        label NUmodes, volVectorField vls)
 {
     label LDsize1 = NPmodes + liftfieldP.size();
     label LDsize2 = NUmodes + liftfield.size();
     Eigen::MatrixXd L_D_matrix(LDsize1, LDsize2);
+
     for (label i = 0; i < LDsize1; i++)
     {
         for (label j = 0; j < LDsize2; j++)
@@ -1303,6 +1312,7 @@ Eigen::MatrixXd steadyNS::laplacian_pressure(label NPmodes)
         ITHACAstream::SaveDenseMatrix(D_matrix, "./ITHACAoutput/Matrices/",
                                       "D_" + name(NPmodes));
     }
+
     return D_matrix;
 }
 
@@ -1433,14 +1443,16 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
     Eigen::MatrixXd BC3_matrix(P3_BC1size, P3_BC2size);
     const fvMesh& mesh = L_U_SUPmodes[0].mesh();
     surfaceVectorField n(mesh.Sf() / mesh.magSf());
+
     for (label i = 0; i < P3_BC1size; i++)
     {
         for (label j = 0; j < P3_BC2size; j++)
         {
             surfaceVectorField BC3 = fvc::interpolate(fvc::curl(L_U_SUPmodes[j])).ref();
-            surfaceVectorField BC4 = (n^ fvc::interpolate(fvc::grad(Pmodes[i]))).ref();
-            surfaceScalarField BC5 = ((BC3& BC4) * mesh.magSf()).ref();
+            surfaceVectorField BC4 = (n ^ fvc::interpolate(fvc::grad(Pmodes[i]))).ref();
+            surfaceScalarField BC5 = ((BC3 & BC4) * mesh.magSf()).ref();
             double s = 0;
+
             for (label k = 0; k < BC5.boundaryField().size(); k++)
             {
                 if (BC5.boundaryField()[k].type() != "processor")
@@ -1458,6 +1470,7 @@ Eigen::MatrixXd steadyNS::pressure_BC3(label NUmodes, label NPmodes)
         ITHACAstream::SaveDenseMatrix(BC3_matrix, "./ITHACAoutput/Matrices/",
                                       "BC3_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(NPmodes));
     }
+
     return BC3_matrix;
 }
 

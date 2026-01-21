@@ -51,74 +51,74 @@ namespace ITHACAmuq
 ///
 class Pagani2016filter
 {
-    int Nseeds = 0;
+        int Nseeds = 0;
 
-    int timeSampI = 0;
-    int stateSize = 0;
-    int parameterSize = 0;
-    int observationSize = 0;
+        int timeSampI = 0;
+        int stateSize = 0;
+        int parameterSize = 0;
+        int observationSize = 0;
 
-    int timeStepI = 0;
-    double startTime;
-    double deltaTime;
-    double endTime;
-    int Ntimes = 0;
+        int timeStepI = 0;
+        double startTime;
+        double deltaTime;
+        double endTime;
+        int Ntimes = 0;
 
-    bool initialStateFlag = 0;
-    bool parameterPriorFlag = 0;
-    bool modelErrorFlag = 0;
-    bool measurementNoiseFlag = 0;
+        bool initialStateFlag = 0;
+        bool parameterPriorFlag = 0;
+        bool modelErrorFlag = 0;
+        bool measurementNoiseFlag = 0;
 
-    /// Mean of the initial state
-    Eigen::VectorXd initialStateMean;
+        /// Mean of the initial state
+        Eigen::VectorXd initialStateMean;
 
-    /// Covariance of the initial state
-    Eigen::MatrixXd initialStateCov;
+        /// Covariance of the initial state
+        Eigen::MatrixXd initialStateCov;
 
-    /// Mean of the prior parameter
-    Eigen::VectorXd parameterPriorMean;
+        /// Mean of the prior parameter
+        Eigen::VectorXd parameterPriorMean;
 
-    /// Covariance of the prior parameter
-    Eigen::MatrixXd parameterPriorCov;
+        /// Covariance of the prior parameter
+        Eigen::MatrixXd parameterPriorCov;
 
-    /// Parameters mean
-    Eigen::MatrixXd parameterMean;
+        /// Parameters mean
+        Eigen::MatrixXd parameterMean;
 
-    /// State mean
-    Eigen::MatrixXd stateMean;
+        /// State mean
+        Eigen::MatrixXd stateMean;
 
-    /// Timesteps vector
-    Eigen::VectorXd timeVector;
+        /// Timesteps vector
+        Eigen::VectorXd timeVector;
 
-    /// Timestep at which observations start
-    int observationStart;
+        /// Timestep at which observations start
+        int observationStart;
 
-    /// Number of timesteps between observations
-    int observationDelta;
+        /// Number of timesteps between observations
+        int observationDelta;
 
-    /// Vector that has 1 for the timestesp for which I have samples
-    Eigen::VectorXi observationBoolVec;
+        /// Vector that has 1 for the timestesp for which I have samples
+        Eigen::VectorXi observationBoolVec;
 
-    /// Matrix containing on each column the observations
-    Eigen::MatrixXd trueObservations;
+        /// Matrix containing on each column the observations
+        Eigen::MatrixXd trueObservations;
 
-    /// Initial state density
-    std::shared_ptr<muq::Modeling::Gaussian> initialStateDensity;
+        /// Initial state density
+        std::shared_ptr<muq::Modeling::Gaussian> initialStateDensity;
 
-    /// Parameter prior density
-    std::shared_ptr<muq::Modeling::Gaussian> parameterPriorDensity;
+        /// Parameter prior density
+        std::shared_ptr<muq::Modeling::Gaussian> parameterPriorDensity;
 
-   /// Parameter-observation cross covariance
-   Eigen::MatrixXd parameterObservation_crossCov;
+        /// Parameter-observation cross covariance
+        Eigen::MatrixXd parameterObservation_crossCov;
 
-   /// State-observation cross covariance
-   Eigen::MatrixXd stateObservation_crossCov;
+        /// State-observation cross covariance
+        Eigen::MatrixXd stateObservation_crossCov;
 
-   /// Observation covariance
-   Eigen::MatrixXd observation_Cov;
+        /// Observation covariance
+        Eigen::MatrixXd observation_Cov;
 
 
-    int innerLoopI = 0;
+        int innerLoopI = 0;
 
 
     public:
@@ -164,7 +164,7 @@ class Pagani2016filter
         //--------------------------------------------------------------------------
         /// Return number of samples per ensamble
         int getNumberOfSamples();
-        
+
         //--------------------------------------------------------------------------
         /// Return the size of the observation vector
         int getObservationSize();
@@ -202,7 +202,7 @@ class Pagani2016filter
         void computeParameterMean(int _index);
 
         //--------------------------------------------------------------------------
-        /// Return 
+        /// Return
         int getObservationCounter();
 
         //--------------------------------------------------------------------------
@@ -215,11 +215,11 @@ class Pagani2016filter
         void setTrueObservations(Eigen::MatrixXd _observations);
 
         //--------------------------------------------------------------------------
-        /// Setup the time vector 
+        /// Setup the time vector
         void setTime(double _startTime, double _deltaTime, double _endTime);
 
         //--------------------------------------------------------------------------
-        /// Setup the observation vector 
+        /// Setup the observation vector
         void setObservationTime(int _observationStart, int _observationDelta);
 
         //--------------------------------------------------------------------------
@@ -231,59 +231,59 @@ class Pagani2016filter
         void setParameterError(double cov);
 
         //--------------------------------------------------------------------------
-        /// Create initial state ensemble 
+        /// Create initial state ensemble
         void setInitialStateDensity(Eigen::VectorXd _mean, Eigen::MatrixXd _cov);
 
         //--------------------------------------------------------------------------
-        /// Create initial state ensemble 
+        /// Create initial state ensemble
         void sampleInitialState();
 
         //--------------------------------------------------------------------------
-        /// Create initial parameter ensemble 
+        /// Create initial parameter ensemble
         void sampleInitialParameter();
 
         //--------------------------------------------------------------------------
-        /// Create parameter ensemble 
+        /// Create parameter ensemble
         void setParameterPriorDensity(Eigen::VectorXd _mean, Eigen::MatrixXd _cov);
 
         //--------------------------------------------------------------------------
-        /// General class to sample from an input density 
-        Eigen::MatrixXd ensembleFromDensity(std::shared_ptr<muq::Modeling::Gaussian> 
-                _density);
+        /// General class to sample from an input density
+        Eigen::MatrixXd ensembleFromDensity(std::shared_ptr<muq::Modeling::Gaussian>
+                                            _density);
 
         //--------------------------------------------------------------------------
-        /// Project the state in between two sampling steps and fills the state and 
+        /// Project the state in between two sampling steps and fills the state and
         /// parameter mean and confidence level, their ensembles and the observationEns
-        /// It also must make timeStepI evolving 
-        /// 
+        /// It also must make timeStepI evolving
+        ///
         virtual void stateProjection() = 0;
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         virtual void observeState() = 0;
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         void setObservationSize(int _size);
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         void setStateSize(int _size);
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         int getStateSize();
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         void setParameterSize(int _size);
 
         //--------------------------------------------------------------------------
-        /// 
+        ///
         int getParameterSize();
 
         //--------------------------------------------------------------------------
-        /// Perform Kalman filter update 
+        /// Perform Kalman filter update
         void update();
 
         //--------------------------------------------------------------------------

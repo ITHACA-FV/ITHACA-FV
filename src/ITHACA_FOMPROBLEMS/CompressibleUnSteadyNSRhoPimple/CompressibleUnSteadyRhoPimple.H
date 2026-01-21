@@ -63,7 +63,8 @@ SourceFiles
 /** In this class are implemented the methods for the offline solve of a Compressible UnSteady problem
 and the for the generation of the reduced matrices for subsequent online solve, this class is a son
 of the reduction problem class */
-class CompressibleUnSteadyRhoPimple: public CompressibleSteadyNS, public UnsteadyProblem
+class CompressibleUnSteadyRhoPimple: public CompressibleSteadyNS,
+    public UnsteadyProblem
 {
     public:
         // Constructors
@@ -99,10 +100,12 @@ class CompressibleUnSteadyRhoPimple: public CompressibleSteadyNS, public Unstead
         fvScalarMatrix getDiffTerm();
 
         // Pressure equation terms
-        fvScalarMatrix getPmatrix(fvVectorMatrix& Ueqn, volVectorField& U, volScalarField& p);
+        fvScalarMatrix getPmatrix(fvVectorMatrix& Ueqn, volVectorField& U,
+                                  volScalarField& p);
         surfaceScalarField getPhiHbyA(fvVectorMatrix& Ueqn, volVectorField& U,
                                       volScalarField& p);
-        volScalarField getDivPhiHbyA(fvVectorMatrix& Ueqn, volVectorField& U, volScalarField& p);
+        volScalarField getDivPhiHbyA(fvVectorMatrix& Ueqn, volVectorField& U,
+                                     volScalarField& p);
         surfaceScalarField getRhorAUf(fvVectorMatrix& Ueqn);
         fvScalarMatrix getPoissonTerm(fvVectorMatrix& Ueqn, volScalarField& p);
 
@@ -115,11 +118,11 @@ class CompressibleUnSteadyRhoPimple: public CompressibleSteadyNS, public Unstead
 
         //--------------------------------------------------------------------------
         /// set all variables back to the values into the 0 folder
-        /// 
+        ///
         void restart();
 
         autoPtr<fluidThermo> pThermo;
-           // /// Dynamic mesh field
+        // /// Dynamic mesh field
         autoPtr<Foam::dynamicFvMesh> meshPtr;
         /// pimpleControl
         autoPtr<pimpleControl> _pimple;
@@ -175,7 +178,7 @@ class CompressibleUnSteadyRhoPimple: public CompressibleSteadyNS, public Unstead
 
         /// Export also intermediate fields
         bool middleExport;
-        
+
         bool  correctPhi;
         bool  checkMeshCourantNo;
         bool  moveMeshOuterCorrectors;

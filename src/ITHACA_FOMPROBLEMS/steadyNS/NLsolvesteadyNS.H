@@ -60,7 +60,6 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
         residual = max(presidual, uresidual);
         Info << "\nResidual: " << residual << endl << endl;
     }
-
     laminarTransport.correct();
     turbulence->correct();
     csolve = csolve + 1;

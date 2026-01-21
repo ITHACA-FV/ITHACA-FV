@@ -57,12 +57,12 @@ MyIcoSolver::MyIcoSolver(int argc, char* argv[])
 #include "createTime.H"
 #include "createMesh.H"
     _piso = autoPtr<pisoControl>
-              (
-                  new pisoControl
-                  (
-                      mesh
-                  )
-              );
+            (
+                new pisoControl
+                (
+                    mesh
+                )
+            );
     ITHACAdict = new IOdictionary
     (
         IOobject
@@ -76,7 +76,7 @@ MyIcoSolver::MyIcoSolver(int argc, char* argv[])
     );
 #include "createFields.H"
 #include "createFvOptions.H"
-    para = ITHACAparameters::getInstance(mesh, runTime);    
+    para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     //supex = ITHACAutilities::check_sup();
@@ -102,32 +102,32 @@ void MyIcoSolver::truthSolve(List<scalar> mu_now, fileName folder)
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime;
-/*
-    // Set time-dependent velocity BCs for initial condition
-    if (timedepbcMethod == "yes")
-    {
-        for (label i = 0; i < inletPatch.rows(); i++)
+    /*
+        // Set time-dependent velocity BCs for initial condition
+        if (timedepbcMethod == "yes")
         {
-            Vector<double> inl(0, 0, 0);
-
-            for (label j = 0; j < inl.size(); j++)
+            for (label i = 0; i < inletPatch.rows(); i++)
             {
-                inl[j] = timeBCoff(i* inl.size() + j, 0);
+                Vector<double> inl(0, 0, 0);
+
+                for (label j = 0; j < inl.size(); j++)
+                {
+                    inl[j] = timeBCoff(i* inl.size() + j, 0);
+                }
+
+                assignBC(U, inletPatch(i, 0), inl);
             }
-
-            assignBC(U, inletPatch(i, 0), inl);
         }
-    }
 
-    // Export and store the initial conditions for velocity and pressure
-    ITHACAstream::exportSolution(U, name(counter), folder);
-    ITHACAstream::exportSolution(p, name(counter), folder);
-    std::ofstream of(folder + name(counter) + "/" +
-                     runTime.timeName());
-    Ufield.append(U.clone());
-    Pfield.append(p.clone());
-    counter++;
-    nextWrite += writeEvery;*/
+        // Export and store the initial conditions for velocity and pressure
+        ITHACAstream::exportSolution(U, name(counter), folder);
+        ITHACAstream::exportSolution(p, name(counter), folder);
+        std::ofstream of(folder + name(counter) + "/" +
+                         runTime.timeName());
+        Ufield.append(U.clone());
+        Pfield.append(p.clone());
+        counter++;
+        nextWrite += writeEvery;*/
 
     // Start the time loop
     while (runTime.run())
@@ -199,6 +199,7 @@ void MyIcoSolver::truthSolve(List<scalar> mu_now, fileName folder)
             }*/
         }
     }
+
     /*
     // Resize to Unitary if not initialized by user (i.e. non-parametric problem)
     if (mu.cols() == 0)
@@ -229,7 +230,6 @@ void MyIcoSolver::restart()
     Time& runTime = _runTime();
     runTime.setTime(0, 1);
     Foam::fvMesh& mesh = _mesh();
-
     pisoControl& piso = _piso();
     Info << "ReReading field p\n" << endl;
     _p = autoPtr<volScalarField>

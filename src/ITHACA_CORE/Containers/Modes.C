@@ -204,7 +204,7 @@ Modes<Type, PatchField, GeoMesh>::projectSnapshot(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> &
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>&
     fields,
     label numberOfModes, word projType, fvMatrix<Type>* Af)
 {
@@ -318,6 +318,7 @@ Modes<Type, PatchField, GeoMesh>::reconstruct(
 {
     PtrList<GeometricField<Type, PatchField, GeoMesh >> inputFields;
     inputFields.resize(0);
+
     for (label i = 0; i < Coeff.size(); i++)
     {
         inputField = reconstruct(inputField, Coeff[i], Name);
@@ -478,9 +479,10 @@ void Modes<Type, PatchField, GeoMesh>::projectSnapshots(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Modes<Type, PatchField, GeoMesh>::operator=(const
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> & modes)
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& modes)
 {
     this->resize(modes.size());
+
     for (label i = 0; i < modes.size(); i++)
     {
         (* this).set(i, modes[i].clone());

@@ -36,8 +36,7 @@ autoPtr<surfaceVectorField> Uf;
 
 if (mesh.dynamic())
 {
-    Info<< "Constructing face velocity Uf\n" << endl;
-
+    Info << "Constructing face velocity Uf\n" << endl;
     Uf.reset
     (
         new surfaceVectorField

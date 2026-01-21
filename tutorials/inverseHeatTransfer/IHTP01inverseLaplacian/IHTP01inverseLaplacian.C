@@ -129,7 +129,6 @@ int main(int argc, char* argv[])
             mesh.boundaryMesh()[example_paramBC.hotSide_ind].faceCentres()[faceI].x();
         example_paramBC.g[faceI] = example_paramBC.k * (b * faceX + c) ;
     }
-
     example_paramBC.gTrue = example_paramBC.g;
     example_paramBC.solveTrue();
     example_CG.g = example_paramBC.g;

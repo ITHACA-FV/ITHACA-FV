@@ -108,7 +108,7 @@ bool isTurbulent()
 }
 
 template<typename T>
-List<T> combineList(List<List<T >> & doubleList)
+List<T> combineList(List<List<T >>& doubleList)
 {
     List<T> a = ListListOps::combine<List<T >> (doubleList,
                 accessOp<List<T >> ());
@@ -123,13 +123,14 @@ List<T> combineList(List<List<T >> & doubleList)
     {
         b[i] = a[order[i]];
     }
+
     a.resize(order.size());
     a = b;
 #endif
     return a;
 }
 
-template List<label> combineList(List<List<label >> & doubleList);
+template List<label> combineList(List<List<label >>& doubleList);
 
 
 // Using the Eigen library, using the SVD decomposition method to solve the
