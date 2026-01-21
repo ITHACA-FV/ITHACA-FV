@@ -26,7 +26,6 @@ if (example_CG.conjugateGradient())
                                      std::to_string(solutionI + 1), outputFolder,
                                      "g_CG");
     }
-
     example_CG.postProcess(outputFolder, "g_CG");
 }
 else

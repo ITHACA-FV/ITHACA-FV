@@ -176,7 +176,7 @@ Eigen::VectorXd getMassMatrixFV(
 template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
                           snapshot,
-                          PtrList<GeometricField<Type, PatchField, GeoMesh >> & modes, label Nmodes = 0,
+                          PtrList<GeometricField<Type, PatchField, GeoMesh >>& modes, label Nmodes = 0,
                           bool consider_volumes = true);
 
 //------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ Eigen::VectorXd getCoeffs(GeometricField<Type, PatchField, GeoMesh>&
 /// @return     The coefficients of the projection.
 ///
 template<class Type, template<class> class PatchField, class GeoMesh >
-Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
+Eigen::MatrixXd getCoeffs(PtrList<GeometricField<Type, PatchField, GeoMesh >>&
                           snapshot,
                           PtrList<GeometricField<Type, PatchField, GeoMesh >>& modes, label Nmodes = 0,
                           bool consider_volumes = true);

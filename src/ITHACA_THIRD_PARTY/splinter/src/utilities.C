@@ -48,10 +48,11 @@ std::vector<std::vector<double >> denseMatrixToVectorVector(
             vec.at(i).push_back(mat(i, j));
         }
     }
+
     return vec;
 }
 
-DenseMatrix vectorVectorToDenseMatrix(const std::vector<std::vector<double >> &
+DenseMatrix vectorVectorToDenseMatrix(const std::vector<std::vector<double >>&
                                       vec)
 {
     size_t numRows = vec.size();

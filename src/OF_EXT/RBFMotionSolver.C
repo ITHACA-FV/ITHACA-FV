@@ -70,7 +70,6 @@ void Foam::RBFMotionSolver::makeControlIDs()
             nMovingPoints++;
         }
     }
-
     // Mark moving points and select control points from moving patches
     movingIDs_.setSize(nMovingPoints);
     Info << "Total points on moving boundaries: " << nMovingPoints << endl;
@@ -90,7 +89,6 @@ void Foam::RBFMotionSolver::makeControlIDs()
             nMovingPoints++;
         }
     }
-
     movingIDs_.setSize(nMovingPoints);
     // Actual location of moving points will be set later on request
     // HJ, 19/Dec/2008
@@ -118,7 +116,6 @@ void Foam::RBFMotionSolver::makeControlIDs()
             nStaticPoints++;
         }
     }
-
     Info << "Total points on static boundaries: " << nStaticPoints << endl;
     staticIDs_.setSize(nStaticPoints);
     // Re-use counter
@@ -132,7 +129,6 @@ void Foam::RBFMotionSolver::makeControlIDs()
             nStaticPoints++;
         }
     }
-
     staticIDs_.setSize(nStaticPoints);
     // Control IDs also potentially include points on static patches
     // HJ, 24/Mar/2011
@@ -160,7 +156,6 @@ void Foam::RBFMotionSolver::makeControlIDs()
             nControlPoints++;
         }
     }
-
     Info << "Selected " << nControlPoints
          << " control points on moving boundaries" << endl;
 
@@ -188,7 +183,6 @@ void Foam::RBFMotionSolver::makeControlIDs()
                 nControlPoints++;
             }
         }
-
         Info << "Selected " << nControlPoints
              << " total control points" << endl;
     }
@@ -202,7 +196,6 @@ void Foam::RBFMotionSolver::makeControlIDs()
     {
         controlPoints_[i] = points[controlIDs_[i]];
     }
-
     // Pick up all internal points
     internalIDs_.setSize(points.size());
     internalPoints_.setSize(points.size());
@@ -218,7 +211,6 @@ void Foam::RBFMotionSolver::makeControlIDs()
             nInternalPoints++;
         }
     }
-
     Info << "Number of internal points: " << nInternalPoints << endl;
     // Resize the lists
     internalIDs_.setSize(nInternalPoints);
@@ -306,7 +298,6 @@ void Foam::RBFMotionSolver::setMotion(const vectorField& m)
         {
             controlPoints_[i] = points[controlIDs_[i]];
         }
-
         // Re-calculate interpolation
         interpolation_.movePoints();
     }
@@ -340,13 +331,11 @@ Foam::tmp<Foam::pointField> Foam::RBFMotionSolver::curPoints() const
     {
         curPoints[movingIDs_[i]] = motion_[i];
     }
-
     // 2. Insert zero motion of static points
     forAll (staticIDs_, i)
     {
         curPoints[staticIDs_[i]] = vector::zero;
     }
-
     // Set motion of control
     vectorField motionOfControl(controlIDs_.size());
     // 2. Capture positions of control points
@@ -354,7 +343,6 @@ Foam::tmp<Foam::pointField> Foam::RBFMotionSolver::curPoints() const
     {
         motionOfControl[i] = curPoints[controlIDs_[i]];
     }
-
     // Call interpolation
     vectorField interpolatedMotion =
         interpolation_.interpolate(motionOfControl).ref();
@@ -363,7 +351,6 @@ Foam::tmp<Foam::pointField> Foam::RBFMotionSolver::curPoints() const
     {
         curPoints[internalIDs_[i]] = interpolatedMotion[i];
     }
-
     // 4. Add old point positions
     curPoints += mesh().points();
     twoDCorrectPoints(const_cast<pointField&>(tcurPoints()));

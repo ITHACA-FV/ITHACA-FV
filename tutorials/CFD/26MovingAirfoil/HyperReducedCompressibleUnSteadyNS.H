@@ -68,7 +68,8 @@ class HyperReducedCompressibleUnSteadyNS: public ReducedCompressibleSteadyNS
         /// @param[in]  problem  a full order steadyNS problem
         /// @param[in]  tipo     Type of pressure stabilisation method you want to use "SUP" for supremizer, "PPE" for pressure Poisson equation.
         ///
-        explicit HyperReducedCompressibleUnSteadyNS(CompressibleUnSteadyRhoPimple& problem);
+        explicit HyperReducedCompressibleUnSteadyNS(CompressibleUnSteadyRhoPimple&
+                problem);
 
         ~HyperReducedCompressibleUnSteadyNS() {};
 
@@ -81,10 +82,10 @@ class HyperReducedCompressibleUnSteadyNS: public ReducedCompressibleSteadyNS
         /// @param[in]  NmodesPproj  The number of modes one wants to use for pressure projection.
         /// @param[in]  NmodesEproj  The number of modes one wants to use for energy projection.
         ///
-        void SolveHyperReducedSys(int NmodesUproj, 
-                                    int NmodesPproj, 
-                                    int NmodesEproj,
-                                    fileName folder= "./ITHACAoutput/Online/");
+        void SolveHyperReducedSys(int NmodesUproj,
+                                  int NmodesPproj,
+                                  int NmodesEproj,
+                                  fileName folder = "./ITHACAoutput/Online/");
 
         ///
         /// @brief      It checks if the number of imposed boundary conditions is correct
@@ -102,7 +103,7 @@ class HyperReducedCompressibleUnSteadyNS: public ReducedCompressibleSteadyNS
         /// @param[in]  NmodesEproj  The number of modes one wants to use for energy projection.
         ///
         void projectReducedOperators(int NmodesUproj, int NmodesPproj, int NmodesEproj);
-        
+
         ///
         /// @brief      It assembles the reduced oeprators using the modes
         ///
@@ -111,13 +112,14 @@ class HyperReducedCompressibleUnSteadyNS: public ReducedCompressibleSteadyNS
         /// @param[in]  MagicPoints coming from DEIM
         /// @param[in]  Modes modes given by the DEIM
         ///
-        std::tuple<Eigen::MatrixXd, Eigen::VectorXd> HyperReducedSys(Eigen::SparseMatrix<double>& S,
-                                                                                                            Eigen::VectorXd& se, 
-                                                                                                            List<label>& MagicPoints, 
-                                                                                                            Eigen::MatrixXd& Modes);
-                                                                                                            
-       /// Method to check and write solutions
-        bool checkWrite(Time& timeObject);                                                                                                       
+        std::tuple<Eigen::MatrixXd, Eigen::VectorXd> HyperReducedSys(
+            Eigen::SparseMatrix<double>& S,
+            Eigen::VectorXd& se,
+            List<label>& MagicPoints,
+            Eigen::MatrixXd& Modes);
+
+        /// Method to check and write solutions
+        bool checkWrite(Time& timeObject);
         // Variables
 
         /// velocity modes.

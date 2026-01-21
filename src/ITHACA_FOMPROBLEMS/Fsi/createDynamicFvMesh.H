@@ -23,10 +23,10 @@
   along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 \*---------------------------------------------------------------------------*/
 Info << "Create a dynamic mesh for time = "
-             << runTime.timeName() << nl << endl;
+     << runTime.timeName() << nl << endl;
 
-        meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
-        dynamicFvMesh& mesh = meshPtr();
+meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+dynamicFvMesh& mesh = meshPtr();
 
 // Info<< "Create mesh for time = "
 //     << runTime.timeName() << nl << endl;

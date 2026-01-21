@@ -57,7 +57,7 @@ class ConvLayer
         ///
         /// @param[in]  db    The database
         ///
-        ConvLayer(PtrList<GeometricField<Type, PatchField, GeoMesh >> & snapshots);
+        ConvLayer(PtrList<GeometricField<Type, PatchField, GeoMesh >>& snapshots);
 
         PtrList<GeometricField<Type, PatchField, GeoMesh >>& _snapshots;
         const fvMesh& mesh;

@@ -146,7 +146,6 @@ class EnKF_1DinverseHeatTransfer: public laplacianProblem
                 //add check if I put two measurements on the same cell
                 measures(pntI) = field[mesh.findCell(measurementPoints[pntI])];
             }
-
             return measures;
         }
 

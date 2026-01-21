@@ -145,7 +145,7 @@ double errorL2Abs(GeometricField<T, fvPatchField, volMesh>& field1,
 /// @return     Column vector, in each row the L2 norm of the relative error.
 ///
 template<typename T>
-Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh >> &
+Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh >>&
                            fields1,
                            PtrList<GeometricField<T, fvPatchField, volMesh >>& fields2,
                            List<label>* labels = NULL);
@@ -162,7 +162,7 @@ Eigen::MatrixXd errorL2Rel(PtrList<GeometricField<T, fvPatchField, volMesh >> &
 /// @return     Column vector, in each row the Frobenius norm of the relative error.
 ///
 template<class T, template<class> class PatchField, class GeoMesh>
-Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh >> &
+Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh >>&
                              fields1,
                              PtrList<GeometricField<T, PatchField, GeoMesh >>& fields2,
                              List<label>* labels = NULL);
@@ -181,7 +181,7 @@ Eigen::MatrixXd errorFrobRel(PtrList<GeometricField<T, PatchField, GeoMesh >> &
 ///
 template<typename T>
 Eigen::MatrixXd errorL2Abs(
-    PtrList<GeometricField<T, fvPatchField, volMesh >> & fields1,
+    PtrList<GeometricField<T, fvPatchField, volMesh >>& fields1,
     PtrList<GeometricField<T, fvPatchField, volMesh >>& fields2,
     PtrList<volScalarField>& Volumes);
 
@@ -197,7 +197,7 @@ Eigen::MatrixXd errorL2Abs(
 /// @return     column vector, in each row the L2 norm of the absolute error.
 ///
 template<typename T>
-Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh >> &
+Eigen::MatrixXd errorL2Abs(PtrList<GeometricField<T, fvPatchField, volMesh >>&
                            fields1,
                            PtrList<GeometricField<T, fvPatchField, volMesh >>& fields2,
                            List<label>* labels = NULL);
