@@ -5,28 +5,32 @@
      ██║   ██║   ██╔══██║██╔══██║██║     ██╔══██║╚════╝██╔══╝  ╚██╗ ██╔╝
      ██║   ██║   ██║  ██║██║  ██║╚██████╗██║  ██║      ██║      ╚████╔╝
      ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝      ╚═╝       ╚═══╝
-
+ *
  * In real Time Highly Advanced Computational Applications for Finite Volumes
  * Copyright (C) 2017 by the ITHACA-FV authors
--------------------------------------------------------------------------------
-License
-    This file is part of ITHACA-FV
-    ITHACA-FV is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-    ITHACA-FV is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Lesser General Public License for more details.
-    You should have received a copy of the GNU Lesser General Public License
-    along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
-Class
-    ReducedUnsteadyNSTurb
-Description
-    A reduced problem for the unsteady turbulent NS equations
-SourceFiles
-    ReducedUnsteadyNSTurb.C
+ *-------------------------------------------------------------------------------
+ *
+ * License
+ *     This file is part of ITHACA-FV
+ *     ITHACA-FV is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *     ITHACA-FV is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *     GNU Lesser General Public License for more details.
+ *     You should have received a copy of the GNU Lesser General Public License
+ *     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Class
+ *     ReducedUnsteadyNSTurb
+ *
+ * Description
+ *     A reduced problem for the unsteady turbulent NS equations
+ *
+ * SourceFiles
+ *     ReducedUnsteadyNSTurb.C
 \*---------------------------------------------------------------------------*/
 
 /// \file
@@ -39,291 +43,285 @@ SourceFiles
 
 #include "fvCFD.H"
 #include "IOmanip.H"
+
 #include "ReducedSteadyNS.H"
 #include "ReducedUnsteadyNS.H"
 #include "UnsteadyNSTurb.H"
+
 #include <Eigen/Dense>
 #include <unsupported/Eigen/NonLinearOptimization>
 #include <unsupported/Eigen/NumericalDiff>
 
-
-struct newtonUnsteadyNSTurbSUP: public newton_argument<double>
+// Forward declarations for Splinter types we only keep pointers to
+namespace SPLINTER
 {
-    public:
-        newtonUnsteadyNSTurbSUP() {}
+class RBFSpline;
+class DataTable;
+}  // namespace SPLINTER
 
-        newtonUnsteadyNSTurbSUP(int Nx, int Ny,
-                                UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem(& problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-            nphiNut(problem.nNutModes),
-            Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows()),
-            gNut(problem.nNutModes)
-        {}
+// * * * * * * * * * * * * * * * Newton functors * * * * * * * * * * * * * * //
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+struct newtonUnsteadyNSTurbSUP : public newton_argument<double>
+{
+public:
+    newtonUnsteadyNSTurbSUP() = default;
 
-        UnsteadyNSTurb* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
-        scalar nu;
-        scalar dt;
-        Eigen::VectorXd y_old;
-        Eigen::VectorXd yOldOld;
-        Eigen::VectorXd bc;
-        Eigen::MatrixXd tauU;
-        Eigen::VectorXd gNut;
-        std::vector<SPLINTER::RBFSpline*> SPLINES;
+    newtonUnsteadyNSTurbSUP(int Nx, int Ny, UnsteadyNSTurb& problem)
+    :
+        newton_argument<double>(Nx, Ny),
+        problem(&problem),
+        Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
+        nphiNut(problem.nNutModes),
+        Nphi_p(problem.NPmodes),
+        N_BC(problem.inletIndex.rows()),
+        gNut(problem.nNutModes)
+    {}
+
+    int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+    int df(const Eigen::VectorXd& x, Eigen::MatrixXd& fjac) const;
+
+    UnsteadyNSTurb* problem{nullptr};
+
+    int Nphi_u{0};
+    int nphiNut{0};
+    int Nphi_p{0};
+    int N_BC{0};
+
+    scalar nu{0};
+    scalar dt{0};
+
+    Eigen::VectorXd y_old;
+    Eigen::VectorXd yOldOld;
+    Eigen::VectorXd bc;
+
+    Eigen::MatrixXd tauU;
+    Eigen::VectorXd gNut;
+
+    std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
-
-
-struct newtonUnsteadyNSTurbPPE: public newton_argument<double>
+struct newtonUnsteadyNSTurbPPE : public newton_argument<double>
 {
-    public:
-        newtonUnsteadyNSTurbPPE() {}
+public:
+    newtonUnsteadyNSTurbPPE() = default;
 
-        newtonUnsteadyNSTurbPPE(int Nx, int Ny,
-                                UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem(& problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size()),
-            nphiNut(problem.nNutModes),
-            Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows()),
-            gNut(problem.nNutModes)
-        {}
+    newtonUnsteadyNSTurbPPE(int Nx, int Ny, UnsteadyNSTurb& problem)
+    :
+        newton_argument<double>(Nx, Ny),
+        problem(&problem),
+        Nphi_u(problem.NUmodes + problem.liftfield.size()),
+        nphiNut(problem.nNutModes),
+        Nphi_p(problem.NPmodes),
+        N_BC(problem.inletIndex.rows()),
+        gNut(problem.nNutModes)
+    {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+    int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+    int df(const Eigen::VectorXd& x, Eigen::MatrixXd& fjac) const;
 
-        UnsteadyNSTurb* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
-        scalar nu;
-        scalar dt;
-        Eigen::VectorXd y_old;
-        Eigen::VectorXd yOldOld;
-        Eigen::VectorXd bc;
-        Eigen::MatrixXd tauU;
-        Eigen::VectorXd gNut;
-        std::vector<SPLINTER::RBFSpline*> SPLINES;
+    UnsteadyNSTurb* problem{nullptr};
+
+    int Nphi_u{0};
+    int nphiNut{0};
+    int Nphi_p{0};
+    int N_BC{0};
+
+    scalar nu{0};
+    scalar dt{0};
+
+    Eigen::VectorXd y_old;
+    Eigen::VectorXd yOldOld;
+    Eigen::VectorXd bc;
+
+    Eigen::MatrixXd tauU;
+    Eigen::VectorXd gNut;
+
+    std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
-struct newtonUnsteadyNSTurbSUPAve: public newton_argument<double>
+struct newtonUnsteadyNSTurbSUPAve : public newton_argument<double>
 {
-    public:
-        newtonUnsteadyNSTurbSUPAve() {}
+public:
+    newtonUnsteadyNSTurbSUPAve() = default;
 
-        newtonUnsteadyNSTurbSUPAve(int Nx, int Ny,
-                                   UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem(& problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
-            nphiNut(problem.nNutModes),
-            Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows()),
-            gNut(problem.nNutModes),
-            gNutAve(problem.nutAve.size())
-        {}
+    newtonUnsteadyNSTurbSUPAve(int Nx, int Ny, UnsteadyNSTurb& problem)
+    :
+        newton_argument<double>(Nx, Ny),
+        problem(&problem),
+        Nphi_u(problem.NUmodes + problem.liftfield.size() + problem.NSUPmodes),
+        nphiNut(problem.nNutModes),
+        Nphi_p(problem.NPmodes),
+        N_BC(problem.inletIndex.rows()),
+        gNut(problem.nNutModes),
+        gNutAve(problem.nutAve.size())
+    {}
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+    int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+    int df(const Eigen::VectorXd& x, Eigen::MatrixXd& fjac) const;
 
-        UnsteadyNSTurb* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
-        scalar nu;
-        scalar dt;
-        Eigen::VectorXd y_old;
-        Eigen::VectorXd yOldOld;
-        Eigen::VectorXd bc;
-        Eigen::MatrixXd tauU;
-        Eigen::VectorXd gNut;
-        Eigen::VectorXd gNutAve;
-        std::vector<SPLINTER::RBFSpline*> SPLINES;
+    UnsteadyNSTurb* problem{nullptr};
+
+    int Nphi_u{0};
+    int nphiNut{0};
+    int Nphi_p{0};
+    int N_BC{0};
+
+    scalar nu{0};
+    scalar dt{0};
+
+    Eigen::VectorXd y_old;
+    Eigen::VectorXd yOldOld;
+    Eigen::VectorXd bc;
+
+    Eigen::MatrixXd tauU;
+
+    Eigen::VectorXd gNut;
+    Eigen::VectorXd gNutAve;
+
+    // used in .C
+    Eigen::VectorXd gNutFluct;
+
+    std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
-struct newtonUnsteadyNSTurbPPEAve: public newton_argument<double>
+struct newtonUnsteadyNSTurbPPEAve : public newton_argument<double>
 {
-    public:
-        newtonUnsteadyNSTurbPPEAve() {}
+public:
+    newtonUnsteadyNSTurbPPEAve() = default;
 
-        newtonUnsteadyNSTurbPPEAve(int Nx, int Ny,
-                                   UnsteadyNSTurb& problem): newton_argument<double>(Nx, Ny),
-            problem(& problem),
-            Nphi_u(problem.NUmodes + problem.liftfield.size()),
-            nphiNut(problem.nNutModes),
-            Nphi_p(problem.NPmodes),
-            N_BC(problem.inletIndex.rows()),
-            gNut(problem.nNutModes),
-            gNutAve(problem.nutAve.size())
+    newtonUnsteadyNSTurbPPEAve(int Nx, int Ny, UnsteadyNSTurb& problem)
+    :
+        newton_argument<double>(Nx, Ny),
+        problem(&problem),
+        Nphi_u(problem.NUmodes + problem.liftfield.size()),
+        nphiNut(problem.nNutModes),
+        Nphi_p(problem.NPmodes),
+        N_BC(problem.inletIndex.rows()),
+        gNut(problem.nNutModes),
+        gNutAve(problem.nutAve.size())
+    {}
 
-        {}
+    int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
+    int df(const Eigen::VectorXd& x, Eigen::MatrixXd& fjac) const;
 
-        int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const;
-        int df(const Eigen::VectorXd& x,  Eigen::MatrixXd& fjac) const;
+    UnsteadyNSTurb* problem{nullptr};
 
-        UnsteadyNSTurb* problem;
-        int Nphi_u;
-        int nphiNut;
-        int Nphi_p;
-        int N_BC;
-        scalar nu;
-        scalar dt;
-        Eigen::VectorXd y_old;
-        Eigen::VectorXd yOldOld;
-        Eigen::VectorXd bc;
-        Eigen::MatrixXd tauU;
-        Eigen::VectorXd gNut;
-        Eigen::VectorXd gNutAve;
-        std::vector<SPLINTER::RBFSpline*> SPLINES;
+    int Nphi_u{0};
+    int nphiNut{0};
+    int Nphi_p{0};
+    int N_BC{0};
+
+    scalar nu{0};
+    scalar dt{0};
+
+    Eigen::VectorXd y_old;
+    Eigen::VectorXd yOldOld;
+    Eigen::VectorXd bc;
+
+    Eigen::MatrixXd tauU;
+
+    Eigen::VectorXd gNut;
+    Eigen::VectorXd gNutAve;
+
+    // used in .C
+    Eigen::VectorXd gNutFluct;
+
+    std::vector<SPLINTER::RBFSpline*> SPLINES;
 };
 
+// * * * * * * * * * * * * Reduced problem declaration * * * * * * * * * * * //
 
-
-/*---------------------------------------------------------------------------*\
-                        Class reducedProblem Declaration
-\*---------------------------------------------------------------------------*/
-
-/// Class where it is implemented a reduced problem for the <b> unsteady Navier-stokes </b> problem.
-/** In this class are implemented the methods to solve a reduced version of the stationary Navier-stokes
-equations. This class must be used together with the steadyNS class */
-class ReducedUnsteadyNSTurb: public reducedUnsteadyNS
+class ReducedUnsteadyNSTurb : public reducedUnsteadyNS
 {
-    private:
+public:
+    ReducedUnsteadyNSTurb();
+    explicit ReducedUnsteadyNSTurb(UnsteadyNSTurb& problem);
+    ~ReducedUnsteadyNSTurb() = default;
 
-    public:
-        // Constructors
-        /// Construct Null
-        ReducedUnsteadyNSTurb();
-        /// Construct Null
-        ///
-        /// @param      problem  a full order UnsteadyNSTurb problem
-        ///
-        explicit ReducedUnsteadyNSTurb(UnsteadyNSTurb& problem);
+    /// Pointer to the FOM problem
+    UnsteadyNSTurb* problem{nullptr};
 
-        ~ReducedUnsteadyNSTurb() {};
+    /// Number of viscosity modes (combined)
+    int nphiNut{0};
 
-        /// Pointer to the FOM problem
-        UnsteadyNSTurb* problem;
+    /// Split counts for average/fluctuation ν_t
+    int nphiNutAvg{0};
+    int nphiNutFluct{0};
 
-        /// Number of viscosity modes
-        int nphiNut;
+    /// Dimension of the interpolation independent variable
+    int dimA{0};
 
-        /// Dimension of the interpolation independent variable
-        int dimA;
+    /// Legacy combined ν_t modes
+    PtrList<volScalarField> nutModes;
 
-        /// List of pointers to store the modes for the eddy viscosity
-        PtrList<volScalarField> nutModes;
+    /// Split ν_t modes
+    PtrList<volScalarField> nutAvgModes;
+    PtrList<volScalarField> nutFluctModes;
 
-        /// The matrix of the eddy viscosity RBF interoplated coefficients
-        Eigen::MatrixXd rbfCoeffMat;
+    /// Coeff buffers for avg/fluct ν_t
+    Eigen::VectorXd coeffNutAvg;
+    Eigen::VectorXd coeffNutFluct;
 
-        /// The matrix of the initial velocity and pressure reduced coefficients
-        Eigen::MatrixXd initCond;
+    /// RBF sample tables (match FOM types)
+    List<SPLINTER::DataTable*> samplesNutAvg;
+    List<SPLINTER::DataTable*> samplesNutFluct;
 
-        /// The initial eddy viscosity reduced coefficients
-        Eigen::VectorXd nut0;
+    /// RBF splines (match FOM types)
+    List<SPLINTER::RBFSpline*> rbfSplinesNutAvg;
+    List<SPLINTER::RBFSpline*> rbfSplinesNutFluct;
 
-        /// Function object to call the non linear solver sup approach
-        newtonUnsteadyNSTurbSUP newtonObjectSUP;
+    /// The matrix of the eddy viscosity RBF interpolated coefficients
+    Eigen::MatrixXd rbfCoeffMat;
 
-        /// Function object to call the non linear solver sup approach with the splitting of the eddy viscosity
-        newtonUnsteadyNSTurbSUPAve newtonObjectSUPAve;
+    /// The matrix of the initial velocity and pressure reduced coefficients
+    Eigen::MatrixXd initCond;
 
-        /// Function object to call the non linear solver PPE approach
-        newtonUnsteadyNSTurbPPE newtonObjectPPE;
+    /// The initial eddy viscosity reduced coefficients
+    Eigen::VectorXd nut0;
 
-        /// Function object to call the non linear solver PPE approach with the splitting of the eddy viscosity
-        newtonUnsteadyNSTurbPPEAve newtonObjectPPEAve;
+    /// Newton objects
+    newtonUnsteadyNSTurbSUP    newtonObjectSUP;
+    newtonUnsteadyNSTurbSUPAve newtonObjectSUPAve;
+    newtonUnsteadyNSTurbPPE    newtonObjectPPE;
+    newtonUnsteadyNSTurbPPEAve newtonObjectPPEAve;
 
-        /// Online parameter value
-        Eigen::VectorXd muStar;
+    /// Online parameter value
+    Eigen::VectorXd muStar;
 
-        /// The reduced average vector for viscosity coefficients
-        Eigen::VectorXd gNutAve;
+    /// The reduced average vector for viscosity coefficients
+    Eigen::VectorXd gNutAve;
 
-        /// Interpolation independent variable choice
-        int interChoice = 1;
+    /// Interpolation independent variable choice
+    int interChoice{1};
 
-        /// Interpolation boolean variable to skip lifting functions
-        bool skipLift = false;
+    /// Interpolation boolean variable to skip lifting functions
+    bool skipLift{false};
 
-        /// Reconstructed eddy viscosity fields list
-        PtrList<volScalarField> nutRecFields;
+    /// Reconstructed eddy viscosity fields list
+    PtrList<volScalarField> nutRecFields;
 
-        // Functions
+    /// Reconstructed U and p fields (used in reconstruct)
+    PtrList<volVectorField> uRecFields;
+    PtrList<volScalarField> pRecFields;
 
-        ///
-        /// Method to perform an online solve using a PPE stabilisation method
-        ///
-        /// @param[in]  velNow   The vector of online velocity. It is defined in
-        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
-        /// of parametrized boundary conditions.
-        ///
-        void solveOnlinePPE(Eigen::MatrixXd velNow);
+    /// Time series container (each entry is an (N+1)x1 column matrix [t; a; b])
+    List<Eigen::MatrixXd> online_solution;
 
-        ///
-        /// Method to perform an online solve using a supremizer stabilisation method
-        ///
-        /// @param[in]  velNow   The vector of online velocity. It is defined in
-        /// with an Eigen::MatrixXd and must have one col and as many rows as the number
-        /// of parametrized boundary conditions.
-        ///
-        void solveOnlineSUP(Eigen::MatrixXd velNow);
+    /// Sizes used in constructor/reconstruct
+    int Nphi_u{0};
+    int Nphi_p{0};
+    int N_BC{0};
 
-        ///
-        /// Method to perform an online solve using a supremizer stabilisation method
-        /// with the use of the average splitting approach for the eddy viscosity
-        ///
-        /// @param[in]  velNow  The velocity now
-        ///
-        void solveOnlineSUPAve(Eigen::MatrixXd velNow);
+    // Functions
+    void solveOnlinePPE(Eigen::MatrixXd velNow);
+    void solveOnlineSUP(Eigen::MatrixXd velNow);
+    void solveOnlineSUPAve(Eigen::MatrixXd velNow);
+    void solveOnlinePPEAve(Eigen::MatrixXd velNow);
 
-        ///
-        /// Method to perform an online solve using a PPE stabilisation method
-        /// with the use of the average splitting approach for the eddy viscosity
-        ///
-        /// @param[in]  velNow  The velocity now
-        ///
-        void solveOnlinePPEAve(Eigen::MatrixXd velNow);
+    void reconstruct(bool exportFields = false, fileName folder = "./online_rec");
 
-        /// Method to reconstruct the solutions from an online solve with any of
-        /// the two techniques SUP or the PPE
-        ///
-        /// @param[in]  exportFields  A boolean variable which determines whether to export fields or not
-        /// @param[in]  folder        The folder where to output the solutions in case on wants to
-        ///
-        void reconstruct(bool exportFields = false,
-                         fileName folder = "./online_rec");
-
-        ///
-        /// @brief      Sets the online velocity.
-        ///
-        /// @param[in]  vel   The velocity
-        ///
-        /// @return     The rescaled velocity vector
-        ///
-        Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
-
+    Eigen::MatrixXd setOnlineVelocity(Eigen::MatrixXd vel);
 };
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-
-
-#endif
-
-
-
-
-
+#endif  // ReducedUnsteadyNSTurb_H
 
