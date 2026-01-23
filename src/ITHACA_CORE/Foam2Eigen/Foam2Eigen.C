@@ -191,7 +191,7 @@ Eigen::VectorXd Foam2Eigen::field2Eigen(const
                           field.size(), 1);
     return out;
 }
-// To be modified with map
+
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     GeometricField<tensor, PatchField, GeoMesh>& field)
@@ -202,16 +202,9 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 
     for (label i = 0; i < size; i++)
     {
-        label sizei = field.boundaryField()[i].size();
-        Out[i].resize(sizei * 9);
-
-        for (label k = 0; k < sizei; k++)
-        {
-            for (label j = 0; j < 9; j++)
-            {
-                Out[i](k * 9 + j) = field.boundaryField()[i][k][j];
-            }
-        }
+        Out[i] = Eigen::Map<Eigen::VectorXd>(const_cast<double*>(&
+                                             (field.boundaryField()[i][0][0])),
+                                             field.boundaryField()[i].size() * 9);
     }
 
     return Out;
@@ -219,7 +212,7 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 
 template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     volTensorField& field);
-// To be modified with map
+
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     GeometricField<vector, PatchField, GeoMesh>& field)
@@ -234,32 +227,19 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     {
         for (label i = 0; i < size; i++ )
         {
-            label sizei = field.boundaryField()[i].size();
-            Out[i].resize(sizei * 3);
-
-            for (label k = 0; k < sizei ; k++)
-            {
-                for (label j = 0; j < 3; j++)
-                {
-                    Out[i](k * 3 + j) = field.boundaryField()[i][k][j];
-                }
-            }
+            Out[i] = Eigen::Map<Eigen::VectorXd>(const_cast<double*>(&
+                                                 (field.boundaryField()[i][0][0])),
+                                                 field.boundaryField()[i].size() * 3);
         }
     }
     else if  constexpr(std::is_same<pointMesh, GeoMesh>::value)
     {
-        for (label i = 0; i < size; i++ )
+        for (label i = 0; i < size;
+                i++ ) //field.boundaryField()[i].patchInternalField()()[k][j];
         {
-            label sizei = field.boundaryField()[i].size();
-            Out[i].resize(sizei * 3);
-
-            for (label k = 0; k < sizei ; k++)
-            {
-                for (label j = 0; j < 3; j++)
-                {
-                    Out[i](k * 3 + j) = field.boundaryField()[i].patchInternalField()()[k][j];
-                }
-            }
+            Out[i] = Eigen::Map<Eigen::VectorXd>(const_cast<double*>(&
+                                                 (field.boundaryField()[i].patchInternalField()()[0][0])),
+                                                 field.boundaryField()[i].patchInternalField()().size() * 3);
         }
     }
 
@@ -269,7 +249,6 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     volVectorField& field);
 
-// To be modified with map
 template <template <class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
     GeometricField<scalar, PatchField, GeoMesh>& field)
@@ -280,13 +259,8 @@ List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
 
     for (label i = 0; i < size; i++)
     {
-        label sizei = field.boundaryField()[i].size();
-        Out[i].resize(sizei);
-
-        for (label k = 0; k < sizei; k++)
-        {
-            Out[i](k) = field.boundaryField()[i][k];
-        }
+        Out[i] = Eigen::Map<Eigen::VectorXd>(const_cast<double*>(&
+                                             (field.boundaryField()[i][0])), field.boundaryField()[i].size());
     }
 
     return Out;
@@ -622,13 +596,13 @@ Field<scalar> Foam2Eigen::Eigen2field(
 
     return field;
 }
-// This needs to be changed with MAP and changing the order of assignment
+
 template <>
 Field<vector> Foam2Eigen::Eigen2field(
     Field<vector>& field, Eigen::MatrixXd& matrix, bool correctBC)
 {
     label sizeBC = field.size();
-    M_Assert(matrix.cols() == 3,
+    M_Assert(matrix.cols() == 1,
              "The number of columns of the Input members is not correct, it should be 1");
 
     if (matrix.rows() == 1)
@@ -654,13 +628,13 @@ Field<vector> Foam2Eigen::Eigen2field(
 
     return field;
 }
-// This needs to be changed with MAP and changing the order of assignment
+
 template <>
 Field<tensor> Foam2Eigen::Eigen2field(
     Field<tensor>& field, Eigen::MatrixXd& matrix, bool correctBC)
 {
     label sizeBC = field.size();
-    M_Assert(matrix.cols() == 9,
+    M_Assert(matrix.cols() == 1,
              "The number of columns of the Input members is not correct, it should be 1");
 
     if (matrix.rows() == 1)
