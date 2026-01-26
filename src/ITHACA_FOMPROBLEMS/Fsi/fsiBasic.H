@@ -95,7 +95,7 @@ class fsiBasic:  public steadyNS, public UnsteadyProblem
         pointField point0;
         faceList faces0;
         cellList celllist0;
-        
+
         autoPtr<surfaceVectorField> _Uf;
         /// List of pointers used pointDisplacement modes
         PtrList<pointVectorField> DFields;
@@ -148,31 +148,32 @@ class fsiBasic:  public steadyNS, public UnsteadyProblem
         void truthSolve(label paramIndex,  fileName folder = "./ITHACAoutput/Offline/");
         /// method to set all fields back to values in 0 folder
         void restart();
-        
+
         ///  Method to construct RBFI for pointDisplacement
         ///void PodIpointDispl(Eigen::MatrixXd muu,  label NPdModes);
         void change_viscosity(double mu);
         void change_stiffness(scalar& mu);
-        void updateStiffnessAndRebuildSolver(scalar& newMu, word param_name="stiffness");
+        void updateStiffnessAndRebuildSolver(scalar& newMu,
+                                             word param_name = "stiffness");
         /// Help function for the prepareFoamData routine
-        void exportFoamFieldToNpy(const word& outputDir, 
-                           const word& fileName, 
-                           const List<scalar>& foamField);
-                           
+        void exportFoamFieldToNpy(const word& outputDir,
+                                  const word& fileName,
+                                  const List<scalar>& foamField);
+
         /// Prepare data such forces and centre of mass
-        void prepareFoamData(const word& outputPath);                   
+        void prepareFoamData(const word& outputPath);
         /// to load all centre of mass for training RBF network
         void loadCentreOfMassY(const fileName& baseDir = "ITHACAoutput");
-        
-       /*
-        mapFieldToMesh0( const volScalarField& sourceField,
-                 const Foam::fvMesh& mesh0,
-                 volScalarField& mappedField);
-                 
-        mapFieldToMesh0( const volVectorField& sourceField,
-                 const Foam::fvMesh& mesh0,
-                 volVectorField& mappedField);*/
-};        
+
+        /*
+         mapFieldToMesh0( const volScalarField& sourceField,
+                  const Foam::fvMesh& mesh0,
+                  volScalarField& mappedField);
+
+         mapFieldToMesh0( const volVectorField& sourceField,
+                  const Foam::fvMesh& mesh0,
+                  volVectorField& mappedField);*/
+};
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif

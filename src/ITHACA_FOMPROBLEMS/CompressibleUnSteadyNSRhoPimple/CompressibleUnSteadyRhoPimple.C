@@ -38,8 +38,9 @@
 // * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * * * //
 // Constructor
 CompressibleUnSteadyRhoPimple::CompressibleUnSteadyRhoPimple() {}
-CompressibleUnSteadyRhoPimple::CompressibleUnSteadyRhoPimple(int argc, char* argv[])
-  : UnsteadyProblem()
+CompressibleUnSteadyRhoPimple::CompressibleUnSteadyRhoPimple(int argc,
+        char* argv[])
+    : UnsteadyProblem()
 {
     _args = autoPtr<argList>
             (
@@ -53,11 +54,10 @@ CompressibleUnSteadyRhoPimple::CompressibleUnSteadyRhoPimple(int argc, char* arg
 
     argList& args = _args();
 #include "createTime.H"
-            Info << "Create a dynamic mesh for time = "
-             << runTime.timeName() << nl << endl;
-
-        meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
-        dynamicFvMesh& mesh = meshPtr();
+    Info << "Create a dynamic mesh for time = "
+         << runTime.timeName() << nl << endl;
+    meshPtr = autoPtr<dynamicFvMesh> (dynamicFvMesh::New(args, runTime));
+    dynamicFvMesh& mesh = meshPtr();
     _pimple = autoPtr<pimpleControl>
               (
                   new pimpleControl
@@ -81,7 +81,7 @@ CompressibleUnSteadyRhoPimple::CompressibleUnSteadyRhoPimple(int argc, char* arg
             IOobject::NO_WRITE
         )
     );
-    ITHACAparameters* para = ITHACAparameters::getInstance(mesh,_runTime());
+    ITHACAparameters* para = ITHACAparameters::getInstance(mesh, _runTime());
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
     //middleExport = para->ITHACAdict->lookupOrDefault<bool>("middleExport", true);
@@ -105,9 +105,8 @@ void CompressibleUnSteadyRhoPimple::truthSolve(word folder)
     runTime.setTime(Times[1], 1);
     runTime.setDeltaT(timeStep);
     nextWrite = startTime; // timeStep initialization
-    int counter =1;
+    int counter = 1;
 #include "NLsolve.H"
-
 }
 
 void CompressibleUnSteadyRhoPimple::changeViscosity(double mu_new)
@@ -151,16 +150,16 @@ fvVectorMatrix CompressibleUnSteadyRhoPimple::getUmatrix(volVectorField& U)
     volScalarField& rho = _rho();
     fv::options& fvOptions = _fvOptions();
     Ueqn_global.reset(
-                          new fvVectorMatrix
-                          ( fvm::ddt(rho, U) 
-                            + 
-                            getNLTerm(U)
-                            + 
-                            getViscTerm(U)
-                             ==
-                            fvOptions(rho, U)
-                           )
-                    );
+        new fvVectorMatrix
+        ( fvm::ddt(rho, U)
+          +
+          getNLTerm(U)
+          +
+          getViscTerm(U)
+          ==
+          fvOptions(rho, U)
+        )
+    );
     Ueqn_global().relax();
     fvOptions.constrain(Ueqn_global());
     return Ueqn_global();
@@ -207,8 +206,9 @@ fvScalarMatrix CompressibleUnSteadyRhoPimple::getEmatrix(volVectorField& U,
     return Eeqn_global();
 }
 
-surfaceScalarField CompressibleUnSteadyRhoPimple::getPhiHbyA(fvVectorMatrix& Ueqn,
-        volVectorField& U, volScalarField& p)
+surfaceScalarField CompressibleUnSteadyRhoPimple::getPhiHbyA(
+    fvVectorMatrix& Ueqn,
+    volVectorField& U, volScalarField& p)
 {
     volScalarField& rho = _rho();
     volScalarField rAU(1.0 /
@@ -220,14 +220,16 @@ surfaceScalarField CompressibleUnSteadyRhoPimple::getPhiHbyA(fvVectorMatrix& Ueq
     return phiHbyA;
 }
 
-volScalarField CompressibleUnSteadyRhoPimple::getDivPhiHbyA(fvVectorMatrix& Ueqn,
-        volVectorField& U, volScalarField& p)
+volScalarField CompressibleUnSteadyRhoPimple::getDivPhiHbyA(
+    fvVectorMatrix& Ueqn,
+    volVectorField& U, volScalarField& p)
 {
     volScalarField divPhiHbyA = fvc::div(getPhiHbyA(Ueqn, U, p));
     return divPhiHbyA;
 }
 
-surfaceScalarField CompressibleUnSteadyRhoPimple::getRhorAUf(fvVectorMatrix& Ueqn)
+surfaceScalarField CompressibleUnSteadyRhoPimple::getRhorAUf(
+    fvVectorMatrix& Ueqn)
 {
     volScalarField& rho = _rho();
     volScalarField rAU(1.0 /
@@ -236,13 +238,15 @@ surfaceScalarField CompressibleUnSteadyRhoPimple::getRhorAUf(fvVectorMatrix& Ueq
     return rhorAUf;
 }
 
-fvScalarMatrix CompressibleUnSteadyRhoPimple::getPoissonTerm(fvVectorMatrix& Ueqn, volScalarField& p)
+fvScalarMatrix CompressibleUnSteadyRhoPimple::getPoissonTerm(
+    fvVectorMatrix& Ueqn, volScalarField& p)
 {
     fvScalarMatrix poissonTerm = fvm::laplacian(getRhorAUf(Ueqn), p);
     return poissonTerm;
 }
 
-fvScalarMatrix CompressibleUnSteadyRhoPimple::getPmatrix(fvVectorMatrix& Ueqn, volVectorField& U, volScalarField& p)
+fvScalarMatrix CompressibleUnSteadyRhoPimple::getPmatrix(fvVectorMatrix& Ueqn,
+        volVectorField& U, volScalarField& p)
 {
     volScalarField& rho = _rho();
     fv::options& fvOptions = _fvOptions();
@@ -382,8 +386,7 @@ void CompressibleUnSteadyRhoPimple::restart()
            (
                new volScalarField(thermo.psi())
            );
-
-        _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
+    _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
 #include "initContinuityErrs.H"
     //turbulence->validate();
 }

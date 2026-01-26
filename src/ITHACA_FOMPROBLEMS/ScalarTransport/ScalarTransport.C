@@ -119,18 +119,19 @@ void ScalarTransport::truthSolve(word folder)
     //counter++;
     nextWrite = startTime;
     nextWrite += writeEvery;
+
     while (_simple().loop())
     {
         Info << "Time = " << _runTime().timeName() << nl << endl;
+
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix TEqn
             (
                 fvm::ddt(T)
-                + fvm::div(phi,T)
-                - fvm::laplacian(nu,T)
+                + fvm::div(phi, T)
+                - fvm::laplacian(nu, T)
             );
-
             TEqn.relax();
             fvOptions.constrain(TEqn);
             TEqn.solve();
@@ -202,12 +203,12 @@ void ScalarTransport::restart()
 //         autoPtr<simpleControl> _simple;
 //         // /// fvOptions
 //         autoPtr<fv::options> _fvOptions;
-        
+
 //         auto submesh = problem->EliObject->submesh;
 //         submesh->setCellSubset(problem->EliObject->uniqueMagicPoints() );
 //         submesh->subMesh().fvSchemes::readOpt() = problem->_mesh().fvSchemes::readOpt();
 //         submesh->subMesh().fvSolution::readOpt() = problem->_mesh().fvSolution::readOpt();
-        
+
 //         submesh->subMesh().fvSchemes::read();
 //         submesh->subMesh().fvSolution::read();
 //         //submesh().subMesh().write();
@@ -218,11 +219,11 @@ void ScalarTransport::restart()
 //                       submesh().subMesh()
 //                   )
 //               );
-        
+
 //         _fvOptions = autoPtr<fv::options>(new fv::options(submesh().subMesh()));
 //         simpleControl& simple = _simple();
 //         fv::options& fvOptions = _fvOptions();
-    
+
 //         autoPtr<volVectorField> _S;
 //         _S = autoPtr<volVectorField>
 //          (
@@ -269,7 +270,7 @@ void ScalarTransport::restart()
 //        //  Eigen::SparseMatrix<double> field2submesh;
 //        //  label M  = problem->EliObject->uniqueMagicPoints().size();
 //        //  field2submesh.resize(nCells*dim, M*dim);
- 
+
 //        //  for (unsigned int ith_subCell{0} ; ith_subCell < M; ith_subCell++)
 //        //  {
 //        //      for (unsigned int i= 0; i < dim; i++)
@@ -279,20 +280,20 @@ void ScalarTransport::restart()
 //        //  }
 //        //  field2submesh.makeCompressed();
 //        // /// Important matrices
-//        //  Eigen::MatrixXd X = problem->EliObject->U; 
+//        //  Eigen::MatrixXd X = problem->EliObject->U;
 //        //  Eigen::MatrixXd V = (X.transpose()*field2submesh*field2submesh.transpose()*X).inverse()*X.transpose()*field2submesh; // Ok
 //        //  /// Define the full matrix to the full field
-//        //  Eigen::MatrixXd Y = X*V; 
+//        //  Eigen::MatrixXd Y = X*V;
 //         ////
 //         nextWrite = startTime;
 //         nextWrite += writeEvery;
-        
+
 //         Eigen::SparseMatrix<double> Se;
 
 //         Eigen::VectorXd se;
 //         Eigen::SimplicialLLT<Eigen::SparseMatrix<double> > solver; //0k
 //         // performs a Cholesky factorization of A
-//         //Eigen::SimplicialCholesky<Eigen::SparseMatrix<double>> chol(Se);    
+//         //Eigen::SimplicialCholesky<Eigen::SparseMatrix<double>> chol(Se);
 //         //Eigen::SparseQR<Eigen::SparseMatrix<double> > solver;
 //         //Eigen::SimplicialLDLT <Eigen::SparseMatrix<double> > solver;
 //        //Eigen::SparseLU<Eigen::SparseMatrix<double>> solver;
@@ -308,7 +309,7 @@ void ScalarTransport::restart()
 
 //                 fvVectorMatrix SEqn
 //                 (
-//                     fvm::ddt(S) 
+//                     fvm::ddt(S)
 //                     + fvm::div(sphi,S)
 //                     - fvm::laplacian(problem->_nu(),S)
 //                 );
@@ -319,7 +320,7 @@ void ScalarTransport::restart()
 //                 Eigen::VectorXd a = solver.compute(Se).solve(se);
 //                 //std::cout << "a.rows() = " << a.rows() << std::endl;
 //                 //std::cout << "a.cols() = " << a.cols() << std::endl;
-//                 //Eigen::VectorXd z = Y*a; 
+//                 //Eigen::VectorXd z = Y*a;
 //                 //exit(0);
 //                 /// Solution in eigen format
 //                 S = Foam2Eigen::Eigen2field(_S(), a);
@@ -338,7 +339,7 @@ void ScalarTransport::restart()
 //         }
 
 //     }
-   
+
 //     bool checkWrite(Time& timeObject)
 //     {
 //         scalar diffnow = mag(nextWrite - atof(timeObject.timeName().c_str()));
@@ -354,7 +355,7 @@ void ScalarTransport::restart()
 //             return false;
 //         }
 //     }
-    
+
 // };
 
 
@@ -399,16 +400,16 @@ void ScalarTransport::restart()
 //     //     }
 //     // }
 //     // field2submesh.makeCompressed();
-    
+
 //     // /// Important matrices
-//     // Eigen::MatrixXd X = train.EliObject->U; 
+//     // Eigen::MatrixXd X = train.EliObject->U;
 //     // Eigen::MatrixXd V = (X.transpose()*field2submesh*field2submesh.transpose()*X).inverse()*X.transpose()*field2submesh; // Ok
 //     // /// Define the full matrix to the full field
-//     // Eigen::MatrixXd Y = X*V; 
+//     // Eigen::MatrixXd Y = X*V;
 //     // //std::cout << "Y.rows() = " << Y.rows() << std::endl;
 //     // //std::cout << "Y.cols() = " << Y.cols() << std::endl;
-//     // train.EliObject->MatrixOnline = Y; 
-   
+//     // train.EliObject->MatrixOnline = Y;
+
 //     // // PtrList<volVectorField> subfields;
 
 //     // // for (int i = 0; i < train.Ufield.size(); ++i)
@@ -416,9 +417,9 @@ void ScalarTransport::restart()
 
 //     // //   auto  subfld = train.EliObject->submesh().interpolate(train.Ufield[i] ).ref();
 //     // //   subfields.append(subfld);
-       
+
 //     // // }
-//     // // ITHACAstream::exportFields(subfields, "./ITHACAoutput/SubFields", subfields[0].name() );  
+//     // // ITHACAstream::exportFields(subfields, "./ITHACAoutput/SubFields", subfields[0].name() );
 
 //     // //exit(0);
 //     // std::clock_t startOn;
@@ -449,25 +450,25 @@ void ScalarTransport::restart()
 // }
 
 // // ########################################################
-    // label n = train.EliObject->uniqueMagicPoints().size();
-    // // int size = train.EliObject->magicPoints().size();
-    // Info << train.EliObject->magicPoints() << endl;
-    // Info << train.EliObject->uniqueMagicPoints() << endl;
-    // // //Info << train.EliObject->uniqueMagicPoints()[5] << endl;
+// label n = train.EliObject->uniqueMagicPoints().size();
+// // int size = train.EliObject->magicPoints().size();
+// Info << train.EliObject->magicPoints() << endl;
+// Info << train.EliObject->uniqueMagicPoints() << endl;
+// // //Info << train.EliObject->uniqueMagicPoints()[5] << endl;
 
-    // // for (int i = 0; i <n ; ++i)
-    // // {
-    // //     //Info << "mesh.cells() = " << train._mesh().cells()[train.EliObject->uniqueMagicPoints()[5]] << endl;
+// // for (int i = 0; i <n ; ++i)
+// // {
+// //     //Info << "mesh.cells() = " << train._mesh().cells()[train.EliObject->uniqueMagicPoints()[5]] << endl;
 
-    // //     auto cell  = train._mesh().cells()[train.EliObject->uniqueMagicPoints()[i]];
-    // //     Info << cell << endl;
-    // //     forAll (cell, faceI)
-    // //     {
-    // //         Info << cell[faceI] << endl;
-    // //     }
-    
-    // // }
-    // // // ##############################################################
+// //     auto cell  = train._mesh().cells()[train.EliObject->uniqueMagicPoints()[i]];
+// //     Info << cell << endl;
+// //     forAll (cell, faceI)
+// //     {
+// //         Info << cell[faceI] << endl;
+// //     }
+
+// // }
+// // // ##############################################################
 
 
 
@@ -512,7 +513,7 @@ void ScalarTransport::restart()
 
 //  exit(0);
 
- 
+
 // Eigen::VectorXd z  = problem->EliObject->MatrixOnline*y;
 
 //U = Foam2Eigen::Eigen2field(problem->_U(),z, true);

@@ -36,7 +36,7 @@ BCMethod lift;
 // eddy viscosity coefficients computation method
 viscDict 
 {   
-    package splinter; // mathtoolbox or splinter
+    package mathtoolbox; // mathtoolbox or splinter
     normalize true; // true or false, normalize data before interpolation
 
     // RBF parameters
@@ -44,7 +44,6 @@ viscDict
     kernel inverse_quadratic; 
     // RBF kernels: linear, cubic, quintic, thin_plate_spline, 
     // gaussian, multiquadric, inverse_multiquadric, inverse_quadratic
-    // GPR kernels: matern, squared_exp
     regularization false; // true or false, only for mathtoolbox RBF
     polynomial false; // true or false, only for mathtoolbox RBF
     lambda 1e-6; // regularization parameter, only for mathtoolbox RBF
@@ -52,6 +51,8 @@ viscDict
 
     // // GPR hyperparameters, only for mathtoolbox GPR
     // algorithm GPR;
+    // kernel matern;
+    // // GPR kernels: matern, squared_exp
     // optimizeHyperparams true; // true or false
     // kernelScale 0.1; // initial kernel scale
     // lengthScale 0.1; // initial length scale

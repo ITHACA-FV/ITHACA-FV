@@ -44,7 +44,6 @@ while (simple.loop(runTime))
 #include "decEqns.H"
 #include "TEqn.H"
     }
-
     laminarTransport.correct();
     turbulence->correct();
     runTime.write();

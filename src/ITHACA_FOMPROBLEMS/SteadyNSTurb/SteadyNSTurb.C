@@ -211,6 +211,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor1_cache(label NUmodes,
     {
         // Cache only one row (j fixed)
         List<tmp<volVectorField>> lapRow(cSize);
+
         for (label k = 0; k < cSize; ++k)
         {
             lapRow[k] = fvc::laplacian(nutModes[j], L_U_SUPmodes[k]);
@@ -233,6 +234,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor1_cache(label NUmodes,
                                       "ct1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                           NSUPmodes) + "_" + name(nNutModes) + "_t");
     }
+
     return ct1Tensor;
 }
 
@@ -309,6 +311,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2_cache(label NUmodes,
     {
         // Cache only one j-row
         List<tmp<volVectorField>> divRow(cSize);
+
         for (label k = 0; k < cSize; ++k)
         {
             divRow[k] = fvc::div(nutModes[j] * dev((fvc::grad(L_U_SUPmodes[k]))().T()));
@@ -319,7 +322,8 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2_cache(label NUmodes,
             for (label k = 0; k < cSize; ++k)
             {
                 const volVectorField& divRowField = divRow[k]();
-                ct2Tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & divRowField).value();
+                ct2Tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] &
+                                     divRowField).value();
             }
         }
     }
@@ -331,6 +335,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2_cache(label NUmodes,
                                       "ct2_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                           NSUPmodes) + "_" + name(nNutModes) + "_t");
     }
+
     return ct2Tensor;
 }
 
@@ -371,8 +376,8 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
 {
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::Tensor<double, 3> ct1PPETensor(NPmodes, nNutModes, cSize);
-
     List<tmp<volVectorField>> PmodesGrad(NPmodes);
+
     for (label i = 0; i < NPmodes; ++i)
     {
         PmodesGrad[i] = fvc::grad(Pmodes[i]);
@@ -382,6 +387,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
     {
         // Cache one row (j fixed)
         List<tmp<volVectorField>> lapRow(cSize);
+
         for (label k = 0; k < cSize; ++k)
         {
             lapRow[k] = fvc::laplacian(nutModes[j], L_U_SUPmodes[k]);
@@ -390,6 +396,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
         for (label i = 0; i < NPmodes; ++i)
         {
             const volVectorField& gradPi = PmodesGrad[i]();
+
             for (label k = 0; k < cSize; ++k)
             {
                 const volVectorField& lapRowField = lapRow[k]();
@@ -405,6 +412,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
                                       "ct1PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                           NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
     }
+
     return ct1PPETensor;
 }
 
@@ -444,8 +452,8 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
 {
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::Tensor<double, 3> ct2PPETensor(NPmodes, nNutModes, cSize);
-
     List<tmp<volVectorField>> PmodesGrad(NPmodes);
+
     for (label i = 0; i < NPmodes; ++i)
     {
         PmodesGrad[i] = fvc::grad(Pmodes[i]);
@@ -455,6 +463,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
     {
         // Cache one row of div fields for this nutMode[j]
         List<tmp<volVectorField>> divLow(cSize);
+
         for (label k = 0; k < cSize; ++k)
         {
             divLow[k] = fvc::div(nutModes[j] * dev2((fvc::grad(L_U_SUPmodes[k]))().T()));
@@ -463,6 +472,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
         for (label i = 0; i < NPmodes; ++i)
         {
             const volVectorField& gradPi = PmodesGrad[i]();
+
             for (label k = 0; k < cSize; ++k)
             {
                 const volVectorField& divLowField = divLow[k]();
@@ -478,6 +488,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
                                       "ct2PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                           NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
     }
+
     return ct2PPETensor;
 }
 

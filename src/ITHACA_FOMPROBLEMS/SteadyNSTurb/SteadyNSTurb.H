@@ -193,7 +193,7 @@ class SteadyNSTurb: public steadyNS
         ///
         Eigen::Tensor<double, 3 > turbulenceTensor1(label NUmodes,
                 label NSUPmodes, label nNutModes);
-        
+
         //--------------------------------------------------------------------------
         /// @brief      ct1 tensor for the turbulence treatement using the cached procedure
         ///

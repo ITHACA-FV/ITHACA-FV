@@ -33,7 +33,7 @@ namespace ITHACAtorch
 {
 template<class Type, template<class> class PatchField, class GeoMesh>
 ConvLayer<Type, PatchField, GeoMesh>::ConvLayer(
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> & snapshots):
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& snapshots):
     _snapshots(snapshots),
     mesh(snapshots[0].mesh()),
     convDict(autoPtr<IOdictionary>

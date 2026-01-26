@@ -47,8 +47,8 @@ _T0 = autoPtr<volScalarField>
       (
           new volScalarField(T0)
       );
-      
-      
+
+
 _U = autoPtr<volVectorField>
      (
          new volVectorField
@@ -64,7 +64,7 @@ _U = autoPtr<volVectorField>
              mesh
          )
      );
-volVectorField& U = _U();      
+volVectorField& U = _U();
 
 Info << "Reading/calculating face flux field phi\n" << endl;
 

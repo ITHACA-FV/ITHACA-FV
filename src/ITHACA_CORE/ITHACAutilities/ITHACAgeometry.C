@@ -82,7 +82,6 @@ List<label> getIndices(const fvMesh& mesh, int index, int layers)
     {
         out2.append(out[uniqueIndex[i]]);
     }
-
     return out2;
 }
 
@@ -111,7 +110,6 @@ List<label> getIndices(const fvMesh& mesh, int index_row,
     {
         out2.append(out[uniqueIndex[i]]);
     }
-
     return out2;
 }
 
@@ -312,7 +310,6 @@ Eigen::VectorXd boudaryFaceToCellDistance(
         label faceOwner = faceCells[faceI] ;
         cellFaceDistance(faceI) = mag(mesh.C()[faceOwner] - mesh.Cf()[faceID]);
     }
-
     return (cellFaceDistance);
 }
 

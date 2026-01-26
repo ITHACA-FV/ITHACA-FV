@@ -28,7 +28,7 @@ License
 
 tmp<fvVectorMatrix> tUEqn
 (
-    fvm::ddt(U) 
+    fvm::ddt(U)
     + fvm::div(phi, U)
     //+ MRF.DDt(U)
     + turbulence->divDevReff(U)

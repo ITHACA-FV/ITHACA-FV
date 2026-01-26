@@ -287,6 +287,35 @@ cnpy::NpyArray cnpy::load_the_npy_file(std::string fname)
     return load_the_npy_file(fp);
 }
 
+void parse_zip64_sizes(const std::vector<char>& extra_field,
+                       uint32_t& compr_bytes, uint32_t& uncompr_bytes)
+{
+    if (extra_field.size() >= 4 && (compr_bytes == 0xFFFFFFFF
+                                    || uncompr_bytes == 0xFFFFFFFF))
+    {
+        uint16_t extra_id = *reinterpret_cast<const uint16_t*>(&extra_field[0]);
+        uint16_t extra_size = *reinterpret_cast<const uint16_t*>(&extra_field[2]);
+
+        if (extra_id == 0x0001 && extra_size >= 16)  // ZIP64 extended info
+        {
+            size_t offset = 4;
+
+            if (uncompr_bytes == 0xFFFFFFFF)
+            {
+                uncompr_bytes = static_cast<uint32_t>(*reinterpret_cast<const uint64_t*>
+                                                      (&extra_field[offset]));
+                offset += 8;
+            }
+
+            if (compr_bytes == 0xFFFFFFFF)
+            {
+                compr_bytes = static_cast<uint32_t>(*reinterpret_cast<const uint64_t*>
+                                                    (&extra_field[offset]));
+            }
+        }
+    }
+}
+
 cnpy::NpyArray load_the_npz_array(FILE* fp, uint32_t compr_bytes,
                                   uint32_t uncompr_bytes)
 {
@@ -329,6 +358,7 @@ cnpy::NpyArray load_the_npz_array(FILE* fp, uint32_t compr_bytes,
 cnpy::npz_t cnpy::npz_load(std::string fname)
 {
     FILE* fp = fopen(fname.c_str(), "rb");
+    std::cerr << "Line: 350 of file cnpy.C" << std::endl;
 
     if (!fp)
     {
@@ -340,7 +370,8 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
     while (1)
     {
         std::vector<char> local_header(30);
-        size_t headerres = fread(& local_header[0], sizeof(char), 30, fp);
+        size_t headerres = fread(&local_header[0], sizeof(char), 30, fp);
+        std::cerr << headerres << std::endl;
 
         if (headerres != 30)
         {
@@ -354,9 +385,9 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
         }
 
         //read in the variable name
-        uint16_t name_len = * (uint16_t*) & local_header[26];
+        uint16_t name_len = *(uint16_t*) &local_header[26];
         std::string varname(name_len, ' ');
-        size_t vname_res = fread(& varname[0], sizeof(char), name_len, fp);
+        size_t vname_res = fread(&varname[0], sizeof(char), name_len, fp);
 
         if (vname_res != name_len)
         {
@@ -366,12 +397,12 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
         //erase the lagging .npy
         varname.erase(varname.end() - 4, varname.end());
         //read in the extra field
-        uint16_t extra_field_len = * (uint16_t*) & local_header[28];
+        uint16_t extra_field_len = *(uint16_t*) &local_header[28];
+        std::vector<char> extra_field(extra_field_len);
 
         if (extra_field_len > 0)
         {
-            std::vector<char> buff(extra_field_len);
-            size_t efield_res = fread(& buff[0], sizeof(char), extra_field_len, fp);
+            size_t efield_res = fread(&extra_field[0], sizeof(char), extra_field_len, fp);
 
             if (efield_res != extra_field_len)
             {
@@ -379,9 +410,11 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
             }
         }
 
-        uint16_t compr_method = * reinterpret_cast<uint16_t*>(& local_header[0] + 8);
-        uint32_t compr_bytes = * reinterpret_cast<uint32_t*>(& local_header[0] + 18);
-        uint32_t uncompr_bytes = * reinterpret_cast<uint32_t*>(& local_header[0] + 22);
+        uint16_t compr_method = *reinterpret_cast<uint16_t*>(&local_header[0] + 8);
+        uint32_t compr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 18);
+        uint32_t uncompr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 22);
+        // ZIP64 support: if sizes are 0xFFFFFFFF, read from extra field
+        parse_zip64_sizes(extra_field, compr_bytes, uncompr_bytes);
 
         if (compr_method == 0)
         {
@@ -409,7 +442,7 @@ cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
     while (1)
     {
         std::vector<char> local_header(30);
-        size_t header_res = fread(& local_header[0], sizeof(char), 30, fp);
+        size_t header_res = fread(&local_header[0], sizeof(char), 30, fp);
 
         if (header_res != 30)
         {
@@ -423,9 +456,9 @@ cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
         }
 
         //read in the variable name
-        uint16_t name_len = * (uint16_t*) & local_header[26];
+        uint16_t name_len = *(uint16_t*) &local_header[26];
         std::string vname(name_len, ' ');
-        size_t vname_res = fread(& vname[0], sizeof(char), name_len, fp);
+        size_t vname_res = fread(&vname[0], sizeof(char), name_len, fp);
 
         if (vname_res != name_len)
         {
@@ -434,11 +467,24 @@ cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
 
         vname.erase(vname.end() - 4, vname.end()); //erase the lagging .npy
         //read in the extra field
-        uint16_t extra_field_len = * (uint16_t*) & local_header[28];
-        fseek(fp, extra_field_len, SEEK_CUR); //skip past the extra field
-        uint16_t compr_method = * reinterpret_cast<uint16_t*>(& local_header[0] + 8);
-        uint32_t compr_bytes = * reinterpret_cast<uint32_t*>(& local_header[0] + 18);
-        uint32_t uncompr_bytes = * reinterpret_cast<uint32_t*>(& local_header[0] + 22);
+        uint16_t extra_field_len = *(uint16_t*) &local_header[28];
+        std::vector<char> extra_field(extra_field_len);
+
+        if (extra_field_len > 0)
+        {
+            size_t efield_res = fread(&extra_field[0], sizeof(char), extra_field_len, fp);
+
+            if (efield_res != extra_field_len)
+            {
+                throw std::runtime_error("npz_load: failed fread");
+            }
+        }
+
+        uint16_t compr_method = *reinterpret_cast<uint16_t*>(&local_header[0] + 8);
+        uint32_t compr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 18);
+        uint32_t uncompr_bytes = *reinterpret_cast<uint32_t*>(&local_header[0] + 22);
+        // ZIP64 support: if sizes are 0xFFFFFFFF, read from extra field
+        parse_zip64_sizes(extra_field, compr_bytes, uncompr_bytes);
 
         if (vname == varname)
         {
@@ -449,9 +495,8 @@ cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
         }
         else
         {
-            //skip past the data
-            uint32_t size = * (uint32_t*) & local_header[22];
-            fseek(fp, size, SEEK_CUR);
+            //skip past the data (use compr_bytes for compressed data)
+            fseek(fp, compr_bytes, SEEK_CUR);
         }
     }
 
@@ -460,6 +505,7 @@ cnpy::NpyArray cnpy::npz_load(std::string fname, std::string varname)
     throw std::runtime_error("npz_load: Variable name " + varname + " not found in "
                              + fname);
 }
+
 
 cnpy::NpyArray cnpy::npy_load(std::string fname)
 {

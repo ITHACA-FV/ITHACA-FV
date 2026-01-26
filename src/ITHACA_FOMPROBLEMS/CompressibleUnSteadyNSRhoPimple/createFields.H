@@ -69,9 +69,9 @@ volScalarField& rho = _rho();
 volScalarField rho0(rho);
 
 _rho0 = autoPtr<volScalarField>
-      (
-          new volScalarField(rho0)
-      );
+        (
+            new volScalarField(rho0)
+        );
 
 _E = autoPtr<volScalarField>
      (
@@ -152,9 +152,10 @@ _psi = autoPtr<volScalarField>
 _fvOptions = autoPtr<fv::options>(new fv::options(mesh));
 
 
-correctPhi = pimple.dict().getOrDefault("correctPhi",mesh.dynamic());
-checkMeshCourantNo = pimple.dict().getOrDefault("checkMeshCourantNo",false);
-moveMeshOuterCorrectors = pimple.dict().getOrDefault("moveMeshOuterCorrectors",false);
+correctPhi = pimple.dict().getOrDefault("correctPhi", mesh.dynamic());
+checkMeshCourantNo = pimple.dict().getOrDefault("checkMeshCourantNo", false);
+moveMeshOuterCorrectors = pimple.dict().getOrDefault("moveMeshOuterCorrectors",
+                          false);
 //const dimensionedScalar rhoMax("rhoMax", dimDensity, GREAT, pimple.dict());
 //const dimensionedScalar rhoMin("rhoMin", dimDensity, Zero, pimple.dict());
 

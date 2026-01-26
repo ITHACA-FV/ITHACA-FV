@@ -79,6 +79,7 @@ Foam::tmp<Foam::Field<Type >> Foam::RBFInterpolation::interpolate
             alpha[row] += mat[row][col] * ctrlField[col];
         }
     }
+
     if (polynomials_)
     {
         for
@@ -94,6 +95,7 @@ Foam::tmp<Foam::Field<Type >> Foam::RBFInterpolation::interpolate
             }
         }
     }
+
     // Evaluation
     scalar t;
     // Algorithmic improvement, Matteo Lombardi.  21/Mar/2011
@@ -141,7 +143,6 @@ Foam::tmp<Foam::Field<Type >> Foam::RBFInterpolation::interpolate
             result[flPoint] = w * result[flPoint];
         }
     }
-
     return tresult;
 }
 

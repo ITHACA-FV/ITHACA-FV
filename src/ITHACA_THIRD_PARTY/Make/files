@@ -11,4 +11,18 @@ splinter/src/serializer.C
 splinter/src/utilities.C
 splinter/src/rbfspline.C
 
+../thirdparty/mathtoolbox/src/acquisition-functions.cpp
+../thirdparty/mathtoolbox/src/bayesian-optimization.cpp
+../thirdparty/mathtoolbox/src/bfgs.cpp
+../thirdparty/mathtoolbox/src/classical-mds.cpp
+../thirdparty/mathtoolbox/src/gaussian-process-regression.cpp
+../thirdparty/mathtoolbox/src/gradient-descent.cpp
+../thirdparty/mathtoolbox/src/kernel-functions.cpp
+../thirdparty/mathtoolbox/src/l-bfgs.cpp
+../thirdparty/mathtoolbox/src/log-determinant.cpp
+../thirdparty/mathtoolbox/src/matrix-inversion.cpp
+../thirdparty/mathtoolbox/src/probability-distributions.cpp
+../thirdparty/mathtoolbox/src/rbf-interpolation.cpp
+../thirdparty/mathtoolbox/src/som.cpp
+
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_THIRD_PARTY

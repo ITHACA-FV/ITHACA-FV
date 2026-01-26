@@ -418,6 +418,7 @@ S DEIM<T>::generateSubmesh(label layers, const fvMesh& mesh, S field,
 
         uniqueMagicPoints() = ITHACAutilities::combineList(totalMagicPoints());
     }
+
 #if OPENFOAM >= 1812
     submesh->setCellSubset(uniqueMagicPoints());
 #else
@@ -440,6 +441,7 @@ S DEIM<T>::generateSubmesh(label layers, const fvMesh& mesh, S field,
         ITHACAstream::exportSolution(Indici, "1", "./ITHACAoutput/DEIM/" + FunctionName
                                     );
     }
+
     totalMagicPoints().write();
     uniqueMagicPoints().write();
     return f;
@@ -505,6 +507,7 @@ S DEIM<T>::generateSubmeshMatrix(label layers, const fvMesh& mesh, S field,
                        layers));
         totalMagicPointsA().append(indices);
     }
+
     uniqueMagicPointsA() = ITHACAutilities::combineList(totalMagicPointsA());
 #if OPENFOAM >= 1812
     submeshA->setCellSubset(uniqueMagicPointsA());
@@ -532,6 +535,7 @@ S DEIM<T>::generateSubmeshMatrix(label layers, const fvMesh& mesh, S field,
         totalMagicPointsA().write();
         uniqueMagicPointsA().write();
     }
+
     runSubMeshA = true;
     return f;
 }
@@ -599,6 +603,7 @@ S DEIM<T>::generateSubmeshVector(label layers, const fvMesh& mesh, S field,
             ITHACAutilities::assignONE(Indici, indices);
         }
     }
+
     uniqueMagicPointsB() = ITHACAutilities::combineList(totalMagicPointsB());
     std::cout.setstate(std::ios_base::failbit);
 #if OPENFOAM >= 1812
@@ -625,6 +630,7 @@ S DEIM<T>::generateSubmeshVector(label layers, const fvMesh& mesh, S field,
         totalMagicPointsB().write();
         uniqueMagicPointsB().write();
     }
+
     runSubMeshB = true;
     return f;
 }
@@ -784,6 +790,7 @@ void DEIM<T>::setMagicPoints(labelList& newMagicPoints, labelList& newxyz)
     {
         magicPoints().append(newMagicPoints[i]);
     }
+
     xyz.reset
     (
         autoPtr<IOList<label >>
@@ -807,6 +814,7 @@ void DEIM<T>::setMagicPoints(labelList& newMagicPoints, labelList& newxyz)
     {
         xyz().append(newxyz[i]);
     }
+
     magicPoints().write();
     xyz().write();
 }
