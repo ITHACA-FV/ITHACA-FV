@@ -11,6 +11,4 @@ splinter/src/serializer.C
 splinter/src/utilities.C
 splinter/src/rbfspline.C
 
-../thirdparty/mathtoolbox/src/rbf-interpolation.cpp
-
 LIB = $(FOAM_USER_LIBBIN)/libITHACA_THIRD_PARTY

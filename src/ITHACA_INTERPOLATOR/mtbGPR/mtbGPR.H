@@ -27,50 +27,53 @@ License
     along with ITHACA-FV. If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    RBFinterpolator Declaration
+    mtbGPR
 Description
-    Radial Basis Function Interpolator interface class that wraps different RBF packages.
-Source files
-    RBFinterpolator.C
+    Gaussian Process Regression wrapper around the Mathtoolbox implementation.
+SourceFiles
+    mtbGPR.C
 \*---------------------------------------------------------------------------*/
 
-#ifndef RBFinterpolator_H
-#define RBFinterpolator_H
+#ifndef mtbGPR_H
+#define mtbGPR_H
 
 #include <Eigen/Core>
 #include <memory>
-#include <string>
+#include <mathtoolbox/gaussian-process-regression.hpp>
 #include "dictionary.H"
+#include "Ostream.H"
 
-// Forward declarations
-class mtbRBF;
-class splinterRBF;
-
-class RBFinterpolator
+class mtbGPR
 {
 public:
     // Constructor from OpenFOAM dictionary
-    RBFinterpolator(const Foam::dictionary& dict);
+    explicit mtbGPR(const Foam::dictionary& dict);
 
     // Destructor
-    ~RBFinterpolator();
+    ~mtbGPR();
 
     // Fit function
     void fit(const Eigen::MatrixXd& X, const Eigen::VectorXd& y);
 
-    // Predict function
-    double predict(const Eigen::VectorXd& x);
+    // Predict function (mean only)
+    Foam::scalar predict(const Eigen::VectorXd& x);
 
     // Predict for multiple points
     Eigen::VectorXd predict(const Eigen::MatrixXd& X);
 
-    // Print model information
+    // Print model info
     void printInfo() const;
 
 private:
-    std::unique_ptr<mtbRBF> mtb_;
-    std::unique_ptr<splinterRBF> splinter_;
-    std::string package_;
+    mathtoolbox::GaussianProcessRegressor::KernelType parseKernelType(const Foam::word& kernelWord) const;
+
+    std::unique_ptr<mathtoolbox::GaussianProcessRegressor> impl_;
+    Foam::word kernelTypeWord_;
+    bool useDataNormalization_;
+    bool optimizeHyperparams_;
+    Foam::scalar kernelScale_;
+    Foam::scalar lengthScale_;
+    Foam::scalar noise_; // observation noise hyperparameter
 };
 
 #endif

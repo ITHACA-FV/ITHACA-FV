@@ -34,18 +34,28 @@ maxIter    500;
 BCMethod lift;
 
 // eddy viscosity coefficients computation method
-viscRBFdict 
+viscDict 
 {   
     package splinter; // mathtoolbox or splinter
-    algorithm RBF; // RBF for splinter, RBF or GPR for mathtoolbox. GPR not yet implemented
+    normalize true; // true or false, normalize data before interpolation
+
+    // RBF parameters
+    algorithm RBF; // RBF for splinter, RBF or GPR for mathtoolbox.
     kernel inverse_quadratic; 
-    // linear, cubic, quintic, thin_plate_spline, 
+    // RBF kernels: linear, cubic, quintic, thin_plate_spline, 
     // gaussian, multiquadric, inverse_multiquadric, inverse_quadratic
+    // GPR kernels: matern, squared_exp
     regularization false; // true or false, only for mathtoolbox RBF
     polynomial false; // true or false, only for mathtoolbox RBF
     lambda 1e-6; // regularization parameter, only for mathtoolbox RBF
     epsilon 0.5; // shape parameter, for both mathtoolbox and splinter RBF
-    normalize true; // true or false, only for mathtoolbox RBF
+
+    // // GPR hyperparameters, only for mathtoolbox GPR
+    // algorithm GPR;
+    // optimizeHyperparams true; // true or false
+    // kernelScale 0.1; // initial kernel scale
+    // lengthScale 0.1; // initial length scale
+    // noise 1e-5; // initial noise level
 };
 
 // Export Reduced Matrices

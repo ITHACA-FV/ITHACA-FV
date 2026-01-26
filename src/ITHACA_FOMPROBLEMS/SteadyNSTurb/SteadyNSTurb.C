@@ -85,7 +85,7 @@ SteadyNSTurb::SteadyNSTurb(int argc, char* argv[])
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
     M_Assert(bcMethod == "lift" || bcMethod == "penalty",
              "The BC method must be set to lift or penalty in ITHACAdict");
-    viscRBFdict = ITHACAdict->subDict("viscRBFdict");
+    viscDict = ITHACAdict->subDict("viscDict");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -825,8 +825,8 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
     rbfSplines.resize(nNutModes);
     for (label i = 0; i < nNutModes; i++)
     {
-        // Create RBFinterpolator instance
-        rbfSplines[i] = std::make_shared<RBFinterpolator>(viscRBFdict);
+        // Create ithacaInterpolator instance
+        rbfSplines[i] = std::make_shared<ithacaInterpolator>(viscDict);
         
         // Prepare training data: X is parameter matrix (transposed), y is coefficient vector
         Eigen::MatrixXd X = mu.transpose();  // Now each row is a parameter sample
@@ -834,10 +834,10 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
         
         rbfSplines[i]->fit(X, y);
         
-        Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
+        Info << "Constructing ithacaInterpolator for mode " << i + 1 << endl;
     }
 
-    Info<< "Info on RBF interpolators for nut coefficients: "<< endl;
+    Info<< "Info on interpolators for nut coefficients: "<< endl;
     rbfSplines[0]->printInfo();
 }
 
@@ -1090,8 +1090,8 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     rbfSplines.resize(nNutModes);
     for (label i = 0; i < nNutModes; i++)
     {
-        // Create RBFinterpolator instance
-        rbfSplines[i] = std::make_shared<RBFinterpolator>(viscRBFdict);
+        // Create ithacaInterpolator instance
+        rbfSplines[i] = std::make_shared<ithacaInterpolator>(viscDict);
         
         // Prepare training data: X is parameter matrix (transposed), y is coefficient vector
         Eigen::MatrixXd X = mu.transpose();  // Now each row is a parameter sample
@@ -1099,8 +1099,8 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
         
         rbfSplines[i]->fit(X, y);
         
-        Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
+        Info << "Constructing ithacaInterpolator for mode " << i + 1 << endl;
     }
-    Info<< "Info on RBF interpolators for nut coefficients: "<< endl;
+    Info<< "Info on interpolators for nut coefficients: "<< endl;
     rbfSplines[0]->printInfo();
 }
