@@ -18,6 +18,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/OF_EXT/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/lnInclude \    
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/lnInclude \   
+    -I$(LIB_ITHACA_SRC)/ITHACA_INTERPOLATOR/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/lnInclude \    
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/Foam2Eigen \
@@ -42,6 +43,7 @@ EXE_LIBS = \
     -lforces \
     -lITHACA_ROMPROBLEMS \
     -lITHACA_FOMPROBLEMS \
+    -lITHACA_INTERPOLATOR \
     -lITHACA_THIRD_PARTY \
     -lITHACA_CORE \
     -lITHACA_DEIM \

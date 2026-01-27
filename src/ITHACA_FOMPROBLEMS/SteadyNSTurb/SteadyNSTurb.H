@@ -45,6 +45,7 @@ SourceFiles
 #include "reductionProblem.H"
 #include "ITHACAstream.H"
 #include <iostream>
+#include "ithacaInterpolator.H"
 #include <datatable.h>
 #include <bspline.h>
 #include <bsplinebuilder.h>
@@ -79,11 +80,8 @@ class SteadyNSTurb: public steadyNS
         /// List of POD modes for eddy viscosity
         volScalarModes nutModes;
 
-        /// Create a samples for interpolation
-        std::vector<SPLINTER::DataTable*> samples;
-
-        /// Create a RBF splines for interpolation
-        std::vector<SPLINTER::RBFSpline*> rbfSplines;
+        /// Interpolators for nut coefficient interpolation
+        std::vector<std::shared_ptr<ithacaInterpolator>> rbfSplines;
 
         /// Turbulent viscosity matrix
         Eigen::MatrixXd btMatrix;
@@ -119,7 +117,7 @@ class SteadyNSTurb: public steadyNS
         Eigen::VectorXd nutCoeff;
 
         /// The way to compute the eddy viscosity snapshots
-        word viscCoeff;
+        dictionary viscDict;
 
         /// Number of viscoisty modes used for the projection
         label nNutModes;

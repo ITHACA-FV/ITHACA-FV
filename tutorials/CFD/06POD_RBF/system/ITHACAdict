@@ -1,4 +1,4 @@
-/*--------------------------------*- C++ -*----------------------------------*\
+ /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  2.2.2                                 |
@@ -34,7 +34,30 @@ maxIter    500;
 BCMethod lift;
 
 // eddy viscosity coefficients computation method
-viscCoeff RBF;
+viscDict 
+{   
+    package mathtoolbox; // mathtoolbox or splinter
+    normalize true; // true or false, normalize data before interpolation
+
+    // RBF parameters
+    algorithm RBF; // RBF for splinter, RBF or GPR for mathtoolbox.
+    kernel inverse_quadratic; 
+    // RBF kernels: linear, cubic, quintic, thin_plate_spline, 
+    // gaussian, multiquadric, inverse_multiquadric, inverse_quadratic
+    regularization false; // true or false, only for mathtoolbox RBF
+    polynomial false; // true or false, only for mathtoolbox RBF
+    lambda 1e-6; // regularization parameter, only for mathtoolbox RBF
+    epsilon 0.5; // shape parameter, for both mathtoolbox and splinter RBF
+
+    // // GPR hyperparameters, only for mathtoolbox GPR
+    // algorithm GPR;
+    // kernel matern;
+    // // GPR kernels: matern, squared_exp
+    // optimizeHyperparams true; // true or false
+    // kernelScale 0.1; // initial kernel scale
+    // lengthScale 0.1; // initial length scale
+    // noise 1e-5; // initial noise level
+};
 
 // Export Reduced Matrices
 exportPython 1;

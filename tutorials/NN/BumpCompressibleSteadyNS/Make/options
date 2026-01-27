@@ -49,6 +49,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
     -I$(LIB_ITHACA_SRC)/ITHACA_TORCH \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
+    -I$(LIB_ITHACA_SRC)/ITHACA_INTERPOLATOR/lnInclude \
     -I$(TORCH_LIBRARIES)/include \
     -I$(TORCH_LIBRARIES)/include/torch/csrc/api/include \
     -I$(LIB_ITHACA_SRC)/OF_EXT/lnInclude \
@@ -70,6 +71,7 @@ EXE_LIBS = \
     -lforces \
     -lITHACA_ROMPROBLEMS \
     -lITHACA_FOMPROBLEMS \
+    -lITHACA_INTERPOLATOR \
     -lITHACA_THIRD_PARTY \
     -lITHACA_CORE \
     -L$(FOAM_USER_LIBBIN) \

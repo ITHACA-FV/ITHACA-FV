@@ -15,8 +15,8 @@ EXE_INC = \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude\
     -I$(LIB_ITHACA_SRC)/ITHACA_FOMPROBLEMS/lnInclude \
-    -I$(LIB_ITHACA_SRC)/ITHACA_CORE/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_ROMPROBLEMS/lnInclude \
+    -I$(LIB_ITHACA_SRC)/ITHACA_INTERPOLATOR/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_DEIM \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
@@ -48,6 +48,7 @@ EXE_LIBS = \
     -latmosphericModels\
     -lITHACA_ROMPROBLEMS \
     -lITHACA_FOMPROBLEMS \
+    -lITHACA_INTERPOLATOR \
     -lITHACA_THIRD_PARTY \
     -lITHACA_CORE \
     -lITHACA_DEIM \
