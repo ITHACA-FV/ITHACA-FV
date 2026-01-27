@@ -1,3 +1,3 @@
 Foam2EigenTest.C
 
-EXE = Foam2EigenTest
+EXE = Foam2EigenTest.exe
