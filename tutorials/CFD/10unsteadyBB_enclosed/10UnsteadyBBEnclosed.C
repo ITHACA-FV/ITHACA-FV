@@ -362,7 +362,6 @@ int main(int argc, char* argv[])
 /// \file
 /// \brief Implementation of tutorial 10 for an unsteady Buoyant Boussinesq problem for an enclosed cavity
 ///
-/// \example 10UnsteadyBBEnclosed.C
 /// \section intro_unsteadyBB Introduction to tutorial 10
 /// In this tutorial an unsteady Buoyant Boussinesq (BB) 2D problem with paramerized temperature boundary conditions is implemented.
 /// The physical problem represents a differentially heated cavity. A uniform temperature is

@@ -324,7 +324,6 @@ int main(int argc, char* argv[])
 /// \file
 /// \brief Implementation of tutorial 17 for an unsteady Navier-Stokes problem with time-dependent inlet boundary conditions
 ///
-/// \example 17YJunction.C
 /// \section intro_UnsteadyNS Introduction to tutorial 17
 /// In this tutorial, we contruct a reduced order model for a Y-junction flow problem.
 /// The Y-junction consists of two inlets and one outlet channel whose time-dependent

@@ -296,7 +296,6 @@ int main(int argc, char* argv[])
 /// \file
 /// \brief Implementation of a tutorial in the incremental POD
 
-/// \example 20incrementalPOD.C
 /// \section intro_IPOD Introduction to the incremental POD tutorial
 /// In this tutorial, we test an incremental POD algorithm.
 /// The incremental POD algorithm implemented in ITHACA-FV is the one proposed by Oxberry et al. in the paper "Limited-memory adaptive snapshot selection

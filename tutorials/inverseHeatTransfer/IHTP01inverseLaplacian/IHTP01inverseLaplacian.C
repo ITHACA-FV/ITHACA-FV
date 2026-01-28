@@ -206,7 +206,6 @@ int main(int argc, char* argv[])
 /// \file
 /// \brief Implementation of an inverse heat transfer problem. Given a set of pointwise temeprature measurements in the interior of the domain, we want to estimate the boundary heat flux.
 
-/// \example IHTP01inverseLaplacian.C
 /// \section intro_IHTP01inverseLaplacian Boundary heat flux estimation
 /// The tutorial consists in the estimation of the boundary heat flux \f$g\f$ given a set of pointwise temperature measurements in the interior of the domain.
 ///

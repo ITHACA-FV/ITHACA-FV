@@ -155,7 +155,6 @@ int main(int argc, char* argv[])
 /// \file
 /// \brief Implementation of tutorial 19 for an unsteady Navier-Stokes problem
 ///
-/// \example 19UnsteadyNSExplicit.C
 /// \section intro_UnsteadyNSExplicit Introduction to tutorial 19
 /// In this tutorial we contruct a reduced order model for the classical lid driven cavity benchmark, which is a closed flow problem.
 /// The length of the two-dimensional square cavity is \f$L\f$ = 1.0 m. A (64 \f$\times\f$ 64) structured mesh with quadrilateral cells is constructed on the domain.
