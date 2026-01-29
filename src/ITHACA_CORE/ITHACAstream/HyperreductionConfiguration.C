@@ -73,7 +73,7 @@ void HyperreductionConfiguration::initializeHyperreduction(std::unique_ptr<PODCo
 {
     if (m_HRMethod == "GappyDEIM")
     {
-        m_HRMethod == "DEIM";
+        m_HRMethod = "DEIM";
     }
 
     if (m_interpFieldCentered)
