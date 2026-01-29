@@ -98,7 +98,7 @@ class sequentialIHTP: public laplacianProblem
         dimensionedScalar DT;
 
         /// Diffusivity value
-	scalar diffusivity = 0.0; 
+        scalar diffusivity = 0.0;
 
         /// List of snapshots for the T0 solutions
         PtrList<volScalarField> T0field;
@@ -124,10 +124,10 @@ class sequentialIHTP: public laplacianProblem
         /// Matrix that reconstruct some points into the full order space
         Eigen::MatrixXd pointsReconstructMatrix;
 
-        /// Matrix that reconstructs the Tbasis at the magic points  
+        /// Matrix that reconstructs the Tbasis at the magic points
         Eigen::MatrixXd pointTbasis_reconstructionMat;
 
-        /// Reconstruction of Tsd at the magic points 
+        /// Reconstruction of Tsd at the magic points
         Eigen::VectorXd pointTad_reconstructed;
 
         /// L2 norm of the projection error of Tbasis on the T0 modes
@@ -161,16 +161,16 @@ class sequentialIHTP: public laplacianProblem
         label timeSamplesNum;
 
         /// Number of timesteps between two samples
-	label NtimeStepsBetweenSamples;
+        label NtimeStepsBetweenSamples;
 
         /// Time sample index
-	label timeSampleI;
+        label timeSampleI;
 
         /// Number of sampling steps to consider when computing offline phase
-        label basisDeltaSample = 2; 
+        label basisDeltaSample = 2;
 
         /// List of timesteps at which measurements are available
-        List<label> samplingSteps; 
+        List<label> samplingSteps;
 
         /// 1 if readThermocouples() was called, 0 elsewise
         bool thermocouplesRead = 0;
@@ -262,7 +262,7 @@ class sequentialIHTP: public laplacianProblem
         Eigen::VectorXd T0_vector;
         Eigen::VectorXd Tcomp;
         Eigen::MatrixXd Theta;
-	word timeBasisType = "None";
+        word timeBasisType = "None";
 
         word linSys_solver;
         label TSVD_filter;
@@ -274,7 +274,8 @@ class sequentialIHTP: public laplacianProblem
         List<int> thermocouplesCellProc;
         List<Foam::vector> thermocouplesCellC;
         Eigen::VectorXd Tmeas;   //Temperature at the thermocouples locations [K]
-	Eigen::VectorXd TmeasShort; //Temperature at the thermocouples locations in only two sampling times [K]
+        Eigen::VectorXd
+        TmeasShort; //Temperature at the thermocouples locations in only two sampling times [K]
         Eigen::VectorXd Tdirect;
         Eigen::VectorXd Tdiff;
 
@@ -295,7 +296,7 @@ class sequentialIHTP: public laplacianProblem
 
         /// Set parameterized heat flux defining the basis
         void set_gParametrized(word spaceBaseFuncType,
-            scalar shapeParameter_space);
+                               scalar shapeParameter_space);
 
         //--------------------------------------------------------------------------
 
@@ -306,7 +307,7 @@ class sequentialIHTP: public laplacianProblem
 
         ///
         ///
-        /// @param[in] 
+        /// @param[in]
         ///
         List<List<scalar>> interpolateWeights(List<scalar> Wold, List<scalar> Wnew);
 
@@ -336,7 +337,7 @@ class sequentialIHTP: public laplacianProblem
 
         //--------------------------------------------------------------------------
 
-        /// Reconstructs the temperature field using superposition of effects at 
+        /// Reconstructs the temperature field using superposition of effects at
         /// some points at the last timestep of the offline phase
         ///
         /// @param[in]  cells  Cells IDs at which the field is reconstructed
@@ -391,10 +392,10 @@ class sequentialIHTP: public laplacianProblem
 
         //--------------------------------------------------------------------------
 
-        /// Assemble the matrix pointsProjectionMatrix to project some points on the 
+        /// Assemble the matrix pointsProjectionMatrix to project some points on the
         /// reduced basis space
         ///
-        void pointProjectionOffline(); 
+        void pointProjectionOffline();
 
         //--------------------------------------------------------------------------
 

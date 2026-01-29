@@ -10,9 +10,9 @@ namespace ITHACAmuq
 ///
 class ensemble
 {
-    int Nsamples = 0;
-    int samplesSize = 0;
-    Eigen::MatrixXd samples;
+        int Nsamples = 0;
+        int samplesSize = 0;
+        Eigen::MatrixXd samples;
 
     public:
         // Constructors
@@ -24,7 +24,7 @@ class ensemble
         // Functions
 
         //--------------------------------------------------------------------------
-        /// Get number of samples 
+        /// Get number of samples
         int getSize();
 
         //--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ class ensemble
         void assignSample(int sampleI, Eigen::VectorXd sample);
 
         //--------------------------------------------------------------------------
-        /// Assing the samples matrix 
+        /// Assing the samples matrix
         void assignSamples(Eigen::MatrixXd _samples);
 
         //--------------------------------------------------------------------------

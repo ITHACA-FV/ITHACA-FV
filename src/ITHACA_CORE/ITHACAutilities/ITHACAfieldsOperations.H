@@ -182,7 +182,7 @@ TypeField computeAverage(PtrList<TypeField>& fields);
 ///
 template<typename Type>
 void normalizeFields(
-    PtrList<GeometricField<Type, fvPatchField, volMesh >> & fields);
+    PtrList<GeometricField<Type, fvPatchField, volMesh >>& fields);
 
 
 //------------------------------------------------------------------------------
@@ -214,7 +214,7 @@ Eigen::MatrixXd getValues(GeometricField<Type, fvPatchField,
 ///
 template<typename Type>
 Eigen::MatrixXd getValues(PtrList<GeometricField<Type, fvPatchField,
-                          volMesh >> & field, labelList& indices, labelList* xyz = NULL);
+                          volMesh >>& field, labelList& indices, labelList* xyz = NULL);
 
 };
 

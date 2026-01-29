@@ -182,6 +182,7 @@ class DEIMLaplacian: public laplacianProblem
             auto time_span = std::chrono::duration_cast<std::chrono::duration<double >>
                              (t2 - t1);
             time_full = 0;
+
             for (int i = 0; i < par.rows(); i++)
             {
                 fvScalarMatrix Teqn = DEIMmatrice->evaluate_expression(T, par.row(i));
@@ -235,6 +236,7 @@ class DEIMLaplacian: public laplacianProblem
             auto time_span = std::chrono::duration_cast<std::chrono::duration<double >>
                              (t2 - t1);
             time_rom = 0;
+
             for (int i = 0; i < par_new.rows(); i++)
             {
                 // solve
@@ -244,7 +246,7 @@ class DEIMLaplacian: public laplacianProblem
                 Eigen::MatrixXd A = EigenFunctions::MVproduct(ReducedMatricesA, thetaonA);
                 Eigen::VectorXd B = EigenFunctions::MVproduct(ReducedVectorsB, thetaonB);
                 Eigen::VectorXd x = A.fullPivLu().solve(B);
-                Eigen::VectorXd full = ModesTEig* x;
+                Eigen::VectorXd full = ModesTEig * x;
                 t2 = std::chrono::high_resolution_clock::now();
                 time_span = std::chrono::duration_cast<std::chrono::duration<double >>
                             (t2 - t1);

@@ -245,7 +245,7 @@ template volScalarField computeAverage(
 
 template<typename Type>
 void normalizeFields(
-    PtrList<GeometricField<Type, fvPatchField, volMesh >> & fields)
+    PtrList<GeometricField<Type, fvPatchField, volMesh >>& fields)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     word normType = para->ITHACAdict->lookupOrDefault<word>("normalizationNorm",
@@ -285,7 +285,7 @@ void normalizeFields(
 }
 
 template void normalizeFields(
-    PtrList<GeometricField<scalar, fvPatchField, volMesh >> & fields);
+    PtrList<GeometricField<scalar, fvPatchField, volMesh >>& fields);
 template void normalizeFields(
     PtrList<GeometricField<vector, fvPatchField, volMesh >>& fields);
 
@@ -361,7 +361,7 @@ Eigen::MatrixXd getValues(GeometricField<scalar, fvPatchField,
 
 template<typename T>
 Eigen::MatrixXd getValues(PtrList<GeometricField<T, fvPatchField,
-                          volMesh >> & fields, labelList& indices, labelList* xyz)
+                          volMesh >>& fields, labelList& indices, labelList* xyz)
 {
     Eigen::MatrixXd out;
     Eigen::MatrixXd a = getValues(fields[0], indices, xyz);
@@ -381,6 +381,6 @@ Eigen::MatrixXd getValues(PtrList<GeometricField<scalar, fvPatchField,
                                   volMesh >>& fields, labelList& indices, labelList* xyz);
 template
 Eigen::MatrixXd getValues(PtrList<GeometricField<vector, fvPatchField,
-                                  volMesh >> & fields, labelList& indices, labelList* xyz);
+                                  volMesh >>& fields, labelList& indices, labelList* xyz);
 
 }

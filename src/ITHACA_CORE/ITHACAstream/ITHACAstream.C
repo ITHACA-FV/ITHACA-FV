@@ -486,7 +486,8 @@ GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
         word timename(field.mesh().time().rootPath() + "/" +
                       field.mesh().time().caseName());
         timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "/" + "processor" + name(Pstream::myProcNo());
+        timename = timename + "/" + casename + "/" + "processor" + name(
+                       Pstream::myProcNo());
         int last_s = numberOfFiles(casename,
                                    "processor" + name(Pstream::myProcNo()));
 
@@ -514,19 +515,22 @@ GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_fields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield, word Name,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& Lfield, word Name,
     fileName casename, int first_snap, int n_snap)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     const fvMesh& mesh = para->mesh;
     const pointMesh& pMesh  = pointMesh::New(mesh);
-    constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value || std::is_same<surfaceMesh, GeoMesh>::value;
+    constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value
+                               || std::is_same<surfaceMesh, GeoMesh>::value;
+
     if (!Pstream::parRun())
     {
         Info << "######### Reading the Data for " << Name << " #########" << endl;
         fileName rootpath(".");
         int last_s;
         Foam::Time runTime2(Foam::Time::controlDictName, rootpath, casename);
+
         if (first_snap >= runTime2.times().size())
         {
             Info << "Error the index of the first snapshot must be smaller than the number of snapshots"
@@ -542,6 +546,7 @@ void read_fields(
         {
             last_s = min(runTime2.times().size(), n_snap + 2);
         }
+
         if  constexpr(check_vol)
         {
             for (int i = 2 + first_snap; i < last_s + first_snap; i++)
@@ -559,8 +564,7 @@ void read_fields(
                 Lfield.append(tmp_field.clone());
                 printProgress(double(i + 1) / (last_s + first_snap));
             }
-        } 
-        
+        }
         else if  constexpr(std::is_same<pointMesh, GeoMesh>::value)
         {
             for (int i = 2 + first_snap; i < last_s + first_snap; i++)
@@ -578,7 +582,8 @@ void read_fields(
                 Lfield.append(tmp_field.clone());
                 printProgress(double(i + 1) / (last_s + first_snap));
             }
-        }    
+        }
+
         std::cout << std::endl;
     }
     else
@@ -588,7 +593,8 @@ void read_fields(
         word timename(mesh.time().rootPath() + "/" +
                       mesh.time().caseName() );
         timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "/" + "processor" + name(Pstream::myProcNo());
+        timename = timename + "/" + casename + "/" + "processor" + name(
+                       Pstream::myProcNo());
         int last_s = numberOfFiles(casename,
                                    "processor" + name(Pstream::myProcNo()) + "/");
 
@@ -606,7 +612,9 @@ void read_fields(
         {
             last_s = min(last_s, n_snap + 2);
         }
-        if  constexpr(check_vol){
+
+        if  constexpr(check_vol)
+        {
             for (int i = 1 + first_snap; i < last_s + first_snap; i++)
             {
                 GeometricField<Type, PatchField, GeoMesh> tmp_field(
@@ -623,8 +631,8 @@ void read_fields(
                 printProgress(double(i + 1) / (last_s + first_snap));
             }
         }
-        
-        else if  constexpr(std::is_same<pointMesh, GeoMesh>::value){
+        else if  constexpr(std::is_same<pointMesh, GeoMesh>::value)
+        {
             for (int i = 1 + first_snap; i < last_s + first_snap; i++)
             {
                 GeometricField<Type, PatchField, GeoMesh> tmp_field(
@@ -640,7 +648,7 @@ void read_fields(
                 Lfield.append(tmp_field.clone());
                 printProgress(double(i + 1) / (last_s + first_snap));
             }
-        }      
+        }
 
         Info << endl;
     }
@@ -648,14 +656,16 @@ void read_fields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_fields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename, int first_snap, int n_snap)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
     const fvMesh& mesh = para->mesh;
     const pointMesh& pMesh  = pointMesh::New(mesh );
-    constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value || std::is_same<surfaceMesh, GeoMesh>::value;
+    constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value
+                               || std::is_same<surfaceMesh, GeoMesh>::value;
+
     if (!Pstream::parRun())
     {
         Info << "######### Reading the Data for " << field.name() << " #########" <<
@@ -679,6 +689,7 @@ void read_fields(
         {
             last_s = min(runTime2.times().size(), n_snap + 2);
         }
+
         if  constexpr(check_vol)
         {
             for (int i = 2 + first_snap; i < last_s + first_snap; i++)
@@ -697,7 +708,6 @@ void read_fields(
                 printProgress(double(i + 1) / (last_s + first_snap));
             }
         }
-        
         else if  constexpr(std::is_same<pointMesh, GeoMesh>::value)
         {
             for (int i = 2 + first_snap; i < last_s + first_snap; i++)
@@ -715,7 +725,7 @@ void read_fields(
                 Lfield.append(tmp_field.clone());
                 printProgress(double(i + 1) / (last_s + first_snap));
             }
-        }    
+        }
 
         std::cout << std::endl;
     }
@@ -730,7 +740,8 @@ void read_fields(
 
         timename = field.mesh().time().rootPath() + "/" + field.mesh().time().caseName();
         timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "/" + "processor" + name(Pstream::myProcNo());
+        timename = timename + "/" + casename + "/" + "processor" + name(
+                       Pstream::myProcNo());
 
         if (first_snap > last_s)
         {
@@ -746,7 +757,9 @@ void read_fields(
         {
             last_s = min(last_s, n_snap + 2);
         }
-        if  constexpr(check_vol){
+
+        if  constexpr(check_vol)
+        {
             for (int i = 2 + first_snap; i < last_s + first_snap; i++)
             {
                 GeometricField<Type, PatchField, GeoMesh> tmp_field(
@@ -770,7 +783,7 @@ void read_fields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readMiddleFields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field, fileName casename)
 {
     int par = 1;
@@ -786,7 +799,7 @@ void readMiddleFields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readConvergedFields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& Lfield,
     GeometricField<Type, PatchField, GeoMesh>& field,
     fileName casename)
 {
@@ -800,7 +813,8 @@ void readConvergedFields(
     {
         int last = 1;
 
-        while (ITHACAutilities::check_folder(casename + "/" + name(par) + "/" + name(last)))
+        while (ITHACAutilities::check_folder(casename + "/" + name(par) + "/" + name(
+                last)))
         {
             last++;
         }
@@ -822,7 +836,7 @@ void readConvergedFields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void read_last_fields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& Lfield,
     const GeometricField<Type, PatchField, GeoMesh>& field,
     const fileName casename)
 {
@@ -862,7 +876,6 @@ void read_last_fields(
 #endif
         std::cout << std::endl;
     }
-
     else
     {
         Info << "######### Reading the Data for " << field.name() << " #########" <<
@@ -870,7 +883,8 @@ void read_last_fields(
         word timename(field.mesh().time().rootPath() + "/" +
                       field.mesh().time().caseName() );
         timename = timename.substr(0, timename.find_last_of("\\/"));
-        timename = timename + "/" + casename + "/" + "processor" + name(Pstream::myProcNo());
+        timename = timename + "/" + casename + "/" + "processor" + name(
+                       Pstream::myProcNo());
         int last_s = numberOfFiles(casename,
                                    "processor" + name(Pstream::myProcNo()));
 #if defined(OFVER) && (OFVER >= 2212)
@@ -887,17 +901,17 @@ void read_last_fields(
         );
 #else
         auto tfld =
-        autoPtr<GeometricField<Type, PatchField, GeoMesh >>::New
-        (
-            IOobject
+            autoPtr<GeometricField<Type, PatchField, GeoMesh >>::New
             (
-                field.name(),
-                timename + "/" + name(last_s - 1),
-                field.mesh(),
-                IOobject::MUST_READ
-            ),
-            field.mesh()
-        );
+                IOobject
+                (
+                    field.name(),
+                    timename + "/" + name(last_s - 1),
+                    field.mesh(),
+                    IOobject::MUST_READ
+                ),
+                field.mesh()
+            );
         Lfield.append(std::move(tfld));
 #endif
         Info << endl;
@@ -906,7 +920,7 @@ void read_last_fields(
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void readLastFields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> & Lfield,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& Lfield,
     const GeometricField<Type, PatchField, GeoMesh>& field,
     const fileName casename)
 {
@@ -943,12 +957,13 @@ int numberOfFiles(word folder, word MatrixName, word ext)
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 void exportFields(
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> & field,
+    PtrList<GeometricField<Type, PatchField, GeoMesh >>& field,
     word folder, word fieldname)
 {
     ITHACAutilities::createSymLink(folder);
     Info << "######### Exporting the Data for " << fieldname << " #########" <<
          endl;
+
     for (int j = 0; j < field.size() ; j++)
     {
         exportSolution(field[j], name(j + 1), folder, fieldname);
@@ -962,13 +977,13 @@ template void exportFields(
     PtrList<GeometricField<scalar, fvPatchField, volMesh >>& field,
     word folder, word fieldname);
 template void exportFields(
-    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh >> & field,
+    PtrList<GeometricField<scalar, fvsPatchField, surfaceMesh >>& field,
     word folder, word fieldname);
 template void exportFields(
     PtrList<GeometricField<vector, fvPatchField, volMesh >>& field,
     word folder, word fieldname);
 template void exportFields(
-    PtrList<GeometricField<tensor, fvPatchField, volMesh >> & field,
+    PtrList<GeometricField<tensor, fvPatchField, volMesh >>& field,
     word folder, word fieldname);
 template void exportFields(
     PtrList<GeometricField<vector, pointPatchField, pointMesh>>& field,
@@ -1020,7 +1035,7 @@ template void exportSolution(
     fileName subfolder, fileName folder,
     word fieldName);
 template void exportSolution(
-    GeometricField<vector, fvsPatchField, surfaceMesh> & s,
+    GeometricField<vector, fvsPatchField, surfaceMesh>& s,
     fileName subfolder, fileName folder,
     word fieldName);
 
@@ -1063,7 +1078,7 @@ template void exportSolution(
     fileName subfolder, fileName folder);
 
 template void exportSolution(
-    GeometricField<vector, fvsPatchField, surfaceMesh> & s,
+    GeometricField<vector, fvsPatchField, surfaceMesh>& s,
     fileName subfolder, fileName folder);
 
 template void exportSolution(
@@ -1116,10 +1131,11 @@ void printProgress(double percentage)
 }
 
 template<typename T>
-void save(const List<Eigen::SparseMatrix<T >> & MatrixList, word folder,
+void save(const List<Eigen::SparseMatrix<T >>& MatrixList, word folder,
           word MatrixName)
 {
     mkDir(folder);
+
     for (int i = 0; i < MatrixList.size(); i++)
     {
         word fileName = folder + "/" + MatrixName + name(i) + ".npz";
@@ -1128,7 +1144,7 @@ void save(const List<Eigen::SparseMatrix<T >> & MatrixList, word folder,
 }
 
 template<typename T>
-void load(List<Eigen::SparseMatrix<T >> & MatrixList, word folder,
+void load(List<Eigen::SparseMatrix<T >>& MatrixList, word folder,
           word MatrixName)
 {
     int number_of_files = numberOfFiles(folder, MatrixName, ".npz");
@@ -1144,10 +1160,11 @@ void load(List<Eigen::SparseMatrix<T >> & MatrixList, word folder,
         MatrixList.append(A);
     }
 }
-template void read_fields(PtrList<pointVectorField>& Lfield,word Name,
+template void read_fields(PtrList<pointVectorField>& Lfield, word Name,
                           fileName casename, int first_snap, int n_snap);
-template void read_fields(PtrList<pointVectorField>& Lfield,pointVectorField& field, 
-fileName casename, int first_snap, int n_snap);
+template void read_fields(PtrList<pointVectorField>& Lfield,
+                          pointVectorField& field,
+                          fileName casename, int first_snap, int n_snap);
 
 template void read_fields(PtrList<volScalarField>& Lfield,
                           word Name,
@@ -1177,7 +1194,7 @@ template void read_fields(PtrList<surfaceVectorField>& Lfield,
 template void readMiddleFields(PtrList<volScalarField>& Lfield,
                                volScalarField& field, fileName casename);
 
-template void readMiddleFields(PtrList<pointVectorField> & Lfield,
+template void readMiddleFields(PtrList<pointVectorField>& Lfield,
                                pointVectorField& field, fileName casename);
 template void readMiddleFields(PtrList<volVectorField>& Lfield,
                                volVectorField& field, fileName casename);
@@ -1241,7 +1258,7 @@ template void exportList(Field<vector>& list, word folder,
 template void exportList(Field<tensor>& list, word folder,
                          word filename);
 
-template void save(const List<Eigen::SparseMatrix<double >> & MatrixList,
+template void save(const List<Eigen::SparseMatrix<double >>& MatrixList,
                    word folder, word MatrixName);
 
 template void load(List<Eigen::SparseMatrix<double >>& MatrixList, word folder,

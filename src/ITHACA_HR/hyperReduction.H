@@ -494,7 +494,6 @@ class HyperReduction
                 cumulativeSize += ith_fieldSize;
                 ith_field++;
             }
-
             (oFields), ...);
         }
 

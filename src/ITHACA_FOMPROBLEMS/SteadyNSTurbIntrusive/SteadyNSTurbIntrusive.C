@@ -218,75 +218,81 @@ Eigen::MatrixXd SteadyNSTurbIntrusive::btTurbulence(label nModes)
 void SteadyNSTurbIntrusive::project(fileName folder, label nModes)
 {
     nModesOnline = nModes;
+
     if (ITHACAutilities::check_folder("./ITHACAoutput/Matrices/"))
     {
         word bStr = "b_" + name(nModes);
+
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + bStr))
         {
             ITHACAstream::ReadDenseMatrix(bMatrix, "./ITHACAoutput/Matrices/", bStr);
         }
-
         else
         {
             bMatrix = diffusiveTerm(nModes);
         }
+
         word btStr = "bt_" + name(nModes);
+
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + btStr))
         {
             ITHACAstream::ReadDenseMatrix(btMatrix, "./ITHACAoutput/Matrices/", btStr);
         }
-
         else
         {
             btMatrix = btTurbulence(nModes);
         }
+
         word kStr = "k_" + name(nModes);
+
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + kStr))
         {
             ITHACAstream::ReadDenseMatrix(kMatrix, "./ITHACAoutput/Matrices/", kStr);
         }
-
         else
         {
             kMatrix = pressureGradientTerm(nModes);
         }
+
         word cStr = "c_" + name(nModes) + "_t";
+
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + cStr))
         {
             ITHACAstream::ReadDenseTensor(convTensor, "./ITHACAoutput/Matrices/", cStr);
         }
-
         else
         {
             convTensor = convectiveTerm(nModes);
         }
+
         word ct1Str = "ct1_" + name(nModes) + "_t";
+
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct1Str))
         {
             ITHACAstream::ReadDenseTensor(ct1Tensor, "./ITHACAoutput/Matrices/", ct1Str);
         }
-
         else
         {
             ct1Tensor = turbulenceTensor1(nModes);
         }
+
         word ct2Str = "ct2_" + name(nModes) + "_t";
+
         if (ITHACAutilities::check_file("./ITHACAoutput/Matrices/" + ct2Str))
         {
             ITHACAstream::ReadDenseTensor(ct2Tensor, "./ITHACAoutput/Matrices/", ct2Str);
         }
-
         else
         {
             ct2Tensor = turbulenceTensor2(nModes);
         }
+
         if (bcMethod == "penalty")
         {
             bcVelVec = bcVelocityVec(nModes);
             bcVelMat = bcVelocityMat(nModes);
         }
     }
-
     else
     {
         bMatrix = diffusiveTerm(nModes);

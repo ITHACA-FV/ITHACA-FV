@@ -1,0 +1,17 @@
+EXE_INC = \
+    -I$(LIB_SRC)/OpenFOAM/lnInclude \
+    -I$(LIB_SRC)/OSspecific/POSIX/lnInclude \
+    -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/lnInclude \
+    -I$(LIB_ITHACA_SRC)/ITHACA_INTERPOLATOR/lnInclude \
+    -isystem $(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -I$(LIB_ITHACA_SRC)/thirdparty/mathtoolbox/include \
+    -std=c++17 \
+    -Wno-old-style-cast
+
+EXE_LIBS = \
+    -L$(FOAM_USER_LIBBIN) \
+    -lITHACA_THIRD_PARTY \
+    -lITHACA_INTERPOLATOR \
+    -lOpenFOAM \
+    -ldl \
+    -lm

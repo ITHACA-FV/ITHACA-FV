@@ -78,7 +78,7 @@ class ScalarTransport: public reductionProblem, public UnsteadyProblem
 
         /// Temperature field
         autoPtr<volScalarField> _T;
-         /// Velocity field
+        /// Velocity field
         autoPtr<volVectorField> _U;
 
         /// Initial Temperature field (for restart purposes)

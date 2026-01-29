@@ -1,123 +1,123 @@
-   
-    //Time& runTime = _runTime();
-    dynamicFvMesh& mesh = problem->meshPtr();
-    dimensionedScalar& initialMass = problem->_initialMass();
-    surfaceScalarField& phi = problem->_phi();
-    volScalarField& rho = problem->_rho();
-    fluidThermo& thermo = problem->pThermo();
-    pressureControl& pressureControl = problem->_pressureControl();
-    volScalarField& psi = problem->_psi();
-    bool closedVolume = false;
-    IOMRFZoneList& MRF = problem->_MRF();
-    fv::options& fvOptions = problem->_fvOptions();
-    const dimensionedScalar rhoMax("rhoMax", dimDensity, GREAT, pimple.dict());
-    const dimensionedScalar rhoMin("rhoMin", dimDensity, Zero, pimple.dict());
-    //turbulence = problem->turbulence;
+
+//Time& runTime = _runTime();
+dynamicFvMesh& mesh = problem->meshPtr();
+dimensionedScalar& initialMass = problem->_initialMass();
+surfaceScalarField& phi = problem->_phi();
+volScalarField& rho = problem->_rho();
+fluidThermo& thermo = problem->pThermo();
+pressureControl& pressureControl = problem->_pressureControl();
+volScalarField& psi = problem->_psi();
+bool closedVolume = false;
+IOMRFZoneList& MRF = problem->_MRF();
+fv::options& fvOptions = problem->_fvOptions();
+const dimensionedScalar rhoMax("rhoMax", dimDensity, GREAT, pimple.dict());
+const dimensionedScalar rhoMin("rhoMin", dimDensity, Zero, pimple.dict());
+//turbulence = problem->turbulence;
 
 
-    Info<< "\nStarting time loop\n" << endl;
+Info << "\nStarting time loop\n" << endl;
 #include "createRhoUfIfPresent.H"
 #include "createDpdt.H"
 #include "createK.H"
-    while (runTime.run())
-    {
-//#include "readDyMControls.H"
 
-        // Store divrhoU from the previous mesh so that it can be mapped
-        // and used in correctPhi to ensure the corrected phi has the
-        // same divergence
-        autoPtr<volScalarField> divrhoU;
-        if (correctPhi)
-        {
-            divrhoU.reset
+while (runTime.run())
+{
+    //#include "readDyMControls.H"
+    // Store divrhoU from the previous mesh so that it can be mapped
+    // and used in correctPhi to ensure the corrected phi has the
+    // same divergence
+    autoPtr<volScalarField> divrhoU;
+
+    if (correctPhi)
+    {
+        divrhoU.reset
+        (
+            new volScalarField
             (
-                new volScalarField
-                (
-                    "divrhoU",
-                    fvc::div(fvc::absolute(phi, rho, U))
-                )
-            );
-        }
+                "divrhoU",
+                fvc::div(fvc::absolute(phi, rho, U))
+            )
+        );
+    }
 
 #include "compressibleCourantNo.H"
-//#include "setDeltaT.H"
-        runTime.setEndTime(finalTime);
-        ++runTime;
+    //#include "setDeltaT.H"
+    runTime.setEndTime(finalTime);
+    ++runTime;
+    Info << "Time = " << runTime.timeName() << nl << endl;
 
-        Info<< "Time = " << runTime.timeName() << nl << endl;
-
-        // --- Pressure-velocity PIMPLE corrector loop
-        while (pimple.loop())
+    // --- Pressure-velocity PIMPLE corrector loop
+    while (pimple.loop())
+    {
+        if (pimple.firstIter() || moveMeshOuterCorrectors)
         {
-            if (pimple.firstIter() || moveMeshOuterCorrectors)
+            // Store momentum to set rhoUf for introduced faces.
+            autoPtr<volVectorField> rhoU;
+
+            if (rhoUf.valid())
             {
-                // Store momentum to set rhoUf for introduced faces.
-                autoPtr<volVectorField> rhoU;
-                if (rhoUf.valid())
+                rhoU.reset(new volVectorField("rhoU", rho * U));
+            }
+
+            // Do any mesh changes
+            mesh.controlledUpdate();
+
+            if (mesh.changing())
+            {
+                MRF.update();
+
+                if (correctPhi)
                 {
-                    rhoU.reset(new volVectorField("rhoU", rho*U));
+                    // Calculate absolute flux
+                    // from the mapped surface velocity
+                    phi = mesh.Sf() & rhoUf();
+                    //include "correctPhi.H"
+                    // Make the fluxes relative to the mesh-motion
+                    fvc::makeRelative(phi, rho, U);
                 }
 
-                // Do any mesh changes
-                mesh.controlledUpdate();
-
-                if (mesh.changing())
+                if (checkMeshCourantNo)
                 {
-                    MRF.update();
-
-                    if (correctPhi)
-                    {
-                        // Calculate absolute flux
-                        // from the mapped surface velocity
-                        phi = mesh.Sf() & rhoUf();
-
-//include "correctPhi.H"
-                        // Make the fluxes relative to the mesh-motion
-                        fvc::makeRelative(phi, rho, U);
-                    }
-
-                    if (checkMeshCourantNo)
-                    {
 #include "meshCourantNo.H"
-                    }
                 }
             }
+        }
 
-            if (pimple.firstIter() && !pimple.SIMPLErho())
-            {
+        if (pimple.firstIter() && !pimple.SIMPLErho())
+        {
 #include "rhoEqn.H"
-            }
+        }
 
 #include "ReducedUEqn.H"
 #include "ReducedEEqn.H"
 
-            // --- Pressure corrector loop
-            while (pimple.correct())
-            {
+        // --- Pressure corrector loop
+        while (pimple.correct())
+        {
 #include "ReducedpEqn.H"
-            }
-
-            if (pimple.turbCorr())
-            {
-                 problem->turbulence->correct();
-            }
         }
 
-        rho = thermo.rho();
-        if (checkWrite(runTime))
+        if (pimple.turbCorr())
         {
-            ITHACAstream::exportSolution(U, name(counter), folder);
-            ITHACAstream::exportSolution(p, name(counter), folder);
-            ITHACAstream::exportSolution(E, name(counter), folder);
-            ITHACAstream::writePoints(mesh.points(), folder, name(counter) + "/polyMesh/");
-
-            //ITHACAstream::exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
-            std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
-            Ufield.append(U.clone());
-            Pfield.append(p.clone());
-            Efield.append(E.clone());
-            nextWrite += writeEvery;
-            counter++;
-            //nutFields.append(_nut);
+            problem->turbulence->correct();
         }
     }
+
+    rho = thermo.rho();
+
+    if (checkWrite(runTime))
+    {
+        ITHACAstream::exportSolution(U, name(counter), folder);
+        ITHACAstream::exportSolution(p, name(counter), folder);
+        ITHACAstream::exportSolution(E, name(counter), folder);
+        ITHACAstream::writePoints(mesh.points(), folder, name(counter) + "/polyMesh/");
+        //ITHACAstream::exportSolution(_nut, name(counter), "./ITHACAoutput/Offline/");
+        std::ofstream of(folder + name(counter) + "/" + runTime.timeName());
+        Ufield.append(U.clone());
+        Pfield.append(p.clone());
+        Efield.append(E.clone());
+        nextWrite += writeEvery;
+        counter++;
+        //nutFields.append(_nut);
+    }
+}

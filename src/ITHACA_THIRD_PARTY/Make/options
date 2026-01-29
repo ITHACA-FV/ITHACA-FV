@@ -9,10 +9,13 @@ ifeq (,$(strip $(FOAM_MODULE_LIBBIN)))
 endif
 
 EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/OpenFOAM/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/splinter/include \
     -I$(LIB_ITHACA_SRC)/ITHACA_THIRD_PARTY/cnpy \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/redsvd \
+    -I$(LIB_ITHACA_SRC)/thirdparty/mathtoolbox/include \
     -std=c++17 \
     -ftemplate-depth=500 \
     -w \

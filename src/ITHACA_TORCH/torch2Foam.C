@@ -84,11 +84,12 @@ Field<scalar> torch2Field(torch::Tensor& torchTensor)
 }
 
 template<>
-torch::Tensor ptrList2Torch(PtrList<Field<vector >> & ptrList)
+torch::Tensor ptrList2Torch(PtrList<Field<vector >>& ptrList)
 {
     int Nrows = ptrList.size();
     int Ncols = ptrList[0].size() * 3;
     torch::Tensor out = torch::randn({Nrows, Ncols});
+
     for (auto i = 0; i < ptrList.size(); i++)
     {
         out.slice(0, i, i + 1) = field2Torch(ptrList[i]);
@@ -98,11 +99,12 @@ torch::Tensor ptrList2Torch(PtrList<Field<vector >> & ptrList)
 }
 
 template<>
-torch::Tensor ptrList2Torch(PtrList<Field<scalar >> & ptrList)
+torch::Tensor ptrList2Torch(PtrList<Field<scalar >>& ptrList)
 {
     int Nrows = ptrList.size();
     int Ncols = ptrList[0].size();
     torch::Tensor out = torch::randn({Nrows, Ncols});
+
     for (auto i = 0; i < ptrList.size(); i++)
     {
         out.slice(0, i, i + 1) = field2Torch(ptrList[i]);
@@ -121,6 +123,7 @@ PtrList<Field<type_f >> torch2PtrList(torch::Tensor& tTensor)
         torch::Tensor t = tTensor.slice(0, i, i + 1);
         out.append(tmp<Field<type_f >> (torch2Field<type_f>(t)));
     }
+
     return out;
 }
 

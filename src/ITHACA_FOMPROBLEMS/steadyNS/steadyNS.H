@@ -474,7 +474,7 @@ class steadyNS: public reductionProblem
         /// @return     reduced third order tensor for the conv. term which is used for the PPE approach
         ///
         Eigen::Tensor<double, 3 > divMomentum(label NUmodes, label NPmodes);
-        
+
         //--------------------------------------------------------------------------
         /// Divergence of convective term (PPE approach) using the cached procedure
         ///
@@ -802,7 +802,7 @@ class steadyNS: public reductionProblem
         Eigen::Tensor<double, 3 > convective_term_tens(label NUmodes,
                 label NPmodes,
                 label NSUPmodes);
-        
+
         //--------------------------------------------------------------------------
         /// @brief      Export convective term as a tensor using the cached procedure
         ///

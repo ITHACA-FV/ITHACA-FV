@@ -85,7 +85,7 @@ SteadyNSTurb::SteadyNSTurb(int argc, char* argv[])
     bcMethod = ITHACAdict->lookupOrDefault<word>("bcMethod", "lift");
     M_Assert(bcMethod == "lift" || bcMethod == "penalty",
              "The BC method must be set to lift or penalty in ITHACAdict");
-    viscCoeff = ITHACAdict->lookupOrDefault<word>("viscCoeff", "RBF");
+    viscDict = ITHACAdict->subDict("viscDict");
     para = ITHACAparameters::getInstance(mesh, runTime);
     offline = ITHACAutilities::check_off();
     podex = ITHACAutilities::check_pod();
@@ -211,6 +211,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor1_cache(label NUmodes,
     {
         // Cache only one row (j fixed)
         List<tmp<volVectorField>> lapRow(cSize);
+
         for (label k = 0; k < cSize; ++k)
         {
             lapRow[k] = fvc::laplacian(nutModes[j], L_U_SUPmodes[k]);
@@ -233,6 +234,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor1_cache(label NUmodes,
                                       "ct1_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                           NSUPmodes) + "_" + name(nNutModes) + "_t");
     }
+
     return ct1Tensor;
 }
 
@@ -309,6 +311,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2_cache(label NUmodes,
     {
         // Cache only one j-row
         List<tmp<volVectorField>> divRow(cSize);
+
         for (label k = 0; k < cSize; ++k)
         {
             divRow[k] = fvc::div(nutModes[j] * dev((fvc::grad(L_U_SUPmodes[k]))().T()));
@@ -319,7 +322,8 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2_cache(label NUmodes,
             for (label k = 0; k < cSize; ++k)
             {
                 const volVectorField& divRowField = divRow[k]();
-                ct2Tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] & divRowField).value();
+                ct2Tensor(i, j, k) = fvc::domainIntegrate(L_U_SUPmodes[i] &
+                                     divRowField).value();
             }
         }
     }
@@ -331,6 +335,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulenceTensor2_cache(label NUmodes,
                                       "ct2_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                           NSUPmodes) + "_" + name(nNutModes) + "_t");
     }
+
     return ct2Tensor;
 }
 
@@ -371,8 +376,8 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
 {
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::Tensor<double, 3> ct1PPETensor(NPmodes, nNutModes, cSize);
-
     List<tmp<volVectorField>> PmodesGrad(NPmodes);
+
     for (label i = 0; i < NPmodes; ++i)
     {
         PmodesGrad[i] = fvc::grad(Pmodes[i]);
@@ -382,6 +387,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
     {
         // Cache one row (j fixed)
         List<tmp<volVectorField>> lapRow(cSize);
+
         for (label k = 0; k < cSize; ++k)
         {
             lapRow[k] = fvc::laplacian(nutModes[j], L_U_SUPmodes[k]);
@@ -390,6 +396,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
         for (label i = 0; i < NPmodes; ++i)
         {
             const volVectorField& gradPi = PmodesGrad[i]();
+
             for (label k = 0; k < cSize; ++k)
             {
                 const volVectorField& lapRowField = lapRow[k]();
@@ -405,6 +412,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor1_cache(label NUmodes,
                                       "ct1PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                           NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
     }
+
     return ct1PPETensor;
 }
 
@@ -444,8 +452,8 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
 {
     label cSize = NUmodes + NSUPmodes + liftfield.size();
     Eigen::Tensor<double, 3> ct2PPETensor(NPmodes, nNutModes, cSize);
-
     List<tmp<volVectorField>> PmodesGrad(NPmodes);
+
     for (label i = 0; i < NPmodes; ++i)
     {
         PmodesGrad[i] = fvc::grad(Pmodes[i]);
@@ -455,6 +463,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
     {
         // Cache one row of div fields for this nutMode[j]
         List<tmp<volVectorField>> divLow(cSize);
+
         for (label k = 0; k < cSize; ++k)
         {
             divLow[k] = fvc::div(nutModes[j] * dev2((fvc::grad(L_U_SUPmodes[k]))().T()));
@@ -463,6 +472,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
         for (label i = 0; i < NPmodes; ++i)
         {
             const volVectorField& gradPi = PmodesGrad[i]();
+
             for (label k = 0; k < cSize; ++k)
             {
                 const volVectorField& divLowField = divLow[k]();
@@ -478,6 +488,7 @@ Eigen::Tensor<double, 3> SteadyNSTurb::turbulencePPETensor2_cache(label NUmodes,
                                       "ct2PPE_" + name(liftfield.size()) + "_" + name(NUmodes) + "_" + name(
                                           NSUPmodes) + "_" + name(NPmodes) + "_" + name(nNutModes) + "_t");
     }
+
     return ct2PPETensor;
 }
 
@@ -820,46 +831,25 @@ void SteadyNSTurb::projectPPE(fileName folder, label NU, label NP, label NSUP,
     // Export the matrix
     ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
                                   "coeffL2_nut_" + name(nNutModes));
-    samples.resize(nNutModes);
+    
+    // Create RBF interpolators for nut coefficient interpolation
     rbfSplines.resize(nNutModes);
-    Eigen::MatrixXd weights;
-
     for (label i = 0; i < nNutModes; i++)
     {
-        word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
-                          + name(NUmodes) + "_" + name(NSUPmodes) ;
-
-        if (ITHACAutilities::check_file("./ITHACAoutput/weightsPPE/" + weightName))
-        {
-            samples[i] = new SPLINTER::DataTable(1, 1);
-
-            for (label j = 0; j < coeffL2.cols(); j++)
-            {
-                samples[i]->addSample(mu.row(j), coeffL2(i, j));
-            }
-
-            ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsPPE/",
-                                          weightName);
-            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
-        }
-        else
-        {
-            samples[i] = new SPLINTER::DataTable(1, 1);
-
-            for (label j = 0; j < coeffL2.cols(); j++)
-            {
-                samples[i]->addSample(mu.row(j), coeffL2(i, j));
-            }
-
-            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN);
-            ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
-                                          "./ITHACAoutput/weightsPPE/", weightName);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
-        }
+        // Create ithacaInterpolator instance
+        rbfSplines[i] = std::make_shared<ithacaInterpolator>(viscDict);
+        
+        // Prepare training data: X is parameter matrix (transposed), y is coefficient vector
+        Eigen::MatrixXd X = mu.transpose();  // Now each row is a parameter sample
+        Eigen::VectorXd y = coeffL2.row(i).transpose();  // Coefficient vector for this mode
+        
+        rbfSplines[i]->fit(X, y);
+        
+        Info << "Constructing ithacaInterpolator for mode " << i + 1 << endl;
     }
+
+    Info<< "Info on interpolators for nut coefficients: "<< endl;
+    rbfSplines[0]->printInfo();
 }
 
 void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
@@ -1106,48 +1096,22 @@ void SteadyNSTurb::projectSUP(fileName folder, label NU, label NP, label NSUP,
     // Export the matrix
     ITHACAstream::SaveDenseMatrix(coeffL2, "./ITHACAoutput/Matrices/",
                                   "coeffL2_nut_" + name(nNutModes));
-    samples.resize(nNutModes);
+    
+    // Create RBF interpolators for nut coefficient interpolation
     rbfSplines.resize(nNutModes);
-    Eigen::MatrixXd weights;
-
     for (label i = 0; i < nNutModes; i++)
     {
-        word weightName = "wRBF_N" + name(i + 1) + "_" + name(liftfield.size()) + "_"
-                          + name(NUmodes) + "_" + name(NSUPmodes) ;
-
-        if (ITHACAutilities::check_file("./ITHACAoutput/weightsSUP/" + weightName))
-        {
-            samples[i] = new SPLINTER::DataTable(1, 1);
-
-            for (label j = 0; j < coeffL2.cols(); j++)
-            {
-                samples[i]->addSample(mu.row(j), coeffL2(i, j));
-            }
-
-            ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weightsSUP/",
-                                          weightName);
-            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
-        }
-        else
-        {
-            samples[i] = new SPLINTER::DataTable(1, 1);
-
-            for (label j = 0; j < coeffL2.cols(); j++)
-            {
-                samples[i]->addSample(mu.row(j), coeffL2(i, j));
-            }
-
-            rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
-                                                    SPLINTER::RadialBasisFunctionType::GAUSSIAN);
-            ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
-                                          "./ITHACAoutput/weightsSUP/", weightName);
-            ITHACAstream::exportMatrix(rbfSplines[i]->weights,
-                                       "wRBF_" + name(i), "eigen",
-                                       "./ITHACAoutput/weightsSUP/"
-                                      );
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
-        }
+        // Create ithacaInterpolator instance
+        rbfSplines[i] = std::make_shared<ithacaInterpolator>(viscDict);
+        
+        // Prepare training data: X is parameter matrix (transposed), y is coefficient vector
+        Eigen::MatrixXd X = mu.transpose();  // Now each row is a parameter sample
+        Eigen::VectorXd y = coeffL2.row(i).transpose();  // Coefficient vector for this mode
+        
+        rbfSplines[i]->fit(X, y);
+        
+        Info << "Constructing ithacaInterpolator for mode " << i + 1 << endl;
     }
+    Info<< "Info on interpolators for nut coefficients: "<< endl;
+    rbfSplines[0]->printInfo();
 }

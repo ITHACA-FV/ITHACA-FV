@@ -83,7 +83,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh >>
         ///
         /// @return     The PtrList containing the modes
         ///
-        PtrList<GeometricField<Type, PatchField, GeoMesh >> & toPtrList()
+        PtrList<GeometricField<Type, PatchField, GeoMesh >>& toPtrList()
         {
             return static_cast<PtrList<GeometricField<Type, PatchField, GeoMesh >>& >
                    (* this);
@@ -151,7 +151,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh >>
         ///
         /// @return     An Eigen MatricxXd list.
         ///
-        Eigen::MatrixXd project(PtrList<GeometricField<Type, PatchField, GeoMesh >> &
+        Eigen::MatrixXd project(PtrList<GeometricField<Type, PatchField, GeoMesh >>&
                                 fields,
                                 label numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
 
@@ -248,7 +248,7 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh >>
                               PtrList<volScalarField> Volumes,
                               word innerProduct);
 
-        void operator=(const PtrList<GeometricField<Type, PatchField, GeoMesh >> &
+        void operator=(const PtrList<GeometricField<Type, PatchField, GeoMesh >>&
                        modes);
 };
 

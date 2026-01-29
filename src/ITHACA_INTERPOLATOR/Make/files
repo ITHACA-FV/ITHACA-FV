@@ -1,0 +1,9 @@
+ithacaInterpolator.C
+mtbGPR/mtbGPR.C
+mtbRBF/mtbRBF.C
+splinterRBF/splinterRBF.C
+
+$(LIB_ITHACA_SRC)/thirdparty/mathtoolbox/src/gaussian-process-regression.cpp
+$(LIB_ITHACA_SRC)/thirdparty/mathtoolbox/src/rbf-interpolation.cpp
+
+LIB = $(FOAM_USER_LIBBIN)/libITHACA_INTERPOLATOR

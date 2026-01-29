@@ -1,0 +1,3 @@
+Foam2EigenTest.C
+
+EXE = Foam2EigenTest.exe
