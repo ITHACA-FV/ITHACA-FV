@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
     if(pod_exist == 1)
     {
         Info << "The POD has already been performed, please delete the ITHACAoutput folder and try again." << endl;
-        exit(0);
+        return 0;
     }
 
     // Initialize Variables

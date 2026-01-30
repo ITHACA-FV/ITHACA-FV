@@ -321,9 +321,9 @@ void Fang2017filter::updateJointEns(Eigen::VectorXd _observation)
     //auto P_rank = lu_decomp.rank();
     //if (P_rank < P.cols() || P_rank < P.rows())
     //{
-    //    std::cout << "Pseudo inverse of P should be implemented in the EnKF, exiting" <<
-    //              std::endl;
-    //    std::cout << P << std::endl;
+    //    Info << "Pseudo inverse of P should be implemented in the EnKF, exiting" <<
+    //              endl;
+    //    Info << P << endl;
     //    exit(10);
     //}
     //else
@@ -385,19 +385,19 @@ void Fang2017filter::run(int innerLoopMax, word outputFolder)
                     sampleParameterDist();
                 }
 
-                std::cout << "\ndebug : parameterPriorMean = " <<
-                          parameterPriorMean << std::endl;
-                std::cout << "\ndebug : parameterMean.col(" << timeStepI << ") =\n" <<
-                          parameterMean.col(timeStepI) << std::endl;
+                Info << "\ndebug : parameterPriorMean = " <<
+                          parameterPriorMean << endl;
+                Info << "\ndebug : parameterMean.col(" << timeStepI << ") =\n" <<
+                          parameterMean.col(timeStepI) << endl;
             }
             else
             {
-                std::cout << "\ndebug : parameterMean before loop =\n" <<
-                          parameterMean.col(timeStepI) << std::endl;
+                Info << "\ndebug : parameterMean before loop =\n" <<
+                          parameterMean.col(timeStepI) << endl;
                 setParameterPriorDensity(parameterMean.col(timeStepI), parameterPriorCov);
                 sampleParameterDist();
-                std::cout << "\ndebug : parameterMean after loop =\n" <<
-                          parameterMean.col(timeStepI) << std::endl;
+                Info << "\ndebug : parameterMean after loop =\n" <<
+                          parameterMean.col(timeStepI) << endl;
             }
 
             stateProjection();
@@ -407,9 +407,9 @@ void Fang2017filter::run(int innerLoopMax, word outputFolder)
             {
                 Eigen::MatrixXd measNoiseSamps = ensembleFromDensity(measNoiseDensity);
                 observeState();
-                std::cout << "\ndebug : observation =\n" <<
+                Info << "\ndebug : observation =\n" <<
                           observations.col(observationBoolVec.head(timeStepI + 1).sum() - 1) <<
-                          std::endl;
+                          endl;
                 updateJointEns(
                     observations.col(
                         observationBoolVec.head(timeStepI + 1).sum() - 1));

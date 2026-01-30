@@ -431,8 +431,7 @@ void Fang2017filter_wDF::run(int innerLoopMax, word outputFolder)
         if (timeStepI == 0)
         {
             setParameterPriorDensity(parameterPriorMean, parameterPriorCov);
-            std::cout << "debugInside: parameterPriorMean = " << parameterPriorMean <<
-                      std::endl;
+            Info << "debugInside: parameterPriorMean = " << parameterPriorMean << endl;
             sampleParameterDist();
         }
         else
@@ -451,14 +450,14 @@ void Fang2017filter_wDF::run(int innerLoopMax, word outputFolder)
             while (innerLoopI < innerLoopMax)
             {
                 Info << "Inner loop " << innerLoopI << endl;
-                std::cout << "debug: param mean =\n" << parameterEns.mean() << std::endl;
+                Info << "debug: param mean =\n" << parameterEns.mean() << endl;
 
                 if (innerLoopI > 0)
                 {
                     setParameterPriorDensity(parameterMean.col(timeStepI), parameterPriorCov);
                     sampleParameterDist();
-                    std::cout << "\ndebug : parameterMean after loop =\n" << parameterMean.col(
-                                  timeStepI) << std::endl;
+                    Info << "\ndebug : parameterMean after loop =\n" << parameterMean.col(
+                                  timeStepI) << endl;
                 }
 
                 buildJointEns();

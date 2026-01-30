@@ -212,12 +212,12 @@ void inverseLaplacianProblem_paramBC::parameterizedBCoffline(bool force)
             fin >> metaData.numberTC >> metaData.numberBasis >>
                 metaData.basisType >> metaData.shapeParameter;
             fin.close();
-            std::cout << "\nOffline FOUND with parameter:\n" <<
+            Info << "\nOffline FOUND with parameter:\n" <<
                          "Number of thermocouples = " << metaData.numberTC <<
                          "\nNumber of basis functions = " << metaData.numberBasis <<
                          "\nType of basis functions = " << metaData.basisType <<
                          "\nRBF shape parameters = " << metaData.shapeParameter <<
-                         "\n\nShould I recompute it? [y/n]" << std::endl;
+                         "\n\nShould I recompute it? [y/n]" << endl;
             std::cin >> recomputeOffline;
         }
         while (!cin.fail() && recomputeOffline != 'y' && recomputeOffline != 'n' );
@@ -368,19 +368,19 @@ void inverseLaplacianProblem_paramBC::parameterizedBCpostProcess(
     Eigen::VectorXd weigths)
 {
     //// Printing outputs at screen
-    //std::cout << "Eigenvalues of Theta.transpose() * Theta are " << std::endl;
-    //std::cout << linSys[0].eigenvalues() << std::endl;
+    //Info << "Eigenvalues of Theta.transpose() * Theta are " << endl;
+    //Info << linSys[0].eigenvalues() << endl;
     //Eigen::JacobiSVD<Eigen::MatrixXd> svd(linSys[0], Eigen::ComputeThinU | Eigen::ComputeThinV);
-    //std::cout << "Singular values of Theta.transpose() * Theta are " << std::endl;
-    //std::cout << svd.singularValues() << std::endl;
-    //std::cout << "debug: weigths size = " << std::endl;
-    //std::cout << weigths.size() << std::endl;
+    //Info << "Singular values of Theta.transpose() * Theta are " << endl;
+    //Info << svd.singularValues() << endl;
+    //Info << "debug: weigths size = " << endl;
+    //Info << weigths.size() << endl;
     //
     //residual =  linSys[0] * weigths - linSys[1];
-    //std::cout << "Residual  = " << std::endl;
-    //std::cout << residual << std::endl;
-    //std::cout << "Residual 2-norm = " << std::endl;
-    //std::cout << residual.squaredNorm() << std::endl;
+    //Info << "Residual  = " << endl;
+    //Info << residual << endl;
+    //Info << "Residual 2-norm = " << endl;
+    //Info << residual.squaredNorm() << endl;
     gWeights.resize(weigths.size());
     forAll(gWeights, weightI)
     {

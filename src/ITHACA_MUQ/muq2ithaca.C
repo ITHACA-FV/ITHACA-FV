@@ -42,9 +42,9 @@ Eigen::MatrixXd EnsembleKalmanFilter(Eigen::MatrixXd prior,
 
     if (P_rank < P.cols() || P_rank < P.rows())
     {
-        std::cout << "Pseudo inverse of P should be implemented in the EnKF, exiting" <<
-                  std::endl;
-        std::cout << P << std::endl;
+        Info << "Pseudo inverse of P should be implemented in the EnKF, exiting" <<
+                  endl;
+        Info << P << endl;
         exit(10);
     }
     else
@@ -60,8 +60,8 @@ Eigen::MatrixXd EnsembleKalmanFilter(Eigen::MatrixXd prior,
 
     if ((K.array() < 0.0).any())
     {
-        std::cout << "WARNING: Kalman Gain is negative.\nK = \n" << K << std::endl <<
-                  std::endl;
+        Info << "WARNING: Kalman Gain is negative.\nK = \n" << K << endl <<
+                  endl;
     }
 
     return prior + Z * M;
@@ -106,9 +106,9 @@ Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField>& prior,
 
     if (P_rank < P.cols() || P_rank < P.rows())
     {
-        std::cout << "Pseudo inverse of P should be implemented in the EnKF, exiting" <<
-                  std::endl;
-        std::cout << P << std::endl;
+        Info << "Pseudo inverse of P should be implemented in the EnKF, exiting" <<
+                  endl;
+        Info << P << endl;
         exit(10);
     }
     else
@@ -124,8 +124,8 @@ Eigen::MatrixXd EnsembleKalmanFilter(PtrList<volScalarField>& prior,
 
     if ((K.array() < 0.0).any())
     {
-        std::cout << "WARNING: Kalman Gain is negative.\nK = \n" << K << std::endl <<
-                  std::endl;
+        Info << "WARNING: Kalman Gain is negative.\nK = \n" << K << endl <<
+                  endl;
     }
 
     return priorMatrix + Z * M;
@@ -176,7 +176,7 @@ double quantile(Eigen::VectorXd samps, double p, int method)
     }
     else
     {
-        std::cout << "Quantile method not implemented. Exiting." << std::endl;
+        Info << "Quantile method not implemented. Exiting." << endl;
         exit(10);
     }
 

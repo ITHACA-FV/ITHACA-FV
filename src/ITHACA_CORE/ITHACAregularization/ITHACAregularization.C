@@ -115,9 +115,9 @@ Eigen::VectorXd  Tikhonov(Eigen::MatrixXd A,
                            Eigen::MatrixXd::Identity(A.rows(), A.cols());
     Eigen::MatrixXd bNew = A.transpose() * b;
     Eigen::VectorXd x = A.inverse() * b;
-    std::cout << "x = \n" << x.transpose() << std::endl;
+    Info << "x = \n" << x.transpose() << endl;
     x = Anew.inverse() * bNew;
-    std::cout << "xNew = \n" << x.transpose() << std::endl;
+    Info << "xNew = \n" << x.transpose() << endl;
     return x;
 }
 }

@@ -43,13 +43,13 @@ SourceFiles
 
 int main(int argc, char* argv[])
 {
-    std::cout << "******************************************************" << std::endl;
-    std::cout << "\nTEST of the function ITHACAmuq::muq2ithaca::quantile" << std::endl;
-    std::cout << "We sample from a Gaussian distribution with mean mu = 0"<< std::endl;
-    std::cout << "and variance sigma = 1.\n "<< std::endl;
-    std::cout << "For this distribution, the p-quantile is given by\n\n" <<
-         "mu + sigma * sqrt(2) * invErf(2 * p - 1)\n" << std::endl;
-    std::cout << "Several methods to approximate the quantile have been implemented and are here tested." << std::endl;
+    Info << "******************************************************" << endl;
+    Info << "\nTEST of the function ITHACAmuq::muq2ithaca::quantile" << endl;
+    Info << "We sample from a Gaussian distribution with mean mu = 0"<< endl;
+    Info << "and variance sigma = 1.\n "<< endl;
+    Info << "For this distribution, the p-quantile is given by\n\n" <<
+         "mu + sigma * sqrt(2) * invErf(2 * p - 1)\n" << endl;
+    Info << "Several methods to approximate the quantile have been implemented and are here tested." << endl;
 
 
 
@@ -57,9 +57,9 @@ int main(int argc, char* argv[])
     auto density = std::make_shared<muq::Modeling::Gaussian>(nSeeds);
     Eigen::VectorXd samps = density->Sample();
     double p = 0.3;
-    std::cout << "\nQuantile method 1 = " << ITHACAmuq::muq2ithaca::quantile(samps, p, 1) << std::endl;
-    std::cout << "Quantile method 2 = " << ITHACAmuq::muq2ithaca::quantile(samps, p, 2) << std::endl;
-    std::cout << "Quantile method 3 = " << ITHACAmuq::muq2ithaca::quantile(samps, p, 3) << std::endl;
-    std::cout << "True quantile = " << std::sqrt(2) * boost::math::erf_inv(2 * p - 1) << std::endl;
+    Info << "\nQuantile method 1 = " << ITHACAmuq::muq2ithaca::quantile(samps, p, 1) << endl;
+    Info << "Quantile method 2 = " << ITHACAmuq::muq2ithaca::quantile(samps, p, 2) << endl;
+    Info << "Quantile method 3 = " << ITHACAmuq::muq2ithaca::quantile(samps, p, 3) << endl;
+    Info << "True quantile = " << std::sqrt(2) * boost::math::erf_inv(2 * p - 1) << endl;
     return 0;
 }
