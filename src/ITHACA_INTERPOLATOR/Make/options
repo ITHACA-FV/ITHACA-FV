@@ -15,7 +15,9 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/ITHACA_INTERPOLATOR/mtbRBF \
     -I$(LIB_ITHACA_SRC)/ITHACA_INTERPOLATOR/splinterRBF \
     -I$(LIB_ITHACA_SRC)/thirdparty/mathtoolbox/include \
-    -isystem $(LIB_ITHACA_SRC)/thirdparty/Eigen
+    -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
+    -std=c++17 \
+
 
 LIB_LIBS = \
     -L$(FOAM_USER_LIBBIN) \

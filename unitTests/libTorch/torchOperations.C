@@ -41,10 +41,10 @@ using namespace ITHACAtorch::torch2Eigen;
 int main()
 {
     torch::Tensor tensor = torch::randn({2, 2, 3});
-    Info << tensor << endl;
+    std::cout << tensor << std::endl;
     ITHACAtorch::save(tensor,"test.npy");
     torch::Tensor aloaded = ITHACAtorch::load("test.npy");
-    Info << aloaded << endl;
+    std::cout << aloaded << std::endl;
     return 0;
 
 }

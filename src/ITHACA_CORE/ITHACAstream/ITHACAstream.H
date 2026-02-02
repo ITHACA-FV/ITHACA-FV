@@ -602,6 +602,23 @@ Ostream& operator<< (Ostream& os, const Eigen::Transpose<Eigen::Matrix<T, -1, 1>
     return os;
 }
 
+// Support for Eigen::Block (column/row views from matrices)
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Block<Eigen::Matrix<T, -1, -1>, -1, 1, true>& mat)
+{
+    Eigen::Matrix<T, -1, 1> evaluated = mat;
+    os << evaluated;
+    return os;
+}
+
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Block<Eigen::Matrix<T, -1, -1>, 1, -1, false>& mat)
+{
+    Eigen::Matrix<T, 1, -1> evaluated = mat;
+    os << evaluated;
+    return os;
+}
+
 template<typename T>
 Ostream& operator<< (Ostream& os, const Eigen::Tensor<T, 3>& tens)
 {

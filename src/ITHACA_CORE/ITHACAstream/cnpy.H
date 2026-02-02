@@ -24,6 +24,7 @@
 #include<numeric>
 #include <regex>
 #include<cstring>
+#include "IFstream.H"
 
 
 namespace cnpy
