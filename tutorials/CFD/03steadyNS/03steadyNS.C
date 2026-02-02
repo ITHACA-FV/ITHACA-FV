@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
     {
         Info << "Pass 'offline' or 'online' as first arguments."
              << endl;
-        exit(0);
+        return 0;
     }
 
     // process arguments removing "offline" or "online" keywords
@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
     }
 
 #endif
-    exit(0);
+    return 0;
 }
 
 void offline_stage(tutorial03& example)

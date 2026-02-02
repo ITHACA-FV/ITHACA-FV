@@ -317,7 +317,7 @@ int main(int argc, char* argv[])
     // Set the online temperature BC and solve reduced model
     reduced.solveOnline_PPE(vel_now);
     reduced.reconstruct(false, "./ITHACAoutput/Reconstruction/");
-    exit(0);
+    return 0;
 }
 
 /// \dir 17YJunction Folder of the turorial 17

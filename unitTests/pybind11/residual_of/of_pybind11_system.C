@@ -99,7 +99,7 @@ public:
 
     void printMatrix(Eigen::Ref<Eigen::MatrixXd>& a)
     {
-        std::cerr << a << std::endl;
+        std::cerr << a << endl;
     }
 
     Eigen::SparseMatrix<double> get_system_matrix(Eigen::VectorXd& T, Eigen::VectorXd& S)

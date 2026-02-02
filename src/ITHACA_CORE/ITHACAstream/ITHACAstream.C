@@ -138,7 +138,7 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
 
             if (i != (matrix.rows() - 1))
             {
-                ofs << std::endl;
+                ofs << endl;
             }
         }
 
@@ -584,7 +584,7 @@ void read_fields(
             }
         }
 
-        std::cout << std::endl;
+        Info << endl;
     }
     else
     {
@@ -727,7 +727,7 @@ void read_fields(
             }
         }
 
-        std::cout << std::endl;
+        Info << endl;
     }
     else
     {
@@ -804,8 +804,7 @@ void readConvergedFields(
     int par = 1;
     M_Assert(ITHACAutilities::check_folder(casename + "/" + name(par)) != 0,
              "No parameter dependent solutions stored into Offline folder");
-    std::cout << "######### Reading the Data for " << field.name() << " #########"
-              << std::endl;
+    Info << "######### Reading the Data for " << field.name() << " #########" << endl;
 
     while (ITHACAutilities::check_folder(casename + "/" + name(par)))
     {
@@ -872,7 +871,7 @@ void read_last_fields(
             );
         Lfield.append(std::move(tfld));
 #endif
-        std::cout << std::endl;
+        Info << endl;
     }
     else
     {
@@ -968,7 +967,7 @@ void exportFields(
         printProgress(double(j + 1) / field.size());
     }
 
-    std::cout << std::endl;
+    Info << endl;
 }
 
 template void exportFields(
@@ -1009,7 +1008,6 @@ void exportSolution(GeometricField<Type, PatchField, GeoMesh>& s,
         GeometricField<Type, PatchField, GeoMesh> act(fieldName, s);
         fileName fieldname = folder + "/processor" + name(Pstream::myProcNo()) + "/" +
                              subfolder + "/" + fieldName;
-        std::cout << fieldname << std::endl;
         OFstream os(fieldname);
         act.writeHeader(os);
         os << act << endl;
@@ -1146,7 +1144,7 @@ void load(List<Eigen::SparseMatrix<T >>& MatrixList, word folder,
           word MatrixName)
 {
     int number_of_files = numberOfFiles(folder, MatrixName, ".npz");
-    std::cout << "Reading the Matrix " + folder + "/" + MatrixName << std::endl;
+    Info << "Reading the Matrix " + folder + "/" + MatrixName << endl;
     M_Assert(number_of_files != 0,
              "Check if the file you are trying to read exists" );
     MatrixList.resize(0);

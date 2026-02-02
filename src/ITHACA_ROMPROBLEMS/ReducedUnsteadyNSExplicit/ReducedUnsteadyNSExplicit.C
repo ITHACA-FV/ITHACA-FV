@@ -97,8 +97,8 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
         for (label i = 1; i < online_solution.size(); i++)
         {
             time = time + dt;
-            std::cout << " ################## time =   " << time <<
-                      " ##################" << std::endl;
+            Info << " ################## time =   " << time <<
+                      " ##################" << endl;
             // Pressure Poisson Equation
             // Diffusion Term
             Eigen::VectorXd M1 = problem->BP_matrix * a_o * nu ;
@@ -206,8 +206,8 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
         for (label i = 1; i < online_solution.size(); i++)
         {
             time = time + dt;
-            std::cout << " ################## time =   " << time <<
-                      " ##################" << std::endl;
+            Info << " ################## time =   " << time <<
+                      " ##################" << endl;
             Eigen::VectorXd presidual = Eigen::VectorXd::Zero(Nphi_p);
             // Pressure Poisson Equation
             // Diffusion Term
@@ -302,9 +302,9 @@ void ReducedUnsteadyNSExplicit::solveOnline(Eigen::MatrixXd vel,
     }
     else
     {
-        std::cout <<
+        Info <<
         "Only the inconsistent flux method and consistent flux method are implemented."
-                  << std::endl;
+                  << endl;
         exit(0);
     }
 }

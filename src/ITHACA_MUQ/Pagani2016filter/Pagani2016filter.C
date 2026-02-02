@@ -133,14 +133,14 @@ int Pagani2016filter::getObservationTimestep(int _timeSampleI)
 void Pagani2016filter::setTrueObservations(Eigen::MatrixXd _observations)
 {
     trueObservations = _observations;
-    std::cout << "trueObservations = \n" << trueObservations << std::endl;
+    Info << "trueObservations = \n" << trueObservations << endl;
 
     for (int colI = 0; colI < trueObservations.cols(); colI++)
     {
         trueObservations.col(colI) += measNoiseDensity->Sample();
     }
 
-    std::cout << "trueObservations w. error = \n" << trueObservations << std::endl;
+    Info << "trueObservations w. error = \n" << trueObservations << endl;
 }
 
 //--------------------------------------------------------------------------
@@ -343,9 +343,9 @@ void Pagani2016filter::update()
     Eigen::MatrixXd P = measNoiseDensity->ApplyCovariance(
                             Eigen::MatrixXd::Identity(observationSize, observationSize));
     P += observation_Cov;
-    std::cout << "debug : P = \n" << P << std::endl;
+    Info << "debug : P = \n" << P << endl;
     P = P.inverse(); //TODO check if invertible
-    std::cout << "debug : P inverse = \n" << P << std::endl;
+    Info << "debug : P inverse = \n" << P << endl;
     Eigen::MatrixXd parameterUpdateMat = parameterObservation_crossCov * P;
     Eigen::MatrixXd stateUpdateMat = stateObservation_crossCov * P;
 
@@ -359,9 +359,8 @@ void Pagani2016filter::update()
                               stateEns.getSample(seedI) + stateUpdateMat * observationDelta);
     }
 
-    std::cout << "debug : parameterEns.mean() =\n" << parameterEns.mean() <<
-              std::endl;
-    std::cout << "debug : stateEns.mean() =\n" << stateEns.mean() << std::endl;
+    Info << "debug : parameterEns.mean() =\n" << parameterEns.mean() << endl;
+    Info << "debug : stateEns.mean() =\n" << stateEns.mean() << endl;
 }
 
 //--------------------------------------------------------------------------

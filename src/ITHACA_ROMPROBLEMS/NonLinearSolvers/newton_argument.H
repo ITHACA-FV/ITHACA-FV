@@ -80,9 +80,9 @@ class newton_argument
         ///
         int operator()(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
         {
-            std::cout <<
+            Info <<
             "This is a virtual method, it needs to be overriden with a suitable residual function"
-                      << std::endl;
+                      << endl;
             return 0;
         }
 
@@ -95,9 +95,9 @@ class newton_argument
         ///
         int df(const Eigen::VectorXd& x, Eigen::VectorXd& fvec) const
         {
-            std::cout <<
+            Info <<
             "This is a virtual method, it needs to be overriden with a suitable jacobian function"
-                      << std::endl;
+                      << endl;
             return 0;
         }
 

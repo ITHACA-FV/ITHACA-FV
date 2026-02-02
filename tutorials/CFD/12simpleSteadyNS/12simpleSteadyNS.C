@@ -132,5 +132,5 @@ int main(int argc, char* argv[])
         reduced.solveOnline_Simple(mu_now, NmodesUproj, NmodesPproj);
     }
 
-    exit(0);
+    return 0;
 }

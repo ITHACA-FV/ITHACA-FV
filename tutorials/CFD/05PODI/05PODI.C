@@ -104,5 +104,5 @@ int main(int argc, char* argv[])
     ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                         example.podex, 0, 0,
                         NmodesPout);
-    exit(0);
+    return 0;
 }

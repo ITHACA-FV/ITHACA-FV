@@ -504,8 +504,8 @@ void fsiBasic::loadCentreOfMassY(const fileName& baseDir)
             Eigen::MatrixXd CentreOfMassY;
             cnpy::load(CentreOfMassY, targetFile);
             Eigen::VectorXd currentVec = CentreOfMassY.col(0);
-            // std::cout << "CentreOfMassY dimensions: "
-            //          << CentreOfMassY.rows() << " x " << CentreOfMassY.cols() << std::endl;
+            // Info << "CentreOfMassY dimensions: "
+            //          << CentreOfMassY.rows() << " x " << CentreOfMassY.cols() << endl;
             vecOfCentreOfMasses.conservativeResize(vecOfCentreOfMasses.size() +
                                                    currentVec.size());
             vecOfCentreOfMasses.tail(currentVec.size()) = currentVec;
@@ -517,7 +517,7 @@ void fsiBasic::loadCentreOfMassY(const fileName& baseDir)
         }
     }
     this->CylDispl = vecOfCentreOfMasses;
-    // std::cout << "=== vecOfCentereOfMasses size ===" << vecOfCentreOfMasses.size() << std::endl;
+    // Info << "=== vecOfCentereOfMasses size ===" << vecOfCentreOfMasses.size() << endl;
 }
 
 

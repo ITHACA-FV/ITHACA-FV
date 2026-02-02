@@ -26,7 +26,7 @@ bool ReadAndWriteTensor()
     if (difference(0) < comp(0))
     {
         esit = true;
-        std::cout << "> Read And Write Test for tensors succeeded!" << std::endl;
+        Foam::Info << "> Read And Write Test for tensors succeeded!" << Foam::endl;
     }
 
     system("rm output");
@@ -99,7 +99,7 @@ bool ReadAndWriteNPYMatrix()
             && difference_TI == 0 && difference_TD == 0 && difference_TF == 0)
     {
         esit = true;
-        std::cout << "> Read And Write NPY matrix succeeded!" << std::endl;
+        Foam::Info << "> Read And Write NPY matrix succeeded!" << Foam::endl;
     }
 
     system("rm *.npy");
@@ -157,7 +157,7 @@ int cnpyTEST()
     Eigen::MatrixXf pc1 = Eigen::MatrixXf::Random(5, 5);
     cnpy::save(pc1, "arr.npy");
     Eigen::MatrixXf pc0 = cnpy::load(pc0, "arr.npy");
-    std::cout << pc0 << std::endl;
+    Foam::Info << pc0 << Foam::endl;
     cnpy::save(pc0, "test.npy");
     return 0;
 }
@@ -169,13 +169,13 @@ int TestSparseMatrix()
     cnpy::save(mat,"forNpy.npz");
     Eigen::SparseMatrix<double> mat2;
     cnpy::load(mat2,"forNpy.npz");
-    // std::cout << mat2 << std::endl;
+    // Foam::Info << mat2 << Foam::endl;
     bool esit = false;
 
     if ((mat-mat2).norm() == 0)
     {
         esit = true;
-        std::cout << "> Read And Write NPZ sparse matrix succeeded!" << std::endl;
+        Foam::Info << "> Read And Write NPZ sparse matrix succeeded!" << Foam::endl;
     }
     return esit;
 }

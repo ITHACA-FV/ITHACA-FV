@@ -37,6 +37,8 @@ License
 #include <iomanip>
 #include "dictionary.H"
 #include "IFstream.H"
+#include "Ostream.H"
+#include "IOmanip.H"
 
 // Function to approximate: z = sin(x) * cos(y)
 double targetFunction(double x, double y)
@@ -116,7 +118,7 @@ double evaluateModel(ithacaInterpolator& model, int nTest, double minVal, double
 
 int main(int argc, char **argv)
 {
-    std::cout << "Comprehensive test of RBF and GPR kernels with different packages..." << std::endl;
+    Foam::Info << "Comprehensive test of RBF and GPR kernels with different packages..." << Foam::endl;
 
     // 1. Generate Training Data
     int nSamples = 20;
@@ -181,9 +183,9 @@ int main(int argc, char **argv)
 
     for (const auto& config : configs)
     {
-        std::cout << "\n" << std::string(60, '=') << std::endl;
-        std::cout << "Testing: " << config.description << std::endl;
-        std::cout << std::string(60, '=') << std::endl;
+        Foam::Info << "\n" << std::string(60, '=') << Foam::endl;
+        Foam::Info << "Testing: " << config.description << Foam::endl;
+        Foam::Info << std::string(60, '=') << Foam::endl;
 
         try
         {
@@ -195,7 +197,7 @@ int main(int argc, char **argv)
             model.printInfo();
 
             // Fit the model
-            std::cout << "Fitting the model..." << std::endl;
+            Foam::Info << "Fitting the model..." << Foam::endl;
             model.fit(X_train, y_train);
 
             // Evaluate performance
@@ -204,29 +206,29 @@ int main(int argc, char **argv)
             mae_values.push_back(mae);
             descriptions.push_back(config.description);
 
-            std::cout << "Mean Absolute Error: " << mae << std::endl;
-            std::cout << "Test PASSED" << std::endl;
+            Foam::Info << "Mean Absolute Error: " << mae << Foam::endl;
+            Foam::Info << "Test PASSED" << Foam::endl;
         }
         catch (const std::exception& e)
         {
-            std::cout << "Test FAILED with exception: " << e.what() << std::endl;
+            Foam::Info << "Test FAILED with exception: " << e.what() << Foam::endl;
             mae_values.push_back(std::numeric_limits<double>::max());
             descriptions.push_back(config.description + " (FAILED)");
         }
     }
 
     // 4. Summary and comparison
-    std::cout << "\n" << std::string(80, '=') << std::endl;
-    std::cout << "SUMMARY OF RESULTS" << std::endl;
-    std::cout << std::string(80, '=') << std::endl;
+    Foam::Info << "\n" << std::string(80, '=') << Foam::endl;
+    Foam::Info << "SUMMARY OF RESULTS" << Foam::endl;
+    Foam::Info << std::string(80, '=') << Foam::endl;
 
-    std::cout << std::left << std::setw(50) << "Configuration" << std::setw(15) << "MAE" << std::endl;
-    std::cout << std::string(65, '-') << std::endl;
+    Foam::Info << std::left << Foam::setw(50) << "Configuration" << Foam::setw(15) << "MAE" << Foam::endl;
+    Foam::Info << std::string(65, '-') << Foam::endl;
 
     for (size_t i = 0; i < descriptions.size(); ++i)
     {
-        std::cout << std::left << std::setw(50) << descriptions[i]
-                  << std::setw(15) << (mae_values[i] == std::numeric_limits<double>::max() ? "FAILED" : std::to_string(mae_values[i])) << std::endl;
+        Foam::Info << std::left << Foam::setw(50) << descriptions[i]
+                  << Foam::setw(15) << (mae_values[i] == std::numeric_limits<double>::max() ? "FAILED" : std::to_string(mae_values[i])) << Foam::endl;
     }
 
     // Find best performing configuration (excluding failed ones)
@@ -243,8 +245,8 @@ int main(int argc, char **argv)
 
     if (best_mae != std::numeric_limits<double>::max())
     {
-        std::cout << "\nBest performing configuration:" << std::endl;
-        std::cout << descriptions[best_idx] << " with MAE = " << best_mae << std::endl;
+        Foam::Info << "\nBest performing configuration:" << Foam::endl;
+        Foam::Info << descriptions[best_idx] << " with MAE = " << best_mae << Foam::endl;
     }
 
     return 0;

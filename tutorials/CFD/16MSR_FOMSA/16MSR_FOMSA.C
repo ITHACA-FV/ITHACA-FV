@@ -205,7 +205,7 @@ int main(int argc, char* argv[])
         std::ofstream diff_t("./ITHACAoutput/t_SA=" + name(deltat_offline));
     }
 
-    std::cout << "Offline stage time= " << deltat_offline << std::endl;
+    Info << "Offline stage time= " << deltat_offline << endl;
     //sensitivity analysis
     int Nparameters = prova.Pnumber;
     int samplingPoints = prova.Tnumber;
@@ -226,15 +226,15 @@ int main(int argc, char* argv[])
     //load the model output in the VDSensitivity object
     analisi.load_output();
     analisi.getYstat();
-    std::cout << "Mean value and variance of the output:" << std::endl;
-    std::cout << analisi.Ey << "\t" << analisi.Vy << std::endl;
-    std::cout << "-------------" << std::endl;
+    Info << "Mean value and variance of the output:" << endl;
+    Info << analisi.Ey << "\t" << analisi.Vy << endl;
+    Info << "-------------" << endl;
     analisi.getBetas();
-    std::cout << "analisi regression coefficients:" << std::endl;
-    std::cout << analisi.betas << std::endl;
-    std::cout << "-------------" << std::endl;
+    Info << "analisi regression coefficients:" << endl;
+    Info << analisi.betas << endl;
+    Info << "-------------" << endl;
     analisi.assessQuality();
-    std::cout << "quality: " << analisi.QI << std::endl;
+    Info << "quality: " << analisi.QI << endl;
     Eigen::MatrixXd saveyout(samplingPoints, 1);
     Eigen::MatrixXd saveymodel(samplingPoints, 1);
     saveyout.col(0) = analisi.y;
@@ -255,15 +255,15 @@ int main(int argc, char* argv[])
     //load the model output in the VDSensitivity object
     analisi.load_output();
     analisi.getYstat();
-    std::cout << "Mean value and variance of the output:" << std::endl;
-    std::cout << analisi.Ey << "\t" << analisi.Vy << std::endl;
-    std::cout << "-------------" << std::endl;
+    Info << "Mean value and variance of the output:" << endl;
+    Info << analisi.Ey << "\t" << analisi.Vy << endl;
+    Info << "-------------" << endl;
     analisi.getBetas();
-    std::cout << "analisi regression coefficients:" << std::endl;
-    std::cout << analisi.betas << std::endl;
-    std::cout << "-------------" << std::endl;
+    Info << "analisi regression coefficients:" << endl;
+    Info << analisi.betas << endl;
+    Info << "-------------" << endl;
     analisi.assessQuality();
-    std::cout << "quality: " << analisi.QI << std::endl;
+    Info << "quality: " << analisi.QI << endl;
     Eigen::MatrixXd saveyoutP(samplingPoints, 1);
     Eigen::MatrixXd saveymodelP(samplingPoints, 1);
     saveyoutP.col(0) = analisi.y;

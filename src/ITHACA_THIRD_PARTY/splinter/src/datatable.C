@@ -15,6 +15,7 @@
 #include <limits>
 #include <serializer.h>
 #include <initializer_list>
+#include "IOstreams.H"
 
 namespace SPLINTER
 {
@@ -81,9 +82,9 @@ void DataTable::addSample(const DataPoint& sample)
         if (!allowDuplicates)
         {
 #ifndef NDEBUG
-            std::cout << "Discarding duplicate sample because allowDuplicates is false!" <<
-                      std::endl;
-            std::cout << "Initialise with DataTable(true) to set it to true." << std::endl;
+            Foam::Info << "Discarding duplicate sample because allowDuplicates is false!" <<
+                      Foam::endl;
+            Foam::Info << "Initialise with DataTable(true) to set it to true." << Foam::endl;
 #endif // NDEBUG
             return;
         }

@@ -61,8 +61,8 @@ HyperReducedCompressibleUnSteadyNS::HyperReducedCompressibleUnSteadyNS(
     }
 
     //problem->restart();
-    std::cout << "################ HyperReduced Ctor called ##################" <<
-              std::endl;
+    Info << "################ HyperReduced Ctor called ##################" <<
+              endl;
 }
 
 

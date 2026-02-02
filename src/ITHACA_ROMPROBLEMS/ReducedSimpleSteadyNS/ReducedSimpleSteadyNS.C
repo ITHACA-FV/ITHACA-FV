@@ -168,7 +168,7 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
             && iter < maxIterOn)
     {
         iter++;
-        std::cout << "Iteration " << iter << std::endl;
+        Info << "Iteration " << iter << endl;
 #if defined(OFVER) && (OFVER == 6)
         simple.loop(runTime);
 #else
@@ -235,18 +235,18 @@ void reducedSimpleSteadyNS::solveOnline_Simple(scalar mu_now,
 
         if (problem->para->debug)
         {
-            std::cout << "Residual jump = " << residual_jump << std::endl;
-            std::cout << "Normalized residual = " << std::max(U_norm_res,
-                      P_norm_res) << std::endl;
+            Info << "Residual jump = " << residual_jump << endl;
+            Info << "Normalized residual = " << std::max(U_norm_res,
+                      P_norm_res) << endl;
         }
     }
 
-    std::cout << "Solution " << counter << " converged in " << iter <<
-                 " iterations." << std::endl;
-    std::cout << "Final normalized residual for velocity: " << U_norm_res <<
-              std::endl;
-    std::cout << "Final normalized residual for pressure: " << P_norm_res <<
-              std::endl;
+    Info << "Solution " << counter << " converged in " << iter <<
+                 " iterations." << endl;
+    Info << "Final normalized residual for velocity: " << U_norm_res <<
+              endl;
+    Info << "Final normalized residual for pressure: " << P_norm_res <<
+              endl;
     ULmodes.reconstruct(U, a, "Uaux");
     P.rename("Paux");
     problem->Pmodes.reconstruct(P, b, "Paux");

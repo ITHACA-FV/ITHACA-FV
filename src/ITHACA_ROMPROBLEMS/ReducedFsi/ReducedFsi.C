@@ -56,7 +56,7 @@ ReducedFsi::ReducedFsi(fsiBasic& FoamPb): problem(&FoamPb)
     }
 
     //problem->restart();
-    //std::cout << "################ ctor of POD-I Fsi ##################" << std::endl;
+    //Info << "################ ctor of POD-I Fsi ##################" << endl;
 }
 void ReducedFsi::PODI(Eigen::MatrixXd coeffL2, Eigen::MatrixXd muu,
                       label NPdModes)
@@ -87,7 +87,7 @@ void ReducedFsi::PODI(Eigen::MatrixXd coeffL2, Eigen::MatrixXd muu,
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weights/", weightName);
             problem->rbfSplines[i] = new SPLINTER::RBFSpline(*(problem->samples)[i],
                 SPLINTER::RadialBasisFunctionType::THIN_PLATE_SPLINE, weights);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
         else
         {
@@ -103,7 +103,7 @@ void ReducedFsi::PODI(Eigen::MatrixXd coeffL2, Eigen::MatrixXd muu,
                 SPLINTER::RadialBasisFunctionType::THIN_PLATE_SPLINE);
             ITHACAstream::SaveDenseMatrix(problem->rbfSplines[i]->weights,
                                           "./ITHACAoutput/weights/", weightName);
-            std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
     }
 }
@@ -162,8 +162,8 @@ void ReducedFsi::solveOnline_Pimple(int NmodesUproj,
     Eigen::MatrixXd muEval(1, 1);
     //Eigen::VectorXd b_ref = Pmodes.project(p, NmodesPproj);
     //Eigen::VectorXd a_ref = Umodes.project(U, NmodesUproj);
-    //std::cout << " ==== b_ref === " << b_ref << std::endl;
-    //std::cout << " ==== a_ref === " << a_ref << std::endl;
+    //Info << " ==== b_ref === " << b_ref << endl;
+    //Info << " ==== a_ref === " << a_ref << endl;
     //exit(0);
     // double lambda0 = 1.0; // Initial weight
     // double lambda_t = 0.0;
@@ -181,8 +181,8 @@ void ReducedFsi::solveOnline_Pimple(int NmodesUproj,
         runTime++;
         //p.storePrevIter();
         Info << "Time = " << runTime.timeName() << nl << endl;
-        //res_u << runTime.timeName() << std::endl;
-        //res_p << runTime.timeName() << std::endl;
+        //res_u << runTime.timeName() << endl;
+        //res_p << runTime.timeName() << endl;
 
         while (pimple.loop())
         {
@@ -257,8 +257,8 @@ void ReducedFsi::solveOnline_Pimple(int NmodesUproj,
                 //Eigen::MatrixXd A_reg = RedLinSysU[0] + 1e-6 *Eigen::MatrixXd::Identity(NmodesUproj, NmodesUproj);
                 //a = A_reg.ldlt().solve(RedLinSysU[1]);
                 //Eigen::MatrixXd aNew = cg.solve(RedLinSysU[1]);
-                //std::cout << "res_u = " << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
-                //res_u << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << std::endl;
+                //Info << "res_u = " << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << endl;
+                //res_u << (RedLinSysU[0] * a - RedLinSysU[1]).norm() << endl;
                 /*
                 if (cg.info() != Eigen::Success)
                 {
@@ -314,8 +314,8 @@ void ReducedFsi::solveOnline_Pimple(int NmodesUproj,
                     cgP.setTolerance(1e-6);
                     cgP.compute(RedLinSysP[0]);
                     Eigen::MatrixXd bNew = cgP.solve(RedLinSysP[1]);*/
-                    //std::cout << "res_p = " << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
-                    //res_p << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << std::endl;
+                    //Info << "res_p = " << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << endl;
+                    //res_p << (RedLinSysP[0] * b - RedLinSysP[1]).norm() << endl;
                     Pmodes.reconstruct(p, b, "p");
 
                     //p.correctBoundaryConditions();

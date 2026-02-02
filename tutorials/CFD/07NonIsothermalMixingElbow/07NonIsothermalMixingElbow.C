@@ -161,6 +161,6 @@ int main(int argc, char* argv[])
     // Reconstruct the solution and export it
     reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 2);
     reduced.reconstruct_supt("./ITHACAoutput/ReconstructionSUP/", 2);
-    exit(0);
+    return 0;
 }
 

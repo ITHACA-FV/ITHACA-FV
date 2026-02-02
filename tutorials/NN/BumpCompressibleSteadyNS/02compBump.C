@@ -118,15 +118,15 @@ class CompressibleSteadyNN : public CompressibleSteadyNS
                 ITHACAstream::readMiddleFields(nutFieldsTrain, nut_train,
                                                "./ITHACAoutput/Offline/");
                 /// Compute the coefficients for train
-                std::cout << "Computing the coefficients for U train" << std::endl;
+                Info << "Computing the coefficients for U train" << endl;
                 Eigen::MatrixXd coeffL2U_train = ITHACAutilities::getCoeffs(UfieldTrain,
                                                  Umodes,
                                                  0, true);
-                std::cout << "Computing the coefficients for p train" << std::endl;
+                Info << "Computing the coefficients for p train" << endl;
                 Eigen::MatrixXd coeffL2P_train = ITHACAutilities::getCoeffs(PfieldTrain,
                                                  Pmodes,
                                                  0, true);
-                std::cout << "Computing the coefficients for nuT train" << std::endl;
+                Info << "Computing the coefficients for nuT train" << endl;
                 Eigen::MatrixXd coeffL2Nut_train = ITHACAutilities::getCoeffs(nutFieldsTrain,
                                                    nutModes,
                                                    0, true);
@@ -400,12 +400,12 @@ class ReducedCompressibleSteadyNN : public ReducedCompressibleSteadyNS
 
                 rho = thermo.rho(); // Here rho is calculated as p*psi = p/(R*T)
                 rho.relax();
-                std::cout << "Ures = " << (uResidual.cwiseAbs()).sum() /
-                          (RedLinSysU[1].cwiseAbs()).sum() << std::endl;
-                std::cout << "Eres = " << (eResidual.cwiseAbs()).sum() /
-                          (RedLinSysE[1].cwiseAbs()).sum() << std::endl;
-                std::cout << "Pres = " << (pResidual.cwiseAbs()).sum() /
-                          (RedLinSysP[1].cwiseAbs()).sum() << std::endl;
+                Info << "Ures = " << (uResidual.cwiseAbs()).sum() /
+                          (RedLinSysU[1].cwiseAbs()).sum() << endl;
+                Info << "Eres = " << (eResidual.cwiseAbs()).sum() /
+                          (RedLinSysE[1].cwiseAbs()).sum() << endl;
+                Info << "Pres = " << (pResidual.cwiseAbs()).sum() /
+                          (RedLinSysP[1].cwiseAbs()).sum() << endl;
                 residualNorm = max(max((uResidual.cwiseAbs()).sum() /
                                        (RedLinSysU[1].cwiseAbs()).sum(),
                                        (pResidual.cwiseAbs()).sum() / (RedLinSysP[1].cwiseAbs()).sum()),
@@ -455,7 +455,7 @@ class tutorial02 : public CompressibleSteadyNN
             );
             ITHACAutilities::getPointsFromPatch(_mesh(), 0, top0, top0_ind);
             ITHACAutilities::getPointsFromPatch(_mesh(), 1, bot0, bot0_ind);
-            // std::cout << _mesh().points().size() << std::endl;
+            // Info << _mesh().points().size() << endl;
             ms = new RBFMotionSolver(_mesh(), *dyndict);
             vectorField motion(ms->movingPoints().size(), vector::zero);
             movingIDs = ms->movingIDs();
@@ -505,7 +505,7 @@ class tutorial02 : public CompressibleSteadyNN
 
             if (parTop != 0 || parBot != 0)
             {
-                // std::cout << parTop << std::endl;
+                // Info << parTop << endl;
                 List<vector> top0_cur = moveBasis(top0, parTop);
                 List<vector> bot0_cur = moveBasis(bot0, parBot);
                 ITHACAutilities::setIndices2Value(top0_ind, top0_cur, movingIDs, curX);
@@ -678,7 +678,7 @@ int main(int argc, char* argv[])
         ITHACAstream::writePoints(example._mesh().points(),
                                   "./ITHACAoutput/Online_" + name(NmodesUproj) + "_" + name(NmodesNutProj) + "/",
                                   name(k + 1) + "/polyMesh/");
-        //std::cout << example.inletIndex.rows() << std::endl;
+        //Info << example.inletIndex.rows() << endl;
         //reduced.setOnlineVelocity(vel);
         reduced.projectReducedOperators(NmodesUproj, NmodesPproj, NmodesEproj);
         example.restart();
@@ -824,8 +824,8 @@ int main(int argc, char* argv[])
     else
     {
         std::cerr << "checkOff folder is missing, error analysis cannot be performed."
-                  << std::endl;
+                  << endl;
     }
 
-    exit(0);
+    return 0;
 }

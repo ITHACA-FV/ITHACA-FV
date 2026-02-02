@@ -136,9 +136,9 @@ int main(int argc, char* argv[])
 {
     if (argc == 1)
     {
-        std::cout << "Pass 'supremizer' or 'poisson' as first arguments."
-                  << std::endl;
-        exit(0);
+        Info << "Pass 'supremizer' or 'poisson' as first arguments."
+                  << endl;
+        return 0;
     }
 
     // process arguments removing "offline" or "online" keywords
@@ -165,10 +165,10 @@ int main(int argc, char* argv[])
     }
     else
     {
-        std::cout << "Pass supremizer, poisson" << std::endl;
+        Info << "Pass supremizer, poisson" << endl;
     }
 
-    exit(0);
+    return 0;
 }
 
 void supremizer_approach(tutorial22& example)

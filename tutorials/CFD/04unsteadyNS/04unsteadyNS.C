@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
     // Reconstruct the solution and export it
     reduced.reconstruct(true,
                         "./ITHACAoutput/Reconstruction" + example.method + "/");
-    exit(0);
+    return 0;
 }
 
 

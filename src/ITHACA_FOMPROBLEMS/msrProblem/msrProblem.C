@@ -397,9 +397,9 @@ void msrProblem::projectPPE(fileName folder, label NU, label NP, label NF,
 {
     if (NPrec.size() != 8 || NDec.size() != 3)
     {
-        std::cout <<
+        Info <<
         "The model assumes 8 groups of precursors and 3 of decay heat, check NDrec and NDec dimensions..."
-                  << std::endl;
+                  << endl;
         exit(0);
     }
 
@@ -1775,7 +1775,7 @@ void msrProblem::readMSRfields(std::string& dir)
     }
     else
     {
-        std::cout << "Error" << std::endl;
+        Info << "Error" << endl;
     }
 }
 
@@ -1804,8 +1804,8 @@ void msrProblem::msrcoeff(label& NC)
 
     for (label i = 0; i < NCmodes; i++)
     {
-        std::cout << "Constructing v RadialBasisFunction for mode " << i + 1 <<
-                  std::endl;
+        Info << "Constructing v RadialBasisFunction for mode " << i + 1 <<
+                  endl;
         SAMPLES_v[i] = new SPLINTER::DataTable(1, 1);
 
         for (label j = 0; j < Ncol; j++)
@@ -1825,8 +1825,8 @@ void msrProblem::msrcoeff(label& NC)
 
     for (label i = 0; i < NCmodes; i++)
     {
-        std::cout << "Constructing D RadialBasisFunction for mode " << i + 1 <<
-                  std::endl;
+        Info << "Constructing D RadialBasisFunction for mode " << i + 1 <<
+                  endl;
         SAMPLES_D[i] = new SPLINTER::DataTable(1, 1);
 
         for (label j = 0; j < Ncol; j++)
@@ -1847,8 +1847,8 @@ void msrProblem::msrcoeff(label& NC)
 
     for (label i = 0; i < NCmodes; i++)
     {
-        std::cout << "Constructing NSF RadialBasisFunction for mode " << i + 1 <<
-                  std::endl;
+        Info << "Constructing NSF RadialBasisFunction for mode " << i + 1 <<
+                  endl;
         SAMPLES_NSF[i] = new SPLINTER::DataTable(1, 1);
 
         for (label j = 0; j < Ncol; j++)
@@ -1868,8 +1868,8 @@ void msrProblem::msrcoeff(label& NC)
 
     for (label i = 0; i < NCmodes; i++)
     {
-        std::cout << "Constructing A RadialBasisFunction for mode " << i + 1 <<
-                  std::endl;
+        Info << "Constructing A RadialBasisFunction for mode " << i + 1 <<
+                  endl;
         SAMPLES_A[i] = new SPLINTER::DataTable(1, 1);
 
         for (label j = 0; j < Ncol; j++)
@@ -1890,8 +1890,8 @@ void msrProblem::msrcoeff(label& NC)
 
     for (label i = 0; i < NCmodes; i++)
     {
-        std::cout << "Constructing  SP RadialBasisFunction for mode " << i + 1 <<
-                  std::endl;
+        Info << "Constructing  SP RadialBasisFunction for mode " << i + 1 <<
+                  endl;
         SAMPLES_SP[i] = new SPLINTER::DataTable(1, 1);
 
         for (label j = 0; j < Ncol; j++)
@@ -1912,8 +1912,8 @@ void msrProblem::msrcoeff(label& NC)
 
     for (label i = 0; i < NCmodes; i++)
     {
-        std::cout << "Constructing  TXS RadialBasisFunction for mode " << i + 1 <<
-                  std::endl;
+        Info << "Constructing  TXS RadialBasisFunction for mode " << i + 1 <<
+                  endl;
         SAMPLES_TXS[i] = new SPLINTER::DataTable(1, 1);
 
         for (label j = 0; j < Ncol; j++)

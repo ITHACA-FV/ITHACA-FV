@@ -541,6 +541,6 @@ void UnsteadyNSTTurb::projectSUP(fileName folder, label NU, label NP,
 
         rbfsplines[i] = new SPLINTER::RBFSpline(* SAMPLES[i],
                                                 SPLINTER::RadialBasisFunctionType::GAUSSIAN);
-        std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+        Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
     }
 }

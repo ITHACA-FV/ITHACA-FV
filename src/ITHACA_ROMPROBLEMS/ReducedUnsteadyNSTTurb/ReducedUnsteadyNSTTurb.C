@@ -127,7 +127,7 @@ int newton_unsteadyNSTTurb_sup::operator()(const Eigen::VectorXd& x,
     // Pressure Term
     Eigen::VectorXd M3 = problem->P_matrix * a_tmp;
 
-    //std::cerr << "I am here 5" << std::endl;
+    //std::cerr << "I am here 5" << endl;
     for (int i = 0; i < Nphi_u; i++)
     {
         cc = a_tmp.transpose() * problem->C_matrix[i] * a_tmp - nu_c.transpose() *
@@ -339,20 +339,20 @@ void ReducedUnsteadyNSTTurb::solveOnlineSup(Eigen::MatrixXd& vel_now,
         newton_object_sup.y_old = y;
         newton_object_sup_t.operator()(z, rest);
         newton_object_sup_t.z_old = z;
-        std::cout << "################## Online solve N° " << count_online_solve <<
-                  " ##################" << std::endl;
+        Info << "################## Online solve N° " << count_online_solve <<
+                  " ##################" << endl;
         Info << "Time = " << time << endl;
-        std::cout << "Solving for the parameter: " << vel_now << std::endl;
+        Info << "Solving for the parameter: " << vel_now << endl;
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         count_online_solve += 1;

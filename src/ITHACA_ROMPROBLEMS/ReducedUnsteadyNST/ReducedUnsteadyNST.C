@@ -292,32 +292,32 @@ void reducedUnsteadyNST::solveOnline_sup(Eigen::MatrixXd& vel_now,
         newton_object_sup.y_old = y;
         newton_object_sup_t.operator()(z, rest);
         newton_object_sup_t.z_old = z;
-        std::cout << "################## Online solve N° " << count_online_solve <<
-                  " ##################" << std::endl;
+        Info << "################## Online solve N° " << count_online_solve <<
+                  " ##################" << endl;
         Info << "Time = " << time << endl;
-        std::cout << "Solving for the parameter: " << vel_now << std::endl;
-        std::cout << "Solving for the parameter: " << temp_now << std::endl;
+        Info << "Solving for the parameter: " << vel_now << endl;
+        Info << "Solving for the parameter: " << temp_now << endl;
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         if (rest.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << rest.norm() << " - Minimun reached in " <<
-                      hnlst.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << rest.norm() << " - Minimun reached in " <<
+                      hnlst.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << rest.norm() << " - Minimun reached in " <<
-                      hnlst.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << rest.norm() << " - Minimun reached in " <<
+                      hnlst.iter << " iterations " << def << endl << endl;
         }
 
         count_online_solve += 1;

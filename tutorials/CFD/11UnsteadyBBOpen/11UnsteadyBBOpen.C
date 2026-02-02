@@ -426,7 +426,7 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/l2error");
     ITHACAstream::exportMatrix(L2errorMatrixT, "L2errorMatrixT", "eigen",
                                "./ITHACAoutput/l2error");
-    exit(0);
+    return 0;
 }
 
 /// \dir 11UnsteadyBB Folder of the turorial 11

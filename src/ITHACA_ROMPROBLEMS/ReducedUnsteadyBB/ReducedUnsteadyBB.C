@@ -252,9 +252,9 @@ int newton_unsteadyBB_PPE::df(const Eigen::VectorXd& x,
 Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
         Eigen::MatrixXd& vel_now_BC, int NParaSet, int startSnap)
 {
-    std::cout << "################## Online solve N° " << NParaSet <<
-              " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << temp_now_BC << std::endl;
+    Info << "################## Online solve N° " << NParaSet <<
+              " ##################" << endl;
+    Info << "Solving for the parameter: " << temp_now_BC << endl;
     // Count number of time steps
     int counter = 0;
     time = tstart;
@@ -265,7 +265,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
         counter ++;
     }
 
-    std::cerr << "File: ReducedUnsteadyBB.C, Line: 264" << std::endl;
+    std::cerr << "File: ReducedUnsteadyBB.C, Line: 264" << endl;
     // Set size of online solution
     online_solutiont.resize(Nphi_u + Nphi_prgh + Nphi_t + 1, counter + 1);
     // Set initial condition for online solve
@@ -279,7 +279,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
             if (j == problem->inletIndexT(i, 0))
             {
                 T_IC.boundaryFieldRef()[problem->inletIndexT(i, 0)][j] = temp_now_BC(i, 0);
-                std::cerr << "File: ReducedUnsteadyBB.C, Line: 277" << std::endl;
+                std::cerr << "File: ReducedUnsteadyBB.C, Line: 277" << endl;
             }
             else
             {
@@ -287,7 +287,7 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
         }
     }
 
-    std::cerr << "File: ReducedUnsteadyBB.C, Line: 284" << std::endl;
+    std::cerr << "File: ReducedUnsteadyBB.C, Line: 284" << endl;
     // Create and resize the solution vector
     y.resize(Nphi_u + Nphi_prgh + Nphi_t, 1);
     y.setZero();
@@ -302,9 +302,9 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
                                             problem->Prghmodes);
     }
 
-    std::cerr << "File: ReducedUnsteadyBB.C, Line: 299" << std::endl;
+    std::cerr << "File: ReducedUnsteadyBB.C, Line: 299" << endl;
     y.tail(Nphi_t) = ITHACAutilities::getCoeffs(T_IC, LTmodes);
-    std::cerr << "File: ReducedUnsteadyBB.C, Line: 302" << std::endl;
+    std::cerr << "File: ReducedUnsteadyBB.C, Line: 302" << endl;
     // Set some properties of the newton object
     newton_object_sup.nu = nu;
     newton_object_sup.y_old = y;
@@ -363,13 +363,13 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_sup(Eigen::MatrixXd& temp_now_BC,
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         tmp_sol(0) = time;
@@ -392,9 +392,9 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
         temp_now_BC,
         Eigen::MatrixXd& vel_now_BC, int NParaSet, int startSnap)
 {
-    std::cout << "################## Online solve N° " << NParaSet <<
-              " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << temp_now_BC << std::endl;
+    Info << "################## Online solve N° " << NParaSet <<
+              " ##################" << endl;
+    Info << "Solving for the parameter: " << temp_now_BC << endl;
     // Count number of time steps
     int counter = 0;
     time = tstart;
@@ -532,13 +532,13 @@ Eigen::MatrixXd ReducedUnsteadyBB::solveOnline_PPE(Eigen::MatrixXd&
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         tmp_sol(0) = time;

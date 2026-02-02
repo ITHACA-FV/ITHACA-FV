@@ -23,8 +23,7 @@
 #include <rbfspline.h>
 #include <spline.h>
 
-using std::cout;
-using std::endl;
+#include "IFstream.H"
 
 using namespace SPLINTER;
 
@@ -44,18 +43,18 @@ bool is_identical(DataTable &a, DataTable &b)
 	{
 		for(unsigned int i = 0; i < a.getNumVariables(); i++)
 		{
-//            std::cout << std::setprecision(SAVE_DOUBLE_PRECISION) << ait->getX().at(i) << " == " << std::setprecision(SAVE_DOUBLE_PRECISION) << bit->getX().at(i) << " ";
+//            Foam::Info << std::setprecision(SAVE_DOUBLE_PRECISION) << ait->getX().at(i) << " == " << std::setprecision(SAVE_DOUBLE_PRECISION) << bit->getX().at(i) << " ";
 			if(!equalsWithinRange(ait->getX().at(i), bit->getX().at(i)))
 				return false;
 		}
 
-//            std::cout << std::setprecision(SAVE_DOUBLE_PRECISION) << ait->getY().at(j) << " == " << std::setprecision(SAVE_DOUBLE_PRECISION) << bit->getY().at(j) << " ";
+//            Foam::Info << std::setprecision(SAVE_DOUBLE_PRECISION) << ait->getY().at(j) << " == " << std::setprecision(SAVE_DOUBLE_PRECISION) << bit->getY().at(j) << " ";
 		if(!equalsWithinRange(ait->getY(), bit->getY()))
 			return false;
-//        std::cout << std::endl;
+//        Foam::Info << Foam::endl;
 	}
 
-//    std::cout << "Finished comparing samples..." << std::endl;
+//    Foam::Info << "Finished comparing samples..." << Foam::endl;
 
 	return ait == a.cend() && bit == b.cend();
 }
@@ -306,30 +305,30 @@ void runExample()
     // Evaluate the splines at x = (0,0)
 	xf2(0) = 0; xf2(1) = 0; xf2(2) = 0; 	
 
-	cout << endl << endl;
-	cout << "Evaluating splines at grid point x = [0,0,0]"        << endl;
-	cout << "-------------------------------------------"       << endl;
-	cout << "Function y(x):         "   << f3(xf2)                 << endl;
-	cout << "Linear B-spline:       "   << bspline1.eval(xf2)     << endl;
-	cout << "Quadratic B-spline:    "   << bspline2.eval(xf2)     << endl;
-	cout << "Cubic B-spline:        "   << bspline3.eval(xf2)     << endl;
-	cout << "P-spline:              "   << pspline.eval(xf2)      << endl;
-    // cout << "Thin-plate RBF spline:     "   << rbfspline.eval(x)    << endl;
-	cout << "-------------------------------------------"       << endl;
+	Foam::Info << Foam::endl << Foam::endl;
+	Foam::Info << "Evaluating splines at grid point x = [0,0,0]"        << Foam::endl;
+	Foam::Info << "-------------------------------------------"       << Foam::endl;
+	Foam::Info << "Function y(x):         "   << f3(xf2)                 << Foam::endl;
+	Foam::Info << "Linear B-spline:       "   << bspline1.eval(xf2)     << Foam::endl;
+	Foam::Info << "Quadratic B-spline:    "   << bspline2.eval(xf2)     << Foam::endl;
+	Foam::Info << "Cubic B-spline:        "   << bspline3.eval(xf2)     << Foam::endl;
+	Foam::Info << "P-spline:              "   << pspline.eval(xf2)      << Foam::endl;
+    // Foam::Info << "Thin-plate RBF spline:     "   << rbfspline.eval(x)    << Foam::endl;
+	Foam::Info << "-------------------------------------------"       << Foam::endl;
 
     // Evaluate the splines at xf2 = (1,1,1)
 	xf2(0) = 1; xf2(1) = 1; xf2(2) = 1;
 
-	cout << endl << endl;
-	cout << "Evaluating splines at x = [1,1,1]"                   << endl;
-	cout << "-------------------------------------------"       << endl;
-	cout << "Function y(x):         "   << f3(xf2)                 << endl;
-	cout << "Linear B-spline:       "   << bspline1.eval(xf2)     << endl;
-	cout << "Quadratic B-spline:    "   << bspline2.eval(xf2)     << endl;
-	cout << "Cubic B-spline:        "   << bspline3.eval(xf2)     << endl;
-	cout << "P-spline:              "   << pspline.eval(xf2)      << endl;
-    // cout << "Thin-plate RBF spline:     "   << rbfspline.eval(x)    << endl;
-	cout << "-------------------------------------------"       << endl;
+	Foam::Info << Foam::endl << Foam::endl;
+	Foam::Info << "Evaluating splines at x = [1,1,1]"                   << Foam::endl;
+	Foam::Info << "-------------------------------------------"       << Foam::endl;
+	Foam::Info << "Function y(x):         "   << f3(xf2)                 << Foam::endl;
+	Foam::Info << "Linear B-spline:       "   << bspline1.eval(xf2)     << Foam::endl;
+	Foam::Info << "Quadratic B-spline:    "   << bspline2.eval(xf2)     << Foam::endl;
+	Foam::Info << "Cubic B-spline:        "   << bspline3.eval(xf2)     << Foam::endl;
+	Foam::Info << "P-spline:              "   << pspline.eval(xf2)      << Foam::endl;
+    // Foam::Info << "Thin-plate RBF spline:     "   << rbfspline.eval(x)    << Foam::endl;
+	Foam::Info << "-------------------------------------------"       << Foam::endl;
 
     // Evaluate error norm
 	auto x0_vec_2 = linspace(0, 2, 200);
@@ -357,15 +356,15 @@ void runExample()
 		}
 	}
 
-	cout << endl << endl;
-	cout << "Evaluating spline errors (using max norm)  "   << endl;
-	cout << "-------------------------------------------"   << endl;
-	cout << "Linear B-spline:      "   << e_max.at(0)       << endl;
-	cout << "Quadratic B-spline:   "   << e_max.at(1)       << endl;
-	cout << "Cubic B-spline:       "   << e_max.at(2)       << endl;
-	cout << "P-spline:             "   << e_max.at(3)       << endl;
-    // cout << "Thin-plate spline:    "   << e_max.at(4)       << endl;
-	cout << "-------------------------------------------"   << endl;
+	Foam::Info << Foam::endl << Foam::endl;
+	Foam::Info << "Evaluating spline errors (using max norm)  "   << Foam::endl;
+	Foam::Info << "-------------------------------------------"   << Foam::endl;
+	Foam::Info << "Linear B-spline:      "   << e_max.at(0)       << Foam::endl;
+	Foam::Info << "Quadratic B-spline:   "   << e_max.at(1)       << Foam::endl;
+	Foam::Info << "Cubic B-spline:       "   << e_max.at(2)       << Foam::endl;
+	Foam::Info << "P-spline:             "   << e_max.at(3)       << Foam::endl;
+    // Foam::Info << "Thin-plate spline:    "   << e_max.at(4)       << Foam::endl;
+	Foam::Info << "-------------------------------------------"   << Foam::endl;
 }
 
 bool compareBSplines(BSpline &bs, const BSpline &bs_orig)
@@ -388,8 +387,8 @@ bool compareBSplines(BSpline &bs, const BSpline &bs_orig)
 			double yb_orig = bs_orig.eval(x);
 			if(std::abs(yb-yb_orig) > 1e-8)
 			{
-				cout << yb << endl;
-				cout << yb_orig << endl;
+				Foam::Info << yb << Foam::endl;
+				Foam::Info << yb_orig << Foam::endl;
 				return false;
 			}
 		}
@@ -443,8 +442,8 @@ bool domainReductionTest(BSpline &bs, const BSpline &bs_orig)
 
 void runRecursiveDomainReductionTest()
 {
-	cout << endl << endl;
-	cout << "Starting recursive domain reduction test..." << endl;
+	Foam::Info << Foam::endl << Foam::endl;
+	Foam::Info << "Starting recursive domain reduction test..." << Foam::endl;
 
     // Create new DataTable to manage samples
 	DataTable samples;
@@ -476,15 +475,15 @@ void runRecursiveDomainReductionTest()
 
 
 	if(domainReductionTest(bspline,bspline))
-		cout << "Test finished successfully!" << endl;
+		Foam::Info << "Test finished successfully!" << Foam::endl;
 	else
-		cout << "Test failed!" << endl;
+		Foam::Info << "Test failed!" << Foam::endl;
 }
 
 void testSplineDerivative()
 {
-	cout << endl << endl;
-	cout << "Testing spline derivative..." << endl;
+	Foam::Info << Foam::endl << Foam::endl;
+	Foam::Info << "Testing spline derivative..." << Foam::endl;
 
     // Create new DataTable to manage samples
 	DataTable samples;
@@ -538,7 +537,7 @@ void testSplineDerivative()
     		DenseMatrix dfdx = spline.evalJacobian(x);
     		if(dfdx.cols() != 2)
     		{
-    			cout << "Test failed - check Jacobian size!" << endl;
+    			Foam::Info << "Test failed - check Jacobian size!" << Foam::endl;
     			return;
     		}
 
@@ -591,16 +590,16 @@ void testSplineDerivative()
     		if(std::abs(dfdx(0) - x0_diff) > tol
     			|| std::abs(dfdx(1) - x1_diff) > tol)
     		{
-    			cout << x0 << ", " << x1 << endl;
-    			cout << dfdx(0) - x0_diff << endl;
-    			cout << dfdx(1) - x1_diff << endl;
-    			cout << "Test failed - check Jacobian!" << endl;
+    			Foam::Info << x0 << ", " << x1 << Foam::endl;
+    			Foam::Info << dfdx(0) - x0_diff << Foam::endl;
+    			Foam::Info << dfdx(1) - x1_diff << Foam::endl;
+    			Foam::Info << "Test failed - check Jacobian!" << Foam::endl;
     			return;
     		}
     	}
     }
 
-    cout << "Test finished successfully!" << endl;
+    Foam::Info << "Test finished successfully!" << Foam::endl;
 }
 
 void run_tests()
@@ -611,15 +610,15 @@ void run_tests()
 
 	runRecursiveDomainReductionTest();
 
-	cout << endl << endl;
-	cout << "Testing load and save functionality:       "   << endl;
-	cout << "-------------------------------------------"   << endl;
-	cout << "test1(): " << (test1() ? "success" : "fail")   << endl;
-	cout << "test2(): " << (test2() ? "success" : "fail")   << endl;
-	cout << "test3(): " << (test3() ? "success" : "fail")   << endl;
-	cout << "test4(): " << (test4() ? "success" : "fail")   << endl;
-	cout << "test5(): " << (test5() ? "success" : "fail")   << endl;
-	cout << "test6(): " << (test6() ? "success" : "fail")   << endl;
+	Foam::Info << Foam::endl << Foam::endl;
+	Foam::Info << "Testing load and save functionality:       "   << Foam::endl;
+	Foam::Info << "-------------------------------------------"   << Foam::endl;
+	Foam::Info << "test1(): " << (test1() ? "success" : "fail")   << Foam::endl;
+	Foam::Info << "test2(): " << (test2() ? "success" : "fail")   << Foam::endl;
+	Foam::Info << "test3(): " << (test3() ? "success" : "fail")   << Foam::endl;
+	Foam::Info << "test4(): " << (test4() ? "success" : "fail")   << Foam::endl;
+	Foam::Info << "test5(): " << (test5() ? "success" : "fail")   << Foam::endl;
+	Foam::Info << "test6(): " << (test6() ? "success" : "fail")   << Foam::endl;
 }
 
 int main(int argc, char **argv)
@@ -630,11 +629,11 @@ int main(int argc, char **argv)
 	}
 	catch(SPLINTER::Exception& e)
 	{
-		cout << "MS Exception - " << e.what() << endl;
+		Foam::Info << "MS Exception - " << e.what() << Foam::endl;
 	}
 	catch(std::exception& e)
 	{
-		cout << "std::exception - " << e.what() << endl;
+		Foam::Info << "std::exception - " << e.what() << Foam::endl;
 	}
 	return 0;
 }

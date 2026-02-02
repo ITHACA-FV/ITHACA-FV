@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
     reduced.solveOnline(vel_now, 1);
     // Reconstruct the solution and export it
     reduced.reconstruct(false, "./ITHACAoutput/Reconstruction/");
-    exit(0);
+    return 0;
 }
 
 /// \dir 19UnsteadyNSExplicit Folder of the turorial 19

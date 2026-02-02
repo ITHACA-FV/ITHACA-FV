@@ -56,8 +56,8 @@ void LRSensitivity::load_output()
     }
     else
     {
-        std::cout << "Model output not computed or assigned, program aborted" <<
-                  std::endl;
+        Foam::Info << "Model output not computed or assigned, program aborted" <<
+                  Foam::endl;
         exit(0);
     }
 }
@@ -118,9 +118,9 @@ void LRSensitivity::getBetas()
     }
     else
     {
-        std::cout <<
+        Foam::Info <<
         "Statistics about inputs or output are not computed yet, nothing to do ..." <<
-                  std::endl;
+                  Foam::endl;
     }
 }
 
@@ -149,9 +149,9 @@ void LRSensitivity::assessQuality()
     }
     else
     {
-        std::cout <<
+        Foam::Info <<
         "Linear regression coefficients are not computed yet, nothing to do ..." <<
-                  std::endl;
+                  Foam::endl;
     }
 }
 

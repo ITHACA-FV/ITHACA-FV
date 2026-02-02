@@ -355,7 +355,7 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/l2error");
     ITHACAstream::exportMatrix(L2errorMatrixT, "L2errorMatrixT", "eigen",
                                "./ITHACAoutput/l2error");
-    exit(0);
+    return 0;
 }
 
 /// \dir 10unsteadyBB_open Folder of the tutorial 10

@@ -47,14 +47,14 @@ int main()
 
     if (success)
     {
-        std::cout << "gd: sphere test completed successfully." << "\n";
+        Info << "gd: sphere test completed successfully." << "\n";
     }
 
     else
     {
-        std::cout << "gd: sphere test completed unsuccessfully." << "\n";
+        Info << "gd: sphere test completed unsuccessfully." << "\n";
     }
 
-    std::cout << "gd: solution to sphere test:\n" << x << std::endl;
+    Info << "gd: solution to sphere test:\n" << x << endl;
     return 0;
 }

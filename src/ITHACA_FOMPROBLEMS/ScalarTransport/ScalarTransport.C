@@ -185,7 +185,7 @@ void ScalarTransport::restart()
 //         startTime  = problem->startTime;
 //         writeEvery = problem->writeEvery;
 
-//         std::cout << "######## reduced Constructor calling ##########"<< std::endl;
+//         Info << "######## reduced Constructor calling ##########"<< endl;
 //     }
 
 //     ~EliBurgers(){}
@@ -318,8 +318,8 @@ void ScalarTransport::restart()
 //                 /// Hyper-reduced system
 //                 /// TODO: make sure to include the values of the volumes.
 //                 Eigen::VectorXd a = solver.compute(Se).solve(se);
-//                 //std::cout << "a.rows() = " << a.rows() << std::endl;
-//                 //std::cout << "a.cols() = " << a.cols() << std::endl;
+//                 //Info << "a.rows() = " << a.rows() << endl;
+//                 //Info << "a.cols() = " << a.cols() << endl;
 //                 //Eigen::VectorXd z = Y*a;
 //                 //exit(0);
 //                 /// Solution in eigen format
@@ -329,7 +329,7 @@ void ScalarTransport::restart()
 
 //             if (checkWrite(problem->_runTime()))
 //             {
-//                 //std::cout << "########## line 190" << std::endl;
+//                 //Info << "########## line 190" << endl;
 //                 //ITHACAstream::exportSolution(S, name(counter), folder);
 //                 counter++;
 //                 Ufield.append(S.clone());
@@ -377,7 +377,7 @@ void ScalarTransport::restart()
 //     startOff= std::clock();
 //     train.offlineSolve();
 //     durationOff = (std::clock() - startOff);
-//     std::cout << "The Offline phase duration is equal to" << durationOff << std::endl;
+//     Info << "The Offline phase duration is equal to" << durationOff << endl;
 //     // ITHACAPOD::getModes(train.Ufield, train.Umodes, train._U().name(),
 //     //                    train.podex, 0, 0,NmodesUout);
 
@@ -406,8 +406,8 @@ void ScalarTransport::restart()
 //     // Eigen::MatrixXd V = (X.transpose()*field2submesh*field2submesh.transpose()*X).inverse()*X.transpose()*field2submesh; // Ok
 //     // /// Define the full matrix to the full field
 //     // Eigen::MatrixXd Y = X*V;
-//     // //std::cout << "Y.rows() = " << Y.rows() << std::endl;
-//     // //std::cout << "Y.cols() = " << Y.cols() << std::endl;
+//     // //Info << "Y.rows() = " << Y.rows() << endl;
+//     // //Info << "Y.cols() = " << Y.cols() << endl;
 //     // train.EliObject->MatrixOnline = Y;
 
 //     // // PtrList<volVectorField> subfields;
@@ -432,7 +432,7 @@ void ScalarTransport::restart()
 //     // reduced.OnlineBurgers(NmodesUproj);
 
 //     // durationOn = (std::clock() - startOn);
-//     // std::cout << "The Online  phase  duration  is  equal  to " << durationOn << std::endl;
+//     // Info << "The Online  phase  duration  is  equal  to " << durationOn << endl;
 //     // //ITHACAstream::exportFields(reduced.Ufield, "./ITHACAoutput/Online", reduced.Ufield[0].name() );
 //     // //PtrList<volVectorField> errflds;
 //     // //exit(0);
@@ -501,15 +501,15 @@ void ScalarTransport::restart()
 // Info << x << endl;
 // //volVectorField x(xx);
 
-// std::cout << problem->EliObject->MatrixOnline.cols() << std::endl;
-// std::cout << problem->EliObject->MatrixOnline.rows() << std::endl;
+// Info << problem->EliObject->MatrixOnline.cols() << endl;
+// Info << problem->EliObject->MatrixOnline.rows() << endl;
 
 
 
 // Eigen::VectorXd y = Foam2Eigen::field2Eigen(x);
 
-// std::cout << y.cols() << std::endl;
-// std::cout << y.rows() << std::endl;
+// Info << y.cols() << endl;
+// Info << y.rows() << endl;
 
 //  exit(0);
 
@@ -538,8 +538,8 @@ void ScalarTransport::restart()
 // auto Ap = Q.transpose()* Ar *Q;
 // auto bp = Q.transpose() * br;
 
-//std::cout <<  "P = " << P << std::endl;
+//Info <<  "P = " << P << endl;
 
-//std::cout <<  "Ar = " << Q.transpose()* Ar *Q << std::endl;
-//std::cout <<  "br = " << Q.transpose() * br << std::endl;
+//Info <<  "Ar = " << Q.transpose()* Ar *Q << endl;
+//Info <<  "br = " << Q.transpose() * br << endl;
 //auto a = Ap.colPivHouseholderQr().solve(bp);

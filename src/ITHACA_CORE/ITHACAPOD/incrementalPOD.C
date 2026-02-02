@@ -316,7 +316,7 @@ incrementalPOD<Type, PatchField, GeoMesh>::projectSnapshot(
     }
     else
     {
-        std::cout << "Inner product not defined" << endl;
+        Foam::Info << "Inner product not defined" << Foam::endl;
         exit(0);
     }
 
@@ -367,7 +367,7 @@ void incrementalPOD<Type, PatchField, GeoMesh>::projectSnapshots(
         }
         else
         {
-            std::cout << "Inner product not defined" << endl;
+            Foam::Info << "Inner product not defined" << Foam::endl;
             exit(0);
         }
 

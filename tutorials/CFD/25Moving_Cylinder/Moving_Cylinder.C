@@ -77,7 +77,7 @@ class tutorial22: public fsiBasic
                     //std::clock_t startOff;
                     //startOff = std::clock();
                     //folderN = i;
-                    std::cout << "Current mu = " << mu(i, 0) << std::endl;
+                    Info << "Current mu = " << mu(i, 0) << endl;
                     //change_viscosity(mu(i, 0));
                     //change_stiffness(mu(i,0));
                     //meshPtr().movePoints(Mesh0->points());
@@ -144,9 +144,9 @@ int main(int argc, char* argv[])
     //startOff= std::clock();
     //Info << example.Mesh0->checkMesh(true) << endl;
     //exit(0);
-    //std::cerr << "debug point 3" << std::endl;
+    //std::cerr << "debug point 3" << endl;
     example.offlineSolve();
-    //std::cerr << "debug point 4" << std::endl;
+    //std::cerr << "debug point 4" << endl;
     //example.meshPtr().movePoints( example.Mesh0->points());
 
     // bool meshesDiffer = false;
@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
     //     Info << "Meshes differ in point locations." << endl;
     // else
     // Info << "Meshes are geometrically identical." << endl;
-    // //std::cout << "The Offline phase  duration  is  equal  to " << durationOff << std::endl;
+    // //Info << "The Offline phase  duration  is  equal  to " << durationOff << endl;
     // exit(0);
 
     //example.meshPtr().movePoints(example.Dfield[0]);
@@ -224,7 +224,7 @@ int main(int argc, char* argv[])
 
         for (label k = 0; k < parsOn.rows(); k++)
         {
-            //std::cout << "Current mu = " << parsOn(k, 0) << std::endl;
+            //Info << "Current mu = " << parsOn(k, 0) << endl;
             //example.meshPtr().movePoints( example.Mesh0->points());
             word param_name = "damping";
             testkOff.updateStiffnessAndRebuildSolver(parsOn(k, 0), param_name);
@@ -281,8 +281,8 @@ int main(int argc, char* argv[])
 
     for (label i = 0; i < parsOn.rows(); i++)
     {
-        // std::cout << "Current mu = "
-        //           << parsOn(i,0) << std::endl;
+        // Info << "Current mu = "
+        //           << parsOn(i,0) << endl;
         //example.meshPtr().movePoints( example.Mesh0->points());
         word param_name = "damping";
         example.updateStiffnessAndRebuildSolver(parsOn(i, 0), param_name);
@@ -322,11 +322,11 @@ int main(int argc, char* argv[])
     }
 
     //durationOn = (std::clock() - startOn);
-    //std::cout << "The Online  phase  duration  is  equal  to " << durationOn << std::endl;
-    exit(0);
+    //Info << "The Online  phase  duration  is  equal  to " << durationOn << endl;
+    return 0;
     Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(example.Ufield,
                              reduced.UredFields);
-    std::cout <<
+    Info <<
     "======================= errL2U completed================================" <<
     "\n";
     Eigen::MatrixXd errL2P = ITHACAutilities::errorL2Rel(example.Pfield,
@@ -335,5 +335,5 @@ int main(int argc, char* argv[])
                    NmodesUproj) + "_" + name(NmodesPproj) + ".npy");
     cnpy::save(errL2P, "./ITHACAoutput/DataFromRom/errL2P_" + name(
                    NmodesUproj) + "_" + name(NmodesPproj) + ".npy");
-    exit(0);
+    return 0;
 }
