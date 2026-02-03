@@ -32,7 +32,8 @@ Linear and non-linear algebra operations which are not already implemented in Op
 *   [**OpenFOAM 2312**](https://www.openfoam.com/news/main-news/openfoam-v2312) or
 *   [**OpenFOAM 2406**](https://www.openfoam.com/news/main-news/openfoam-v2406) or
 *   [**OpenFOAM 2412**](https://www.openfoam.com/news/main-news/openfoam-v2412) or
-*   [**OpenFOAM 2506**](https://www.openfoam.com/news/main-news/openfoam-v2506)
+*   [**OpenFOAM 2506**](https://www.openfoam.com/news/main-news/openfoam-v2506) or
+*   [**OpenFOAM 2512**](https://www.openfoam.com/news/main-news/openfoam-v2512)
 
 
 ### 2. Installation and usage
