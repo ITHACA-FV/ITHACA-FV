@@ -260,6 +260,18 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> vectorTensorProduct(
 /// @param      n int 
 Eigen::VectorXd repeatElements(Eigen::VectorXd input, int n);
 
+//------------------------------------------------------------------------------
+/// @brief      Changes the order of the vector's elements given a dimension
+///
+/// @details    Example: input = (a_1, b_1, a_2, b_2, a_3, b_3); dim = 3
+///                      output = (a_1, a_2, a_3, b_1, b_2, b_3)
+///             Typically switch from a component then coordinate order to the opposite
+///             as did the change in the Foam2Eigen mapping 
+///
+/// @param      input Eigen::VectorXd
+/// @param      dim int 
+Eigen::VectorXd reorderVectorFromDim(Eigen::VectorXd input, int dim);
+
 };
 
 template <typename T>

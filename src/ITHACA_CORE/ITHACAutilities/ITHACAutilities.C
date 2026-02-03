@@ -232,24 +232,5 @@ Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert,
     }
 }
 
-Eigen::SparseMatrix<double> sparseBlockDiagonalRepeat(Eigen::SparseMatrix<double>& A, int n)
-{
-  std::vector<Eigen::Triplet<double>> tripletList;
-  tripletList.reserve(n*A.nonZeros());
-
-  for (int i = 0; i < A.outerSize(); i++) 
-  {
-    for (Eigen::SparseMatrix<double>::InnerIterator j(A,i); j; ++j) 
-    {
-      for (int k = 0; k < n; k++)
-      {
-        tripletList.push_back(Eigen::Triplet<double>(j.row() + k*A.rows(), j.col() + k*A.cols(), j.value()));
-      }
-    }
-  }
-  Eigen::SparseMatrix<double> out(n*A.rows(), n*A.cols());
-  out.setFromTriplets(tripletList.begin(), tripletList.end());
-  return out;
-}
 
 }

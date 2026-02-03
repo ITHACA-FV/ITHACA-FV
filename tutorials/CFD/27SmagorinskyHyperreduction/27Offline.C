@@ -139,16 +139,10 @@ void tutorial27_offline::project()
                     K_proj_line_i = K_DEIM.row(i);
                 }
 
-                for (label j_p = 0 ; j_p < d ; j_p++)
-                {
-                    for (label j = 0 ; j < nMagicPoints ; j++)
-                    {
-                        K_proj(i, j + j_p * (nMagicPoints + 1)) = K_proj_line_i(j + j_p * nMagicPoints);
-                    }
-                }
-                K_proj(i, nMagicPoints) = ITHACAutilities::dot_product_L2(spatialModesU[i], meanSmag);
-                K_proj(i, nMagicPoints + nMagicPoints + 1) = 0.0;
-                K_proj(i, nMagicPoints + 2 * (nMagicPoints + 1)) = 0.0;
+                K_proj.row(i).head(d*nMagicPoints) = K_proj_line_i;
+                K_proj(i, d*nMagicPoints) = ITHACAutilities::dot_product_L2(spatialModesU[i], meanSmag);
+                K_proj(i, d*nMagicPoints + 1) = 0.0;
+                K_proj(i, d*nMagicPoints + 2) = 0.0;
             }
 
             cnpy::save(K_proj, file_projK_DEIM);
@@ -172,7 +166,7 @@ void tutorial27_offline::project()
 
             if (m_parameters->get_HRMethod() == "DEIM")
             {
-                K_DEIM.array().colwise() /= ITHACAutilities::getMassMatrixFV(spatialModesU[0]).head(K_DEIM.rows()).array().sqrt();
+                K_DEIM.array().colwise() /= Foam2Eigen::field2Eigen(m_parameters->get_volume()).array().sqrt();
                 for (label i = 0; i < nModesU; i++)
                 {
                     for (label q = 0; q < nModesU+1; q++)

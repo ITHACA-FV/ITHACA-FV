@@ -117,11 +117,11 @@ Eigen::VectorXd tutorial27_online::computeApproxSmagMg(const Eigen::VectorXd& re
     {
         vector stressVector = weightAtMg(i) * (stressField)[localMagicPoints[i]];
 
-        output(i) = stressVector.x();
-        output(i + nMagicPoints + 1) = stressVector.y();
-        output(i + 2 * (nMagicPoints + 1)) = stressVector.z();
+        output(i * d) = stressVector.x();
+        output(i * d + 1) = stressVector.y();
+        output(i * d + 2) = stressVector.z();
     }
-    output(nMagicPoints) = 1.0;
+    output(d * nMagicPoints) = 1.0;
     return output;
 }
 

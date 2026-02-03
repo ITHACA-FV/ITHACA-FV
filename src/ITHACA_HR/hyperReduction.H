@@ -526,6 +526,13 @@ class HyperReduction
         void getSnapMatrix(Eigen::MatrixXd& snapMatrix, Eigen::VectorXd& fieldWeights,
                            List<Eigen::MatrixXd>& snapMatrixBoundary,
                            List<Eigen::VectorXd>& fieldWeightsBoundary);
+
+        /// @brief      Compute the sparse mask matrix P with a vectorial dimension different 
+        ///             from the snapshots (enlarged or reduced)
+        ///
+        /// @param[in]  newDim  int, the vectorial dim for the output
+        ///
+        Eigen::SparseMatrix<double> maskToOtherDim(int newDim);
 };
 
 #endif

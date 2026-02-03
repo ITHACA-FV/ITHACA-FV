@@ -142,4 +142,28 @@ Eigen::VectorXd repeatElements(Eigen::VectorXd input, int n)
         return output;
     }
 }
+
+Eigen::VectorXd reorderVectorFromDim(Eigen::VectorXd input, int dim)
+{
+    if ((input.size() % dim) != 0)
+    {
+        Info << "EigenFunctions::reorderVectorFromDim has incompatible vector size " <<
+                "and reordering dimension. Aborting" << endl;
+        abort();
+    }
+    else
+    {
+        Eigen::VectorXd output(input.size());
+        int n = int(input.size() / dim);
+        for (int i = 0; i < n; i++)
+        {
+            for (int d = 0; d < dim; d++)
+            {
+                output(i * dim + d) = input(i + d * dim);
+            }
+        }
+        return output;
+    }
+}
+
 }

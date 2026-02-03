@@ -544,15 +544,15 @@ void TurbDiffusionHyperreduction<volF,T,S>::computeTurbDiffusionHyperreduction()
     {
         Eigen::VectorXd vectorWeights = ITHACAutilities::getMassMatrixFV(f_spatialModesU[0]).array().sqrt(); 
         Eigen::MatrixXd spatialModesU = vectorWeights.asDiagonal() * Foam2Eigen::PtrList2Eigen(f_spatialModesU);
-        Eigen::SparseMatrix<double> P = ITHACAutilities::sparseBlockDiagonalRepeat(ithacaHyperreduction->P, 3);
+        Eigen::SparseMatrix<double> P = ithacaHyperreduction->maskToOtherDim(3);
         Eigen::MatrixXd K_DEIM = spatialModesU.transpose() * P;
         for (label m = 0; m < ithacaHyperreduction->n_nodes; m++)
         {
             for (label c = 0; c < f_spatialModesU.size(); c++)
             {
-                K_DEIM(c,m) *= quadWeights[c][m];
-                K_DEIM(c,ithacaHyperreduction->n_nodes + m) *= quadWeights[c][m];
-                K_DEIM(c,2*ithacaHyperreduction->n_nodes + m) *= quadWeights[c][m];
+                K_DEIM(c, 3*m) *= quadWeights[c][m];
+                K_DEIM(c, 3*m + 1) *= quadWeights[c][m];
+                K_DEIM(c, 3*m + 2) *= quadWeights[c][m];
             }
         }
         cnpy::save(K_DEIM, folder_HR + "/K_DEIM.npy");

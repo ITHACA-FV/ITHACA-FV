@@ -148,12 +148,6 @@ Eigen::MatrixXd pinv_eigen_based(Eigen::MatrixXd& origin, const float er = 0);
 Eigen::MatrixXd invertMatrix(Eigen::MatrixXd& matrixToInvert,
                              const word inversionMethod);
 
-//------------------------------------------------------------------------------
-/// @brief      Builds a block diagonal sparse matrix from n repetitions of the sparse matrix A
-///
-/// @param      A Eigen::SparseMatrix
-/// @param      n int
-Eigen::SparseMatrix<double> sparseBlockDiagonalRepeat(Eigen::SparseMatrix<double>& A, int n);
 
 };
 

@@ -554,8 +554,8 @@ void HyperReduction<SnapshotsLists...>::offlineGappyDEIM(
                         adding.rowwise() += norma.transpose();
                         Eigen::VectorXd denom = (adding.array().pow(1. /
                                                  V.cols()).matrix()).rowwise().prod();
-                        max = ((mp_not_mask.head(n_cells).asDiagonal() * num).array() /
-                               denom.array()).maxCoeff(& ind_max, & c1);
+                        max = ((mp_not_mask(Eigen::seq(0, Eigen::indexing::last, vectorial_dim)).asDiagonal() * num)
+                              .array() / denom.array()).maxCoeff(& ind_max, & c1);
                     }
                     else
                     {
@@ -732,8 +732,8 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
 
             for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
             {
-                Eigen::MatrixXd block = listSnapshotsModes[ith_subspace].block(ith_field* n_cells, 0, n_cells,
-                                        n_modesCurrent).transpose();
+                Eigen::MatrixXd block = listSnapshotsModes[ith_subspace](Eigen::seq(ith_field, 
+                                        Eigen::indexing::last, vectorial_dim), Eigen::indexing::all).transpose();
 
                 if (predictVolume)
                 {
@@ -815,8 +815,8 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
 
             while (nodePoints->size() < n_nodes)
             {
-                max = ((b.transpose() * A * mp_not_mask.head(
-                            n_cells).asDiagonal()).colwise().sum()).maxCoeff(& r1, & ind_max);
+                max = ((b.transpose() * A * mp_not_mask(Eigen::seq(0, Eigen::indexing::last, vectorial_dim))
+                            .asDiagonal()).colwise().sum()).maxCoeff(& r1, & ind_max);
                 updateNodes(P, ind_max, mp_not_mask);
                 n_modesPrevious = 0;
                 for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
@@ -873,7 +873,7 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
         if (n_subspaces == 1)
         {
             basisMatrix = listSnapshotsModes[0];
-            quadratureWeights = quadratureWeightsSubspaces[0];
+            quadratureWeights = EigenFunctions::reorderVectorFromDim(quadratureWeightsSubspaces[0], vectorial_dim);
             evaluateWPU(P, basisMatrix, normalizingWeights, quadratureWeights);
             cnpy::save(basisMatrix, folderMethod + "/basisMatrix.npy");
             cnpy::save(quadratureWeights, folderMethod + "/quadratureWeights.npy");
@@ -884,6 +884,8 @@ void HyperReduction<SnapshotsLists...>::offlineECP(List<Eigen::MatrixXd>& listSn
             Eigen::MatrixXd quadratureWeightsMerged(n_nodes, n_subspaces);
             for (int ith_subspace = 0; ith_subspace < n_subspaces; ith_subspace++)
             {
+                quadratureWeightsSubspaces[ith_subspace] = EigenFunctions::reorderVectorFromDim(
+                                           quadratureWeightsSubspaces[ith_subspace], vectorial_dim);
                 cnpy::save(quadratureWeightsSubspaces[ith_subspace], folderMethod + "/quadratureWeights_subspace" +
                         std::to_string(ith_subspace+1) + ".npy");
                 quadratureWeightsMerged.col(ith_subspace) = quadratureWeightsSubspaces[ith_subspace];
@@ -942,9 +944,9 @@ void HyperReduction<SnapshotsLists...>::initSeeds(Eigen::VectorXd mp_not_mask,
 
             for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
             {
-                P.insert(index + ith_field * n_cells,
-                         vectorial_dim * trueSeeds + ith_field) = 1;
-                mp_not_mask(index + ith_field * n_cells) = 0;
+                P.insert(index * vectorial_dim + ith_field,
+                         trueSeeds * vectorial_dim + ith_field) = 1;
+                mp_not_mask(index * vectorial_dim + ith_field) = 0;
             }
 
             trueSeeds++;
@@ -982,14 +984,14 @@ void HyperReduction<SnapshotsLists...>::updateNodes(Eigen::SparseMatrix<double>
     {
         for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
         {
-            P.insert(nodes[ith_node] + ith_field * n_cells,
-                     ith_node + ith_field * (step + 1)) = 1;
+            P.insert(nodes[ith_node] * vectorial_dim + ith_field,
+                     ith_node * vectorial_dim + ith_field) = 1;
         }
     }
 
     for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
     {
-        mp_not_mask(ind + ith_field * n_cells) = 0;
+        mp_not_mask(ind * vectorial_dim + ith_field) = 0;
     }
 }
 
@@ -1021,8 +1023,8 @@ void HyperReduction<SnapshotsLists...>::updateNodesRemove(Eigen::SparseMatrix<do
     {
         for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
         {
-            P.insert(nodes[ith_node] + ith_field * n_cells,
-                     ith_node + ith_field*(step + 1)) = 1;
+            P.insert(nodes[ith_node] * vectorial_dim + ith_field,
+                     ith_node * vectorial_dim + ith_field) = 1;
         }
     }
     // Not updating mp_not_mask : we are not choosing again a node that we removed
@@ -1062,7 +1064,7 @@ void HyperReduction<SnapshotsLists...>::initReshapeMat(
     {
         for (unsigned int ith_field = 0; ith_field < vectorial_dim; ith_field++)
         {
-            reshapeMat.insert(i, i + n_cells * ith_field) = 1;
+            reshapeMat.insert(i, i * vectorial_dim + ith_field) = 1;
         }
     }
 
@@ -1305,6 +1307,29 @@ List<label> HyperReduction<SnapshotsLists...>::global2local(
     }
 
     return localPoints;
+}
+
+template<typename... SnapshotsLists>
+Eigen::SparseMatrix<double> HyperReduction<SnapshotsLists...>::maskToOtherDim(int newDim)
+{
+    if (!(newDim > 0))
+    {
+        Info << "The integer for the HyperReduction::maskToOtherDim method must be positive. Aborting" << endl;
+        abort();
+    }
+    else
+    {
+        Eigen::SparseMatrix<double> output(n_cells * newDim, nodes.size() * newDim);
+        for (int ith_node = 0; ith_node < nodes.size(); ith_node++)
+        {
+            for (unsigned int ith_field = 0; ith_field < newDim; ith_field++)
+            {
+                output.insert(nodes[ith_node] * newDim + ith_field,
+                              ith_node * newDim + ith_field) = 1;
+            }
+        }
+        return output;
+    }
 }
 
 #endif
