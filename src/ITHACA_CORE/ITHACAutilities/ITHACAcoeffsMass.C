@@ -321,7 +321,7 @@ Eigen::VectorXd getMassMatrixFV(
         Eigen::MatrixXd snapEigen = Foam2Eigen::field2Eigen(snapshot);
         label dim = std::nearbyint(snapEigen.rows() / (snapshot.mesh().V()).size());
         Eigen::VectorXd volumes = Foam2Eigen::field2Eigen(snapshot.mesh().V());
-        Eigen::VectorXd vol3 = volumes.replicate(dim, 1);
+        Eigen::VectorXd vol3 = EigenFunctions::repeatElements(volumes, dim);
         return vol3;
     }
     else if constexpr(std::is_same<pointMesh, GeoMesh>::value)
@@ -330,7 +330,7 @@ Eigen::VectorXd getMassMatrixFV(
         label dim = std::nearbyint(snapEigen.rows() / (snapshot.mesh()
                                    ().points()).size());
         Eigen::VectorXd pointsdata = Foam2Eigen::field2Eigen(snapshot);
-        Eigen::VectorXd points3 = pointsdata.replicate(dim, 1);
+        Eigen::VectorXd points3 = EigenFunctions::repeatElements(pointsdata, dim);
         return points3;
     }
 }

@@ -249,6 +249,17 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> vectorTensorProduct(
     const Eigen::Tensor<T, 3 >& c,
     const Eigen::Matrix<T, Eigen::Dynamic, 1>& a);
 
+
+//------------------------------------------------------------------------------
+/// @brief      Repeat each element n times after themselves
+///
+/// @details    Example: input = (a, b); n = 3
+///                      output = (a, a, a, b, b, b)
+///
+/// @param      input Eigen::VectorXd
+/// @param      n int 
+Eigen::VectorXd repeatElements(Eigen::VectorXd input, int n);
+
 };
 
 template <typename T>
