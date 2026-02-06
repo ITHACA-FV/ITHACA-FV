@@ -61,6 +61,7 @@ using namespace std::placeholders;
 #include "ITHACAerror.H"
 #include "ITHACAassign.H"
 #include "ITHACAcoeffsMass.H"
+#include "ITHACAstring.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

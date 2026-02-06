@@ -1,0 +1,20 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Launch OpenFOAM simulation if not done yet
+if [ ! -d "Offline" ]; then
+    ./create_mesh > /dev/null
+
+    mkdir Offline
+    ln -s $PWD/0/ Offline/
+    ln -s $PWD/system/ Offline/
+    ln -s $PWD/constant/ Offline/
+    cd Offline
+    pimpleFoam > ../log.pimpleFoam
+    cd ..
+fi
+
+runApplication 27SmagorinskyHyperreduction 

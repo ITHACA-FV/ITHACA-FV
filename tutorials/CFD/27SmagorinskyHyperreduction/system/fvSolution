@@ -1,0 +1,98 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  6                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    p
+    {
+        solver           		GAMG;
+        tolerance        		1e-6;
+        relTol           		0.01;
+        smoother         		GaussSeidel;
+        nPreSweeps       		0;
+        nPostSweeps      		2;
+        cacheAgglomeration 		on;
+        agglomerator     		faceAreaPair;
+        nCellsInCoarsestLevel 	100;
+        mergeLevels      		1;
+		minIter		 			1;
+    }
+
+    pFinal
+    {
+		$p;
+        tolerance        	1e-6;
+		relTol		 		0;
+		minIter		 		1;
+    }
+
+    U
+    {
+
+        //solver           smoothSolver;
+        //smoother         GaussSeidel;
+        //tolerance        1e-8;
+        //relTol           0.0;
+        //nSweeps          1;
+
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0.0;
+		minIter			1;
+    }
+
+    UFinal
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-08;
+        relTol          0;
+		minIter			1;
+    }
+}
+
+PIMPLE
+{
+    momemtumPredictor 			yes;
+    turbOnFInallIterOnly 		false;
+
+    nOuterCorrectors 			1;		//1 is equivalent to PISO mode
+    nCorrectors     			2;
+    nNonOrthogonalCorrectors 	1;
+
+    pRefCell        			0;
+    pRefValue       			0;
+}
+
+//Be careful when under relaxing pimpleFoam because you loose time accuracy
+/*
+relaxationFactors
+{
+    fields
+    {
+        p               0.3;
+    }
+    equations
+    {
+        U               0.7;
+        k               0.7;
+        omega           0.7;
+    }
+}
+*/
+
+// ************************************************************************* //

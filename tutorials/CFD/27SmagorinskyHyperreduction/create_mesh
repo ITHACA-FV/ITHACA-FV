@@ -1,0 +1,10 @@
+#!/bin/sh
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+cleanCase
+
+runApplication blockMesh
+runApplication snappyHexMesh -overwrite
+runApplication extrudeMesh
+

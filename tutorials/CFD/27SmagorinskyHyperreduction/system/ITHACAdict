@@ -1,0 +1,74 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      ITHACAdict;
+}
+
+
+fields
+(
+U_pod
+fullStressFunction
+nut
+);
+
+U_pod
+{
+field_name U;
+// Specify the number of modes you want to extract for U
+nmodes 4;
+field_type vector;
+hilbertSpacePOD L2;
+}
+
+fullStressFunction
+{
+field_name fullStressFunction;
+// Specify the number of modes you want to extract for hyperreduction
+nmodes 16;
+field_type vector;
+}
+
+nut
+{
+field_name nut;
+// Specify the number of modes you want to extract for hyperreduction
+nmodes 16;
+field_type scalar;
+}
+
+// Root path where OpenFOAM simulation outputs are
+rootpath "./";
+
+// Path (from rootPath) where OpenFOAM simulation outputs are
+casename "./Offline/";
+
+// Set Time from which you want to start taking the Snapshots
+InitialTime 0.0;
+
+// Set Time when you want to stop taking the Snapshots
+FinalTime 25.0;
+
+// Set Time when you want to stop taking the Snapshots
+FinalTimeSimulation 30.0;
+
+// Must be 1 for the tutorial: the snapshots are centered before POD (snapshots = snapshots - meanField)
+centeredOrNot 1;
+interpFieldCenteredOrNot 1;
+
+// name of eigensolver : eigen or spectra
+EigenSolver spectra;
+
+HyperReduction "DEIM";   // DEIM or ECP
+DEIMInterpolatedField "reducedFullStressFunction";  // reducedFullStressFunction or reducedNut
+

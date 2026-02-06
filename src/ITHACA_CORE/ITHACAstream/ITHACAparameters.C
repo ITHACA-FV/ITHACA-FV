@@ -2,7 +2,7 @@
 
 ITHACAparameters* ITHACAparameters::instance = nullptr;
 
-ITHACAparameters::ITHACAparameters(fvMesh& mesh, Time& localTime)
+ITHACAparameters::ITHACAparameters(const fvMesh& mesh, Time& localTime)
     :
     runTime(localTime),
     mesh(mesh)
@@ -42,7 +42,7 @@ ITHACAparameters::ITHACAparameters(fvMesh& mesh, Time& localTime)
     correctBC = ITHACAdict->lookupOrDefault<bool>("correctBC", 1);
 }
 
-ITHACAparameters* ITHACAparameters::getInstance(fvMesh& mesh,
+ITHACAparameters* ITHACAparameters::getInstance(const fvMesh& mesh,
         Time& localTime)
 {
     if (instance == nullptr)

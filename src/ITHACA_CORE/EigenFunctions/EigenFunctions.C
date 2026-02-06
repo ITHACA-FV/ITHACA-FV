@@ -121,4 +121,49 @@ vectorTensorProduct(
     const Eigen::Matrix<float, Eigen::Dynamic, 1>& g,
     const Eigen::Tensor<float, 3 >& c,
     const Eigen::Matrix<float, Eigen::Dynamic, 1>& a);
+
+Eigen::VectorXd repeatElements(Eigen::VectorXd input, int n)
+{
+    if (!(n > 0))
+    {
+        Info << "The integer for the EigenFunctions::repeat method must be positive. Aborting" << endl;
+        abort();
+    }
+    else
+    {
+        Eigen::VectorXd output(input.size() * n);
+        for (int i = 0; i < input.size(); i++)
+        {
+            for (int r = 0; r < n; r++)
+            {
+                output(i * n + r) = input(i);
+            }
+        }
+        return output;
+    }
+}
+
+Eigen::VectorXd reorderVectorFromDim(Eigen::VectorXd input, int dim)
+{
+    if ((input.size() % dim) != 0)
+    {
+        Info << "EigenFunctions::reorderVectorFromDim has incompatible vector size " <<
+                "and reordering dimension. Aborting" << endl;
+        abort();
+    }
+    else
+    {
+        Eigen::VectorXd output(input.size());
+        int n = int(input.size() / dim);
+        for (int i = 0; i < n; i++)
+        {
+            for (int d = 0; d < dim; d++)
+            {
+                output(i * dim + d) = input(i + d * dim);
+            }
+        }
+        return output;
+    }
+}
+
 }
