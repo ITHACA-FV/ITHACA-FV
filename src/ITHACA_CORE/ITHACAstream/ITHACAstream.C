@@ -1297,7 +1297,7 @@ readFieldByIndex(
 
 
 template<typename T>
-void ITHACAstream::read_snapshot(T& snapshot, const Foam::word snap_time,
+void read_snapshot(T& snapshot, const Foam::word snap_time,
                                   Foam::word path, Foam::word name)
 {
     // ITHACAparameters* para(ITHACAparameters::getInstance());
@@ -1358,11 +1358,11 @@ void ITHACAstream::read_snapshot(T& snapshot, const Foam::word snap_time,
 }
 
 
-template void ITHACAstream::read_snapshot(Foam::volScalarField& snapshot,
+template void read_snapshot(Foam::volScalarField& snapshot,
         const Foam::word snap_time, Foam::word path, Foam::word name);
-template void ITHACAstream::read_snapshot(Foam::volVectorField& snapshot,
+template void read_snapshot(Foam::volVectorField& snapshot,
         const Foam::word snap_time, Foam::word path, Foam::word name);
-template void ITHACAstream::read_snapshot(Foam::volTensorField& snapshot,
+template void read_snapshot(Foam::volTensorField& snapshot,
         const Foam::word snap_time, Foam::word path, Foam::word name);
 
 
