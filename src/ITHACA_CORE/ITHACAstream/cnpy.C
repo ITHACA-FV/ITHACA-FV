@@ -358,7 +358,7 @@ cnpy::NpyArray load_the_npz_array(FILE* fp, uint32_t compr_bytes,
 cnpy::npz_t cnpy::npz_load(std::string fname)
 {
     FILE* fp = fopen(fname.c_str(), "rb");
-    std::cerr << "Line: 350 of file cnpy.C" << std::endl;
+    std::cerr << "Line: 350 of file cnpy.C" << endl;
 
     if (!fp)
     {
@@ -371,7 +371,7 @@ cnpy::npz_t cnpy::npz_load(std::string fname)
     {
         std::vector<char> local_header(30);
         size_t headerres = fread(&local_header[0], sizeof(char), 30, fp);
-        std::cerr << headerres << std::endl;
+        std::cerr << headerres << endl;
 
         if (headerres != 30)
         {

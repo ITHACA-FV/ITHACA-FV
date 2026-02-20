@@ -601,7 +601,7 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation()
         x(1) = interpolationPlane.thermocoupleZ[thermocoupleI];
         thermocouplesSamples.addSample(x, Tmeas(thermocoupleI));
     }
-    std::cout << Tmeas << std::endl;
+    Info << Tmeas << endl;
     RBFSpline rbfspline(thermocouplesSamples, RadialBasisFunctionType::GAUSSIAN);
     auto inPlaneCellID = 0;
     forAll(T.internalField(), cellI)
@@ -711,7 +711,7 @@ void inverseLaplacianProblem_CG::thermocouplesInterpolation(
         x(1) = interpolationPlane.thermocoupleZ[thermocoupleI];
         thermocouplesSamples.addSample(x, Tmeas(thermocoupleI));
     }
-    std::cout << Tmeas << std::endl;
+    Info << Tmeas << endl;
     RBFSpline rbfspline(thermocouplesSamples, RadialBasisFunctionType::GAUSSIAN);
     auto inPlaneCellID = 0;
     forAll(T.internalField(), cellI)

@@ -116,8 +116,8 @@ int main(int argc, char* argv[])
     example.offlineSolve();
     //exit(0);
     durationOff = (std::clock() - startOff);
-    std::cout << "The Offline phase  duration  is  equal  to " << durationOff <<
-              std::endl;
+    Info << "The Offline phase  duration  is  equal  to " << durationOff <<
+              endl;
 
     if (example.podex == 0 )
     {
@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
     hyperreduced.writeEvery = example.writeEvery;
     /// Solving the hyper-reduced problem
     hyperreduced.SolveHyperReducedSys(NmodesUproj, NmodesPproj, NmodesEproj);
-    exit(0);
+    return 0;
     // online.coeffL2 = ITHACAutilities::getCoeffs(example.Dfield, online.Dmodes, NmodesDproj, false);
     // if( (!ITHACAutilities::check_folder("./ITHACAoutput/Matrices/")) )
     // {
@@ -171,8 +171,8 @@ int main(int argc, char* argv[])
     //  startOn = std::clock();
     //  reduced.solveOnline_Pimple(mu_now, NmodesUproj, NmodesPproj, NmodesDproj);
     //  durationOn = (std::clock() - startOn);
-    //  std::cout << "The Online  phase  duration  is  equal  to " << durationOn << std::endl;
-    //  std::cout << "======================= ONLINE PHASE COMPLETED ================================" << "\n";
+    //  Info << "The Online  phase  duration  is  equal  to " << durationOn << endl;
+    //  Info << "======================= ONLINE PHASE COMPLETED ================================" << "\n";
     //  if (!ITHACAutilities::check_folder("./ITHACAoutput/DataFromRom"))
     //  {
     //      mkDir("ITHACAoutput/DataFromRom");
@@ -189,11 +189,11 @@ int main(int argc, char* argv[])
     //      ITHACAstream::exportMatrix(reduced.CoeffU,"CoeffsU", "python", "./ITHACAoutput/DataFromRom/ReducedCoeffs/");
     //  }
     // Eigen::MatrixXd errL2U = ITHACAutilities::errorL2Rel(example.Ufield, reduced.UredFields);
-    // std::cout << "======================= errL2U completed================================" << "\n";
+    // Info << "======================= errL2U completed================================" << "\n";
     // Eigen::MatrixXd errL2P = ITHACAutilities::errorL2Rel(example.Pfield, reduced.PredFields);
     // cnpy::save(errL2U, "./ITHACAoutput/DataFromRom/errL2U_" + name(NmodesUproj) + "_" + name(NmodesPproj) + ".npy");
     // cnpy::save(errL2P, "./ITHACAoutput/DataFromRom/errL2P_" + name(NmodesUproj) + "_" + name(NmodesPproj) + ".npy");
-    exit(0);
+    return 0;
 }
 
 

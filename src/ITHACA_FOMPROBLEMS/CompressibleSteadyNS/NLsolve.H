@@ -138,14 +138,14 @@ while (simple.loop() && residual > tolerance && csolve < maxIter )
     rho.relax();
     auto uresidual = max(max(uresidual_v[0], uresidual_v[1]), uresidual_v[2]);
     residual = max(max(presidual, uresidual), eresidual);
-    Info << "\nResidual: " << residual << endl << endl;
+    Foam::Info << "\nResidual: " << residual << Foam::endl << Foam::endl;
     turbulence->correct();
     csolve = csolve + 1;
-    Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+    Foam::Info << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
          << "  ClockTime = "   << runTime.elapsedClockTime() << " s"
-         << nl << endl;
+         << Foam::endl << Foam::endl;
     saver++;
-    std::cout << "saver ================== \t" << saver << std::endl;
+    Foam::Info << "saver ================== \t" << saver << Foam::endl;
 
     if (middleExport && saver == middleStep)
     {

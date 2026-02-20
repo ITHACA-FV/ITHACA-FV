@@ -383,19 +383,19 @@ void reducedUnsteadyNS::solveOnline_sup(Eigen::MatrixXd vel,
         newton_object_sup.operator()(y, res);
         newton_object_sup.yOldOld = newton_object_sup.y_old;
         newton_object_sup.y_old = y;
-        std::cout << "################## Online solve N° " << counter <<
-                  " ##################" << std::endl;
+        Info << "################## Online solve N° " << counter <<
+                  " ##################" << endl;
         Info << "Time = " << time << endl;
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         tmp_sol(0) = time;
@@ -544,19 +544,19 @@ void reducedUnsteadyNS::solveOnline_PPE(Eigen::MatrixXd vel,
         newton_object_PPE.operator()(y, res);
         newton_object_PPE.yOldOld = newton_object_PPE.y_old;
         newton_object_PPE.y_old = y;
-        std::cout << "################## Online solve N° " << counter <<
-                  " ##################" << std::endl;
+        Info << "################## Online solve N° " << counter <<
+                  " ##################" << endl;
         Info << "Time = " << time << endl;
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         tmp_sol(0) = time;
@@ -611,8 +611,8 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_sup(Eigen::MatrixXd& vel_now,
             }
         }
 
-        std::cout << "Solving for penalty factor(s): " << tauIter << std::endl;
-        std::cout << "number of iterations: " << Iter << std::endl;
+        Info << "Solving for penalty factor(s): " << tauIter << endl;
+        Info << "number of iterations: " << Iter << endl;
         //  Set the old boundary value to the current value
         valBC0  = valBC;
         y.resize(Nphi_u + Nphi_p, 1);
@@ -668,13 +668,13 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_sup(Eigen::MatrixXd& vel_now,
 
             if (res.norm() < 1e-5)
             {
-                std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                          hnls.iter << " iterations " << def << std::endl << std::endl;
+                Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                          hnls.iter << " iterations " << def << endl << endl;
             }
             else
             {
-                std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                          hnls.iter << " iterations " << def << std::endl << std::endl;
+                Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                          hnls.iter << " iterations " << def << endl << endl;
             }
 
             volVectorField U_rec("U_rec", Umodes[0] * 0);
@@ -698,13 +698,13 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_sup(Eigen::MatrixXd& vel_now,
                              timeStepPenalty - 1)));
         }
 
-        std::cout << "max error: " << diffvel.maxCoeff() << std::endl;
+        Info << "max error: " << diffvel.maxCoeff() << endl;
         // Count the number of iterations
         Iter ++;
     }
 
-    std::cout << "Final penalty factor(s): " << tauIter << std::endl;
-    std::cout << "Iterations: " << Iter - 1 << std::endl;
+    Info << "Final penalty factor(s): " << tauIter << endl;
+    Info << "Iterations: " << Iter - 1 << endl;
     return tauIter;
 }
 
@@ -732,8 +732,8 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_PPE(Eigen::MatrixXd& vel_now,
             }
         }
 
-        std::cout << "Solving for penalty factor(s): " << tauIter << std::endl;
-        std::cout << "number of iterations: " << Iter << std::endl;
+        Info << "Solving for penalty factor(s): " << tauIter << endl;
+        Info << "number of iterations: " << Iter << endl;
         //  Set the old boundary value to the current value
         valBC0  = valBC;
         y.resize(Nphi_u + Nphi_p, 1);
@@ -791,13 +791,13 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_PPE(Eigen::MatrixXd& vel_now,
 
             if (res.norm() < 1e-5)
             {
-                std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                          hnls.iter << " iterations " << def << std::endl << std::endl;
+                Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                          hnls.iter << " iterations " << def << endl << endl;
             }
             else
             {
-                std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                          hnls.iter << " iterations " << def << std::endl << std::endl;
+                Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                          hnls.iter << " iterations " << def << endl << endl;
             }
 
             volVectorField U_rec("U_rec", Umodes[0] * 0);
@@ -821,13 +821,13 @@ Eigen::MatrixXd reducedUnsteadyNS::penalty_PPE(Eigen::MatrixXd& vel_now,
                              timeStepPenalty - 1)));
         }
 
-        std::cout << "max error: " << diffvel.maxCoeff() << std::endl;
+        Info << "max error: " << diffvel.maxCoeff() << endl;
         // Count the number of iterations
         Iter ++;
     }
 
-    std::cout << "Final penalty factor(s): " << tauIter << std::endl;
-    std::cout << "Iterations: " << Iter - 1 << std::endl;
+    Info << "Final penalty factor(s): " << tauIter << endl;
+    Info << "Iterations: " << Iter - 1 << endl;
     return tauIter;
 }
 

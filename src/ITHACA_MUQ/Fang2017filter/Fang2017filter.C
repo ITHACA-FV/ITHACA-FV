@@ -103,10 +103,10 @@ void Fang2017filter::setTime(double _startTime, double _deltaTime,
     deltaTime = _deltaTime;
     endTime = _endTime;
     Ntimes = (endTime - startTime) / deltaTime;
-    Info << "startTime = " << startTime << endl;
-    Info << "endTime = " << endTime << endl;
-    Info << "deltaTime = " << deltaTime << endl;
-    Info << "Ntimes = " << Ntimes << endl;
+    Foam::Info << "startTime = " << startTime << endl;
+    Foam::Info << "endTime = " << endTime << endl;
+    Foam::Info << "deltaTime = " << deltaTime << endl;
+    Foam::Info << "Ntimes = " << Ntimes << endl;
     timeVector = Eigen::VectorXd::LinSpaced(Ntimes + 1, startTime, endTime);
 }
 
@@ -120,9 +120,9 @@ void Fang2017filter::setObservationTime(int _observationStart,
     M_Assert(_observationStart > 0, "First observation timestep can't be 0");
     observationStart = _observationStart;
     observationDelta = _observationDelta;
-    Info << "First observation at time = " << timeVector(observationStart) << " s"
+    Foam::Info << "First observation at time = " << timeVector(observationStart) << " s"
          << endl;
-    Info << "Observations taken every " << observationDelta << " timesteps" << endl;
+    Foam::Info << "Observations taken every " << observationDelta << " timesteps" << endl;
     observationBoolVec = Eigen::VectorXi::Zero(timeVector.size() - 1);
 
     for (int i = observationStart - 1; i < Ntimes; i += observationDelta)
@@ -274,7 +274,7 @@ void Fang2017filter::buildJointEns()
 void Fang2017filter::setObservationSize(int _size)
 {
     observationSize = _size;
-    Info << "Observation size = " << observationSize << endl;
+    Foam::Info << "Observation size = " << observationSize << Foam::endl;
 }
 
 //--------------------------------------------------------------------------
@@ -282,7 +282,7 @@ void Fang2017filter::setObservationSize(int _size)
 void Fang2017filter::setStateSize(int _size)
 {
     stateSize = _size;
-    Info << "State size = " << stateSize << endl;
+    Foam::Info << "State size = " << stateSize << Foam::endl;
 }
 
 //--------------------------------------------------------------------------
@@ -297,7 +297,7 @@ int Fang2017filter::getStateSize()
 void Fang2017filter::setParameterSize(int _size)
 {
     parameterSize = _size;
-    Info << "Parameter size = " << parameterSize << endl;
+    Foam::Info << "Parameter size = " << parameterSize << Foam::endl;
 }
 
 //--------------------------------------------------------------------------
@@ -321,9 +321,9 @@ void Fang2017filter::updateJointEns(Eigen::VectorXd _observation)
     //auto P_rank = lu_decomp.rank();
     //if (P_rank < P.cols() || P_rank < P.rows())
     //{
-    //    std::cout << "Pseudo inverse of P should be implemented in the EnKF, exiting" <<
-    //              std::endl;
-    //    std::cout << P << std::endl;
+    //    Info << "Pseudo inverse of P should be implemented in the EnKF, exiting" <<
+    //              endl;
+    //    Info << P << endl;
     //    exit(10);
     //}
     //else
@@ -362,13 +362,13 @@ void Fang2017filter::run(int innerLoopMax, word outputFolder)
 
     while (timeStepI < Ntimes)
     {
-        Info << "timeStep " << timeStepI << endl;
+        Foam::Info << "timeStep " << timeStepI << Foam::endl;
         innerLoopI = 0;
         oldStateEns.assignSamples(stateEns.getSamples());
 
         while (innerLoopI < innerLoopMax)
         {
-            Info << "Inner loop " << innerLoopI << endl;
+            Foam::Info << "Inner loop " << innerLoopI << Foam::endl;
 
             // Projection
             if (innerLoopI == 0)
@@ -385,19 +385,19 @@ void Fang2017filter::run(int innerLoopMax, word outputFolder)
                     sampleParameterDist();
                 }
 
-                std::cout << "\ndebug : parameterPriorMean = " <<
-                          parameterPriorMean << std::endl;
-                std::cout << "\ndebug : parameterMean.col(" << timeStepI << ") =\n" <<
-                          parameterMean.col(timeStepI) << std::endl;
+                Foam::Info << "\ndebug : parameterPriorMean = " <<
+                          parameterPriorMean << Foam::endl;
+                Foam::Info << "\ndebug : parameterMean.col(" << timeStepI << ") =\n" <<
+                          parameterMean.col(timeStepI) << Foam::endl;
             }
             else
             {
-                std::cout << "\ndebug : parameterMean before loop =\n" <<
-                          parameterMean.col(timeStepI) << std::endl;
+                Foam::Info << "\ndebug : parameterMean before loop =\n" <<
+                          parameterMean.col(timeStepI) << Foam::endl;
                 setParameterPriorDensity(parameterMean.col(timeStepI), parameterPriorCov);
                 sampleParameterDist();
-                std::cout << "\ndebug : parameterMean after loop =\n" <<
-                          parameterMean.col(timeStepI) << std::endl;
+                Foam::Info << "\ndebug : parameterMean after loop =\n" <<
+                          parameterMean.col(timeStepI) << Foam::endl;
             }
 
             stateProjection();
@@ -407,9 +407,9 @@ void Fang2017filter::run(int innerLoopMax, word outputFolder)
             {
                 Eigen::MatrixXd measNoiseSamps = ensembleFromDensity(measNoiseDensity);
                 observeState();
-                std::cout << "\ndebug : observation =\n" <<
+                Foam::Info << "\ndebug : observation =\n" <<
                           observations.col(observationBoolVec.head(timeStepI + 1).sum() - 1) <<
-                          std::endl;
+                          Foam::endl;
                 updateJointEns(
                     observations.col(
                         observationBoolVec.head(timeStepI + 1).sum() - 1));

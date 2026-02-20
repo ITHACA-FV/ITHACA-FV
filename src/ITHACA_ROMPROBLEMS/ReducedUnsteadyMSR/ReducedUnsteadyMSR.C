@@ -829,47 +829,47 @@ void reducedusMSR::solveOnline(Eigen::MatrixXd vel_now,
         newton_object_n.w_old = w;
         newton_object_t.operator()(z, res_t);
         newton_object_t.z_old = z;
-        std::cout << "################## Online solve N° " << count_online_solve <<
-                  " ##################" << std::endl;
+        Info << "################## Online solve N° " << count_online_solve <<
+                  " ##################" << endl;
         Info << "Time = " << time << endl;
 
         if (res_fd.norm() / y.norm() < 1e-5)
         {
-            std::cout << green << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
-                                  " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
-                      << std::endl;
+            Info << green << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
+                                  " - Minimun reached in " << hnls_fd.iter << " iterations " << def << endl
+                      << endl;
         }
         else
         {
-            std::cout << red << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
-                                " - Minimun reached in " << hnls_fd.iter << " iterations " << def << std::endl
-                      << std::endl;
+            Info << red << "|F_fd(x)| = " << res_fd.norm() / y.norm() <<
+                                " - Minimun reached in " << hnls_fd.iter << " iterations " << def << endl
+                      << endl;
         }
 
         if (res_n.norm() / w.norm() < 1e-5)
         {
-            std::cout << green << "|F_n(x)| = " << res_n.norm() / w.norm() <<
-                                  " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
-                      std::endl;
+            Info << green << "|F_n(x)| = " << res_n.norm() / w.norm() <<
+                                  " - Minimun reached in " << hnls_n.iter << " iterations " << def << endl <<
+                      endl;
         }
         else
         {
-            std::cout << red << "|F_n(x)| = " << res_n.norm() / w.norm() <<
-                                " - Minimun reached in " << hnls_n.iter << " iterations " << def << std::endl <<
-                      std::endl;
+            Info << red << "|F_n(x)| = " << res_n.norm() / w.norm() <<
+                                " - Minimun reached in " << hnls_n.iter << " iterations " << def << endl <<
+                      endl;
         }
 
         if (res_t.norm() / z.norm() < 1e-5)
         {
-            std::cout << green << "|F_t(x)| = " << res_t.norm() / z.norm() <<
-                                  " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
-                      std::endl;
+            Info << green << "|F_t(x)| = " << res_t.norm() / z.norm() <<
+                                  " - Minimun reached in " << hnls_t.iter << " iterations " << def << endl <<
+                      endl;
         }
         else
         {
-            std::cout << red << "|F_t(x)| = " << res_t.norm() / z.norm() <<
-                                " - Minimun reached in " << hnls_t.iter << " iterations " << def << std::endl <<
-                      std::endl;
+            Info << red << "|F_t(x)| = " << res_t.norm() / z.norm() <<
+                                " - Minimun reached in " << hnls_t.iter << " iterations " << def << endl <<
+                      endl;
         }
 
         count_online_solve += 1;

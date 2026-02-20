@@ -284,16 +284,16 @@ int main(int argc, char* argv[])
     DEIMLaplacian example_new(argc, argv);
     example_new.OnlineSolveFull(par_new1, "Online_full");
     // Output some infos
-    std::cout << std::endl << "The FOM Solve took: " << example_new.time_full  <<
-                              " seconds." << std::endl;
-    std::cout << std::endl << "The ROM Solve took: " << example.time_rom  <<
-                              " seconds." << std::endl;
-    std::cout << std::endl << "The Speed-up is: " << example_new.time_full /
-              example.time_rom  << std::endl << std::endl;
+    Info << endl << "The FOM Solve took: " << example_new.time_full  <<
+                              " seconds." << endl;
+    Info << endl << "The ROM Solve took: " << example.time_rom  <<
+                              " seconds." << endl;
+    Info << endl << "The Speed-up is: " << example_new.time_full /
+              example.time_rom  << endl << endl;
     Eigen::MatrixXd error = ITHACAutilities::errorL2Abs(example_new.Tfield,
                             example.Tonline);
-    std::cout << "The mean L2 error is: " << error.mean() << std::endl;
-    exit(0);
+    Info << "The mean L2 error is: " << error.mean() << endl;
+    return 0;
 }
 
 /// \dir 09DEIM_ROM Folder of the turorial 9

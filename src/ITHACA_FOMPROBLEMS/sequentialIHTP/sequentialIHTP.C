@@ -1207,31 +1207,31 @@ void sequentialIHTP::parameterizedBC_postProcess(
     if (verbose)
     {
         // Printing outputs at screen
-        std::cout << "Singular values of Theta.transpose() * Theta are " << std::endl;
-        std::cout << svd.singularValues() << std::endl;
-        std::cout << "weigths = " << std::endl;
-        std::cout << weigths << std::endl;
-        std::cout << "linSys[1] = " << std::endl;
-        std::cout << linSys[1] << std::endl;
-        std::cout << "Theta = " << std::endl;
-        std::cout << Theta << std::endl;
+        Info << "Singular values of Theta.transpose() * Theta are " << endl;
+        Info << svd.singularValues() << endl;
+        Info << "weigths = " << endl;
+        Info << weigths << endl;
+        Info << "linSys[1] = " << endl;
+        Info << linSys[1] << endl;
+        Info << "Theta = " << endl;
+        Info << Theta << endl;
         residual =  linSys[0] * weigths - linSys[1];
-        //std::cout << "Residual  = " << std::endl;
-        //std::cout << residual << std::endl;
-        std::cout << "Residual 2-norm = " << std::endl;
-        std::cout << residual.squaredNorm() << std::endl;
-        std::cout << "\n addSol = " << std::endl;
-        std::cout << addSol << std::endl;
-        std::cout << "T0_vector = " << std::endl;
-        std::cout << T0_vector << std::endl;
-        std::cout << "Tmeas = " << std::endl;
-        std::cout << Tmeas << std::endl;
+        //Info << "Residual  = " << endl;
+        //Info << residual << endl;
+        Info << "Residual 2-norm = " << endl;
+        Info << residual.squaredNorm() << endl;
+        Info << "\n addSol = " << endl;
+        Info << addSol << endl;
+        Info << "T0_vector = " << endl;
+        Info << T0_vector << endl;
+        Info << "Tmeas = " << endl;
+        Info << Tmeas << endl;
     }
 
     reconstrucT(outputFolder);
     Tcomp = fieldValueAtThermocouples(Ttime);
-    std::cout << "Tcomp = \n" << Tcomp.transpose() << std::endl;
-    std::cout << "TmeasShort = \n" << TmeasShort.transpose() << std::endl;
+    Info << "Tcomp = \n" << Tcomp.transpose() << endl;
+    Info << "TmeasShort = \n" << TmeasShort.transpose() << endl;
     J = 0.5 * Foam::sqrt((Tcomp - TmeasShort).dot(Tcomp - TmeasShort));
     Info << "J = " << J << endl;
     Jlist.conservativeResize(Jlist.size() + 1);

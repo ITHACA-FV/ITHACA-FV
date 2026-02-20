@@ -622,20 +622,20 @@ void ReducedUnsteadyNSTurb::solveOnlineSUP(Eigen::MatrixXd vel)
         newtonObjectSUP.operator()(y, res);
         newtonObjectSUP.yOldOld = newtonObjectSUP.y_old;
         newtonObjectSUP.y_old = y;
-        std::cout << "################## Online solve N° " << count_online_solve <<
-                  " ##################" << std::endl;
+        Info << "################## Online solve N° " << count_online_solve <<
+                  " ##################" << endl;
         Info << "Time = " << time << endl;
-        std::cout << "Solving for the parameter: " << vel_now << std::endl;
+        Info << "Solving for the parameter: " << vel_now << endl;
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         count_online_solve += 1;
@@ -823,20 +823,20 @@ void ReducedUnsteadyNSTurb::solveOnlineSUPAve(Eigen::MatrixXd vel)
 
         newtonObjectSUPAve.yOldOld = newtonObjectSUPAve.y_old;
         newtonObjectSUPAve.y_old = y;
-        std::cout << "################## Online solve N° " << count_online_solve <<
-                  " ##################" << std::endl;
+        Info << "################## Online solve N° " << count_online_solve <<
+                  " ##################" << endl;
         Info << "Time = " << time << endl;
-        std::cout << "Solving for the parameter: " << vel_now << std::endl;
+        Info << "Solving for the parameter: " << vel_now << endl;
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         count_online_solve += 1;
@@ -1015,20 +1015,20 @@ void ReducedUnsteadyNSTurb::solveOnlinePPE(Eigen::MatrixXd vel)
         newtonObjectPPE.operator()(y, res);
         newtonObjectPPE.yOldOld = newtonObjectPPE.y_old;
         newtonObjectPPE.y_old = y;
-        std::cout << "################## Online solve N° " << count_online_solve <<
-                  " ##################" << std::endl;
+        Info << "################## Online solve N° " << count_online_solve <<
+                  " ##################" << endl;
         Info << "Time = " << time << endl;
-        std::cout << "Solving for the parameter: " << vel_now << std::endl;
+        Info << "Solving for the parameter: " << vel_now << endl;
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         count_online_solve += 1;
@@ -1216,20 +1216,20 @@ void ReducedUnsteadyNSTurb::solveOnlinePPEAve(Eigen::MatrixXd vel)
 
         newtonObjectPPEAve.yOldOld = newtonObjectPPEAve.y_old;
         newtonObjectPPEAve.y_old = y;
-        std::cout << "################## Online solve N° " << count_online_solve <<
-                  " ##################" << std::endl;
+        Info << "################## Online solve N° " << count_online_solve <<
+                  " ##################" << endl;
         Info << "Time = " << time << endl;
-        std::cout << "Solving for the parameter: " << vel_now << std::endl;
+        Info << "Solving for the parameter: " << vel_now << endl;
 
         if (res.norm() < 1e-5)
         {
-            std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
         else
         {
-            std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                      hnls.iter << " iterations " << def << std::endl << std::endl;
+            Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                      hnls.iter << " iterations " << def << endl << endl;
         }
 
         count_online_solve += 1;
