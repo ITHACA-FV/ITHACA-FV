@@ -192,18 +192,18 @@ void reducedSteadyNS::solveOnline_sup(Eigen::MatrixXd vel)
 
     if (Pstream::master())
     {
-        std::cout << "Solving for the parameter: " << vel_now << std::endl;
+        Info << "Solving for the parameter: " << vel_now << endl;
     }
 
     if (res.norm() < 1e-5 && Pstream::master())
     {
-        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << endl << endl;
     }
     else if (Pstream::master())
     {
-        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << endl << endl;
     }
 
     count_online_solve += 1;

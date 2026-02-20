@@ -88,7 +88,7 @@ void SteadyNSSimple::getTurbRBF(label NNutModes)
             ITHACAstream::ReadDenseMatrix(weights, "./ITHACAoutput/weights/", weightName);
             rbfSplines[i] = new SPLINTER::RBFSpline(* samples[i],
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN, weights);
-            // std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            // Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
             Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
         else
@@ -105,7 +105,7 @@ void SteadyNSSimple::getTurbRBF(label NNutModes)
                                                     SPLINTER::RadialBasisFunctionType::GAUSSIAN);
             ITHACAstream::SaveDenseMatrix(rbfSplines[i]->weights,
                                           "./ITHACAoutput/weights/", weightName);
-            // std::cout << "Constructing RadialBasisFunction for mode " << i + 1 << std::endl;
+            // Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
             Info << "Constructing RadialBasisFunction for mode " << i + 1 << endl;
         }
     }
@@ -242,8 +242,8 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
             ITHACAstream::exportSolution(p, name(folderN), Folder + name(counter));
             Ufield.append(U.clone());
             Pfield.append(p.clone());
-            res_U << uresidual << std::endl;
-            res_P << presidual << std::endl;
+            res_U << uresidual << endl;
+            res_P << presidual << endl;
 
             if (ITHACAutilities::isTurbulent())
             {
@@ -254,9 +254,9 @@ void SteadyNSSimple::truthSolve2(List<scalar> mu_now, word Folder)
         }
     }
 
-    snaps_os << folderN + 1 << std::endl;
-    iters << csolve << std::endl;
-    res_os << residual << std::endl;
+    snaps_os << folderN + 1 << endl;
+    iters << csolve << endl;
+    res_os << residual << endl;
     res_os.close();
     res_U.close();
     res_P.close();

@@ -293,8 +293,8 @@ void UnsteadyBB::solvesupremizer(word type)
     }
     else
     {
-        std::cout << "You must specify the variable type with either snapshots or modes"
-                  << std::endl;
+        Info << "You must specify the variable type with either snapshots or modes"
+                  << endl;
         exit(0);
     }
 

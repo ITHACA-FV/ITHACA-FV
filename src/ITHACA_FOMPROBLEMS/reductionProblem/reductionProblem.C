@@ -340,9 +340,9 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
         }
         else
         {
-            std::cout <<
+            Info <<
             "Unknown string for rbfBasis. Valid types are 'GAUSSIAN', 'THIN_PLATE', 'MULTI_QUADRIC', 'INVERSE_QUADRIC', 'INVERSE_MULTI_QUADRIC'"
-                      << std::endl;
+                      << endl;
             exit(0);
         }
     }
@@ -424,9 +424,9 @@ std::vector<SPLINTER::RBFSpline> reductionProblem::getCoeffManifoldRBF(
         }
         else
         {
-            std::cout <<
+            Info <<
             "Unknown string for rbfBasis. Valid types are 'GAUSSIAN', 'THIN_PLATE', 'MULTI_QUADRIC', 'INVERSE_QUADRIC', 'INVERSE_MULTI_QUADRIC'"
-                      << std::endl;
+                      << endl;
             exit(0);
         }
     }

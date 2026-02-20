@@ -108,15 +108,15 @@ class SteadyNSSimpleNN : public SteadyNSSimple
                 ITHACAstream::readMiddleFields(nutFieldsTrain, nut_train,
                                                "./ITHACAoutput/Offline/");
                 /// Compute the coefficients for train
-                std::cout << "Computing the coefficients for U train" << std::endl;
+                Info << "Computing the coefficients for U train" << endl;
                 Eigen::MatrixXd coeffL2U_train = ITHACAutilities::getCoeffs(UfieldTrain,
                                                  Umodes,
                                                  0, true);
-                std::cout << "Computing the coefficients for p train" << std::endl;
+                Info << "Computing the coefficients for p train" << endl;
                 Eigen::MatrixXd coeffL2P_train = ITHACAutilities::getCoeffs(PfieldTrain,
                                                  Pmodes,
                                                  0, true);
-                std::cout << "Computing the coefficients for nuT train" << std::endl;
+                Info << "Computing the coefficients for nuT train" << endl;
                 Eigen::MatrixXd coeffL2Nut_train = ITHACAutilities::getCoeffs(nutFieldsTrain,
                                                    nutModes,
                                                    0, true);
@@ -288,7 +288,7 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
                     iter < maxIterOn)
             {
                 iter++;
-                std::cout << iter << std::endl;
+                Info << iter << endl;
 #if defined(OFVER) && (OFVER == 6)
                 simple.loop(runTime);
 #else
@@ -380,27 +380,27 @@ class reducedSimpleSteadyNN : public reducedSimpleSteadyNS
 
                 if (problem->para->debug)
                 {
-                    std::cout << "Residual jump = " << residual_jump << std::endl;
-                    std::cout << "Normalized residual = " << std::max(U_norm_res,
-                              P_norm_res) << std::endl;
-                    std::cout << "Final normalized residual for velocity: " << U_norm_res <<
-                              std::endl;
-                    std::cout << "Final normalized residual for pressure: " << P_norm_res <<
-                              std::endl;
+                    Info << "Residual jump = " << residual_jump << endl;
+                    Info << "Normalized residual = " << std::max(U_norm_res,
+                              P_norm_res) << endl;
+                    Info << "Final normalized residual for velocity: " << U_norm_res <<
+                              endl;
+                    Info << "Final normalized residual for pressure: " << P_norm_res <<
+                              endl;
                 }
 
-                res_os_U << U_norm_res << std::endl;
-                res_os_P << P_norm_res << std::endl;
+                res_os_U << U_norm_res << endl;
+                res_os_P << P_norm_res << endl;
             }
 
             res_os_U.close();
             res_os_P.close();
-            std::cout << "Solution " << counter << " converged in " << iter <<
-                         " iterations." << std::endl;
-            std::cout << "Final normalized residual for velocity: " << U_norm_res <<
-                      std::endl;
-            std::cout << "Final normalized residual for pressure: " << P_norm_res <<
-                      std::endl;
+            Info << "Solution " << counter << " converged in " << iter <<
+                         " iterations." << endl;
+            Info << "Final normalized residual for velocity: " << U_norm_res <<
+                      endl;
+            Info << "Final normalized residual for pressure: " << P_norm_res <<
+                      endl;
             problem->Umodes.reconstruct(U, a, "Uaux");
             problem->Pmodes.reconstruct(P, b, "Paux");
 
@@ -638,8 +638,8 @@ int main(int argc, char* argv[])
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
     // Set the maximum iterations number for the online phase
     reduced.maxIterOn = para->ITHACAdict->lookupOrDefault<int>("maxIterOn", 2000);
-    std::cout << "Total amout of parameters to be solved online: " + name(
-                  angOn.rows()) << std::endl;
+    Info << "Total amout of parameters to be solved online: " + name(
+                  angOn.rows()) << endl;
     //Perform the online solutions
     std::clock_t startOn;
     double durationOn;
@@ -647,7 +647,7 @@ int main(int argc, char* argv[])
 
     for (label k = 0; k < angOn.rows(); k++)
     {
-        std::cout << "Solving online for parameter number " + name(k + 1) << std::endl;
+        Info << "Solving online for parameter number " + name(k + 1) << endl;
         scalar mu_now = angOn(k, 0);
         example.restart();
         reduced.vel_now = vel;
@@ -699,7 +699,7 @@ int main(int argc, char* argv[])
     }
 
     durationOn = (std::clock() - startOn);
-    std::cout << "ONLINE PHASE COMPLETED" << std::endl;
+    Info << "ONLINE PHASE COMPLETED" << endl;
     PtrList<volVectorField> Ufull;
     PtrList<volScalarField> Pfull;
     PtrList<volVectorField> Ured;
@@ -737,9 +737,9 @@ int main(int argc, char* argv[])
     ITHACAstream::exportMatrix(relErrorP,
                                "errorP_" + name(example.NUmodes) + "_" + name(example.NPmodes) + "_" + name(
                                    example.NNutModes), "python", ".");
-    std::cout << "The online phase duration is equal to " << durationOn <<
-              std::endl;
-    std::cout << "The offline phase duration is equal to " << durationOff <<
-              std::endl;
-    exit(0);
+    Info << "The online phase duration is equal to " << durationOn <<
+              endl;
+    Info << "The offline phase duration is equal to " << durationOff <<
+              endl;
+    return 0;
 }

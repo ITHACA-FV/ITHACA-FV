@@ -117,15 +117,15 @@ class CompressibleSteadyNN : public CompressibleSteadyNS
                 ITHACAstream::readMiddleFields(nutFieldsTrain, nut_train,
                                                "./ITHACAoutput/Offline/");
                 /// Compute the coefficients for train
-                std::cout << "Computing the coefficients for U train" << std::endl;
+                Info << "Computing the coefficients for U train" << endl;
                 Eigen::MatrixXd coeffL2U_train = ITHACAutilities::getCoeffs(UfieldTrain,
                                                  Umodes,
                                                  0, true);
-                std::cout << "Computing the coefficients for p train" << std::endl;
+                Info << "Computing the coefficients for p train" << endl;
                 Eigen::MatrixXd coeffL2P_train = ITHACAutilities::getCoeffs(PfieldTrain,
                                                  Pmodes,
                                                  0, true);
-                std::cout << "Computing the coefficients for nuT train" << std::endl;
+                Info << "Computing the coefficients for nuT train" << endl;
                 Eigen::MatrixXd coeffL2Nut_train = ITHACAutilities::getCoeffs(nutFieldsTrain,
                                                    nutModes,
                                                    0, true);
@@ -184,15 +184,15 @@ class CompressibleSteadyNN : public CompressibleSteadyNS
         //         ITHACAstream::readMiddleFields(nutFieldsTrain, nut_train,
         //                                        "./ITHACAoutput/Offline/");
         //         /// Compute the coefficients for train
-        //         std::cout << "Computing the coefficients for U train" << std::endl;
+        //         Info << "Computing the coefficients for U train" << endl;
         //         Eigen::MatrixXd coeffL2U_train = ITHACAutilities::getCoeffs(UfieldTrain,
         //                                          Umodes,
         //                                          0, true);
-        //         std::cout << "Computing the coefficients for p train" << std::endl;
+        //         Info << "Computing the coefficients for p train" << endl;
         //         Eigen::MatrixXd coeffL2P_train = ITHACAutilities::getCoeffs(PfieldTrain,
         //                                          Pmodes,
         //                                          0, true);
-        //         std::cout << "Computing the coefficients for nuT train" << std::endl;
+        //         Info << "Computing the coefficients for nuT train" << endl;
         //         Eigen::MatrixXd coeffL2Nut_train = ITHACAutilities::getCoeffs(nutFieldsTrain,
         //                                            nutModes,
         //                                            0, true);
@@ -472,12 +472,12 @@ class ReducedCompressibleSteadyNN : public ReducedCompressibleSteadyNS
 
                 rho = thermo.rho(); // Here rho is calculated as p*psi = p/(R*T)
                 rho.relax();
-                std::cout << "Ures = " << (uResidual.cwiseAbs()).sum() /
-                          (RedLinSysU[1].cwiseAbs()).sum() << std::endl;
-                std::cout << "Eres = " << (eResidual.cwiseAbs()).sum() /
-                          (RedLinSysE[1].cwiseAbs()).sum() << std::endl;
-                std::cout << "Pres = " << (pResidual.cwiseAbs()).sum() /
-                          (RedLinSysP[1].cwiseAbs()).sum() << std::endl;
+                Info << "Ures = " << (uResidual.cwiseAbs()).sum() /
+                          (RedLinSysU[1].cwiseAbs()).sum() << endl;
+                Info << "Eres = " << (eResidual.cwiseAbs()).sum() /
+                          (RedLinSysE[1].cwiseAbs()).sum() << endl;
+                Info << "Pres = " << (pResidual.cwiseAbs()).sum() /
+                          (RedLinSysP[1].cwiseAbs()).sum() << endl;
                 residualNorm = max(max((uResidual.cwiseAbs()).sum() /
                                        (RedLinSysU[1].cwiseAbs()).sum(),
                                        (pResidual.cwiseAbs()).sum() / (RedLinSysP[1].cwiseAbs()).sum()),
@@ -556,12 +556,12 @@ class tutorial03 : public CompressibleSteadyNN
                 {
                     //std::clock_t startOff;
                     //startOff = std::clock();
-                    std::cout << "Current mu = " << mu(i, 0) << std::endl;
+                    Info << "Current mu = " << mu(i, 0) << endl;
                     changeViscosity(mu(i, 0));
                     assignIF(_U(), Uinl);
                     truthSolve(folder);
                     //durationOff = (std::clock() - startOff);
-                    //cpuTimes << durationOff << std::endl;
+                    //cpuTimes << durationOff << endl;
                 }
             }
 
@@ -579,7 +579,7 @@ int main(int argc, char* argv[])
     // exit(0);
     //std::clock_t startOff, startOn;
     //double durationOn, durationOff;
-    std::cerr << "debug point 1" << std::endl;
+    std::cerr << "debug point 1" << endl;
     ITHACAparameters* para = ITHACAparameters::getInstance();
     //Eigen::MatrixXd parOff;
     std::ifstream exFileOff("./parsOff_mat.txt");
@@ -610,7 +610,7 @@ int main(int argc, char* argv[])
         ITHACAstream::exportMatrix(parsOn, "parsOn", "eigen", "./");
     }
 
-    std::cerr << "debug point 2" << std::endl;
+    std::cerr << "debug point 2" << endl;
     // Read some parameters from file
     int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
     int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
@@ -625,9 +625,9 @@ int main(int argc, char* argv[])
     // example.inletIndex(0, 0) = 1;
     // example.inletIndex(0, 1) = 0;
     //Perform the offline solve
-    std::cerr << "debug point 3" << std::endl;
+    std::cerr << "debug point 3" << endl;
     example.offlineSolve();
-    std::cerr << "debug point 4" << std::endl;
+    std::cerr << "debug point 4" << endl;
     //Read the lift field
     // ITHACAstream::read_fields(example.liftfield, example._U(), "./lift/");
     // ITHACAutilities::normalizeFields(example.liftfield);
@@ -734,16 +734,16 @@ int main(int argc, char* argv[])
             example.changeViscosity(mu_now(0, 0));
             // reduced.setOnlineVelocity(vel);
             reduced.projectReducedOperators(NmodesUproj, NmodesPproj, NmodesEproj);
-            //std::cout << "############################" << std::endl;
+            //Info << "############################" << endl;
             example.restart();
             example.turbulence->validate();
-            //std::cout << "##############################################################" << std::endl;
+            //Info << "##############################################################" << endl;
             // reduced.solveOnlineCompressible(mu_now, NmodesUproj, NmodesPproj, NmodesEproj);
             reduced.solveOnlineCompressible(NmodesUproj, NmodesPproj, NmodesEproj,
                                             NmodesNutProj, mu_now, "./ITHACAoutput/Online_" + name(NmodesUproj) + "_" +
                                             name(NmodesNutProj) + "/");
             durationOn = std::clock() - startOn;
-            cpuTimes << durationOn << std::endl;
+            cpuTimes << durationOn << endl;
         }
     }
     //// Read the files
@@ -782,21 +782,21 @@ int main(int argc, char* argv[])
             //auto err = foam2Eigen::foam2Eigen
             auto u = ITHACAutilities::L2Norm(offlineU[j]);
             Ue /= u;
-            //std::cout << "Ue = " << ITHACAutilities::L2Norm(Ue)/u << std::endl;
+            //Info << "Ue = " << ITHACAutilities::L2Norm(Ue)/u << endl;
             //////////
             volScalarField Pe = offlineP[j] - onlineP[j];
             auto p = ITHACAutilities::L2Norm(offlineP[j]);
             Pe /= p;
-            //std::cout << "Pe = " <<  ITHACAutilities::L2Norm(Pe)/p << std::endl;
+            //Info << "Pe = " <<  ITHACAutilities::L2Norm(Pe)/p << endl;
             ////////
             volScalarField Ee = offlineE[j] - onlineE[j];
             auto e = ITHACAutilities::L2Norm(offlineE[j]);
             Ee /= e;
-            //std::cout << "Ee = " <<  ITHACAutilities::L2Norm(Ee)/e << std::endl;
+            //Info << "Ee = " <<  ITHACAutilities::L2Norm(Ee)/e << endl;
             volScalarField Nute = offlineNut[j] - onlineNut[j];
             auto n = ITHACAutilities::L2Norm(offlineNut[j]);
             Nute /= n;
-            //std::cout << "Nute = " <<  ITHACAutilities::L2Norm(Nute)/n << std::endl;
+            //Info << "Nute = " <<  ITHACAutilities::L2Norm(Nute)/n << endl;
             Ue.rename("Ue");
             Pe.rename("Pe");
             Ee.rename("Ee");
@@ -889,14 +889,14 @@ int main(int argc, char* argv[])
     //                 example.changeViscosity(mu_now(0,0));
     //                 // reduced.setOnlineVelocity(vel);
     //                 reduced.projectReducedOperators(NmodesUproj, NmodesPproj, NmodesEproj);
-    //                 //std::cout << "############################" << std::endl;
+    //                 //Info << "############################" << endl;
     //                 example.restart();
     //                 example.turbulence->validate();
-    //                 std::cout << "##############################################################" << std::endl;
+    //                 Info << "##############################################################" << endl;
     //                 // reduced.solveOnlineCompressible(mu_now, NmodesUproj, NmodesPproj, NmodesEproj);
     //                 reduced.solveOnlineCompressible(mu_now, NmodesUproj, NmodesPproj, NmodesEproj, NmodesNutProj, "./ITHACAoutput/Online_" + name(NmodesUproj) + "_"+name(NmodesNutProj) + "/");
     //                 durationOn = std::clock() - startOn;
-    //                 cpuTimes << durationOn << std::endl;
+    //                 cpuTimes << durationOn << endl;
     //             }
     //         }
     //         //// Read the files
@@ -949,7 +949,7 @@ int main(int argc, char* argv[])
     // }
     // else
     // {
-    //     std::cerr << "CheckOff folder is missing, error analysis cannot be performed." << std::endl;
+    //     std::cerr << "CheckOff folder is missing, error analysis cannot be performed." << endl;
     // }
     exit(0);
 }

@@ -247,5 +247,5 @@ int main(int argc, char* argv[])
                                "./ITHACAoutput/ErrorsL2/");
     ITHACAstream::exportMatrix(errL2Nut, "errL2Nut", "matlab",
                                "./ITHACAoutput/ErrorsL2/");
-    exit(0);
+    return 0;
 }

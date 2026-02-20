@@ -152,19 +152,19 @@ void ReducedSteadyNSTurbIntrusive::solveOnline(Eigen::MatrixXd vel)
     hnls.solve(y);
     Eigen::VectorXd res(y);
     newtonObject.operator()(y, res);
-    std::cout << "################## Online solve N° " << count_online_solve <<
-              " ##################" << std::endl;
-    std::cout << "Solving for the parameter: " << vel_now << std::endl;
+    Info << "################## Online solve N° " << count_online_solve <<
+              " ##################" << endl;
+    Info << "Solving for the parameter: " << vel_now << endl;
 
     if (res.norm() < 1e-5)
     {
-        std::cout << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << green << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << endl << endl;
     }
     else
     {
-        std::cout << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
-                  hnls.iter << " iterations " << def << std::endl << std::endl;
+        Info << red << "|F(x)| = " << res.norm() << " - Minimun reached in " <<
+                  hnls.iter << " iterations " << def << endl << endl;
     }
 
     count_online_solve += 1;

@@ -117,12 +117,12 @@ Foam::fvMesh& mesh = meshPtr();
     Info << p << endl;
 
     Info << "\nFirst two elements of p, by reference:\n" << endl;
-    std::cerr << *(&p.ref()[0]) << std::endl;
-    std::cerr << *(&p.ref()[0]+1) << std::endl;
+    std::cerr << *(&p.ref()[0]) << endl;
+    std::cerr << *(&p.ref()[0]+1) << endl;
 
     Info << "\nFirst two elements of p_eigen:\n" << endl;
-    std::cerr << p_eigen(0) << std::endl;
-    std::cerr << p_eigen(1) << std::endl;
+    std::cerr << p_eigen(0) << endl;
+    std::cerr << p_eigen(1) << endl;
 
     // Change p_eigen
     p_eigen(0) = 0.0;
@@ -149,29 +149,29 @@ Foam::fvMesh& mesh = meshPtr();
     Eigen::VectorXd U_eigen;
     U_eigen = Foam2Eigen::field2Eigen(U);
 
-    std::cerr << "\nFirst 4 elements of U, by reference:\n" << std::endl;
+    std::cerr << "\nFirst 4 elements of U, by reference:\n" << endl;
     Info << *(&U.ref()[0][0]) << endl;
     Info << *(&U.ref()[0][0]+1) << endl;
     Info << *(&U.ref()[0][0]+2) << endl;
     Info << *(&U.ref()[0][0]+3) << endl;
 
-    std::cerr << "\nFirst 4 elements of U_eigen:\n" << std::endl;
-    std::cerr << U_eigen(0) << std::endl;
-    std::cerr << U_eigen(1) << std::endl;
-    std::cerr << U_eigen(2) << std::endl;
-    std::cerr << U_eigen(3) << std::endl;
+    std::cerr << "\nFirst 4 elements of U_eigen:\n" << endl;
+    std::cerr << U_eigen(0) << endl;
+    std::cerr << U_eigen(1) << endl;
+    std::cerr << U_eigen(2) << endl;
+    std::cerr << U_eigen(3) << endl;
     
     // Change U_eigen
     U_eigen(3) = 0.0;
     U = Foam2Eigen::Eigen2field(U, U_eigen, false);
-    std::cerr << "\nConverting back to field:, after setting U_eigen(3) = 0.0 (second row, first column)\n" << std::endl;
+    std::cerr << "\nConverting back to field:, after setting U_eigen(3) = 0.0 (second row, first column)\n" << endl;
     Info << U << endl;
 
     // uncomment lines below to test error handling for wrong size
     // Info << "\nConverting back to field with a resized U (9×3). Eigen2Field should throw an error:\n" << endl;
     // Eigen::MatrixXd U_eigen_r = Eigen::Map<Eigen::MatrixXd>((U_eigen.data()),3 ,9);
     // U_eigen_r.transposeInPlace();
-    // std::cerr << U_eigen_r << std::endl;
+    // std::cerr << U_eigen_r << endl;
     // volVectorField UU(U);
     // Foam2Eigen::Eigen2field(UU, U_eigen_r, false);
 
@@ -213,7 +213,7 @@ Foam::fvMesh& mesh = meshPtr();
 
     // Change R_eigen
     R_eigen(9) = 0.0;
-    std::cerr << "\nConverting back to field, after setting R_eigen(9) = 0.0 (First row, first column, second element):\n" << std::endl;
+    std::cerr << "\nConverting back to field, after setting R_eigen(9) = 0.0 (First row, first column, second element):\n" << endl;
     R = Foam2Eigen::Eigen2field(R, R_eigen, false);
     Info << R << endl;
     // exit(0);
@@ -222,7 +222,7 @@ Foam::fvMesh& mesh = meshPtr();
     // Eigen::MatrixXd R_eigen_r = Eigen::Map<Eigen::MatrixXd>((R_eigen.data()),9 ,9);
     // R_eigen_r.transposeInPlace();
     // Info << "\nResized R_eigen:\n" << endl;
-    // std::cerr << R_eigen_r << std::endl;
+    // std::cerr << R_eigen_r << endl;
     // volTensorField RR(R);
     // Info << "\nConverting back to field with a resized U (9×9). Eigen2Field should throw an error:\n" << endl;
     // Foam2Eigen::Eigen2field(RR, R_eigen_r, false);

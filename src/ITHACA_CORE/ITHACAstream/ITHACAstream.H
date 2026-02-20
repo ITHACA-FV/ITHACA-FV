@@ -64,6 +64,7 @@ SourceFiles
 #pragma GCC diagnostic ignored "-Wignored-attributes"
 #include <Eigen/Eigen>
 #include "EigenFunctions.H"
+#include "colormod.H"
 
 #include <unsupported/Eigen/CXX11/Tensor>
 #pragma GCC diagnostic pop
@@ -548,7 +549,7 @@ namespace Foam
 template<typename T>
 Ostream& operator<< (Ostream& os, const Eigen::Matrix < T, -1, -1 > & mat)
 {
-    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::MatrixXd&>
+    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::Matrix<T, -1, -1>&>
             (mat).data(), mat.size());
     return os;
 }
@@ -567,7 +568,7 @@ Istream& operator>> (Istream& is, Eigen::Matrix < T, -1, -1 > & mat)
 template<typename T>
 Ostream& operator<< (Ostream& os, const Eigen::Matrix < T, -1, 1 > & mat)
 {
-    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::VectorXd&>
+    os << mat.rows() << mat.cols() << UList<T>(const_cast<Eigen::Matrix<T, -1, 1>&>
             (mat).data(), mat.size());
     return os;
 }
@@ -581,6 +582,41 @@ Istream& operator>> (Istream& is, Eigen::Matrix < T, -1, 1 > & mat)
     UList<T> list(mat.data(), nrow * ncol);
     is >> list;
     return is;
+}
+
+// Support for Eigen matrix transpose expression
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Transpose<Eigen::Matrix<T, -1, -1>>& mat)
+{
+    Eigen::Matrix<T, -1, -1> evaluated = mat;
+    os << evaluated.rows() << evaluated.cols() << UList<T>(evaluated.data(), evaluated.size());
+    return os;
+}
+
+// Support for Eigen vector transpose expression
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Transpose<Eigen::Matrix<T, -1, 1>>& mat)
+{
+    Eigen::Matrix<T, 1, -1> evaluated = mat;
+    os << evaluated.rows() << evaluated.cols() << UList<T>(evaluated.data(), evaluated.size());
+    return os;
+}
+
+// Support for Eigen::Block (column/row views from matrices)
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Block<Eigen::Matrix<T, -1, -1>, -1, 1, true>& mat)
+{
+    Eigen::Matrix<T, -1, 1> evaluated = mat;
+    os << evaluated;
+    return os;
+}
+
+template<typename T>
+Ostream& operator<< (Ostream& os, const Eigen::Block<Eigen::Matrix<T, -1, -1>, 1, -1, false>& mat)
+{
+    Eigen::Matrix<T, 1, -1> evaluated = mat;
+    os << evaluated;
+    return os;
 }
 
 template<typename T>
@@ -601,6 +637,13 @@ Istream& operator>> (Istream& is, Eigen::Tensor<T, 3>& tens)
     UList<T> list(tens.data(), d1 * d2 * d3);
     is >> list;
     return is;
+}
+
+inline Ostream& operator<<(Ostream& os, const Color::Modifier& mod)
+{
+    // Output ANSI code to Foam Ostream
+    os << "\033[" << int(mod.getCode()) << "m";
+    return os;
 }
 
 }
@@ -648,8 +691,8 @@ void ITHACAstream::ReadSparseMatrix(Eigen::SparseMatrix<T, whatever, IND>& m,
 
     if (!readFile.good())
     {
-        std::cout << folder + MatrixName <<
-        " file does not exist, try to rerun the Offline Stage!" << std::endl;
+        Foam::Info << folder + MatrixName <<
+        " file does not exist, try to rerun the Offline Stage!" << Foam::endl;
         exit(EXIT_FAILURE);
     }
     else if (readFile.is_open())
@@ -697,8 +740,8 @@ void ITHACAstream::ReadDenseMatrix(MatrixType& Matrix, word folder,
 
     if (!in.good())
     {
-        std::cout << folder + MatrixName <<
-        " file does not exist, try to rerun the Offline Stage!" << std::endl;
+        Foam::Info << folder + MatrixName <<
+        " file does not exist, try to rerun the Offline Stage!" << Foam::endl;
         exit(EXIT_FAILURE);
     }
     else if (in.is_open())
@@ -785,7 +828,7 @@ void ITHACAstream::ReadSparseMatrixList(
     List<Eigen::SparseMatrix<T, whatever, IND >>& m, word folder, word MatrixName)
 {
     int number_of_files = numberOfFiles(folder, MatrixName);
-    std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
+    Foam::Info << "Reading the Matrix " + folder + MatrixName << Foam::endl;
     M_Assert(number_of_files != 0,
              "Check if the file you are trying to read exists" );
     Eigen::SparseMatrix<T, whatever, IND> A;
@@ -803,7 +846,7 @@ void ITHACAstream::ReadDenseMatrixList(List<MatrixType>& m, word folder,
                                        word MatrixName)
 {
     int number_of_files = numberOfFiles(folder, MatrixName);
-    std::cout << "Reading the Matrix " + folder + MatrixName << std::endl;
+    Foam::Info << "Reading the Matrix " + folder + MatrixName << Foam::endl;
     M_Assert(number_of_files != 0,
              "Check if the file you are trying to read exists" );
     MatrixType A;
