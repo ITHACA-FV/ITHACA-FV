@@ -542,6 +542,11 @@ GeometricField<Type, PatchField, GeoMesh> readFieldByIndex(
     label index
 );
 
+template <typename T>
+void read_snapshot(T& snapshot, const Foam::word snap_time,
+                    Foam::word path, Foam::word name = "default_name");
+
+
 };
 
 namespace Foam

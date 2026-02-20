@@ -41,7 +41,7 @@ class ITHACAparameters
 {
     public:
 
-        ITHACAparameters(fvMesh& mesh, Time& localTime);
+        ITHACAparameters(const fvMesh& mesh, Time& localTime);
 
         /// type of eigensolver used in the eigenvalue decomposition can be either be eigen or spectra
         word eigensolver;
@@ -68,7 +68,7 @@ class ITHACAparameters
         Time& runTime;
 
         /// Mesh object defined locally
-        fvMesh& mesh;
+        const fvMesh& mesh;
 
         /// Pointer to the ITHACAparameters class
         static ITHACAparameters* instance;
@@ -82,7 +82,7 @@ class ITHACAparameters
         ///
         /// @return     The instance.
         ///
-        static ITHACAparameters* getInstance(fvMesh& mesh, Time& localTime);
+        static ITHACAparameters* getInstance(const fvMesh& mesh, Time& localTime);
 
         ///
         /// @brief      Gets an instance of ITHACAparameters, to be used if the instance is already existing.

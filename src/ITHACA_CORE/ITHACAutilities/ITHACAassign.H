@@ -60,34 +60,6 @@ using namespace std::placeholders;
 /// Namespace to implement some useful assign operation of OF fields
 namespace ITHACAutilities
 {
-//-----------------------------------------------------------------------------
-/// @brief      A function to compute time-averaged fields for a set of different parameter samples
-/// and also the fields with the corresponding averaged subtracted
-///
-/// @param[in]  fields     The fields from which the time-averaged fields have to be computed
-/// @param[in]  ind        The indices at which fields for different samples of the parameter start
-/// @param      ave        The computed time-averaged fields
-///
-/// @tparam     TypeField  Type of field
-///
-/// @return     A list of fields which correspond to the original fields subtracted by
-/// the time-averaged part
-///
-template<class TypeField>
-PtrList<TypeField> averageSubtract(PtrList<TypeField>
-                                   fields, Eigen::MatrixXd ind, PtrList<TypeField>& ave);
-
-//-----------------------------------------------------------------------------
-/// @brief      Calculates the average of a list of fields
-///
-/// @param      fields     The fields
-///
-/// @tparam     TypeField  { description }
-///
-/// @return     The average.
-///
-template<class TypeField>
-TypeField computeAverage(PtrList<TypeField>& fields);
 
 //--------------------------------------------------------------------------
 /// Assign internal field
@@ -432,46 +404,13 @@ void assignMixedBC(GeometricField<Type, fvPatchField, volMesh>& field,
                    List<Type>& grad, List<scalar>& valueFrac);
 
 
-//--------------------------------------------------------------------------
-/// @brief      Normalize list of Geometric fields
-///
-/// @param      fields  The fields to be normalized
-///
-/// @tparam     Type  type of the Field can be Scalar or Vector
-///
-template<typename Type>
-void normalizeFields(
-    PtrList<GeometricField<Type, fvPatchField, volMesh >>& fields);
-
 //------------------------------------------------------------------------------
-/// @brief      /// @brief      Gets the values from a list of indices
+/// @brief      Set a field of type vol[Scalar|Vector|Tensor]Field to 0
 ///
-/// @param      field    The field from which you want to extract the values
-/// @param      indices  The indices at the point
-/// @param      xyz      Definition of the x, y, z coordinate of the value you want to extract 0 for x, 1 for y, 2 for z
+/// @param      f1 field to set to 0 
 ///
-/// @tparam     Type     type of the Field can be Scalar or Vector
-///
-/// @return     The values.
-///
-template<typename Type>
-Eigen::MatrixXd getValues(GeometricField<Type, fvPatchField,
-                          volMesh>& field, labelList& indices, labelList* xyz = NULL);
-
-//------------------------------------------------------------------------------
-/// @brief      Gets the values from a list of indices
-///
-/// @param      field    The field
-/// @param      indices  The indices
-/// @param      xyz      The xyz
-///
-/// @tparam     Type     { description }
-///
-/// @return     The values.
-///
-template<typename Type>
-Eigen::MatrixXd getValues(PtrList<GeometricField<Type, fvPatchField,
-                          volMesh >>& field, labelList& indices, labelList* xyz = NULL);
+template<typename T>
+void setToZero(T& f1);
 
 }
 

@@ -519,7 +519,7 @@ void read_fields(
     fileName casename, int first_snap, int n_snap)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
-    fvMesh& mesh = para->mesh;
+    const fvMesh& mesh = para->mesh;
     const pointMesh& pMesh  = pointMesh::New(mesh);
     constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value
                                || std::is_same<surfaceMesh, GeoMesh>::value;
@@ -661,7 +661,7 @@ void read_fields(
     fileName casename, int first_snap, int n_snap)
 {
     ITHACAparameters* para(ITHACAparameters::getInstance());
-    fvMesh& mesh = para->mesh;
+    const fvMesh& mesh = para->mesh;
     const pointMesh& pMesh  = pointMesh::New(mesh );
     constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value
                                || std::is_same<surfaceMesh, GeoMesh>::value;
@@ -731,15 +731,17 @@ void read_fields(
     }
     else
     {
-        Info << "######### Reading the Data for " << field.name() << " #########" <<
+        Info << "################ Parallel Reading the Data for " << field.name() << " #########" <<
              endl;
-        word timename(field.mesh().time().rootPath() + "/" +
-                      field.mesh().time().caseName() );
+
+        word timename = casename + "processor" + name(Pstream::myProcNo());
+        Foam::Time runTime2(Foam::Time::controlDictName, ".", timename);
+        int last_s = runTime2.times().size();
+
+        timename = field.mesh().time().rootPath() + "/" + field.mesh().time().caseName();
         timename = timename.substr(0, timename.find_last_of("\\/"));
         timename = timename + "/" + casename + "/" + "processor" + name(
                        Pstream::myProcNo());
-        int last_s = numberOfFiles(casename,
-                                   "processor" + name(Pstream::myProcNo()) + "/");
 
         if (first_snap > last_s)
         {
@@ -758,13 +760,13 @@ void read_fields(
 
         if  constexpr(check_vol)
         {
-            for (int i = 1 + first_snap; i < last_s + first_snap; i++)
+            for (int i = 2 + first_snap; i < last_s + first_snap; i++)
             {
                 GeometricField<Type, PatchField, GeoMesh> tmp_field(
                     IOobject
                     (
                         field.name(),
-                        timename + "/" + name(i),
+                        timename + "/" + runTime2.times()[i].name(),
                         field.mesh(),
                         IOobject::MUST_READ
                     ),
@@ -1290,5 +1292,77 @@ readFieldByIndex(
     const GeometricField<vector, fvsPatchField, surfaceMesh>&,
     fileName,
     label);
+
+
+template<typename T>
+void read_snapshot(T& snapshot, const Foam::word snap_time,
+                                  Foam::word path, Foam::word name)
+{
+    // ITHACAparameters* para(ITHACAparameters::getInstance());
+    const fvMesh& mesh = snapshot.mesh();
+    word arg_path = path;
+    word pathProcessor = "";
+
+    if (name == "default_name")
+    {
+        name = snapshot.name();
+    }
+
+    if (Pstream::parRun())
+    {
+        // If specific path, changing processor* from casename directory to the target directory
+        word path_start = mesh.time().rootPath() + "/" + mesh.time().caseName();
+        path_start = path_start.substr(0, path_start.find_last_of("\\/")) + "/";
+        pathProcessor = "/processor" + std::to_string(Pstream::myProcNo());
+
+        if (!ITHACAutilities::containsSubstring(path, pathProcessor + "/"))
+        {
+            path = path_start + arg_path.substr(0, arg_path.find_last_of("\\/")) + pathProcessor
+                              + "/" + arg_path.substr(arg_path.find_last_of("\\/"), arg_path.size());
+        }
+        else
+        {
+            path = path_start + arg_path;
+        }
+    }
+    else
+    {
+        path = arg_path;
+    }
+
+    path = path + "/" + snap_time;
+
+    if (!ITHACAutilities::check_file(path + "/" + name))
+    {
+        Info << "Error: data not found at :" << endl;
+        Info << path << endl;
+        Info << name << endl;
+        Info << endl;
+        abort();
+    }
+
+
+    T snapshot_dummy(
+        IOobject
+        (
+            name,
+            path,
+            mesh,
+            IOobject::MUST_READ
+        ),
+        mesh);
+
+    snapshot = snapshot_dummy;
+}
+
+
+template void read_snapshot(Foam::volScalarField& snapshot,
+        const Foam::word snap_time, Foam::word path, Foam::word name);
+template void read_snapshot(Foam::volVectorField& snapshot,
+        const Foam::word snap_time, Foam::word path, Foam::word name);
+template void read_snapshot(Foam::volTensorField& snapshot,
+        const Foam::word snap_time, Foam::word path, Foam::word name);
+
+
 
 }

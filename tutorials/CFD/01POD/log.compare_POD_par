@@ -1,0 +1,31 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2106                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : _40a7d5d6-20210727 OPENFOAM=2106 patch=211215
+Arch   : "LSB;label=32;scalar=64"
+Exec   : compare_POD -parallel
+Date   : Jul 30 2025
+Time   : 14:56:48
+Host   : LS-PF4RTR07
+PID    : 555062
+I/O    : uncollated
+Case   : /home/fregnault/Code/ITHACA-FV/tutorials/CFD/01POD
+nProcs : 4
+Hosts  :
+(
+    (LS-PF4RTR07 4)
+)
+Pstream initialized with:
+    floatTransfer      : 0
+    nProcsSimpleSum    : 0
+    commsType          : nonBlocking
+    polling iterations : 0
+trapFpe: Floating point exception trapping enabled (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 5, maxFileModificationPolls 20)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
