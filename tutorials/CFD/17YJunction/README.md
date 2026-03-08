@@ -1,26 +1,33 @@
-# Introduction to tutorial 17
-In this tutorial, we contruct a reduced order model for a Y-junction flow problem. The Y-junction consists of two inlets and one outlet channel whose time-dependent inlet boundary conditions are controlled. The angle between each inlet and the horizontal axis is 60 degrees. The length of the channels is <img src="https://render.githubusercontent.com/render/math?math=2 m"> . The two inlets, <img src="https://render.githubusercontent.com/render/math?math=\Gamma_{i1}\)">  and <img src="https://render.githubusercontent.com/render/math?math=\Gamma_{i2}\)"> , have a width of <img src="https://render.githubusercontent.com/render/math?math=0.5 m"> , while the outlet, <img src="https://render.githubusercontent.com/render/math?math=\Gamma_{o}\)"> , has a width of <img src="https://render.githubusercontent.com/render/math?math=1 m"> . The kinematic viscosity is equal to <img src="https://render.githubusercontent.com/render/math?math=\nu= 0.01 m ^2/s">  and the flow is considered laminar. As initial conditions the steady state solution, obtained with the simpleFOAM-solver, for a velocity magnitude of <img src="https://render.githubusercontent.com/render/math?math=1 m/s">  at both inlets is chosen. In this tutorial, new values of the velocity magnitude of the flow at the inlets are imposed in the reduced order model with either an iterative penalty method or a lifting function method. The reduced order model is constructed using Galerkin projection approach together with an exploitation of a pressure Poisson equation during the projection stage.
-The following image depicts a sketch of the geometry of the two-dimensional Y-junction.
+# Tutorial 17
 
-![image info](https://github.com/mathLab/ITHACA-FV/blob/master/docs/images/YJunction.png)
+## Introduction
+The problem consists of an unsteady Navier-Stokes problem with time-dependent boundary conditions in a Y-junction geometry. The Y-junction has two inlets and one outlet, with parameterized inlet velocities, demonstrating ROM for flows with time-varying BCs.
 
-## A detailed look into the code
-In this section we explain the main steps necessary to construct the tutorial N°17.
-
-The necessary header files
-First of all let's have a look at the header files that need to be included and what they are responsible for.
-
-The header files of ITHACA-FV necessary for this tutorial are: unsteadyNS.H for the full order unsteady NS problem, ITHACAPOD.H for the POD decomposition, reducedUnsteadyNS.H for the construction of the reduced order problem, and finally ITHACAstream.H for some ITHACA input-output operations.
-
-    #include "unsteadyNS.H"
-    #include "ITHACAPOD.H"
-    #include "ReducedUnsteadyNS.H"
-    #include "ITHACAstream.H"
-
-### Definition of the tutorial17 class
-We define the tutorial17 class as a child of the unsteadyNS class.
-
+## The necessary header files
+First of all let's have a look into the header files which have to be included, indicating what they are responsible for:
+```cpp
+#include "unsteadyNS.H"
+#include "ITHACAPOD.H"
+#include "ReducedUnsteadyNS.H"
+#include "ITHACAstream.H"
 ```
+`<unsteadyNS.H>` is the base class for unsteady NS problems.
+`<ITHACAPOD.H>` is for the computation of the POD modes.
+`<ReducedUnsteadyNS.H>` is for the reduced-order unsteady NS problem.
+`<ITHACAstream.H>` is responsible for reading and exporting the fields and other sorts of data.
+
+Additional standard libraries:
+```cpp
+#include <chrono>
+#include <math.h>
+#include <iomanip>
+```
+**Chrono** to compute execution times, **math.h** for mathematical functions, **iomanip** for output formatting.
+
+## Implementation of the tutorial17 class
+We define the tutorial17 class as a child of the `unsteadyNS` class.
+The constructor is defined with members that are the fields required to be manipulated during the resolution of the full order problem. Such fields are also initialized with the same initial conditions in the solver.
+```cpp
 class tutorial17: public unsteadyNS
 {
     public:
@@ -35,9 +42,8 @@ class tutorial17: public unsteadyNS
         volVectorField& U;
         volScalarField& p;
 ```
-Inside the tutorial17 class we define the offlineSolve method according to the specific problem that needs to be solved. If the offline solve has been previously performed then the method just reads the existing snapshots from the Offline directory. Otherwise it performs the offline solve.
-
-```
+Inside the tutorial17 class we define the offlineSolve method. If the offline solve has been previously performed then the method just reads the existing snapshots. If not, it performs the full-order simulation for the parameter.
+```cpp
         void offlineSolve()
         {
             List<scalar> mu_now(1);
@@ -48,6 +54,46 @@ Inside the tutorial17 class we define the offlineSolve method according to the s
             {
                 ITHACAstream::read_fields(Ufield, U, "./ITHACAoutput/Offline/");
                 ITHACAstream::read_fields(Pfield, p, "./ITHACAoutput/Offline/");
+            }
+            else
+            {
+                U = U0;
+                p = P0;
+                mu_now[0] = mu(0, 0);
+                truthSolve(mu_now);
+            }
+        }
+```
+
+## Definition of the main function
+The main function sets up the problem parameters, performs the offline phase, computes POD modes, and solves the online reduced problem with time-dependent boundary conditions.
+
+First, the tutorial object is constructed and parameters are configured:
+```cpp
+tutorial17 example(argc, argv);
+ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                     example._runTime());
+int NmodesUout = para->ITHACAdict->lookupOrDefault<int>("NmodesUout", 15);
+int NmodesPout = para->ITHACAdict->lookupOrDefault<int>("NmodesPout", 15);
+int NmodesUproj = para->ITHACAdict->lookupOrDefault<int>("NmodesUproj", 10);
+int NmodesPproj = para->ITHACAdict->lookupOrDefault<int>("NmodesPproj", 10);
+example.Pnumber = 1;
+example.Tnumber = 1;
+example.setParameters();
+example.mu_range(0, 0) = 0.1;
+example.mu_range(0, 1) = 0.1;
+example.genEquiPar();
+example.inletPatch.resize(2, 1);
+example.inletPatch << 0, 1;
+example.startTime = 0;
+example.finalTime = 10;
+example.timeStep = 0.01;
+example.writeEvery = 0.1;
+```
+
+The offline solve, lift functions, POD modes, and online solve are performed with time-dependent BCs.
+
+This completes the tutorial for unsteady NS with time-dependent BCs in a Y-junction.
             }
             else
             {

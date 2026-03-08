@@ -1,4 +1,5 @@
-# Introduction to tutorial 27
+# Tutorial 27
+## Introduction to tutorial 27
 
 In this tutorial we perform the hyperreduction of the Smagorinsky term from LES simulations inside a reduced order model. The test case is the 2D wake flow past a cylinder at Reynolds 100.
 
