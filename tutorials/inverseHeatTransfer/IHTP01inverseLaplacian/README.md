@@ -96,7 +96,7 @@ Run from the tutorial root:
 
 The ITHACAdict controls which tests to run:
 
-```text
+```cpp
 CGtest              1;           // enable CG regularization
 parameterizedBCtest 1;           // enable RBF parametrization
 thermocouplesLocationTest_CG     1;  // vary thermocouple distance
@@ -107,7 +107,7 @@ thermocouplesNumberTest_paramBC   1;  // ... with RBF
 
 Other settings include:
 
-```text
+```cpp
 cgIterMax    100;             // max CG iterations
 Jtolerance   1e-6;            // cost function tolerance
 JrelativeTolerance 1e-3;      // relative cost tolerance
@@ -127,5 +127,5 @@ Results are exported to `./ITHACAoutput/`, including:
 Compare the two methods by examining their respective error norms
 (L2 relative, L∞ relative) as computed at runtime.
 
----
-*(README summarising inverse Laplacian heat transfer tutorial.)*
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/inverseHeatTransfer/IHTP01inverseLaplacian/IHTP01inverseLaplacian.C).

@@ -140,8 +140,23 @@ class tutorialIPOD: public laplacianProblem
 ### Main execution
 The remainder of the original README contains detailed code snippets for
 setting parameters, running offline solves, computing sources, building POD
-bases, and performing projection tests. These steps remain unchanged but are
-organized logically in the above sections.
+bases, and performing projection tests. 
+First, collect the POD modes:
+```cpp
+        ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
+```
+
+Then, the incremental POD is initialized
+```cpp
+        scalarIncrementalPOD IPOD(example.Tfield[0], tolleranceSVD, "L2");
+```
+and filled
+```cpp
+        for (int fieldI = 1; fieldI < example.Tfield.size(); fieldI++)
+        {
+            IPOD.addSnapshot(example.Tfield[fieldI]);
+        }
+```
 
 ### Usage notes
 Compile the tutorial using its `Make/` target. Provide parameter files and use
@@ -149,17 +164,5 @@ the ITHACAdict dictionary to control algorithmic options (number of modes,
 incremental tolerance, etc.). The primary outputs are snapshot matrices and
 error metrics comparing classical versus incremental POD projection.
 
----
-*(README reorganized into structured sections with retained technical content.)*
-        ITHACAPOD::getModes(example.Tfield, example.Tmodes, example._T().name(),
-
-Then, the incremental POD is initialized
-
-        scalarIncrementalPOD IPOD(example.Tfield[0], tolleranceSVD, "L2");
-
-and filled
-
-        for (int fieldI = 1; fieldI < example.Tfield.size(); fieldI++)
-        {
-            IPOD.addSnapshot(example.Tfield[fieldI]);
-        }
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/20incrementalPOD/20incrementalPOD.C).

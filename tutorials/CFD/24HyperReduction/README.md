@@ -70,3 +70,7 @@ onlinearly reconstructed fields, error metrics) will be written under the
 Adjust hyper-reduction settings in the dictionary and regenerate snapshots if
 needed. The tutorial acts as a generic template for approximating arbitrary
 nonlinear functions in a reduced fashion.
+
+
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/24HyperReduction/24HyperReduction.C).

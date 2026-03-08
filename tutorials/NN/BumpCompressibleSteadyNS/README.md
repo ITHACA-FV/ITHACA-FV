@@ -50,5 +50,5 @@ All NN‑related outputs appear under `ITHACAoutput/NN/`, including:
 * `coeffs/coeffL2*Train.npy`, `*Test.npy` – projection coefficients
 * TorchScript model file generated during training
 
----
-*(README summarising compressible bump neural‑network tutorial.)*
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/NN/BumpCompressibleSteadyNS/02compBump.C).

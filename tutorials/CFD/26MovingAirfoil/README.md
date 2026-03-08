@@ -72,3 +72,7 @@ Compile with the provided `Make/` target. Configure the problem via
 `system/` dictionary files and run the executable to generate snapshots and
 reduced models in `ITHACAoutput/`. The tutorial is designed to illustrate the
 integration of compressible solvers with hyper-reduction techniques in ITHACA-FV.
+
+
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/26MovingAirfoil/26MovingAirfoil.C).

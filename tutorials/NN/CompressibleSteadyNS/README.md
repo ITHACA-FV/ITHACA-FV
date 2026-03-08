@@ -64,5 +64,5 @@ Results are stored under `ITHACAoutput/NN/`, comprising:
 * Trained TorchScript model and optimiser checkpoints
 * Error logs and diagnostic data (`loss*.dat`, `errors.dat`, etc.)
 
----
-*(README created for compressible steady flow neural‑network tutorial.)*
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/NN/CompressibleSteadyNS/03compSteadyNS.C).

@@ -60,7 +60,7 @@ Adjusting the ITHACAdict also enables or disables additional utility tests
 ## Post‑processing
 The Python script `plots.py` in the tutorial folder visualises the reconstructed
 temperature at a point, along with 95% confidence bands. The `0/` subdirectory
-contains example initial and boundary condition files used by the solver.
+contains example initial and boundary  condition files used by the solver.
 
----
-*(README summarising inverse heat transfer EnKF tutorial.)*
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/UQ/02enKF_1DinverseHeatTransfer/02enKF_1DinverseHeatTransfer.C).

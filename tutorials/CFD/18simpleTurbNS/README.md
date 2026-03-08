@@ -119,3 +119,6 @@ ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
 The reduced problem is set up and solved online for different viscosities.
 
 This completes the tutorial for turbulent steady NS with SIMPLE algorithm.
+
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/17YJunction/17YJunction.C).

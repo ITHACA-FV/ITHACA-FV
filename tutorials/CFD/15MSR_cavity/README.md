@@ -9,18 +9,19 @@ to reactor safety.
 
 ### Parametrization
 Three parameters are varied:
-	* kinematic viscosity `nu` of the fluid,
-	* total delayed neutron fraction `betaTot` (with fixed ratios
-		`beta_i/betaTot` for each group),
-	* third decay heat group constant `decLam3`.
+
+- kinematic viscosity `nu` of the fluid,
+- total delayed neutron fraction `betaTot` (with fixed ratios `beta_i/betaTot` for each group),
+- third decay heat group constant `decLam3`.
 
 Sampling ranges are set to ±10 % around reference values (`nu0`,
 `betaTot0`, `decLam30`) with a Reynolds number of 100 based on `nu0`.
 
 ### Sensitivity metrics
 Two figures of merit are computed at 100 s of simulation time:
-	* total power `P_tot`,
-	* mean temperature `T_m`.
+
+- total power `P_tot`,
+- mean temperature `T_m`.
 
 Temporal discretization during offline sampling uses Δt = 0.1 s, 31 runs,
 150 s each, with snapshots every 5 s (configurable via the ITHACAdict file).
@@ -111,6 +112,5 @@ parameter files are read from `parsOff_mat.txt` and outputs are stored in
 `ITHACAoutput/` directories. For plotting helper Python scripts
 (`plotCentreMass.py`, `plotDrag.py`, `plotLift.py`) can be used.
 
----
-(*This README replaces the previous short summary with detailed structure
-and steps.*)
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/15MSR_cavity/15MSR_cavity.C).

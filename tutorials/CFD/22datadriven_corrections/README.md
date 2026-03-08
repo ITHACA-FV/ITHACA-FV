@@ -78,5 +78,5 @@ coefficients, prediction errors, and visualizable OpenFOAM fields for
 comparison.
 
 ---
-*(This README synthesizes the content of the provided notebooks into a
+*(This README synthesizes the content of the provided Jupyter notebooks into a
 standalone overview.)

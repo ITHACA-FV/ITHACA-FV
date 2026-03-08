@@ -143,3 +143,5 @@ reduced.reconstruct_supt("./ITHACAoutput/ReconstructionSUP/", 2);
 ```
 
 This completes the tutorial, demonstrating the full workflow from full-order snapshots to reduced-order online solution.
+
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/07NonIsothermalMixingElbow/07NonIsothermalMixingElbow.C).

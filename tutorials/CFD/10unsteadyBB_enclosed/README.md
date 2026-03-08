@@ -1,7 +1,7 @@
 # Tutorial 10
 
 ## Introduction
-The problem consists of an unsteady Buoyant Boussinesq (BB) 2D problem with parameterized temperature boundary conditions. The physical setup represents a differentially heated cavity with uniform temperature on the left (hot) and right (cold) sides, while other sides are adiabatic. The cavity has an aspect ratio of 1.0, laminar flow, and air as the working fluid with Pr = 0.7. Ambient temperature is 300 K, hot wall at 301.5 K, cold wall at 298.5 K.
+The problem consists of an unsteady Buoyant Boussinesq (BB) 2D problem with parameterized temperature boundary conditions. The physical setup represents a differentially heated cavity with uniform temperature on the left (hot) and right (cold) sides, while other sides are adiabatic. The cavity has an aspect ratio of $1.0$, laminar flow, and air as the working fluid with $Pr = 0.7$. Ambient temperature is $300$ K, hot wall at $301.5$ K, cold wall at $298.5$ K.
 
 ## The necessary header files
 First of all let's have a look into the header files which have to be included, indicating what they are responsible for:
@@ -127,3 +127,6 @@ ITHACAPOD::getModes(example.Tomfield, example.Tmodes, example._T().name(),
 Projection errors are calculated for different numbers of modes, and the reduced problem is solved online for various boundary conditions. Full-order solutions are also computed for comparison, and errors between ROM and FOM are evaluated.
 
 This completes the tutorial, demonstrating ROM for unsteady buoyant flows with parameterized boundary conditions.
+
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/10unsteadyBB_enclosed/10unsteadyBB_enclosed.C).

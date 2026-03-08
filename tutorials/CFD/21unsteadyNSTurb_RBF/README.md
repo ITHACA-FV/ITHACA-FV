@@ -115,3 +115,6 @@ reduction coefficients and reconstructions to `ITHACAoutput/`.
 This tutorial highlights the coupling of turbulent modelling with parameter
 interpolation using RBFs in a reduced context. Adjust the number of modes or
 sampling range via the ITHACAdict dictionary.
+
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/21unsteadyNSTurb_RBF/21unsteadyNSTurb_RBF.C).

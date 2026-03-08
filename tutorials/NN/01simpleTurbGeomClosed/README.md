@@ -54,5 +54,5 @@ in the dictionary to change the number of modes.
 Outputs (trained model, normalization factors, coefficient files) appear in
 `ITHACAoutput/NN/`.
 
----
-*(Tutorial README created to describe neural‑network closure example.)*
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/NN/01simpleTurbGeomClosed/01simpleTurbGeomClosed.C).

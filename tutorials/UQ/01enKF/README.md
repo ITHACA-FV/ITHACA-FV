@@ -58,5 +58,5 @@ Ensure the input matrices are present in the same folder. After execution the
 `ITHACAoutput/` directory will contain the exported data, which can be
 plotted using `plots.py` or any other tool.
 
----
-*(README created to document the EnKF linear system tutorial.)*
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/UQ/01enKF/01enKF.C).

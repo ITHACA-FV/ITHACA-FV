@@ -100,7 +100,5 @@ Compile with the provided `Make/` target. Configure the problem via the
 `system/ITHACAdict` file (e.g. `fluxMethod` and mode counts). Run the binary to
 produce `ITHACAoutput/` containing snapshots, POD modes and online results.
 
----
-*(README restructured to match the style of other tutorials while preserving
-existing information.)*
-```
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/19UnsteadyNSExplicit/19UnsteadyNSExplicit.C).

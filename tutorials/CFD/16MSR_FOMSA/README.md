@@ -7,17 +7,18 @@ rather than constructing a reduced order model.
 
 ### Parameters
 Three random parameters are considered:
-	* kinematic viscosity `nu`,
-	* total delayed neutron fraction `betaTot` (ratios `beta_i/betaTot` fixed),
-	* third decay heat group constant `decLam3`.
+- kinematic viscosity `nu`,
+- total delayed neutron fraction `betaTot` (ratios `beta_i/betaTot` fixed),
+- third decay heat group constant `decLam3`.
 
 Each parameter is assumed normally distributed and sampled at 1000 points.
 The offline FOM is run for each sample, and statistics are collected.
 
 ### Figures of merit
 The quantities monitored for each sample are:
-	* total power `P_tot`,
-	* mean temperature `T_m`,
+
+- total power `P_tot`,
+- mean temperature `T_m`,
 both evaluated at t = 100 s. Only the final time and the initial condition
 are exported since temporal evolution is not required for the analysis.
 
@@ -37,6 +38,5 @@ temperature values.
 Results can be post-processed using scripts or standard tools to produce
 statistical distributions or sensitivity plots.
 
----
-(*Updated README with structured description and usage information.*)
-
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/16MSR_FOMSA/16MSR_FOMSA.C).

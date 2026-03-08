@@ -120,3 +120,6 @@ for (label k = 0; k < (example.mu).size(); k++)
 ```
 
 This completes the tutorial for steady NS with SIMPLE algorithm.
+
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/12simpleSteadyNS/12simpleSteadyNS.C).

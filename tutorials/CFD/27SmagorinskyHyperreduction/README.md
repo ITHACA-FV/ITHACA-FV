@@ -57,3 +57,6 @@ Saved results include:
 - a file 'predictionCoeffs.npy' containing the approximated values $\widehat{\Phi^T F(\Phi a)}$ at each time step of the test interval
 - a file 'relativeSmagProjError.npy' containing the L2 relative error between the reference $\Phi\Phi^T F(\Phi a)$ and the prediction
 - subfolders containg the OpenFOAM field for the reference $\Phi\Phi^T F(\Phi a)$ and the prediction, for visualization
+
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/27SmagorinskyHyperreduction/27SmagorinskyHyperreduction.C).

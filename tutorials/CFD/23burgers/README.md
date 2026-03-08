@@ -69,3 +69,6 @@ written under `ITHACAoutput/Offline` and `ITHACAoutput/POD`.
 
 This simple tutorial is useful for demonstrating the basic mechanics of
 offline snapshot generation and POD mode extraction within ITHACA-FV.
+
+## The plain code
+The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/23burgers/23burgers.C).
