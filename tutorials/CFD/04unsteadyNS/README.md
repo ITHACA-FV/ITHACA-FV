@@ -35,7 +35,7 @@ We can define the tutorial04 class as a child of the `<unsteadyNS>` class. The c
             explicit tutorial04(int argc, char* argv[])
                 : unsteadyNS(argc, argv), U(_U()), p(_p()) {}
 ```
-Inside the tutorial04 class we define the `offlineSolve` method according to the specific parametrized problem that needs to be solved. If the offline solve has been previously performed then the method just reads the existing snapshots from the `Offline` directory. Otherwise it loops over all the parameters, changes the system viscosity with the iterable parameter then performs the offline solve.
+Inside the tutorial04 class we define the `offlineSolve` method according to the specific parametrized problem that needs to be solved. If the offline solve has been previously performed then the method just reads the existing snapshots from the `Offline` directory. Otherwise it loops over all the parameters, changes the system viscosity with the iterable parameter, then performs the offline solve.
 ```cpp
         void offlineSolve()
         {
@@ -80,9 +80,9 @@ Then we parse the `ITHACAdict` file to determine the number of modes to be writt
 ```
 We note that a default value can be assigned in case the parser did not find the corresponding string in the `ITHACAdict` file.
 
-Now we would like to perform 10 parametrized simulations where the kinematic viscosity is the sole parameter to change, and we take 10 equispaced values in the range of $[0.01, 0.1]$ m$^2$/s. Alternatively, we can also think of those simulations as that they are performed for fluid flow that has $Re$ changes from $Re=10$ to $Re=100$ with step size $= 10$. In fact, both definitions are the same since the inlet velocity and the domain geometry are both kept fixed through all simulations.
+Now we would like to perform 10 parametrized simulations where the kinematic viscosity is the only parameter to change, and we take 10 equispaced values in the range of $[0.01, 0.1]$ m$^2$/s. Alternatively, we can also think of those simulations as that they are performed for fluid flow that has $Re$ changes from $Re=10$ to $Re=100$ with step size $= 10$. In fact, both definitions are the same since the inlet velocity and the domain geometry are both kept fixed through all simulations.
 
-In our implementation, the parameter (viscosity) can be defined by specifying that `Nparameters=1, Nsamples=10,` and the parameter ranges from 0.01 to 0.1 equispaced, i.e.
+In our implementation, the parameter (viscosity) can be defined by specifying that `Nparameters=1, Nsamples=10,` and the parameter assumes equispaced values in the range [0.01, 0.1] equispaced, i.e.
 
 ```cpp
     example.Pnumber = 1;
@@ -96,14 +96,14 @@ In our implementation, the parameter (viscosity) can be defined by specifying th
     // Generate equispaced samples inside the parameter range
     example.genEquiPar();
 ```
-After that we set the inlet boundaries where we have the non homogeneous BC:
+After that we set the inlet boundaries, where we have the non homogeneous BC:
 
 ```cpp
     example.inletIndex.resize(1, 2);
     example.inletIndex(0, 0) = 0;
     example.inletIndex(0, 1) = 0;
 ```
-And we set the parameters for the time integration, so as to simulate 20 seconds for each simulation, with a step size $= 0.01$ seconds, and the data are dumped every 0.1 seconds, i.e.
+We set the parameters for the time integration, so as to simulate 20 seconds for each simulation, with a step size $= 0.01$ seconds, and the data are dumped every 0.1 seconds, i.e.
 
 ```cpp
     example.startTime = 60;
@@ -123,7 +123,7 @@ ITHACAutilities::normalizeFields(example.liftfield);
 example.computeLift(example.Ufield, example.liftfield,
     example.Uomfield);
 ```
-After that, the modes for velocity, pressure and supremizers are obtained:
+After that, the modes for velocity and pressure fields are obtained:
 ```cpp
     ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
                         example.podex, 0, 0, NmodesUout);

@@ -8,38 +8,23 @@ The following image illustrates the computational domain used to discretize the 
 ![computational mesh](../../../docs/images/mesh.png)
 
 The non-linear function is described by a parametric Gaussian function:
-$$
-S(\mathbf{x},\mathbf{\mu}) = e^{-2(x-\mu_x-1)^2 - 2(y-\mu_y-0.5)^2},
-$$
-that is depending on the parameter vector $\mathbf{\mu} = [\mu_x, \mu_y] $ and on the location inside the domain $ \mathbf{x} = [x,y]$. A training set of 100 samples is used to construct the "DEIM" modes which are later used for the approximation.
+
+$$ S(\mathbf{x},\mathbf{\mu}) = e^{-2(x-{\mu}_x-1)^2 - 2(y-{\mu}_y-0.5)^2}, $$
+
+that is depending on the parameter vector $\mathbf{\mu} = [{\mu}_x, {\mu}_y]$ and on the location inside the domain $\mathbf{x} = [x,y]$. A training set of 100 samples is used to construct the "DEIM" modes which are later used for the approximation.
+
+# A detailed look into the code
+This section explains the main steps necessary to construct the tutorial N°8.
+
 ## The header files
-First of all let's have a look to the header files that needs to be included and what they are responsible for:
+First of all let's have a look to the header files that needs to be included and what they are responsible for.
 The header files of ITHACA-FV necessary for this tutorial are: `<Foam2Eigen.H>` for Eigen to OpenFOAM conversion of objects, `<ITHACAstream.H>` for ITHACA-FV input-output operations. `<ITHACAPOD.H>` for the POD decomposition, `<hyperReduction.templates.H>` for the "DEIM" approximation.
-
-## A detailed look at the code
-The OpenFOAM header files are:
-
-```cpp
-#include "fvCFD.H"
-#include "fvOptions.H"
-#include "simpleControl.H"
-#include "simpleControl.H"
-#include "fvMeshSubset.H"
-```
-and the ITHACA-FV header files are:
-```cpp
-#include "ITHACAutilities.H"
-#include "Foam2Eigen.H"
-#include "ITHACAstream.H"
-#include "ITHACAPOD.H"
-#include "hyperReduction.templates.H"
-```
 Then we include `chrono` to compute the speedup:
 ```cpp
 #include <chrono>
 ```
 
-Then, we construct the function `DEIM_function` to be approximated with the "DEIM" method from the `HyperReduction` class is:
+Then, we construct the function `DEIM_function` to be approximated with the "DEIM" method from the `HyperReduction` class:
 ```cpp
 class DEIM_function : public HyperReduction<PtrList<volScalarField> & >
 {
@@ -48,7 +33,7 @@ class DEIM_function : public HyperReduction<PtrList<volScalarField> & >
 ```
 The method with the explicit definition of the non-linear function is:
 ```cpp
-static volScalarField evaluate_expression(volScalarField& S, Eigen::MatrixXd mu)
+    static volScalarField evaluate_expression(volScalarField& S, Eigen::MatrixXd mu)
         {
             volScalarField yPos = S.mesh().C().component(vector::Y).ref();
             volScalarField xPos = S.mesh().C().component(vector::X).ref();
@@ -65,7 +50,7 @@ static volScalarField evaluate_expression(volScalarField& S, Eigen::MatrixXd mu)
 
 The method with the expression for the evaluation of the online coefficients is:
 ```cpp
-Eigen::VectorXd onlineCoeffs(Eigen::MatrixXd mu)
+    Eigen::VectorXd onlineCoeffs(Eigen::MatrixXd mu)
         {
             theta.resize(nodePoints().size());
             auto f = evaluate_expression(subField(), mu);
@@ -80,9 +65,9 @@ Eigen::VectorXd onlineCoeffs(Eigen::MatrixXd mu)
         }
 ```
 Now let's have a look at important commands in the main function.
-Read the parameters from the `ITHACAdict` file and store the snapshots in a `volScalarField`:
+At first, we read the parameters from the `ITHACAdict` file and store the snapshots in a `volScalarField`:
 ```cpp
-ITHACAparameters* para = ITHACAparameters::getInstance(mesh, runTime);
+    ITHACAparameters* para = ITHACAparameters::getInstance(mesh, runTime);
     int NDEIM = para->ITHACAdict->lookupOrDefault<int>("NDEIM", 15);
     simpleControl simple(mesh);
 #include "createFields.H"
@@ -104,9 +89,9 @@ ITHACAparameters* para = ITHACAparameters::getInstance(mesh, runTime);
     );
 ```
 
-The, we define the parameter samples to train the non-linear function and we perform the offline training of the function. Finally, we assemble the snapshots list.
+The, we define the parameter samples to train the non-linear function and we perform the offline training of the function. Finally, we assemble the snapshots list and export the solutions.
 ```cpp
-    / Parameters used to train the non-linear function
+    // Parameters used to train the non-linear function
     Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
 
     // Perform the offline phase
@@ -128,12 +113,12 @@ Compute the "DEIM" modes using the `ITHACAPOD` class:
                                     S.name());
     snapshotsModes = Foam2Eigen::PtrList2Eigen(modes);
 ```
-It follows the construction of the `HyperReduction` object passing the maximum number of "DEIM" modes `NDEIM`, the `initSeeds` (none in this tutorial), the name used to store the output "DEIM" and the list of snapshots `Sp`. The constructor is taking the number of modes and the number of point to compute, for the "DEIM" method these numbers are equal.
+It follows the construction of the `HyperReduction` object passing the maximum number of "DEIM" modes `NDEIM`, the `initSeeds` (none in this tutorial), the name used to store the output "DEIM" and the list of snapshots `Sp`. The constructor is taking the number of modes and the number of points to compute (for the "DEIM" method these numbers are equal).
 ```cpp
     Eigen::VectorXi initSeeds(0);
     DEIM_function c(NDEIM, NDEIM, initSeeds, "DEIM", Sp);
 ```
-Then, we compute the "DEIM" method `HyperReduction::offlineGappyDEIM` passing the "DEIM" modes and the `normalizingWeights`:
+Then, we use the "DEIM" method `HyperReduction::offlineGappyDEIM` passing the "DEIM" modes and the `normalizingWeights` object:
 ```cpp
 c.offlineGappyDEIM(snapshotsModes, normalizingWeights);
 ```
@@ -142,7 +127,7 @@ The command to generate the submeshes used for pointwise evaluation of the funct
 c.generateSubmesh(2, mesh);
 c.subField = c.interpolateField<volScalarField>(Sp[0]);
 ```
-Then, the definition of a new sample value to test the accuracy of the method $ \mu* = (0,0) $ follows:
+Then, the definition of a new sample value to test the accuracy of the method $\mu^*=(0,0)$ follows:
 ```cpp
 Eigen::MatrixXd par_new(2, 1);
 par_new(0, 0) = 0;
@@ -158,7 +143,7 @@ Then, export the approximation:
 ```cpp
 ITHACAstream::exportSolution(S2, name(1), "./ITHACAoutput/Online/");
 ```
-Finally, we can evaluate the reference function on in $\mu*$ using the FOM, export the FOM solution and compute the error between DEIM and FOM.
+Finally, we can evaluate the reference function at $\mu^*$ using the FOM, export the FOM solution and compute the error between DEIM and FOM.
 ```cpp
 // Evaluate the full order function and export it
 DEIM_function::evaluate_expression(S, par_new);

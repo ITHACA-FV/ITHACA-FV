@@ -30,7 +30,7 @@ We can define the tutorial05 class as a child of the `<steadyNS>` class. The con
             explicit tutorial05(int argc, char* argv[])
                 : steadyNS(argc, argv), U(_U()), p(_p()) {}
 ```
-Inside the tutorial05 class we define the `offlineSolve` method according to the specific parametrized problem that needs to be solved. If the offline solve has been previously performed then the method just reads the existing snapshots from the `Offline` directory. Otherwise it loops over all the parameters, changes the system viscosity with the iterable parameter then performs the offline solve.
+Inside the tutorial05 class we define the `offlineSolve` method according to the specific parametrized problem that needs to be solved. If the offline solve has been previously performed, then the method just reads the existing snapshots from the `Offline` directory. Otherwise it loops over all the parameters, changes the system viscosity with the iterable parameter, and then performs the offline solve.
 ```cpp
         void offlineSolve()
         {

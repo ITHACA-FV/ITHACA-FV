@@ -5,6 +5,9 @@ The problem consists of an unsteady Navier-Stokes problem coupled with heat tran
 
 The geometry is a mixing elbow where two inlets with different velocities and temperatures merge, and the outlet conditions are simulated. The tutorial showcases the application of POD-based reduction to both momentum and energy equations.
 
+# A detailed look into the code
+This section explains the main steps necessary to construct the tutorial N°7.
+
 ## The necessary header files
 First of all let's have a look into the header files which have to be included, indicating what they are responsible for:
 ```cpp
@@ -25,7 +28,7 @@ Additional standard libraries:
 #include <math.h>
 #include <iomanip>
 ```
-**Chrono** to compute execution times, **math.h** for mathematical functions, **iomanip** for output formatting.
+**Chrono** is useful to compute execution times, **math.h** is used for mathematical functions, and **iomanip** for output formatting.
 
 ## Implementation of the tutorial07 class
 We define the tutorial07 class as a child of the `unsteadyNST` class.
@@ -47,7 +50,7 @@ class tutorial07: public unsteadyNST
         volScalarField& p;
         volScalarField& T;
 ```
-Inside the tutorial07 class we define the offlineSolve method. If the offline solve has been previously performed then the method just reads the existing snapshots from the `Offline` directory. If not, it loops over all the parameter samples and performs the full-order simulations.
+Inside the tutorial07 class we define the `offlineSolve` method. If the offline solve has been previously performed, then the method just reads the existing snapshots from the `Offline` directory. If not, it loops over all the parameter samples and performs the full-order simulations.
 ```cpp
         void offlineSolve()
         {
@@ -109,7 +112,8 @@ The offline solve is performed:
 example.offlineSolve();
 ```
 
-Supremizer and lift functions are computed:
+Supremizer and lift functions are then computed.
+Note that the lift function is assigned for both the velocity and the temperature (`liftSolveT` and `computeLiftT`).
 ```cpp
 example.solvesupremizer();
 example.liftSolve();
@@ -138,6 +142,10 @@ vel_now << 0.6, 1.2;
 Eigen::MatrixXd temp_now(3, 1);
 temp_now << 60, 70, 60;
 reduced.solveOnline_sup(vel_now, temp_now);
+```
+
+The reduced solution is then reconstructed and exported:
+```cpp
 reduced.reconstruct_sup("./ITHACAoutput/ReconstructionSUP/", 2);
 reduced.reconstruct_supt("./ITHACAoutput/ReconstructionSUP/", 2);
 ```

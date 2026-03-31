@@ -9,11 +9,11 @@ The velocity at the inlet is parameterized in both x and y directions.
 In other words, the parameters in this setting are the magnitude of the velocity at the inlet and
 the inclination of the velocity with respect to the inlet.
 
-## A detailed look into the code
+# A detailed look into the code
 This section explains the main steps necessary to construct the tutorial N°6.
 
-### The necessary header files
-First of all let's have a look into the header files which have to be included, indicating what they are responsible for:
+## The necessary header files
+First of all, let's have a look into the header files which have to be included, indicating what they are responsible for:
 ```cpp
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
@@ -50,7 +50,7 @@ The header files of ITHACA-FV necessary for this tutorial are:
 `<SteadyNSTurb.H>` is the child of `<steadyNS.H>` and it is the class for the full order steady NS turbulent problem.
 Finally `<reducedSteadyNS.H>` and `<ReducedSteadyNSTurb.H>` are for the construction of the reduced order problems
 
-### Definition of the tutorial06 class
+## Definition of the tutorial06 class
 We define the tutorial06 class as a child of the `SteadyNSTurb` class.
 The constructor is defined with members that are the fields required to be manipulated during the resolution of the full order problem using simpleFoam. Such fields are also initialized with the same initial conditions in the solver.
 ```cpp
@@ -152,7 +152,7 @@ This `offlineSolve` method is just designed to compute the full order solutions 
         }
 };
 ```
-### Definition of the main function
+## Definition of the main function
 In this section we address the definition of the main function.
 First we construct the object `example` of type tutorial06:
 ```cpp
@@ -210,15 +210,26 @@ After that, the modes for velocity, pressure and the eddy viscosity are obtained
                         example.podex,
                         example.supex, 0, NmodesProject);
     ITHACAPOD::getModes(example.nutFields, example.nutModes, example._nut().name(),
+                        example.podex,
+                        example.supex, 0, NmodesProject);
 ```
-Then we compute the supremizer modes on the basis of the POD pressure modes obtained from the last step:
+Then, we compute the supremizer modes on the basis of the POD pressure modes obtained from the last step:
 ```cpp
         example.solvesupremizer("modes");
 ```
 
-Then, we perform the projection onto the POD modes
+Then, we perform the projection onto the POD modes, either using the supremizer approach or using the PPE approach. The stabilization type can be changed in the `system/ITHACAdict` file.
 ```cpp
+    if (stabilization == "supremizer")
+    {
         example.projectSUP("./Matrices", NmodesU, NmodesP, NmodesSUP,
+                           NmodesNUT);
+    }
+    else if (stabilization == "PPE")
+    {
+        example.projectPPE("./Matrices", NmodesU, NmodesP, NmodesSUP,
+                           NmodesNUT);
+    }
 ```
 Now we proceed to the ROM part of the tutorial, at first we construct an object of the class `<ReducedSteadyNSTurb.H>` and we set the value of the reduced viscosity and we initialize the penalty factor which will be zero
 ```cpp
@@ -271,6 +282,7 @@ Now we output the matrix `rbfCoeff` and the online solution
     ITHACAstream::exportMatrix(pod_rbf.online_solution, "red_coeff", "matlab",
                                "./ITHACAoutput/red_coeff");
     ITHACAstream::exportMatrix(pod_rbf.online_solution, "red_coeff", "eigen",
+                                "./ITHACAoutput/red_coeff");
 ```
 
 

@@ -104,11 +104,11 @@ and the offline stage is performed:
 ```cpp
     example.offlineSolve();
 ```
-and the supremizer problem is solved:
+Then, the supremizer problem is solved:
 ```cpp
     example.solvesupremizer();
 ```
-In order to show the functionality of reading fields in this case the lifting function is read from a precomputed simulation with a unitary inlet velocity:
+In order to show the functionality of reading fields, in this case the lifting function is read from a precomputed simulation with a unitary inlet velocity:
 ```cpp
     ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
     ITHACAutilities::normalizeFields(example.liftfield);
@@ -128,7 +128,7 @@ and the modes for velocity, pressure and supremizers are obtained:
                         example.podex,
                         example.supex, 1, NmodesSUPout);
 ```
-then the projection onto the POD modes is performed with:
+Then, the projection onto the POD modes is performed with:
 ```cpp
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesSUPproj);
 ```
@@ -153,7 +153,7 @@ The viscosity is set with the command:
 ```cpp
     reduced.nu = example.mu(k, 0)
 ```
-finally the online solution stored during the online solve is exported to file in three different formats with the lines:
+Finally, the online solution stored during the online solve is exported to file in three different formats with the lines:
 ```cpp
     ITHACAstream::exportMatrix(reduced.online_solution, "red_coeff", "python",
                                "./ITHACAoutput/red_coeff");
@@ -191,8 +191,8 @@ The online stage is performed analogously
 ```
     mpirun -np 4 -quiet 03steadyNS -parallel -stage online
 ```
-Or the users can simple run the script `Allrun_parallel`.
+To run the tutorial in parallel, the users can simple run the script `Allrun_parallel`.
 
-In the case of OF1812 the parallel run is not supported.
+In the case of OF1812, the parallel run is not supported.
 
 The plain code can be found [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/03steadyNS/03steadyNS.C).
