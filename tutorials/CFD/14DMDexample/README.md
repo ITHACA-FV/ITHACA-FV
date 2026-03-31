@@ -3,15 +3,11 @@
 ## Introduction
 The problem consists of an unsteady Navier-Stokes problem reproduced using Dynamic Mode Decomposition (DMD). The setup involves parameterized viscosity, and DMD is applied to extract dynamic modes from the velocity and pressure snapshots for flow reconstruction.
 
+# A detailed look into the code
+Here we document the code used for tutorial 14.
+
 ## The necessary header files
-First of all let's have a look into the header files which have to be included, indicating what they are responsible for:
-```cpp
-#include "unsteadyNS.H"
-#include "ITHACAPOD.H"
-#include "ITHACADMD.H"
-#include "ReducedUnsteadyNS.H"
-#include "ITHACAstream.H"
-```
+First of all, let's have a look into the header files which have to be included, indicating what they are responsible for:
 `<unsteadyNS.H>` is the base class for unsteady NS problems.
 `<ITHACAPOD.H>` is for the computation of the POD modes.
 `<ITHACADMD.H>` is for Dynamic Mode Decomposition.
@@ -19,12 +15,6 @@ First of all let's have a look into the header files which have to be included, 
 `<ITHACAstream.H>` is responsible for reading and exporting the fields and other sorts of data.
 
 Additional libraries:
-```cpp
-#include <chrono>
-#include <math.h>
-#include <iomanip>
-#include "redsvd"
-```
 **Chrono** to compute execution times, **math.h** for mathematical functions, **iomanip** for output formatting, **redsvd** for SVD computations in DMD.
 
 ## Implementation of the tutorial14 class
@@ -100,7 +90,7 @@ The offline solve is performed:
 example.offlineSolve();
 ```
 
-DMD is applied to velocity and pressure fields:
+DMD is applied to velocity and pressure fields (`DMDv` and `DMDp`, respectively):
 ```cpp
 ITHACADMDvolVector DMDv(example.Ufield, example.writeEvery);
 DMDv.getModes(numberOfModesDMD, exactDMD, exportDMDModes);

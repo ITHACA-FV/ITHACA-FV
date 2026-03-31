@@ -3,16 +3,11 @@
 ## Introduction
 The problem consists of a steady Navier-Stokes problem solved using the SIMPLE algorithm. The setup involves parameterized viscosity and inlet velocities, demonstrating reduced order modeling for steady incompressible flows.
 
+# A detailed look into the code
+This is the explanation of the code used for tutorial 12.
+
 ## The necessary header files
 First of all let's have a look into the header files which have to be included, indicating what they are responsible for:
-```cpp
-#include "SteadyNSSimple.H"
-#include "ITHACAstream.H"
-#include "ITHACAPOD.H"
-#include "ReducedSimpleSteadyNS.H"
-#include "forces.H"
-#include "IOmanip.H"
-```
 `<SteadyNSSimple.H>` is the base class for steady NS problems solved with SIMPLE.
 `<ITHACAstream.H>` is responsible for reading and exporting the fields and other sorts of data.
 `<ITHACAPOD.H>` is for the computation of the POD modes.

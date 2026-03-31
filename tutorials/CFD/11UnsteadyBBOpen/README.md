@@ -3,28 +3,21 @@
 ## Introduction
 The problem consists of an unsteady Buoyant Boussinesq (BB) problem for open flows where pressure cannot be neglected. The setup involves parameterized temperature and velocity boundary conditions in an open flow configuration, demonstrating ROM for buoyant flows with pressure effects.
 
+# A detailed look into the code
+This is the description of the code for tutorial 11.
+
 ## The necessary header files
 First of all let's have a look into the header files which have to be included, indicating what they are responsible for:
-```cpp
-#include "UnsteadyBB.H"
-#include "ITHACAPOD.H"
-#include "ReducedUnsteadyBB.H"
-#include "ITHACAstream.H"
-```
+
 `<UnsteadyBB.H>` is the base class for unsteady Buoyant Boussinesq problems.
 `<ITHACAPOD.H>` is for the computation of the POD modes.
 `<ReducedUnsteadyBB.H>` is for the reduced-order unsteady BB problem.
 `<ITHACAstream.H>` is responsible for reading and exporting the fields and other sorts of data.
 
 Additional standard libraries:
-```cpp
-#include <chrono>
-#include <math.h>
-#include <iomanip>
-```
 **Chrono** to compute execution times, **math.h** for mathematical functions, **iomanip** for output formatting.
 
-## Implementation of the tutorial11 class
+# Implementation of the tutorial11 class
 We define the tutorial11 class as a child of the `UnsteadyBB` class.
 The constructor is defined with members that are the fields required to be manipulated during the resolution of the full order problem. Such fields are also initialized with the same initial conditions in the solver.
 ```cpp
@@ -78,11 +71,12 @@ Inside the tutorial11 class we define the offlineSolve method with parameterized
             }
         }
 ```
+The other functions (`onlineSolveFull`, `onlineSolveRead`, `liftSolveT`) are introduced to solve the FOM problem for the novel online parameters, to read the online pre-saved solutions, and to compute the lifting function, respectively. For more details on these functions, refer to [the documentation of tutorial 10](https://github.com/ITHACA-FV/ITHACA-FV/tree/master/tutorials/CFD/10unsteadyBB_enclosed#tutorial-10). 
 
 ## Definition of the main function
 The main function sets up the problem parameters, performs the offline phase including supremizer stabilization, computes POD modes for velocity, pressure, p_rgh, and temperature, evaluates projection errors, and solves the online reduced problem.
 
-First, the tutorial object is constructed and parameters are configured:
+First, the tutorial object is constructed and parameters are configured. Note that the parameters are read from the files `par_offline_BC` (for the offline stage), and `par_online_BC` (for online parameters).
 ```cpp
 tutorial11 example(argc, argv);
 word par_offline_BC("./par_offline_BC");
@@ -125,7 +119,8 @@ if (stabilization == "supremizer")
 }
 ```
 
-Projection errors are calculated, reduced matrices are obtained, and online solutions are performed with error evaluation against full-order solutions.
+Projection errors are then calculated, reduced matrices are obtained, and online solutions are performed with error evaluation against full-order solutions.
+Everything repeats the same procedure of tutorial 10, for more details refer to [the documentation of tutorial 10](https://github.com/ITHACA-FV/ITHACA-FV/tree/master/tutorials/CFD/10unsteadyBB_enclosed#tutorial-10).
 
 This completes the tutorial for open buoyant flows with pressure effects.
 

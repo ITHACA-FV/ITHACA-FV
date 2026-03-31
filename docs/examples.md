@@ -49,9 +49,11 @@
 </div>
 <div class="tutorial-card">
 [`12simpleSteadyNS`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/12simpleSteadyNS#tutorial-12): POD-Galerkin ROM for steady turbulent Navier-Stokes using the SIMPLE algorithm.
+<div class="tutorial-image">![Reconstructed pressure](images/12_simple.gif)</div>
 </div>
 <div class="tutorial-card">
 [`14DMDexample`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/14DMDexample#tutorial-14): Dynamic Mode Decomposition applied to a transient flow problem.
+<div class="tutorial-image">![Reconstructed velocity](images/14_cyl.gif)</div>
 </div>
 <div class="tutorial-card">
 [`15MSR_cavity`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/15MSR_cavity#tutorial-15): reduced order model for molten salt reactor cavity with parametrized diffusivity.
