@@ -11,8 +11,7 @@ The following image depicts the magnitude of the Smagorinsky term for one time s
 
 First, the LES simulation is ran for 6 vortex shedding cycles, saving 20 snapshots per cycle. The initial conditions correspond to fields value during the steady state (the transitional period has been precomputed). The first 5 vortex shedding cycle are then used for learning, and the final one serves as validation data. Hence, we are trying to extrapolate in time but the simulation is not parametric.
 
-The nonpolynomial term that we are considering is $F(u) = 2\nabla \cdot ({\nu}_{t}(u) {\nabla}^s u)$
-with ${\nu}_{t}(u) = C_S \delta^2 ||{\nabla}^s u||$. We denote by $F$ the Smagorinsky term (or `fullStressFunction` in the code) and ${\nu}_{t}$ by `nut`.
+The nonpolynomial term that we are considering is $F(u) = 2 \nabla \cdot ({\nu}_t (u) {\nabla}^s u)$ with ${\nu}_t(u) = C_S {\delta}^2 \|{\nabla}^s u\|$. We denote by $F$ the Smagorinsky term (or `fullStressFunction` in the code) and ${\nu}_t$ by `nut`.
 Given the reduced basis $\Phi$ and the associated temporal modes $a$ for the velocity $u$, we are trying to approximate at a low computational cost $\Phi^T F(\Phi a)$.
 
 Two methods are possible:
