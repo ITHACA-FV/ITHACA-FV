@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
     reducedSimpleSteadyNS reduced(example);
     PtrList<volVectorField> U_rec_list;
     PtrList<volScalarField> P_rec_list;
-    // Reads inlet volocities boundary conditions.
+    // Reads inlet velocities boundary conditions.
     word vel_file(para->ITHACAdict->lookup("online_velocities"));
     Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
     // Set the maximum iterations number for the online phase

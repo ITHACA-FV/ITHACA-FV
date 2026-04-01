@@ -57,27 +57,34 @@
 </div>
 <div class="tutorial-card">
 [`15MSR_cavity`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/15MSR_cavity#tutorial-15): reduced order model for molten salt reactor cavity with parametrized diffusivity.
+<div class="tutorial-image">![Some velocity snapshots](images/15_cavity.gif)</div>
 </div>
 <div class="tutorial-card">
 [`16MSR_FOMSA`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/16MSR_FOMSA#tutorial-16): sensitivity analysis of molten salt reactor cavity parameters.
+<div class="tutorial-image">![Some flux snapshots](images/16_flux.gif)</div>
 </div>
 <div class="tutorial-card">
-[`17YJunction`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/17YJunction#tutorial-17): 
+[`17YJunction`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/17YJunction#tutorial-17): unsteady Navier-Stokes problem with time-dependent and parametrized boundary conditions in a Y-junction geometry.
+<div class="tutorial-image">![Velocity snapshots](images/17_junction.gif)</div>
 </div>
 <div class="tutorial-card">
-[`18simpleTurbNS`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/18simpleTurbNS#tutorial-18): 
+[`18simpleTurbNS`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/18simpleTurbNS#tutorial-18): a steady-state backstep model with ROMs in turbulent regime.
+<div class="tutorial-image">![Eddy viscosity snapshot](images/18_eddyviscosity.gif)</div>
 </div>
 <div class="tutorial-card">
 [`19UnsteadyNSExplicit`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/19UnsteadyNSExplicit#tutorial-19): explicit time integration for POD-Galerkin ROM of lid-driven cavity.
+<div class="tutorial-image">![Velocity POD modes](images/19_modes.gif)</div>
 </div>
 <div class="tutorial-card">
 [`20incrementalPOD`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/20incrementalPOD#tutorial-20): incremental POD algorithm for adaptive basis enrichment.
+<div class="tutorial-image">![POD modes](images/20_modes.gif)</div>
 </div>
 <div class="tutorial-card">
 [`21unsteadyNSTurb_RBF`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/21unsteadyNSTurb_RBF#tutorial-21): 
+<div class="tutorial-image">![POD modes](images/21_velocity_modes.gif)</div>
 </div>
 <div class="tutorial-card">
-[`22datadriven_corrections`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/22datadriven_corrections#tutorial-22): data-driven POD corrections for improved ROM accuracy.
+[`22datadriven_corrections`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/22datadriven_corrections#tutorial-22): data-driven pressure POD corrections for improved ROM accuracy on the flow past a cylinder case.
 </div>
 <div class="tutorial-card">
 [`23burgers`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/23burgers#tutorial-23): Burgers equation ROM using POD and DEIM.

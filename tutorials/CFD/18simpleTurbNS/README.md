@@ -3,16 +3,12 @@
 ## Introduction
 The problem consists of a turbulent steady Navier-Stokes problem solved using the SIMPLE algorithm. The setup involves parameterized viscosity and inlet velocities, demonstrating ROM for turbulent incompressible flows.
 
+# A detailed look into the code
+Let's have a look into the code of tutorial 18.
+
 ## The necessary header files
 First of all let's have a look into the header files which have to be included, indicating what they are responsible for:
-```cpp
-#include "SteadyNSSimple.H"
-#include "ITHACAstream.H"
-#include "ITHACAPOD.H"
-#include "ReducedSimpleSteadyNS.H"
-#include "forces.H"
-#include "IOmanip.H"
-```
+
 `<SteadyNSSimple.H>` is the base class for steady NS problems solved with SIMPLE.
 `<ITHACAstream.H>` is responsible for reading and exporting the fields and other sorts of data.
 `<ITHACAPOD.H>` is for the computation of the POD modes.
@@ -42,7 +38,7 @@ class tutorial18 : public SteadyNSSimple
         ///
         surfaceScalarField& phi;
 ```
-Inside the tutorial18 class we define the offlineSolve method. If the offline solve has been previously performed then the method just reads the existing snapshots including turbulent fields. If not, it loops over the viscosity parameters, changes the viscosity, and performs the full-order simulations.
+Inside the tutorial18 class we define the offlineSolve method. If the offline solve has been previously performed, then the method just reads the existing snapshots including turbulent fields. If not, it loops over the viscosity parameters, changes the viscosity, and performs the full-order simulations.
 ```cpp
         /// Perform an Offline solve
         void offlineSolve()
@@ -109,15 +105,60 @@ The offline solve is performed:
 ```cpp
 example.offlineSolve();
 ITHACAstream::read_fields(example.liftfield, example.U, "./lift/");
+```
+The snapshots are homogenized using the lifting function:
+```cpp
 example.computeLift(example.Ufield, example.liftfield, example.Uomfield);
+```
+and the POD modes are extracted. If the case is turbulent, also the modes for the eddy viscosity field are extracted and the RBF interpolator object is created (to find the eddy viscosity coefficients also for test parameters):
+```cpp
 ITHACAPOD::getModes(example.Uomfield, example.Umodes, example._U().name(),
                     example.podex, 0, 0, NmodesUout);
 ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
                     example.podex, 0, 0, NmodesPout);
+if (ITHACAutilities::isTurbulent())
+    {
+        ITHACAPOD::getModes(example.nutFields, example.nutModes, "nut",
+                            example.podex, 0, 0, example.NNutModesOut);
+        // Create the RBF for turbulence
+        example.getTurbRBF(example.NNutModes);
+    }
 ```
 
-The reduced problem is set up and solved online for different viscosities.
+The reduced object is then created and the lists storing the reconstructions are initialzied:
+```cpp
+    reducedSimpleSteadyNS reduced(example);
+    PtrList<volVectorField> U_rec_list;
+    PtrList<volScalarField> P_rec_list;
+```
 
+Then, the inlet velocities are read and the maximum number of iterations for the online solver is set to 2000:
+```cpp
+    word vel_file(para->ITHACAdict->lookup("online_velocities"));
+    Eigen::MatrixXd vel = ITHACAstream::readMatrix(vel_file);
+    reduced.maxIterOn = para->ITHACAdict->lookupOrDefault<int>("maxIterOn", 2000);
+```
+This final loop solves the online system for all the viscosities:
+```cpp
+    for (label k = 0; k < parOn.size(); k++)
+    {
+        scalar mu_now = parOn(k, 0);
+        example.restart();
+        example.change_viscosity(mu_now);
+        reduced.setOnlineVelocity(vel);
+
+        if (ITHACAutilities::isTurbulent())
+        {
+            reduced.solveOnline_Simple(mu_now, example.NUmodes, example.NPmodes,
+                                       example.NNutModes);
+        }
+        else
+        {
+            reduced.solveOnline_Simple(mu_now, example.NUmodes, example.NPmodes,
+                                       example.NNutModes);
+        }
+    }
+```
 This completes the tutorial for turbulent steady NS with SIMPLE algorithm.
 
 ## The plain code
