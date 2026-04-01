@@ -80,26 +80,32 @@
 <div class="tutorial-image">![POD modes](images/20_modes.gif)</div>
 </div>
 <div class="tutorial-card">
-[`21unsteadyNSTurb_RBF`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/21unsteadyNSTurb_RBF#tutorial-21): 
+[`21unsteadyNSTurb_RBF`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/21unsteadyNSTurb_RBF#tutorial-21): solving a reduced unsteady system with RBF interpolation for eddy viscosity coefficients, in the flow past a cylinder test case.
 <div class="tutorial-image">![POD modes](images/21_velocity_modes.gif)</div>
 </div>
 <div class="tutorial-card">
 [`22datadriven_corrections`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/22datadriven_corrections#tutorial-22): data-driven pressure POD corrections for improved ROM accuracy on the flow past a cylinder case.
+<div class="tutorial-image">![Eddy viscosity snapshots](images/22_eddyviscosity_cyl.gif)</div>
 </div>
 <div class="tutorial-card">
-[`23burgers`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/23burgers#tutorial-23): Burgers equation ROM using POD and DEIM.
+[`23burgers`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/23burgers#tutorial-23): solving a Burgers problem in a backstep domain, and apply POD.
+<div class="tutorial-image">![POD modes](images/23_backstep.gif)</div>
 </div>
 <div class="tutorial-card">
 [`24HyperReduction`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/24HyperReduction#tutorial-24): POD with hyper-reduction techniques (DEIM, gappy POD).
+<div class="tutorial-image">![FOM-ROM comparison](images/24_comparison.gif)</div>
 </div>
 <div class="tutorial-card">
 [`25Moving_Cylinder`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/25Moving_Cylinder#tutorial-25): reduced order model for flow around a moving cylinder.
+<div class="tutorial-image">![Velocity snapshots with moving cylinder](images/25_moving.gif)</div>
 </div>
 <div class="tutorial-card">
 [`26MovingAirfoil`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/26MovingAirfoil#tutorial-26): POD-based ROM for flow around a moving airfoil.
+<div class="tutorial-image">![Velocity snapshots with moving airfoil](images/26_movingairfoil.gif)</div>
 </div>
 <div class="tutorial-card">
 [`27SmagorinskyHyperreduction`](https://github.com/annaivagnes/ITHACA-FV/tree/tutorials_doc/tutorials/CFD/27SmagorinskyHyperreduction#tutorial-27): Smagorinsky model with hyper-reduction for LES ROM.
+<div class="tutorial-image">![Smagorinsky term](images/27_smag.gif)</div>
 </div>
 </div>
 

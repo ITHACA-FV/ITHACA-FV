@@ -172,7 +172,7 @@ The matrices of the interpolated eddy viscosity coefficients and of the online s
     ITHACAstream::exportMatrix(pod_rbf.online_solution, "red_coeff", "eigen",
                                "./ITHACAoutput/red_coeff");
 ```
-The remaining part is for reconstructing the solution, computing the FOM counterparts for comparison, and compute the relative L2 errors:
+The remaining part is for reconstructing the solution, computing the FOM counterparts for comparison, and computing the relative L2 errors. The FOM counterpart solutions are stored in the folder `Offline_check`, and the errors are stored in the `ErrorsL2` and `ErrorsFrob` directories.
 
 ```cpp
     // Reconstruct and export the solution

@@ -1,13 +1,13 @@
 # Tutorial 23
 
 ## Introduction
-This tutorial considers a parameterized heat-transfer–type problem based on the
-Burgers equation. Although the class name is `Burgers`, the implemented
-equations are scalar advection–diffusion; the objective is to compute a reduced
-basis for the velocity field using a simple offline/online split.
+This tutorial considers a parameterized heat-transfer–type problem based on the Burgers equation. Although the class name is `Burgers`, the implemented equations are scalar advection–diffusion; the objective is to compute a reduced basis for the velocity field using a simple offline/online split.
+
+# A detailed look into the code
+This section explains the code of tutorial 23.
 
 ## Header files
-The small program includes both standard and ITHACA-FV headers:
+The program includes both standard and ITHACA-FV headers:
 ```cpp
 #include <iostream>
 #include "fvCFD.H"
@@ -20,8 +20,7 @@ The small program includes both standard and ITHACA-FV headers:
 `<Burgers.H>` defines the full-order problem derived from `laplacianProblem`.
 
 ## Implementation
-The `tutorial23` class inherits from `Burgers` and stores a reference to the
-velocity field `U`:
+The `tutorial23` class inherits from `Burgers` and stores a reference to the velocity field `U`:
 ```cpp
 class tutorial23: public Burgers
 {
@@ -44,12 +43,10 @@ class tutorial23: public Burgers
         }
 };
 ```
-During offline execution the code either reads existing snapshots or runs
-the full-order solver once and saves the resulting velocity fields.
+During offline execution the code either reads existing snapshots or runs the full-order solver once and saves the resulting velocity fields.
 
 ## Main function
-In `main` the tutorial object is created and POD mode numbers are extracted
-from the dictionary file:
+In `main` the tutorial object is created and POD mode numbers are extracted from the dictionary file:
 ```cpp
 tutorial23 train(argc, argv);
 ITHACAparameters* para = ITHACAparameters::getInstance(train._mesh(),
@@ -59,16 +56,8 @@ train.offlineSolve();
 ITHACAPOD::getModes(train.Ufield, train.Umodes, train._U().name(),
                     train.podex, 0, 0, NmodesUout);
 ```
-The reduced velocity basis is written to `train.Umodes` and can subsequently be
-used for online reduced computations.
+The reduced velocity basis is written to `train.Umodes` and can subsequently be used for online reduced computations.
 
-## Usage
-Compile using the provided `Make/` target and run the binary. The parameter
-file for the problem is supplied via the ITHACAdict configuration. Outputs are
-written under `ITHACAoutput/Offline` and `ITHACAoutput/POD`.
-
-This simple tutorial is useful for demonstrating the basic mechanics of
-offline snapshot generation and POD mode extraction within ITHACA-FV.
 
 ## The plain code
 The plain code is available [here](https://raw.githubusercontent.com/ITHACA-FV/ITHACA-FV/refs/heads/master/tutorials/CFD/23burgers/23burgers.C).

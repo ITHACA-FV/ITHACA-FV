@@ -1,82 +1,178 @@
 # Tutorial 22
 
-This tutorial introduces data-driven correction terms into pressure-Poisson
-based reduced order models (PPE-ROM) for the 2D flow around a circular
-cylinder. The notebook-based workflow is available in the repository and the
-Python scripts illustrate the offline data preparation and online simulation
-stages.
+This tutorial introduces data-driven correction terms into supremizer-based or pressure-Poisson based reduced order models (SUP-ROM or PPE-ROM) for the 2D flow around a circular cylinder.
+
+More details about the model can be found in [Ivagnes et al., JCP, 2023](https://doi.org/10.1016/j.jcp.2022.111904) and in [Ivagnes et al., AMC, 2023](https://doi.org/10.1016/j.amc.2023.127920).
+
+# A detailed look into the code
+This tutorial is divided into an offline stage (performed as usual in C++ using ITHACA-FV by running the `offline` script), and a second online stage performed using Python. The notebooks `DD-SUP-ROM_tutorial.ipynb` and `DD-PPE-ROM_tutorial.ipynb` illustrate the online stage using either a supremizer or a PPE stabilization approach.
 
 ## Offline data collection
+The `offline` script should be run adding the specified option for the stabilization: `supremizer` or `poisson`.
+In the `offline` script, the class `tutorial22` is inherited from `UnsteadyNSTurb`, and the relevant fields are innitialized:
+```cpp
+class tutorial22 : public UnsteadyNSTurb
+{
+    public:
+        explicit tutorial22(int argc, char* argv[])
+            :
+            UnsteadyNSTurb(argc, argv),
+            U(_U()),
+            p(_p()),
+            nut(_nut())
+        {}
 
-Start from a standard ITHACA-FV offline run (use command line `offline
-'poisson'` in the cylinder case). Snapshots of velocity, pressure and
-supremizer fields are stored in `ITHACAoutput/Offline/` and the matrices
-required for assembly of the reduced systems appear in
-`ITHACAoutput/Matrices`. POD modes are saved in `ITHACAoutput/POD/`.
+        // Relevant Fields
+        volVectorField& U;
+        volScalarField& p;
+        volScalarField& nut;
+```
 
-The offline stage is handled by the full-order OpenFOAM solver; the notebooks
-explain how to read and structure the data for subsequent machine learning.
+In this class, as usual, the offline solve is defined, together with a tensor product, which will be useful in computations:
+```cpp
+        void offlineSolve(std::string offlinepath)
+        {
+            Vector<double> inl(0, 0, 0);
+            List<scalar> mu_now(1);
+            mu_now[0] =  1e-05;
 
-## PPE-ROM dynamical system (online stage)
+            if ((offline) && (ITHACAutilities::check_folder(offlinepath) == true))
+            {
+                ITHACAstream::read_fields(Ufield, U, offlinepath);
+                ITHACAstream::read_fields(Pfield, p, offlinepath);
+                ITHACAstream::read_fields(nutFields, nut, offlinepath);
+            }
+            else
+            {
+                truthSolve(mu_now, offlinepath);
+            }
+        }
 
-The Python package `DD_PPE_ROM` defines a class `PPE_ROM` encapsulating the
-reduced dynamical system for the velocity coefficient vector $a$ and the
-pressure coefficients $b$. With a given number of modes $N_u, N_p$ (and
-no supremizer modes for the Poisson formulation), the reduced fields are
-$u_r = \sum a_i \phi_i$ and $\bar p_r = \sum b_i \chi_i$.
+        Eigen::MatrixXd vectorTensorMult(Eigen::VectorXd g, Eigen::Tensor<double, 3> c,
+                                         Eigen::VectorXd a)
+        {
+            int prodDim = c.dimension(0);
+            Eigen::MatrixXd prod;
+            prod.resize(prodDim, 1);
 
-The standard PPE-ROM system without corrections reads:
+            for (int i = 0; i < prodDim; i++)
+            {
+                prod(i, 0) = g.transpose() *
+                             Eigen::SliceFromTensor(c, 0, i) * a;
+            }
 
-\[
-    \begin{cases}
-    M \dot{a}=\nu(B+B_T)a - a^T C a - H b + \tau\Big(\sum_{k} (U_{BC,k} D^k - E^k a)\Big),\\
-    D b + a^T G a - \nu N a - L =0,
-    \end{cases}
-\]
+            return prod;
+        }
+};
+```
 
-Matrices (M, B, C, etc.) are defined in the notebook; penalization terms
-handle Dirichlet boundary conditions. Time-stepping uses a second-order
-backward scheme and typical online runs last 501 steps of 0.004 s each.
+In the main function, two options can be given: either `supremizer` or `poisson`, depending on the chosen stabilization:
 
-The notebooks demonstrate how to compute projection error metrics and compare
-reconstruction percentages of the projected fields.
+```cpp
+int main(int argc, char* argv[])
+{
+    if (argc == 1)
+    {
+        Info << "Pass 'supremizer' or 'poisson' as first arguments."
+                  << endl;
+        return 0;
+    }
+    ...
+    if (std::strcmp(argv[1], "supremizer") == 0)
+    {
+        // perform the offline stage, extracting the modes from the snapshots' dataset corresponding to parOffline
+        supremizer_approach(example);
+    }
+    else if (std::strcmp(argv[1], "poisson") == 0)
+    {
+        poisson_approach(example);
+    }
+    else
+    {
+        Info << "Pass supremizer, poisson" << endl;
+    }
 
-## Data-driven correction terms
+    return 0;
+}
+```
+Both approaches are then defined in different functions. In both cases, the physical parameters (viscosity, time stepping, initial, final time, number of modes, penalty factor for the BCs) are initialized or read from the `ITHACAdict` dictionary:
 
-Exact correction terms $\tau_u^{\text{exact}},\tau_p^{\text{exact}}$ are
-extracted from snapshot data; the pressure correction comprises two parts
-$\tau_D, \tau_G$. An ansatz of the form
-$\tilde J_A ab + (ab)^T \tilde J_B ab$ is proposed and the unknown
-matrices $\tilde J_A, \tilde J_B$ are determined via least-squares
-minimization against the exact terms. The notebook walks through the
-derivation and shows how to select the number of retained singular values
-based on pressure error metrics.
+```cpp
+    word filename("./par");
+    Eigen::VectorXd par;
+    example.inletIndex.resize(1, 2);
+    example.inletIndex << 0, 0;
+    example.inletIndexT.resize(1, 1);
+    example.inletIndexT << 1;
+    ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),
+                             example._runTime());
+    int NmodesU = para->ITHACAdict->lookupOrDefault<int>("NmodesU", 5);
+    int NmodesP = para->ITHACAdict->lookupOrDefault<int>("NmodesP", 5);
+    int NmodesSUP = para->ITHACAdict->lookupOrDefault<int>("NmodesSUP", 5);
+    int NmodesNUT = para->ITHACAdict->lookupOrDefault<int>("NmodesNUT", 5);
+    int NmodesProject = para->ITHACAdict->lookupOrDefault<int>("NmodesProject", 5);
+    int NmodesMatrixRec = para->ITHACAdict->lookupOrDefault<int>("NmodesMatrixRec",
+                          5);
+    double penaltyFactor =
+        para->ITHACAdict->lookupOrDefault<double>("penaltyFactor", 5);
+    double U_BC = para->ITHACAdict->lookupOrDefault<double>("U_BC", 0.001);
+    double romStartTime = para->ITHACAdict->lookupOrDefault<double>("romStartTime",
+                          0);
+    double romEndTime = para->ITHACAdict->lookupOrDefault<double>("romEndTime", 3);
+    double romTimeStep = para->ITHACAdict->lookupOrDefault<double>("romTimeStep",
+                         0.001);
+    double e = para->ITHACAdict->lookupOrDefault<double>("RBFradius", 1);
+    example.startTime = 20;
+    example.finalTime = 40;
+    example.timeStep = 0.0002;
+    example.writeEvery = 0.004;
+```
 
-The extended system including correction terms is then solved and compared to
-reference data.
+The FOM simulation is then performed (together with the supremizer solve, if the supremizer approach is used):
 
-## Turbulence modelling extension
+```cpp
+example.offlineSolve("./ITHACAoutput/Offline");
+example.solvesupremizer();
+```
+The POD is performed and the modes are computed:
 
-The tutorial further extends to include eddy viscosity modelling. A neural
-network is trained on pairs $(a,g)$ to express the reduced eddy viscosity
-coefficients $g$ as a function of velocity coefficients $a$. The
-reduced PDE system is modified with additional tensors accounting for
-viscosity terms, and the notebook explains the required modifications.
+```cpp
+    ITHACAPOD::getModes(example.Ufield, example.Umodes, example._U().name(),
+                        example.podex, 0, 0, NmodesProject);
+    ITHACAPOD::getModes(example.Pfield, example.Pmodes, example._p().name(),
+                        example.podex, 0, 0, NmodesProject);
+    ITHACAPOD::getModes(example.supfield, example.supmodes, example._U().name(),
+                        example.podex,
+                        example.supex, 1, NmodesProject);
+```
+Then, depending on the stabilization, either `projectSUP` or `projectPPE` are used to compute the reduced order operators to assemble the online system.
+Finally, the projected coefficients are stored and will be used in the online stage in the Python scripts:
 
-## Running the notebooks
+```cpp
+    Eigen::MatrixXd coeefs = ITHACAutilities::getCoeffs(example.Ufield,
+                             example.L_U_SUPmodes);
+    Eigen::MatrixXd coeefsNut = ITHACAutilities::getCoeffs(example.nutFields,
+                                example.nutModes);
+    Eigen::MatrixXd coeefsP = ITHACAutilities::getCoeffs(example.Pfield,
+                              example.Pmodes);
+    cnpy::save(coeefs, "./ITHACAoutput/Matrices/coeefs.npy");
+    cnpy::save(coeefsNut, "./ITHACAoutput/Matrices/coeefsNut.npy");
+    cnpy::save(coeefsP, "./ITHACAoutput/Matrices/coeefsP.npy");
+```
+Note that in the case of supremizer approach, the supremizer coefficients are appended in the `coeefs` object.
 
-Open `DD-PPE-ROM_tutorial.ipynb` and `DD-SUP-ROM_tutorial.ipynb` using Jupyter
-or VSCode's notebook interface. They contain both explanatory text and the
-commands to execute the offline and online workflows. Python scripts
-`DD_PPE_ROM.py`, `DD_SUP_ROM.py`, `TrainNet.py` provide reusable classes and
-training routines.
 
-## Output
+## Online stage: SUP-ROM or PPE-ROM dynamical system
 
-Results are saved to the `ITHACAoutput` directory and include reduced
-coefficients, prediction errors, and visualizable OpenFOAM fields for
-comparison.
+The Python files `DD_SUP_ROM` and `DD_PPE_ROM` define two classes (`SUP_ROM` and `PPE_ROM`, respectively) encapsulating the
+reduced dynamical system for the velocity coefficient vector $a$ and the pressure coefficients $b$.
+With a given number of modes $N_u, N_p$ (and the supremizer modes for the SUP formulation), the reduced SUP or PPE systems can be assembled.
+The tutorials `DD-SUP-ROM_tutorial.ipynb` and `DD-PPE-ROM_tutorial.ipynb` show how to use the `SUP_ROM` and `PPE_ROM` classes to enhance the dynamical systems with data-driven corrections.
 
----
-*(This README synthesizes the content of the provided Jupyter notebooks into a
-standalone overview.)
+In order to do so, the data-driven extra terms are built using data by solving a least-squares problem, and then added into the ROM system.
+The extended system including correction terms is then solved and its solution is compared to the reference data and to the standard ROM approach.
+
+### Turbulence modelling extension
+
+The tutorial further extends to include eddy viscosity modelling. A neural network is trained on pairs $(a,g)$ to express the reduced eddy viscosity coefficients $g$ as a function of velocity coefficients $a$. The reduced PDE system is modified with additional tensors accounting for viscosity terms, and the notebook explains the required modifications.
+

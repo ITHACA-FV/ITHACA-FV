@@ -215,8 +215,8 @@ void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh,
         dimensionedScalar("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), 0)
     );
     // Parameters used to train the non-linear function
-    Eigen::MatrixXd pars;
-    cnpy::load(pars, "trainingPars.npy");
+    Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    //cnpy::load(pars, "trainingPars.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -227,8 +227,8 @@ void test_scalar(ITHACAparameters* para, Foam::fvMesh& mesh,
     }
 
     // Define new online parameters
-    Eigen::MatrixXd parTest;// = ITHACAutilities::rand(100, 2, -0.5, 0.5);
-    cnpy::load(parTest, "testingPars.npy");
+    Eigen::MatrixXd parTest = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    //cnpy::load(parTest, "testingPars.npy");
     // Create HyperReduction object with given number of basis functions
     Eigen::VectorXi initSeeds;
     // initSeeds = cnpy::load(initSeeds, "./mp.npy");//load mp to test initialSeeds
@@ -328,8 +328,8 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh,
         dimensionedVector("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), vector(0, 0, 0))
     );
     // Parameters used to train the non-linear function
-    Eigen::MatrixXd pars;
-    cnpy::load(pars, "trainingPars.npy");
+    Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    // cnpy::load(pars, "trainingPars.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -340,8 +340,8 @@ void test_vector(ITHACAparameters* para, Foam::fvMesh& mesh,
     }
 
     // Define new online parameters
-    Eigen::MatrixXd parTest;// = ITHACAutilities::rand(100, 2, -0.5, 0.5);
-    cnpy::load(parTest, "testingPars.npy");
+    Eigen::MatrixXd parTest = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    // cnpy::load(parTest, "testingPars.npy");
     // Create HyperReduction object with given number of basis functions
     Eigen::VectorXi initSeeds;
     // initSeeds = cnpy::load(initSeeds, "./mp.npy");//load mp to test initialSeeds
@@ -458,8 +458,8 @@ void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh,
         dimensionedScalar("zero", dimensionSet(0, 0, -1, 1, 0, 0, 0), 0)
     );
     // Parameters used to train the non-linear function
-    Eigen::MatrixXd pars;
-    cnpy::load(pars, "trainingPars.npy");
+    Eigen::MatrixXd pars = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    // cnpy::load(pars, "trainingPars.npy");
 
     // Perform the offline phase
     for (int i = 0; i < 100; i++)
@@ -472,8 +472,8 @@ void test_vector_scalar(ITHACAparameters* para, Foam::fvMesh& mesh,
     }
 
     // Define new online parameters
-    Eigen::MatrixXd parTest;// = ITHACAutilities::rand(100, 2, -0.5, 0.5);
-    cnpy::load(parTest, "testingPars.npy");
+    Eigen::MatrixXd parTest = ITHACAutilities::rand(100, 2, -0.5, 0.5);
+    // cnpy::load(parTest, "testingPars.npy");
     // Create HyperReduction object with given number of basis functions
     Eigen::VectorXi initSeeds;
     // initSeeds = cnpy::load(initSeeds, "./mp.npy");//load mp to test initialSeeds
