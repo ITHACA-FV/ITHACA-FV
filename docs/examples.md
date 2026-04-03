@@ -114,12 +114,15 @@
 <div class="tutorials-grid">
 <div class="tutorial-card">
 [`01simpleTurbGeomClosed`](https://github.com/ITHACA-FV/ITHACA-FV/tree/master/tutorials/NN/01simpleTurbGeomClosed#tutorial-nn-01): neural network closure for steady turbulent flow in a closed geometry.
+<div class="tutorial-image">![Varying mesh in backstep](images/nn01_mesh.gif)</div>
 </div>
 <div class="tutorial-card">
 [`BumpCompressibleSteadyNS`](https://github.com/ITHACA-FV/ITHACA-FV/tree/master/tutorials/NN/BumpCompressibleSteadyNS#tutorial-nn-02): neural network reduced model for compressible flow over a bump.
+<div class="tutorial-image">![Velocity around airfoil](images/nn02_vel.gif)</div>
 </div>
 <div class="tutorial-card">
 [`CompressibleSteadyNS`](https://github.com/ITHACA-FV/ITHACA-FV/tree/master/tutorials/NN/CompressibleSteadyNS#tutorial-nn-03): neural network reduced model for compressible steady Navier-Stokes.
+<div class="tutorial-image">![Pressure around airfoil](images/nn03_pres.gif)</div>
 </div>
 </div>
 
