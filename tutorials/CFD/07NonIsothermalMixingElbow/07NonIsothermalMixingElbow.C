@@ -20,7 +20,7 @@ License
 Description
     Example of NS-Stokes and heat transport equation Reduction Problem
 SourceFiles
-    06NonIsothermalMixingElbow.C
+    07NonIsothermalMixingElbow.C
 
 
 \*---------------------------------------------------------------------------*/
@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
     example.projectSUP("./Matrices", NmodesUproj, NmodesPproj, NmodesTproj,
                        NmodesSUPproj);
     reducedUnsteadyNST reduced(example);
-    // Set values of the ridotto stuff
+    // Set values of the reduced stuff
     reduced.nu = 0.1;
     reduced.tstart = 0;
     reduced.finalTime = 50;

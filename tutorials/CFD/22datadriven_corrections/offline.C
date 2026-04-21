@@ -198,8 +198,8 @@ void supremizer_approach(tutorial22& example)
     double romTimeStep = para->ITHACAdict->lookupOrDefault<double>("romTimeStep",
                          0.001);
     double e = para->ITHACAdict->lookupOrDefault<double>("RBFradius", 1);
-    example.startTime = 79.992;
-    example.finalTime = 99.996;
+    example.startTime = 20;
+    example.finalTime = 40;
     example.timeStep = 0.0002;
     example.writeEvery = 0.004;
     example.offlineSolve("./ITHACAoutput/Offline/");
@@ -252,8 +252,8 @@ void poisson_approach(tutorial22& example)
     double romTimeStep = para->ITHACAdict->lookupOrDefault<double>("romTimeStep",
                          0.001);
     double e = para->ITHACAdict->lookupOrDefault<double>("RBFradius", 1);
-    example.startTime = 79.992;
-    example.finalTime = 99.996;
+    example.startTime = 20;
+    example.finalTime = 40;
     example.timeStep = 0.0002;
     example.writeEvery = 0.004;
     example.offlineSolve("./ITHACAoutput/Offline");

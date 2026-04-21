@@ -46,14 +46,14 @@ field_type scalar;
 
 
 // Set Time from which you want to start taking the Snapshots
-InitialTime 79.992;
+InitialTime 20;
 
 // Set Time when you want to stop taking the Snapshots
-FinalTime 99.996;
+FinalTime 40;
 
 //fields U;
 
-// Eventually you could set just InitalTime and Number of Snapshots you want    
+// Eventually you could set just InitalTime and Number of Snapshots you want
 //Nsnapshots 5000;
 
 // Field you want to use to construct the basis

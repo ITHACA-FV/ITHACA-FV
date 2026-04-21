@@ -14,6 +14,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
+    # Aggiorna la versione nel Doxyfile con anno e mese correnti
+    - name: Update version in Doxyfile
+      run: |
+        CURRENT_VERSION=$(date +'%Y.%m')
+        cd docs
+        sed -i "s/^PROJECT_NUMBER.*/PROJECT_NUMBER         = \"$CURRENT_VERSION\"/" Doxyfile
+
     # Build the HTML documentation
     - name: Doxygen Action
       uses: mattnotmitt/doxygen-action@v1.1.0

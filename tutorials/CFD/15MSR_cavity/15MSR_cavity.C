@@ -192,7 +192,7 @@ int main(int argc, char* argv[])
     prova.setParameters();
     int central = static_cast<int>(prova.Tnumber / 2);
     double nu0 = 2.46E-06;
-    double betatot0 = 321.8E-05;
+    double betatot0 = 3.218E-05;
     double dlam30 = 3.58e-04;
     //+-10% from default values
     prova.mu_range(0, 0) = 1.1 * nu0; //nu range

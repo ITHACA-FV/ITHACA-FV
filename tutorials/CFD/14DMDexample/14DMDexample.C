@@ -77,7 +77,7 @@ class tutorial14: public unsteadyNS
 \*---------------------------------------------------------------------------*/
 int main(int argc, char* argv[])
 {
-    // Construct the tutorial04 object
+    // Construct the tutorial14 object
     tutorial14 example(argc, argv);
     // Read parameters from ITHACAdict file
     ITHACAparameters* para = ITHACAparameters::getInstance(example._mesh(),

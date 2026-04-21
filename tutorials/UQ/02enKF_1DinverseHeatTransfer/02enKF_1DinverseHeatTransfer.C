@@ -96,7 +96,6 @@ int main(int argc, char* argv[])
 /// \file
 /// \brief Implementation of state reconstruction in a 1D heat transfer problem
 
-/// \example 02enKF_1DinverseHeatTransfer.C
 /// \section intro_invProb 1D heat transfer state reconstruction
 /// The tutorial consists in the state reconstruction of a 1D heat transfer problem where we have some measurement points inside the domain but partially known boundary conditions.
 ///

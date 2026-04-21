@@ -45,11 +45,10 @@ runTimeModifiable false;
 
 adjustTimeStep  off;
 
-maxCo           0.1; 
+maxCo           0.1;
 
 
 
 // ************************************************************************* //
 
-}
 
