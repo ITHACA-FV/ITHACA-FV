@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['u_0',['U',['../classDEIM.html#a56f664537ebd1ba6b23ea9a0010191ee',1,'DEIM::U'],['../classtutorial03.html#ac8f3095d6763f532a1ab2ba2503fa936',1,'tutorial03::U'],['../classtutorial05.html#a7c7f815162be6e356fe8b49fc9cbcb1d',1,'tutorial05::U'],['../classtutorial06.html#a33b6b6be45459eb32c9b86d46c5ef790',1,'tutorial06::U'],['../classtutorial12.html#afd96fec623db4ed76e7d2750ca838a5f',1,'tutorial12::U'],['../classtutorial18.html#a657ab90cda2a6a606d608d0800b5a76d',1,'tutorial18::U'],['../classtutorial22.html#aa2dda1daaa6e1a71e5c0a1824e656fb1',1,'tutorial22::U'],['../classtutorial23.html#a1d4f4680022f9302f3450906bfc6eb87',1,'tutorial23::U'],['../classtutorial26.html#a5a12660fa09e111d2838d152d1273759',1,'tutorial26::U']]],
+  ['ua_1',['UA',['../classDEIM.html#ab246d19be9be882cf1a4ff80df307ff0',1,'DEIM']]],
+  ['ub_2',['UB',['../classDEIM.html#aedb5ecee97c5d7a60dfa7573db2c8211',1,'DEIM']]],
+  ['ueqn_5fglobal_3',['Ueqn_global',['../classSteadyNSSimple.html#abf09dd96900cb04f1bca74c1782dbe7c',1,'SteadyNSSimple']]],
+  ['ufield_4',['Ufield',['../classBurgers.html#a205754a7a7989884e3af5f211de5f43a',1,'Burgers::Ufield'],['../classmsrProblem.html#acafc0907841e54a1e9d1526bdd072697',1,'msrProblem::Ufield'],['../classsteadyNS.html#a4efe3474afaa557ad5a211631115124f',1,'steadyNS::Ufield']]],
+  ['ufield_5fon_5',['Ufield_on',['../classUnsteadyBB.html#aa54ce7a3c7fed7570ce15eadc65acc37',1,'UnsteadyBB']]],
+  ['uinl_6',['Uinl',['../classsteadyNS.html#ada27c7fb3a1597b8a6de151dccd79f9a',1,'steadyNS']]],
+  ['ulmodes_7',['ULmodes',['../classReducedCompressibleSteadyNS.html#aaa65d7206ec1b63ea0bbaf2f2780d599',1,'ReducedCompressibleSteadyNS::ULmodes'],['../classreducedSimpleSteadyNS.html#ad851faa6ae39815988f2779d4c7ee29f',1,'reducedSimpleSteadyNS::ULmodes']]],
+  ['umodes_8',['Umodes',['../classBurgers.html#af9566d414b54ff4ba15167853691793e',1,'Burgers::Umodes'],['../classmsrProblem.html#ac6bf74d67781d93b773d0ddb8131a187',1,'msrProblem::Umodes'],['../classsteadyNS.html#a490a86432b3b9a9282e284794ff253d9',1,'steadyNS::Umodes'],['../classreducedMSR.html#a27c58297a6d28925072fe66eae8b198c',1,'reducedMSR::Umodes'],['../classreducedSteadyNS.html#acb99e7bdb9d75bb18a4d848b79a09786',1,'reducedSteadyNS::Umodes'],['../classHyperReducedCompressibleUnSteadyNS.html#afe1e1ad1a6fe1e4bb3a1e9b5705fd644',1,'HyperReducedCompressibleUnSteadyNS::Umodes']]],
+  ['umodesweighted_9',['UModesWeighted',['../classUnsteadyBB.html#aa9616199fa426ab1e3d89cdf900893af',1,'UnsteadyBB::UModesWeighted'],['../classunsteadyNST.html#a09760e985110751e197391a3648ed8a2',1,'unsteadyNST::UModesWeighted']]],
+  ['uniquemagicpoints_10',['uniqueMagicPoints',['../classDEIM.html#a1813b9b88d7d29a1d6e8a7ebe13bf339',1,'DEIM']]],
+  ['uniquemagicpointsa_11',['uniqueMagicPointsA',['../classDEIM.html#a77e66ac450038508e4898d21ccb721e7',1,'DEIM']]],
+  ['uniquemagicpointsb_12',['uniqueMagicPointsB',['../classDEIM.html#a88f2958dd23422619924de533705b442',1,'DEIM']]],
+  ['uniquenodepoints_13',['uniqueNodePoints',['../classHyperReduction.html#adf651d9b5f98d886259ab6d0e9c90499',1,'HyperReduction']]],
+  ['uomfield_14',['Uomfield',['../classmsrProblem.html#a2d1aca07b9bb8b82dc70e266b787fcb7',1,'msrProblem::Uomfield'],['../classsteadyNS.html#a90ad18c91dc2643525fa5197317d8cfb',1,'steadyNS::Uomfield']]],
+  ['urec_15',['UREC',['../classreducedMSR.html#a4fd1c14740e2bf493be3651fd21cc9a4',1,'reducedMSR::UREC'],['../classreducedSteadyNS.html#ade80fc6ce4032c56f11de6c5f440af66',1,'reducedSteadyNS::UREC']]],
+  ['urecfields_16',['uRecFields',['../classreducedSteadyNS.html#acd13752a9b58e97bbf3ac0565fcb8b8a',1,'reducedSteadyNS']]],
+  ['usnapshots_17',['Usnapshots',['../classreducedMSR.html#a23fa2d6605eb44d716e2bf3323e278a9',1,'reducedMSR::Usnapshots'],['../classreducedSteadyNS.html#ac4156955acf7dd3864f0e4771ebae5fa',1,'reducedSteadyNS::Usnapshots']]]
+];

@@ -1,0 +1,97 @@
+#titlearea
+{
+    background-color: rgb(243, 243, 243);
+    /*height: 84px;*/
+    padding-top: 8px;
+    padding-left: 15px;
+    padding-bottom: 15px;
+}
+
+#projectlogo
+{
+    padding-right: 10px;
+}
+
+#titlearea, #projectname, #projectbrief, #projectnumber
+{
+    font-family: Lato, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+#projectname
+{
+    font-size: 220%;
+}
+
+#projectname a
+{
+    color: rgba(0, 0, 0, 0.75);
+}
+
+#projectname a:hover, #projectbrief a:hover
+{
+    text-decoration: none;
+    color: rgba(0, 0, 0, 1);
+}
+
+#projectbrief
+{
+    font-size: 130%;
+}
+
+#projectbrief a
+{
+    color: rgba(0, 0, 0, 0.65);
+}
+
+#projectnumber a
+{
+    font-size: 160%;
+}
+
+/*
+#projectnumber a::before
+{
+    content: "v";
+}
+*/
+
+#titlearea::before
+{
+    padding-left: 300px;
+    position: absolute;
+    left: 18%;
+    top: 40px;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    content: "C++ Source Code Guide";
+    font-size: 180%;
+}
+
+.tutorials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.tutorial-card {
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 20px;
+    background: #ffffff;
+}
+
+.tutorial-image {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.tutorial-image img {
+    max-width: 100%;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+    border-radius: 4px;
+    object-fit: contain;
+}

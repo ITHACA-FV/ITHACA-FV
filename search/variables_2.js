@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['b_0',['b',['../classIHTP01inverseLaplacian__paramBC.html#afc9760a832c94f01d1aa9d616d3ed770',1,'IHTP01inverseLaplacian_paramBC::b'],['../classIHTP01inverseLaplacian__CG.html#a3c8112b979b997adb1ba3f308c295357',1,'IHTP01inverseLaplacian_CG::b']]],
+  ['b_5fmatrix_1',['B_matrix',['../classmsrProblem.html#aca7cd8a96bc7e9c8b207d2abc3e905c9',1,'msrProblem::B_matrix'],['../classsteadyNS.html#a9684cad25bcbb3015d8c0c935a0040b4',1,'steadyNS::B_matrix'],['../classreducedUnsteadyNST.html#a026eca5f5dba7169aaba3ca731ebf81a',1,'reducedUnsteadyNST::B_matrix']]],
+  ['b_5ftotal_5fmatrix_2',['B_total_matrix',['../classUnsteadyNSTTurb.html#a63bb76b3379071df23330e80cf969e9e',1,'UnsteadyNSTTurb']]],
+  ['basefunctype_3',['baseFuncType',['../classinverseLaplacianProblem__paramBC.html#a6ef1f635e831be86caf6d734568a94af',1,'inverseLaplacianProblem_paramBC']]],
+  ['basisdeltasample_4',['basisDeltaSample',['../classsequentialIHTP.html#ab492baf37f84ee77cd9da7ce314491ab',1,'sequentialIHTP']]],
+  ['basismatrix_5',['basisMatrix',['../classHyperReduction.html#af45a34eccfd974cbb21b9201da625576',1,'HyperReduction']]],
+  ['bc1_5fmatrix_6',['BC1_matrix',['../classmsrProblem.html#a0e6e3121ec7e88af3241bfc93aafd3f2',1,'msrProblem::BC1_matrix'],['../classsteadyNS.html#a235a7e7bd200b533e9b6982b60ce217a',1,'steadyNS::BC1_matrix']]],
+  ['bc2_5fmatrix_7',['BC2_matrix',['../classmsrProblem.html#a1bb8c491a55549ad4b5c4accf994d33d',1,'msrProblem::BC2_matrix'],['../classsteadyNS.html#ada0702763648196a1e7700415bc601ef',1,'steadyNS::BC2_matrix']]],
+  ['bc2tensor_8',['bc2Tensor',['../classsteadyNS.html#ae30df9b54b0f3ae77e9128e730cb8658',1,'steadyNS']]],
+  ['bc3_5fmatrix_9',['BC3_matrix',['../classmsrProblem.html#a466c03eb9168019be6dac0ff83b88b01',1,'msrProblem::BC3_matrix'],['../classsteadyNS.html#a2ad319da3d13f3f9e9a6fd1a0834bf4b',1,'steadyNS::BC3_matrix']]],
+  ['bc4_5fmatrix_10',['BC4_matrix',['../classsteadyNS.html#a2940afb44a1f4adfe7aa199896a9833c',1,'steadyNS']]],
+  ['bc_5fprec_11',['bc_prec',['../classmsrProblem.html#af7e255bc76f0f758253792d97eb3edb7',1,'msrProblem']]],
+  ['bcmethod_12',['bcMethod',['../classsteadyNS.html#af90d1e97d6fedd1f51a2153dd80d10a9',1,'steadyNS']]],
+  ['bcvelmat_13',['bcVelMat',['../classsteadyNS.html#ac6a55ddee86c924fbb9488545ccb406f',1,'steadyNS']]],
+  ['bcvelvec_14',['bcVelVec',['../classsteadyNS.html#a0cbc11d64b81bb73f223fa71f918f25f',1,'steadyNS']]],
+  ['bdone_15',['bdone',['../classLRSensitivity.html#a94681c5e2ddbb91e36c187d96d4b12bd',1,'LRSensitivity']]],
+  ['beta_16',['beta',['../classinverseLaplacianProblem__CG.html#a760c6b3b52967346fa7539052963ccfe',1,'inverseLaplacianProblem_CG']]],
+  ['betas_17',['betas',['../classLRSensitivity.html#aa0049ae5e85f0ca0c9ffea9834dea1f6',1,'LRSensitivity']]],
+  ['bmatrix_18',['bMatrix',['../classSteadyNSTurbIntrusive.html#ac5afcda26812518effc6337a3b4140d2',1,'SteadyNSTurbIntrusive::bMatrix'],['../classUnsteadyNSTurbIntrusive.html#ac96c2578e935cfd2daa091790d1adb42',1,'UnsteadyNSTurbIntrusive::bMatrix']]],
+  ['bp_5fmatrix_19',['BP_matrix',['../classsteadyNS.html#acf990b319666486bfef66eb942547664',1,'steadyNS']]],
+  ['bt_5fmatrix_20',['BT_matrix',['../classUnsteadyNSTTurb.html#a1d1e1941067a724366f83a5cbb66b64e',1,'UnsteadyNSTTurb']]],
+  ['btmatrix_21',['btMatrix',['../classSteadyNSTurb.html#a15e1dbdab6f147ad85a6f09e2af981b5',1,'SteadyNSTurb::btMatrix'],['../classSteadyNSTurbIntrusive.html#a88b407fbce59e87a28d9e1fa0edd162e',1,'SteadyNSTurbIntrusive::btMatrix'],['../classUnsteadyNSTurb.html#a847cae81cd04fa9b1c3d509c958407a8',1,'UnsteadyNSTurb::btMatrix'],['../classUnsteadyNSTurbIntrusive.html#a9cfda24d8cfcdf7226bd797b153f662a',1,'UnsteadyNSTurbIntrusive::btMatrix']]],
+  ['btotalmatrix_22',['bTotalMatrix',['../classSteadyNSTurb.html#a226d665f67e95bab72cceb056610afbc',1,'SteadyNSTurb::bTotalMatrix'],['../classSteadyNSTurbIntrusive.html#a2e2072e4546279520f265e234496bc09',1,'SteadyNSTurbIntrusive::bTotalMatrix'],['../classUnsteadyNSTurb.html#ac645ac9513624660f7fdf52c593d1676',1,'UnsteadyNSTurb::bTotalMatrix'],['../classUnsteadyNSTurbIntrusive.html#aa5923c9bafadcc6a9f5231d8608b6a60',1,'UnsteadyNSTurbIntrusive::bTotalMatrix']]]
+];
