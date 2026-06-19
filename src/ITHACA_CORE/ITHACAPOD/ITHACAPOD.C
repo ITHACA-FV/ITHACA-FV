@@ -305,6 +305,8 @@ void getModes(
         Eigen::saveMarketVector(cumEigenValues,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
+        cnpy::save(eigenValueseig,  "./ITHACAoutput/POD/EigenValues_" + snapshots[0].name() + ".npy");
+        cnpy::save(cumEigenValues,  "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name() + ".npy");
     }
     else
     {
@@ -609,6 +611,8 @@ void getModesMemoryEfficient(
         Eigen::saveMarketVector(cumEigenValues,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + fieldName, para->precision,
                                 para->outytpe);
+        cnpy::save(eigenValues,  "./ITHACAoutput/POD/EigenValues_" + fieldName + ".npy");
+        cnpy::save(cumEigenValues,  "./ITHACAoutput/POD/CumEigenvalues_" + fieldName + ".npy");
     }
     else
     {
@@ -827,6 +831,8 @@ void getWeightedModes(
         Eigen::saveMarketVector(cumEigenValues,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
+        cnpy::save(eigenValueseig,  "./ITHACAoutput/POD/EigenValues_" + snapshots[0].name() + ".npy");
+        cnpy::save(cumEigenValues,  "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name() + ".npy");
     }
     else
     {
@@ -923,6 +929,8 @@ void getModesSVD(
         Eigen::saveMarketVector(cumEigenValues,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
+        cnpy::save(eigenValueseig,  "./ITHACAoutput/POD/EigenValueseig" + snapshots[0].name() + ".npy");
+        cnpy::save(cumEigenValues,  "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name() + ".npy");
     }
     else
     {
@@ -1471,9 +1479,8 @@ void getModes(
             esEg.compute(_corMatrix);
             M_Assert(esEg.info() == Eigen::Success,
                      "The Eigenvalue Decomposition did not succeed");
-            eigenVectoreig = esEg.eigenvectors().real().rowwise().reverse().leftCols(
-                                 nmodes);
-            eigenValueseig = esEg.eigenvalues().real().reverse().head(nmodes);
+            eigenVectoreig = esEg.eigenvectors().real().rowwise().reverse();
+            eigenValueseig = esEg.eigenvalues().real().reverse();
         }
 
         Info << "####### End of the POD for " << snapshots[0].name() << " #######" <<
@@ -1524,6 +1531,8 @@ void getModes(
         Eigen::saveMarketVector(cumEigenValues,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
+        cnpy::save(eigenValueseig,  "./ITHACAoutput/POD/EigenValues_" + snapshots[0].name() + ".npy");
+        cnpy::save(cumEigenValues,  "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name() + ".npy");
     }
     else
     {
@@ -1705,6 +1714,10 @@ DEIMmodes(PtrList<type_matrix>& MatrixList, label nmodesA, label nmodesB,
         Eigen::saveMarketVector(cumEigenValuesB,
                                 "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesB", para->precision,
                                 para->outytpe);
+        cnpy::save(eigenValueseigA,  "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesA" + ".npy");
+        cnpy::save(eigenValueseigB,  "./ITHACAoutput/DEIM/" + MatrixName + "/eigenValuesB" + ".npy");
+        cnpy::save(cumEigenValuesA,  "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesA" + ".npy");
+        cnpy::save(cumEigenValuesB,  "./ITHACAoutput/DEIM/" + MatrixName + "/cumEigenValuesB" + ".npy");
     }
     else
     {
@@ -1926,6 +1939,9 @@ PtrList<GeometricField<Type, PatchField, GeoMesh >> DEIMmodes(
         Eigen::saveMarketVector(cumEigenValues,
                                 "./ITHACAoutput/DEIM/cumEigenValues_" + fieldName, para->precision,
                                 para->outytpe);
+        cnpy::save(eigenValueseig,  "./ITHACAoutput/DEIM/eigenValues_" + fieldName + ".npy");
+        cnpy::save(cumEigenValues,  "./ITHACAoutput/DEIM/cumEigenValues_" + fieldName + ".npy");
+        
     }
     else
     {
@@ -2059,6 +2075,8 @@ void getModes(
         Eigen::saveMarketVector(cumEigenValues,
                                 "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name(), para->precision,
                                 para->outytpe);
+        cnpy::save(eigenValueseig,  "./ITHACAoutput/POD/EigenValues_" + snapshots[0].name() + ".npy");
+        cnpy::save(cumEigenValues,  "./ITHACAoutput/POD/CumEigenvalues_" + snapshots[0].name() + ".npy");
     }
     else
     {
