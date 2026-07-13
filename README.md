@@ -22,7 +22,7 @@
 
 Linear and non-linear algebra operations which are not already implemented in OpenFOAM are performed with the external library [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page). Eigen 3.4 is provided as a git submodule together with ITHACA-FV and is located in the [src/thirdyparty/Eigen](./src/thirdparty/Eigen) folder.  For the EigenValue decomposition it is also possible to rely on the [**Spectra-1.2.0**](https://spectralib.org/) library and the source code, as a git submodule, is provided in the [src/thirdyparty/spectra](./src//thirdparty/spectra) folder. Numerical optimization can be performed using the external library [**OptimLib**](https://www.kthohr.com/optimlib.html) and the header based source code, as a git submodule, is provided in the [src/thirdyparty/OptimLib](./src/thirdparty/OptimLib) folder.
 
-**ITHACA-FV** has been tested on several versions of ubuntu, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 2106, OpenFOAM 2212, OpenFOAM 2306, OpenFOAM 2312, OpenFOAM 2406, OpenFOAM 2412 and OpenFOAM 2506.
+**ITHACA-FV** has been tested on several versions of ubuntu, CentOS 7, ArchLinux but can be easily compiled on any linux distribution with a compiled version of OpenFOAM 2106, OpenFOAM 2212, OpenFOAM 2306, OpenFOAM 2312, OpenFOAM 2406, OpenFOAM 2412, OpenFOAM 2506, OpenFOAM 2512 and OpenFOAM 2606.
 
 ### 1. Prerequisites
 **ITHACA-FV** requires
