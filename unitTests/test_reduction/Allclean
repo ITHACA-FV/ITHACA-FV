@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "Cleaning case..."
+
+rm -rf processor*
+rm -rf postProcessing
+rm -rf VTK
+
+rm -rf constant/polyMesh
+
+rm -f log.*
+rm -f *.log
+
+rm -f 0/*.orig
+rm -f constant/*.orig
+rm -f system/*.orig
+
+echo "Done."

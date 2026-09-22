@@ -752,48 +752,115 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
 }
 
 template <>
-void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
-                                Eigen::MatrixXd& A,
-                                Eigen::VectorXd& b)
+void Foam2Eigen::fvMatrix2Eigen
+(
+    fvMatrix<vector> foam_matrix,
+    Eigen::MatrixXd& A,
+    Eigen::VectorXd& b
+)
 {
-    label sizeA = foam_matrix.diag().size();
-    A.resize(sizeA * 3, sizeA * 3);
-    b.resize(sizeA * 3);
+    const label sizeA = foam_matrix.diag().size();
+    const label nComp = 3;
 
-    for (auto i = 0; i < sizeA; i++)
-    {
-        A(i, i) = foam_matrix.diag()[i];
-        A(sizeA + i, sizeA + i) = foam_matrix.diag()[i];
-        A(2 * sizeA + i, 2 * sizeA + i) = foam_matrix.diag()[i];
-        b(i) = foam_matrix.source()[i][0];
-        b(sizeA + i) = foam_matrix.source()[i][1];
-        b(2 * sizeA + i) = foam_matrix.source()[i][2];
-    }
+    A.setZero(sizeA * nComp, sizeA * nComp);
+    b.setZero(sizeA * nComp);
 
-    const lduAddressing& addr = foam_matrix.lduAddr();
-    const labelList& lowerAddr = addr.lowerAddr();
-    const labelList& upperAddr = addr.upperAddr();
-    forAll(lowerAddr, i)
+    auto idx = [nComp](label celli, direction cmpt)
     {
-        A(lowerAddr[i], upperAddr[i]) = foam_matrix.upper()[i];
-        A(lowerAddr[i] + sizeA, upperAddr[i] + sizeA) = foam_matrix.upper()[i];
-        A(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2) = foam_matrix.upper()[i];
-        A(upperAddr[i], lowerAddr[i]) = foam_matrix.lower()[i];
-        A(upperAddr[i] + sizeA, lowerAddr[i] + sizeA) = foam_matrix.lower()[i];
-        A(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2) = foam_matrix.lower()[i];
-    }
-    forAll(foam_matrix.psi().boundaryField(), I)
+        return nComp * celli + cmpt;
+    };
+
+
+    // ------------------------------------------------------------
+    // Diagonal + source
+    // ------------------------------------------------------------
+
+    for (label i = 0; i < sizeA; ++i)
     {
-        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
-        forAll(ptch, J)
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
         {
-            label w = ptch.faceCells()[J];
-            A(w, w) += foam_matrix.internalCoeffs()[I][J][0];
-            A(w + sizeA, w + sizeA) += foam_matrix.internalCoeffs()[I][J][1];
-            A(w + sizeA * 2, w + sizeA * 2) += foam_matrix.internalCoeffs()[I][J][2];
-            b(w) += foam_matrix.boundaryCoeffs()[I][J][0];
-            b(w + sizeA) += foam_matrix.boundaryCoeffs()[I][J][1];
-            b(w + sizeA * 2) += foam_matrix.boundaryCoeffs()[I][J][2];
+            const label ii = idx(i, cmpt);
+
+            A(ii, ii) = foam_matrix.diag()[i];
+
+            b(ii) =
+                foam_matrix.source()[i][cmpt];
+        }
+    }
+
+
+    // ------------------------------------------------------------
+    // Internal ldu coefficients
+    // ------------------------------------------------------------
+
+    const lduAddressing& addr =
+        foam_matrix.lduAddr();
+
+    const labelList& lowerAddr =
+        addr.lowerAddr();
+
+    const labelList& upperAddr =
+        addr.upperAddr();
+
+
+    forAll(lowerAddr, facei)
+    {
+        const label lowerCell =
+            lowerAddr[facei];
+
+        const label upperCell =
+            upperAddr[facei];
+
+
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+        {
+            const label lowerI =
+                idx(lowerCell, cmpt);
+
+            const label upperI =
+                idx(upperCell, cmpt);
+
+
+            A(lowerI, upperI) =
+                foam_matrix.upper()[facei];
+
+            A(upperI, lowerI) =
+                foam_matrix.lower()[facei];
+        }
+    }
+
+
+    // ------------------------------------------------------------
+    // Boundary contributions
+    // ------------------------------------------------------------
+
+    forAll(foam_matrix.psi().boundaryField(), patchI)
+    {
+        const fvPatch& patch =
+            foam_matrix.psi().boundaryField()[patchI].patch();
+
+
+        forAll(patch, faceI)
+        {
+            const label celli =
+                patch.faceCells()[faceI];
+
+
+            for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+            {
+                const label ii =
+                    idx(celli, cmpt);
+
+
+                A(ii, ii) +=
+                    foam_matrix.internalCoeffs()
+                    [patchI][faceI][cmpt];
+
+
+                b(ii) +=
+                    foam_matrix.boundaryCoeffs()
+                    [patchI][faceI][cmpt];
+            }
         }
     }
 }
@@ -858,64 +925,178 @@ Foam2Eigen::fvMat2Eigen<Eigen::SparseMatrix<double, Eigen::ColMajor>, Eigen::Vec
 
 
 template<typename SparseMatType, typename VecType>
-void Foam2Eigen::fvMat2Eigen(fvMatrix<vector> foam_matrix,
-                             SparseMatType& A,
-                             VecType& b)
+void Foam2Eigen::fvMat2Eigen
+(
+    fvMatrix<vector> foam_matrix,
+    SparseMatType& A,
+    VecType& b
+)
 {
-    label sizeA = foam_matrix.diag().size();
-    label nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
-                foam_matrix.lower().size();
-    A.resize(sizeA * 3, sizeA * 3);
-    A.reserve(nel * 3);
-    b.resize(sizeA * 3);
+    const label sizeA = foam_matrix.diag().size();
+    const label nComp = 3;
+
+    const label nel =
+        foam_matrix.diag().size()
+      + foam_matrix.upper().size()
+      + foam_matrix.lower().size();
+
+    A.resize(sizeA * nComp, sizeA * nComp);
+    A.reserve(nel * nComp);
+
+    b.resize(sizeA * nComp);
+    b.setZero();
+
     typedef Eigen::Triplet<double> Trip;
+
     std::vector<Trip> tripletList;
-    tripletList.reserve(nel * 3);
 
-    for (auto i = 0; i < sizeA; i++)
-    {
-        tripletList.push_back(Trip(i, i, foam_matrix.diag()[i]));
-        tripletList.push_back(Trip(sizeA + i, sizeA + i, foam_matrix.diag()[i]));
-        tripletList.push_back(Trip(2 * sizeA + i, 2 * sizeA + i,
-                                   foam_matrix.diag()[i]));
-        b(i) = foam_matrix.source()[i][0];
-        b(sizeA + i) = foam_matrix.source()[i][1];
-        b(2 * sizeA + i) = foam_matrix.source()[i][2];
-    }
+    // Slightly more room because boundary diagonal contributions
+    // are also inserted as triplets.
+    tripletList.reserve
+    (
+        nel * nComp
+      + foam_matrix.psi().boundaryField().size() * nComp
+    );
 
-    const lduAddressing& addr = foam_matrix.lduAddr();
-    const labelList& lowerAddr = addr.lowerAddr();
-    const labelList& upperAddr = addr.upperAddr();
-    forAll(lowerAddr, i)
+
+    auto idx = [nComp](label celli, direction cmpt)
     {
-        tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(lowerAddr[i] + sizeA, upperAddr[i] + sizeA,
-                                   foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2,
-                                   foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]));
-        tripletList.push_back(Trip(upperAddr[i] + sizeA, lowerAddr[i] + sizeA,
-                                   foam_matrix.lower()[i]));
-        tripletList.push_back(Trip(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2,
-                                   foam_matrix.lower()[i]));
-    }
-    forAll(foam_matrix.psi().boundaryField(), I)
+        return nComp * celli + cmpt;
+    };
+
+
+    // ============================================================
+    // Diagonal + source
+    // ============================================================
+
+    for (label celli = 0; celli < sizeA; ++celli)
     {
-        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
-        forAll(ptch, J)
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
         {
-            label w = ptch.faceCells()[J];
-            tripletList.push_back(Trip(w, w, foam_matrix.internalCoeffs()[I][J][0]));
-            tripletList.push_back(Trip(w + sizeA, w + sizeA,
-                                       foam_matrix.internalCoeffs()[I][J][1]));
-            tripletList.push_back(Trip(w + sizeA * 2, w + sizeA * 2,
-                                       foam_matrix.internalCoeffs()[I][J][2]));
-            b(w) += foam_matrix.boundaryCoeffs()[I][J][0];
-            b(w + sizeA) += foam_matrix.boundaryCoeffs()[I][J][1];
-            b(w + sizeA * 2) += foam_matrix.boundaryCoeffs()[I][J][2];
+            const label ii =
+                idx(celli, cmpt);
+
+            tripletList.push_back
+            (
+                Trip
+                (
+                    ii,
+                    ii,
+                    foam_matrix.diag()[celli]
+                )
+            );
+
+            b(ii) =
+                foam_matrix.source()[celli][cmpt];
         }
     }
-    A.setFromTriplets(tripletList.begin(), tripletList.end());
+
+
+    // ============================================================
+    // Internal ldu coefficients
+    // ============================================================
+
+    const lduAddressing& addr =
+        foam_matrix.lduAddr();
+
+    const labelList& lowerAddr =
+        addr.lowerAddr();
+
+    const labelList& upperAddr =
+        addr.upperAddr();
+
+
+    forAll(lowerAddr, facei)
+    {
+        const label lowerCell =
+            lowerAddr[facei];
+
+        const label upperCell =
+            upperAddr[facei];
+
+
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+        {
+            const label lowerI =
+                idx(lowerCell, cmpt);
+
+            const label upperI =
+                idx(upperCell, cmpt);
+
+
+            tripletList.push_back
+            (
+                Trip
+                (
+                    lowerI,
+                    upperI,
+                    foam_matrix.upper()[facei]
+                )
+            );
+
+
+            tripletList.push_back
+            (
+                Trip
+                (
+                    upperI,
+                    lowerI,
+                    foam_matrix.lower()[facei]
+                )
+            );
+        }
+    }
+
+
+    // ============================================================
+    // Boundary contributions
+    // ============================================================
+
+    forAll(foam_matrix.psi().boundaryField(), patchI)
+    {
+        const fvPatch& patch =
+            foam_matrix.psi().boundaryField()[patchI].patch();
+
+
+        forAll(patch, faceI)
+        {
+            const label celli =
+                patch.faceCells()[faceI];
+
+
+            for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+            {
+                const label ii =
+                    idx(celli, cmpt);
+
+
+                // Diagonal boundary contribution
+                tripletList.push_back
+                (
+                    Trip
+                    (
+                        ii,
+                        ii,
+                        foam_matrix.internalCoeffs()
+                        [patchI][faceI][cmpt]
+                    )
+                );
+
+
+                // RHS boundary contribution
+                b(ii) +=
+                    foam_matrix.boundaryCoeffs()
+                    [patchI][faceI][cmpt];
+            }
+        }
+    }
+
+
+    A.setFromTriplets
+    (
+        tripletList.begin(),
+        tripletList.end()
+    );
 }
 
 template void
@@ -975,62 +1156,110 @@ void Foam2Eigen::fvMatrix2Eigen(fvMatrix<scalar> foam_matrix,
 }
 
 template <>
-void Foam2Eigen::fvMatrix2Eigen(fvMatrix<vector> foam_matrix,
-                                Eigen::SparseMatrix<double>& A, Eigen::VectorXd& b)
+void Foam2Eigen::fvMatrix2Eigen
+(
+    fvMatrix<vector> foam_matrix,
+    Eigen::SparseMatrix<double>& A,
+    Eigen::VectorXd& b
+)
 {
-    label sizeA = foam_matrix.diag().size();
-    label nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
-                foam_matrix.lower().size();
-    A.resize(sizeA * 3, sizeA * 3);
-    A.reserve(nel * 3);
-    b.resize(sizeA * 3);
+    const label sizeA = foam_matrix.diag().size();
+    const label nComp = vector::nComponents;
+    const label nel =
+        foam_matrix.diag().size()
+      + foam_matrix.upper().size()
+      + foam_matrix.lower().size();
+
+    A.resize(sizeA * nComp, sizeA * nComp);
+    A.reserve(nel * nComp);
+
+    b.setZero(sizeA * nComp);
+
     typedef Eigen::Triplet<double> Trip;
     std::vector<Trip> tripletList;
-    tripletList.reserve(nel * 3);
+    tripletList.reserve(nel * nComp);
 
-    for (auto i = 0; i < sizeA; i++)
+    auto idx = [nComp](label celli, direction cmpt)
     {
-        tripletList.push_back(Trip(i, i, foam_matrix.diag()[i]));
-        tripletList.push_back(Trip(sizeA + i, sizeA + i, foam_matrix.diag()[i]));
-        tripletList.push_back(Trip(2 * sizeA + i, 2 * sizeA + i,
-                                   foam_matrix.diag()[i]));
-        b(i) = foam_matrix.source()[i][0];
-        b(sizeA + i) = foam_matrix.source()[i][1];
-        b(2 * sizeA + i) = foam_matrix.source()[i][2];
+        return nComp * celli + cmpt;
+    };
+
+    // Diagonal and source
+    for (label celli = 0; celli < sizeA; ++celli)
+    {
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+        {
+            const label ii = idx(celli, cmpt);
+
+            tripletList.emplace_back
+            (
+                ii,
+                ii,
+                foam_matrix.diag()[celli]
+            );
+
+            b(ii) = foam_matrix.source()[celli][cmpt];
+        }
     }
 
+    // Internal ldu coefficients
     const lduAddressing& addr = foam_matrix.lduAddr();
     const labelList& lowerAddr = addr.lowerAddr();
     const labelList& upperAddr = addr.upperAddr();
-    forAll(lowerAddr, i)
+
+    forAll(lowerAddr, facei)
     {
-        tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(lowerAddr[i] + sizeA, upperAddr[i] + sizeA,
-                                   foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2,
-                                   foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]));
-        tripletList.push_back(Trip(upperAddr[i] + sizeA, lowerAddr[i] + sizeA,
-                                   foam_matrix.lower()[i]));
-        tripletList.push_back(Trip(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2,
-                                   foam_matrix.lower()[i]));
-    }
-    forAll(foam_matrix.psi().boundaryField(), I)
-    {
-        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
-        forAll(ptch, J)
+        const label lowerCell = lowerAddr[facei];
+        const label upperCell = upperAddr[facei];
+
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
         {
-            label w = ptch.faceCells()[J];
-            tripletList.push_back(Trip(w, w, foam_matrix.internalCoeffs()[I][J][0]));
-            tripletList.push_back(Trip(w + sizeA, w + sizeA,
-                                       foam_matrix.internalCoeffs()[I][J][1]));
-            tripletList.push_back(Trip(w + sizeA * 2, w + sizeA * 2,
-                                       foam_matrix.internalCoeffs()[I][J][2]));
-            b(w) += foam_matrix.boundaryCoeffs()[I][J][0];
-            b(w + sizeA) += foam_matrix.boundaryCoeffs()[I][J][1];
-            b(w + sizeA * 2) += foam_matrix.boundaryCoeffs()[I][J][2];
+            const label lowerI = idx(lowerCell, cmpt);
+            const label upperI = idx(upperCell, cmpt);
+
+            tripletList.emplace_back
+            (
+                lowerI,
+                upperI,
+                foam_matrix.upper()[facei]
+            );
+
+            tripletList.emplace_back
+            (
+                upperI,
+                lowerI,
+                foam_matrix.lower()[facei]
+            );
         }
     }
+
+    // Boundary contributions
+    forAll(foam_matrix.psi().boundaryField(), patchI)
+    {
+        const fvPatch& patch =
+            foam_matrix.psi().boundaryField()[patchI].patch();
+
+        forAll(patch, faceI)
+        {
+            const label celli = patch.faceCells()[faceI];
+
+            for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+            {
+                const label ii = idx(celli, cmpt);
+
+                tripletList.emplace_back
+                (
+                    ii,
+                    ii,
+                    foam_matrix.internalCoeffs()[patchI][faceI][cmpt]
+                );
+
+                b(ii) +=
+                    foam_matrix.boundaryCoeffs()[patchI][faceI][cmpt];
+            }
+        }
+    }
+
     A.setFromTriplets(tripletList.begin(), tripletList.end());
 }
 
@@ -1104,95 +1333,170 @@ void Foam2Eigen::fvMatrix2EigenM(fvMatrix<scalar>& foam_matrix,
 }
 
 template <>
-void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
-                                 Eigen::MatrixXd& A)
+void Foam2Eigen::fvMatrix2EigenM
+(
+    fvMatrix<vector>& foam_matrix,
+    Eigen::MatrixXd& A
+)
 {
-    label sizeA = foam_matrix.diag().size();
-    A.resize(sizeA * 3, sizeA * 3);
+    const label sizeA = foam_matrix.diag().size();
+    const label nComp = vector::nComponents;
 
-    for (auto i = 0; i < sizeA; i++)
+    A.setZero(sizeA * nComp, sizeA * nComp);
+
+    auto idx = [nComp](label celli, direction cmpt)
     {
-        A(i, i) = foam_matrix.diag()[i];
-        A(sizeA + i, sizeA + i) = foam_matrix.diag()[i];
-        A(2 * sizeA + i, 2 * sizeA + i) = foam_matrix.diag()[i];
+        return nComp * celli + cmpt;
+    };
+
+    // Diagonal
+    for (label celli = 0; celli < sizeA; ++celli)
+    {
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+        {
+            const label ii = idx(celli, cmpt);
+            A(ii, ii) = foam_matrix.diag()[celli];
+        }
     }
 
+    // Internal ldu coefficients
     const lduAddressing& addr = foam_matrix.lduAddr();
     const labelList& lowerAddr = addr.lowerAddr();
     const labelList& upperAddr = addr.upperAddr();
-    forAll(lowerAddr, i)
+
+    forAll(lowerAddr, facei)
     {
-        A(lowerAddr[i], upperAddr[i]) = foam_matrix.upper()[i];
-        A(lowerAddr[i] + sizeA, upperAddr[i] + sizeA) = foam_matrix.upper()[i];
-        A(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2) = foam_matrix.upper()[i];
-        A(upperAddr[i], lowerAddr[i]) = foam_matrix.lower()[i];
-        A(upperAddr[i] + sizeA, lowerAddr[i] + sizeA) = foam_matrix.lower()[i];
-        A(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2) = foam_matrix.lower()[i];
-    }
-    forAll(foam_matrix.psi().boundaryField(), I)
-    {
-        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
-        forAll(ptch, J)
+        const label lowerCell = lowerAddr[facei];
+        const label upperCell = upperAddr[facei];
+
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
         {
-            label w = ptch.faceCells()[J];
-            A(w, w) += foam_matrix.internalCoeffs()[I][J][0];
-            A(w + sizeA, w + sizeA) += foam_matrix.internalCoeffs()[I][J][1];
-            A(w + sizeA * 2, w + sizeA * 2) += foam_matrix.internalCoeffs()[I][J][2];
+            const label lowerI = idx(lowerCell, cmpt);
+            const label upperI = idx(upperCell, cmpt);
+
+            A(lowerI, upperI) = foam_matrix.upper()[facei];
+            A(upperI, lowerI) = foam_matrix.lower()[facei];
+        }
+    }
+
+    // Boundary diagonal contributions
+    forAll(foam_matrix.psi().boundaryField(), patchI)
+    {
+        const fvPatch& patch =
+            foam_matrix.psi().boundaryField()[patchI].patch();
+
+        forAll(patch, faceI)
+        {
+            const label celli = patch.faceCells()[faceI];
+
+            for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+            {
+                const label ii = idx(celli, cmpt);
+
+                A(ii, ii) +=
+                    foam_matrix.internalCoeffs()[patchI][faceI][cmpt];
+            }
         }
     }
 }
 
-
 template <>
-void Foam2Eigen::fvMatrix2EigenM(fvMatrix<vector>& foam_matrix,
-                                 Eigen::SparseMatrix<double>& A)
+void Foam2Eigen::fvMatrix2EigenM
+(
+    fvMatrix<vector>& foam_matrix,
+    Eigen::SparseMatrix<double>& A
+)
 {
-    label sizeA = foam_matrix.diag().size();
-    label nel = foam_matrix.diag().size() + foam_matrix.upper().size() +
-                foam_matrix.lower().size();
-    A.resize(sizeA * 3, sizeA * 3);
-    A.reserve(nel * 3);
+    const label sizeA = foam_matrix.diag().size();
+    const label nComp = vector::nComponents;
+    const label nel =
+        foam_matrix.diag().size()
+      + foam_matrix.upper().size()
+      + foam_matrix.lower().size();
+
+    A.resize(sizeA * nComp, sizeA * nComp);
+    A.reserve(nel * nComp);
+
     typedef Eigen::Triplet<double> Trip;
     std::vector<Trip> tripletList;
-    tripletList.reserve(nel * 3);
+    tripletList.reserve(nel * nComp);
 
-    for (auto i = 0; i < sizeA; i++)
+    auto idx = [nComp](label celli, direction cmpt)
     {
-        tripletList.push_back(Trip(i, i, foam_matrix.diag()[i]));
-        tripletList.push_back(Trip(sizeA + i, sizeA + i, foam_matrix.diag()[i]));
-        tripletList.push_back(Trip(2 * sizeA + i, 2 * sizeA + i,
-                                   foam_matrix.diag()[i]));
+        return nComp * celli + cmpt;
+    };
+
+    // Diagonal
+    for (label celli = 0; celli < sizeA; ++celli)
+    {
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+        {
+            const label ii = idx(celli, cmpt);
+
+            tripletList.emplace_back
+            (
+                ii,
+                ii,
+                foam_matrix.diag()[celli]
+            );
+        }
     }
 
+    // Internal ldu coefficients
     const lduAddressing& addr = foam_matrix.lduAddr();
     const labelList& lowerAddr = addr.lowerAddr();
     const labelList& upperAddr = addr.upperAddr();
-    forAll(lowerAddr, i)
+
+    forAll(lowerAddr, facei)
     {
-        tripletList.push_back(Trip(lowerAddr[i], upperAddr[i], foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(lowerAddr[i] + sizeA, upperAddr[i] + sizeA,
-                                   foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(lowerAddr[i] + sizeA * 2, upperAddr[i] + sizeA * 2,
-                                   foam_matrix.upper()[i]));
-        tripletList.push_back(Trip(upperAddr[i], lowerAddr[i], foam_matrix.lower()[i]));
-        tripletList.push_back(Trip(upperAddr[i] + sizeA, lowerAddr[i] + sizeA,
-                                   foam_matrix.lower()[i]));
-        tripletList.push_back(Trip(upperAddr[i] + sizeA * 2, lowerAddr[i] + sizeA * 2,
-                                   foam_matrix.lower()[i]));
-    }
-    forAll(foam_matrix.psi().boundaryField(), I)
-    {
-        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
-        forAll(ptch, J)
+        const label lowerCell = lowerAddr[facei];
+        const label upperCell = upperAddr[facei];
+
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
         {
-            label w = ptch.faceCells()[J];
-            tripletList.push_back(Trip(w, w, foam_matrix.internalCoeffs()[I][J][0]));
-            tripletList.push_back(Trip(w + sizeA, w + sizeA,
-                                       foam_matrix.internalCoeffs()[I][J][1]));
-            tripletList.push_back(Trip(w + sizeA * 2, w + sizeA * 2,
-                                       foam_matrix.internalCoeffs()[I][J][2]));
+            const label lowerI = idx(lowerCell, cmpt);
+            const label upperI = idx(upperCell, cmpt);
+
+            tripletList.emplace_back
+            (
+                lowerI,
+                upperI,
+                foam_matrix.upper()[facei]
+            );
+
+            tripletList.emplace_back
+            (
+                upperI,
+                lowerI,
+                foam_matrix.lower()[facei]
+            );
         }
     }
+
+    // Boundary diagonal contributions
+    forAll(foam_matrix.psi().boundaryField(), patchI)
+    {
+        const fvPatch& patch =
+            foam_matrix.psi().boundaryField()[patchI].patch();
+
+        forAll(patch, faceI)
+        {
+            const label celli = patch.faceCells()[faceI];
+
+            for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+            {
+                const label ii = idx(celli, cmpt);
+
+                tripletList.emplace_back
+                (
+                    ii,
+                    ii,
+                    foam_matrix.internalCoeffs()[patchI][faceI][cmpt]
+                );
+            }
+        }
+    }
+
     A.setFromTriplets(tripletList.begin(), tripletList.end());
 }
 
@@ -1220,28 +1524,47 @@ void Foam2Eigen::fvMatrix2EigenV(fvMatrix<scalar>& foam_matrix,
 }
 
 template <>
-void Foam2Eigen::fvMatrix2EigenV(fvMatrix<vector>& foam_matrix,
-                                 Eigen::VectorXd& b)
+void Foam2Eigen::fvMatrix2EigenV
+(
+    fvMatrix<vector>& foam_matrix,
+    Eigen::VectorXd& b
+)
 {
-    label sizeA = foam_matrix.diag().size();
-    b.resize(sizeA * 3);
+    const label sizeA = foam_matrix.diag().size();
+    const label nComp = vector::nComponents;
 
-    for (auto i = 0; i < sizeA; i++)
+    b.setZero(sizeA * nComp);
+
+    auto idx = [nComp](label celli, direction cmpt)
     {
-        b(i) = foam_matrix.source()[i][0];
-        b(sizeA + i) = foam_matrix.source()[i][1];
-        b(2 * sizeA + i) = foam_matrix.source()[i][2];
+        return nComp * celli + cmpt;
+    };
+
+    // Source
+    for (label celli = 0; celli < sizeA; ++celli)
+    {
+        for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+        {
+            b(idx(celli, cmpt)) =
+                foam_matrix.source()[celli][cmpt];
+        }
     }
 
-    forAll(foam_matrix.psi().boundaryField(), I)
+    // Boundary source contributions
+    forAll(foam_matrix.psi().boundaryField(), patchI)
     {
-        const fvPatch& ptch = foam_matrix.psi().boundaryField()[I].patch();
-        forAll(ptch, J)
+        const fvPatch& patch =
+            foam_matrix.psi().boundaryField()[patchI].patch();
+
+        forAll(patch, faceI)
         {
-            label w = ptch.faceCells()[J];
-            b(w) += foam_matrix.boundaryCoeffs()[I][J][0];
-            b(w + sizeA) += foam_matrix.boundaryCoeffs()[I][J][1];
-            b(w + sizeA * 2) += foam_matrix.boundaryCoeffs()[I][J][2];
+            const label celli = patch.faceCells()[faceI];
+
+            for (direction cmpt = 0; cmpt < nComp; ++cmpt)
+            {
+                b(idx(celli, cmpt)) +=
+                    foam_matrix.boundaryCoeffs()[patchI][faceI][cmpt];
+            }
         }
     }
 }
@@ -1256,15 +1579,22 @@ Eigen::VectorXd Foam2Eigen::projectField(
     Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
     Eigen::VectorXd f = Foam2Eigen::field2Eigen(field);
     Eigen::VectorXd Volumes = field2Eigen(modes[0].mesh());
-    Eigen::MatrixXd VolumesN(Volumes.rows(), 1);
-    VolumesN = Volumes;
+    Eigen::MatrixXd VolumesN(Eig_Modes.rows(), 1);
 
-    if (Volumes.rows() != Eig_Modes.rows())
+    M_Assert
+    (
+        Eig_Modes.rows() % Volumes.rows() == 0,
+        "The number of Eigen field entries must be an integer multiple of the number of cells"
+    );
+
+    const label nComp = Eig_Modes.rows() / Volumes.rows();
+
+    for (label celli = 0; celli < Volumes.rows(); ++celli)
     {
-        VolumesN.resize(Eig_Modes.rows(), 1);
-        VolumesN.col(0).segment(0, Volumes.rows()) = Volumes;
-        VolumesN.col(0).segment(Volumes.rows() + 1, Volumes.rows() * 2) = Volumes;
-        VolumesN.col(0).segment(Volumes.rows() * 2 + 1, Volumes.rows() * 3) = Volumes;
+        for (label cmpt = 0; cmpt < nComp; ++cmpt)
+        {
+            VolumesN(nComp * celli + cmpt, 0) = Volumes(celli);
+        }
     }
 
     fr = Eig_Modes.transpose() * (f.cwiseProduct(VolumesN));
@@ -1283,27 +1613,24 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd> Foam2Eigen::projectFvMatrix(
     Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
     Foam2Eigen::fvMatrix2Eigen(matrix, A, b);
     Eigen::VectorXd Volumes = field2Eigen(modes[0].mesh());
-    Eigen::MatrixXd VolumesN(Volumes.rows(), Nmodes);
+    Eigen::MatrixXd VolumesN(Eig_Modes.rows(), Nmodes);
 
-    if (Volumes.rows() != Eig_Modes.rows())
-    {
-        VolumesN.resize(Eig_Modes.rows(), Nmodes);
-    }
+    M_Assert
+    (
+        Eig_Modes.rows() % Volumes.rows() == 0,
+        "The number of Eigen mode entries must be an integer multiple of the number of cells"
+    );
 
-    if (Volumes.rows() == Eig_Modes.rows())
+    const label nComp = Eig_Modes.rows() / Volumes.rows();
+
+    for (label modeI = 0; modeI < Nmodes; ++modeI)
     {
-        for (auto i = 0; i < Nmodes; i++)
+        for (label celli = 0; celli < Volumes.rows(); ++celli)
         {
-            VolumesN.col(i) = Volumes;
-        }
-    }
-    else
-    {
-        for (auto i = 0; i < Nmodes; i++)
-        {
-            VolumesN.col(i).segment(0, Volumes.rows()) = Volumes;
-            VolumesN.col(i).segment(Volumes.rows() + 1, Volumes.rows() * 2) = Volumes;
-            VolumesN.col(i).segment(Volumes.rows() * 2 + 1, Volumes.rows() * 3) = Volumes;
+            for (label cmpt = 0; cmpt < nComp; ++cmpt)
+            {
+                VolumesN(nComp * celli + cmpt, modeI) = Volumes(celli);
+            }
         }
     }
 
@@ -1321,27 +1648,24 @@ Eigen::MatrixXd Foam2Eigen::MassMatrix(
     Eigen::MatrixXd Mr;
     Eigen::MatrixXd Eig_Modes = PtrList2Eigen(modes, Nmodes);
     Eigen::VectorXd Volumes = field2Eigen(modes[0].mesh());
-    Eigen::MatrixXd VolumesN(Volumes.rows(), Nmodes);
+    Eigen::MatrixXd VolumesN(Eig_Modes.rows(), Nmodes);
 
-    if (Volumes.rows() != Eig_Modes.rows())
-    {
-        VolumesN.resize(Eig_Modes.rows(), Nmodes);
-    }
+    M_Assert
+    (
+        Eig_Modes.rows() % Volumes.rows() == 0,
+        "The number of Eigen mode entries must be an integer multiple of the number of cells"
+    );
 
-    if (Volumes.rows() == Eig_Modes.rows())
+    const label nComp = Eig_Modes.rows() / Volumes.rows();
+
+    for (label modeI = 0; modeI < Nmodes; ++modeI)
     {
-        for (auto i = 0; i < Nmodes; i++)
+        for (label celli = 0; celli < Volumes.rows(); ++celli)
         {
-            VolumesN.col(i) = Volumes;
-        }
-    }
-    else
-    {
-        for (auto i = 0; i < Nmodes; i++)
-        {
-            VolumesN.col(i).segment(0, Volumes.rows()) = Volumes;
-            VolumesN.col(i).segment(Volumes.rows() + 1, Volumes.rows() * 2) = Volumes;
-            VolumesN.col(i).segment(Volumes.rows() * 2 + 1, Volumes.rows() * 3) = Volumes;
+            for (label cmpt = 0; cmpt < nComp; ++cmpt)
+            {
+                VolumesN(nComp * celli + cmpt, modeI) = Volumes(celli);
+            }
         }
     }
 

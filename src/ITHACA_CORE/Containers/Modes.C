@@ -60,62 +60,6 @@ List<Eigen::MatrixXd> Modes<Type, PatchField, GeoMesh>::toEigen()
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-List<Eigen::MatrixXd> Modes<Type, PatchField, GeoMesh>::project(
-    fvMatrix<Type>& Af, label numberOfModes,
-    word projType)
-{
-    M_Assert(projType == "G" || projType == "PG",
-             "Projection type can be G for Galerkin or PG for Petrov-Galerkin");
-    List<Eigen::MatrixXd> LinSys;
-    LinSys.resize(2);
-
-    if (EigenModes.size() == 0)
-    {
-        toEigen();
-    }
-
-    Eigen::SparseMatrix<double> Ae;
-    Eigen::VectorXd be;
-    Foam2Eigen::fvMatrix2Eigen(Af, Ae, be);
-
-    if (numberOfModes == 0)
-    {
-        if (projType == "G")
-        {
-            LinSys[0] = EigenModes[0].transpose() * Ae * EigenModes[0];
-            LinSys[1] = EigenModes[0].transpose() * be;
-        }
-
-        if (projType == "PG")
-        {
-            LinSys[0] = (Ae * EigenModes[0]).transpose() * Ae * EigenModes[0];
-            LinSys[1] = (Ae * EigenModes[0]).transpose() * be;
-        }
-    }
-    else
-    {
-        M_Assert(numberOfModes <= EigenModes[0].cols(),
-                 "Number of required modes for projection is higher then the number of available ones");
-
-        if (projType == "G")
-        {
-            LinSys[0] = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * Ae *
-                        (EigenModes[0]).leftCols(numberOfModes);
-            LinSys[1] = ((EigenModes[0]).leftCols(numberOfModes)).transpose() * be;
-        }
-
-        if (projType == "PG")
-        {
-            LinSys[0] = (Ae * ((EigenModes[0]).leftCols(numberOfModes))).transpose() * Ae *
-                        (EigenModes[0]).leftCols(numberOfModes);
-            LinSys[1] = (Ae * ((EigenModes[0]).leftCols(numberOfModes))).transpose() * be;
-        }
-    }
-
-    return LinSys;
-}
-
-template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::MatrixXd Modes<Type, PatchField, GeoMesh>::project(
     GeometricField<Type, PatchField, GeoMesh>&
     field, label numberOfModes, word projType, fvMatrix<Type>* Af)
@@ -489,6 +433,401 @@ void Modes<Type, PatchField, GeoMesh>::operator=(const
     }
 }
 
+template<class Type, template<class> class PatchField, class GeoMesh>
+List<Eigen::MatrixXd>
+Modes<Type, PatchField, GeoMesh>::project
+(
+    fvMatrix<Type>& Af,
+    label numberOfModes,
+    word projType
+)
+{
+    FatalErrorInFunction
+        << "fvMatrix projection is currently implemented only for volScalarField and volVectorField modes"
+        << exit(FatalError);
+
+    return List<Eigen::MatrixXd>();
+}
+
+template<>
+List<Eigen::MatrixXd>
+Modes<scalar, fvPatchField, volMesh>::project
+(
+    fvMatrix<scalar>& Af,
+    label numberOfModes,
+    word projType
+)
+{
+    M_Assert
+    (
+        projType == "G" || projType == "PG",
+        "Projection type can be G for Galerkin or PG for Petrov-Galerkin"
+    );
+
+    if (numberOfModes == 0)
+    {
+        numberOfModes = this->size();
+    }
+
+    M_Assert
+    (
+        numberOfModes <= this->size(),
+        "Number of required modes is larger than number of available modes"
+    );
+
+    const label nModes = numberOfModes;
+
+    List<Eigen::MatrixXd> LinSys(2);
+    LinSys[0] = Eigen::MatrixXd::Zero(nModes, nModes);
+    LinSys[1] = Eigen::MatrixXd::Zero(nModes, 1);
+
+    class projectableMatrix
+    :
+        public fvScalarMatrix
+    {
+    public:
+
+        projectableMatrix(const fvScalarMatrix& A)
+        :
+            fvScalarMatrix(A)
+        {}
+
+        void prepare()
+        {
+            addBoundaryDiag(diag(), 0);
+        }
+
+        void prepareSource(scalarField& source)
+        {
+            addBoundarySource(source, false);
+        }
+    };
+
+    projectableMatrix Ap(Af);
+    Ap.prepare();
+
+    const lduInterfaceFieldPtrsList interfaces
+    (
+        Af.psi().boundaryField().scalarInterfaces()
+    );
+
+    // ------------------------------------------------------------
+    // Compute A*phi_j for every mode once.
+    // ------------------------------------------------------------
+
+    List<scalarField> Amodes(nModes);
+
+    for (label j = 0; j < nModes; ++j)
+    {
+        const scalarField& x =
+            (*this)[j].primitiveField();
+
+        Amodes[j].setSize(x.size());
+        Amodes[j] = 0.0;
+
+        Ap.Amul
+        (
+            Amodes[j],
+            x,
+            Ap.boundaryCoeffs(),
+            interfaces,
+            0
+        );
+    }
+
+    // ------------------------------------------------------------
+    // Reduced matrix
+    //
+    // G :  V^T A V
+    // PG: (A V)^T A V
+    // ------------------------------------------------------------
+
+    for (label i = 0; i < nModes; ++i)
+    {
+        for (label j = 0; j < nModes; ++j)
+        {
+            scalar value = 0.0;
+
+            if (projType == "G")
+            {
+                const scalarField& modeI =
+                    (*this)[i].primitiveField();
+
+                forAll(Amodes[j], celli)
+                {
+                    value +=
+                        modeI[celli]
+                       *Amodes[j][celli];
+                }
+            }
+            else
+            {
+                forAll(Amodes[j], celli)
+                {
+                    value +=
+                        Amodes[i][celli]
+                       *Amodes[j][celli];
+                }
+            }
+
+            reduce(value, sumOp<scalar>());
+
+            LinSys[0](i,j) = value;
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Reduced source
+    //
+    // G :  V^T b
+    // PG: (A V)^T b
+    // ------------------------------------------------------------
+
+    scalarField rhs(Af.source());
+    Ap.prepareSource(rhs);
+
+    for (label i = 0; i < nModes; ++i)
+    {
+        scalar value = 0.0;
+
+        if (projType == "G")
+        {
+            const scalarField& modeI =
+                (*this)[i].primitiveField();
+
+            forAll(rhs, celli)
+            {
+                value +=
+                    modeI[celli]
+                   *rhs[celli];
+            }
+        }
+        else
+        {
+            forAll(rhs, celli)
+            {
+                value +=
+                    Amodes[i][celli]
+                   *rhs[celli];
+            }
+        }
+
+        reduce(value, sumOp<scalar>());
+
+        LinSys[1](i,0) = value;
+    }
+
+    return LinSys;
+}
+
+template<>
+List<Eigen::MatrixXd>
+Modes<vector, fvPatchField, volMesh>::project
+(
+    fvMatrix<vector>& Af,
+    label numberOfModes,
+    word projType
+)
+{
+    M_Assert
+    (
+        projType == "G" || projType == "PG",
+        "Projection type can be G for Galerkin or PG for Petrov-Galerkin"
+    );
+
+    if (numberOfModes == 0)
+    {
+        numberOfModes = this->size();
+    }
+
+    M_Assert
+    (
+        numberOfModes <= this->size(),
+        "Number of required modes is larger than number of available modes"
+    );
+
+    const label nModes = numberOfModes;
+
+    List<Eigen::MatrixXd> LinSys(2);
+    LinSys[0] = Eigen::MatrixXd::Zero(nModes, nModes);
+    LinSys[1] = Eigen::MatrixXd::Zero(nModes, 1);
+
+    class projectableMatrix
+    :
+        public fvVectorMatrix
+    {
+    public:
+
+        projectableMatrix(const fvVectorMatrix& A)
+        :
+            fvVectorMatrix(A)
+        {}
+
+        void prepareComponent
+        (
+            const scalarField& originalDiag,
+            const direction cmpt
+        )
+        {
+            diag() = originalDiag;
+            addBoundaryDiag(diag(), cmpt);
+        }
+
+        void prepareSource(vectorField& source)
+        {
+            addBoundarySource(source, false);
+        }
+    };
+
+    projectableMatrix Ap(Af);
+    const scalarField originalDiag(Ap.diag());
+
+    const lduInterfaceFieldPtrsList interfaces
+    (
+        Af.psi().boundaryField().scalarInterfaces()
+    );
+
+    // ------------------------------------------------------------
+    // Compute A*phi_j for every vector mode once.
+    // ------------------------------------------------------------
+
+    List<vectorField> Amodes(nModes);
+
+    for (label j = 0; j < nModes; ++j)
+    {
+        const vectorField& modeJ =
+            (*this)[j].primitiveField();
+
+        Amodes[j].setSize(modeJ.size());
+        Amodes[j] = vector::zero;
+
+        for
+        (
+            direction cmpt = 0;
+            cmpt < vector::nComponents;
+            ++cmpt
+        )
+        {
+            Ap.prepareComponent(originalDiag, cmpt);
+
+            scalarField x
+            (
+                modeJ.component(cmpt)
+            );
+
+            scalarField Ax
+            (
+                x.size(),
+                0.0
+            );
+
+            FieldField<Field, scalar> bouCoeffsCmpt
+            (
+                Ap.boundaryCoeffs().component(cmpt)
+            );
+
+            Ap.Amul
+            (
+                Ax,
+                x,
+                bouCoeffsCmpt,
+                interfaces,
+                cmpt
+            );
+
+            forAll(Ax, celli)
+            {
+                Amodes[j][celli][cmpt] = Ax[celli];
+            }
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Reduced matrix
+    //
+    // G :  V^T A V
+    // PG: (A V)^T A V
+    // ------------------------------------------------------------
+
+    for (label i = 0; i < nModes; ++i)
+    {
+        for (label j = 0; j < nModes; ++j)
+        {
+            scalar value = 0.0;
+
+            if (projType == "G")
+            {
+                const vectorField& modeI =
+                    (*this)[i].primitiveField();
+
+                forAll(Amodes[j], celli)
+                {
+                    value +=
+                        modeI[celli]
+                      & Amodes[j][celli];
+                }
+            }
+            else
+            {
+                forAll(Amodes[j], celli)
+                {
+                    value +=
+                        Amodes[i][celli]
+                      & Amodes[j][celli];
+                }
+            }
+
+            reduce(value, sumOp<scalar>());
+
+            LinSys[0](i,j) = value;
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Reduced source
+    //
+    // G :  V^T b
+    // PG: (A V)^T b
+    // ------------------------------------------------------------
+
+    vectorField rhs(Af.source());
+    Ap.prepareSource(rhs);
+
+    for (label i = 0; i < nModes; ++i)
+    {
+        scalar value = 0.0;
+
+        if (projType == "G")
+        {
+            const vectorField& modeI =
+                (*this)[i].primitiveField();
+
+            forAll(rhs, celli)
+            {
+                value +=
+                    modeI[celli]
+                  & rhs[celli];
+            }
+        }
+        else
+        {
+            forAll(rhs, celli)
+            {
+                value +=
+                    Amodes[i][celli]
+                  & rhs[celli];
+            }
+        }
+
+        reduce(value, sumOp<scalar>());
+
+        LinSys[1](i,0) = value;
+    }
+
+    Ap.diag() = originalDiag;
+
+    return LinSys;
+}
 
 template class Modes<scalar, fvPatchField, volMesh>;
 template class Modes<vector, fvPatchField, volMesh>;

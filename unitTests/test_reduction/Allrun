@@ -1,0 +1,62 @@
+#!/bin/bash
+
+set -e
+
+APP=romProjectionTest
+NPROCS=4
+
+echo
+echo "========================================"
+echo " Cleaning previous decomposition"
+echo "========================================"
+
+rm -rf processor*
+
+echo
+echo "========================================"
+echo " MESH GENERATION"
+echo "========================================"
+
+blockMesh > log.blockMesh
+
+echo
+echo "========================================"
+echo " SERIAL TEST"
+echo "========================================"
+
+$APP | tee log.serial
+
+echo
+echo "========================================"
+echo " PARALLEL DECOMPOSITION"
+echo "========================================"
+
+decomposePar -force > log.decomposePar
+
+
+echo
+echo "========================================"
+echo " PARALLEL TEST ($NPROCS MPI ranks)"
+echo "========================================"
+
+mpirun -np $NPROCS $APP -parallel | tee log.parallel
+
+
+echo
+echo "========================================"
+echo " SUMMARY"
+echo "========================================"
+
+echo
+echo "--- SERIAL ---"
+grep -E "SCALAR|VECTOR|Result:|Overall result" log.serial || true
+
+echo
+echo "--- PARALLEL ---"
+grep -E "SCALAR|VECTOR|Result:|Overall result" log.parallel || true
+
+
+echo
+echo "========================================"
+echo " ALL TESTS COMPLETED"
+echo "========================================"
