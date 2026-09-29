@@ -117,31 +117,10 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
 
     if (type == "eigen")
     {
-        const static Eigen::IOFormat CSVFormat(6, false, ", ", "\n");
-        std::ofstream ofs;
+        const static Eigen::IOFormat CleanFormat(Eigen::StreamPrecision, 0, " ", "\n");
+        std::ofstream ofs(folder + "/" + Name + "_mat.txt");
         ofs.precision(20);
-        ofs.open (folder + "/" + Name + "_mat.txt");
-
-        for (int i = 0; i < matrix.rows(); i++)
-        {
-            for (int j = 0; j < matrix.cols(); j++)
-            {
-                if (j == 0)
-                {
-                    ofs << matrix(i, j);
-                }
-                else
-                {
-                    ofs << " " << matrix(i, j);
-                }
-            }
-
-            if (i != (matrix.rows() - 1))
-            {
-                ofs << endl;
-            }
-        }
-
+        ofs << matrix.format(CleanFormat);    
         ofs.close();
     }
 }
@@ -399,55 +378,46 @@ List<Eigen::MatrixXd> readMatrix(word folder, word mat_name)
 
 Eigen::MatrixXd readMatrix(word filename)
 {
-    int cols = 0, rows = 0;
-    double buff[MAXBUFSIZE];
-    // Read numbers from file into buffer.
-    std::ifstream infile;
-    infile.open(filename.c_str());
-    std::string message = "The matrix file \"" +  filename +
-                          "\" does not exist. Check the existence of the file or the way it is named.";
-    M_Assert(infile.good() != 0, message.c_str()
-            );
+    std::ifstream infile(filename.c_str());
+    M_Assert(infile.good(), ("The matrix file \"" + filename + "\" does not exist.").c_str());
 
-    while (! infile.eof())
+    std::vector<double> values;
+    std::string line;
+    int rows = 0;
+    int cols = 0;
+
+    while (std::getline(infile, line))
     {
-        string line;
-        getline(infile, line);
-        int temp_cols = 0;
-        std::stringstream stream(line);
-
-        while (! stream.eof())
-        {
-            stream >> buff[cols * rows + temp_cols++];
-        }
-
-        if (temp_cols == 0)
-        {
+        if (line.find_first_not_of(" \t\r\n") == std::string::npos) 
             continue;
+
+        std::stringstream stream(line);
+        double val;
+        int temp_cols = 0;
+
+        while (stream >> val)
+        {
+            values.push_back(val);
+            temp_cols++;
         }
 
         if (cols == 0)
         {
             cols = temp_cols;
         }
+        else if (temp_cols != cols)
+        {
+            // Optional safety check: ensure all rows have matching column count
+            M_Assert(temp_cols == cols, "Inconsistent column count across rows.");
+        }
 
         rows++;
     }
 
-    infile.close();
-    rows--;
-    // Populate matrix with numbers.
-    Eigen::MatrixXd result(rows, cols);
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            result(i, j) = buff[ cols * i + j ];
-        }
-    }
-
-    return result;
+    // Map vector memory directly to Eigen Matrix
+    return Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(
+        values.data(), rows, cols
+    );
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>

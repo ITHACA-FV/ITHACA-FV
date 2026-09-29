@@ -33,6 +33,58 @@ bool ReadAndWriteTensor()
     return esit;
 }
 
+bool TestExportAndLoad(Eigen::MatrixXd output)
+{
+    const std::string typeName = (output.cols() == 1) ? "vector" : "matrix";
+    Foam::Info << "> Testing Read And Write for " << typeName << "..." << Foam::endl;
+
+    ITHACAstream::exportMatrix(output, "testElement", "eigen", "./");
+
+    Eigen::MatrixXd input = ITHACAstream::readMatrix("testElement_mat.txt");
+
+    std::remove("testElementestElement_mat.txt");
+
+    if (output.rows() != input.rows() || output.cols() != input.cols())
+    {
+        Foam::Info << "  Read And Write Test for " << typeName << Foam::nl
+                   << " failed due to different saved/read dimensions!" << Foam::nl
+                   << "  The dimensions of the output " << typeName << " are "
+                   << output.rows() << " x " << output.cols() << Foam::nl
+                   << "  The dimensions of the input " << typeName << " are "
+                   << input.rows() << " x " << input.cols() << Foam::endl;
+
+        return false;
+    }
+
+    double differenceNorm = (output - input).norm();
+    if (differenceNorm < 1e-10)
+    {
+        Foam::Info << "  Read And Write Test for " << typeName << Foam::nl
+                   << " succeeded!" << Foam::nl
+                   << "  The norm of the difference is " << differenceNorm << Foam::endl;
+        return true;
+    }
+    else
+    {
+        Foam::Info << "  Read And Write Test for " << typeName << Foam::nl
+                   << " failed due to high numerical errors!" << Foam::nl
+                   << "  The norm of the difference is " << differenceNorm << Foam::endl;
+        return false;
+    }
+}
+
+bool ExportAndLoadVector()
+{
+  Eigen::VectorXd v = Eigen::VectorXd::Random(5);
+  return TestExportAndLoad(v);
+}
+
+bool ExportAndLoadMatrix()
+{
+  Eigen::MatrixXd m = Eigen::MatrixXd::Random(5, 5);
+  return TestExportAndLoad(m);
+}
+
 bool ReadAndWriteNPYMatrix()
 {
     bool esit = false;
@@ -184,6 +236,8 @@ int main(int argc, char **argv)
 {
     Eigen::MatrixXi MI_out = Eigen::MatrixXi::Random(5, 5);
     ReadAndWriteTensor();
+    ExportAndLoadMatrix();
+    ExportAndLoadVector();
     ReadAndWriteNPYMatrix();
     TestSparseMatrix();
     return 0;
