@@ -6,13 +6,13 @@ EXE_INC = \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
-    -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/lnInclude \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra-0.6.1/include \
     -I$(LIB_ITHACA_SRC)/thirdparty/splinter/include \
+    -I$(GTEST_DIR)/include \
     -w \
-    -DOFVER=$${WM_PROJECT_VERSION%.*} \
+    -DOFVER=$(WM_PROJECT_VERSION) \
     -std=c++17
 
 EXE_LIBS = \
@@ -26,7 +26,8 @@ EXE_LIBS = \
     -lforces \
     -lITHACA_CORE \
     -L$(FOAM_USER_LIBBIN) \
-    -L$(GTEST_DIR) \
-    -lgtest
-
-
+    -L$(GTEST_DIR)/lib \
+    -L$(GTEST_DIR)/lib64 \
+    -lgtest \
+    -lgtest_main \
+    -lpthread
