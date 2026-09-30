@@ -12,7 +12,7 @@ EXE_INC = \
     -I$(LIB_ITHACA_SRC)/thirdparty/splinter/include \
     -I$(GTEST_DIR)/include \
     -w \
-    -DOFVER=$(WM_PROJECT_VERSION) \
+    -DOFVER=$${WM_PROJECT_VERSION%.*} \
     -std=c++17
 
 EXE_LIBS = \
@@ -29,5 +29,4 @@ EXE_LIBS = \
     -L$(GTEST_DIR)/lib \
     -L$(GTEST_DIR)/lib64 \
     -lgtest \
-    -lgtest_main \
-    -lpthread
+    -lgtest_main
