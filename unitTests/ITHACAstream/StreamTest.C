@@ -37,11 +37,12 @@ bool TestExportAndLoad(Eigen::MatrixXd output)
 {
     const std::string typeName = (output.cols() == 1) ? "vector" : "matrix";
     Foam::Info << "-- Testing Read And Write for " << typeName << "..." << Foam::endl;
-
-    ITHACAstream::exportMatrix(output, "testElement", "eigen", "./");
-
-    Eigen::MatrixXd input = ITHACAstream::readMatrix("testElement_mat.txt");
-    std::remove("testElement_mat.txt");
+    
+    ITHACAstream::exportMatrix(output, "testElement" + typeName, "eigen", "./");
+    
+    const std::string fileName = "testElement" + typeName + "_mat.txt";
+    Eigen::MatrixXd input = ITHACAstream::readMatrix(fileName);
+    std::remove(fileName.c_str()); // Uncomment if you actually want to see the file
 
     if (output.rows() != input.rows() || output.cols() != input.cols())
     {
