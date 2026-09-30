@@ -162,3 +162,36 @@ TEST(ITHACAstream, TestSparseMatrix)
     cnpy::load(mat2,"forNpy.npz");
     EXPECT_TRUE((mat-mat2).norm() == 0) << "Read And Write NPZ sparse matrix failed!" << std::endl;
 }
+
+// General function, the tests below call this with vector or matrix
+void TestExportAndLoad(Eigen::MatrixXd output)
+{
+    const std::string typeName = (output.cols() == 1) ? "vector" : "matrix";
+    const std::string fileName = "testElement" + typeName + "_mat.txt";
+
+    ITHACAstream::exportMatrix(output, "testElement" + typeName, "eigen", "./");
+
+    Eigen::MatrixXd input = ITHACAstream::readMatrix(fileName);
+    std::remove(fileName.c_str());
+
+    ASSERT_EQ(output.rows(), input.rows()) 
+        << "Read/Write failed for " << typeName << ": Row dimension mismatch.";
+    ASSERT_EQ(output.cols(), input.cols()) 
+        << "Read/Write failed for " << typeName << ": Column dimension mismatch.";
+
+    double differenceNorm = (output - input).norm();
+    EXPECT_NEAR(differenceNorm, 0.0, 1e-10) 
+        << "Read/Write failed for " << typeName << " due to high numerical error.";
+}
+
+TEST(ITHACAstreamTest, ExportAndLoadVector)
+{
+    Eigen::VectorXd v = Eigen::VectorXd::Random(5);
+    TestExportAndLoad(v);
+}
+
+TEST(ITHACAstreamTest, ExportAndLoadMatrix)
+{
+    Eigen::MatrixXd m = Eigen::MatrixXd::Random(5, 5);
+    TestExportAndLoad(m);
+}
