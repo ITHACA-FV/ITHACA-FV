@@ -36,18 +36,17 @@ bool ReadAndWriteTensor()
 bool TestExportAndLoad(Eigen::MatrixXd output)
 {
     const std::string typeName = (output.cols() == 1) ? "vector" : "matrix";
-    Foam::Info << "> Testing Read And Write for " << typeName << "..." << Foam::endl;
+    Foam::Info << "-- Testing Read And Write for " << typeName << "..." << Foam::endl;
 
     ITHACAstream::exportMatrix(output, "testElement", "eigen", "./");
 
     Eigen::MatrixXd input = ITHACAstream::readMatrix("testElement_mat.txt");
-
-    std::remove("testElementestElement_mat.txt");
+    std::remove("testElement_mat.txt");
 
     if (output.rows() != input.rows() || output.cols() != input.cols())
     {
-        Foam::Info << "  Read And Write Test for " << typeName << Foam::nl
-                   << " failed due to different saved/read dimensions!" << Foam::nl
+        Foam::Info << "X Read And Write Test for " << typeName
+                   << "  failed due to different saved/read dimensions!" << Foam::nl
                    << "  The dimensions of the output " << typeName << " are "
                    << output.rows() << " x " << output.cols() << Foam::nl
                    << "  The dimensions of the input " << typeName << " are "
@@ -59,16 +58,16 @@ bool TestExportAndLoad(Eigen::MatrixXd output)
     double differenceNorm = (output - input).norm();
     if (differenceNorm < 1e-10)
     {
-        Foam::Info << "  Read And Write Test for " << typeName << Foam::nl
-                   << " succeeded!" << Foam::nl
-                   << "  The norm of the difference is " << differenceNorm << Foam::endl;
+        Foam::Info << "> Read And Write Test for " << typeName
+                   << " succeeded!"
+                   << " The norm of the difference between the saved and loaded data is " << differenceNorm << Foam::endl;
         return true;
     }
     else
     {
-        Foam::Info << "  Read And Write Test for " << typeName << Foam::nl
-                   << " failed due to high numerical errors!" << Foam::nl
-                   << "  The norm of the difference is " << differenceNorm << Foam::endl;
+        Foam::Info << "X Read And Write Test for " << typeName
+                   << " failed due to high numerical errors!"
+                   << " The norm of the difference between the saved and loaded data is " << differenceNorm << Foam::endl;
         return false;
     }
 }
@@ -232,13 +231,23 @@ int TestSparseMatrix()
     return esit;
 }
 
+bool testNumpyMatrixIO()
+{
+  bool success = false;
+  Eigen::MatrixXd output = Eigen::MatrixXd::Random(3, 2);
+  ITHACAstream::exportMatrix(output, "testElement", "numpy", "./");
+  return success;
+}
+
 int main(int argc, char **argv)
 {
+    // Remember to run the python script readSparseMatrix.py after this, to read the npy file and print it
     Eigen::MatrixXi MI_out = Eigen::MatrixXi::Random(5, 5);
     ReadAndWriteTensor();
     ExportAndLoadMatrix();
     ExportAndLoadVector();
     ReadAndWriteNPYMatrix();
+    testNumpyMatrixIO();
     TestSparseMatrix();
     return 0;
 }

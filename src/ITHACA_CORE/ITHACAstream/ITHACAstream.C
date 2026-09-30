@@ -59,15 +59,16 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen", message.c_str()
+             || type == "eigen" || type == "numpy", message.c_str()
             );
     mkDir(folder);
+    const auto base_name = folder / (Name + "_mat");
     word est;
 
     if (type == "python")
     {
         est = ".py";
-        OFstream str(folder + "/" + Name + "_mat" + est);
+        OFstream str(base_name + est);
         str << Name << "=np.array([";
 
         for (int i = 0; i < matrix.rows(); i++)
@@ -93,10 +94,10 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         str << "]])" << endl;
     }
 
-    if (type == "matlab")
+    else if (type == "matlab")
     {
         est = ".m";
-        OFstream str(folder + "/" + Name + "_mat" + est);
+        OFstream str(base_name + est);
         str << Name << "=[";
 
         for (int i = 0; i < matrix.rows(); i++)
@@ -115,13 +116,21 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         str << "];" << endl;
     }
 
-    if (type == "eigen")
+    else if (type == "eigen")
     {
-        const static Eigen::IOFormat CleanFormat(Eigen::StreamPrecision, 0, " ", "\n");
-        std::ofstream ofs(folder + "/" + Name + "_mat.txt");
-        ofs.precision(20);
+        est = ".txt";
+        // TODO: standardize the precision. It was 20 before in this eigen branch
+        const static Eigen::IOFormat CleanFormat(Eigen::FullPrecision, Eigen::DontAlignCols, " ", "\n");
+        std::ofstream ofs(base_name + est);
         ofs << matrix.format(CleanFormat);    
         ofs.close();
+    }
+    else if (type == "numpy")
+    {
+        est = ".npy";
+        // Necessary trick to save the matrix in row-major order, as numpy expects it
+        Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> matrixRowMajor = matrix;
+        cnpy::npy_save(base_name + est, matrixRowMajor.data(), {size_t(matrixRowMajor.rows()), size_t(matrixRowMajor.cols())}, "w");
     }
 }
 
@@ -155,7 +164,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen", message.c_str()
+             || type == "eigen" || type == "numpy", message.c_str()
             );
     mkDir(folder);
     word est;
@@ -383,38 +392,40 @@ Eigen::MatrixXd readMatrix(word filename)
 
     std::vector<double> values;
     std::string line;
-    int rows = 0;
-    int cols = 0;
+    std::istringstream stream; // Reused for each line, so it's not re-allcated
+    Eigen::Index rows = 0;
+    Eigen::Index cols = -1;
 
     while (std::getline(infile, line))
     {
+        // This should avoid counting empty lines as rows
         if (line.find_first_not_of(" \t\r\n") == std::string::npos) 
             continue;
 
-        std::stringstream stream(line);
+        stream.clear();
+        stream.str(line);
+
         double val;
-        int temp_cols = 0;
+        Eigen::Index line_cols = 0;
 
         while (stream >> val)
         {
             values.push_back(val);
-            temp_cols++;
+            ++line_cols;
         }
 
-        if (cols == 0)
+        if (cols < 0)
         {
-            cols = temp_cols;
+            cols = line_cols;
         }
-        else if (temp_cols != cols)
+        else if (line_cols != cols)
         {
-            // Optional safety check: ensure all rows have matching column count
-            M_Assert(temp_cols == cols, "Inconsistent column count across rows.");
+            M_Assert(line_cols == cols, "Inconsistent column count across rows.");
         }
-
-        rows++;
+        ++rows;
     }
 
-    // Map vector memory directly to Eigen Matrix
+    // Maps the vector with values to an Eigen matrix. RowMajor since we read line by line
     return Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(
         values.data(), rows, cols
     );
