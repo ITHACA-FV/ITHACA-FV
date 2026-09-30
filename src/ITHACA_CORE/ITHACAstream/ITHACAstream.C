@@ -59,15 +59,16 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen", message.c_str()
+             || type == "eigen" || type == "numpy", message.c_str()
             );
     mkDir(folder);
+    const auto base_name = folder / (Name + "_mat");
     word est;
 
     if (type == "python")
     {
         est = ".py";
-        OFstream str(folder + "/" + Name + "_mat" + est);
+        OFstream str(base_name + est);
         str << Name << "=np.array([";
 
         for (int i = 0; i < matrix.rows(); i++)
@@ -93,10 +94,10 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         str << "]])" << endl;
     }
 
-    if (type == "matlab")
+    else if (type == "matlab")
     {
         est = ".m";
-        OFstream str(folder + "/" + Name + "_mat" + est);
+        OFstream str(base_name + est);
         str << Name << "=[";
 
         for (int i = 0; i < matrix.rows(); i++)
@@ -115,34 +116,21 @@ void exportMatrix(Eigen::Matrix < T, -1, dim > & matrix,
         str << "];" << endl;
     }
 
-    if (type == "eigen")
+    else if (type == "eigen")
     {
-        const static Eigen::IOFormat CSVFormat(6, false, ", ", "\n");
-        std::ofstream ofs;
-        ofs.precision(20);
-        ofs.open (folder + "/" + Name + "_mat.txt");
-
-        for (int i = 0; i < matrix.rows(); i++)
-        {
-            for (int j = 0; j < matrix.cols(); j++)
-            {
-                if (j == 0)
-                {
-                    ofs << matrix(i, j);
-                }
-                else
-                {
-                    ofs << " " << matrix(i, j);
-                }
-            }
-
-            if (i != (matrix.rows() - 1))
-            {
-                ofs << endl;
-            }
-        }
-
+        est = ".txt";
+        // TODO: standardize the precision. It was 20 before in this eigen branch
+        const static Eigen::IOFormat CleanFormat(Eigen::FullPrecision, Eigen::DontAlignCols, " ", "\n");
+        std::ofstream ofs(base_name + est);
+        ofs << matrix.format(CleanFormat);    
         ofs.close();
+    }
+    else if (type == "numpy")
+    {
+        est = ".npy";
+        // Necessary trick to save the matrix in row-major order, as numpy expects it
+        Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> matrixRowMajor = matrix;
+        cnpy::npy_save(base_name + est, matrixRowMajor.data(), {size_t(matrixRowMajor.rows()), size_t(matrixRowMajor.cols())}, "w");
     }
 }
 
@@ -176,7 +164,7 @@ void exportMatrix(List <Eigen::MatrixXd>& matrix, word Name,
     std::string message = "The extension \"" +  type +
                           "\" was not implemented. Check the list of possible extensions.";
     M_Assert(type == "python" || type == "matlab"
-             || type == "eigen", message.c_str()
+             || type == "eigen" || type == "numpy", message.c_str()
             );
     mkDir(folder);
     word est;
@@ -399,55 +387,48 @@ List<Eigen::MatrixXd> readMatrix(word folder, word mat_name)
 
 Eigen::MatrixXd readMatrix(word filename)
 {
-    int cols = 0, rows = 0;
-    double buff[MAXBUFSIZE];
-    // Read numbers from file into buffer.
-    std::ifstream infile;
-    infile.open(filename.c_str());
-    std::string message = "The matrix file \"" +  filename +
-                          "\" does not exist. Check the existence of the file or the way it is named.";
-    M_Assert(infile.good() != 0, message.c_str()
-            );
+    std::ifstream infile(filename.c_str());
+    M_Assert(infile.good(), ("The matrix file \"" + filename + "\" does not exist.").c_str());
 
-    while (! infile.eof())
+    std::vector<double> values;
+    std::string line;
+    std::istringstream stream; // Reused for each line, so it's not re-allcated
+    Eigen::Index rows = 0;
+    Eigen::Index cols = -1;
+
+    while (std::getline(infile, line))
     {
-        string line;
-        getline(infile, line);
-        int temp_cols = 0;
-        std::stringstream stream(line);
-
-        while (! stream.eof())
-        {
-            stream >> buff[cols * rows + temp_cols++];
-        }
-
-        if (temp_cols == 0)
-        {
+        // This should avoid counting empty lines as rows
+        if (line.find_first_not_of(" \t\r\n") == std::string::npos) 
             continue;
-        }
 
-        if (cols == 0)
+        stream.clear();
+        stream.str(line);
+
+        double val;
+        Eigen::Index line_cols = 0;
+
+        while (stream >> val)
         {
-            cols = temp_cols;
+            values.push_back(val);
+            ++line_cols;
         }
 
-        rows++;
+        if (cols < 0)
+        {
+            cols = line_cols;
+        }
+        else if (line_cols != cols)
+        {
+            M_Assert(line_cols == cols, "Inconsistent column count across rows.");
+        }
+        ++rows;
     }
 
-    infile.close();
-    rows--;
-    // Populate matrix with numbers.
-    Eigen::MatrixXd result(rows, cols);
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            result(i, j) = buff[ cols * i + j ];
-        }
-    }
-
-    return result;
+    // Maps the vector with values to an Eigen matrix. RowMajor since we read line by line
+    return Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(
+        values.data(), rows, cols
+    );
 }
 
 template<class Type, template<class> class PatchField, class GeoMesh>

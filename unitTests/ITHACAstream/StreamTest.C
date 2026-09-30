@@ -33,6 +33,58 @@ bool ReadAndWriteTensor()
     return esit;
 }
 
+bool TestExportAndLoad(Eigen::MatrixXd output)
+{
+    const std::string typeName = (output.cols() == 1) ? "vector" : "matrix";
+    Foam::Info << "-- Testing Read And Write for " << typeName << "..." << Foam::endl;
+    
+    ITHACAstream::exportMatrix(output, "testElement" + typeName, "eigen", "./");
+    
+    const std::string fileName = "testElement" + typeName + "_mat.txt";
+    Eigen::MatrixXd input = ITHACAstream::readMatrix(fileName);
+    std::remove(fileName.c_str()); // Uncomment if you actually want to see the file
+
+    if (output.rows() != input.rows() || output.cols() != input.cols())
+    {
+        Foam::Info << "X Read And Write Test for " << typeName
+                   << "  failed due to different saved/read dimensions!" << Foam::nl
+                   << "  The dimensions of the output " << typeName << " are "
+                   << output.rows() << " x " << output.cols() << Foam::nl
+                   << "  The dimensions of the input " << typeName << " are "
+                   << input.rows() << " x " << input.cols() << Foam::endl;
+
+        return false;
+    }
+
+    double differenceNorm = (output - input).norm();
+    if (differenceNorm < 1e-10)
+    {
+        Foam::Info << "> Read And Write Test for " << typeName
+                   << " succeeded!"
+                   << " The norm of the difference between the saved and loaded data is " << differenceNorm << Foam::endl;
+        return true;
+    }
+    else
+    {
+        Foam::Info << "X Read And Write Test for " << typeName
+                   << " failed due to high numerical errors!"
+                   << " The norm of the difference between the saved and loaded data is " << differenceNorm << Foam::endl;
+        return false;
+    }
+}
+
+bool ExportAndLoadVector()
+{
+  Eigen::VectorXd v = Eigen::VectorXd::Random(5);
+  return TestExportAndLoad(v);
+}
+
+bool ExportAndLoadMatrix()
+{
+  Eigen::MatrixXd m = Eigen::MatrixXd::Random(5, 5);
+  return TestExportAndLoad(m);
+}
+
 bool ReadAndWriteNPYMatrix()
 {
     bool esit = false;
@@ -180,11 +232,23 @@ int TestSparseMatrix()
     return esit;
 }
 
+bool testNumpyMatrixIO()
+{
+  bool success = false;
+  Eigen::MatrixXd output = Eigen::MatrixXd::Random(3, 2);
+  ITHACAstream::exportMatrix(output, "testElement", "numpy", "./");
+  return success;
+}
+
 int main(int argc, char **argv)
 {
+    // Remember to run the python script readSparseMatrix.py after this, to read the npy file and print it
     Eigen::MatrixXi MI_out = Eigen::MatrixXi::Random(5, 5);
     ReadAndWriteTensor();
+    ExportAndLoadMatrix();
+    ExportAndLoadVector();
     ReadAndWriteNPYMatrix();
+    testNumpyMatrixIO();
     TestSparseMatrix();
     return 0;
 }
