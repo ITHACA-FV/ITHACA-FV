@@ -6,6 +6,7 @@ EXE_INC = \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_ITHACA_SRC)/ITHACA_CORE/lnInclude \
     -I$(LIB_ITHACA_SRC)/thirdparty/Eigen \
     -I$(LIB_ITHACA_SRC)/thirdparty/spectra/include \
@@ -22,11 +23,8 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools \
     -lfvOptions \
-    -lsampling \
-    -lforces \
     -lITHACA_CORE \
     -L$(FOAM_USER_LIBBIN) \
     -L$(GTEST_DIR)/lib \
     -L$(GTEST_DIR)/lib64 \
-    -lgtest \
-    -lgtest_main
+    -lgtest

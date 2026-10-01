@@ -220,7 +220,8 @@ GeometricField<Type, PatchField, GeoMesh>
 Modes<Type, PatchField, GeoMesh>::reconstruct(
     GeometricField<Type, PatchField, GeoMesh>& inputField,
     Eigen::MatrixXd Coeff,
-    word Name)
+    word Name,
+    bool correctBC)
 {
     if (EigenModes.size() == 0)
     {
@@ -235,7 +236,7 @@ Modes<Type, PatchField, GeoMesh>::reconstruct(
         InField = (InField.array() < 0).select(0, InField);
     }
 
-    inputField = Foam2Eigen::Eigen2field(inputField, InField);
+    inputField = Foam2Eigen::Eigen2field(inputField, InField, correctBC);
     inputField.rename(Name);
 
     for (label i = 0; i < NBC; i++)
@@ -258,14 +259,15 @@ PtrList<GeometricField<Type, PatchField, GeoMesh >>
 Modes<Type, PatchField, GeoMesh>::reconstruct(
     GeometricField<Type, PatchField, GeoMesh>& inputField,
     List < Eigen::MatrixXd> Coeff,
-    word Name)
+    word Name,
+    bool correctBC)
 {
     PtrList<GeometricField<Type, PatchField, GeoMesh >> inputFields;
     inputFields.resize(0);
 
     for (label i = 0; i < Coeff.size(); i++)
     {
-        inputField = reconstruct(inputField, Coeff[i], Name);
+        inputField = reconstruct(inputField, Coeff[i], Name, correctBC);
         inputFields.append(inputField.clone());
     }
 

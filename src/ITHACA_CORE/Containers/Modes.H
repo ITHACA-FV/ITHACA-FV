@@ -68,70 +68,71 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh >>
 {
     public:
-    
-    /// List of Matrices that contains the internalField and the additional matrices for the boundary patches.
-    List<Eigen::MatrixXd> EigenModes;
-    
-    /// Number of patches
-    label NBC;
-    
-    /// Method that convert a PtrList of modes into Eigen matrices filling the EigenModes object
-    List<Eigen::MatrixXd> toEigen();
-    
-    //--------------------------------------------------------------------------
-    /// @brief      Function that returns the Modes object as a standard PtrList
-    ///
-    /// @return     The PtrList containing the modes
-    ///
-    PtrList<GeometricField<Type, PatchField, GeoMesh >>& toPtrList()
-    {
-        return static_cast<PtrList<GeometricField<Type, PatchField, GeoMesh >>& >
-        (* this);
-    };
-    
-    //----------------------------------------------------------------------
-    /// @brief      A function that project an FvMatrix (OpenFoam linear
-    ///             System) on the modes
-    ///
-    /// @details    Used to project an FvMatrix that is a standard linear
-    ///             system of OpenFoam onto the modes defined inside the
-    ///             Modes container. The output is a list of matrices that
-    ///             contains in the first element the reduced matrix and in
-    ///             the second element the source term.
-    ///
-    /// @param[in]  Af             The OpenFOAM fvMatrix linear system, it
-    ///                            can be vector or scalar matrix
-    /// @param[in]  numberOfModes  The number of modes used to project. If
-    ///                            not given it will use all the available
-    ///                            ones.
-    /// @param[in]  projType       The projection type, Galerkin "G" or Petrov-Galerkin "PG".
-    ///
-    /// @return     A list of Eigen Matrices of dimension 2. The first
-    ///             element of the list is the reduced matrix of the linear
-    ///             system, the second element is the reduced source term of
-    ///             the linear system.
-    ///
-    List<Eigen::MatrixXd> project(fvMatrix<Type>& Af, label numberOfModes = 0, word projType = "G");
-//----------------------------------------------------------------------
-    /// @brief      A function that project a field on the modes
-    ///
-    /// @details    Used to project a field onto the modes defined inside
-    ///             the Modes container. The output is matrix containing the
-    ///             projected field.
-    ///
-    /// @param[in]  field          The field to be projected, it can be
-    ///                            vector or scalar.
-    /// @param[in]  numberOfModes  The number of modes used to project. If
-    ///                            not given it will use all the available
-    ///                            ones.
-    /// @param[in]  projType       The projection type, Galerkin "G" or Petrov-Galerkin "PG".
-    /// @param      Af             The system matrix used in case of Petrov-Galerkin projection
-    ///
-    /// @return     An Eigen MatrixXd.
-    ///
-    Eigen::MatrixXd project(GeometricField<Type, PatchField, GeoMesh>& field,
-        label numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
-        
+
+        /// List of Matrices that contains the internalField and the additional matrices for the boundary patches.
+        List<Eigen::MatrixXd> EigenModes;
+
+        /// Number of patches
+        label NBC;
+
+        /// Method that convert a PtrList of modes into Eigen matrices filling the EigenModes object
+        List<Eigen::MatrixXd> toEigen();
+
+        //--------------------------------------------------------------------------
+        /// @brief      Function that returns the Modes object as a standard PtrList
+        ///
+        /// @return     The PtrList containing the modes
+        ///
+        PtrList<GeometricField<Type, PatchField, GeoMesh >>& toPtrList()
+        {
+            return static_cast<PtrList<GeometricField<Type, PatchField, GeoMesh >>& >
+                   (* this);
+        };
+
+        //----------------------------------------------------------------------
+        /// @brief      A function that project an FvMatrix (OpenFoam linear
+        ///             System) on the modes
+        ///
+        /// @details    Used to project an FvMatrix that is a standard linear
+        ///             system of OpenFoam onto the modes defined inside the
+        ///             Modes container. The output is a list of matrices that
+        ///             contains in the first element the reduced matrix and in
+        ///             the second element the source term.
+        ///
+        /// @param[in]  Af             The OpenFOAM fvMatrix linear system, it
+        ///                            can be vector or scalar matrix
+        /// @param[in]  numberOfModes  The number of modes used to project. If
+        ///                            not given it will use all the available
+        ///                            ones.
+        /// @param[in]  projType       The projection type, Galerkin "G" or Petrov-Galerkin "PG".
+        ///
+        /// @return     A list of Eigen Matrices of dimension 2. The first
+        ///             element of the list is the reduced matrix of the linear
+        ///             system, the second element is the reduced source term of
+        ///             the linear system.
+        ///
+        List<Eigen::MatrixXd> project(fvMatrix<Type>& Af, label numberOfModes = 0,
+                                      word projType = "G");
+        //----------------------------------------------------------------------
+        /// @brief      A function that project a field on the modes
+        ///
+        /// @details    Used to project a field onto the modes defined inside
+        ///             the Modes container. The output is matrix containing the
+        ///             projected field.
+        ///
+        /// @param[in]  field          The field to be projected, it can be
+        ///                            vector or scalar.
+        /// @param[in]  numberOfModes  The number of modes used to project. If
+        ///                            not given it will use all the available
+        ///                            ones.
+        /// @param[in]  projType       The projection type, Galerkin "G" or Petrov-Galerkin "PG".
+        /// @param      Af             The system matrix used in case of Petrov-Galerkin projection
+        ///
+        /// @return     An Eigen MatrixXd.
+        ///
+        Eigen::MatrixXd project(GeometricField<Type, PatchField, GeoMesh>& field,
+                                label numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
+
         //----------------------------------------------------------------------
         /// @brief      A function that project a list of fields on the modes
         ///
@@ -150,112 +151,115 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh >>
         /// @return     An Eigen MatricxXd list.
         ///
         Eigen::MatrixXd project(PtrList<GeometricField<Type, PatchField, GeoMesh >>&
-            fields,
+                                fields,
+                                label numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
+
+        //----------------------------------------------------------------------
+        /// @brief      A function that project and reconstruct a snapshot on the modes
+        ///
+        /// @param      field          The field one wants to project
+        /// @param[in]  numberOfModes  The number of modes
+        /// @param[in]  projType       The projection type, it can be Galerkin "G", Petrov-Galerkin "PG" or "F" Frobenius
+        /// @param      Af             The system matrix used in case of Petrov-Galerkin projection
+        ///
+        /// @return     The projected snapshot
+        ///
+        GeometricField<Type, PatchField, GeoMesh> projectSnapshot(
+            GeometricField<Type, PatchField, GeoMesh>& field,
             label numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
-            
-            //----------------------------------------------------------------------
-            /// @brief      A function that project and reconstruct a snapshot on the modes
-            ///
-            /// @param      field          The field one wants to project
-            /// @param[in]  numberOfModes  The number of modes
-            /// @param[in]  projType       The projection type, it can be Galerkin "G", Petrov-Galerkin "PG" or "F" Frobenius
-            /// @param      Af             The system matrix used in case of Petrov-Galerkin projection
-            ///
-            /// @return     The projected snapshot
-            ///
-            GeometricField<Type, PatchField, GeoMesh> projectSnapshot(
-                GeometricField<Type, PatchField, GeoMesh>& field,
-                label numberOfModes = 0, word projType = "G", fvMatrix<Type>* Af = NULL);
-                
-                //----------------------------------------------------------------------
-                /// @brief      Function to reconstruct the solution starting from the
-                ///             coefficients, in this case the field is passed as
-                ///             input/output
-                ///
-                /// @param[in/out]  inputField  The input/output field
-                /// @param[in]  Coeff       The coefficients of the POD expansion
-                /// @param[in]  Name        The name of the field you want to return
-                ///
-                /// @return     A volVectorField or volScalarField given by the
-                ///             reconstruction.
-                ///
-                GeometricField<Type, PatchField, GeoMesh> reconstruct(
-                    GeometricField<Type, PatchField, GeoMesh>& inputField, Eigen::MatrixXd Coeff,
-                    word Name);
-                    
-                    //----------------------------------------------------------------------
-                    /// @brief      Function to reconstruct a list of fields starting from a list of
-                    ///             coefficients, in this case the list of fields is filled by reconstructing
-                    ///             each field from a coefficients matrix inside the list passed
-                    ///
-                    /// @param      inputField  The input field
-                    /// @param[in]  Coeff       The list of coefficients of the POD expansion
-                    /// @param[in]  Name        The name
-                    ///
-                    /// @return     A list of volVectorFields or volScalarFields given by the
-                    ///             reconstruction.
-                    ///
-                    PtrList<GeometricField<Type, PatchField, GeoMesh >> reconstruct(
-                        GeometricField<Type, PatchField, GeoMesh>& inputField,
-                        List < Eigen::MatrixXd> Coeff,
-                        word Name);
-                        
-                        //----------------------------------------------------------------------
-                        /// @brief      Function to project a list of fields into the modes manifold
-                        ///
-                        /// @param[in]  snapshots  The list of snapshots to be projected
-                        /// @param[in]  numberOfModes       The number of modes you want to use
-                        /// @param[in]  innerProduct        The inner product to be applied
-                        ///
-                        void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh >>
-                            snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
-                            label numberOfModes = 0, word innerProduct = "L2");
-                            
-                            //----------------------------------------------------------------------
-                            /// @brief      Function to project a list of fields into the modes manifold by the use of all the modes
-                            ///
-                            /// @param[in]  snapshots  The list of snapshots to be projected
-                            /// @param[in]  innerProduct        The inner product to be applied
-                            ///
-                            void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh >>
-                                snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
-                                word innerProduct = "L2");
-                                
-                                //----------------------------------------------------------------------
-                                /// @brief      Function to project a list of fields into the modes manifold
-                                ///
-                                /// @param[in]  snapshots  The list of snapshots to be projected
-                                /// @param[in]  Volumes       The mesh volumes for the inner product
-                                /// @param[in]  numberOfModes       The number of modes you want to use
-                                /// @param[in]  innerProduct        The inner product to be applied
-                                ///
-                                void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh >>
-                                    snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
-                                    PtrList<volScalarField> Volumes,
-                                    label numberOfModes = 0, word innerProduct = "L2");
-                                    
-                                    //----------------------------------------------------------------------
-                                    /// @brief      Function to project a list of fields into the modes manifold by the use of all the modes
-                                    ///
-                                    /// @param[in]  snapshots  The list of snapshots to be projected
-                                    /// @param[in]  Volumes       The mesh volumes for the inner product
-                                    /// @param[in]  innerProduct        The inner product to be applied
-                                    ///
-                                    void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh >>
-                                        snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
-                                        PtrList<volScalarField> Volumes,
-                                        word innerProduct);
-                                        
-                                        void operator=(const PtrList<GeometricField<Type, PatchField, GeoMesh >>&
-                                            modes);
-                                        };
-                                        
-                                        typedef Modes<scalar, fvPatchField, volMesh> volScalarModes;
-                                        typedef Modes<vector, fvPatchField, volMesh> volVectorModes;
-                                        typedef Modes<scalar, fvsPatchField, surfaceMesh> surfaceScalarModes;
-                                        typedef Modes<vector, pointPatchField, pointMesh> pointVectorModes;
-                                        
-                                        #endif
-                                        
-                                        
-                                        
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to reconstruct the solution starting from the
+        ///             coefficients, in this case the field is passed as
+        ///             input/output
+        ///
+        /// @param[in/out]  inputField  The input/output field
+        /// @param[in]  Coeff       The coefficients of the POD expansion
+        /// @param[in]  Name        The name of the field you want to return
+        /// @param[in]  correctBC   Whether correctBoundaryConditions() is called on the reconstructed field or not.
+        ///                         Depending on the application, this might cause a fatal error.
+        ///                         An example is a call on fixedFluxPressure without a constrainPressure() call beforehand.
+
+        /// @return     A volVectorField or volScalarField given by the
+        ///             reconstruction.
+        ///
+        GeometricField<Type, PatchField, GeoMesh> reconstruct(
+            GeometricField<Type, PatchField, GeoMesh>& inputField, Eigen::MatrixXd Coeff,
+            word Name, bool correctBC = true);
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to reconstruct a list of fields starting from a list of
+        ///             coefficients, in this case the list of fields is filled by reconstructing
+        ///             each field from a coefficients matrix inside the list passed
+        ///
+        /// @param      inputField  The input field
+        /// @param[in]  Coeff       The list of coefficients of the POD expansion
+        /// @param[in]  Name        The name
+        /// @param[in]  correctBC   Whether correctBoundaryConditions() is called on the reconstructed field or not.
+        ///                         See previous reconstruct() for details.
+        ///
+        /// @return     A list of volVectorFields or volScalarFields given by the
+        ///             reconstruction.
+        ///
+        PtrList<GeometricField<Type, PatchField, GeoMesh >> reconstruct(
+            GeometricField<Type, PatchField, GeoMesh>& inputField,
+            List < Eigen::MatrixXd> Coeff,
+            word Name,
+            bool correctBC = true);
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to project a list of fields into the modes manifold
+        ///
+        /// @param[in]  snapshots  The list of snapshots to be projected
+        /// @param[in]  numberOfModes       The number of modes you want to use
+        /// @param[in]  innerProduct        The inner product to be applied
+        ///
+        void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh >>
+                              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
+                              label numberOfModes = 0, word innerProduct = "L2");
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to project a list of fields into the modes manifold by the use of all the modes
+        ///
+        /// @param[in]  snapshots  The list of snapshots to be projected
+        /// @param[in]  innerProduct        The inner product to be applied
+        ///
+        void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh >>
+                              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
+                              word innerProduct = "L2");
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to project a list of fields into the modes manifold
+        ///
+        /// @param[in]  snapshots  The list of snapshots to be projected
+        /// @param[in]  Volumes       The mesh volumes for the inner product
+        /// @param[in]  numberOfModes       The number of modes you want to use
+        /// @param[in]  innerProduct        The inner product to be applied
+        ///
+        void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh >>
+                              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
+                              PtrList<volScalarField> Volumes,
+                              label numberOfModes = 0, word innerProduct = "L2");
+
+        //----------------------------------------------------------------------
+        /// @brief      Function to project a list of fields into the modes manifold by the use of all the modes
+        ///
+        /// @param[in]  snapshots  The list of snapshots to be projected
+        /// @param[in]  Volumes       The mesh volumes for the inner product
+        /// @param[in]  innerProduct        The inner product to be applied
+        ///
+        void projectSnapshots(PtrList<GeometricField<Type, PatchField, GeoMesh >>
+                              snapshots, PtrList<GeometricField<Type, PatchField, GeoMesh >>& projSnapshots,
+                              PtrList<volScalarField> Volumes,
+                              word innerProduct);
+
+        void operator=(const PtrList<GeometricField<Type, PatchField, GeoMesh >>&
+                       modes);
+};
+
+typedef Modes<scalar, fvPatchField, volMesh> volScalarModes;
+typedef Modes<vector, fvPatchField, volMesh> volVectorModes;
+typedef Modes<scalar, fvsPatchField, surfaceMesh> surfaceScalarModes;
+typedef Modes<vector, pointPatchField, pointMesh> pointVectorModes;
+
+#endif
