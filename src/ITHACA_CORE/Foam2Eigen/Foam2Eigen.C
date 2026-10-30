@@ -97,63 +97,93 @@ template Eigen::MatrixXd Foam2Eigen::field2Eigen(
 template Eigen::MatrixXd Foam2Eigen::field2Eigen(
     surfaceScalarField& field);
 
-template <>
-Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
-    volScalarField& field)
+
+template <class Type, template<class> class PatchField, class GeoMesh>
+Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMap(
+    GeometricField<Type, PatchField, GeoMesh>& field)
 {
-    Eigen::Map<Eigen::MatrixXd> output(field.ref().data(), field.size(), 1);
-    return std::move(output);
+    Field<Type>& fieldRef = field.primitiveFieldRef();
+    
+    Eigen::Map<Eigen::VectorXd> outputMap (
+      reinterpret_cast<scalar*>(fieldRef.data()),
+      fieldRef.size() * pTraits<Type>::nComponents);
+    return outputMap;
 }
 
-template <>
-Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
-    volVectorField& field)
+template <class Type, template<class> class PatchField, class GeoMesh>
+Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMap(
+    const GeometricField<Type, PatchField, GeoMesh>& field)
 {
-    Eigen::Map<Eigen::MatrixXd> output(&field.ref()[0][0], field.size() * 3, 1);
-    return std::move(output);
+    const Field<Type>& fieldRef = field.primitiveField();
+    Eigen::Map<const Eigen::VectorXd> outputMap (
+      reinterpret_cast<const scalar*>(fieldRef.cdata()),
+      fieldRef.size() * pTraits<Type>::nComponents);
+    return outputMap;
 }
 
-template <>
-Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
-    volTensorField& field)
-{
-    Eigen::Map<Eigen::MatrixXd> output(&field.ref()[0][0], field.size() * 9, 1);
-    return std::move(output);
-}
-
-template <>
-Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMapBC(
-    volScalarField& field, int BC_index)
-{
-    Eigen::Map<Eigen::MatrixXd> output(field.boundaryFieldRef()[BC_index].data(),
-                                       field.boundaryField()[BC_index].size(), 1);
-    return std::move(output);
-}
-
-template <>
-Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMapBC(
-    volVectorField& field, int BC_index)
-{
-    Eigen::Map<Eigen::MatrixXd> output(field.boundaryFieldRef()[BC_index][0].data(),
-                                       field.boundaryField()[BC_index].size() * 3, 1);
-    return std::move(output);
-};
-
-
-template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
+template Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMap(
     volScalarField& field);
-
-template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
+template Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMap(
     volVectorField& field);
-
-template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMap(
+template Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMap(
     volTensorField& field);
+template Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMap(
+    pointVectorField& field);
+template Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMap(
+    surfaceScalarField& field);
+template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMap(
+    const volScalarField& field);
+template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMap(
+    const volVectorField& field);
+template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMap(
+    const volTensorField& field);
+template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMap(
+    const pointVectorField& field);
+template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMap(
+    const surfaceScalarField& field);
 
-template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMapBC(
-    volScalarField& field, int BC_index);
 
-template Eigen::Map<Eigen::MatrixXd> Foam2Eigen::field2EigenMapBC(
-    volVectorField& field, int BC_index);
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  GeometricField<Type, PatchField, GeoMesh>& field, label BC_index)
+{
+  PatchField<Type>& patchField = field.boundaryFieldRef()[BC_index];
+  Eigen::Map<Eigen::VectorXd> outputMap(
+    reinterpret_cast<scalar*>(
+      patchField.data()),
+      patchField.size() * pTraits<Type>::nComponents);
+  return outputMap;
+}
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  const GeometricField<Type, PatchField, GeoMesh>& field, label BC_index)
+{
+  const PatchField<Type>& patchField = field.boundaryField()[BC_index];
+  Eigen::Map<const Eigen::VectorXd> outputMap(
+    reinterpret_cast<const scalar*>(
+      patchField.cdata()),
+      patchField.size() * pTraits<Type>::nComponents);
+  return outputMap;
+}
+
+template Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  volScalarField& field, label BC_index);
+template Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  volVectorField& field, label BC_index);
+template Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  volTensorField& field, label BC_index);
+template Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  surfaceScalarField& field, label BC_index);
+
+template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  const volScalarField& field, label BC_index);
+template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  const volVectorField& field, label BC_index);
+template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  const volTensorField& field, label BC_index);
+template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
+  const surfaceScalarField& field, label BC_index);
 
 template <>
 Eigen::VectorXd Foam2Eigen::field2Eigen(const Field<scalar>& field)
