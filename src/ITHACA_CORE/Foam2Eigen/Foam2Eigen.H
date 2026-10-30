@@ -173,8 +173,21 @@ class Foam2Eigen
         /// @return     Dense Eigen vector
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
-        static Eigen::MatrixXd field2Eigen(
-            GeometricField<Type, PatchField, GeoMesh>& field);
+        static Eigen::VectorXd field2Eigen(
+            const GeometricField<Type, PatchField, GeoMesh>& field);
+        
+        //----------------------------------------------------------------------
+        /// @brief      Convert an OpenFOAM field into an Eigen Vector
+        ///
+        /// @param[in]  field  The field
+        ///
+        /// @tparam     Type   Type of the field can be volScalarField or
+        ///                    volVectorField
+        ///
+        /// @return     Dense   Eigen vector
+        ///
+        template<class Type>
+        static Eigen::VectorXd field2Eigen(const Field<Type>& field);
 
         //----------------------------------------------------------------------
         /// @brief      Convert a scalar OpenFOAM field into an Eigen Map.
@@ -230,33 +243,6 @@ class Foam2Eigen
         static void field2EigenMapBC(
             const GeometricField<Type, PatchField, GeoMesh>&&
             field, label BC_index) = delete;
-
-        //----------------------------------------------------------------------
-        /// @brief      Convert an OpenFOAM field into an Eigen Vector
-        ///
-        /// @param[in]  field    The field
-        ///
-        /// @tparam     Type     vector or scalar.
-        /// @tparam     GeoMesh  volMesh or surfaceMesh.
-        ///
-        /// @return     Dense Eigen vector
-        ///
-        template<class Type, class GeoMesh>
-        static Eigen::VectorXd field2Eigen(const
-                                           DimensionedField<Type, GeoMesh>& field);
-
-        //----------------------------------------------------------------------
-        /// @brief      Convert an OpenFOAM field into an Eigen Vector
-        ///
-        /// @param[in]  field  The field
-        ///
-        /// @tparam     Type   Type of the field can be volScalarField or
-        ///                    volVectorField
-        ///
-        /// @return     Dense   Eigen vector
-        ///
-        template<class Type>
-        static Eigen::VectorXd field2Eigen(const Field<Type>& field);
 
         //----------------------------------------------------------------------
         /// @brief      Convert an OpenFOAM scalar field to a List of Eigen
