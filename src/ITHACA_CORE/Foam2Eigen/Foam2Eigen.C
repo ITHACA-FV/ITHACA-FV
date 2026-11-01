@@ -38,6 +38,31 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam2Eigen::patch2EigenRef(
+    const GeometricField<Type, PatchField, GeoMesh>& field,
+    const label patchi,
+    Eigen::Ref<Eigen::VectorXd> target
+)
+{   
+    M_Assert(target.size() == field.boundaryField()[patchi].size() * pTraits<Type>::nComponents,
+        "The size of the target Eigen vector does not match the size of the OpenFOAM patch field.");
+
+    if constexpr(std::is_same<GeoMesh, pointMesh>::value)
+    {
+        const tmp<Field<Type>> tmpvalues = field.boundaryField()[patchi].patchInternalField();
+        const Field<Type>& values = tmpvalues();
+        
+        target = Eigen::Map<const Eigen::VectorXd>(
+          reinterpret_cast<const scalar*>(values.cdata()),
+          values.size() * pTraits<Type>::nComponents);
+    }
+    else
+    {
+        target = field2EigenMapBC(field, patchi);
+    }
+}
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 Eigen::VectorXd Foam2Eigen::field2Eigen(
   const GeometricField<Type, PatchField, GeoMesh>& field
 )
@@ -165,226 +190,78 @@ template Eigen::Map<const Eigen::VectorXd> Foam2Eigen::field2EigenMapBC(
   const surfaceScalarField& field, label BC_index);
 
 
-template <template <class> class PatchField, class GeoMesh>
+template<class Type, template<class> class PatchField, class GeoMesh>
 List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    GeometricField<tensor, PatchField, GeoMesh>& field)
+    const GeometricField<Type, PatchField, GeoMesh>& field
+)
 {
-    List<Eigen::VectorXd> Out;
-    label size = field.boundaryField().size();
-    Out.resize(size);
-
-    for (label i = 0; i < size; i++)
+    List<Eigen::VectorXd> Out(field.boundaryField().size());
+    forAll(field.boundaryField(), patchi)
     {
-        Out[i] = Eigen::Map<Eigen::VectorXd>(const_cast<double*>(&
-            (field.boundaryField()[i][0][0])),
-                                             field.boundaryField()[i].size() * 9);
+        Out[patchi].resize(field.boundaryField()[patchi].size() * pTraits<Type>::nComponents);
+        patch2EigenRef(field, patchi, Out[patchi]);
     }
-
     return Out;
 }
 
 template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    volTensorField& field);
-
-template <template <class> class PatchField, class GeoMesh>
-List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    GeometricField<vector, PatchField, GeoMesh>& field)
-{
-    List<Eigen::VectorXd> Out;
-    label size = field.boundaryField().size();
-    Out.resize(size);
-    constexpr bool check_vol = std::is_same<volMesh, GeoMesh>::value
-                               || std::is_same<surfaceMesh, GeoMesh>::value;
-
-    if  constexpr(check_vol)
-    {
-        for (label i = 0; i < size; i++ )
-        {
-            Out[i] = Eigen::Map<Eigen::VectorXd>(const_cast<double*>(&
-                (field.boundaryField()[i][0][0])),
-                                                 field.boundaryField()[i].size() * 3);
-        }
-    }
-    else if  constexpr(std::is_same<pointMesh, GeoMesh>::value)
-    {
-        for (label i = 0; i < size;
-                i++ ) //field.boundaryField()[i].patchInternalField()()[k][j];
-        {
-            Out[i] = Eigen::Map<Eigen::VectorXd>(const_cast<double*>(&
-                (field.boundaryField()[i].patchInternalField()()[0][0])),
-                                                 field.boundaryField()[i].patchInternalField()().size() * 3);
-        }
-    }
-
-    return Out;
-}
-
+    const volScalarField& field);
 template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    volVectorField& field);
-
-template <template <class> class PatchField, class GeoMesh>
-List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    GeometricField<scalar, PatchField, GeoMesh>& field)
-{
-    List<Eigen::VectorXd> Out;
-    label size = field.boundaryField().size();
-    Out.resize(size);
-
-    for (label i = 0; i < size; i++)
-    {
-        Out[i] = Eigen::Map<Eigen::VectorXd>(const_cast<double*>(&
-            (field.boundaryField()[i][0])), field.boundaryField()[i].size());
-    }
-
-    return Out;
-}
-
+    const volVectorField& field);
 template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
-    volScalarField& field);
+    const volTensorField& field);
+template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    const surfaceScalarField& field);
+template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    const pointVectorField& field);
+template List<Eigen::VectorXd> Foam2Eigen::field2EigenBC(
+    const pointScalarField& field);
 
-template <template <class> class PatchField, class GeoMesh>
+
+template <class Type, template <class> class PatchField, class GeoMesh>
 List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<GeometricField<scalar, PatchField, GeoMesh >>&
-    fields,
-    label Nfields)
+    const PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
+    const label Nfields)
 {
-    label Nf;
+    M_Assert(fields.size() > 0, "The input list of fields is empty.");
     M_Assert(Nfields <= fields.size(),
-             "The Number of requested fields cannot be bigger than the number of requested entries.");
+        "The Number of requested fields cannot be bigger than the number of requested entries.");
 
-    if (Nfields == -1)
-    {
-        Nf = fields.size();
-    }
-    else
-    {
-        Nf = Nfields;
-    }
+    const label Nf = (Nfields == -1) ? fields.size() : Nfields;
+    M_Assert(Nf > 0, "The number of requested fields is zero.");
 
-    List<Eigen::MatrixXd> Out;
-    label NBound = fields[0].boundaryField().size();
-    Out.resize(NBound);
+    const label NBound = fields[0].boundaryField().size();
+    List<Eigen::MatrixXd> Out(NBound);
 
     for (label i = 0; i < NBound; i++)
     {
-        label sizei = fields[0].boundaryField()[i].size();
+        const label sizei = fields[0].boundaryField()[i].size() * pTraits<Type>::nComponents;
         Out[i].resize(sizei, Nf);
     }
 
     for (label k = 0; k < Nf; k++)
     {
-        List<Eigen::VectorXd> temp;
-        temp = field2EigenBC(fields[k]);
-
         for (label i = 0; i < NBound; i++)
         {
-            Out[i].col(k) = temp[i];
+            patch2EigenRef(fields[k], i, Out[i].col(k));
         }
     }
-
     return Out;
 }
 
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<volScalarField>& fields, label Nfields);
+    const PtrList<volScalarField>& fields, const label Nfields);
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<surfaceScalarField>& fields, label Nfields);
-
-
-template <template <class> class PatchField, class GeoMesh>
-List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<GeometricField<vector, PatchField, GeoMesh >>&
-    fields,
-    label Nfields)
-{
-    label Nf;
-    M_Assert(Nfields <= fields.size(),
-             "The Number of requested fields cannot be bigger than the number of requested entries.");
-
-    if (Nfields == -1)
-    {
-        Nf = fields.size();
-    }
-    else
-    {
-        Nf = Nfields;
-    }
-
-    List<Eigen::MatrixXd> Out;
-    label NBound = fields[0].boundaryField().size();
-    Out.resize(NBound);
-
-    for (label i = 0; i < NBound; i++)
-    {
-        label sizei = fields[0].boundaryField()[i].size();
-        Out[i].resize(sizei * 3, Nf);
-    }
-
-    for (label k = 0; k < Nf; k++)
-    {
-        List<Eigen::VectorXd> temp;
-        temp = field2EigenBC(fields[k]);
-
-        for (label i = 0; i < NBound; i++)
-        {
-            Out[i].col(k) = temp[i];
-        }
-    }
-
-    return Out;
-}
-
+    const PtrList<volVectorField>& fields, const label Nfields);
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<volVectorField>& fields, label Nfields);
-
+    const PtrList<volTensorField>& fields, const label Nfields);
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<pointVectorField>& fields, label Nfields);
-
-template <template <class> class PatchField, class GeoMesh>
-List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<GeometricField<tensor, PatchField, GeoMesh >>&
-    fields,
-    label Nfields)
-{
-    label Nf;
-    M_Assert(Nfields <= fields.size(),
-             "The Number of requested fields cannot be bigger than the number of requested entries.");
-
-    if (Nfields == -1)
-    {
-        Nf = fields.size();
-    }
-    else
-    {
-        Nf = Nfields;
-    }
-
-    List<Eigen::MatrixXd> Out;
-    label NBound = fields[0].boundaryField().size();
-    Out.resize(NBound);
-
-    for (label i = 0; i < NBound; i++)
-    {
-        label sizei = fields[0].boundaryField()[i].size();
-        Out[i].resize(sizei * 9, Nf);
-    }
-
-    for (label k = 0; k < Nf; k++)
-    {
-        List<Eigen::VectorXd> temp;
-        temp = field2EigenBC(fields[k]);
-
-        for (label i = 0; i < NBound; i++)
-        {
-            Out[i].col(k) = temp[i];
-        }
-    }
-
-    return Out;
-}
-
+    const PtrList<surfaceScalarField>& fields, const label Nfields);
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
-    PtrList<volTensorField>& fields, label Nfields);
+    const PtrList<pointVectorField>& fields, const label Nfields);
+template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
+    const PtrList<pointScalarField>& fields, const label Nfields);
+    
 // Not consistent with the others, to be fixed, it is changing just the BC
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<tensor, PatchField, GeoMesh> Foam2Eigen::Eigen2field(

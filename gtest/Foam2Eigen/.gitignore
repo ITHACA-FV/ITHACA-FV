@@ -1,0 +1,5 @@
+constant/polyMesh/*
+[1-9]*
+Foam2EigenTest.exe
+log.*
+processor*

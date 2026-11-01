@@ -61,6 +61,22 @@
 class Foam2Eigen
 {
     private:
+        //----------------------------------------------------------------------
+        /// @brief      Reads a patch i from a field f into an Eigen::Ref
+        ///
+        /// @param[in]  field       OpenFOAM field
+        /// @param[in]  patchi      The index of the patch to read
+        /// @param[in]  target      Eigen ref to write into
+        ///
+        /// @tparam     Type        Type of the field
+        /// @tparam     PatchField  fvPatchField or fvsPatchField.
+        /// @tparam     GeoMesh     volMesh or surfaceMesh.
+        ///
+        template<class Type, template<class> class PatchField, class GeoMesh>
+        static void patch2EigenRef(
+            const GeometricField<Type, PatchField, GeoMesh>& field,
+            const label patchi,
+            Eigen::Ref<Eigen::VectorXd> target);
 
     public:
 
@@ -141,7 +157,6 @@ class Foam2Eigen
         template <class type_foam_matrix, class type_B>
         static void fvMatrix2EigenV(fvMatrix<type_foam_matrix>& foam_matrix,
                                     type_B& b);
-
 
         //----------------------------------------------------------------------
         /// @brief      Convert a PtrList of snapshots to Eigen matrix (only
@@ -245,8 +260,8 @@ class Foam2Eigen
             field, label BC_index) = delete;
 
         //----------------------------------------------------------------------
-        /// @brief      Convert an OpenFOAM scalar field to a List of Eigen
-        ///             Vectors, one for each boundary
+        /// @brief      Convert an OpenFOAM GeometricField boundaries
+        ///             to a List of Eigen Vectors, one for each boundary
         ///
         /// @param[in]  field       The field
         ///
@@ -255,40 +270,9 @@ class Foam2Eigen
         ///
         /// @return     Dense Eigen vector
         ///
-        template<template<class> class PatchField, class GeoMesh>
+        template<class Type, template<class> class PatchField, class GeoMesh>
         static List<Eigen::VectorXd> field2EigenBC(
-            GeometricField<scalar, PatchField, GeoMesh>& field);
-
-        //----------------------------------------------------------------------
-        /// @brief      Convert an OpenFOAM vector field to a List of Eigen
-        ///             Vectors, one for each boundary
-        ///
-        /// @param[in]  field       The field
-        ///
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        /// @return     Dense Eigen vector
-        ///
-        template<template<class> class PatchField, class GeoMesh>
-        static List<Eigen::VectorXd> field2EigenBC(
-            GeometricField<vector, PatchField, GeoMesh>& field);
-
-        //----------------------------------------------------------------------
-        /// @brief      Convert an OpenFOAM tensor field to a List of Eigen
-        ///             Vectors, one for each boundary
-        ///
-        /// @param[in]  field       The field
-        ///
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        /// @return     Dense Eigen vector
-        ///
-        template<template<class> class PatchField, class GeoMesh>
-        static List<Eigen::VectorXd> field2EigenBC(
-            GeometricField<tensor, PatchField, GeoMesh>& field);
-
+            const GeometricField<Type, PatchField, GeoMesh>& field);
 
         //----------------------------------------------------------------------
         /// @brief      Convert an OpenFOAM scalar field to a List of Eigen
@@ -302,44 +286,10 @@ class Foam2Eigen
         ///
         /// @return     Dense Eigen matrix
         ///
-        template<template<class> class PatchField, class GeoMesh>
+        template<class Type,template<class> class PatchField, class GeoMesh>
         static List<Eigen::MatrixXd> PtrList2EigenBC(
-            PtrList<GeometricField<scalar, PatchField, GeoMesh >>& fields,
-            label Nfields = -1);
-
-        //----------------------------------------------------------------------
-        /// @brief      Convert an OpenFOAM vector field to a List of Eigen
-        ///             Vectors, one for each boundary
-        ///
-        /// @param[in]  fields      The field
-        /// @param[in]  Nfields     The nfields
-        ///
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        /// @return     Dense Eigen matrix
-        ///
-        template<template<class> class PatchField, class GeoMesh >
-        static List<Eigen::MatrixXd> PtrList2EigenBC(
-            PtrList<GeometricField<vector, PatchField, GeoMesh >>& fields,
-            label Nfields = -1);
-
-        //----------------------------------------------------------------------
-        /// @brief      Convert an OpenFOAM vector field to a List of Eigen
-        ///             Vectors, one for each boundary
-        ///
-        /// @param[in]  fields      The field
-        /// @param[in]  Nfields     The nfields
-        ///
-        /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
-        ///
-        /// @return     Dense Eigen matrix
-        ///
-        template<template<class> class PatchField, class GeoMesh >
-        static List<Eigen::MatrixXd> PtrList2EigenBC(
-            PtrList<GeometricField<tensor, PatchField, GeoMesh >>& fields,
-            label Nfields = -1);
+            const PtrList<GeometricField<Type, PatchField, GeoMesh >>& fields,
+            const label Nfields = -1);
 
         //----------------------------------------------------------------------
         /// @brief         Convert a vector in Eigen format into an OpenFOAM
