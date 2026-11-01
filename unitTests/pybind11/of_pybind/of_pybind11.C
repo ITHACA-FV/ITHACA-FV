@@ -72,8 +72,8 @@ public:
     Eigen::Map<Eigen::MatrixXd> getT()
     {
         volScalarField& T = _T();
-        Eigen::Map<Eigen::MatrixXd> Teig(Foam2Eigen::field2EigenMap(T));
-        return std::move(Teig);
+        Eigen::Map<Eigen::VectorXd> Teig(Foam2Eigen::field2EigenMap(T));
+        return Eigen::Map<Eigen::MatrixXd>(Teig.data(), Teig.size(), 1);
     }
 
     void printT()

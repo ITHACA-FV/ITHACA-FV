@@ -43,7 +43,7 @@ void Foam2Eigen::patch2EigenRef(
     const label patchi,
     Eigen::Ref<Eigen::VectorXd> target
 )
-{   
+{ 
     M_Assert(target.size() == field.boundaryField()[patchi].size() * pTraits<Type>::nComponents,
         "The size of the target Eigen vector does not match the size of the OpenFOAM patch field.");
 
@@ -51,7 +51,7 @@ void Foam2Eigen::patch2EigenRef(
     {
         const tmp<Field<Type>> tmpvalues = field.boundaryField()[patchi].patchInternalField();
         const Field<Type>& values = tmpvalues();
-        
+
         target = Eigen::Map<const Eigen::VectorXd>(
           reinterpret_cast<const scalar*>(values.cdata()),
           values.size() * pTraits<Type>::nComponents);
@@ -107,7 +107,7 @@ Eigen::Map<Eigen::VectorXd> Foam2Eigen::field2EigenMap(
     GeometricField<Type, PatchField, GeoMesh>& field)
 {
     Field<Type>& fieldRef = field.primitiveFieldRef();
-    
+
     Eigen::Map<Eigen::VectorXd> outputMap (
       reinterpret_cast<scalar*>(fieldRef.data()),
       fieldRef.size() * pTraits<Type>::nComponents);
@@ -261,7 +261,7 @@ template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     const PtrList<pointVectorField>& fields, const label Nfields);
 template List<Eigen::MatrixXd> Foam2Eigen::PtrList2EigenBC(
     const PtrList<pointScalarField>& fields, const label Nfields);
-    
+
 // Not consistent with the others, to be fixed, it is changing just the BC
 template <template <class> class PatchField, class GeoMesh>
 GeometricField<tensor, PatchField, GeoMesh> Foam2Eigen::Eigen2field(

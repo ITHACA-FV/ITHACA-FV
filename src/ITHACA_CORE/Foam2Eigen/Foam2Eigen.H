@@ -70,7 +70,7 @@ class Foam2Eigen
         ///
         /// @tparam     Type        Type of the field
         /// @tparam     PatchField  fvPatchField or fvsPatchField.
-        /// @tparam     GeoMesh     volMesh or surfaceMesh.
+        /// @tparam     GeoMesh     volMesh, pointMesh or surfaceMesh
         ///
         template<class Type, template<class> class PatchField, class GeoMesh>
         static void patch2EigenRef(
@@ -190,7 +190,7 @@ class Foam2Eigen
         template<class Type, template<class> class PatchField, class GeoMesh>
         static Eigen::VectorXd field2Eigen(
             const GeometricField<Type, PatchField, GeoMesh>& field);
-        
+
         //----------------------------------------------------------------------
         /// @brief      Convert an OpenFOAM field into an Eigen Vector
         ///
@@ -205,16 +205,17 @@ class Foam2Eigen
         static Eigen::VectorXd field2Eigen(const Field<Type>& field);
 
         //----------------------------------------------------------------------
-        /// @brief      Convert a scalar OpenFOAM field into an Eigen Map.
+        /// @brief      Convert an OpenFOAM field into an Eigen Map.
         /// @details    If a const-version overload to avoid the use with a
         ///             rvalue reference is a safety measure.
         ///             That is because rvalues are not guaranteed to be valid
         ///             after field2EigenMap returns, thus
         ///             risking that the Map will point to freed/invalid memory.
-        ///             Passing a temporary such as grad(U) would result in 
+        ///             Passing a temporary such as grad(U) would result in
         ///             in an error, so it should be wrapped in a tmp first.
         /// @param[in]  field       OpenFOAM field to be mapped into Eigen
         ///
+        /// @tparam     Type        Type of the field
         /// @tparam     PatchField  fvPatchField or fvsPatchField.
         /// @tparam     GeoMesh     volMesh or surfaceMesh.
         ///
@@ -231,7 +232,7 @@ class Foam2Eigen
         template<class Type, template<class> class PatchField, class GeoMesh>
         static void field2EigenMap(
             const GeometricField<Type, PatchField, GeoMesh>&& field) = delete;
-        
+
         //----------------------------------------------------------------------
         /// @brief      Map a OpenFOAM field boundary into an Eigen Map.
         ///             The same reasoning as for the full field applies here
@@ -248,12 +249,12 @@ class Foam2Eigen
         static Eigen::Map<Eigen::VectorXd> field2EigenMapBC(
             GeometricField<Type, PatchField, GeoMesh>&
             field, label BC_index);
-        
+
         template<class Type, template<class> class PatchField, class GeoMesh>
         static Eigen::Map<const Eigen::VectorXd> field2EigenMapBC(
             const GeometricField<Type, PatchField, GeoMesh>&
             field, label BC_index);
-        
+
         template<class Type, template<class> class PatchField, class GeoMesh>
         static void field2EigenMapBC(
             const GeometricField<Type, PatchField, GeoMesh>&&
@@ -275,7 +276,7 @@ class Foam2Eigen
             const GeometricField<Type, PatchField, GeoMesh>& field);
 
         //----------------------------------------------------------------------
-        /// @brief      Convert an OpenFOAM scalar field to a List of Eigen
+        /// @brief      Convert an OpenFOAM field to a List of Eigen
         ///             Vectors, one for each boundary
         ///
         /// @param[in]  fields      The field
