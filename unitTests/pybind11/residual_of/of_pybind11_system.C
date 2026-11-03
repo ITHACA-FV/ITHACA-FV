@@ -68,14 +68,14 @@ public:
     ~of_pybind11_system() {};
     Eigen::Map<Eigen::MatrixXd> getT()
     {
-        Eigen::Map<Eigen::MatrixXd> Teig(Foam2Eigen::field2EigenMap(_T()));
-        return std::move(Teig);
+        Eigen::Map<Eigen::VectorXd> Teig(Foam2Eigen::field2EigenMap(_T()));
+        return Eigen::Map<Eigen::MatrixXd>(Teig.data(), Teig.size(), 1);
     }
 
     Eigen::Map<Eigen::MatrixXd> getS()
     {
-        Eigen::Map<Eigen::MatrixXd> Teig(Foam2Eigen::field2EigenMap(_S()));
-        return std::move(Teig);
+        Eigen::Map<Eigen::VectorXd> Teig(Foam2Eigen::field2EigenMap(_S()));
+        return Eigen::Map<Eigen::MatrixXd>(Teig.data(), Teig.size(), 1);
     }
 
     Eigen::Map<Eigen::MatrixXd> get_residual(Eigen::VectorXd& T, Eigen::VectorXd& S)
@@ -83,8 +83,8 @@ public:
         Foam2Eigen::Eigen2field(_T(), T);
         Foam2Eigen::Eigen2field(_S(), S);
         _res() = fvc::laplacian(_nu(), _T()) - _S();
-        Eigen::Map<Eigen::MatrixXd> res_eig(Foam2Eigen::field2EigenMap(_res()));
-        return std::move(res_eig);
+        Eigen::Map<Eigen::VectorXd> res_eig(Foam2Eigen::field2EigenMap(_res()));
+        return Eigen::Map<Eigen::MatrixXd>(res_eig.data(), res_eig.size(), 1);
     }
 
     void printT()

@@ -1,0 +1,6 @@
+#!/bin/sh
+cd "${0%/*}" || exit
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+
+[ -d constant/polyMesh ] || runApplication blockMesh
+wmake && ./Foam2EigenTest.exe "$@"
