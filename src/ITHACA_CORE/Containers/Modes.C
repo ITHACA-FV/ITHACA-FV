@@ -37,15 +37,7 @@ License
 template<class Type, template<class> class PatchField, class GeoMesh>
 List<Eigen::MatrixXd> Modes<Type, PatchField, GeoMesh>::toEigen()
 {
-    NBC = 0;
-
-    for (label i = 0; i < (this->first()).boundaryFieldRef().size(); i++)
-    {
-        if ((this->first()).boundaryFieldRef()[i].type() != "processor")
-        {
-            NBC++;
-        }
-    }
+    NBC = this->first().boundaryField().size();
 
     EigenModes.resize(NBC + 1);
     EigenModes[0] = Foam2Eigen::PtrList2Eigen(this->toPtrList());
@@ -219,16 +211,16 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 GeometricField<Type, PatchField, GeoMesh>
 Modes<Type, PatchField, GeoMesh>::reconstruct(
     GeometricField<Type, PatchField, GeoMesh>& inputField,
-    Eigen::MatrixXd Coeff,
-    word Name,
-    bool correctBC)
+    const Eigen::MatrixXd Coeff,
+    const word Name,
+    const bool correctBC)
 {
     if (EigenModes.size() == 0)
     {
         toEigen();
     }
 
-    label Nmodes = Coeff.rows();
+    const label Nmodes = Coeff.rows();
     Eigen::VectorXd InField = EigenModes[0].leftCols(Nmodes) * Coeff;
 
     if (inputField.name() == "nut")

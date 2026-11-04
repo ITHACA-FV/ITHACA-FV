@@ -184,8 +184,8 @@ class Modes : public PtrList<GeometricField<Type, PatchField, GeoMesh >>
         ///             reconstruction.
         ///
         GeometricField<Type, PatchField, GeoMesh> reconstruct(
-            GeometricField<Type, PatchField, GeoMesh>& inputField, Eigen::MatrixXd Coeff,
-            word Name, bool correctBC = true);
+            GeometricField<Type, PatchField, GeoMesh>& inputField, const Eigen::MatrixXd Coeff,
+            const word Name, const bool correctBC = true);
 
         //----------------------------------------------------------------------
         /// @brief      Function to reconstruct a list of fields starting from a list of

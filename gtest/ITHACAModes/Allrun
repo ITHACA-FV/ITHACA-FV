@@ -1,0 +1,9 @@
+#!/bin/sh
+cd "${0%/*}" || exit
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+
+[ -d constant/polyMesh ] || runApplication blockMesh
+wmake && ./ITHACAModesTest.exe "$@"
+
+decomposePar -force
+mpirun -np 2 ./ITHACAModesTest.exe -parallel "$@"
